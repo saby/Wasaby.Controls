@@ -41,6 +41,17 @@ define('Controls/Input/DateTime/StringValueConverter', [
          return true;
       },
 
+      getFullYearBy2DigitsYear: function(valueYear) {
+         var
+            curYear = (new Date()).getFullYear(),
+            shortCurYear = curYear % 100,
+            curCentury = (curYear - shortCurYear);
+
+         // Если год задаётся двумя числами, то считаем что это текущий век
+         // если год меньше или равен текущему году + 10, иначе это прошлый век.
+         return valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      },
+
       parseString: function(self, str) {
          var valueModel = {
                year: { str: null, value: 1900, valid: false },
@@ -50,9 +61,6 @@ define('Controls/Input/DateTime/StringValueConverter', [
                minutes: { str: null, value: 0, valid: false },
                seconds: { str: null, value: 0, valid: false }
             },
-            curYear = (new Date()).getFullYear(),
-            shortCurYear = curYear % 100,
-            curCentury = (curYear - shortCurYear),
             maskItems = self._mask.split(/[.: /]/g),
             strItems = str.split(/[.: /]/g),
             i, valueObject;
@@ -64,10 +72,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
                valueObject.valid = true;
                valueObject.value = parseInt(strItems[i], 10);
                if (maskItems[i] === 'YY') {
-                  // Если год задаётся двумя числами, то считаем что это текущий век
-                  // если год меньше или равен текущему году + 10, иначе это прошлый век.
-                  valueObject.value = valueObject.value <= shortCurYear + 10
-                     ? curCentury + valueObject.value : (curCentury - 100) + valueObject.value;
+                  valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
                } else if (maskItems[i] === 'MM') {
                   valueObject.value -= 1;
                }
@@ -111,7 +116,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
       autocomplete: function(self, valueModel, autocompleteType, required) {
          var now = new Date(),
             maskType = _private.getMaskType(self._mask),
-            item, itemValue;
+            item, itemValue, isZeroAtBeginning;
 
          var getDate = function(autocompliteDefaultDate) {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
@@ -130,6 +135,23 @@ define('Controls/Input/DateTime/StringValueConverter', [
                obj.valid = true;
             }
          };
+
+         if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+
+            // If there is a Replacer between the numbers, then the year is incorrect
+            if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
+               return;
+            }
+
+            // Two-digit years auto-complete if there are no zeros at the beginning
+            itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
+            isZeroAtBeginning = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
+            if (!isNaN(itemValue) && itemValue < 100 && isZeroAtBeginning) {
+               setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
+            } else {
+               return;
+            }
+         }
 
          for (item in valueModel) {
             if (valueModel.hasOwnProperty(item)) {
@@ -264,6 +286,8 @@ define('Controls/Input/DateTime/StringValueConverter', [
    var ModuleClass = cExtend.extend({
       _mask: null,
       _replacer: null,
+      _replacerRegExp: null,
+      _replacerBetweenCharsRegExp: null,
 
       constructor: function(options) {
          this.update(options || {});
@@ -275,7 +299,11 @@ define('Controls/Input/DateTime/StringValueConverter', [
        */
       update: function(options) {
          this._mask = options.mask;
-         this._replacer = options.replacer;
+         if (this._replacer !== options.replacer) {
+            this._replacer = options.replacer;
+            this._replacerBetweenCharsRegExp = new RegExp('[^' + this._replacer + ']+' + this._replacer + '[^' + this._replacer + ']+');
+            this._replacerRegExp = new RegExp(this._replacer, 'g');
+         }
       },
 
       /**
@@ -307,7 +335,8 @@ define('Controls/Input/DateTime/StringValueConverter', [
          valueModel = _private.parseString(this, str);
          _private.fillFromBaseValue(this, valueModel, baseValue);
 
-         if (_private.isFilled(this, str) && valueModel.year.str === '0000') {
+         if (_private.isFilled(this, str) &&
+             (this._mask.indexOf('YYYY') !== -1 && parseInt(valueModel.year.str, 10) < 1000)) {
             // Zero year does not exist
             return new Date('Invalid');
          }
