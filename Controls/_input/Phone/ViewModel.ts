@@ -23,7 +23,7 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
             var mask = MaskBuilder.getMask(value);
 
             self._format = FormatBuilder.getFormat(mask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
-            this._nextVersion();
+            self._nextVersion();
          },
 
          prepareData: function(result) {
