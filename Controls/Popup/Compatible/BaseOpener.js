@@ -83,6 +83,8 @@ function(cMerge,
          }
 
          cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+         cfg.templateOptions.closeOnTargetScroll = cfg.closeOnTargetScroll || false;
+         cfg.templateOptions.closeOnTargetHide = cfg.closeOnTargetHide || false;
 
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
