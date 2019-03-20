@@ -425,7 +425,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             })
          });
          
-         Suggest._private.precessResultData(self, {data: queryRecordSet});
+         Suggest._private.processResultData(self, {data: queryRecordSet});
    
          assert.equal(self._searchResult.data, queryRecordSet);
          assert.equal(self._tabsSelectedKey, 'testId');
@@ -440,8 +440,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                }
             })
          });
-         Suggest._private.precessResultData(self, {data: queryRecordSetEmpty});
+         self._suggestMarkedKey = 'test';
+         Suggest._private.processResultData(self, {data: queryRecordSetEmpty});
    
+         assert.equal(self._suggestMarkedKey, null);
          assert.notEqual(self._searchResult.data, queryRecordSet);
          assert.equal(self._searchResult.data, queryRecordSetEmpty);
          assert.equal(self._tabsSelectedKey, 'testId2');
