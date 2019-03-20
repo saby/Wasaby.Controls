@@ -11,6 +11,7 @@ define('Controls/Decorator/Markup/resources/template', [
    var markupGenerator,
       defCollection,
       control,
+      dataAttributeRegExp = /^data-([\w-])*/,
       resolver,
       resolverParams,
       resolverMode;
@@ -20,12 +21,18 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function validAttributesInsertion(to, from) {
-      var validAttributes = validHtml.validAttributes,
-         dataAttributeRegExp = /^data-([\w-])*/;
+      var validAttributes = validHtml.validAttributes;
       for (var key in from) {
-         if (from.hasOwnProperty(key) && (validAttributes[key] || dataAttributeRegExp.test(key))) {
-            to[key] = markupGenerator.escape(from[key]);
+         if (!from.hasOwnProperty(key)) {
+            continue;
          }
+         if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {
+            continue;
+         }
+         if ((key === 'src' || key === 'href') && from[key].indexOf('javascript:') === 0) {
+            continue;
+         }
+         to[key] = markupGenerator.escape(from[key]);
       }
    }
 
