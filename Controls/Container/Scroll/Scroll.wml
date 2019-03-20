@@ -21,6 +21,8 @@
                               attr:class="controls-Scroll__userContent"
                               on:fixed="_fixedHandler()"
                               on:stickyRegister="_stickyRegisterHandler()"
+                              on:saveScrollPosition="_saveScrollPosition()"
+                              on:restoreScrollPosition="_restoreScrollPosition()"
                               on:selectedKeysChanged="selectedKeysChanged()"
                               on:excludedKeysChanged="excludedKeysChanged()"
                               on:checkboxClick="_tmplNotify('checkboxClick')"
