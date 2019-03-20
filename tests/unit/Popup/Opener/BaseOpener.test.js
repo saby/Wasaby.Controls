@@ -71,6 +71,12 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, true);
+
+            isHideIndicatorCall = false;
+            opener._indicatorId = null;
+            opener._beforeUnmount();
+            assert.equal(opener._indicatorId, null);
+            assert.equal(isHideIndicatorCall, false);
             opener.destroy();
          });
       });
