@@ -49,16 +49,16 @@ define('Controls/Application/Core',
 
             //__hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
             //и так и сяк
-
+            var stateReceiverInst = new StateReceiver();
             if (typeof window === 'undefined' || window.__hasRequest === undefined) {
-
                //need create request for SSR
                //on client request will create in app-init.js
-               var stateReceiverInst = new StateReceiver();
                AppInit.default(cfg, PresentationService.default, stateReceiverInst);
                if (typeof window !== 'undefined' && window.receivedStates) {
                   stateReceiverInst.deserialize(window.receivedStates);
                }
+            } else {
+               AppInit.default(cfg, undefined, stateReceiverInst);
             }
 
             var headData = new HeadData([], true);
