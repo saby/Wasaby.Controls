@@ -1,27 +1,21 @@
 define('Controls/Container/Async',
    [
       'Core/Control',
-      'Core/Deferred',
       'Application/Env',
       'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
-      'View/Executor/Utils',
       'Core/library',
-      'Types/entity',
-      'Env/Env'
+      'Types/entity'
    ],
 
    function(Base,
-      Deferred,
       AppEnv,
       constants,
       template,
       ModuleLoader,
-      Utils,
       library,
-      entity,
-      Env) {
+      entity) {
       'use strict';
 
 
