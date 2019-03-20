@@ -144,13 +144,19 @@ define('Controls/Container/Suggest/Layout',
                    hasItems && self._options.historyId && !self._searchValue ||
                   (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
-         precessResultData: function(self, resultData) {
+         processResultData: function(self, resultData) {
             self._searchResult = resultData;
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
                var result = metaData.results;
+               
                _private.setMissSpellingCaption(self, getSwitcherStrFromData(data));
+               
+               if (!data.getCount()) {
+                  _private.setSuggestMarkedKey(self, null);
+               }
+               
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
@@ -443,7 +449,7 @@ define('Controls/Container/Suggest/Layout',
                }
             }
             this._searchDelay = this._options.searchDelay;
-            _private.precessResultData(this, result);
+            _private.processResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
             }
