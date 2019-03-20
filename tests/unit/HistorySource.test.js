@@ -338,6 +338,7 @@ define(
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
+                  assert.equal(self._recentCount, 2);
                   self._history.pinned.forEach(function(pinnedItem){
                      assert.isFalse(pinnedItem.getId()=='9');
                   });
