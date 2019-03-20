@@ -370,6 +370,7 @@ var _private = {
 
     onScrollShow: function(self) {
         self._loadOffset = LOAD_TRIGGER_OFFSET;
+        self._isScrollShown = true;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -392,6 +393,7 @@ var _private = {
             self._pagingVisible = false;
             needUpdate = true;
         }
+        self._isScrollShown = false;
 
         if (needUpdate) {
             self._forceUpdate();
@@ -789,6 +791,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     _itemTemplate: null,
 
+    _isScrollShown: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _loadOffset: 0,
@@ -954,7 +957,10 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
                 * to first element.
                 */
-                if (self._listViewModel.getCount()) {
+
+                //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
+                //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
+                if (self._listViewModel.getCount() && self._isScrollShown) {
                     self._keyDisplayedItem = self._listViewModel.getFirstItem().getId();
                 }
             });
@@ -1249,9 +1255,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        this._focusTimeout = setTimeout(() => {
-           this._children.fakeFocusElem.focus();
-        }, 0);
+        var target = domEvent.target;
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true') {
+            this._focusTimeout = setTimeout(() => {
+                this._children.fakeFocusElem.focus();
+            }, 0);
+        }
         event.blockUpdate = true;
     },
 

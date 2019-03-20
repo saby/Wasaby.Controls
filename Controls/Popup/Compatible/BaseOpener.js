@@ -83,6 +83,8 @@ function(cMerge,
          }
 
          cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+         cfg.templateOptions.closeOnTargetScroll = cfg.closeOnTargetScroll || false;
+         cfg.templateOptions.closeOnTargetHide = cfg.closeOnTargetHide || false;
 
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
@@ -120,6 +122,12 @@ function(cMerge,
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
+         cfg.templateOptions.minWidth = cfg.minWidth;
+         cfg.templateOptions.maxWidth = cfg.maxWidth;
+         cfg.templateOptions.minHeight = cfg.minHeight;
+         cfg.templateOptions.maxHeight = cfg.maxHeight;
+         cfg.templateOptions.width = cfg.width;
+         cfg.templateOptions.height = cfg.height;
 
          if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;

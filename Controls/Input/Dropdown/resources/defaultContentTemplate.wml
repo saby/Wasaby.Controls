@@ -3,7 +3,7 @@
       <ws:partial template="{{contentTemplate}}" text="{{text}}" icon="{{icon}}" item="{{item}}"/>
    </ws:if>
    <ws:else>
-      <div if="{{icon}}" class="controls-Dropdown__icon theme_{{_options.theme}}" title="{{text}}"><div class="{{icon}}"></div></div>
-      <div if="{{!icon}}" class="controls-Dropdown__text theme_{{_options.theme}}" title="{{text}}">{{text}}</div>
+      <div if="{{icon}}" class="controls-Dropdown__icon theme_{{_options.theme}}" title="{{tooltip || text}}"><div class="{{icon}}"></div></div>
+      <div if="{{!icon}}" class="controls-Dropdown__text theme_{{_options.theme}}" title="{{tooltip || text}}">{{text}}</div>
    </ws:else>
 </div>

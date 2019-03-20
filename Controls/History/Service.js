@@ -181,7 +181,9 @@ define('Controls/History/Service', [
                }
             });
          } else {
-            getValueDef.callback(self.getHistory(self._historyId));
+            getValueDef.callback(
+               new source.DataSet({ rawData: self.getHistory(self._historyId) })
+            );
          }
          _private.incrementUsage(this);
          return getValueDef;

@@ -26,5 +26,6 @@
                item="{{_item}}"
                icon="{{_icon}}"
                text="{{_text}}"
+               tooltip="{{_tooltip}}"
                class="{{!_options.readOnly ? 'controls-Dropdown__' + (_isEmptyItem ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
 </Controls.Dropdown.Controller>

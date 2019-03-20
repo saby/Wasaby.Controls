@@ -1,4 +1,4 @@
-﻿define('Controls/Container/Suggest/Layout',
+define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
@@ -127,7 +127,7 @@
             }
          },
          shouldSearch: function(self, value) {
-            return self._active && value.length >= self._options.minSearchLength;
+            return self._inputActive && value.length >= self._options.minSearchLength;
          },
    
          prepareValue: function(self, value) {
@@ -144,13 +144,19 @@
                    hasItems && self._options.historyId && !self._searchValue ||
                   (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
-         precessResultData: function(self, resultData) {
+         processResultData: function(self, resultData) {
             self._searchResult = resultData;
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
                var result = metaData.results;
+               
                _private.setMissSpellingCaption(self, getSwitcherStrFromData(data));
+               
+               if (!data.getCount()) {
+                  _private.setSuggestMarkedKey(self, null);
+               }
+               
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
@@ -225,11 +231,9 @@
                historyService.query().addCallback(function(dataSet) {
                   if (self._historyLoad) {
                      var keys = [];
-
                      dataSet.getRow().get('recent').each(function(item) {
                         keys.push(item.get('ObjectId'));
                      });
-
                      self._historyLoad.callback(keys);
                   }
                });
@@ -380,6 +384,7 @@
          },
          
          _inputClicked: function() {
+            this._inputActive = true;
             if (!this._options.suggestState) {
                _private.inputActivated(this);
             }
@@ -425,7 +430,7 @@
          },
    
          // </editor-fold>
-         
+
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -436,7 +441,7 @@
          _searchEnd: function(result) {
             if (this._options.suggestState) {
                this._loading = false;
-               
+
                // _searchEnd may be called synchronously, for example, if local source is used,
                // then we must check, that indicator was created
                if (this._children.indicator) {
@@ -444,7 +449,7 @@
                }
             }
             this._searchDelay = this._options.searchDelay;
-            _private.precessResultData(this, result);
+            _private.processResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
             }
@@ -462,7 +467,7 @@
             });
             _private.close(this);
          },
-         
+
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
@@ -471,10 +476,10 @@
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
             var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
-            
+
             if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
-               
+
                if (this._children.inputKeydown) {
                   this._children.inputKeydown.start(event);
                }

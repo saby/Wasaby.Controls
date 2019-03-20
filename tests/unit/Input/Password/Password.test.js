@@ -52,12 +52,12 @@ define(
                'selectOnClick'
             ].sort());
          });
-         it('The model belongs to the "Controls/Input/Password/ViewModel" class.', function() {
+         it('The model belongs to the "Controls/_input/Password/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''
             });
 
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Password/ViewModel'));
+            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Password/ViewModel'));
          });
 
          describe('The type attribute of the field when mounting.', function() {

@@ -60,9 +60,9 @@
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
       <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
-         <ws:partial template="defaultContentTpl">
+         <ws:partial template="defaultContentTpl" attr:class="controls-TileView__item_flex">
             <ws:imageWrapper>
-               <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}}" attr:style="{{'height: ' + itemData.itemsHeight + 'px;'}}">
+               <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}} {{itemData.isFixed ? 'controls-TileView__imageWrapper_fixed'}}" attr:style="{{!itemData.isFixed ? 'height: ' + itemData.itemsHeight + 'px;'}}">
                   <ws:partial template="imageTpl"/>
                </ws:partial>
             </ws:imageWrapper>
