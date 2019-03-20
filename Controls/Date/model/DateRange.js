@@ -20,16 +20,24 @@ define('Controls/Date/model/DateRange', [
          if (DateUtil.isDatesEqual(self._startValue, value)) {
             return false;
          }
+         var oldValue = self._startValue;
          self._startValue = value;
-         self._nextVersion();
+         if (oldValue !== value) {
+            self._nextVersion();
+         }
+
          return true;
       },
       setEndValue: function(self, value) {
          if (DateUtil.isDatesEqual(self._endValue, value)) {
             return false;
          }
+         var oldValue = self._endValue;
          self._endValue = value;
-         self._nextVersion();
+         if (oldValue !== value) {
+            self._nextVersion();
+         }
+
          return true;
       }
    };
@@ -47,12 +55,22 @@ define('Controls/Date/model/DateRange', [
       update: function(options) {
          var changed = false;
          if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
+            var oldValue = this._startValue;
             this._startValue = options.startValue;
+            if (oldValue !== options.startValue) {
+               this._nextVersion();
+            }
+
             this._state.startValue = options.startValue;
             changed = true;
          }
          if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
+            var oldValue2 = this._endValue;
             this._endValue = options.endValue;
+            if (oldValue2 !== options.endValue) {
+               this._nextVersion();
+            }
+
             this._state.endValue = options.endValue;
             changed = true;
          }

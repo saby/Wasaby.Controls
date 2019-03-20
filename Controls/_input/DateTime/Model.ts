@@ -18,8 +18,12 @@ import dateUtils = require('Controls/Utils/Date');
          }
       },
       updateValue: function(self, value) {
-         self._nextVersion();
+         var oldValue = self._value;
          self._value = value;
+         if (oldValue !== value) {
+            self._nextVersion();
+         }
+
          _private.updateLastValue(self);
          self._textValue = self._stringValueConverter.getStringByValue(value);
       }
@@ -94,7 +98,12 @@ import dateUtils = require('Controls/Utils/Date');
          this._textValue = value;
          newValue = this._stringValueConverter.getValueByString(value, this._lastValue);
          if (!dateUtils.isDatesEqual(this._value, newValue)) {
+            var oldValue = this._value;
             this._value = newValue;
+            if (oldValue !== newValue) {
+               this._nextVersion();
+            }
+
             _private.updateLastValue(this);
             this._notify('valueChanged', [this._value, this._textValue]);
          }

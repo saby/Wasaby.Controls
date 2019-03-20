@@ -29,8 +29,12 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
             var
                value = splitValue.before + splitValue.insert + splitValue.after;
 
+            var oldValue = this._options.value;
             this._options.value = value;
-            this._nextVersion();
+            if (oldValue !== value) {
+               this._nextVersion();
+            }
+
 
             return {
                value: value,
@@ -47,8 +51,11 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
          },
 
          updateOptions: function(options) {
+            var oldValue = this._options.value;
             this._options.value = options.value;
-            this._nextVersion();
+            if (oldValue !== options.value) {
+               this._nextVersion();
+            }
          }
       });
    }
