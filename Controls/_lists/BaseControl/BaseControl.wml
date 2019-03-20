@@ -89,8 +89,8 @@
 </ws:template>
 
 <Controls.dataSource:error.Container
-        name="errorContainer"
-        viewConfig="{{ __error }}"
+    name="errorContainer"
+    viewConfig="{{ __error }}"
 >
     <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
@@ -173,6 +173,8 @@
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
                 listModel="{{ _listViewModel }}"
+                on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />
         </ws:if>
     </div>
