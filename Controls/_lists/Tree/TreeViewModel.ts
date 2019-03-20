@@ -377,7 +377,7 @@ var
                        item: itemParent.getContents(),
                        dispItem: itemParent,
                        multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel() - 1
+                       level: itemParent.getLevel()
                     };
                     if (this._options.nodeFooterTemplate) {
                        current.nodeFooter.template = this._options.nodeFooterTemplate;
