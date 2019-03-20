@@ -422,7 +422,15 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @type {Controls/Utils/getTextWidth}
           * @private
           */
-         _getTextWidth: getTextWidth,
+         _getTextWidth: function(value) {
+            var block = this._children.forCalc;
+
+            block.innerHTML = value;
+            var width = block.scrollWidth;
+            block.innerHTML = '';
+
+            return width;
+         },
 
          /**
           * @type {Controls/Utils/hasHorizontalScroll}
@@ -558,7 +566,8 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
                template: fieldTemplate,
                scope: {
                   controlName: 'InputBase',
-                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
+                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
+                  isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
@@ -895,6 +904,12 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
+            if (displayValue.length === selection.end) {
+               field.scrollLeft = Number.MAX_SAFE_INTEGER;
+
+               return;
+            }
+
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
