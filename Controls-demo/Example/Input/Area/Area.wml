@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Dynamic height</div>
-                     <Controls.Input.Area placeholder="Helpful tooltip"
+                     <Controls.Input.Area placeholder="Helpful tooltip" class="focusText"
                                           maxLines="{{7}}"
                                           bind:value="_value1"/>
                   </div>
@@ -16,7 +16,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Fixed height</div>
-                     <Controls.Input.Area placeholder="Helpful tooltip"
+                     <Controls.Input.Area placeholder="Helpful tooltip" class="fixedHeightArea"
                                           minLines="{{4}}"
                                           maxLines="{{4}}"
                                           bind:value="_value2"/>
