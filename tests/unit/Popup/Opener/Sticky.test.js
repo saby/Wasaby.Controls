@@ -416,7 +416,7 @@ define(
             }, targetC);
 
             assert.equal(position.top, 0);
-            assert.equal(position.left, 1490);
+            assert.equal(position.left, 1520);
          });
 
          it ('Sticky [new position]', () => {
