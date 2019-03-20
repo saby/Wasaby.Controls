@@ -413,16 +413,6 @@ define([
          });
 
          it('Node footer params', function() {
-/*
-      123
-         234
-            1 (лист)
-            2 (лист)
-            3 (пустая папка)
-      345 (лист)
-      456 (лист)
-      567 (лист)
-   */
             var
                treeViewModel = new TreeViewModel(cMerge({
                   expandedItems: [null]

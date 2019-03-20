@@ -4,7 +4,7 @@
    </ws:if>
     <div class="controls-TreeGrid__nodeFooterContent"
          style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2 / ' : 'grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
-      <ws:for data="i in itemData.level">
+      <ws:for data="i in itemData.level-1">
          <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
       </ws:for>
       <div class="controls-TreeGrid__row-expanderPadding"></div>
