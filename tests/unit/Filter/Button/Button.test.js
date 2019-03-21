@@ -81,7 +81,7 @@ define(
                   items: ['testItems'],
                   historyId: 'testHistoryId'
                },
-               locationStrategy: 'fixed',
+               fittingMode: 'fixed',
                template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                target: 'panelTarget'
             };

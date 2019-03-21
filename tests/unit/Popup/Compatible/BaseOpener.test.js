@@ -182,7 +182,7 @@ define(
                flipWindow: 'vertical'
             };
             BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
-            assert.equal(cfg.locationStrategy, 'overflow');
+            assert.equal(cfg.fittingMode, 'overflow');
       })
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
@@ -317,7 +317,7 @@ define(
             config.target = 'testTarget';
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
-            config.locationStrategy = 'fixed';
+            config.fittingMode = 'fixed';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.templateOptions, config.templateOptions);

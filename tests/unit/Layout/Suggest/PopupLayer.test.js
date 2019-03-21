@@ -14,7 +14,7 @@ define(['Controls/Container/Suggest/__PopupLayer'], function(PopupLayer) {
             horizontalAlign: {side: 'test'},
             corner: {side: 'test'},
             className: 'controls-Suggest__suggestionsContainer_popup_test',
-            locationStrategy: 'fixed'
+            fittingMode: 'fixed'
          };
          
          layer._popupOptions = {};
