@@ -13,6 +13,7 @@ define('Controls/Selector/SelectedCollection/Popup',
          _template: template,
 
          _beforeMount: function(options) {
+            // Clone in order to delete items from the list when clicking on the cross.
             this._items = options.items.clone();
          },
 
