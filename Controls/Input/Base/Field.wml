@@ -1,7 +1,4 @@
 <div class="controls-InputBase__field controls-{{controlName}}__field_theme_{{options.theme}}_margin">
-   <ws:if data="{{isFieldFocused()}}">
-      <div name="forCalc" class="controls-InputBase__forCalc"></div>
-   </ws:if>
    <input
       autocorrect="off"
       type="{{type}}"

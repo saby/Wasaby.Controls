@@ -329,26 +329,6 @@ define('Controls/Input/Base',
             data.delete = displayValue.substring(start, end);
             data.before = displayValue.substring(0, start);
             data.after = displayValue.substring(end, displayValue.length);
-         },
-
-         getTextWidth: function(element, value) {
-            element.innerHTML = value;
-            var width = element.scrollWidth;
-            element.innerHTML = '';
-
-            return width;
-         },
-
-         getTextWidthThroughCreationElement: function(value) {
-            var element = document.createElement('div');
-            element.classList.add('controls-InputBase__forCalc');
-            element.innerHTML = value;
-
-            document.body.appendChild(element);
-            var width = element.scrollWidth;
-            document.body.removeChild(element);
-
-            return width;
          }
       };
 
@@ -451,17 +431,7 @@ define('Controls/Input/Base',
           * @type {Controls/Utils/getTextWidth}
           * @private
           */
-         _getTextWidth: function(value) {
-            var element = this._children.forCalc;
-
-            /**
-             * The element for calculations is available only at the moment of field focusing.
-             * The reason is that the main call occurs during input when the field is in focus.
-             * At other times, the element will be used very rarely. So for the rare cases
-             * it is better to create it yourself.
-             */
-            return element ? _private.getTextWidth(element, value) : _private.getTextWidthThroughCreationElement(value);
-         },
+         _getTextWidth: getTextWidth,
 
          /**
           * @type {Controls/Utils/hasHorizontalScroll}
@@ -603,8 +573,7 @@ define('Controls/Input/Base',
                template: fieldTemplate,
                scope: {
                   controlName: 'InputBase',
-                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
-                  isFieldFocused: _private.isFieldFocused.bind(_private, this)
+                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
                }
             };
             this._readOnlyField = {
@@ -940,12 +909,6 @@ define('Controls/Input/Base',
          },
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
-            if (displayValue.length === selection.end) {
-               field.scrollLeft = Number.MAX_SAFE_INTEGER;
-
-               return;
-            }
-
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
