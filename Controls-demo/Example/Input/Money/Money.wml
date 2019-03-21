@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Money bind:value="_value1"/>
+                  <Controls.Input.Money bind:value="_value1" class="moneyInputField"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">

@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Header</div>
-                     <Controls.Input.Text fontStyle="secondary"
+                     <Controls.Input.Text fontStyle="secondary" class="fontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_value1"/>
                   </div>
@@ -16,7 +16,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Accent header</div>
-                     <Controls.Input.Text style="primary"
+                     <Controls.Input.Text style="primary" class="accentFontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_value2"/>
                   </div>
