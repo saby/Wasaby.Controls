@@ -77,7 +77,7 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 
          moveCarriageToEnd: function() {
             this.selection = this.displayValue.length;
-
+            this._nextVersion();
             this._shouldBeChanged = true;
          }
       });
