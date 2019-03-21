@@ -4,8 +4,9 @@
 define([
    'Controls/Selector/Lookup/_Lookup',
    'Types/entity',
-   'Types/collection'
-], function(Lookup, entity, collection) {
+   'Types/collection',
+   'Env/Env'
+], function(Lookup, entity, collection, Env) {
 
    function getItems(countItems) {
       for (var items = []; countItems; countItems--) {
@@ -408,6 +409,37 @@ define([
 
          Lookup._private.getItemsSizesLastRow = getItemsSizesLastRow;
          Lookup._private.getCounterWidth = getCounterWidth;
+      });
+
+      it('_keyDown', function() {
+         var
+            lookup = new Lookup(),
+            eventBackspace = {
+               nativeEvent: {
+                  keyCode: Env.constants.key.backspace
+               },
+               stopImmediatePropagation: function() {}
+            },
+            eventNotBackspace = {
+               nativeEvent: {},
+               stopImmediatePropagation: function() {}
+            };
+
+         lookup._beforeMount({
+            value: ''
+         });
+         lookup._options.items = getItems(5);
+         lookup._keyDown(eventNotBackspace);
+         assert.equal(lookup._options.items.getCount(), 5);
+
+         lookup._keyDown(eventBackspace);
+         assert.equal(lookup._options.items.getCount(), 4);
+
+         lookup._beforeMount({
+            value: 'not empty valeue'
+         });
+         lookup._keyDown(eventBackspace);
+         assert.equal(lookup._options.items.getCount(), 4);
       });
    });
 });
