@@ -12,5 +12,8 @@ export {
     ItemTemplate,
     GroupTemplate,
     LadderWrapper,
-    ColumnTemplate
+    ColumnTemplate,
+
+    HeaderContent,
+    SortButton
 }

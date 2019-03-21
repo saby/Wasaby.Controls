@@ -38,5 +38,17 @@ export {
     Paging,
     VirtualScroll,
     DataContainer,
-    _forTemplate
+    _forTemplate,
+
+    EditingTemplate,
+    ItemActionsHelpers,
+    BaseViewModel,
+    ItemActionsControl,
+    ListViewModel,
+    ListControl,
+    ListView,
+    SwipeTemplate,
+    SwipeHorizontalMeasurer,
+    GroupContentResultsTemplate,
+    SimpleListItemTemplate
 };
