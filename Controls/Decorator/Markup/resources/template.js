@@ -11,15 +11,36 @@ define('Controls/Decorator/Markup/resources/template', [
    var markupGenerator,
       defCollection,
       control,
-      dataAttributeRegExp = /^data-([\w-])*/,
       resolver,
       resolverParams,
       resolverMode,
+      linkAttributesMap = {
+         'action': true,
+         'background': true,
+         'cite': true,
+         'codebase': true,
+         'formaction': true,
+         'href': true,
+         'icon': true,
+         'longdesc': true,
+         'manifest': true,
+         'poster': true,
+         'profile': true,
+         'src': true,
+         'usemap': true
+      },
+      dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       longSpaceRegExp = /\u00a0/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
+   }
+
+   // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
+   // This is a way to call any javascript code after such a start.
+   function isLinkAttributeWithJavascript(attributeName, attributeValue) {
+      return linkAttributesMap[attributeName] && attributeValue.indexOf('javascript:') === 0;
    }
 
    function validAttributesInsertion(to, from) {
@@ -31,7 +52,7 @@ define('Controls/Decorator/Markup/resources/template', [
          if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {
             continue;
          }
-         if ((key === 'src' || key === 'href') && from[key].indexOf('javascript:') === 0) {
+         if (isLinkAttributeWithJavascript(key, from[key])) {
             continue;
          }
          to[key] = markupGenerator.escape(from[key]);
