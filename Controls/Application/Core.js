@@ -52,7 +52,7 @@ define('Controls/Application/Core',
             var stateReceiverInst = new StateReceiver();
             var environmentFactory = undefined;
             if (typeof window === 'undefined') {
-               environmentFactory = PresentationService.default
+               environmentFactory = PresentationService.default;
             }
             AppInit.default(cfg, environmentFactory, stateReceiverInst);
 
