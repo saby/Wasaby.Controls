@@ -47,6 +47,9 @@
             </div>
          </Controls.FormController>
 
+         <br />
+         <Controls.buttons:Button caption="Отправить данные" on:click="_sendResult()" class="demo-PopupEditOpener__sendResult"/>
+
          <Controls.Popup.Opener.Confirmation name="popupOpener" />
       </div>
    </ws:contentArea>

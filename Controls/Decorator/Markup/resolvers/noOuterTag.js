@@ -13,7 +13,7 @@ define('Controls/Decorator/Markup/resolvers/noOuterTag', function() {
     * @public
     * @author Кондаков Р.Н.
     */
-   return function innerText(value, parent) {
+   return function noOuterTag(value, parent) {
       if (!parent && value[0] === 'div') {
          value[0] = [];
       }
