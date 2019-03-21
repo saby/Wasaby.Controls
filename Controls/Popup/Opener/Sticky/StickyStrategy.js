@@ -95,10 +95,10 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
             // Check if the popup is outside the screen
             if (maxOverflowValue > 0) {
-               if (popupCfg.locationStrategy === 'fixed') {
+               if (popupCfg.fittingMode === 'fixed') {
                   // Reduce the size to fit the popup into the screen
                   size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - maxOverflowValue;
-               } else if (popupCfg.locationStrategy === 'overflow' && direction === 'vertical') {
+               } else if (popupCfg.fittingMode === 'overflow' && direction === 'vertical') {
                   // todo: переделать на новой схеме
                   coordinate -= maxOverflowValue;
                   if (coordinate < 0) {
@@ -179,7 +179,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var position = _private.getPosition(popupCfg, targetCoords, direction);
          var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          if (positionOverflow > 0) {
-            if (popupCfg.locationStrategy === 'fixed') {
+            if (popupCfg.fittingMode === 'fixed') {
                _private.restrictContainer(position, property, popupCfg, positionOverflow);
                _private.fixPosition(position, targetCoords);
                return position;
