@@ -4,8 +4,6 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'Core/Deferred',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/core-simpleExtend',
-      'Types/entity',
       'Core/library',
       'wml!Controls-demo/PropertyGrid/PropertyGridWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
@@ -27,7 +25,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, cExtend, Entity, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cClone, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
@@ -53,9 +51,9 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'Object': objTmpl
             };
 
-            var OptionsClass = cExtend.extend([Entity.VersionableMixin]);
-            this._exampleControlOptions = new OptionsClass();
-            this._exampleControlOptions = cMerge(this._exampleControlOptions, opts.componentOpt);
+            opts.componentOpt._version = 0;
+            opts.componentOpt.getVersion = function() { return this._version; };
+            this._exampleControlOptions = opts.componentOpt;
 
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
@@ -98,7 +96,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
-            this._exampleControlOptions._nextVersion();
+            this._exampleControlOptions._version++;
             this._notify('optionsChanged', [this._options]);
          },
          reset: function() {
