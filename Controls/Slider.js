@@ -1,11 +1,12 @@
 define('Controls/Slider',
    [
       'Core/Control',
+      'Env/Env',
       'wml!Controls/Slider/Slider',
       'css!theme?Controls/Slider/Slider',
       'Controls/DragNDrop/Controller'
    ],
-   function(Control, template) {
+   function(Control, Env, template) {
       'use strict';
 
       /**
@@ -18,32 +19,41 @@ define('Controls/Slider',
        * @author Колесов В.А.
        */
       var _private = {
+         _align: function(val) {
+            val = Math.min(this._options.maxValue, Math.max(this._options.minValue, val));
+            if (this._options.scaleAlign && this.scaleArr.length > 1){
+               var scaleSize = this.scaleArr[1] - this.scaleArr[0];
+               return Math.round(val / scaleSize) * scaleSize;
+            }
+            else {
+               return val;
+            }
+         },
+         _round:function (val, perc) {
+            return Math.round(val * (10 ** perc)) / (10 ** perc)
+         },
          _calcValue: function(wrapper, pos) {
             var
                box = wrapper.getBoundingClientRect(),
                rangeLength,
-               percent; 
-            if (pos < box.left) {
-               return this._options.minValue;
-            } else if (pos > box.left + box.width) {
-               return this._options.maxValue;
-            } else {
-               rangeLength = this._options.maxValue - this._options.minValue;
-               percent = (pos - box.left - window.pageXOffset) / box.width;
-               var val = percent * rangeLength;
-               if (this._options.scaleAlign && this.scaleArr.length>1){
-                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
-                  val =  Math.round(val / scaleSize) * scaleSize;
-               }
-               return this._options.minValue + val;
-            }
-         },
+               ratio;
+            rangeLength = this._options.maxValue - this._options.minValue;
+            ratio = (pos - box.left - window.pageXOffset) / box.width;               
+            var val = _private._align.call(this, ratio * rangeLength);
+            return this._options.minValue + val;            
+         },         
          _checkBuildOptions: function(opts) {
             if (opts.minValue == undefined || opts.maxValue == undefined) {
-               throw new Error('You must set minValue and maxValue for slider.');
+               Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
+            }
+            if (opts.startValue < opts.minValue || opts.startValue > opts.maxValue) {
+               Env.IoC.resolve('ILogger').error('Slider', 'startValue must be in the range [minValue..maxValue].');
+            }
+            if (opts.endValue < opts.minValue || opts.endValue > opts.maxValue) {
+               Env.IoC.resolve('ILogger').error('Slider', 'endValue must be in the range [minValue..maxValue].');
             }
             if (opts.scaleStep < 0) {
-               throw new Error('scaleStep must positive.');
+               Env.IoC.resolve('ILogger').error('Slider', 'scaleStep must positive.');
             }
             return true;
          },
@@ -55,51 +65,46 @@ define('Controls/Slider',
                }
             }
          },
-         _getPoint(eTarget, pos){
-             
-            this._value = _private._calcValue.call(this, eTarget.parentElement, pos);
-            
-            
-            this._value = Math.round(this._value*(10**this._options.decimals))/(10**this._options.decimals)
-            
+         _getPoint(eTarget, pos) {             
+            this._value = _private._calcValue.call(this, eTarget.parentElement, pos);  
+            this._value = _private._round(this._value,this._options.decimals);
             if (eTarget.classList.contains('controls-Slider__point__start')) {
                return eTarget;
             } 
-            else if (eTarget.classList.contains('controls-Slider__point__end')){
+            else if (eTarget.classList.contains('controls-Slider__point__end')) {
                return eTarget;
             }
             else{
                var container = eTarget.parentElement;
-               if (container.classList.contains('controls-Slider__line__wrapper')){
+               if (container.classList.contains('controls-Slider__line__wrapper')) {
                   container = container.parentElement;
                }
-               if (this._options.single){
+               if (this._options.single) {
                   return container.getElementsByClassName('controls-Slider__point__end')[0];
                }
                else{
-                  var endValue = this._endValue,
-                     startValue = this._startValue;
-
-                  if (this._value > endValue) return container.getElementsByClassName('controls-Slider__point__end')[0];
-                  if (this._value < startValue) return container.getElementsByClassName('controls-Slider__point__start')[0];
-                  if (this._value > (endValue + startValue) / 2) return container.getElementsByClassName('controls-Slider__point__end')[0];
+                  if (this._value > this._endValue) return container.getElementsByClassName('controls-Slider__point__end')[0];
+                  if (this._value < this._startValue) return container.getElementsByClassName('controls-Slider__point__start')[0];
+                  if (this._value > (this._endValue + this._startValue) / 2) return container.getElementsByClassName('controls-Slider__point__end')[0];
                   else return container.getElementsByClassName('controls-Slider__point__start')[0];
                }
             }
          },
          _setValues: function(target) {
-             if (target.classList.contains('controls-Slider__point__start')) {
-               this._startValue = this._value > this._endValue ? this._endValue : this._value;
+            if (target.classList.contains('controls-Slider__point__start')) {
+               this._startValue = this._value > this._endValue ? this._endValue : this._value;               
             } 
-            else if (target.classList.contains('controls-Slider__point__end')){
-               this._endValue = this._value < this._startValue ? this._startValue : this._value;
-            }
+            else if (target.classList.contains('controls-Slider__point__end')) {
+               this._endValue = this._value < this._startValue ? this._startValue : this._value;               
+            }  
+            this._notify('endValueChanged', [this._endValue]);
+            this._notify('startValueChanged', [this._startValue]);          
          },
-         _render: function() {
+         _render: function(options) {
             var
-               rangeLength = this._options.maxValue - this._options.minValue,
-               left = (this._startValue - this._options.minValue) / rangeLength * 100,
-               right = (this._endValue - this._options.minValue) / rangeLength * 100,
+               rangeLength = options.maxValue - options.minValue,
+               left = (options.startValue - options.minValue) / rangeLength * 100,
+               right = (options.endValue - options.minValue) / rangeLength * 100,
                width = right - left;   
             this._container.getElementsByClassName('controls-Slider__point__end')[0].style.left = right + '%';
             this._container.getElementsByClassName('controls-Slider__point__start')[0].style.left = left + '%';
@@ -110,7 +115,10 @@ define('Controls/Slider',
       };
 
       var Slider = Control.extend({
+
          _template: template,
+         _startValue: 0,
+         _endValue: 10,
          _beforeMount: function(options) {
             _private._checkBuildOptions(options);
             _private._prepareBuildOptions.call(this, options);
@@ -121,6 +129,10 @@ define('Controls/Slider',
          _beforeUpdate: function(options) {
             _private._checkBuildOptions(options);
             _private._prepareBuildOptions.call(this, options);
+            //this._endValue = options.endValue || options.maxValue;
+            //this._startValue = options.startValue || options.minValue;
+            _private._render.call(this, options);
+
          },
          /**
           * Handler for the mousedown event. 
@@ -132,7 +144,6 @@ define('Controls/Slider',
                var target;
                target = _private._getPoint.call(this, event.target, nativeEvent.pageX); 
                _private._setValues.call(this, target);
-               _private._render.call(this);
                this._children.dragNDrop.startDragNDrop(target, event);
             }
          },
@@ -142,52 +153,61 @@ define('Controls/Slider',
          _onDragMoveHandler: function(e, dragObject) { 
             if (!this._options.readOnly){
                this._value = _private._calcValue.call(this, dragObject.entity.parentElement, dragObject.position.x);  
-
-               this._value = Math.round(this._value*(10**this._options.decimals))/(10**this._options.decimals)
+ 
+               this._value = _private._round(this._value,this._options.decimals);
                _private._setValues.call(this, dragObject.entity);
-               _private._render.call(this);
             }
          },
          /**
           * Handler for the dragend event. 
           */
          _onDragEndHandler: function() {
-            if (!this._options.readOnly){
+            if (!this._options.readOnly) {
                this._startElemPosition = undefined;
                this._value = undefined;
             }
          },
-         changeStartValue: function(e, val) {
-            val = Math.round(val*(10**this._options.decimals))/(10**this._options.decimals)
-            val = Math.min(val, this._options.maxValue);
-            val = Math.max(val, this._options.minValue);
-            if (this._options.scaleAlign && this.scaleArr.length>1){
-                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
-                  val = this._options.minValue +Math.round((val - this._options.minValue) / scaleSize) * scaleSize;
-               }
-            this._startValue = Math.max(val, this._options.minValue);
-            this._endValue = Math.max(this._startValue, this._endValue);
-            _private._render.call(this);
-
-         },
          keyDownHeandler: function(e){
             if (e.nativeEvent.key === 'Enter'){
                this._children.input_end.activate();
-
             }
+         },
+         changeStartValue: function(e, val){
+            this._startValue = val;
+            this._startValue = Math.max(val, this._options.minValue);
+            this._startValue = Math.min(val, this._options.maxValue);
+         },
+         changeEndValue: function(e, val){
+            this._endValue = val;            
+            this._endValue = Math.max(val, this._options.minValue);
+            this._endValue = Math.min(val, this._options.maxValue);
+         },
+         applyStartValue: function(e, val) {
+            val = _private._round(val ,this._options.decimals);
+            val = Math.min(val, this._options.maxValue);
+            val = Math.max(val, this._options.minValue);
+            val = this._options.minValue + _private._align.call(this,val);
+            
+            this._startValue = Math.max(val, this._options.minValue);
+            this._endValue = Math.max(this._startValue, this._endValue);
+
+            this._notify('startValueChanged', [this._startValue]);
+            this._notify('endValueChanged', [this._endValue]);
 
          },
-         changeEndValue: function(e, val) {
-            val = Math.round(val*(10**this._options.decimals))/(10**this._options.decimals)
+         applyEndValue: function(e, val) {
+            console.log(val);
+            val = _private._round(val ,this._options.decimals);
             val = Math.min(val, this._options.maxValue);
-            val = Math.max(val, this._options.minValue);            
-            if (this._options.scaleAlign && this.scaleArr.length>1){
-                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
-                  val = this._options.minValue +Math.round((val - this._options.minValue) / scaleSize) * scaleSize;
-               }
+            val = Math.max(val, this._options.minValue);      
+            val = this._options.minValue + _private._align.call(this,val);
+            console.log(val);
+
             this._endValue = Math.min(val, this._options.maxValue);
             this._startValue = Math.min(this._endValue, this._startValue);
-            _private._render.call(this);
+
+            this._notify('startValueChanged', [this._startValue]);
+            this._notify('endValueChanged', [this._endValue]);            
          }
 
       });
@@ -229,7 +249,7 @@ define('Controls/Slider',
             /**
              * @cfg {Number} Maximum possible value
              */            
-            maxValue: 10,
+            maxValue: 10,            
             /**
              * @cfg {Number} Number of scale steps
              */            

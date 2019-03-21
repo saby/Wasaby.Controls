@@ -18,6 +18,8 @@
             readOnly="{{_readOnly}}"
             scaleAlign="{{_scaleAlign}}"
             showScale="{{_showScale}}"
+            bind:startValue="_myStartValue"
+            bind:endValue="_myEndValue"
          />
       </div>
       <div class="eventBlock">
@@ -33,11 +35,14 @@
       <h3>Options</h3>
       <Controls.Label caption="minValue:"/>
       <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeMinValue()" bind:value="_minValue" />
-        
       <Controls.Label caption="maxValue:"/>
-      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeMaxValue()" bind:value="_maxValue" />             
+      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeMaxValue()" bind:value="_maxValue" /> 
+      <Controls.Label caption="startValue:"/>
+      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeStartValue()" bind:value="_myStartValue" />
+      <Controls.Label caption="endValue:"/>
+      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeEndValue()" bind:value="_myEndValue" /> 
       <Controls.Label caption="scaleStep:"/>
-      <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScaleStep()" bind:value="_scaleStep" />        
+      <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScaleStep()" bind:value="_scaleStep" />
       <Controls.Label caption="decimals:"/>
       <Controls.Input.Number precision="{{0}}" on:valueChanged="changeDecimals()" bind:value="_decimals" />
       <br/>

@@ -11,7 +11,7 @@ define('Controls-demo/Slider/SliderDemo',
       var SliderDemo = Control.extend({
          _template: template,
          _orientationSource: null,
-         _minValue: 1,
+         _minValue: 0,
          _maxValue: 10,
          _scaleStep: 5,
          _single: false,
@@ -25,72 +25,85 @@ define('Controls-demo/Slider/SliderDemo',
          _scaleAlign: false,
          _showScale: false,
          _event: 'none',
+         _myStartValue:0,
+         _myEndValue:10,
          _beforeMount: function(opts){
             
-            this._minValue = 1;
+            this._minValue = 0;
             this._maxValue = 10;
             this._scaleStep = 5;
             this._decimals = 2;
+            this._myStartValue = 0;
+            this._myEndValue = 10;
+
          },
          reset: function(){
             this._event = 'none';
          },
          changeMinValue: function(e, val){
             this._minValue = val;
-            this._event = 'changeMinValue';
+            this._event = 'minValueChanged';
          },
          changeMaxValue: function(e, val){
             this._maxValue = val;
-            this._event = 'changeMaxValue';
+            this._event = 'maxValueChanged';
+         },
+         changeStartValue: function(e, val){
+            this._myStartValue = Math.max(this._minValue,Math.min(val,this._myEndValue));
+            this._event = 'startValueChanged';
+         },
+         changeEndValue: function(e, val){
+            this._myEndValue = Math.min(this._maxValue,Math.max(val,this._myStartValue));
+            this._event = 'endValueChanged';
          },
          changeDecimals: function(e, val){
             this._decimals = val;
-            this._event = 'changeDecimals';
+            this._event = 'decimalsChanged';
          },
          changeScaleStep: function(e, val){
             this._scaleStep = val;
-            this._event = 'changeScaleStep';
+            this._event = 'scaleStepChanged';
          },
          changeSingle: function(e, val){
             this._single = val;
-            this._event = 'changeSingle';
+            this._event = 'singleChanged';
          },
          changeBigPoint: function(e, val){
             this._bigPoint = val;
-            this._event = 'changeBigPoint';
+            this._event = 'bigPointChanged';
          },
          changeInput: function(e, val){
             this._input = val;
-            this._event = 'changeInput';
+            this._event = 'inputChanged';
          },
          changeBordered: function(e, val){
             this._bordered = val;
-            this._event = 'changeBordered';
+            this._event = 'borderedChanged';
          },
          changeStartLabel: function(e, val){
             this._startLabel = val;
-            this._event = 'changeStartLabel';
+            this._event = 'startLabelChanged';
          },
          changeCenterLabel: function(e, val){
             this._centerLabel = val;
-            this._event = 'changeCenterLabel';
+            this._event = 'centerLabelChanged';
          },
          changeEndLabel: function(e, val){
             this._endLabel = val;
-            this._event = 'changeEndLabel';
+            this._event = 'endLabelChanged';
          },
          changeReadOnly: function(e, val){
             this._readOnly = val;
-            this._event = 'changeReadOnly';
+            this._event = 'readOnlyChanged';
          },
          changeScaleAlign: function(e, val){
             this._scaleAlign = val;
-            this._event = 'changeScaleAlign';
+            this._event = 'scaleAlignChanged';
          },
 
          changeShowScale: function(e, val){
             this._showScale = val;
-            this._event = 'changeShowScale';
+            this._event = 'ShowScaleChanged';
          },
       });
 

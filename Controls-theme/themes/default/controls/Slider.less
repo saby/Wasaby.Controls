@@ -1,166 +1,85 @@
-
-.controls-Slider {
-   padding: 
-}
-.controls-Slider.controls-Slider__big {
-   padding: 8px 10px 0 10px;
-}
-.controls-Slider__withBorder{
-   border: 1px solid #E4E4E4;
-   border-radius: 14px;
-   padding: 0px 12px;
-}
-.controls-Slider__wrapper {
-  
-}
-.controls-Slider__mainSlider {
-   position: relative;
-   height: 12px;
-   padding: 6px 0;
-}
-.controls-Slider__mainSlider.controls-Slider__big {
-   height: 20px;
-   padding: 2px 0;
-}
-.controls-Slider__mainSlider.controls-Slider__big .controls-Slider__point {
-   width: 16px;
-   height: 16px;
-   margin-left: -10px;
-   border-radius: 10px;
-}
-.controls-Slider__mainSlider.controls-Slider__big .controls-Slider__line {
-   margin-top: 9px;
-}
-.controls-Slider__mainSlider.controls-Slider__big .controls-Slider__line__wrapper {
-   height: 20px;
-}
-.controls-Slider__point {
-   position: absolute;
-   cursor: pointer;
-   display: inline-block;
-   width: 8px;
-   height: 8px;
-   margin-left: -6px;
-   border: 2px solid #587AB0;
-   border-radius: 6px;
-   background-color: white;
-   z-index: 2;
-}
-.controls-Slider__point__start {
-   left: 0%;
-}
-.controls-Slider__point__end {
-   left: 100%;
-}
-.controls-Slider__point.lastActivePoint {
-   z-index: 3;
-}
-.controls-Slider__point:hover {
-   background-color: #F0F5FB;
-   border-color: #587AB0;
-}
-.controls-Slider__line {
-   position: absolute;
-   display: inline-block;
-   height: 2px;
-   width: 100%;
-   margin-top: 5px;
-}
-.controls-Slider__line__empty {
-   background-color: #999999;
-}
-.controls-Slider__line__full {
-   z-index: 1;
-   background-color: #587AB0;
-}
-.controls-Slider__line__wrapper {
-   cursor: pointer;
-   position: absolute;
-   height: 12px;
-   width: 100%;
-}
-.controls-Slider.ws-disabled .controls-Slider__point {
-   border: 2px solid #CCC;
-   cursor: auto;
-}
-.controls-Slider.ws-disabled .controls-Slider__line__full,
-.controls-Slider.ws-disabled .controls-Slider__line__empty {
-   background-color: #CCC;
-}
-.controls-Slider__scale {
-   display: flex;
-   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-         justify-content: space-between;
-   -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-         align-items: baseline;
-}
-.controls-Slider__segment {
-   display: inline-flex;
-   color: #999;
-   font-size: 14px;
-   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-         justify-content: center;
-   width: 0;
-   position: relative;
-}
-.controls-Slider__segment:after {
-   content: ' ';
-   position: absolute;
-   top: -11px;
-   width: 1px;
-   height: 4px;
-   display: block;
-   background-color: #999999;
-   left: 0;
-}
-.controls-Slider__segment:first-child {
-   -webkit-box-pack: start;
-      -ms-flex-pack: start;
-         justify-content: flex-start;
-}
-.controls-Slider__segment:last-child {
-   -webkit-box-pack: end;
-      -ms-flex-pack: end;
-         justify-content: flex-end;
-}
-.controls-Slider__segment:last-child:after {
-   left: -1px;
-}
-
-.controls-Slider__input {
-   display: inline-block;
-   font-size: 14px;
-   width: 100%;
-   position: relative;
-}
-
-.controls-Slider__input_wrapper {
-   display: inline-block;
-   font-size: 14px;
-   width: 100%;
-   float: left;
-   position: relative;
-}
-.controls-Slider__inputZone_wrapper {
-   display: flex;
-   margin-top: 3px;
-}
-.controls-Slider__LabelStart {
-   display: inline;
-   float: left;
-}
-
-.controls-Slider__LabelCenter {
-   display: inline;
-   margin-left: 8px;
-}
-
-.controls-Slider__LabelEnd {
-   display: inline;
-   float: right;
-   margin-right: -8px;
-   margin-left: 8px;
-}
+@Slider_padding:                             @Slider_padding_val;
+@Slider_big_padding:                         @Slider_big_padding_val;
+@Slider_border:                              @Slider_border_val;   
+@Slider_border-radius:                       @Slider_border-radius_val; 
+@Slider_border-padding:                      @Slider_border-padding_val; 
+@Slider_main-position:                       @Slider_main-position_val;
+@Slider_main-height:                         @Slider_main-height_val;
+@Slider_main-padding:                        @Slider_main-padding_val;
+@Slider_main_big-height:                     @Slider_main_big-height_val;
+@Slider_main_big-padding:                    @Slider_main_big-padding_val;
+@Slider_main_big_point-size:                 @Slider_main_big_point-size_val;
+@Slider_main_big_point-margin-left:          @Slider_main_big_point-margin-left_val;
+@Slider_main_big_point-berder-radius:        @Slider_main_big_point-berder-radius_val;  
+@Slider_main_big_line-margin-top:            @Slider_main_big_line-margin-top_val;     
+@Slider_main_big_line_wrapper-height:        @Slider_main_big_line_wrapper-height_val;     
+@Slider_point-position:                      @Slider_point-position_val;
+@Slider_point-cursor:                        @Slider_point-cursor_val;                   
+@Slider_point-display:                       @Slider_point-display_val;                   
+@Slider_point-size:                          @Slider_point-size_val;              
+@Slider_point-margin-left:                   @Slider_point-margin-left_val;           
+@Slider_point-border:                        @Slider_point-border_val;         
+@Slider_point-border-radius:                 @Slider_point-border-radius_val;
+@Slider_point-background-color:              @Slider_point-background-color_val; 
+@Slider_point-z-index:                       @Slider_point-z-index_val;
+@Slider_point_start-left:                    @Slider_point_start-left_val;
+@Slider_point_end-left:                      @Slider_point_end-left_val;
+@Slider_last-active-point-z-index:           @Slider_last-active-point-z-index_val;
+@Slider_point_hover-bg-color:                @Slider_point_hover-bg-color_val;
+@Slider_point_hover-border-color:            @Slider_point_hover-border-color_val;
+@Slider_line-position:                       @Slider_line-position_val;
+@Slider_line-display:                        @Slider_line-display_val;
+@Slider_line-height:                         @Slider_line-height_val;
+@Slider_line-width:                          @Slider_line-width_val;
+@Slider_line-margin-top:                     @Slider_line-margin-top_val;
+@Slider_line_empty-bg-color:                 @Slider_line_empty-bg-color_val;
+@Slider_line_full-z-index:                   @Slider_line_full-z-index_val;
+@Slider_line_full-bg-color:                  @Slider_line_full-bg-color_val;
+@Slider_line_wrapper-cursor:                 @Slider_line_wrapper-cursor_val;
+@Slider_line_wrapper-position:               @Slider_line_wrapper-position_val;
+@Slider_line_wrapper-height:                 @Slider_line_wrapper-height_val;
+@Slider_line_wrapper-width:                  @Slider_line_wrapper-width_val;
+@Slider_disabled_point-cursor:               @Slider_disabled_point-cursor_val;
+@Slider_disabled_point-border:               @Slider_disabled_point-border_val;
+@Slider_scale-display:                       @Slider_scale-display_val;
+@Slider_scale-webkit-box-pack:               @Slider_scale-webkit-box-pack_val;
+@Slider_scale-ms-flex-pack:                  @Slider_scale-ms-flex-pack_val;
+@Slider_scale-justify-content:               @Slider_scale-justify-content_val;
+@Slider_scale-align-items:                   @Slider_scale-align-items_val;
+@Slider_segment-display:                     @Slider_segment-display_val;
+@Slider_segment-color:                       @Slider_segment-color_val;
+@Slider_segment-font-size:                   @Slider_segment-font-size_val;
+@Slider_segment-justify-content:             @Slider_segment-justify-content_val;
+@Slider_segment-width:                       @Slider_segment-width_val;
+@Slider_segment-position:                    @Slider_segment-position_val;
+@Slider_segment-after-content:               @Slider_segment-after-content_val;
+@Slider_segment-after-position:              @Slider_segment-after-position_val;
+@Slider_segment-after-top:                   @Slider_segment-after-top_val;
+@Slider_segment-after-width:                 @Slider_segment-after-width_val;
+@Slider_segment-after-height:                @Slider_segment-after-height_val;
+@Slider_segment-after-display:               @Slider_segment-after-display_val;
+@Slider_segment-after-bg-color:              @Slider_segment-after-bg-color_val;
+@Slider_segment-after-left:                  @Slider_segment-after-left_val;
+@Slider_segment_first-webkit-box-pack:       @Slider_segment_first-webkit-box-pack_val;
+@Slider_segment_first-ms-flex-pack:          @Slider_segment_first-ms-flex-pack_val;
+@Slider_segment_first-justify-content:       @Slider_segment_first-justify-content_val;
+@Slider_segment_last-webkit-box-pack:        @Slider_segment_last-webkit-box-pack_val;
+@Slider_segment_last-ms-flex-pack:           @Slider_segment_last-ms-flex-pack_val;
+@Slider_segment_last-justify-content:        @Slider_segment_last-justify-content_val;
+@Slider_segment_last-after-left:             @Slider_segment_last-after-left_val;
+@Slider_input_wrapper-display:               @Slider_input_wrapper-display_val;
+@Slider_input_wrapper-font-size:             @Slider_input_wrapper-font-size_val;
+@Slider_input_wrapper-width:                 @Slider_input_wrapper-width_val;
+@Slider_input_wrapper-float:                 @Slider_input_wrapper-float_val;
+@Slider_input_wrapper-position:              @Slider_input_wrapper-position_val;
+@Slider_input-width:                         @Slider_input-width_val;
+@Slider_input-zone_wrapper-display:          @Slider_input-zone_wrapper-display_val;
+@Slider_input-zone_wrapper-margin-top:       @Slider_input-zone_wrapper-margin-top_val;  
+@Slider_label_start-display:                 @Slider_label_start-display_val;
+@Slider_label_start-float:                   @Slider_label_start-float_val;
+@Slider_label_center-display:                @Slider_label_center-display_val;
+@Slider_label_center-margin-left:            @Slider_label_center-margin-left_val;
+@Slider_label_end-display:                   @Slider_label_end-display_val;
+@Slider_label_end-float:                     @Slider_label_end-float_val;
+@Slider_label_end-margin-right:              @Slider_label_end-margin-right_val;
+@Slider_label_end-margin-left:               @Slider_label_end-margin-left_val;

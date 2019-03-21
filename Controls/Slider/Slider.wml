@@ -16,7 +16,7 @@
                </div>
             </div>
          </div>
-         <div if="{{_options.showScale&&_options.scaleStep&&!_options.bordered}}" class="controls-Slider__scale">
+         <div if="{{_options.showScale && _options.scaleStep && !_options.bordered}}" class="controls-Slider__scale">
             <ws:for data="key, value in scaleArr">
                <span class="controls-Slider__segment">{{value}}</span>
             </ws:for>
@@ -24,11 +24,11 @@
          <div class="controls-Slider__inputZone_wrapper">            
             <Controls.Label if="{{_options.startLabel}}" attr:class="controls-Slider__LabelStart" caption="{{_options.startLabel}}"/>            
             <div class="controls-Slider__input_wrapper" if="{{_options.input&&!_options.single}}" >
-               <Controls.Input.Number attr:tabindex="1" name="input_start" placeholder="{{_options.minValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:keydown="keyDownHeandler()" on:inputCompleted="changeStartValue()" bind:value="_startValue" />
+               <Controls.Input.Number attr:tabindex="1" name="input_start" placeholder="{{_options.startValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:keydown="keyDownHeandler()" on:inputCompleted="applyStartValue()" on:valueChanged="changeStartValue()" bind:value="_startValue" />
             </div>
             <Controls.Label if="{{_options.centerLabel}}" attr:class="controls-Slider__LabelCenter" caption="{{_options.centerLabel}}"/>
             <div class="controls-Slider__input_wrapper">
-               <Controls.Input.Number attr:tabindex="2" name="input_end" if="{{_options.input}}" placeholder="{{_options.maxValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:inputCompleted="changeEndValue()" bind:value="_endValue" />
+               <Controls.Input.Number attr:tabindex="2" name="input_end" if="{{_options.input}}" placeholder="{{_options.endValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:inputCompleted="applyEndValue()" on:valueChanged="changeEndValue()" bind:value="_endValue" />
             </div>
             <Controls.Label if="{{_options.endLabel}}" attr:class="controls-Slider__LabelEnd" caption="{{_options.endLabel}}"/>
          </div>

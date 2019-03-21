@@ -17,10 +17,17 @@
             Small points:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               bind:startValue="_myStartValue1"
+               bind:endValue="_myEndValue1"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider />
+            <Controls.Slider 
+               bind:startValue="_myStartValue2"
+               bind:endValue="_myEndValue2"
+            />
          </div>
       </div>  
       <div class="demo__block">
@@ -28,10 +35,19 @@
             Large points:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" bigPoint="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               bigPoint="{{true}}"
+               bind:startValue="_myStartValue3"
+               bind:endValue="_myEndValue3"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider bigPoint="{{true}}"/>
+            <Controls.Slider 
+               bigPoint="{{true}}"
+               bind:startValue="_myStartValue4"
+               bind:endValue="_myEndValue4"
+            />
          </div>
       </div> 
       <div class="demo__block">
@@ -39,10 +55,19 @@
             Bordered:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" bordered="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               bordered="{{true}}"
+               bind:startValue="_myStartValue5"
+               bind:endValue="_myEndValue5"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider bordered="{{true}}"/>
+            <Controls.Slider 
+               bordered="{{true}}"
+               bind:startValue="_myStartValue6"
+               bind:endValue="_myEndValue6"
+               />
          </div>
       </div> 
       <div class="demo__block">
@@ -50,10 +75,19 @@
             With scale:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" showScale="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               showScale="{{true}}"
+               bind:startValue="_myStartValue7"
+               bind:endValue="_myEndValue7"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider showScale="{{true}}"/>
+            <Controls.Slider 
+               showScale="{{true}}"
+               bind:startValue="_myStartValue8"
+               bind:endValue="_myEndValue8"
+            />
          </div> 
       </div>
       <div class="demo__block">
@@ -61,10 +95,21 @@
             With scale align:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" scaleAlign="{{true}}" showScale="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               scaleAlign="{{true}}" 
+               showScale="{{true}}"
+               bind:startValue="_myStartValue9"
+               bind:endValue="_myEndValue9"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider showScale="{{true}}" scaleAlign="{{true}}"/>
+            <Controls.Slider 
+               showScale="{{true}}"
+               scaleAlign="{{true}}"
+               bind:startValue="_myStartValue10"
+               bind:endValue="_myEndValue10"
+            />
          </div>
       </div>
       <div class="demo__block">
@@ -72,10 +117,21 @@
             With input fields:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" input="{{true}}" showScale="{{true}}"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               input="{{true}}" 
+               showScale="{{true}}"
+               bind:startValue="_myStartValue11"
+               bind:endValue="_myEndValue11"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider showScale="{{true}}" input="{{true}}"/>
+            <Controls.Slider 
+               showScale="{{true}}"
+               input="{{true}}"
+               bind:startValue="_myStartValue12"
+               bind:endValue="_myEndValue12"
+            />
          </div>
       </div>
       <div class="demo__block">
@@ -83,10 +139,26 @@
             With input labels:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" input="{{true}}" showScale="{{true}}" startLabel="to" endLabel="₽"/>
+            <Controls.Slider
+               single="{{true}}"
+               input="{{true}}" 
+               showScale="{{true}}"
+               startLabel="to"
+               endLabel="₽"
+               bind:startValue="_myStartValue13"
+               bind:endValue="_myEndValue13"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider showScale="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+            <Controls.Slider 
+               showScale="{{true}}" 
+               input="{{true}}" 
+               startLabel="from" 
+               centerLabel="to" 
+               endLabel="₽"
+               bind:startValue="_myStartValue14"
+               bind:endValue="_myEndValue14"
+            />
          </div>
       </div>
       <div class="demo__block">
@@ -94,10 +166,26 @@
             Bordered with input:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" input="{{true}}" bordered="{{true}}" startLabel="to" endLabel="₽"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               input="{{true}}" 
+               bordered="{{true}}" 
+               startLabel="to" 
+               endLabel="₽"
+               bind:startValue="_myStartValue15"
+               bind:endValue="_myEndValue15"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider bordered="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+            <Controls.Slider 
+               bordered="{{true}}" 
+               input="{{true}}" 
+               startLabel="from" 
+               centerLabel="to" 
+               endLabel="₽"
+               bind:startValue="_myStartValue16"
+               bind:endValue="_myEndValue16"
+            />
          </div>
       </div>
       <div class="demo__block">
@@ -105,10 +193,21 @@
             With labels:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" startLabel="less" endLabel="more"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               startLabel="less" 
+               endLabel="more"
+               bind:startValue="_myStartValue17"
+               bind:endValue="_myEndValue17"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider  startLabel="less" endLabel="more"/>
+            <Controls.Slider 
+               startLabel="less" 
+               endLabel="more"
+               bind:startValue="_myStartValue18"
+               bind:endValue="_myEndValue18"
+            />
          </div>
       </div>
       <div class="demo__block">
@@ -116,10 +215,28 @@
             ReadOnly:
          </div>
          <div class="demo__element">
-            <Controls.Slider single="{{true}}" readOnly="{{true}}" input="{{true}}" showScale="{{true}}" startLabel="to" endLabel="₽"/>
+            <Controls.Slider 
+               single="{{true}}" 
+               readOnly="{{true}}" 
+               input="{{true}}" 
+               showScale="{{true}}" 
+               startLabel="to" 
+               endLabel="₽"
+               bind:startValue="_myStartValue19"
+               bind:endValue="_myEndValue19"
+            />
          </div>
          <div class="demo__element">
-            <Controls.Slider showScale="{{true}}" readOnly="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+            <Controls.Slider 
+               showScale="{{true}}" 
+               readOnly="{{true}}" 
+               input="{{true}}" 
+               startLabel="from" 
+               centerLabel="to" 
+               endLabel="₽"
+               bind:startValue="_myStartValue20"
+               bind:endValue="_myEndValue20"
+            />
          </div>
       </div>
    </div>
