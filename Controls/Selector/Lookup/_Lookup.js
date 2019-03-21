@@ -13,9 +13,11 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Utils/tmplNotify',
    'Core/helpers/Object/isEqual',
    'Controls/Selector/SelectedCollection/Utils',
+   'Controls/Utils/keysHandler',
+   'Env/Env',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, keysHandler, Env) {
    'use strict';
 
    var
@@ -433,6 +435,19 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
+      },
+
+      _keyDown: function(event) {
+         keysHandler(event, {
+            backspace: Env.constants.key.backspace
+         }, {
+            backspace: function(self) {
+               if (!self._simpleViewModel.getValue() && !self._isEmpty()) {
+                  self._options.items.removeAt(self._options.items.getCount() - 1);
+                  self._notify('updateItems', [self._options.items]);
+               }
+            }
+         }, this);
       }
    });
 

@@ -4,15 +4,21 @@
 define([
    'Controls/Selector/Lookup/_Lookup',
    'Types/entity',
-   'Types/collection'
-], function(Lookup, entity, collection) {
+   'Types/collection',
+   'Env/Env'
+], function(Lookup, entity, collection, Env) {
 
    function getItems(countItems) {
-      return {
-         getCount: function() {
-            return countItems;
-         }
+      for (var items = []; countItems; countItems--) {
+         items.push(new entity.Model({
+            rawData: {id: countItems},
+            idProperty: 'id'
+         }));
       }
+
+      return new collection.List({
+         items: items
+      });
    }
 
    describe('Controls/Selector/Lookup/_Lookup', function() {
@@ -317,6 +323,37 @@ define([
          lookup._onClickShowSelector();
 
          assert.isFalse(lookup._suggestState);
+      });
+
+      it('_keyDown', function() {
+         var
+            lookup = new Lookup(),
+            eventBackspace = {
+               nativeEvent: {
+                  keyCode: Env.constants.key.backspace
+               },
+               stopImmediatePropagation: function() {}
+            },
+            eventNotBackspace = {
+               nativeEvent: {},
+               stopImmediatePropagation: function() {}
+            };
+
+         lookup._beforeMount({
+            value: ''
+         });
+         lookup._options.items = getItems(5);
+         lookup._keyDown(eventNotBackspace);
+         assert.equal(lookup._options.items.getCount(), 5);
+
+         lookup._keyDown(eventBackspace);
+         assert.equal(lookup._options.items.getCount(), 4);
+
+         lookup._beforeMount({
+            value: 'not empty valeue'
+         });
+         lookup._keyDown(eventBackspace);
+         assert.equal(lookup._options.items.getCount(), 4);
       });
    });
 });
