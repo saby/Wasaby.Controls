@@ -275,7 +275,9 @@ define(['Controls/List/TileView/TileView',
       it('_afterMount', function() {
          var events = [];
          tileView._notify = function(eventName, args) {
-            events.push(args[0]);
+            if (eventName === 'register') {
+               events.push(args[0]);
+            }
          };
          tileView._afterMount();
          assert.deepEqual(events, ['controlResize', 'scroll']);
