@@ -53,8 +53,9 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'Object': objTmpl
             };
 
-            var OptionsClass = cExtend.extend([Entity.VersionableMixin], opts.componentOpt);
+            var OptionsClass = cExtend.extend([Entity.VersionableMixin]);
             this._exampleControlOptions = new OptionsClass();
+            this._exampleControlOptions = cMerge(this._exampleControlOptions, opts.componentOpt);
 
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);

@@ -66,12 +66,24 @@ define('Controls/Input/OldText/OldViewModel',
                position: splitValue.before.length + insert.length
             };
          },
-
          updateOptions: function(options) {
-            this._options.constraint = options.constraint;
-            this._options.maxLength = options.maxLength;
+            var oldValue = this._options.value;
             this._options.value = options.value;
-            this._nextVersion();
+            if (oldValue !== options.value) {
+               this._nextVersion();
+            }
+
+            var oldMaxLength = this._options.maxLength;
+            this._options.maxLength = options.maxLength;
+            if (oldMaxLength !== options.maxLength) {
+               this._nextVersion();
+            }
+
+            var oldConstraint = this._options.constraint;
+            this._options.constraint = options.constraint;
+            if (oldConstraint !== options.constraint) {
+               this._nextVersion();
+            }
          }
       });
 

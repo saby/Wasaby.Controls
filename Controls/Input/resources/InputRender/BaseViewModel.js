@@ -29,12 +29,8 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
             var
                value = splitValue.before + splitValue.insert + splitValue.after;
 
-            var oldValue = this._options.value;
             this._options.value = value;
-            if (oldValue !== value) {
-               this._nextVersion();
-            }
-
+            this._nextVersion();
 
             return {
                value: value,
