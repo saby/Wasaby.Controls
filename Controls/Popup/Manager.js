@@ -432,9 +432,9 @@ define('Controls/Popup/Manager',
          },
 
          _contentClick: function(event) {
-            if(_private.popupItems) {
+            if (_private.popupItems) {
                var deactivatedPopups = [];
-               _private.popupItems.each(function (item) {
+               _private.popupItems.each(function(item) {
                   // Закрываем только те окна, которые были открыты до mousedown'a
                   // todo: https://online.sbis.ru/opendoc.html?guid=00a8e7a6-c4b7-4301-a4eb-700d2ef01e9f
                   if (item && item.waitDeactivated && _private.popupItemsClone && _private.popupItemsClone.getIndexByValue('id', item.id) > -1) {
