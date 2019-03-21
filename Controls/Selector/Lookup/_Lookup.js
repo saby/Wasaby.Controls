@@ -438,16 +438,13 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _keyDown: function(event) {
-         keysHandler(event, {
-            backspace: Env.constants.key.backspace
-         }, {
-            backspace: function(self) {
-               if (!self._simpleViewModel.getValue() && !self._isEmpty()) {
-                  self._options.items.removeAt(self._options.items.getCount() - 1);
-                  self._notify('updateItems', [self._options.items]);
-               }
-            }
-         }, this);
+         //If press backspace, the input field is empty and there are selected entries -  remove last item
+         if (event.nativeEvent.keyCode === Env.constants.key.backspace &&
+            !self._simpleViewModel.getValue() && !self._isEmpty()) {
+
+            self._options.items.removeAt(self._options.items.getCount() - 1);
+            self._notify('updateItems', [self._options.items]);
+         }
       }
    });
 
