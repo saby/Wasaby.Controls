@@ -332,6 +332,7 @@ define(['Controls/List/TileView/TileView',
          var
             isTouch,
             count = 0,
+            event = {},
             originFn = tileView._calculateHoveredItemPosition;
 
          tileView._calculateHoveredItemPosition = function() {
@@ -343,21 +344,22 @@ define(['Controls/List/TileView/TileView',
          };
          tileView._listModel.setHoveredItem({key: 1});
          isTouch = false;
-         tileView._onItemMouseMove(null, {key: 1});
+         tileView._onItemMouseMove(event, {key: 1});
+         assert.isTrue(event.blockUpdate);
          assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
 
          tileView._listModel.setHoveredItem(null);
          isTouch = true;
-         tileView._onItemMouseMove(null, {key: 2});
+         tileView._onItemMouseMove({}, {key: 2});
          assert.equal(count, 0);
          assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
          isTouch = false;
-         tileView._onItemMouseMove(null, {key: 3});
+         tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 1);
-         tileView._onItemMouseMove(null, {key: 3});
+         tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 2);
 
          tileView._calculateHoveredItemPosition = originFn;
@@ -374,18 +376,20 @@ define(['Controls/List/TileView/TileView',
       });
 
       it('_onItemMouseLeave', function() {
+         var event = {};
          tileView._listModel.setHoveredItem({key: 2});
 
          //active
-         tileView._onItemMouseLeave(null, {key: 2, isActive: true});
+         tileView._onItemMouseLeave(event, {key: 2, isActive: true});
          assert.equal(tileView._listModel.getHoveredItem().key, 2);
+         assert.isTrue(event.blockUpdate);
 
          //another
-         tileView._onItemMouseLeave(null, {key: 1});
+         tileView._onItemMouseLeave({}, {key: 1});
          assert.equal(tileView._listModel.getHoveredItem().key, 2);
 
          //hovered
-         tileView._onItemMouseLeave(null, {key: 2});
+         tileView._onItemMouseLeave({}, {key: 2});
          assert.equal(tileView._listModel.getHoveredItem(), null);
       });
    });
