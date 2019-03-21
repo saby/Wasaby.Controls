@@ -23,7 +23,6 @@ import SwipeTemplate = require('wml!Controls/_lists/Swipe/resources/SwipeTemplat
 import SwipeHorizontalMeasurer = require('Controls/_lists/Swipe/HorizontalMeasurer');
 import 'css!Controls/_lists/Swipe/Swipe';
 import GroupContentResultsTemplate = require('wml!Controls/_lists/GroupContentResultsTemplate');
-import SimpleListItemTemplate = require('wml!Controls/_lists/SimpleList/ItemTemplate');
 
 export {
     AddButton,
@@ -49,6 +48,5 @@ export {
     ListView,
     SwipeTemplate,
     SwipeHorizontalMeasurer,
-    GroupContentResultsTemplate,
-    SimpleListItemTemplate
+    GroupContentResultsTemplate
 };
