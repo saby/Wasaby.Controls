@@ -14,7 +14,7 @@ define('Controls/Decorator/Markup/resources/template', [
       resolver,
       resolverParams,
       resolverMode,
-      escapeVdomRegExp = /&([a-zA-Z0#]+;)/g,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       longSpaceRegExp = /\u00a0/g;
 
    function isString(value) {
