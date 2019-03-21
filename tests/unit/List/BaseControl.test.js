@@ -1451,6 +1451,9 @@ define([
             target: {
                closest: function(selector) {
                   return selector === '.js-controls-ListView__checkbox';
+               },
+               getAttribute: function(attrName) {
+                  return attrName === 'contenteditable' ? 'true' : '';
                }
             }
          };

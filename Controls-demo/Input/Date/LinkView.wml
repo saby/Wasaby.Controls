@@ -11,14 +11,12 @@
                      bind:endValue="_endValue"
                      prevArrowVisibility="{{true}}"
                      nextArrowVisibility="{{true}}"
-                     clearButtonVisibility="{{true}}"
                />
                <Controls.Input.Date.LinkView
                      bind:startValue="_startValue"
                      bind:endValue="_endValue"
                      prevArrowVisibility="{{true}}"
                      nextArrowVisibility="{{true}}"
-                     clearButtonVisibility="{{true}}"
                />
                <Controls.Input.Date.LinkView
                      bind:startValue="_startValue"

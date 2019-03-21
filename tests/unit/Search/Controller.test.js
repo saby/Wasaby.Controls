@@ -28,6 +28,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          searchParam: 'test',
          minSearchLength: 3,
          searchDelay: 50,
+         sorting: [],
          filter: {},
          source: memorySource,
          navigation: {
@@ -145,12 +146,17 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
          assert.isTrue(Search._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
+         assert.isTrue(Search._private.needUpdateSearchController({minSearchLength: 3, sorting: [{}]}, {minSearchLength: 3, sorting: [{testField: "ASC"}]}));
       });
 
       it('_private.getSearchController', function() {
          var searchController = getSearchController();
+         var controller;
+         
          searchController._dataOptions = defaultOptions;
-         assert.isTrue(cInstance.instanceOfModule(Search._private.getSearchController(searchController), 'Controls/Controllers/_SearchController'));
+         controller = Search._private.getSearchController(searchController);
+         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
+         assert.deepEqual(controller._options.sorting, []);
       });
 
       it('_search', function() {

@@ -1288,6 +1288,17 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         this._listViewModel.setMarkedKey(newKey);
         e.blockUpdate = true;
+
+        // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+        // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+        // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
+        // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
+        var target = originalEvent.target;
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender')) {
+            this._focusTimeout = setTimeout(() => {
+                this._children.fakeFocusElem.focus();
+            }, 0);
+        }
     },
 
     _viewResize: function() {
@@ -1372,15 +1383,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     self._itemDragData = itemData;
                 }
             });
-        }
-
-        // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
-        // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        var target = domEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true') {
-            this._focusTimeout = setTimeout(() => {
-                this._children.fakeFocusElem.focus();
-            }, 0);
         }
         event.blockUpdate = true;
     },

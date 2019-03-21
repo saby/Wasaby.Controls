@@ -253,7 +253,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   message: rk('Загрузка')
                };
                this._indicatorId = this._notify('showIndicator', [cfg], { bubbling: true });
-            } else {
+            } else if (this._indicatorId) {
                this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
                this._indicatorId = null;
             }
