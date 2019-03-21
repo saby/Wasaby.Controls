@@ -152,10 +152,9 @@ define('Controls/Popup/Previewer',
                if (!this._isPopupOpened()) {
                   this._debouncedAction('_open', [event]);
                }
+               event.preventDefault();
+               event.stopPropagation();
             }
-
-            event.preventDefault();
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
