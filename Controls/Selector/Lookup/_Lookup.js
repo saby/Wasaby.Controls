@@ -13,11 +13,10 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Utils/tmplNotify',
    'Core/helpers/Object/isEqual',
    'Controls/Selector/SelectedCollection/Utils',
-   'Controls/Utils/keysHandler',
    'Env/Env',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, keysHandler, Env) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
    'use strict';
 
    var
