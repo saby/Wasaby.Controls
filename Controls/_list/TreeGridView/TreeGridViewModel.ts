@@ -87,6 +87,11 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
             };
 
+           if (current.nodeFooter) {
+              current.nodeFooter.columns = current.columns;
+              current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
+           }
+
             return current;
         },
         _onNodeRemoved: function (event, nodeId) {

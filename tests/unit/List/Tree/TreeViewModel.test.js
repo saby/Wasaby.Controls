@@ -412,6 +412,35 @@ define([
             assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
          });
 
+         it('Node footer params', function() {
+            var
+               treeViewModel = new TreeViewModel(cMerge({
+                  expandedItems: [null]
+               }, cfg));
+            treeViewModel.setHasMoreStorage({
+               123: true,
+               234: true
+            });
+            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[0].');
+            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter, {
+               dispItem: treeViewModel._display.at(0),
+               hasMoreStorage: true,
+               item: treeViewModel._items.at(0),
+               key: treeViewModel._items.at(0).getId(),
+               level: 1,
+               multiSelectVisibility: cfg.multiSelectVisibility
+            }, 'Incorrect nodeFooter for displayItem[1].');
+            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
+            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter, {
+               dispItem: treeViewModel._display.at(1),
+               hasMoreStorage: true,
+               item: treeViewModel._items.at(1),
+               key: treeViewModel._items.at(1).getId(),
+               level: 2,
+               multiSelectVisibility: cfg.multiSelectVisibility
+            }, 'Incorrect nodeFooter for displayItem[4].');
+         });
+
          it('getFirstItem and getLastItem', function() {
             var
                cfg = {
