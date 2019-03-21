@@ -69,7 +69,9 @@
       },
 
       _beforeUpdate: function(options) {
-         this._model.update(options);
+         if (options.value !== this._options.value) {
+            this._model.update(options);
+         }
       },
 
       _inputCompletedHandler: function(event, value, textValue) {

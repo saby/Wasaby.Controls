@@ -37,12 +37,15 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             moduleClass.superclass.init.apply(this, arguments);
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
+            this._keydownHandler = this._keydownHandler.bind(this);
             this._onResultHandler = this._onResultHandler.bind(this);
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
+
+            this.getContainer().bind('keydown', this._keydownHandler);
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
@@ -90,6 +93,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                return def;
             });
+         },
+
+         _keydownHandler: function(e) {
+            if (!e.shiftKey && e.which === Env.constants.key.esc) {
+               e.stopPropagation();
+               this._onCloseHandler();
+            }
          },
 
          _createEventProperty: function(handler) {
@@ -261,6 +271,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
+            this.getContainer().unbind('keydown', this._keydownHandler);
             if (this._vDomTemplate) {
                var Sync = require('Vdom/Vdom').Synchronizer;
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);

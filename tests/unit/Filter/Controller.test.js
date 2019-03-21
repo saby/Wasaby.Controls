@@ -73,8 +73,9 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          }];
          filterLayout._beforeUpdate({ filterButtonSource: items });
          assert.deepEqual(filterLayout._filterButtonItems, items);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
-      
+
       it('_itemsChanged', function () {
          var filterLayout = new Filter();
          var items = [{

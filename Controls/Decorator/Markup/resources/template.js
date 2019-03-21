@@ -14,7 +14,9 @@ define('Controls/Decorator/Markup/resources/template', [
       dataAttributeRegExp = /^data-([\w-])*/,
       resolver,
       resolverParams,
-      resolverMode;
+      resolverMode,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      longSpaceRegExp = /\u00a0/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
@@ -36,6 +38,22 @@ define('Controls/Decorator/Markup/resources/template', [
       }
    }
 
+   // We are not ready to remove "decoratedlink". Old tasks and messages can still contain it.
+   // BL can't replace all "decoratedlink" with simple link, there are too many of them.
+   function replaceDecoratedLink(value) {
+      if (Array.isArray(value) && value[0] === 'decoratedlink' && value[1].href) {
+         // Value should be the same by link not to broke decorating with resolver.
+         value[0] = 'a';
+         value[1] = {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: value[1].href,
+            target: '_blank'
+         };
+         value[2] = value[1].href;
+      }
+   }
+
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
@@ -48,6 +66,7 @@ define('Controls/Decorator/Markup/resources/template', [
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
+      replaceDecoratedLink(valueToBuild);
       var children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
@@ -115,9 +134,15 @@ define('Controls/Decorator/Markup/resources/template', [
          // Protect view of text from needless unescape in inferno.
          oldEscape = markupGenerator.escape;
          markupGenerator.escape = function(str) {
-            return str.replace(/&([^&]*;)/g, function(match, entity) {
+            return str.replace(escapeVdomRegExp, function(match, entity) {
                return '&amp;' + entity;
             });
+         };
+      } else {
+         // Markup Converter should escape long space characters too.
+         oldEscape = markupGenerator.escape;
+         markupGenerator.escape = function(str) {
+            return oldEscape(str).replace(longSpaceRegExp, '&nbsp;');
          };
       }
       try {
@@ -125,9 +150,7 @@ define('Controls/Decorator/Markup/resources/template', [
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       } finally {
-         if (isVdom) {
-            markupGenerator.escape = oldEscape;
-         }
+         markupGenerator.escape = oldEscape;
       }
 
       if (!elements.length) {
