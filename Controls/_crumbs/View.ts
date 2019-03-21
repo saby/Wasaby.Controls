@@ -65,6 +65,7 @@ var BreadCrumbsView = Control.extend({
 
     _onResize: function () {
         this._children.menuOpener.close();
+       this._forceUpdate();
     },
 
     _onResult: function (args) {

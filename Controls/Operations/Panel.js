@@ -154,6 +154,7 @@ define('Controls/Operations/Panel', [
 
       _onResize: function() {
          _private.checkToolbarWidth(this);
+         this._forceUpdate();
       },
 
       _toolbarItemClick: function(event, item) {
