@@ -16,7 +16,10 @@ define('Controls/Popup/Opener/InfoBox/resources/template',
          },
          _sendResult: function(event) {
             this._notify('sendResult', [event], { bubbling: true });
-         }
+         },
 
+         _mousedownHandler: function(event) {
+            event.stopPropagation();
+         }
       });
    });
