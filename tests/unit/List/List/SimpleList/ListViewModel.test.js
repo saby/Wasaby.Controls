@@ -74,10 +74,18 @@ define([
          assert.exists(version, 'DRAG_ITEM');
 
          model._dragTargetPosition = {
-            item: item.item
+            item: item.item,
+            position: "AFTER"
          };
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'DRAG_POSITION');
+         assert.exists(version, 'DRAG_POSITION_AFTER');
+
+         model._dragTargetPosition = {
+            item: item.item,
+            position: "BEFORE"
+         };
+         version = model._calcItemVersion(item, item.key);
+         assert.exists(version, 'DRAG_POSITION_BEFORE');
       });
 
       it('getCurrent', function() {
