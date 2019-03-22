@@ -65,6 +65,7 @@ var BreadCrumbsView = Control.extend({
 
     _onResize: function () {
         this._children.menuOpener.close();
+        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
        this._forceUpdate();
     },
 

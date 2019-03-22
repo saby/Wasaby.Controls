@@ -11,6 +11,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
                var oldValue = self._value;
                self._value = value;
 
+               // если ничего не поменялось - не надо изменять версию
                if (oldValue !== value) {
                   self._nextVersion();
                }
@@ -24,6 +25,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
                self._displayValue = displayValue;
                self.selection = displayValue.length;
 
+               // если ничего не поменялось - не надо изменять версию
                if (oldValue !== displayValue) {
                   self._nextVersion();
                }

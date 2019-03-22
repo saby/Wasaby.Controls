@@ -42,6 +42,8 @@ import entity = require('Types/entity');
          updateOptions: function(options) {
             var oldValue = this._options.value;
             this._options.value = options.value;
+
+            // если ничего не поменялось - не надо изменять версию
             if (oldValue !== this._options.value) {
                this._nextVersion();
             }

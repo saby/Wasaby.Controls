@@ -449,12 +449,16 @@ define('Controls/Container/Scroll',
 
             _scrollbarTakenHandler: function() {
                this._showScrollbarOnHover = false;
+               // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+               // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
                this._forceUpdate();
             },
 
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
+                  // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+                  // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
                   this._forceUpdate();
                   event.preventDefault();
                }

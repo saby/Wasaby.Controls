@@ -20,6 +20,8 @@ import dateUtils = require('Controls/Utils/Date');
       updateValue: function(self, value) {
          var oldValue = self._value;
          self._value = value;
+
+         // если ничего не поменялось - не надо изменять версию
          if (oldValue !== value) {
             self._nextVersion();
          }
@@ -100,6 +102,8 @@ import dateUtils = require('Controls/Utils/Date');
          if (!dateUtils.isDatesEqual(this._value, newValue)) {
             var oldValue = this._value;
             this._value = newValue;
+
+            // если ничего не поменялось - не надо изменять версию
             if (oldValue !== newValue) {
                this._nextVersion();
             }

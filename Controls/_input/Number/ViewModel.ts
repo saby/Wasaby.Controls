@@ -123,6 +123,8 @@ import InputProcessor = require('Controls/_input/Number/InputProcessor');
             if (this._displayValue !== trimmedValue) {
                var oldValue = this._displayValue;
                this._displayValue = trimmedValue;
+
+               // если ничего не поменялось - не надо изменять версию
                if (oldValue !== trimmedValue) {
                   this._nextVersion();
                }
