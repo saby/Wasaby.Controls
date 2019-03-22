@@ -58,6 +58,8 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          return {
             width: width,
             height: height,
+            maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
+            maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width),
             left: left,
             top: top
          };
