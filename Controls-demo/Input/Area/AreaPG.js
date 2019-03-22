@@ -1,77 +1,36 @@
 define('Controls-demo/Input/Area/AreaPG',
    [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
+      'Core/core-merge',
+      'Controls-demo/Input/Text/TextPG',
+      'json!Controls-demo/Input/Area/Area',
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
       'css!Controls-demo/Input/Area/AreaPG'
    ],
 
-   function(Control, template, config) {
+   function(cMerge, Base, config) {
       'use strict';
-      var AreaPG = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Area',
-         _dataObject: null,
-         _componentOptions: null,
+
+      var _private = {
+         CONTENT: 'Controls/Input/Area'
+      };
+
+      var AreaPG = Base.extend({
+         _content: _private.CONTENT,
+
          _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               },
-               tagStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title'
-               },
-               newLineKey: {
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title'
-               },
-               constraint: {
-                  items: [
-                     { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
-                     { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
-                     { id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters' },
-                     { id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters' }
-                  ],
-                  config: {
-                     template: 'custom',
-                     value: 'title',
-                     comment: 'example'
-                  }
-               },
-               style: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
-               }
+            AreaPG.superclass._beforeMount.apply(this, arguments);
+
+            this._dataObject.newLineKey = {
+               placeholder: 'select',
+               keyProperty: 'id',
+               displayProperty: 'title'
             };
-            this._componentOptions = {
-               name: 'Area',
-               placeholder: 'Input text',
-               tagStyle: undefined,
-               constraint: '',
-               value: '',
-               trim: false,
-               maxLength: 100,
-               selectOnClick: true,
-               readOnly: false,
-               tooltip: 'myTooltip',
-               style: undefined,
-               minLines: 3,
-               maxLines: 6,
-               newLineKey: undefined
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+
+            this._componentOptions.name = 'InputArea';
+            this._componentOptions.minLines = 3;
+            this._componentOptions.maxLines = 6;
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
       return AreaPG;

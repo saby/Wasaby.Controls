@@ -1,62 +1,52 @@
 define('Controls-demo/Input/Text/TextPG',
    [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
-
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'Core/core-merge',
+      'Controls-demo/Input/Base/Base',
+      'json!Controls-demo/Input/Text/Text'
    ],
 
-   function(Control, template, config) {
+   function(cMerge, Base, config) {
       'use strict';
-      var TextPG = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Text',
-         _dataObject: null,
-         _componentOptions: null,
-         _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               },
-               tagStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  selectedKey: 0
-               },
 
-               constraint: {
-                  updateInitiator: 'inputCompleted',
-                  items: [
-                     { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
-                     { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
-                     { id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters' },
-                     { id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters' }
-                  ],
-                  config: {
-                     template: 'custom',
-                     value: 'title',
-                     comment: 'example'
+      var _private = {
+         CONTENT: 'Controls/Input/Text'
+      };
+
+      var TextPG = Base.extend({
+         _content: _private.CONTENT,
+
+         _beforeMount: function() {
+            TextPG.superclass._beforeMount.apply(this, arguments);
+
+            this._dataObject.constraint = {
+               updateInitiator: 'inputCompleted',
+               items: [
+                  {
+                     id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits'
+                  },
+                  {
+                     id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters'
+                  },
+                  {
+                     id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters'
+                  },
+                  {
+                     id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters'
                   }
+               ],
+               config: {
+                  template: 'custom',
+                  value: 'title',
+                  comment: 'example'
                }
             };
-            this._componentOptions = {
-               name: 'TextBox',
-               placeholder: 'Input text',
-               tagStyle: 'primary',
-               constraint: '',
-               trim: false,
-               value: '',
-               maxLength: 100,
-               selectOnClick: true,
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+
+            this._componentOptions.trim = false;
+            this._componentOptions.maxLength = 100;
+            this._componentOptions.constraint = '';
+            this._componentOptions.name = 'InputText';
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
       return TextPG;

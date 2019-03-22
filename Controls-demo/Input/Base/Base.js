@@ -1,13 +1,18 @@
 define('Controls-demo/Input/Base/Base',
    [
       'Core/Control',
+      'json!Controls-demo/Input/Base/Base',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/Input/Base/Base'
+
+      'css!Controls-demo/Input/Base/Base'
    ],
 
-   function(Control, template, config) {
-
+   function(Control, config, template) {
       'use strict';
+
+      var _private = {
+         CONTENT: 'Controls/Input/Base'
+      };
 
       var Base = Control.extend({
          _template: template,
@@ -18,7 +23,7 @@ define('Controls-demo/Input/Base/Base',
 
          _componentOptions: null,
 
-         _content: 'Controls/Input/Base',
+         _content: _private.CONTENT,
 
          _beforeMount: function() {
             this._dataObject = {
@@ -27,7 +32,7 @@ define('Controls-demo/Input/Base/Base',
                   placeholder: 'select',
                   keyProperty: 'id',
                   displayProperty: 'title',
-                  selectedKey: 1
+                  selectedKey: 3
                },
                style: {
                   emptyText: 'none',
@@ -58,20 +63,19 @@ define('Controls-demo/Input/Base/Base',
                }
             };
             this._componentOptions = {
-               name: 'BaseField',
-               placeholder: 'Text...',
                value: '',
-               size: undefined,
-               style: undefined,
-               tagStyle: undefined,
-               readOnly: undefined,
-               fontStyle: undefined,
-               textAlign: undefined
+               name: 'InputBase',
+               style: 'info',
+               size: 'default',
+               textAlign: 'left',
+               fontStyle: 'default',
+               placeholder: 'Text...',
+               readOnly: false,
+               selectOnClick: true
             };
-            this._metaData = config[this._content].properties['ws-config'].options;
+            this._metaData = config[_private.CONTENT].properties['ws-config'].options;
          }
       });
 
       return Base;
-   }
-);
+   });

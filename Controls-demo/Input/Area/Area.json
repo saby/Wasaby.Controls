@@ -1,0 +1,23 @@
+{
+  "Controls/Input/Area": {
+    "properties": {
+      "ws-config": {
+        "options": {
+          "minLines": {
+            "type": "Number"
+          },
+          "maxLines": {
+            "type": "Number"
+          },
+          "newLineKey": {
+            "type": "enum",
+            "enum": {
+              "enter": "When user presses Enter.",
+              "ctrlEnter": "When user presses Ctrl + Enter."
+            }
+          }
+        }
+      }
+    }
+  }
+}
