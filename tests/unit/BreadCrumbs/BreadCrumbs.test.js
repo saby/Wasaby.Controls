@@ -1,5 +1,5 @@
 define([
-   'Controls/crumbs',
+   'Controls/breadcrumbs',
    'Types/entity'
 ], function(
    crumbs,
