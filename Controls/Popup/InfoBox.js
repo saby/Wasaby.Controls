@@ -55,23 +55,26 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @name Controls/Popup/InfoBox#position
-       * @cfg {String} Point positioning of the target relative to infobox.
-       * Popup displayed on the top of the target and aligned by left border.
-       * @variant tl Popup displayed on the top of the target and aligned by left border.
-       * @variant tc Popup displayed on the top of the target and aligned by center.
-       * @variant tr Popup displayed on the top of the target and aligned by right border.
-       * @variant bl Popup displayed on the bottom of the target and aligned by left border.
-       * @variant bc Popup displayed on the bottom of the target and aligned by center.
-       * @variant br Popup displayed on the bottom of the target and aligned by right border.
-       * @variant rt Popup displayed on the right of the target and aligned by top border.
-       * @variant rc Popup displayed on the right of the target and aligned by center.
-       * @variant rb Popup displayed on the right of the target and aligned by bottom border.
-       * @variant lt Popup displayed on the left of the target and aligned by top border.
-       * @variant lc Popup displayed on the left of the target and aligned by center.
-       * @variant lb Popup displayed on the left of the target and aligned by bottom border
-       * @default tl
+       * @name Controls/Popup/InfoBox#targetSide
+       * @cfg {String} Side positioning of the target relative to infobox.
+       * Popup displayed on the top of the target.
+       * @variant top Popup displayed on the top of the target.
+       * @variant bottom Popup displayed on the bottom of the target.
+       * @variant left Popup displayed on the left of the target.
+       * @variant right Popup displayed on the right of the target.
+       * @default top
        */
+
+      /**
+       * @name Controls/Popup/InfoBox#alignment
+       * @cfg {String} Alignment of the infobox relative to target
+       * Popup aligned by start of the target.
+       * @variant start Popup aligned by start of the target.
+       * @variant center Popup aligned by center of the target.
+       * @variant end Popup aligned by end of the target.
+       * @default start
+       */
+
       /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
@@ -120,6 +123,10 @@ define('Controls/Popup/InfoBox',
        * @cfg {String} Infobox display style.
        * @variant default
        * @variant danger
+       * @variant warning
+       * @variant info
+       * @variant secondary
+       * @variant success
        */
 
 
@@ -130,7 +137,10 @@ define('Controls/Popup/InfoBox',
                target: self._container,
                template: OpenerTemplate,
                position: self._options.position,
+               targetSide: self._options.targetSide,
+               alignment: self._options.alignment,
                style: self._options.style,
+               styleType: self._options.styleType,
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler,
@@ -316,7 +326,10 @@ define('Controls/Popup/InfoBox',
       InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
+            targetSide: 'top',
+            alignment: 'start',
             style: 'default',
+            styleType: 'outline',
             showDelay: 300,
             hideDelay: 300,
             trigger: 'hover'

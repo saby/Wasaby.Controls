@@ -20,20 +20,21 @@ define('Controls/Popup/InfoBox/InfoboxStyles', [],
     * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
     *
     * @css @background-color_Infobox_default Default background color.
-    * @css @background-color_Infobox_lite Background color when option style is set to lite.
-    * @css @background-color_Infobox_help Background color when option style is set to help.
-    * @css @background-color_Infobox_error Background color when option style is set to error.
     *
     * @css @border-color_Infobox_default Default border color.
-    * @css @border-color_Infobox_lite Border color when option style is set to lite.
-    * @css @border-color_Infobox_help Border color when option style is set to help.
-    * @css @border-color_Infobox_error Border color when option style is set to error.
+    * @css @border-color_Infobox_danger Border color when option style is set to danger.
+    * @css @border-color_Infobox_info Border color when option style is set to info.
+    * @css @border-color_Infobox_warning Border color when option style is set to warning.
+    * @css @border-color_Infobox_success Border color when option style is set to success.
+    * @css @border-color_Infobox_secondary Border color when option style is set to secondary.
     * @css @border-width_Infobox Thickness of border.
     *
     * @css @color_Infobox-shadow_default Default color of shadow.
-    * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
-    * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
-    * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
+    * @css @color_Infobox-shadow_danger Color of shadow when option style is set to danger.
+    * @css @color_Infobox-shadow_info Color of shadow when option style is set to info.
+    * @css @color_Infobox-shadow_warning  Color of shadow when option style is set to warning.
+    * @css @color_Infobox-shadow_success  Color of shadow when option style is set to success.
+    * @css @color_Infobox-shadow_secondary  Color of shadow when option style is set to secondary.
     * @css @box-shadow_Infobox Size of shadow.
     */
 );

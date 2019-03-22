@@ -29,6 +29,8 @@
       height: @size_Infobox-arrow;
       position: absolute;
       border: @border-width_Infobox solid;
+      background: @background-color_Infobox_default;
+      border-color: @border-color_Infobox_default;
       border-top: none;
       border-left: none;
       content: '';
@@ -154,48 +156,31 @@
    float: right;
 }
 
-.controls-InfoBox-style-default {
-   background: @background-color_Infobox_default;
-   border-color: @border-color_Infobox_default;
-   box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
-
-   &.controls-InfoBox__popup:before {
+.controls-InfoBox_style_outline {
+   @variants: default,  danger, info, secondary, warning, success;
+   .for(@variants, { &_@{_item} {
       background: @background-color_Infobox_default;
+      box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
+      border-color: ~"@{border-color_Infobox_@{_item}}";
+
+      &.controls-InfoBox__popup:before {
+         border-color: ~"@{border-color_Infobox_@{_item}}";
+      }
+   } });
+}
+
+.controls-InfoBox_style_marker {
+   @variants: default,  danger, info, secondary, warning, success;
+   .for(@variants, { &_@{_item} {
+      background: @background-color_Infobox_default;
+      box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
       border-color: @border-color_Infobox_default;
-   }
-}
+      border-top-color: ~"@{border-color_Infobox_@{_item}}";
 
-.controls-InfoBox-style-secondary {
-   background: @background-color_Infobox_secondary;
-   border-color: @border-color_Infobox_secondary;
-   box-shadow: @color_Infobox-shadow_secondary @box-shadow_Infobox;
-
-   &.controls-InfoBox__popup:before {
-      background: @background-color_Infobox_secondary;
-      border-color: @border-color_Infobox_secondary;
-   }
-}
-
-.controls-InfoBox-style-primary {
-   background: @background-color_Infobox_primary;
-   border-color: @border-color_Infobox_primary;
-   box-shadow: @color_Infobox-shadow_primary @box-shadow_Infobox;
-
-   &.controls-InfoBox__popup:before {
-      background: @background-color_Infobox_primary;
-      border-color: @border-color_Infobox_primary;
-   }
-}
-
-.controls-InfoBox-style-danger {
-   background: @background-color_Infobox_danger;
-   border-color: @border-color_Infobox_danger;
-   box-shadow: @color_Infobox-shadow_danger @box-shadow_Infobox;
-
-   &.controls-InfoBox__popup:before {
-      background: @background-color_Infobox_danger;
-      border-color: @border-color_Infobox_danger;
-   }
+      &.controls-Popup-corner-vertical-bottom.controls-Popup-align-vertical-bottom:before {
+         border-color: ~"@{border-color_Infobox_@{_item}}";
+      }
+   } });
 }
 
 /*
