@@ -91,6 +91,7 @@ var TileView = ListView.extend({
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         this._notify('register', ['scroll', this, this._onScroll], {bubbling: true});
+        TileView.superclass._afterMount.apply(this, arguments);
     },
 
     _onResize: function () {
@@ -107,6 +108,7 @@ var TileView = ListView.extend({
         if (this._options.itemsHeight !== newOptions.itemsHeight) {
             this._listModel.setItemsHeight(newOptions.itemsHeight);
         }
+        TileView.superclass._beforeUpdate.apply(this, arguments);
     },
 
     _afterUpdate: function () {
@@ -147,6 +149,7 @@ var TileView = ListView.extend({
             }
         }
         _private.clearMouseMoveTimeout(this);
+        TileView.superclass._onItemMouseLeave.apply(this, arguments);
     },
 
     _onItemMouseMove: function (event, itemData) {
@@ -155,6 +158,7 @@ var TileView = ListView.extend({
 
             this._calculateHoveredItemPosition(event, itemData);
         }
+        TileView.superclass._onItemMouseMove.apply(this, arguments);
     },
 
     _calculateHoveredItemPosition: function (event, itemData) {
