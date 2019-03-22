@@ -388,7 +388,7 @@ define([
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
-               ['p', linkNode, nbsp + '   '],
+               ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
                ['p', linkNode, ['br'], 'text'],
@@ -408,7 +408,7 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
-               '<p>' + decoratedLinkHtml + nbsp + '   </p>' +
+               '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +

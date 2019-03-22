@@ -144,7 +144,7 @@ define('Controls/Filter/Button',
                   items: self._options.items,
                   historyId: self._options.historyId
                },
-               locationStrategy: 'fixed',
+               fittingMode: 'fixed',
                template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                target: self._children.panelTarget
             };

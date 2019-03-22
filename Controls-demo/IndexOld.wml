@@ -199,6 +199,10 @@
    <div class="demo_controls_list_section">
       <h1>InfoBox</h1>
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBox">InfoBox</a>
+      <br />
+      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBoxPG">InfoBox PG</a>
+       <br />
+      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FOpener%252FInfoBox">Opener/InfoBox</a>
 
       <h1>Confirmation</h1>
       <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">
@@ -235,7 +239,6 @@
    </div>
    <div class="demo_controls_list_section">
       <h1>FastFilter</h1>
-      %252F
       <a href="/Controls-demo/app/Controls-demo%252FFastFilter%252FFastFilter?withoutLayout=true">
          FastData
       </a>

@@ -9,14 +9,14 @@ define('Controls-demo/Popup/Edit/MyFormController',
       'Types/source',
       'css!Controls-demo/Popup/Edit/MyFormController'
    ],
-   function (Control, GridData, template, source) {
+   function(Control, GridData, template, source) {
       'use strict';
 
       var MyFormController = Control.extend({
          _template: template,
          _record: null,
          _key: null,
-         _beforeMount: function (options) {
+         _beforeMount: function(options) {
             this._record = options.record;
             this._dataSource = new source.Memory({
                idProperty: 'id',
@@ -30,19 +30,19 @@ define('Controls-demo/Popup/Edit/MyFormController',
             }
          },
 
-         _update: function () {
+         _update: function() {
             return this._children.formControllerInst.update();
          },
 
-         _delete: function () {
+         _delete: function() {
             return this._children.formControllerInst.delete();
          },
 
-         _readSuccessedHandler: function (event, record) {
+         _readSuccessedHandler: function(event, record) {
             this._record = record;
          },
 
-         _createSuccessedHandler: function (event, record) {
+         _createSuccessedHandler: function(event, record) {
             this._record = record;
          },
          _updateSuccessedHandler: function(event, record) {
@@ -60,9 +60,14 @@ define('Controls-demo/Popup/Edit/MyFormController',
                type: 'ok'
             };
             this._children.popupOpener.open(cfg);
+         },
+         _sendResult: function() {
+            this._notify('sendResult', ['arg1', 'args2', 'arg3'], { bubbling: true });
+         },
+         openTestStack: function() {
+            this._children.stack.open();
          }
       });
 
       return MyFormController;
-   }
-);
+   });

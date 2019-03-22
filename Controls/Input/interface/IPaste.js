@@ -5,7 +5,7 @@ define('Controls/Input/interface/IPaste', [], function() {
     *
     * @interface Controls/Input/interface/IPaste
     * @public
-    * @author Колесова П.С.
+    * @author Журавлев М.С.
     */
 
    /**
