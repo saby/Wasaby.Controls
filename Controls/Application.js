@@ -8,7 +8,6 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Env/Env',
-      'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'Core/LinkResolver/LinkResolver',
       'View/Request',
@@ -117,7 +116,6 @@ define('Controls/Application',
       Deferred,
       BodyClasses,
       Env,
-      AppData,
       ScrollContext,
       LinkResolver,
       Request,
@@ -342,13 +340,6 @@ define('Controls/Application',
             }
          }
       });
-
-
-      Page.contextTypes = function contextTypes() {
-         return {
-            AppData: AppData
-         };
-      };
 
       return Page;
    });
