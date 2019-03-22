@@ -397,10 +397,11 @@ define(
             let id3 = Manager.show({
                testOption: 'created'
             }, new BaseController());
-
             Manager._mouseDownHandler();
             Manager._contentClick({});
-
+            assert.equal(deactivatedCount, 0);
+            Manager._private.popupItems = null;
+            Manager._contentClick({});
             assert.equal(deactivatedCount, 0);
             Manager.destroy();
          });
