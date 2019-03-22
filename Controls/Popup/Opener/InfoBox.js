@@ -49,6 +49,7 @@ define('Controls/Popup/Opener/InfoBox',
       // Default popup configuration
       var DEFAULT_CONFIG = {
          style: 'default',
+         position: 'tl',
          targetSide: 'top',
          alignment: 'start',
          floatCloseButton: false,
@@ -165,7 +166,10 @@ define('Controls/Popup/Opener/InfoBox',
                Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
             }
             newCfg.style = _private.prepareDisplayStyle(cfg.style);
-            newCfg.position = _private.preparePosition(cfg.targetSide, cfg.alignment);
+
+            if (cfg.targetSide || cfg.alignment) {
+               newCfg.position = _private.preparePosition(cfg.targetSide, cfg.alignment);
+            }
 
             if (newCfg.showDelay > 0) {
                this._openId = setTimeout(this._open.bind(this, newCfg), newCfg.showDelay);
