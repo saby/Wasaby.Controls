@@ -133,10 +133,15 @@ var _private = {
         }
     },
     restoreScrollPosition: function(self) {
-        if (self._oldScrollHeight) {
-            const elem = self._container.closest('.controls-Scroll__content');
-            elem.scrollTop = elem.scrollHeight - self._oldScrollHeight;
-            self._oldScrollHeight = null;
+        if (self._hasSavedScrollPosition) {
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+            self._notify('restoreScrollPosition', [], {
+                bubbling: true
+            });
+            self._hasSavedScrollPosition = false;
             return;
         }
 
@@ -189,8 +194,14 @@ var _private = {
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
         if (direction === 'up') {
-           const elem = self._container.closest('.controls-Scroll__content');
-           self._oldScrollHeight = elem.scrollHeight;
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+           self._notify('saveScrollPosition', [], {
+               bubbling: true
+           });
+           self._hasSavedScrollPosition = true;
         }
 
         _private.showIndicator(self, direction);

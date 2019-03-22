@@ -707,15 +707,6 @@ define([
          var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-         ctrl._container = {
-            closest: function(selector) {
-               if (selector === '.controls-Scroll__content') {
-                  return {
-                     scrollHeight: 10
-                  };
-               }
-            }
-         };
 
          setTimeout(function() {
             BaseControl._private.loadToDirection(ctrl, 'up');
