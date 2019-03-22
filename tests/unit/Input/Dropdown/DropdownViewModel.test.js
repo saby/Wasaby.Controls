@@ -3,9 +3,10 @@ define(
       'Controls/Dropdown/resources/DropdownViewModel',
       'Types/collection',
       'Controls/Constants',
-      'Types/entity'
+      'Types/entity',
+      'Core/core-clone'
    ],
-   (DropdownViewModel, collectionLib, ControlsConstants, entity) => {
+   (DropdownViewModel, collectionLib, ControlsConstants, entity, Clone) => {
       describe('DropdownViewModel', () => {
          let rs = new collectionLib.RecordSet({
             idProperty: 'id',
@@ -79,7 +80,7 @@ define(
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: '@parent',
-            selectedKeys: '3',
+            selectedKeys: ['3'],
             rootKey: null
          };
          const config2 = {
@@ -158,10 +159,21 @@ define(
             assert.isTrue(checkData);
          });
 
-         it('setSelectedKeys', () => {
-            let keys = [1, 2, 3, 4];
-            viewModel.setSelectedKeys(keys);
-            assert.deepEqual(keys, viewModel._options.selectedKeys);
+         it('_private::updateSelection', function() {
+            let configSelection = Clone(config);
+            configSelection.selectedKeys = ['1', '3', '5'];
+            let expectedKeys = [ '1', '3', '5', '6' ];
+            let viewModelSelection = new DropdownViewModel(configSelection);
+            viewModelSelection.updateSelection(rs.at(5));
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = [ '1', '3', '5', '6', '2' ];
+            viewModelSelection.updateSelection(rs.at(1));
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = ['1', '3', '5', '6'];
+            viewModelSelection.updateSelection(rs.at(1));
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
          });
          describe('Groups and separator', function() {
                let newConfig = {
