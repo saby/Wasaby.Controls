@@ -215,6 +215,11 @@ define('Controls/Popup/Opener/BaseOpener',
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
+            if (baseCfg.hasOwnProperty('locationStrategy')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
+               baseCfg.fittingMode = baseCfg.locationStrategy;
+            }
+
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
             baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
             this._prepareNotifyConfig(baseCfg);
