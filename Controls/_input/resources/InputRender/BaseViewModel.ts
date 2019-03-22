@@ -40,8 +40,11 @@ import entity = require('Types/entity');
          },
 
          updateOptions: function(options) {
+            var oldValue = this._options.value;
             this._options.value = options.value;
-            this._nextVersion();
+            if (oldValue !== this._options.value) {
+               this._nextVersion();
+            }
          }
       });
    
