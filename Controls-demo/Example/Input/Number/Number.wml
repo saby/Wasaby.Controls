@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">With tooltip inside</div>
-                     <Controls.Input.Number placeholder="Count"
+                     <Controls.Input.Number placeholder="Count" class="withTooltip"
                                             precision="{{0}}"
                                             bind:value="_value1"/>
                   </div>
@@ -19,7 +19,7 @@
                         <p>Input of integers with a set range</p>
                         <p>(0-999)</p>
                      </div>
-                     <Controls.Input.Number placeholder="Count"
+                     <Controls.Input.Number placeholder="Count" class="withRange"
                                             precision="{{0}}"
                                             integersLength="{{3}}"
                                             onlyPositive="{{true}}"
@@ -31,7 +31,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Input of integer and fractional part</div>
-                     <Controls.Input.Number placeholder="Count"
+                     <Controls.Input.Number placeholder="Count" class="fractionalPart"
                                             precision="{{2}}"
                                             textAlign="right"
                                             bind:value="_value3"/>
