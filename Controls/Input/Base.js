@@ -340,15 +340,17 @@ define('Controls/Input/Base',
          },
 
          getTextWidthThroughCreationElement: function(value) {
-            var element = document.createElement('div');
-            element.classList.add('controls-InputBase__forCalc');
-            element.innerHTML = value;
+            if (document) {
+               var element = document.createElement('div');
+               element.classList.add('controls-InputBase__forCalc');
+               element.innerHTML = value;
 
-            document.body.appendChild(element);
-            var width = element.scrollWidth;
-            document.body.removeChild(element);
-
-            return width;
+               document.body.appendChild(element);
+               var width = element.scrollWidth;
+               document.body.removeChild(element);
+               return width;
+            }
+            return 0;
          }
       };
 
@@ -519,7 +521,7 @@ define('Controls/Input/Base',
           * @private
           */
          _getActiveElement: function() {
-            return document.activeElement;
+            return document && document.activeElement;
          },
 
          constructor: function(cfg) {
