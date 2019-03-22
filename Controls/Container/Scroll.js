@@ -449,11 +449,13 @@ define('Controls/Container/Scroll',
 
             _scrollbarTakenHandler: function() {
                this._showScrollbarOnHover = false;
+               this._forceUpdate();
             },
 
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
+                  this._forceUpdate();
                   event.preventDefault();
                }
             },
