@@ -63,6 +63,9 @@ define('Controls-demo/Popup/Edit/MyFormController',
          },
          _sendResult: function() {
             this._notify('sendResult', ['arg1', 'args2', 'arg3'], { bubbling: true });
+         },
+         openTestStack: function() {
+            this._children.stack.open();
          }
       });
 
