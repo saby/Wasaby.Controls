@@ -277,17 +277,20 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
       });
    
       it('_filterChanged', function() {
-         var filterLayout = new Filter();
-         var filterChangedNotifyed = false;
-         var resultFilter = {test: 'test'};
-         filterLayout._notify = function() {
+         let filterLayout = new Filter();
+         let filterChangedNotifyed = false;
+         let resultFilter = {test: 'test'};
+         let propagationStopped = false;
+         
+         filterLayout._notify = () => {
             filterChangedNotifyed = true;
          };
          
-         filterLayout._filterChanged(null, {test: 'test'});
+         filterLayout._filterChanged({stopPropagation: () => {propagationStopped = true}}, {...resultFilter});
          
          assert.deepEqual(filterLayout._filter, resultFilter);
          assert.isTrue(filterChangedNotifyed);
+         assert.isTrue(propagationStopped);
       });
    
       it('_private.updateFilterItems', function() {
