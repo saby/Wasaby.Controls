@@ -1,7 +1,7 @@
 /// <amd-module name="Controls/_progress/StateIndicator" />
 /**
  * Progress state indicator
- * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/materials/demo/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator 
  * @extends Core/Control
  * @author Колесов В.А.
@@ -30,8 +30,35 @@
  * @demo Controls-demo/StateIndicator/StateIndicatorDemo
  */
 
+/**
+ * @name Controls/_progress/StateIndicator#scale
+ * @cfg {Number} Defines percent count shown by each sector. 
+ * @remark
+ * An integer from 1 to 100. 
+ * @example       
+ * Scale of 5 will set indicator with 20 sectors 
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator scale="{{5}}"/>      
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} IndicatorCategory
+ * @property {Number} value=0 Percents of the corresponding category
+ * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
+ * @property {String} title='' category note
+ */
+ 
+/**
+ * @name Controls/_progress/StateIndicator#data
+ * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>      
+ * </pre>
+ */
 import Control = require('Core/Control');
 import entity = require('Types/entity');
+import env = require('Env/Env');
 import template = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 
 var defaultColors = [
@@ -105,10 +132,10 @@ var defaultColors = [
          var sum = 0;  
 
          if (isNaN(opts.scale)) {
-            throw new Error('Scale [' + opts.scale + '] is incorrect, it is non-numeric value');
-         }    
-         if (opts.scale > 100 || opts.scale < 1) {
-            throw new Error('Scale [' + opts.scale + '] is incorrect, it must be an integer in range [1..100]');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value');
+         }
+         if (opts.scale > 100 || opts.scale < 1) {           
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be an integer in range [1..100]');
          }         
        
          sum = opts.data.map(Object).reduce(function(sum, d) {
@@ -116,19 +143,18 @@ var defaultColors = [
             }, 0);
             
          if (isNaN(sum)) {
-            throw new Error('Data [' + opts.data + '] is incorrect, it contains non-numeric values');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect, it contains non-numeric values');            
          }
          if (sum > 100) {
-            throw new Error('Data [' + opts.data + '] is incorrect. Values total is greater than 100%');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect. Values total is greater than 100%');            
          }
       }
    };
    
-var StateIndicator = Control.extend(
+var StateIndicator = Control.extend( 
    {
-
       /**
-       * @event _mouseEnterIndicatorHandler appears when mouse enters sectors of indicator
+       * @event itemEnter appears when mouse enters sectors of indicator
        * @param {Env/Event:Object} eventObject event descriptor.              
        * 
        */
@@ -142,7 +168,8 @@ var StateIndicator = Control.extend(
       },
 
       _beforeUpdate: function(opts) {
-         this.applyNewState(opts);
+         if (opts.data!==this._options.data||opts.scale!==this._options.scale)
+            this.applyNewState(opts);
       },
 
       _mouseEnterIndicatorHandler: function(e) {
@@ -163,31 +190,8 @@ var StateIndicator = Control.extend(
 
 StateIndicator.getDefaultOptions = function getDefaultOptions() {
    return {
-      theme: "default",
-      /**
-       * @cfg {Number} Defines percent count shown by each sector. 
-       * @remark
-       * An integer from 1 to 100. 
-       * @example       
-       * Scale of 5 will set indicator with 20 sectors 
-       * <pre class="brush:html">
-       *   <Controls.progress:StateIndicator scale="{{5}}"/>      
-       * </pre>
-       */
-      scale: 10,
-
-      /**
-       * @typedef {Object} IndicatorCategory
-       * @property {Number} value=0 Percents of the corresponding category
-       * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
-       * @property {String} title='' category note
-       */
-      /**
-       * @cfg {Array.<IndicatorCategory>} Array of indicator categories
-       * <pre class="brush:html">
-       *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>      
-       * </pre>
-       */
+      theme: "default",      
+      scale: 10,      
       data: [{value:0, title:'', className:''}],
    };
 };

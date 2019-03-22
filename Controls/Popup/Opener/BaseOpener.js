@@ -9,7 +9,8 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-merge',
       'Env/Env',
       'Core/Deferred',
-      'Core/helpers/isNewEnvironment'
+      'Core/helpers/isNewEnvironment',
+      'Core/library'
    ],
    function(
       Control,
@@ -21,7 +22,8 @@ define('Controls/Popup/Opener/BaseOpener',
       CoreMerge,
       Env,
       Deferred,
-      isNewEnvironment
+      isNewEnvironment,
+      library
    ) {
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
@@ -114,38 +116,37 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          // Lazy load template
+
+         /**
+          *
+          * @param config
+          * @param controller
+          * @return {Promise.<{template: Function; controller: Function}>}
+          * @private
+          */
          _requireModules: function(config, controller) {
-            if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return this._openerListDeferred;
+            var self = this;
+            if (this._requireModulesPromise) {
+               return this._requireModulesPromise;
             }
-
-            var deps = [];
-            if (this._needRequireModule(config.template)) {
-               deps.push(config.template);
-            }
-            if (this._needRequireModule(controller)) {
-               deps.push(controller);
-            }
-
-            if (deps.length) {
-               this._openerListDeferred = new Deferred();
-               requirejs(deps, function() {
-                  this._openerListDeferred.callback(this._getRequiredModules(config.template, controller));
-               }.bind(this));
-               return this._openerListDeferred;
-            }
-            return (new Deferred()).callback(this._getRequiredModules(config.template, controller));
+            return Promise.all([
+               self._requireModule(config.template),
+               self._requireModule(controller)
+            ]).then(function(results) {
+               return {
+                  template: results[0],
+                  controller: results[1]
+               };
+            });
          },
 
-         _needRequireModule: function(module) {
-            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
-         },
-
-         _getRequiredModules: function(template, controller) {
-            return {
-               template: typeof template === 'string' ? requirejs(template) : template,
-               controller: typeof controller === 'string' ? requirejs(controller) : controller
-            };
+         /**
+          * @param {String | Function} module
+          * @return {Promise.<Function>}
+          * @private
+          */
+         _requireModule: function(module) {
+            return typeof module === 'string' ? library.load(module) : Promise.resolve(module);
          },
 
          _getConfig: function(popupOptions) {
@@ -213,6 +214,11 @@ define('Controls/Popup/Opener/BaseOpener',
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
+            }
+
+            if (baseCfg.hasOwnProperty('locationStrategy')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
+               baseCfg.fittingMode = baseCfg.locationStrategy;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control

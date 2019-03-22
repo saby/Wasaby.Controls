@@ -68,6 +68,10 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
 
+   <Controls.Popup.Opener.Stack name="childStack" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
+      <ws:templateOptions type="stack" />
+   </Controls.Popup.Opener.Stack>
+
    <Controls.Popup.Opener.Stack name="openStackWithFormController">
       <ws:popupOptions template="Controls-demo/FormController/FormController" closeByExternalClick="{{true}}">
          <ws:templateOptions type="stack"/>
@@ -100,6 +104,9 @@
    <div>
       <Controls.buttons:Button name="notifyButton" caption="notifyStack" on:click="openNotifyStack()" attr:class="ControlsDemo-PopupPage__notifyStackButton"/>
       <span class="ControlsDemo-PopupPage__notifyStackText">{{ _notifyStackText }}</span>
+   </div>
+   <div>
+      <Controls.buttons:Button name="childButton" caption="childStack" on:click="openChildStack()" attr:class="ControlsDemo-PopupPage__childStackButton"/>
    </div>
    <div>
       <Controls.buttons:Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>

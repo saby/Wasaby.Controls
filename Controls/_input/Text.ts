@@ -9,20 +9,14 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
        * <a href="/materials/demo-ws4-input">Demo examples.</a>.
        *
        * @class Controls/_input/Text
-       * @extends Core/Control
+       * @extends Controls/_input/Base
        *
-       * @mixes Controls/_input/interface/IInputTag
-       * @mixes Controls/_input/interface/IInputField
        * @mixes Controls/_input/interface/IInputText
-       * @mixes Controls/_input/interface/IPaste
-       * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        *
        * @public
        * @demo Controls-demo/Input/Text/TextPG
        *
-       * @author Колесова П.С.
+       * @author Журавлев М.С.
        */
 
       var _private = {

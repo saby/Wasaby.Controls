@@ -178,10 +178,18 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
-         
+
+         var
+            markedKeyChangedCalled = false,
+            cb = function() {
+               markedKeyChangedCalled = true;
+            };
+         model.subscribe('onMarkedKeyChanged', cb);
          assert.equal(modelWithoutItems._markedKey, null);
          modelWithoutItems.setItems(items);
          assert.equal(modelWithoutItems._markedKey, 1);
+         model.unsubscribe('onMarkedKeyChanged', cb);
+         assert.isFalse(markedKeyChangedCalled);
       });
 
       it('should set markerFrom state', function () {

@@ -83,7 +83,7 @@ define('Controls/Container/Suggest/__PopupLayer',
             this._popupOptions.horizontalAlign = position.horizontalAlign;
             this._popupOptions.corner = position.corner;
             this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
-            this._popupOptions.locationStrategy = 'fixed';
+            this._popupOptions.fittingMode = 'fixed';
          }
 
       });
