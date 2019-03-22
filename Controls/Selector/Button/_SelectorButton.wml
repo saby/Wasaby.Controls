@@ -9,7 +9,8 @@
               on:itemClick="_itemClickHandler()"
               on:crossClick="_crossClick()">
          <ws:itemTemplate>
-            <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect}}"></ws:partial>
+            <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect && !_options.readOnly}}"
+                        attr:class="{{!_options.multiSelect && !_options.readOnly ? 'controls-Selectorbutton_single_item'}}"/>
          </ws:itemTemplate>
       </Controls.Selector.SelectedCollection>
       <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
