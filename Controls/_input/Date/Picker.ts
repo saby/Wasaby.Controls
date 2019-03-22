@@ -12,12 +12,11 @@ import 'css!theme?Controls/_input/Date/Picker/Picker';
     *
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
-    * @mixes Controls/_input/interface/IInputBase
-    * @mixes Controls/_input/interface/IInputField
     * @mixes Controls/_input/interface/IInputDateTime
-    * @mixes Controls/_input/interface/IInputTag
     * @mixes Controls/_input/interface/IDateMask
-    * @mixes Controls/_input/interface/IValidation
+    * @mixes Controls/_input/interface/IInputTag
+    * @mixes Controls/_input/interface/IInputBase
+    * @mixes Controls/_input/interface/IInputPlaceholder
     *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
     *

@@ -18,16 +18,10 @@ import 'css!Controls/_input/Mask/Mask';
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/_input/Mask
-       * @extends Core/Control
-       * @mixes Controls/_input/interface/IInputTag
+       * @extends Control/_input/Base
        * @mixes Controls/_input/interface/IInputMaskValue
-       * @mixes Controls/_input/interface/IValidation
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
-       * @control
        * @public
        * @author Миронов А.Ю.
-       * @category Input
        * @demo Controls-demo/Input/Mask/MaskPG
        */
 
@@ -100,19 +94,6 @@ import 'css!Controls/_input/Mask/Mask';
        * tmpl:
        * <pre>
        *    <Controls.Input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
-       * </pre>
-       */
-
-      // Add the interface "Controls/_input/interface/IInputBase" and delete "Controls/_input/Mask#tooltip" after remake base control to 'Controls/_input/Base'.
-      /**
-       * @name Controls/_input/Mask#tooltip
-       * @cfg {String} Text of the tooltip shown when the control is hovered over.
-       * @remark
-       * "Title" attribute added to the control's root node and default browser tooltip is shown on hover.
-       * @example
-       * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
-       * <pre>
-       *    <Controls.Input.Mask tooltip="Enter your name"/>
        * </pre>
        */
 

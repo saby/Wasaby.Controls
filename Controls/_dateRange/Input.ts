@@ -17,7 +17,6 @@ import 'css!theme?Controls/_dateRange/Input/Input';
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
  * @mixes Controls/Input/interface/IDateMask
- * @mixes Controls/Input/interface/IValidation
  *
  * @css @width_DateRange-dash Width of dash between input fields.
  * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
