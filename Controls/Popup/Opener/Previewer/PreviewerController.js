@@ -43,6 +43,9 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
                this._destroyDeferred[item.id].callback();
                delete this._destroyDeferred[item.id];
             }
+         },
+         needRestoreFocus: function() {
+            return false;
          }
       });
 
