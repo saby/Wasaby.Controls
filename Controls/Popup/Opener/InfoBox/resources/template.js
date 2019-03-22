@@ -19,6 +19,8 @@ define('Controls/Popup/Opener/InfoBox/resources/template',
          },
 
          _mousedownHandler: function(event) {
+            // Stop the click event on the container. It is necessary in order not to call
+            // the emitters on mousedown on the page, whose handlers will lead to the closure of the InfoBox.
             event.stopPropagation();
          }
       });
