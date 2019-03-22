@@ -13,7 +13,9 @@ define('Controls/Decorator/Markup/resources/template', [
       control,
       resolver,
       resolverParams,
-      resolverMode;
+      resolverMode,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      longSpaceRegExp = /\u00a0/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
@@ -108,9 +110,15 @@ define('Controls/Decorator/Markup/resources/template', [
          // Protect view of text from needless unescape in inferno.
          oldEscape = markupGenerator.escape;
          markupGenerator.escape = function(str) {
-            return str.replace(/&([^&]*;)/g, function(match, entity) {
+            return str.replace(escapeVdomRegExp, function(match, entity) {
                return '&amp;' + entity;
             });
+         };
+      } else {
+         // Markup Converter should escape long space characters too.
+         oldEscape = markupGenerator.escape;
+         markupGenerator.escape = function(str) {
+            return oldEscape(str).replace(longSpaceRegExp, '&nbsp;');
          };
       }
       try {
@@ -118,9 +126,7 @@ define('Controls/Decorator/Markup/resources/template', [
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       } finally {
-         if (isVdom) {
-            markupGenerator.escape = oldEscape;
-         }
+         markupGenerator.escape = oldEscape;
       }
 
       if (!elements.length) {

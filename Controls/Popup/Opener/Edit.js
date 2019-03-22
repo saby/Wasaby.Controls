@@ -179,9 +179,19 @@ define('Controls/Popup/Opener/Edit',
                      _private.synchronize(self, eventResult, data, Synchronizer);
                   });
                }
-            } else if (this._resultHandler) {
-               this._resultHandler.apply(this, arguments);
+            } else {
+               var args = Array.prototype.slice.call(arguments);
+               if (this._resultHandler) {
+                  this._resultHandler.apply(this, args);
+               }
+               this._notify('result', args);
             }
+         },
+         _closeHandler: function(event) {
+            this._notify(event.type, []);
+         },
+         _openHandler: function(event) {
+            this._notify(event.type, []);
          }
       });
 

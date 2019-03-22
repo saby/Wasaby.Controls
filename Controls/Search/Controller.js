@@ -25,6 +25,7 @@ define('Controls/Search/Controller',
                   searchDelay: self._options.searchDelay,
                   filter: clone(options.filter),
                   source: options.source,
+                  sorting: options.sorting,
                   navigation: options.navigation,
                   searchCallback: _private.searchCallback.bind(self, self),
                   abortCallback: _private.abortCallback.bind(self, self),
@@ -74,6 +75,7 @@ define('Controls/Search/Controller',
          
          needUpdateSearchController: function(options, newOptions) {
             return !isEqual(options.navigation, newOptions.navigation) ||
+                   !isEqual(options.sorting, newOptions.sorting) ||
                    options.searchDelay !== newOptions.searchDelay ||
                    options.source !== newOptions.source ||
                    options.searchParam !== newOptions.searchParam ||

@@ -145,17 +145,16 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            if (this._options.trigger !== 'demand') {
+            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
                /**
                 * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
                 */
                if (!this._isPopupOpened()) {
                   this._debouncedAction('_open', [event]);
                }
+               event.preventDefault();
+               event.stopPropagation();
             }
-
-            event.preventDefault();
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
