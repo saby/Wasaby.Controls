@@ -146,6 +146,7 @@ var TileView = ListView.extend({
             }
         }
         _private.clearMouseMoveTimeout(this);
+        event.blockUpdate = true;
     },
 
     _onItemMouseMove: function (event, itemData) {
@@ -154,6 +155,7 @@ var TileView = ListView.extend({
 
             this._calculateHoveredItemPosition(event, itemData);
         }
+        event.blockUpdate = true;
     },
 
     _calculateHoveredItemPosition: function (event, itemData) {

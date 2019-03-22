@@ -7,6 +7,7 @@ define('Controls/Container/Scroll',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
       'Controls/StickyHeader/Context',
+      'Controls/StickyHeader/Utils',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
@@ -16,7 +17,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
+   function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -219,6 +220,13 @@ define('Controls/Container/Scroll',
              * @private
              */
             _stickyHeaderContext: null,
+
+            _isStickyInEdge: null,
+
+            constructor: function(cfg) {
+               Scroll.superclass.constructor.call(this, cfg);
+               this._isStickyInEdge = stickyHeaderUtils.isStickySupport() && Env.detection.isIE;
+            },
 
             _beforeMount: function(options, context, receivedState) {
                var
