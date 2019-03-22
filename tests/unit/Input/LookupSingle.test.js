@@ -327,6 +327,7 @@ define([
 
       it('_keyDown', function() {
          var
+            isNotifyRemoveItems = false,
             lookup = new Lookup(),
             eventBackspace = {
                nativeEvent: {
@@ -339,21 +340,33 @@ define([
                stopImmediatePropagation: function() {}
             };
 
+         lookup._notify = function(eventName, result) {
+            if (eventName === 'removeItem') {
+               isNotifyRemoveItems = true;
+               assert.equal(lookup._options.items.at(lookup._options.items.getCount() - 1), result[0]);
+            }
+         };
+
          lookup._beforeMount({
             value: ''
          });
+         lookup._options.items = getItems(0);
+         lookup._keyDown(eventBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+
          lookup._options.items = getItems(5);
          lookup._keyDown(eventNotBackspace);
-         assert.equal(lookup._options.items.getCount(), 5);
+         assert.isFalse(isNotifyRemoveItems);
 
          lookup._keyDown(eventBackspace);
-         assert.equal(lookup._options.items.getCount(), 4);
+         assert.isTrue(isNotifyRemoveItems);
+         isNotifyRemoveItems = false;
 
          lookup._beforeMount({
             value: 'not empty valeue'
          });
          lookup._keyDown(eventBackspace);
-         assert.equal(lookup._options.items.getCount(), 4);
+         assert.isFalse(isNotifyRemoveItems);
       });
    });
 });
