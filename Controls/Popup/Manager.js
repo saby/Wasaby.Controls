@@ -69,14 +69,15 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, _private.popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
-               _private.fireEventHandler(id, 'onClose');
-               _private.popupItems.remove(element);
-               _private.removeFromParentConfig(element);
-
-               // If the popup is not active, don't set the focus
+               // If the popup is not active, don't set the focus.
+               // Call the method before the "onClose" event notification
                if (element.isActive) {
                   _private.activatePopup(element);
                }
+
+               _private.fireEventHandler(id, 'onClose');
+               _private.popupItems.remove(element);
+               _private.removeFromParentConfig(element);
 
                _private.updateOverlay();
                _private.redrawItems();
