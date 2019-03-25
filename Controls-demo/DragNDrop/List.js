@@ -16,6 +16,7 @@ define('Controls-demo/DragNDrop/List', [
       _viewSource: null,
 
       _beforeMount: function() {
+         this._selectedKeys = [];
          this._itemsReadyCallback = this._itemsReady.bind(this);
          this._itemActions = [{
             title: 'Action',
