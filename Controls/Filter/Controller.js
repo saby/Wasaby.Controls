@@ -490,6 +490,8 @@ define('Controls/Filter/Controller',
          },
 
          _filterChanged: function(event, filter) {
+            //Controller should stop bubbling of 'filterChanged' event, that container-control fired
+            event.stopPropagation();
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
