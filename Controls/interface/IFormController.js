@@ -30,7 +30,7 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @name Controls/FormController#initValues
+    * @name Controls/FormController#createMetaData
     * @cfg {Object} Initial values what will be argument of create method called when key option and record option are not exist.
     * Also its default value for create method.
     */
@@ -42,7 +42,7 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @name Controls/FormController#destroyMeta
+    * @name Controls/FormController#destroyMetaData
     * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
     * Also its default value for destroy method.
     */
