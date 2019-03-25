@@ -568,7 +568,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          var fastFilterItems = [];
 
          var filterButtonItems = [];
-         Filter._private.updateHistory({}, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         Filter._private.updateHistory(filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items, {});
             done();
@@ -603,6 +603,25 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
 
          Filter._private.applyItemsToFilter(self, filter1, filterButtonItems1, []);
          assert.equal(self._filter.testId, filterButtonItems1[0].value);
+      });
+
+      it('updateFilterHistory', function(done) {
+         let fastFilterItems = [],
+            filterButtonItems = [];
+         Filter.updateFilterHistory({historyId: 'TEST_HISTORY_ID', filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
+            assert.deepEqual(items, {});
+            done();
+         });
+
+         let errorCathed = false;
+         try {
+            Filter.updateFilterHistory({filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
+         } catch (error) {
+            errorCathed = true;
+         }
+         assert.isTrue(errorCathed);
+
       });
    });
 
