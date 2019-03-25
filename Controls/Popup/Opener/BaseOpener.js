@@ -9,7 +9,8 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-merge',
       'Env/Env',
       'Core/Deferred',
-      'Core/helpers/isNewEnvironment'
+      'Core/helpers/isNewEnvironment',
+      'Core/library'
    ],
    function(
       Control,
@@ -21,7 +22,8 @@ define('Controls/Popup/Opener/BaseOpener',
       CoreMerge,
       Env,
       Deferred,
-      isNewEnvironment
+      isNewEnvironment,
+      library
    ) {
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
@@ -89,70 +91,62 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
-         _isPopupCreating: function() {
-            return ManagerController.isPopupCreating(this._getCurrentPopupId());
-         },
-
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
-               if (!self._isPopupCreating()) {
-                  cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                  Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                     self._toggleIndicator(false);
-                     if (self._useVDOM()) {
-                        self._popupIds.push(result);
-
-                        // Call redraw to create emitter on scroll after popup opening
-                        self._forceUpdate();
-                     } else {
-                        self._action = result;
-                     }
-                  });
-               } else {
-                  ManagerController.updateOptionsAfterInitializing(self._getCurrentPopupId(), cfg);
+               cfg._vdomOnOldPage = self._options._vdomOnOldPage;
+               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
                   self._toggleIndicator(false);
-               }
+                  if (self._useVDOM()) {
+                     if (self._popupIds.indexOf(result) === -1) {
+                        self._popupIds.push(result);
+                     }
+
+                     // Call redraw to create emitter on scroll after popup opening
+                     self._forceUpdate();
+                  } else {
+                     self._action = result;
+                  }
+               });
                return result;
             });
          },
 
          // Lazy load template
+
+         /**
+          *
+          * @param config
+          * @param controller
+          * @return {Promise.<{template: Function; controller: Function}>}
+          * @private
+          */
          _requireModules: function(config, controller) {
-            if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return this._openerListDeferred;
+            var self = this;
+            if (this._requireModulesPromise) {
+               return this._requireModulesPromise;
             }
-
-            var deps = [];
-            if (this._needRequireModule(config.template)) {
-               deps.push(config.template);
-            }
-            if (this._needRequireModule(controller)) {
-               deps.push(controller);
-            }
-
-            if (deps.length) {
-               this._openerListDeferred = new Deferred();
-               requirejs(deps, function() {
-                  this._openerListDeferred.callback(this._getRequiredModules(config.template, controller));
-               }.bind(this));
-               return this._openerListDeferred;
-            }
-            return (new Deferred()).callback(this._getRequiredModules(config.template, controller));
+            return Promise.all([
+               self._requireModule(config.template),
+               self._requireModule(controller)
+            ]).then(function(results) {
+               return {
+                  template: results[0],
+                  controller: results[1]
+               };
+            });
          },
 
-         _needRequireModule: function(module) {
-            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
-         },
-
-         _getRequiredModules: function(template, controller) {
-            return {
-               template: typeof template === 'string' ? requirejs(template) : template,
-               controller: typeof controller === 'string' ? requirejs(controller) : controller
-            };
+         /**
+          * @param {String | Function} module
+          * @return {Promise.<Function>}
+          * @private
+          */
+         _requireModule: function(module) {
+            return typeof module === 'string' ? library.load(module) : Promise.resolve(module);
          },
 
          _getConfig: function(popupOptions) {
@@ -219,7 +213,12 @@ define('Controls/Popup/Opener/BaseOpener',
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-               baseCfg.closeOnOutsideClick = baseConfig.closeByExternalClick;
+               baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
+            }
+
+            if (baseCfg.hasOwnProperty('locationStrategy')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
+               baseCfg.fittingMode = baseCfg.locationStrategy;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
@@ -246,8 +245,9 @@ define('Controls/Popup/Opener/BaseOpener',
          _notifyEvent: function(eventName, args) {
             // Trim the prefix "on" in the event name
             var event = eventName.substr(2);
+            var newEvent = event.toLowerCase();
             this._notify(event, args);
-            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + newEvent + '" instead of "popup' + event + '"');
             this._notify('popup' + event, args);
          },
 
@@ -258,7 +258,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   message: rk('Загрузка')
                };
                this._indicatorId = this._notify('showIndicator', [cfg], { bubbling: true });
-            } else {
+            } else if (this._indicatorId) {
                this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
                this._indicatorId = null;
             }
@@ -330,7 +330,7 @@ define('Controls/Popup/Opener/BaseOpener',
          if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!Base.isNewEnvironment()) {
                Base.getManager().addCallback(function() {
-                  requirejs(['Controls/Utils/getZIndex'], function(getZIndex) {
+                  Base.getZIndexUtil().addCallback(function(getZIndex) {
                      cfg.zIndex = cfg.zIndex || getZIndex(opener);
                      Base._openPopup(popupId, cfg, controller, def);
                   });
@@ -398,9 +398,25 @@ define('Controls/Popup/Opener/BaseOpener',
          return def;
       };
 
+      Base.getZIndexUtil = function() {
+         var deferred = new Deferred();
+         var module = 'Controls/Utils/getZIndex';
+         if (requirejs.defined(module)) {
+            return deferred.callback(requirejs(module));
+         }
+         requirejs([module], function(getZIndex) {
+            return deferred.callback(getZIndex);
+         });
+         return deferred;
+      };
+
       Base._openPopup = function(popupId, cfg, controller, def) {
          if (popupId) {
-            popupId = ManagerController.update(popupId, cfg);
+            if (ManagerController.isPopupCreating(popupId)) {
+               ManagerController.updateOptionsAfterInitializing(popupId, cfg);
+            } else {
+               popupId = ManagerController.update(popupId, cfg);
+            }
          } else {
             popupId = ManagerController.show(cfg, controller);
          }

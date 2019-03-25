@@ -133,7 +133,8 @@ define('Controls/Popup/InfoBox',
                style: self._options.style,
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
-                  onResult: self._resultHandler
+                  onResult: self._resultHandler,
+                  onClose: self._closeHandler
                },
                templateOptions: {
                   template: self._options.templateName || self._options.template,
@@ -154,6 +155,7 @@ define('Controls/Popup/InfoBox',
 
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
+            this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {
                Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
@@ -169,7 +171,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], { bubbling: true });
+               this._close();
             }
             clearTimeout(this._openId);
          },
@@ -180,6 +182,10 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], { bubbling: true });
             } else {
+
+               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
+               this._notify('openInfoBox', [config]);
+
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
@@ -198,6 +204,9 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('closeInfoBox', [], { bubbling: true });
             } else {
+
+               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
+               this._notify('closeInfoBox');
                this._children.infoBoxOpener.close();
             }
 
@@ -294,6 +303,10 @@ define('Controls/Popup/InfoBox',
                   // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
                   this._opened = false;
             }
+         },
+
+         _closeHandler: function() {
+            this._opened = false;
          },
 
          _scrollHandler: function() {

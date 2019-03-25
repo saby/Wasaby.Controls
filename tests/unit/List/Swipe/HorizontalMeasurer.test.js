@@ -1,5 +1,5 @@
 define([
-   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_lists/Swipe/HorizontalMeasurer',
    'Core/i18n'
 ], function(
    HorizontalMeasurer,
@@ -7,13 +7,16 @@ define([
 ) {
    describe('Controls.List.Swipe.HorizontalMeasurer', function() {
       it('needIcon', function() {
-         assert.isTrue(HorizontalMeasurer.default.needIcon({}, true));
-         assert.isFalse(HorizontalMeasurer.default.needIcon({}, false));
+         assert.isFalse(HorizontalMeasurer.default.needIcon({}, 'none', true));
+         assert.isFalse(HorizontalMeasurer.default.needIcon({}, 'none', false));
+         assert.isFalse(HorizontalMeasurer.default.needIcon({}, 'right', false));
+         assert.isTrue(HorizontalMeasurer.default.needIcon({}, 'right', true));
          assert.isTrue(
             HorizontalMeasurer.default.needIcon(
                {
                   icon: '123'
                },
+               'none',
                true
             )
          );
@@ -22,15 +25,32 @@ define([
                {
                   icon: '123'
                },
+               'none',
                false
             )
          );
       });
 
       it('needTitle', function() {
-         assert.isFalse(HorizontalMeasurer.default.needTitle({}, 'none'));
-         assert.isFalse(HorizontalMeasurer.default.needTitle({}, 'right'));
          assert.isFalse(
+            HorizontalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'none'
+            )
+         );
+         assert.isFalse(
+            HorizontalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'right'
+            )
+         );
+         assert.isTrue(HorizontalMeasurer.default.needTitle({}, 'none'));
+         assert.isTrue(HorizontalMeasurer.default.needTitle({}, 'right'));
+         assert.isTrue(
             HorizontalMeasurer.default.needTitle(
                {
                   title: '123'

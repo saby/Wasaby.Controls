@@ -8,8 +8,9 @@ define(
       'Types/source',
       'Controls/History/Constants',
       'Types/util',
+      'Core/core-clone'
    ],
-   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util) => {
+   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util, clone) => {
       describe('History Source', () => {
          let items = [
             {
@@ -294,6 +295,20 @@ define(
                historyItems = hSource.getItems();
                assert.equal(hSource._history.recent.at(0).getId(), '7');
             });
+            it('updateRecent history not loaded', function() {
+               let config2 = clone(config),
+                  updatedData,
+                  meta = {
+                     $_history: true
+                  };
+               config2.historySource.update = function(data) {
+                  updatedData = data;
+               };
+               let hSource2 = new historySource(config2);
+               hSource2.update(myItem, meta);
+               assert.deepEqual(myItem, updatedData);
+
+            });
             it('prepareHistoryBySourceItems', function(done){
                let newData = new sourceLib.DataSet({
                   rawData: {
@@ -337,7 +352,36 @@ define(
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
+                  assert.equal(self._recentCount, 2);
                   self._history.pinned.forEach(function(pinnedItem){
+                     assert.isFalse(pinnedItem.getId()=='9');
+                  });
+                  done();
+               });
+            });
+
+            it('initHistory source no pinned items', function(done) {
+               let newData = new sourceLib.DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let itemsWithoutId = items.slice(1);
+               let memorySource = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: itemsWithoutId
+               });
+               memorySource.query().addCallback(function(res) {
+                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let sourceItems = res.getAll();
+                  historySource._private.initHistory(self, newData, sourceItems);
+                  assert.equal(self._history.pinned.getCount(), 3);
+                  self._history.pinned.forEach(function(pinnedItem){
+                     assert.isFalse(pinnedItem.getId()=='1');
                      assert.isFalse(pinnedItem.getId()=='9');
                   });
                   done();

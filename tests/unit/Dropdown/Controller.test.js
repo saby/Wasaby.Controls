@@ -248,16 +248,6 @@ define(
             });
          });
 
-         it('open dropdown', () => {
-            let dropdownController = getDropdownController(config);
-            dropdownController._items = itemsRecords;
-            dropdownController._children.DropdownOpener = {
-               close: setTrue.bind(this, assert),
-               open: setTrue.bind(this, assert)
-            };
-            dropdownController._open();
-         });
-
          it('notify footer click', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._beforeMount(configLazyLoad);
@@ -317,19 +307,6 @@ define(
             dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
          });
-         it('open one item', () => {
-            let dropdownController = getDropdownController(config);
-            let item = new collection.RecordSet({
-               idProperty: 'id',
-               rawData: [ {id: 1, title: 'Запись 1'} ]
-            });
-            dropdownController._items = item;
-            dropdownController._notify = (e, data) => {
-               assert.equal(e, 'selectedItemsChanged');
-               assert.deepEqual(data[0], [item.at(0)]);
-            };
-            dropdownController._open();
-         });
 
          it('lazy load', () => {
             let dropdownController = getDropdownController(configLazyLoad);
@@ -375,7 +352,44 @@ define(
             assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 
-         it('open lazyLoad', () => {
+         it('_open dropdown', () => {
+            let dropdownController = getDropdownController(config),
+               opened = false;
+            dropdownController._items = itemsRecords;
+            dropdownController._children.DropdownOpener = {
+               open: () => { opened = true;}
+            };
+            dropdownController._open();
+            assert.isTrue(opened);
+         });
+
+         it('_open dropdown without items', () => {
+            let dropdownController = getDropdownController(config),
+               opened = false;
+            dropdownController._items = Clone(itemsRecords);
+            dropdownController._items.clear();
+            dropdownController._children.DropdownOpener = {
+               open: () => { opened = true;}
+            };
+            dropdownController._open();
+            assert.isFalse(opened);
+         });
+
+         it('_open one item', () => {
+            let dropdownController = getDropdownController(config);
+            let item = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [ {id: 1, title: 'Запись 1'} ]
+            });
+            dropdownController._items = item;
+            dropdownController._notify = (e, data) => {
+               assert.equal(e, 'selectedItemsChanged');
+               assert.deepEqual(data[0], [item.at(0)]);
+            };
+            dropdownController._open();
+         });
+
+         it('_open lazyLoad', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._selectedItems = [];
             dropdownController._children.DropdownOpener = {
@@ -411,6 +425,21 @@ define(
 
             dropdownController._mousedown();
             assert.isFalse(opened);
+         });
+
+         it('_private::closeHandler', function() {
+            let config2 = Clone(config), closed, closeActivated;
+            config2.close = () => {closeActivated = true};
+            let dropdownConroller = getDropdownController(config2);
+            dropdownConroller._notify = function(event) {
+               if (event === '_close') {
+                  closed = true;
+               }
+            };
+            dropdownConroller._beforeMount(config2);
+            dropdownConroller._onClose();
+            assert.isTrue(closeActivated);
+            assert.isTrue(closed);
          });
 
          function setTrue(assert) {

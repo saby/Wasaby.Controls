@@ -190,6 +190,45 @@ define([
             }, 10);
          });
       });
+   
+      it('TreeControl.toggleExpanded with sorting', function() {
+         let treeControl = correctCreateTreeControl({
+            columns: [],
+            root: null,
+            sorting: [{sortField: 'DESC'}],
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         let expandSorting;
+         let originalCreateSourceController = TreeControl._private.createSourceController;
+         TreeControl._private.createSourceController = function() {
+            return {
+               load: function(filter, sorting) {
+                  var result = Deferred.success([]);
+                  expandSorting = sorting;
+                  return result
+               }
+            }
+         };
+   
+         TreeControl._private.toggleExpanded(treeControl, {
+            getContents: function() {
+               return {
+                  getId: function() {
+                     return 1;
+                  }
+               };
+            },
+            isRoot: function() {
+               return false;
+            }
+         });
+         TreeControl._private.createSourceController = originalCreateSourceController;
+         
+         assert.deepEqual([{sortField: 'DESC'}], expandSorting);
+      });
 
 
       it('TreeControl.reload', function(done) {
@@ -202,10 +241,14 @@ define([
             });
          var isSourceControllerNode1Destroyed = false;
          var isSourceControllerNode2Destroyed = false;
+         var vmHasMoreStorage = null;
 
          //viewmodel moch
          treeControl._children.baseControl.getViewModel = function() {
             return {
+               setHasMoreStorage: function (hms) {
+                  vmHasMoreStorage = hms;
+               },
                getExpandedItems: function() {
                   return {
                      '1': true
@@ -224,20 +267,28 @@ define([
             1: {
                destroy: function() {
                   isSourceControllerNode1Destroyed = true;
+               },
+               hasMoreData: function () {
+                  return false;
                }
             },
             2: {
                destroy: function() {
                   isSourceControllerNode2Destroyed = true;
+               },
+               hasMoreData: function () {
+                  return true;
                }
             }
          };
          setTimeout(function() {
+            assert.isTrue(treeControl._nodesSourceControllers['2'].hasMoreData());
             treeControl.reload();
             setTimeout(function() {
                assert.equal(Object.keys(treeControl._nodesSourceControllers).length, 1, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
                assert.isFalse(isSourceControllerNode1Destroyed, 'Invalid value "isSourceControllerNode1Destroyed" after call "treeControl.reload()".');
                assert.isTrue(isSourceControllerNode2Destroyed, 'Invalid value "isSourceControllerNode2Destroyed" after call "treeControl.reload()".');
+               assert.deepEqual({1: false}, vmHasMoreStorage);
                done();
             }, 10);
          }, 10);
@@ -297,6 +348,11 @@ define([
          }, treeViewModel.getExpandedItems());
          assert.equal(1, treeControl._options.root);
 
+         var resetExpandedItemsCalled = false;
+         treeViewModel.resetExpandedItems = function() {
+            resetExpandedItemsCalled = true;
+         };
+
          // Test
          return new Promise(function(resolve) {
             setTimeout(function() {
@@ -308,6 +364,7 @@ define([
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
+                  assert.isTrue(resetExpandedItemsCalled);
                   assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
                   TreeControl._private.clearSourceControllers = clearSourceControllersOriginal;
@@ -465,19 +522,21 @@ define([
          var
             setHasMoreCalled = false,
             mergeItemsCalled = false,
+            loadMoreSorting,
             mockedTreeControlInstance = {
                _options: {
                   filter: {
                      testParam: 11101989
                   },
+                  sorting: [{'test': 'ASC'}],
                   parentProperty: 'parent',
                   uniqueKeys: true
                },
                _nodesSourceControllers: {
                   1: {
-                     load: function() {
-                        var
-                           result = new Deferred();
+                     load: (filter, sorting) => {
+                        let result = new Deferred();
+                        loadMoreSorting = sorting;
                         result.callback();
                         return result;
                      },
@@ -517,6 +576,7 @@ define([
          'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
+         assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {

@@ -108,10 +108,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _subDropdownOpened: false,
 
          constructor: function(config) {
-            var self = this;
-            var sizes = ['small', 'medium', 'large'];
-            var iconSize;
-
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
             }
@@ -122,17 +118,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (config.showHeader) {
                this._headConfig = config.headConfig || {};
                this._headConfig.caption = this._headConfig.caption || config.caption;
-               this._headConfig.icon = this._headConfig.icon || config.icon;
+               this._headConfig.icon = this._headConfig.icon || config.icon || '';
                this._headConfig.menuStyle = this._headConfig.menuStyle || 'defaultHead';
 
-               if (this._headConfig.icon) {
-                  sizes.forEach(function(size) {
-                     if (self._headConfig.icon.indexOf('icon-' + size) !== -1) {
-                        iconSize = size;
-                     }
-                  });
-               } else if (config.iconPadding[config.parentProperty]) {
-                  this._headConfig.icon = config.iconPadding[config.parentProperty][1];
+               var rootKey = config.parentProperty ? config.rootKey : config.parentProperty,
+                  iconSizes = /small|medium|large/g,
+                  iconSize;
+
+               if (this._headConfig.icon && this._headConfig.icon.match(iconSizes)) {
+                  iconSize = this._headConfig.icon.match(iconSizes)[0];
+               } else if (config.iconPadding && config.iconPadding[rootKey]) {
+                  this._headConfig.icon += ' ' + config.iconPadding[rootKey][1];
                }
                if (this._headConfig.menuStyle === 'duplicateHead') {
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
@@ -149,7 +145,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
-                  rootKey: newOptions.rootKey || null,
+                  rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
                   selectedKeys: newOptions.selectedKeys,
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
@@ -170,7 +166,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          _beforeUpdate: function(newOptions) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
-               itemsChanged = newOptions.items !== this._options.items;
+               itemsChanged = newOptions.items !== this._options.items,
+               selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
 
             if (rootChanged) {
                this._listModel.setRootKey(newOptions.rootKey);
@@ -181,6 +178,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                if (this._hasHierarchy) {
                   this._children.subDropdownOpener.close();
                }
+            }
+
+            if (selectedKeysChanged) {
+               this._listModel.setSelectedKeys(newOptions.selectedKeys);
             }
 
             if (rootChanged || itemsChanged) {

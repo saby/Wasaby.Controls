@@ -63,36 +63,40 @@ define('Controls/Decorator/Markup/Converter', [
       return [];
    }
 
-   var linkTagPattern = '(/?a[ >])',
+   var tagPattern = '(?:</?([a-z]+)[^>]*[>])',
       linkPrefixPattern = '((?:https?|ftp|file|smb)://|www\\.)',
-      linkPattern = '(' + linkPrefixPattern + '(?:[^\\s\\x16<>]+?))',
-      emailPattern = '([^\\s\\x16<>]+@[^\\s\\x16<>]+(?:\\.[^\\s\\x16<>]{2,6}?))',
-      endingPattern = '([.,:]?(?:[\\s\\x16<>]|$))',
+      linkPattern = '(' + linkPrefixPattern + '(?:[^\\s\\x16<>]+))',
+      emailPattern = '([^\\s\\x16<>]+@[^\\s\\x16<>]+(?:\\.[^.,:\\s\\x16<>]{1,5}))',
+      endingPattern = '([^.,:\\s\\x16<>])',
       nbsp = '&nbsp;',
       nbspReplacer = '\x16',
       nbspRegExp = new RegExp(nbsp, 'g'),
       nbspReplacerRegExp = new RegExp(nbspReplacer, 'g'),
-      linkParseRegExp = new RegExp(linkTagPattern + '|(?:(?:' + linkPattern + '|' + emailPattern + ')' + endingPattern + ')', 'g');
+      linkParseRegExp = new RegExp(tagPattern + '|(?:(?:' + linkPattern + '|' + emailPattern + ')' + endingPattern + ')', 'g');
 
    // Wrap all links and email addresses placed not in tag a.
    function wrapUrl(html) {
       var resultHtml = html.replace(nbspRegExp, nbspReplacer),
-         inLink = false;
-      resultHtml = resultHtml.replace(linkParseRegExp, function(match, linkTag, link, linkPrefix, email, ending, index, origin) {
+         linkIgnore = false;
+      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, link, linkPrefix, email, ending) {
          var linkParseResult;
-         if (linkTag && origin[index - 1] === '<') {
-            inLink = !inLink;
+         if (tag) {
+            if (tag === 'a') {
+               linkIgnore = !linkIgnore;
+            }
             linkParseResult = match;
-         } else if (inLink) {
+         } else if (linkIgnore) {
             linkParseResult = match;
          } else {
             if (link) {
                if (linkPrefix === 'www.') {
                   link = 'http://' + link;
                }
-               linkParseResult = '<a class="asLink" rel="noreferrer" href="' + link + '" target="_blank">' + link + '</a>' + ending;
+               link = link + ending;
+               linkParseResult = '<a class="asLink" rel="noreferrer" href="' + link + '" target="_blank">' + link + '</a>';
             } else {
-               linkParseResult = '<a href="mailto:' + email + '">' + email + '</a>' + ending;
+               email = email + ending;
+               linkParseResult = '<a href="mailto:' + email + '">' + email + '</a>';
             }
          }
          return linkParseResult;

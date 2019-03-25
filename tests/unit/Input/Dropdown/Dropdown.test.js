@@ -117,6 +117,14 @@ define(
             assert.equal(ddl._text, 'Не выбрано');
             assert.isNull(ddl._icon);
          });
+
+         it('_private::getTooltip', function() {
+            let ddl = getDropdown(config);
+            ddl._setText([null]);
+            assert.equal(ddl._tooltip, '');
+            ddl._setText(items.slice(0, 3));
+            assert.equal(ddl._tooltip, 'Запись 1, Запись 2, Запись 3');
+         });
       });
    }
 );

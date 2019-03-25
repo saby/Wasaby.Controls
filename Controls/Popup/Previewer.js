@@ -4,10 +4,11 @@ define('Controls/Popup/Previewer',
       'wml!Controls/Popup/Previewer/Previewer',
       'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer',
-      'Env/Env'
+      'Env/Env',
+
+      'css!Controls/Popup/Previewer/Previewer'
    ],
    function(Control, template, debounce, PreviewerOpener, Env) {
-
       'use strict';
 
       /**
@@ -27,6 +28,7 @@ define('Controls/Popup/Previewer',
        * @name Controls/Popup/Previewer#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant demand Closing by click not on the content or template.
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
        * @default hoverAndClick
@@ -38,10 +40,10 @@ define('Controls/Popup/Previewer',
             }
             return 'click';
          },
-         getCfg: function(self, event) {
-            return {
+         getCfg: function(self) {
+            var config = {
                opener: self,
-               target: event.currentTarget || event.target,
+               target: self._container,
                template: 'Controls/Popup/Previewer/OpenerTemplate',
                corner: {
                   vertical: 'bottom',
@@ -57,6 +59,34 @@ define('Controls/Popup/Previewer',
                },
                closeChildWindows: self._options.closeChildWindows
             };
+
+            if (self._options.corner) {
+               config.corner = self._options.corner;
+            }
+            if (self._options.verticalAlign) {
+               config.verticalAlign = self._options.verticalAlign;
+            }
+            if (self._options.horizontalAlign) {
+               config.horizontalAlign = self._options.horizontalAlign;
+            }
+            return config;
+         },
+         open: function(self, event, type) {
+            if (!self._isPopupOpened()) {
+               if (self._isNewEnvironment()) { // TODO: COMPATIBLE
+                  self._close(event); // close opened popup to avoid jerking the content for repositioning
+                  self._notify('openPreviewer', [_private.getCfg(self), type], { bubbling: true });
+               } else {
+                  self._children.openerPreviewer.open(_private.getCfg(self), type);
+               }
+            }
+         },
+         close: function(self, type) {
+            if (self._isNewEnvironment()) { // TODO: COMPATIBLE
+               self._notify('closePreviewer', [type], { bubbling: true });
+            } else {
+               self._children.openerPreviewer.close(type);
+            }
          }
       };
 
@@ -74,32 +104,39 @@ define('Controls/Popup/Previewer',
             }
          },
 
+         /**
+          * @param type
+          * @variant hover
+          * @variant click
+          */
+         open: function(type) {
+            _private.open(this, {}, type);
+         },
+
+         /**
+          * @param type
+          * @variant hover
+          * @variant click
+          */
+         close: function(type) {
+            _private.close(this, type);
+         },
+
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            if (!this._isPopupOpened()) {
-               if (this._isNewEnvironment()) { // TODO: COMPATIBLE
-                  this._close(event); // close opened popup to avoid jerking the content for repositioning
-                  this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
-               } else {
-                  this._children.openerPreviewer.open(_private.getCfg(this, event), type);
-               }
-            }
+            _private.open(this, event, type);
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
 
-            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
-               this._notify('closePreviewer', [type], { bubbling: true });
-            } else {
-               this._children.openerPreviewer.close(type);
-            }
+            _private.close(this, type);
          },
 
          _isPopupOpened: function() {
             if (this._isNewEnvironment()) { // TODO: COMPATIBLE
-               return this._notify('isPreviewerOpened', [], {bubbling: true});
+               return this._notify('isPreviewerOpened', [], { bubbling: true });
             }
             return this._children.openerPreviewer.isOpened();
          },
@@ -119,14 +156,16 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            /**
-             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
-             */
-            if (!this._isPopupOpened()) {
-               this._debouncedAction('_open', [event]);
+            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
+               /**
+                * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+                */
+               if (!this._isPopupOpened()) {
+                  this._debouncedAction('_open', [event]);
+               }
+               event.preventDefault();
+               event.stopPropagation();
             }
-            event.preventDefault();
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
@@ -169,7 +208,8 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
             }
-         }
+         },
+         _private: _private
       });
 
       Previewer.getDefaultOptions = function() {

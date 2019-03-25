@@ -12,30 +12,70 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
 
          constructor: function(){
             Index.superclass.constructor.apply(this,arguments);
-            this._states = [
-               [0],
-               [3],
-               [53],
-               [100],
-               [0,30],
-               [20,80],
-               [40,12],
-               [35,40],
-               [30,70],
-               [10,0,50],
-               [25,25,25],
-               [34,33,33],
-               [20,30,3,47]
+            this._scales = [
+               10,
+               10,
+               10,
+               10,
+               10,
+               10,
+               10,
+               5,
+               5,
+               5,
+               5,
+               6,
+               7,
+               ]
+            this._datas = [
+               [{value: 0, className: '', title: 'Положительно'}],               
+               [{value: 3, className: '', title: 'Положительно'}],
+               [{value: 53, className: '', title: 'Положительно'}],
+               [{value: 100, className: '', title: 'Положительно'}],
+
+               [{value: 0, className: '', title: 'Положительно'}, 
+                  {value: 30, className: '', title: 'В работе'}],
+
+               [{value: 20, className: '', title: 'Положительно'},
+                  {value: 80, className: '', title: 'В работе'}],
+
+               [{value: 40, className: '', title: 'Положительно'},
+                  {value: 12, className: '', title: 'В работе'}],
+
+               [{value: 35, className: '', title: 'Положительно'},
+                  {value: 40, className: '', title: 'В работе'}],
+
+               [{value: 30, className: '', title: 'Положительно'},
+                  {value: 70, className: '', title: 'В работе'}],
+
+               [{value: 10, className: '', title: 'Положительно'},
+                  {value: 30, className: '', title: 'В работе'},
+                  {value: 50, className: '', title: 'Отрицательно'}], 
+
+               [{value: 25, className: '', title: 'Положительно'},
+                  {value: 25, className: '', title: 'В работе'},
+                  {value: 25, className: '', title: 'Отрицательно'}], 
+
+               [{value: 33, className: '', title: 'Положительно'},
+                  {value: 33, className: '', title: 'В работе'},
+                  {value: 33, className: '', title: 'Отрицательно'},
+                  {value: 1, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}], 
+
+               [{value: 20, className: '', title: 'Положительно'},
+                  {value: 30, className: '', title: 'В работе'},
+                  {value: 3, className: '', title: 'Отрицательно'},
+                  {value: 47, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}],
             ];
          },
-
-         _mouseHandler: function(e, _item, _data){
+         _mouseLeaveHandler: function(){
+             this._notify('closeInfoBox', [1500], {bubbling: true});
+         },
+         _mouseEnterHandler: function(e, _item){
          	var config = {
               target: _item,
-              message: _data,
               position: 'tl',
               template: popupTemplate,
-              templateOptions: {state: this._states[_item.parentElement.parentElement.getAttribute("index")], data: _data}
+              templateOptions: {data: this._datas[_item.parentElement.parentElement.getAttribute("index")]}
          	};
          	this._notify('openInfoBox', [config], {bubbling: true});
          }

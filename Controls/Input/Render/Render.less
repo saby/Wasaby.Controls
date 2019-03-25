@@ -1,4 +1,5 @@
 .controls-Render {
+   contain: style;
    position: relative;
    display: inline-block;
    box-sizing: border-box;
@@ -55,8 +56,7 @@
    } });
 
    .for(@variants, { &_@{_item}_roundBorder {
-      @height: "height_Render_size_@{_item}";
-      border-radius: @@height / 2;
+      border-radius: ~"@{border-radius_Render_size_@{_item}}";
    } });
 }
 

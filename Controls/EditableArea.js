@@ -1,14 +1,14 @@
 define('Controls/EditableArea', [
    'Core/Control',
    'Core/Deferred',
-   'Controls/EditableArea/Constants',
+   'Controls/Constants',
    'wml!Controls/EditableArea/EditableArea',
    'css!theme?Controls/EditableArea/EditableArea',
    'css!theme?Controls/List/EditInPlace/Text'
 ], function(
    Control,
    Deferred,
-   EditConstants,
+   Constants,
    template
 ) {
    'use strict';
@@ -30,7 +30,7 @@ define('Controls/EditableArea', [
          endEdit: function(self, commit) {
             var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
 
-            if (result === EditConstants.CANCEL) {
+            if (result === Constants.editing.CANCEL) {
                return Deferred.success();
             }
 
@@ -134,7 +134,7 @@ define('Controls/EditableArea', [
          var result = res || this._notify('beforeBeginEdit', [this._editObject], {
             bubbling: true
          });
-         if (result !== EditConstants.CANCEL) {
+         if (result !== Constants.editing.CANCEL) {
             this._isEditing = true;
             this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
          }

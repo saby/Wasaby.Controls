@@ -5,13 +5,13 @@ import template = require('wml!Controls/_crumbs/View/View');
 import itemTemplate = require('wml!Controls/_crumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_crumbs/View/resources/itemsTemplate');
 import menuItemTemplate = require('wml!Controls/_crumbs/resources/menuItemTemplate');
-import 'wml!Controls/BreadCrumbs/resources/menuContentTemplate';
+import 'wml!Controls/_crumbs/resources/menuContentTemplate';
 import 'css!theme?Controls/_crumbs/View/View';
 
 /**
  * BreadCrumbs/View.
  *
- * @class Controls/BreadCrumbs/View
+ * @class Controls/_crumbs/View
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @control

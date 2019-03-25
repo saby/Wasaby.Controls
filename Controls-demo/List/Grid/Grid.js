@@ -31,6 +31,19 @@ define('Controls-demo/List/Grid/Grid', [
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          }
       ],
+      partialColumns2 = [
+         {
+            displayProperty: 'name',
+            width: '1fr',
+            template: 'wml!Controls-demo/List/Grid/DemoName'
+         },
+         {
+            displayProperty: 'costPrice',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         }
+      ],
       fullColumns = [
          {
             displayProperty: 'name',
@@ -114,7 +127,10 @@ define('Controls-demo/List/Grid/Grid', [
          _itemActions: null,
          _viewSource: null,
          _sorting: [],
+         _selectKeyColumn: null,
+         _columnSource: null,
          gridColumns: null,
+         gridColumns2: null,
          gridHeader: null,
          showType: null,
          _showAction: function(action, item) {
@@ -200,12 +216,27 @@ define('Controls-demo/List/Grid/Grid', [
             ];
             this.gridColumns = fullColumns;
             this.gridHeader = fullHeader;
+
+            this._columnSource = new source.Memory({
+               data: [
+                  { key: 'price', title: 'Цена' },
+                  { key: 'costPrice', title: 'Себестоимость' }
+               ],
+               idProperty: 'key'
+            });
+            this.gridColumns2 = partialColumns;
+
+            this._selectKeyColumn = ['price'];
          },
          _onToggleColumnsClicked: function() {
             this._fullSet = !this._fullSet;
             this.gridColumns = this._fullSet ? fullColumns : partialColumns;
             this.gridHeader = this._fullSet ? fullHeader : partialHeader;
             this._forceUpdate();
+         },
+
+         _selectedKeysChangeColumn: function(event, field) {
+            this.gridColumns2 = field[0] === 'price' ? partialColumns : partialColumns2;
          }
       });
 

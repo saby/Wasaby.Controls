@@ -1,5 +1,5 @@
 
-define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection'], function(DropdownList, collection) {
+define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection', 'Core/core-clone'], function(DropdownList, collection, Clone) {
 
    'use strict';
 
@@ -59,6 +59,18 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
    };
 
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
+
+      describe('DropdownList::constructor', function() {
+         let config2 = {
+            showHeader: true,
+            headConfig: { icon: 'icon-add' },
+            parentProperty: 'parent',
+            rootKey: null,
+            iconPadding: { null: [null, 'icon-small'] }
+         };
+         let ddl = getDropDownListWithConfig(config2);
+         assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+      });
 
       describe('DropdownList::_beforeUpdate', function() {
 
@@ -195,6 +207,31 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
       });
 
       describe('DropdownList::_beforeMount', function() {
+         it('check list view model', function() {
+            let expectedConfig = {
+               items: items,
+               rootKey: null,
+               selectedKeys: [2],
+               keyProperty: 'id',
+               displayProperty: 'title',
+               nodeProperty: 'parent@',
+               parentProperty: 'parent',
+               additionalProperty: 'add',
+               emptyText: undefined,
+               groupMethod: undefined,
+               groupTemplate: undefined,
+               groupingKeyCallback: undefined,
+               itemTemplateProperty: undefined
+            };
+            let actualConfig = Clone(expectedConfig);
+            let dropDownList = getDropDownListWithConfig(expectedConfig);
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
+            expectedConfig.rootKey = undefined;
+            actualConfig.rootKey = null;
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
+         });
          it('check popup options', function() {
             var dropDownConfig, dropDownList;
             dropDownConfig = getDropDownConfig();

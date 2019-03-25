@@ -135,7 +135,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             self._inputActive = false;
             self._dependenciesDeferred.addCallback(function() {
                assert.isFalse(state);
-               done();
+   
+               self._inputActive = true;
+               self._stackWithSearchResultsOpened = true;
+               Suggest._private.open(self);
+   
+               self._dependenciesDeferred.addCallback(function() {
+                  assert.isFalse(state);
+                  done();
+               });
             });
          });
       });
@@ -144,11 +152,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var self = getComponentObject();
          self._options.minSearchLength = 3;
          
-         self._active = true;
+         self._inputActive = true;
          assert.isTrue(Suggest._private.shouldSearch(self, 'test'));
          assert.isFalse(Suggest._private.shouldSearch(self, 't'));
    
-         self._active = false;
+         self._inputActive = false;
          assert.isFalse(Suggest._private.shouldSearch(self, 'test'));
          assert.isFalse(Suggest._private.shouldSearch(self, 't'));
       });
@@ -378,7 +386,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.minSearchLength = 3;
          
          suggestComponent.saveOptions(self._options);
-         suggestComponent._active = true;
+         suggestComponent._inputActive = true;
    
          suggestComponent._changeValueHandler(null, 't');
          assert.equal(suggestComponent._searchValue, '');
@@ -425,7 +433,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             })
          });
          
-         Suggest._private.precessResultData(self, {data: queryRecordSet});
+         Suggest._private.processResultData(self, {data: queryRecordSet});
    
          assert.equal(self._searchResult.data, queryRecordSet);
          assert.equal(self._tabsSelectedKey, 'testId');
@@ -440,8 +448,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                }
             })
          });
-         Suggest._private.precessResultData(self, {data: queryRecordSetEmpty});
+         self._suggestMarkedKey = 'test';
+         Suggest._private.processResultData(self, {data: queryRecordSetEmpty});
    
+         assert.equal(self._suggestMarkedKey, null);
          assert.notEqual(self._searchResult.data, queryRecordSet);
          assert.equal(self._searchResult.data, queryRecordSetEmpty);
          assert.equal(self._tabsSelectedKey, 'testId2');
@@ -499,7 +509,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
          suggestComponent._dependenciesDeferred = true;
-         suggestComponent._active = true;
+         suggestComponent._inputActive = true;
          suggestComponent._suggestMarkedKey = 'test'
 
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
@@ -601,7 +611,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._markedKeyChangedHandler(null, 'test2');
          assert.equal(suggestComponent._suggestMarkedKey, 'test2');
       });
-
+   
+      it('Suggest::_stackWithSearchResultsClosed', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._stackWithSearchResultsOpened = true;
+         suggestComponent._stackWithSearchResultsClosed();
+         assert.isFalse(suggestComponent._stackWithSearchResultsOpened);
+      });
+   
+   
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
          var eventPreventDefault = false;
@@ -650,6 +668,65 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
       });
-      
+
+      it('Suggest::_private.openWithHistory', function () {
+         var
+            isCallOpenPopup = false,
+            suggestComponent = new Suggest(),
+            getRecentKeys = Suggest._private.getRecentKeys,
+            _privateOpen = Suggest._private.open;
+
+         Suggest._private.open = function() {
+            isCallOpenPopup = true;
+         };
+
+         suggestComponent._filter = {};
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter = {};
+         suggestComponent._options.suggestState = true;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter = {};
+         Suggest._private.getRecentKeys = function() {
+            return Deferred.success([]);
+         };
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         suggestComponent._options.suggestState = false;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         suggestComponent._options.suggestState = true;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         Suggest._private.getRecentKeys = getRecentKeys;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         Suggest._private.open = _privateOpen;
+      });
+
+      it('Suggest::_inputClicked', function() {
+         var suggestComponent = new Suggest();
+
+         suggestComponent._inputClicked();
+         assert.isTrue(suggestComponent._inputActive);
+      });
    });
 });

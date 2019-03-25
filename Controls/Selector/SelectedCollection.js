@@ -25,7 +25,7 @@ define('Controls/Selector/SelectedCollection',
        */
 
       var _private = {
-         onResult: function(eventType, item) {
+         clickCallbackPopup: function(eventType, item) {
             if (eventType === 'crossClick') {
                this._notify('crossClick', [item]);
             } else if (eventType === 'itemClick') {
@@ -53,7 +53,7 @@ define('Controls/Selector/SelectedCollection',
             templateOptions.readOnly = options.readOnly;
             templateOptions.displayProperty = options.displayProperty;
             templateOptions.itemTemplate = options.itemTemplate;
-            templateOptions.clickCallback = self._onResult.bind(this);
+            templateOptions.clickCallback = self._clickCallbackPopup;
             
             return templateOptions;
          },
@@ -80,7 +80,8 @@ define('Controls/Selector/SelectedCollection',
          _counterWidth: 0,
 
          _beforeMount: function(options) {
-            this._onResult = _private.onResult.bind(this);
+            this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;
+            this._clickCallbackPopup = _private.clickCallbackPopup.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
             this._templateOptions = _private.getTemplateOptions(this, options);
@@ -104,14 +105,6 @@ define('Controls/Selector/SelectedCollection',
                if (this._counterWidth) {
                   this._forceUpdate();
                }
-            }
-         },
-
-         _onResult: function(event, item) {
-            if (event === 'itemClick') {
-               this._itemClick(event, item);
-            } else if (event === 'crossClick') {
-               this._crossClick(event, item);
             }
          },
 

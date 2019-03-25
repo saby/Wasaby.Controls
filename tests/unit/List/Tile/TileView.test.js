@@ -239,7 +239,8 @@ define(['Controls/List/TileView/TileView',
       });
 
       it('_afterUpdate', function() {
-         var hoveredItem;
+         var hoveredItem,
+            controlResizeFired = false;
 
          tileView._setHoveredItem({
             key: 'itemKey1'
@@ -258,17 +259,25 @@ define(['Controls/List/TileView/TileView',
          tileView._hasFixedItemInDOM = function() {
             return true;
          };
+         tileView._notify = function(eventName) {
+            if (eventName === 'controlResize') {
+               controlResizeFired = true;
+            }
+         };
          tileView._afterUpdate();
          hoveredItem = tileView._listModel.getHoveredItem();
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
+         assert.isTrue(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
       });
 
       it('_afterMount', function() {
          var events = [];
          tileView._notify = function(eventName, args) {
-            events.push(args[0]);
+            if (eventName === 'register') {
+               events.push(args[0]);
+            }
          };
          tileView._afterMount();
          assert.deepEqual(events, ['controlResize', 'scroll']);
@@ -325,6 +334,7 @@ define(['Controls/List/TileView/TileView',
          var
             isTouch,
             count = 0,
+            event = {},
             originFn = tileView._calculateHoveredItemPosition;
 
          tileView._calculateHoveredItemPosition = function() {
@@ -336,21 +346,22 @@ define(['Controls/List/TileView/TileView',
          };
          tileView._listModel.setHoveredItem({key: 1});
          isTouch = false;
-         tileView._onItemMouseMove(null, {key: 1});
+         tileView._onItemMouseMove(event, {key: 1});
+         assert.isTrue(event.blockUpdate);
          assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
 
          tileView._listModel.setHoveredItem(null);
          isTouch = true;
-         tileView._onItemMouseMove(null, {key: 2});
+         tileView._onItemMouseMove({}, {key: 2});
          assert.equal(count, 0);
          assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
          isTouch = false;
-         tileView._onItemMouseMove(null, {key: 3});
+         tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 1);
-         tileView._onItemMouseMove(null, {key: 3});
+         tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 2);
 
          tileView._calculateHoveredItemPosition = originFn;
@@ -367,18 +378,20 @@ define(['Controls/List/TileView/TileView',
       });
 
       it('_onItemMouseLeave', function() {
+         var event = {};
          tileView._listModel.setHoveredItem({key: 2});
 
          //active
-         tileView._onItemMouseLeave(null, {key: 2, isActive: true});
+         tileView._onItemMouseLeave(event, {key: 2, isActive: true});
          assert.equal(tileView._listModel.getHoveredItem().key, 2);
+         assert.isTrue(event.blockUpdate);
 
          //another
-         tileView._onItemMouseLeave(null, {key: 1});
+         tileView._onItemMouseLeave({}, {key: 1});
          assert.equal(tileView._listModel.getHoveredItem().key, 2);
 
          //hovered
-         tileView._onItemMouseLeave(null, {key: 2});
+         tileView._onItemMouseLeave({}, {key: 2});
          assert.equal(tileView._listModel.getHoveredItem(), null);
       });
    });

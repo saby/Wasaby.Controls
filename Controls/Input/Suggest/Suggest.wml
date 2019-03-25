@@ -39,7 +39,8 @@
             validationErrors="{{_options.validationErrors}}"
             on:tagClick="_notifyHandler('tagClick')"
             on:tagHover="_notifyHandler('tagHover')"
-            on:valueChanged="_changeValueHandler()">
+            on:valueChanged="_changeValueHandler()"
+            on:inputCompleted="_inputCompletedHandler()">
         <ws:content>
             <ws:partial template="wml!Controls/Input/resources/input"/>
         </ws:content>

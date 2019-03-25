@@ -1,1 +1,1 @@
-<ws:partial template="Controls/toolbars:ToolbarItemTemplate" />
+<ws:partial template="Controls/toolbars:ItemTemplate" />

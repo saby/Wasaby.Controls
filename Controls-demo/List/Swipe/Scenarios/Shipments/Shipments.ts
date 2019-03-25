@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/Shipments/Shipments';
-import { IItemAction, ShowType } from 'Controls/List/Swipe/interface/IItemAction';
 import { HierarchicalMemory } from 'Types/source';
 import 'css!Controls-demo/List/Swipe/Scenarios/Shipments/Shipments';
 import 'wml!Controls-demo/List/Swipe/Scenarios/Shipments/firstColumn';
@@ -12,7 +11,7 @@ import 'wml!Controls-demo/List/Swipe/Scenarios/Shipments/sixthColumn';
 
 export default class Shipments extends Control {
    private _template: Function = template;
-   private _itemActions: IItemAction[];
+   private _itemActions: object[];
    private _columns: object[];
    private _source: HierarchicalMemory;
 
@@ -22,13 +21,13 @@ export default class Shipments extends Control {
             id: 0,
             icon: 'icon-PhoneNull',
             title: 'phone',
-            showType: ShowType.MENU_TOOLBAR
+            showType: 1
          },
          {
             id: 1,
             icon: 'icon-DK',
             title: 'Расчеты по документу',
-            showType: ShowType.MENU_TOOLBAR
+            showType: 1
          }
       ];
       this._columns = [

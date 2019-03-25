@@ -12,10 +12,12 @@ define([
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
+   'Core/core-clone',
    'Controls/List/ListView',
    'Types/entity',
-   'Types/collection'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env) {
+   'Types/collection',
+   'Core/polyfill/PromiseAPIDeferred'
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -137,10 +139,17 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_list/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               ctrl._children.listView = {
+                  getItemsContainer: function () {
+                     return {
+                        children: []
+                     }
+                  }
+               };
                ctrl._afterUpdate({});
                assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
@@ -172,7 +181,7 @@ define([
             ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
             setTimeout(function () {
                assert.equal(ctrl.getViewModel().getStartIndex(), 0);
-               assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               // assert.equal(ctrl.getViewModel().getStopIndex(), 1);
                resolve();
             }, 10);
          });
@@ -578,26 +587,26 @@ define([
       it('virtualScrollCalculation on list change', function() {
          var callBackCount = 0;
          var cfg = {
-               viewName: 'Controls/List/ListView',
-               viewConfig: {
-                  idProperty: 'id'
-               },
-               virtualScrolling: true,
-               viewModelConfig: {
-                  items: [],
-                  idProperty: 'id'
-               },
-               viewModelConstructor: ListViewModel,
-               markedKey: 0,
-               source: source,
-               navigation: {
-                  view: 'infinity'
-               }
-            },
-            instance = new BaseControl(cfg),
-            itemData = {
-               key: 1
-            };
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new BaseControl(cfg),
+             itemData = {
+                key: 1
+             };
 
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
@@ -628,6 +637,48 @@ define([
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getViewModel()._startIndex);
          assert.equal(5, instance.getViewModel()._stopIndex);
+      });
+
+      it('enterHandler', function () {
+        var notified = false;
+
+         // Without marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return null;
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+            }
+         });
+         assert.isFalse(notified);
+
+         var myMarkedItem = {qwe: 123};
+         // With marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return {
+                        getContents: function () {
+                           return myMarkedItem;
+                        }
+                     };
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+               assert.equal(e, 'itemClick');
+               assert.deepEqual(item, [myMarkedItem]);
+               assert.deepEqual(options, { bubbling: true });
+            }
+         });
+         assert.isTrue(notified);
       });
 
       it('loadToDirection up', function(done) {
@@ -788,7 +839,7 @@ define([
             }, 100);
          }, 100);
       });
-
+      /*
       it('processLoadError', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);
@@ -802,6 +853,7 @@ define([
 
          assert.equal(error, result, 'UserErrback doesn\'t return instance of Error');
       });
+      */
 
       it('indicator', function() {
          var cfg = {};
@@ -973,9 +1025,11 @@ define([
 
          BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
+         assert.isFalse(baseControl._isScrollShown);
 
          BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
+         assert.isTrue(baseControl._isScrollShown);
       });
 
       it('scrollToEdge without load', function(done) {
@@ -1166,6 +1220,59 @@ define([
          }, 100);
       });
 
+      it('reload with changing source/navig/filter should call scroll to start', function() {
+
+         var
+             lnSource = new sourceLib.Memory({
+                idProperty: 'id',
+                data: data
+             }),
+             lnSource2 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: [{
+                   id: 4,
+                   title: 'Четвертый',
+                   type: 1
+                },
+                   {
+                      id: 5,
+                      title: 'Пятый',
+                      type: 2
+                   }]
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                markedKey: 3,
+                viewModelConstructor: ListViewModel
+             },
+             lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         assert.equal(lnBaseControl._keyDisplayedItem, null);
+
+         return new Promise(function (resolve) {
+            setTimeout(function () {
+               BaseControl._private.reload(lnBaseControl, lnCfg);
+               setTimeout(function () {
+                  assert.equal(lnBaseControl._keyDisplayedItem, null);
+                  lnCfg = clone(lnCfg);
+                  lnCfg.source = lnSource2;
+                  lnBaseControl._isScrollShown = true;
+                  lnBaseControl._beforeUpdate(lnCfg);
+
+                  setTimeout(function() {
+                     assert.equal(lnBaseControl._keyDisplayedItem, 4);
+                     resolve();
+                  });
+               }, 10);
+            },10);
+         });
+      });
+
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          BaseControl._private.scrollToItem = function() {};
@@ -1344,6 +1451,9 @@ define([
             target: {
                closest: function(selector) {
                   return selector === '.js-controls-ListView__checkbox';
+               },
+               getAttribute: function(attrName) {
+                  return attrName === 'contenteditable' ? 'true' : '';
                }
             }
          };
@@ -1833,7 +1943,6 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isFalse(args.target);
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
@@ -2002,7 +2111,18 @@ define([
                   source: source
                },
                instance = new BaseControl(cfg),
-               target = 123,
+               target = {
+                  getBoundingClientRect: function() {
+                     return {
+                        bottom: 1,
+                        height: 2,
+                        left: 3,
+                        right: 4,
+                        top: 5,
+                        width: 6
+                     };
+                  }
+               },
                fakeEvent = {
                   type: 'click'
 
@@ -2025,7 +2145,7 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.equal(target, args.target);
+                     assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                   }
                }

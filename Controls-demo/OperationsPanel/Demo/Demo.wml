@@ -63,6 +63,7 @@
                                                filter="{{_moveDialogFilter}}"
                                                multiSelectVisibility="visible"
                                                parentProperty="Раздел"
+                                               showRoot="{{true}}"
                                                source="{{_moverSource}}"
                                                searchParam="department"
                                                displayProperty="department"

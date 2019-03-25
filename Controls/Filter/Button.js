@@ -59,9 +59,7 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             chain.factory(items).each(function(item) {
-               if (!isEqual(Utils.object.getPropertyValue(item, 'value'), Utils.object.getPropertyValue(item, 'resetValue')) &&
-                  (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))
-               ) {
+               if (_private.isItemChanged(item) && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
                   var textValue = Utils.object.getPropertyValue(item, 'textValue');
 
                   if (textValue) {
@@ -72,10 +70,27 @@ define('Controls/Filter/Button',
 
             return textArr.join(', ');
          },
+         
+         isItemsChanged: function(items) {
+            var isChanged = false;
+   
+            chain.factory(items).each(function(item) {
+               if (!isChanged) {
+                  isChanged = Utils.object.getPropertyValue(item, 'resetValue') !== undefined && _private.isItemChanged(item);
+               }
+            });
+            
+            return isChanged;
+         },
+         
+         isItemChanged: function(item) {
+            return !isEqual(Utils.object.getPropertyValue(item, 'value'), Utils.object.getPropertyValue(item, 'resetValue'));
+         },
 
          resolveItems: function(self, items) {
             self._items = items;
             self._text = _private.getText(items);
+            self._isItemsChanged = _private.isItemsChanged(items);
             if (self._options.filterTemplate && self._filterCompatible) {
                self._filterCompatible.updateFilterStructure(items);
             }
@@ -121,6 +136,18 @@ define('Controls/Filter/Button',
                   }
                }
             });
+         },
+         getPopupConfig: function(self) {
+            return {
+               templateOptions: {
+                  template: self._options.templateName,
+                  items: self._options.items,
+                  historyId: self._options.historyId
+               },
+               fittingMode: 'fixed',
+               template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+               target: self._children.panelTarget
+            };
          }
       };
 
@@ -129,6 +156,7 @@ define('Controls/Filter/Button',
          _template: template,
          _oldPanelOpener: null,
          _text: '',
+         _isItemsChanged: false,
          _historyId: null,
          _popupOptions: null,
          _depsDeferred: null,
@@ -177,15 +205,7 @@ define('Controls/Filter/Button',
                   });
                } else {
                   _private.requireDeps(this).addCallback(function(res) {
-                     self._children.filterStickyOpener.open({
-                        templateOptions: {
-                           template: self._options.templateName,
-                           items: self._options.items,
-                           historyId: self._options.historyId
-                        },
-                        template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-                        target: self._children.panelTarget
-                     });
+                     self._children.filterStickyOpener.open(_private.getPopupConfig(self));
                      return res;
                   });
                }

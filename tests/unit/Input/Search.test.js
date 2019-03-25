@@ -109,6 +109,15 @@ define(
 
                search._focusOutHandler();
             });
+
+            it('isVisibleResetButton', function() {
+               let self = { _options: { readOnly: false, value: '' } };
+               assert.isFalse(Search._private.isVisibleResetButton.call(self));
+               self._options.value = 'test text';
+               assert.isTrue(Search._private.isVisibleResetButton.call(self));
+               self._options.readOnly = true;
+               assert.isFalse(Search._private.isVisibleResetButton.call(self));
+            });
          });
       });
    }

@@ -5,14 +5,15 @@ define('Controls/Input/interface/IInputField', [], function() {
     *
     * @interface Controls/Input/interface/IInputField
     * @public
-    * @author Колесова П.С.
+    * @author Журавлев М.С.
     */
 
    /**
     * @name Controls/Input/interface/IInputField#value
     * @cfg {String|null} Text in the field.
     * @default '' (empty string)
-    * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+    * @remark
+    * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
     * @example
     * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
     * <pre>
@@ -44,7 +45,7 @@ define('Controls/Input/interface/IInputField', [], function() {
     * @example
     * In this example, we show how you can 'bind' control's value to the field. In the first field, we do it manually using valueChanged event. In the second field we use bind notation. Both fields in this examples will have identical behavior.
     * <pre>
-    *    <Controls.Input.Text value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+    *    <Controls.Input.Text value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()" />
     *
     *    <Controls.Input.Text bind:value="_anotherFieldValue" />
     * </pre>

@@ -1,7 +1,8 @@
 define(
    [
       'Controls/Dropdown/Opener',
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/polyfill/PromiseAPIDeferred'
    ],
    (Opener, BaseOpener) => {
       describe('Dropdown/Opener', () => {
@@ -102,6 +103,13 @@ define(
             config.popupOptions.templateOptions.rootKey = 'testKey';
             Opener._private.checkIcons(opener, config);
             assert.deepEqual(config.popupOptions.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
+         });
+
+         it('getIconSize', function() {
+            let reault = Opener._private.getIconSize('icon-add icon-small', 'm');
+            assert.equal(reault, 'icon-medium');
+            reault = Opener._private.getIconSize('icon-add icon-small');
+            assert.equal(reault, 'icon-small');
          });
       });
    }

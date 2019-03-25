@@ -165,12 +165,20 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
+         it('long html', function() {
+            var text = 'a'.repeat(2000);
+            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', text]]);
+         }).timeout(1000);
+
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
+               '<p> a </p>' +
                '<p>texthttps://ya.ru. More text</p>' +
                '<p><a>https://ya.ru</a>https://ya.ru<a>https://ya.ru</a></p>' +
                '<p>https://ya.ru</p>' +
+               '<p><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>' +
+               '<p><img src="https://ya.ru" alt="a2ae6fcf-a3fa-471f-8b92-2017f78e8155" /></p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
                '<p><strong>https://ya.ru</strong></p>' +
@@ -189,9 +197,26 @@ define([
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
                ['p', linkNode],
+               ['p', ' a '],
                ['p', 'text', linkNode, '. More text'],
                ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
                ['p', linkNode],
+               ['p', ['iframe',
+                  {
+                     style: 'min-width: 350px; min-height: 214px;',
+                     src: 'https://www.youtube.com/embed/LY2I4IXN1zQ',
+                     width: '430',
+                     height: '300',
+                     frameborder: '0',
+                     allowfullscreen: 'allowfullscreen'
+                  }
+               ]],
+               ['p', ['img',
+                  {
+                     src: 'https://ya.ru',
+                     alt: 'a2ae6fcf-a3fa-471f-8b92-2017f78e8155'
+                  }
+               ]],
                ['p', linkNode, nbsp, linkNode, nbsp],
                ['p', '  ', linkNode, '  '],
                ['p', ['strong', linkNode]],
@@ -271,9 +296,11 @@ define([
                         ['p', 'Test paragraph'],
                         ['span', 'Test span'],
                         ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
+                        ['img', { alt: 'javascript:alert(123)', src: 'javascript:alert(123)' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
                         ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
+                        ['a', { alt: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss link'],
                         ['pre', 'Test pretty print'],
                         ['label', 'Test label'],
                         ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
@@ -331,8 +358,10 @@ define([
                '<p>Test paragraph</p>' +
                '<span>Test span</span>' +
                '<img alt="Test image" src="test.gif" />' +
+               '<img alt="javascript:alert(123)" />' +
                '<br />' +
                '<a rel="noreferrer" target="_blank">Test link</a>' +
+               '<a alt="javascript:alert(123)">xss link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
                '<font>Test font</font>' +
@@ -363,7 +392,7 @@ define([
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
-               ['p', linkNode, nbsp + '   '],
+               ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
                ['p', linkNode, ['br'], 'text'],
@@ -383,7 +412,7 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
-               '<p>' + decoratedLinkHtml + nbsp + '   </p>' +
+               '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +

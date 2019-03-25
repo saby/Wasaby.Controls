@@ -23,7 +23,7 @@ define(['Controls/Popup/Templates/Stack/StackTemplate'], (StackTemplate) => {
          Stack._beforeMount({
             maximized: true
          });
-         Stack._beforeUpdate({
+         Stack._afterUpdate({
             maximized: false
          });
 

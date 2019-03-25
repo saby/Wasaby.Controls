@@ -20,7 +20,7 @@
       sorting="{{_options.sorting}}"
       autoDropDown="{{_determineAutoDropDown()}}"
       layerName="Controls/Container/Suggest/__PopupLayer"
-      value="{{_options.value}}"
+      value="{{_inputValue}}"
       attr:class="controls-Lookup__suggest">
    <Controls.Input.resources.InputRender.InputRender
          name="inputRender"
@@ -31,20 +31,19 @@
          selectOnClick="{{ _options.selectOnClick }}"
          inputCharRegExp="{{ _options.inputCharRegExp }}"
          constraint="{{ _options.constraint }}"
-         value="{{ _options.value }}"
+         value="{{_inputValue}}"
          tagStyle="{{ _options.tagStyle }}"
          placeholder="{{ _options.placeholder }}"
          validationErrors="{{ _options.validationErrors }}"
          on:valueChanged="_changeValueHandler()"
          on:inputCompleted="_notifyHandler('inputCompleted')"
          attr:class="controls-Lookup__inputRender controls-Lookup__inputRender_{{_multiLineState ? 'multiLine' : 'singleLine'}}
-            {{!_isEmpty() && !_options.multiSelect ? ' controls-Lookup__inputRender_fieldWrapper_hidden'}}
+            {{!_isInputVisible() ? ' controls-Lookup__inputRender_fieldWrapper_hidden'}}
             controls-Lookup__inputRender_content_width_{{_inputWidth ? 'custom' : 'default'}}">
 
       <ws:content>
-         <ws:if data="{{_isInputVisible()}}">
-            <ws:partial template="wml!Controls/Input/resources/input" attr:style="width: {{_inputWidth}}px;"/>
-         </ws:if>
+         <!--Always keep input field in layout https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629-->
+         <ws:partial template="wml!Controls/Input/resources/input" attr:style="width: {{_inputWidth}}px;" on:keyDown="_keyDown()"/>
       </ws:content>
 
       <ws:beforeFieldWrapper>

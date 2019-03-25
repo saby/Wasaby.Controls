@@ -37,14 +37,15 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             moduleClass.superclass.init.apply(this, arguments);
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
+            this._keydownHandler = this._keydownHandler.bind(this);
             this._onResultHandler = this._onResultHandler.bind(this);
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
-            this._onActivatedHandler = this._onActivatedHandler.bind(this);
-            this._onDeactivatedHandler = this._onDeactivatedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
+
+            this.getContainer().bind('keydown', this._keydownHandler);
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
@@ -92,6 +93,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                return def;
             });
+         },
+
+         _keydownHandler: function(e) {
+            if (!e.shiftKey && e.which === Env.constants.key.esc) {
+               e.stopPropagation();
+               this._onCloseHandler();
+            }
          },
 
          _createEventProperty: function(handler) {
@@ -176,9 +184,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             innerOptions._onResultHandler = this._onResultHandler;
             innerOptions._onResizeHandler = this._onResizeHandler;
             innerOptions._onRegisterHandler = this._onRegisterHandler;
-            innerOptions._onActivatedHandler = this._onActivatedHandler;
             innerOptions._onMaximizedHandler = this._onMaximizedHandler;
-            innerOptions._onDeactivatedHandler = this._onDeactivatedHandler;
          },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
@@ -223,19 +229,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                ManagerWrapperController.unregisterListener(event, eventName, emitter);
             }
          },
-         _onActivatedHandler: function(event, opts) {
-            // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
-            this._$onBringToFront = this.onBringToFront;
-            this.onBringToFront = function() {
-               if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
-                  if (opts._$to.setActive) {
-                     opts._$to.setActive(true);
-                  } else {
-                     opts._$to.activate();
-                  }
-               }
-            };
-         },
 
          onBringToFront: function() {
             this._vDomTemplate && this._vDomTemplate.activate();
@@ -268,12 +261,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._updateVDOMTemplate(newOptions);
          },
-         _onDeactivatedHandler: function() {
-            // активность уходит - восстановим onBringToFront
-            if (this._$onBringToFront) {
-               this.onBringToFront = this._$onBringToFront;
-            }
-         },
 
          _getRootContainer: function() {
             var container = this._vDomTemplate.getContainer();
@@ -284,6 +271,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
+            this.getContainer().unbind('keydown', this._keydownHandler);
             if (this._vDomTemplate) {
                var Sync = require('Vdom/Vdom').Synchronizer;
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);

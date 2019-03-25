@@ -73,8 +73,9 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          }];
          filterLayout._beforeUpdate({ filterButtonSource: items });
          assert.deepEqual(filterLayout._filterButtonItems, items);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
-      
+
       it('_itemsChanged', function () {
          var filterLayout = new Filter();
          var items = [{
@@ -276,17 +277,20 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
       });
    
       it('_filterChanged', function() {
-         var filterLayout = new Filter();
-         var filterChangedNotifyed = false;
-         var resultFilter = {test: 'test'};
-         filterLayout._notify = function() {
+         let filterLayout = new Filter();
+         let filterChangedNotifyed = false;
+         let resultFilter = {test: 'test'};
+         let propagationStopped = false;
+         
+         filterLayout._notify = () => {
             filterChangedNotifyed = true;
          };
          
-         filterLayout._filterChanged(null, {test: 'test'});
+         filterLayout._filterChanged({stopPropagation: () => {propagationStopped = true}}, {...resultFilter});
          
          assert.deepEqual(filterLayout._filter, resultFilter);
          assert.isTrue(filterChangedNotifyed);
+         assert.isTrue(propagationStopped);
       });
    
       it('_private.updateFilterItems', function() {
@@ -567,7 +571,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          var fastFilterItems = [];
 
          var filterButtonItems = [];
-         Filter._private.updateHistory({}, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         Filter._private.updateHistory(filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items, {});
             done();
@@ -602,6 +606,25 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
 
          Filter._private.applyItemsToFilter(self, filter1, filterButtonItems1, []);
          assert.equal(self._filter.testId, filterButtonItems1[0].value);
+      });
+
+      it('updateFilterHistory', function(done) {
+         let fastFilterItems = [],
+            filterButtonItems = [];
+         Filter.updateFilterHistory({historyId: 'TEST_HISTORY_ID', filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
+            assert.deepEqual(items, {});
+            done();
+         });
+
+         let errorCathed = false;
+         try {
+            Filter.updateFilterHistory({filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
+         } catch (error) {
+            errorCathed = true;
+         }
+         assert.isTrue(errorCathed);
+
       });
    });
 

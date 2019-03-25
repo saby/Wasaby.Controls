@@ -1,4 +1,4 @@
-﻿define('Controls/Container/Suggest/Layout',
+define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
@@ -69,7 +69,7 @@
          open: function(self) {
             _private.loadDependencies(self).addCallback(function() {
                //focus can be moved out while dependencies loading
-               if (self._inputActive) {
+               if (self._inputActive && !self._stackWithSearchResultsOpened) {
                   _private.suggestStateNotify(self, true);
                }
             });
@@ -86,6 +86,8 @@
                      filter[HISTORY_KEYS_FIELD] = keys;
                      _private.setSearchValue(self, '');
                      _private.setFilter(self, filter);
+                     _private.open(self);
+                  } else if (!self._options.suggestState) {
                      _private.open(self);
                   }
                   return keys;
@@ -125,7 +127,7 @@
             }
          },
          shouldSearch: function(self, value) {
-            return self._active && value.length >= self._options.minSearchLength;
+            return self._inputActive && value.length >= self._options.minSearchLength;
          },
    
          prepareValue: function(self, value) {
@@ -142,13 +144,19 @@
                    hasItems && self._options.historyId && !self._searchValue ||
                   (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
-         precessResultData: function(self, resultData) {
+         processResultData: function(self, resultData) {
             self._searchResult = resultData;
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
                var result = metaData.results;
+               
                _private.setMissSpellingCaption(self, getSwitcherStrFromData(data));
+               
+               if (!data.getCount()) {
+                  _private.setSuggestMarkedKey(self, null);
+               }
+               
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
@@ -223,11 +231,9 @@
                historyService.query().addCallback(function(dataSet) {
                   if (self._historyLoad) {
                      var keys = [];
-
                      dataSet.getRow().get('recent').each(function(item) {
                         keys.push(item.get('ObjectId'));
                      });
-
                      self._historyLoad.callback(keys);
                   }
                });
@@ -268,6 +274,7 @@
          _showContent: false,
          _inputActive: false,
          _suggestMarkedKey: null,
+         _stackWithSearchResultsOpened: false,
 
          /**
           * three state flag
@@ -378,6 +385,7 @@
          },
          
          _inputClicked: function() {
+            this._inputActive = true;
             if (!this._options.suggestState) {
                _private.inputActivated(this);
             }
@@ -398,6 +406,11 @@
             /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
                we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
             this._forceUpdate();
+         },
+   
+         //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+         _stackWithSearchResultsClosed: function() {
+            this._stackWithSearchResultsOpened = false;
          },
    
          // <editor-fold desc="List handlers">
@@ -423,7 +436,7 @@
          },
    
          // </editor-fold>
-         
+
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -434,7 +447,7 @@
          _searchEnd: function(result) {
             if (this._options.suggestState) {
                this._loading = false;
-               
+
                // _searchEnd may be called synchronously, for example, if local source is used,
                // then we must check, that indicator was created
                if (this._children.indicator) {
@@ -442,7 +455,7 @@
                }
             }
             this._searchDelay = this._options.searchDelay;
-            _private.precessResultData(this, result);
+            _private.processResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
             }
@@ -453,14 +466,19 @@
          },
          _showAllClick: function() {
             var self = this;
-
+   
+            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+            //popup manager moves focus to control after closing panel asynchronously, because of this, there are problems with focus
+            //if we close suggest popup and instantly open stack with search results, focus will moved to input, and suggest will opened (if autodropdown option is setter to true)
+            this._stackWithSearchResultsOpened = true;
+            
             //loading showAll templates
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
-               self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
+               self._children.stackOpener.open();
             });
             _private.close(this);
          },
-         
+
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
@@ -469,10 +487,10 @@
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
             var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
-            
+
             if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
-               
+
                if (this._children.inputKeydown) {
                   this._children.inputKeydown.start(event);
                }

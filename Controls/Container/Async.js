@@ -1,27 +1,21 @@
 define('Controls/Container/Async',
    [
       'Core/Control',
-      'Core/Deferred',
       'View/Request',
       'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
-      'View/Executor/Utils',
       'Core/library',
-      'Types/entity',
-      'Env/Env'
+      'Types/entity'
    ],
 
    function(Base,
-      Deferred,
       Request,
       constants,
       template,
       ModuleLoader,
-      Utils,
       library,
-      entity,
-      Env) {
+      entity) {
       'use strict';
 
 
@@ -61,7 +55,7 @@ define('Controls/Container/Async',
             var result;
             var self = this;
             if (!self._isServer()) {
-               if (!this._isCompat() && (receivedState || self._isLoaded(options.templateName))) {
+               if (self._isLoaded(options.templateName) || (!this._isCompat() && receivedState)) {
                   self._loadContentSync(options.templateName, options.templateOptions, false);
                } else {
                   result = self._loadContentAsync(options.templateName, options.templateOptions, true);
@@ -84,17 +78,17 @@ define('Controls/Container/Async',
                return;
             }
             if (opts.templateName === this._options.templateName) {
-               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, opts.templateOptions);
+               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, opts.templateOptions, opts.templateName);
             } else if (this._isLoaded(opts.templateName)) {
                this._loadContentSync(opts.templateName, opts.templateOptions);
             }
          },
 
-         _afterUpdate: function(oldOptions) {
+         _afterUpdate: function() {
             if (!this.canUpdate) {
                return;
             }
-            if (oldOptions.templateName !== this._options.templateName) {
+            if (this.currentTemplateName !== this._options.templateName) {
                this._loadContentAsync(this._options.templateName, this._options.templateOptions);
             }
          },
@@ -113,7 +107,7 @@ define('Controls/Container/Async',
             var self = this;
             var loaded = this._loadFileSync(name);
             if (!this._checkLoadedError(loaded)) {
-               self._updateOptionsForComponent(loaded, options);
+               self._updateOptionsForComponent(loaded, options, name);
                if (serverSide) {
                   self._pushDepToHeadData(library.parse(name).name);
                }
@@ -132,7 +126,7 @@ define('Controls/Container/Async',
             promise = promise.then(function(res) {
                self.canUpdate = true;
                if (!self._checkLoadedError(res)) {
-                  self._updateOptionsForComponent(res, options);
+                  self._updateOptionsForComponent(res, options, name);
                   if (!noUpdate) {
                      self._forceUpdate();
                   }
@@ -154,7 +148,8 @@ define('Controls/Container/Async',
             }
          },
 
-         _updateOptionsForComponent: function(tpl, opts) {
+         _updateOptionsForComponent: function(tpl, opts, templateName) {
+            this.currentTemplateName = templateName;
             this.optionsForComponent = opts || {};
             this.optionsForComponent.resolvedTemplate = tpl;
          },

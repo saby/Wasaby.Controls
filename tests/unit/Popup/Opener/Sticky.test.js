@@ -24,6 +24,35 @@ define(
             height: 1040
          });
 
+         function getPositionConfig() {
+            return {
+               revertPositionStyle: true,
+               corner: {
+                  vertical: 'top',
+                  horizontal: 'left'
+               },
+               align: {
+                  vertical: {
+                     side: 'top',
+                     offset: 0
+                  },
+                  horizontal: {
+                     side: 'right',
+                     offset: 0
+                  }
+               },
+               config: {},
+               sizes: {
+                  width: 200,
+                  height: 200,
+                  margins: {
+                     top: 0,
+                     left: 0
+                  }
+               }
+            };
+         }
+
          it('Simple sticky', () => {
             var position = StickyStrategy.getPosition({
                corner: {
@@ -33,11 +62,11 @@ define(
                align: {
                   vertical: {
                      side: 'bottom',
-                     offset: 0
+                     offset: 20
                   },
                   horizontal: {
                      side: 'right',
-                     offset: 0
+                     offset: 25
                   }
                },
                config: {},
@@ -50,8 +79,8 @@ define(
                   }
                }
             }, targetCoords);
-            assert.isTrue(position.top === 400);
-            assert.isTrue(position.left === 400);
+            assert.isTrue(position.top === 420);
+            assert.isTrue(position.left === 425);
          });
 
          it('Sticky position fixed', () => {
@@ -322,9 +351,9 @@ define(
             StickyController._private.isTargetVisible = () => true;
          });
 
-         it('Sticky with option locationStrategy=fixed', () => {
+         it('Sticky with option fittingMode=fixed', () => {
             var position = StickyStrategy.getPosition({
-               locationStrategy: 'fixed',
+               fittingMode: 'fixed',
                corner: {
                   vertical: 'bottom',
                   horizontal: 'left'
@@ -352,6 +381,203 @@ define(
 
             assert.isTrue(position.top === 400);
             assert.isTrue(position.left === -190);
+         });
+
+         it('Sticky with option fittingMode=overflow', () => {
+            let left = 1700;
+            let right = 1900;
+            let targetC = {...targetCoords, left, right};
+
+            var position = StickyStrategy.getPosition({
+               fittingMode: 'overflow',
+               corner: {
+                  vertical: 'top',
+                  horizontal: 'left'
+               },
+               align: {
+                  vertical: {
+                     side: 'top',
+                     offset: 0
+                  },
+                  horizontal: {
+                     side: 'right',
+                     offset: 0
+                  }
+               },
+               config: {},
+               sizes: {
+                  width: 400,
+                  height: 400,
+                  margins: {
+                     top: 0,
+                     left: 10
+                  }
+               }
+            }, targetC);
+
+            assert.equal(position.top, 0);
+            assert.equal(position.left, 1520);
+         });
+
+         it ('Sticky [new position]', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            let cfg = getPositionConfig();
+
+            // 1 position
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.bottom, 800);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 2 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 400);
+            assert.equal(position.top, 200);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 3 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'bottom';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 600);
+            assert.equal(position.top, 400);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 4 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 800);
+            assert.equal(position.bottom, 600);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] with body scroll', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            var targetC = {
+               top: 400,
+               left: 400,
+               bottom: 410,
+               right: 410,
+               width: 10,
+               height: 10,
+               leftScroll: 50
+            };
+
+            // 3 position
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'bottom';
+            cfg.align.horizontal.side = 'left';
+            let position = StickyStrategy.getPosition(cfg, targetC);
+            assert.equal(position.top, 410);
+            assert.equal(position.right, 640);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+
+         it ('Sticky [new position] with margins', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+            cfg.sizes.margins.top = 10;
+            cfg.sizes.margins.left = 10;
+
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 410);
+            assert.equal(position.top, 210);
+            assert.equal(Object.keys(position).length, 2);
+
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+            cfg.sizes.margins.top = 10;
+            cfg.sizes.margins.left = 10;
+            cfg.sizes.width = 100;
+            cfg.sizes.height = 100;
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 810);
+            assert.equal(position.bottom, 610);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] revert position', () => {
+            let cfg = getPositionConfig();
+            cfg.sizes.height = 400;
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.top, 400);
+            assert.equal(Object.keys(position).length, 2);
+
+            cfg = getPositionConfig();
+            cfg.sizes.width = 400;
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+            targetCoords.topScroll = 10;
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            targetCoords.topScroll = 0;
+            assert.equal(position.left, 400);
+            assert.equal(position.bottom, 620);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] fittingMode fixed', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            let cfg = getPositionConfig();
+            cfg.fittingMode = 'fixed';
+            cfg.sizes.height = 400;
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.bottom, 800);
+            assert.equal(position.height, 200);
+            assert.equal(Object.keys(position).length, 3);
+
+            cfg = getPositionConfig();
+            cfg.fittingMode = 'fixed';
+            cfg.sizes.width = 400;
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 800);
+            assert.equal(position.bottom, 600);
+            assert.equal(position.width, 200);
+            assert.equal(Object.keys(position).length, 3);
          });
       });
    }

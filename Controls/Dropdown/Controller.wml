@@ -5,7 +5,7 @@
    <Controls.Dropdown.Opener name="DropdownOpener">
       <ws:popupOptions className="{{_options.popupClassName}}">
          <ws:eventHandlers onResult="{{_onResult}}"
-                           onClose="{{_options.close}}"
+                           onClose="{{_onClose}}"
                            onOpen="{{_options.open}}"/>
          <ws:templateOptions
                  keyProperty="{{_options.keyProperty}}"

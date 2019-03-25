@@ -16,7 +16,7 @@
       bind:excludedKeys="_excludedKeys"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:tileItemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
          <ws:partial template="wml!Controls/List/emptyTemplate">
@@ -26,7 +26,7 @@
          </ws:partial>
       </ws:emptyTemplate>
    </Controls.Explorer>
-   <h2>Плитка с разной шириной</h2>
+   <h2>Плитка с разной шириной (без увеличения)</h2>
    <Controls.Tile
       attr:class="demo-Tile__dynamic"
       tileMode="dynamic"
@@ -34,6 +34,22 @@
       imageProperty="image"
       keyProperty="id"
       hoverMode=""
+      source="{{_viewSourceDynamic}}"
+      itemActions="{{_itemActions}}"
+      itemsReadyCallback="{{_itemsReadyCallbackThird}}">
+      <ws:itemTemplate>
+         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                     hasTitle="{{itemTemplate.itemData.item.isDocument}}"
+                     itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
+      </ws:itemTemplate>
+   </Controls.Tile>
+   <h2>Плитка с разной шириной (с увеличением)</h2>
+   <Controls.Tile
+      attr:class="demo-Tile__dynamic"
+      tileMode="dynamic"
+      displayProperty="title"
+      imageProperty="image"
+      keyProperty="id"
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">

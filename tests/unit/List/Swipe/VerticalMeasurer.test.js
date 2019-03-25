@@ -1,21 +1,88 @@
-define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
+define(['Controls/_lists/Swipe/VerticalMeasurer', 'Core/i18n'], function(
    VerticalMeasurer,
    i18n
 ) {
    describe('Controls.List.Swipe.VerticalMeasurer', function() {
       it('needIcon', function() {
-         assert.isFalse(VerticalMeasurer.default.needIcon({}));
+         assert.isFalse(VerticalMeasurer.default.needIcon({}, 'bottom'));
+         assert.isFalse(VerticalMeasurer.default.needIcon({}, 'none'));
+         assert.isFalse(VerticalMeasurer.default.needIcon({}, 'right'));
+         assert.isFalse(VerticalMeasurer.default.needIcon({}, 'bottom', true));
+         assert.isFalse(VerticalMeasurer.default.needIcon({}, 'none', true));
+         assert.isTrue(VerticalMeasurer.default.needIcon({}, 'right', true));
          assert.isTrue(
-            VerticalMeasurer.default.needIcon({
-               icon: '123'
-            })
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'bottom'
+            )
+         );
+         assert.isTrue(
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'right'
+            )
+         );
+         assert.isTrue(
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'none'
+            )
+         );
+         assert.isTrue(
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'bottom',
+               true
+            )
+         );
+         assert.isTrue(
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'right',
+               true
+            )
+         );
+         assert.isTrue(
+            VerticalMeasurer.default.needIcon(
+               {
+                  icon: '123'
+               },
+               'none',
+               true
+            )
          );
       });
 
       it('needTitle', function() {
-         assert.isFalse(VerticalMeasurer.default.needTitle({}, 'none'));
-         assert.isFalse(VerticalMeasurer.default.needTitle({}, 'right'));
          assert.isFalse(
+            VerticalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'none'
+            )
+         );
+         assert.isFalse(
+            VerticalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'right'
+            )
+         );
+         assert.isTrue(VerticalMeasurer.default.needTitle({}, 'none'));
+         assert.isTrue(VerticalMeasurer.default.needTitle({}, 'right'));
+         assert.isTrue(
             VerticalMeasurer.default.needTitle(
                {
                   title: '123'
@@ -63,12 +130,14 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   itemActionsSize: 'm',
                   itemActions: {
                      all: actions,
-                     showed: [{
-                        icon: 'icon-ExpandDown',
-                        title: i18n.rk('Ещё'),
-                        _isMenu: true,
-                        showType: 0
-                     }]
+                     showed: [
+                        {
+                           icon: 'icon-ExpandDown',
+                           title: i18n.rk('Ещё'),
+                           _isMenu: true,
+                           showType: 0
+                        }
+                     ]
                   },
                   paddingSize: 'm'
                };
@@ -118,12 +187,14 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   itemActionsSize: 'm',
                   itemActions: {
                      all: actions,
-                     showed: [{
-                        icon: 'icon-ExpandDown',
-                        title: i18n.rk('Ещё'),
-                        _isMenu: true,
-                        showType: 0
-                     }]
+                     showed: [
+                        {
+                           icon: 'icon-ExpandDown',
+                           title: i18n.rk('Ещё'),
+                           _isMenu: true,
+                           showType: 0
+                        }
+                     ]
                   },
                   paddingSize: 'l'
                };
@@ -173,12 +244,14 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   itemActionsSize: 'm',
                   itemActions: {
                      all: actions,
-                     showed: [{
-                        icon: 'icon-ExpandDown',
-                        title: i18n.rk('Ещё'),
-                        _isMenu: true,
-                        showType: 0
-                     }]
+                     showed: [
+                        {
+                           icon: 'icon-ExpandDown',
+                           title: i18n.rk('Ещё'),
+                           _isMenu: true,
+                           showType: 0
+                        }
+                     ]
                   },
                   paddingSize: 'l'
                };
@@ -201,7 +274,11 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
 
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(actions, 170, 'bottom')
+                  VerticalMeasurer.default.getSwipeConfig(
+                     actions,
+                     170,
+                     'bottom'
+                  )
                );
             });
 
@@ -217,7 +294,11 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
 
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(actions, 200, 'bottom')
+                  VerticalMeasurer.default.getSwipeConfig(
+                     actions,
+                     200,
+                     'bottom'
+                  )
                );
             });
          });
