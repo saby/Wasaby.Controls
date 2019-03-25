@@ -303,9 +303,11 @@ define([
                         ['p', 'Test paragraph'],
                         ['span', 'Test span'],
                         ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
+                        ['img', { alt: 'javascript:alert(123)', src: 'javascript:alert(123)' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
                         ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
+                        ['a', { alt: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss link'],
                         ['pre', 'Test pretty print'],
                         ['label', 'Test label'],
                         ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
@@ -363,8 +365,10 @@ define([
                '<p>Test paragraph</p>' +
                '<span>Test span</span>' +
                '<img alt="Test image" src="test.gif" />' +
+               '<img alt="javascript:alert(123)" />' +
                '<br />' +
                '<a rel="noreferrer" target="_blank">Test link</a>' +
+               '<a alt="javascript:alert(123)">xss link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
                '<font>Test font</font>' +
