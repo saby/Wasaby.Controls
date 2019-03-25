@@ -3,7 +3,7 @@ def version = "19.300"
 def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         checkout([$class: 'GitSCM',
-            branches: [[name: "19.300/pea/local_demo"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
