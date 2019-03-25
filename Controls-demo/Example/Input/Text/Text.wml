@@ -1,10 +1,10 @@
 <div class="example-Text ws-inline-flexbox ws-flex-column" on:labelClick="_labelClickHandler()">
-   <Controls-demo.Example.resource.BaseDemoInput class="simpleTextField_block" title="Simple text field" blocker="{{true}}">
+   <Controls-demo.Example.resource.BaseDemoInput class="ControlsDemo-ExampleInput_simpleTextFieldBlock" title="Simple text field" blocker="{{true}}">
       <ws:contents>
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text placeholder="Tooltip" class="simpleTextField"
+                  <Controls.Input.Text placeholder="Tooltip" class="ControlsDemo-ExampleInput_simpleTextField"
                                        bind:value="_value1"/>
                </ws:template>
             </ws:Object>
@@ -25,7 +25,7 @@
             </ws:Object>
             <ws:Object spacing="big">
                <ws:template>
-                  <Controls.Input.Text name="text3" class="focusText"
+                  <Controls.Input.Text name="text3" class="ControlsDemo-ExampleInput_focusText"
                                        placeholder="Tooltip"
                                        bind:value="_value3"/>
                </ws:template>
