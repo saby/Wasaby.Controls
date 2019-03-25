@@ -258,13 +258,13 @@ define('Controls/Input/DateTime/StringValueConverter', [
             if (date > endDateOfMonth) {
                date = endDateOfMonth;
             }
-            if (hours > 24) {
+            if (hours >= 24) {
                hours = 23;
             }
-            if (minutes > 60) {
+            if (minutes >= 60) {
                minutes = 59;
             }
-            if (seconds > 60) {
+            if (seconds >= 60) {
                seconds = 59;
             }
          }
