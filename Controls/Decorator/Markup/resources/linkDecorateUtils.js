@@ -12,7 +12,7 @@ define('Controls/Decorator/Markup/resources/linkDecorateUtils', [
 
    var hrefMaxLength = 1499,
       onlySpacesRegExp = /^[ \u00a0]+$/,
-      paragraphTagNameRegExp = /^(p|div)$/,
+      paragraphTagNameRegExp = /^(p(re)?|div)$/,
       backSlashRegExp = /\\/g,
       classes = {
          wrap: 'LinkDecorator__wrap',

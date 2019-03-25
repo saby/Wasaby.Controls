@@ -392,6 +392,8 @@ define([
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
+               ['pre', linkNode],
+               ['div', linkNode],
                ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
@@ -412,6 +414,8 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
+               '<pre>' + decoratedLinkHtml + '</pre>' +
+               '<div>' + decoratedLinkHtml + '</div>' +
                '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
@@ -619,6 +623,30 @@ define([
                },
                'https://ya.ru'
             ], '      ', ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 5', function() {
+            var parentNode = ['pre', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 6', function() {
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
       });
