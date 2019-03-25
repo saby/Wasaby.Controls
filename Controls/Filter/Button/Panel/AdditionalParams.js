@@ -108,10 +108,10 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          _private.onResize(this);
       },
 
-      _afterUpdate: function() {
-         if (!isEqual(this.items, this._options.items)) {
-            this.items = _private.cloneItems(this._options.items);
-            this._columns = _private.getColumnsByItems(this._options.items);
+      _beforeUpdate: function(newOptions) {
+         if (!isEqual(this.items, newOptions.items)) {
+            this.items = _private.cloneItems(newOptions.items);
+            this._columns = _private.getColumnsByItems(newOptions.items);
             _private.onResize(this);
          }
       },

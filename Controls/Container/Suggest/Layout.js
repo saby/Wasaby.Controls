@@ -69,7 +69,7 @@ define('Controls/Container/Suggest/Layout',
          open: function(self) {
             _private.loadDependencies(self).addCallback(function() {
                //focus can be moved out while dependencies loading
-               if (self._inputActive) {
+               if (self._inputActive && !self._stackWithSearchResultsOpened) {
                   _private.suggestStateNotify(self, true);
                }
             });
@@ -274,6 +274,7 @@ define('Controls/Container/Suggest/Layout',
          _showContent: false,
          _inputActive: false,
          _suggestMarkedKey: null,
+         _stackWithSearchResultsOpened: false,
 
          /**
           * three state flag
@@ -407,6 +408,11 @@ define('Controls/Container/Suggest/Layout',
             this._forceUpdate();
          },
    
+         //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+         _stackWithSearchResultsClosed: function() {
+            this._stackWithSearchResultsOpened = false;
+         },
+   
          // <editor-fold desc="List handlers">
          
          _select: function(event, item) {
@@ -460,10 +466,15 @@ define('Controls/Container/Suggest/Layout',
          },
          _showAllClick: function() {
             var self = this;
-
+   
+            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+            //popup manager moves focus to control after closing panel asynchronously, because of this, there are problems with focus
+            //if we close suggest popup and instantly open stack with search results, focus will moved to input, and suggest will opened (if autodropdown option is setter to true)
+            this._stackWithSearchResultsOpened = true;
+            
             //loading showAll templates
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
-               self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
+               self._children.stackOpener.open();
             });
             _private.close(this);
          },

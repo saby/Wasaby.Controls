@@ -331,15 +331,18 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          getTextWidthThroughCreationElement: function(value) {
-            var element = document.createElement('div');
-            element.classList.add('controls-InputBase__forCalc');
-            element.innerHTML = value;
+            if (document) {
+               var element = document.createElement('div');
+               element.classList.add('controls-InputBase__forCalc');
+               element.innerHTML = value;
 
-            document.body.appendChild(element);
-            var width = element.scrollWidth;
-            document.body.removeChild(element);
+               document.body.appendChild(element);
+               var width = element.scrollWidth;
+               document.body.removeChild(element);
 
-            return width;
+               return width;
+            }
+            return 0;
          }
       };
 
@@ -510,7 +513,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @private
           */
          _getActiveElement: function() {
-            return document.activeElement;
+            return document && document.activeElement;
          },
 
          constructor: function(cfg) {

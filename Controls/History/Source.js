@@ -297,11 +297,11 @@ define('Controls/History/Source', [
 
       updateRecent: function(self, item, meta) {
          var id = item.getId();
-         var recent = self._history.recent;
-         var hItem = recent.getRecordById(id);
+         var recent = self._history && self._history.recent;
          var records;
 
-         if (!(self._nodeProperty && item.get(self._nodeProperty))) {
+         if (!(self._nodeProperty && item.get(self._nodeProperty)) && recent) {
+            var hItem = recent.getRecordById(id);
             if (hItem) {
                recent.remove(hItem);
             }
