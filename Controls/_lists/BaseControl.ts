@@ -3,8 +3,8 @@ import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import BaseControlTpl = require('wml!Controls/_lists/BaseControl/BaseControl');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
+import VirtualScroll = require('Controls/_lists/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
 import isEqualObject = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
@@ -12,11 +12,11 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
 import tUtil = require('Controls/Utils/Toolbar');
-import aUtil = require('Controls/List/ItemActions/Utils/Actions');
+import aUtil = require('Controls/_lists/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_lists/BaseControl/Footer';
-import 'css!theme?Controls/List/BaseControl/BaseControl';
+import 'css!theme?Controls/_lists/BaseControl/BaseControl';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 
@@ -452,7 +452,7 @@ var _private = {
 
     createScrollPagingController: function(self) {
         var def = new Deferred();
-        require(['Controls/List/Controllers/ScrollPaging'], function(ScrollPagingController) {
+        require(['Controls/_lists/Controllers/ScrollPaging'], function(ScrollPagingController) {
             var scrollPagingCtr;
             scrollPagingCtr = new ScrollPagingController({
                 mode: self._options.navigation.viewConfig.pagingMode,
@@ -740,7 +740,7 @@ var _private = {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            requirejs(['Controls/_lists/resources/utils/GroupUtil'], function(GroupUtil) {
                 GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
             });
         }
@@ -750,7 +750,7 @@ var _private = {
         var
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            requirejs(['Controls/_lists/resources/utils/GroupUtil'], function(GroupUtil) {
                 GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
                     result.callback(collapsedGroupsFromStore || config.collapsedGroups);
                 });
@@ -798,7 +798,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {ErrbackConfig} config
      * @return {Promise}
      * @private
@@ -808,7 +808,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {ErrbackConfig} config
      * @return {Promise.<CrudResult>}
      * @private
@@ -830,7 +830,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {Controls/dataSource:error.ViewConfig} errorConfig
      * @private
      */
@@ -849,7 +849,7 @@ var _private = {
 
 /**
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
- * @class Controls/List/BaseControl
+ * @class Controls/_lists/BaseControl
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -858,16 +858,16 @@ var _private = {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IBaseControl
+ * @mixes Controls/_lists/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/BaseControl/Styles
+ * @mixes Controls/_lists/BaseControl/Styles
  * @control
  * @public
  * @author Авраменко А.С.
  * @category List
  */
 
-var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype */{
+var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototype */{
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,

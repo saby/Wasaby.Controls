@@ -1,9 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lists/ItemActions/ItemActionsControl');
 import tUtil = require('Controls/Utils/Toolbar');
-import aUtil = require('Controls/List/ItemActions/Utils/Actions');
+import aUtil = require('Controls/_lists/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
-import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
+import getStyle = require('Controls/_lists/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';

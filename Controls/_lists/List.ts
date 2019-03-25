@@ -3,11 +3,11 @@
  */
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_lists/List');
-import ListViewModel = require('Controls/List/ListViewModel');
+import ListViewModel = require('Controls/_lists/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import 'Controls/List/ListView';
-import 'Controls/List/ListControl';
+import 'Controls/_lists/ListView';
+import 'Controls/_lists/ListControl';
 
 /**
  * Plain list with custom item template. Can load data from data source.
@@ -21,18 +21,18 @@ import 'Controls/List/ListControl';
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IList
+ * @mixes Controls/_lists/interface/IList
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/interface/IDraggable
+ * @mixes Controls/_lists/interface/IDraggable
  *
- * @mixes Controls/List/BaseControlStyles
- * @mixes Controls/List/ListStyles
- * @mixes Controls/List/ItemActions/ItemActionsStyles
- * @mixes Controls/List/Swipe/SwipeStyles
+ * @mixes Controls/_lists/BaseControlStyles
+ * @mixes Controls/_lists/ListStyles
+ * @mixes Controls/_lists/ItemActions/ItemActionsStyles
+ * @mixes Controls/_lists/Swipe/SwipeStyles
  *
- * @mixes Controls/List/Mover/MoveDialog/Styles
- * @mixes Controls/List/PagingStyles
- * @mixes Controls/List/DigitButtonsStyles
+ * @mixes Controls/_lists/Mover/MoveDialog/Styles
+ * @mixes Controls/_lists/PagingStyles
+ * @mixes Controls/_lists/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.
@@ -43,8 +43,8 @@ import 'Controls/List/ListControl';
 
 var ListControl = Control.extend(/** @lends Controls/List.prototype */{
     _template: ListControlTpl,
-    _viewName: 'Controls/List/ListView',
-    _viewTemplate: 'Controls/List/ListControl',
+    _viewName: 'Controls/_lists/ListView',
+    _viewTemplate: 'Controls/_lists/ListControl',
     _viewModelConstructor: null,
 
     _beforeMount: function() {

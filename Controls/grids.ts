@@ -6,6 +6,7 @@ import ColumnTemplate = require('wml!Controls/_grids/Column');
 
 import HeaderContent = require('wml!Controls/_grids/HeaderContent');
 import SortButton = require('Controls/_grids/SortButton');
+import GridView = require('Controls/_grids/GridView');
 
 export {
     View,
@@ -15,5 +16,6 @@ export {
     ColumnTemplate,
 
     HeaderContent,
-    SortButton
+    SortButton,
+    GridView
 }

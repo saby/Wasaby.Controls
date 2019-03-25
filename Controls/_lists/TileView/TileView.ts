@@ -1,9 +1,9 @@
-import ListView = require('Controls/List/ListView');
+import ListView = require('Controls/_lists/ListView');
 import template = require('wml!Controls/_lists/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_lists/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
-import ItemSizeUtils = require('Controls/List/TileView/resources/ItemSizeUtils');
-import 'css!theme?Controls/List/TileView/TileView';
+import ItemSizeUtils = require('Controls/_lists/TileView/resources/ItemSizeUtils');
+import 'css!theme?Controls/_lists/TileView/TileView';
 
 var _private = {
     getFixedPosition: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
