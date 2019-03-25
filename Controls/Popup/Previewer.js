@@ -41,7 +41,7 @@ define('Controls/Popup/Previewer',
             return 'click';
          },
          getCfg: function(self) {
-            return {
+            var config = {
                opener: self,
                target: self._container,
                template: 'Controls/Popup/Previewer/OpenerTemplate',
@@ -59,6 +59,17 @@ define('Controls/Popup/Previewer',
                },
                closeChildWindows: self._options.closeChildWindows
             };
+
+            if (self._options.corner) {
+               config.corner = self._options.corner;
+            }
+            if (self._options.verticalAlign) {
+               config.verticalAlign = self._options.verticalAlign;
+            }
+            if (self._options.horizontalAlign) {
+               config.horizontalAlign = self._options.horizontalAlign;
+            }
+            return config;
          },
          open: function(self, event, type) {
             if (!self._isPopupOpened()) {
@@ -197,7 +208,8 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
             }
-         }
+         },
+         _private: _private
       });
 
       Previewer.getDefaultOptions = function() {

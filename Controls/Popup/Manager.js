@@ -182,7 +182,6 @@ define('Controls/Popup/Manager',
                item.waitDeactivated = false;
                item.isActive = true;
             }
-            _private.activeElement = {};
          },
 
          popupDeactivated: function(id) {
@@ -191,11 +190,7 @@ define('Controls/Popup/Manager',
                item.isActive = false;
                if (_private.needClosePopupByDeactivated(item)) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
-                     _private.finishPendings(id, function() {
-                        if (!_private.activeElement[id]) {
-                           _private.activeElement[id] = _private.getActiveElement();
-                        }
-                     }, function() {
+                     _private.finishPendings(id, null, function() {
                         // if pendings is exist, take focus back while pendings are finishing
                         _private.getPopupContainer().getPopupById(id).activate();
                      }, function() {
@@ -259,22 +254,6 @@ define('Controls/Popup/Manager',
 
          popupClose: function(id) {
             _private.remove(this, id);
-            return false;
-         },
-
-         popupDestroyed: function(id) {
-            if (_private.activeElement[id]) {
-               // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
-               // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
-               setTimeout(function() {
-                  // new popup can be activated and take focus during the timeout
-                  // will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
-                  if (_private.activeElement[id]) {
-                     _private.activeElement[id].focus();
-                     delete _private.activeElement[id];
-                  }
-               }, 0);
-            }
             return false;
          },
 

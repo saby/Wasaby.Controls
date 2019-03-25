@@ -60,7 +60,7 @@
         </ws:partial>
     </ws:if>
 
-    <Controls.Popup.Opener.Stack name="stackOpener" on:result="_select()">
+    <Controls.Popup.Opener.Stack name="stackOpener" on:result="_select()" on:close="_stackWithSearchResultsClosed()">
         <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog">
             <ws:templateOptions searchValue="{{_searchValue}}" filter="{{_filter}}">
                 <ws:template>

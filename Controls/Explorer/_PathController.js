@@ -2,7 +2,7 @@ define('Controls/Explorer/_PathController', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Explorer/_PathController/_PathController',
-   'Controls/crumbs',
+   'Controls/breadcrumbs',
    'Controls/List/resources/utils/ItemsUtil'
 ], function(
    Control,
