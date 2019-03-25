@@ -13,6 +13,7 @@ define('Controls/Input/interface/IInputPlaceholder', [], function() {
     * @cfg {String|Function} Field placeholder.
     * @remark
     * Renders placeholder in the field when it is empty. We do not use native HTML placeholders and render placeholder as div overlaid on top of the field to allow the use of custom templates.
+    * Clickable elements in custom templates need to set the css property pointer-events: auto.
     * @example
     * In this example, we create a text field with simple text placeholder.
     * <pre>

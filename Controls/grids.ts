@@ -4,10 +4,16 @@ import GroupTemplate = require('wml!Controls/_grids/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ColumnTemplate = require('wml!Controls/_grids/Column');
 
+import HeaderContent = require('wml!Controls/_grids/HeaderContent');
+import SortButton = require('Controls/_grids/SortButton');
+
 export {
     View,
     ItemTemplate,
     GroupTemplate,
     LadderWrapper,
-    ColumnTemplate
+    ColumnTemplate,
+
+    HeaderContent,
+    SortButton
 }

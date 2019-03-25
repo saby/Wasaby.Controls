@@ -1,6 +1,6 @@
 <div>
    <ws:if data="{{_options.items || _options.rootVisible}}">
-      <Controls.crumbs:HeadingPath scope="{{_options}}"
+      <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
                                    name="Path"
                                    header="{{_header}}"
                                    attr:class="controls-Explorer__Path"

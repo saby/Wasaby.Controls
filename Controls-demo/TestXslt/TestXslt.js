@@ -2,7 +2,7 @@ define('Controls-demo/TestXslt/TestXslt', [
    'Core/Control',
    'wml!Controls-demo/TestXslt/TestXslt',
    'Core/xslt-async',
-   'jquery',
+   'is!browser?jquery',
    'css!Controls-demo/TestXslt/TestXslt'
 ], function(Control, template, Xslt) {
    'use strict';

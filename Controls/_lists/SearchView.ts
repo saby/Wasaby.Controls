@@ -1,6 +1,6 @@
 import GridView = require('Controls/List/Grid/GridView');
 import DefaultItemTpl = require('wml!Controls/_lists/SearchView/Item');
-import 'Controls/crumbs';
+import 'Controls/breadcrumbs';
 import 'Controls/Decorator/Highlight';
 import 'wml!Controls/_lists/SearchView/SearchBreadCrumbsContent';
 
