@@ -178,7 +178,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         if (this._dragTargetPosition && this._dragTargetPosition.item === item) {
-            version = 'DRAG_POSITION_' + version;
+            version = 'DRAG_POSITION_' + this._dragTargetPosition.position + '_' + version;
         }
 
         if (this._markedKey === key) {

@@ -18,7 +18,7 @@
       actionsType="{{itemActionsPosition}}"/>
 </ws:template>
 <ws:if data="{{itemData.dragTargetPosition === 'before'}}">
-   <ws:partial multiSelectTpl="{{multiSelectTpl}}" attr:key="{{ itemData.draggingItemData.key + '__dragged' }}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" attr:key="{{ itemData.draggingItemData.key + '__dragged' }}" template="baseTemplate" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
 </ws:if>
 <ws:if data="{{itemData.isVisible !== false}}">
    <ws:partial template="baseTemplate" itemData="{{itemData}}" attr:key="{{ itemData.key }}"/>
@@ -27,5 +27,5 @@
    <ws:partial template="baseTemplate" itemData="{{editingItemData}}" attr:key="{{ editingItemData.key }}"/>
 </ws:if>
 <ws:if data="{{itemData.dragTargetPosition === 'after'}}">
-   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}" attr:key="{{itemData.draggingItemData.key + '__dragged'}}"/>
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="baseTemplate" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}" attr:key="{{itemData.draggingItemData.key + '__dragged'}}"/>
 </ws:if>
