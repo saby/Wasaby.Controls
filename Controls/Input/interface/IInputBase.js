@@ -5,7 +5,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     *
     * @interface Controls/Input/interface/IInputBase
     * @public
-    * @author Колесова П.С.
+    * @author Журавлев М.С.
     */
 
    /**

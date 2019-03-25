@@ -8,6 +8,7 @@
             <Controls.List.Container>
                <Controls.List.MultiSelector>
                   <Controls.Explorer
+                     bind:root="_root"
                      attr:class="demo-Explorer"
                      keyProperty="id"
                      displayProperty="title"

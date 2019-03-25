@@ -58,25 +58,29 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          var filterChanged = false;
          var itemsChanged = false;
          var filter;
+         var isBubbling;
 
-         controller._notify = function(eventName, value) {
+         controller._notify = (eventName, value, eventArgs) => {
             if (eventName === 'filterChanged') {
                filterChanged = true;
                filter = value[0];
+               isBubbling = eventArgs && eventArgs.bubbling
             }
 
             if (eventName === 'itemsChanged') {
                itemsChanged = true;
+               isBubbling = eventArgs && eventArgs.bubbling
             }
          };
 
-         controller._searchContext = { updateConsumers: function() {} };
+         controller._searchContext = { updateConsumers: () => {} };
 
          Search._private.searchCallback(controller, {}, {test: 'testFilterValue'});
 
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
+         assert.isFalse(!!isBubbling)
          assert.isTrue(controller._viewMode === 'search');
          assert.equal(controller._searchValue, 'testFilterValue');
 

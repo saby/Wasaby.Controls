@@ -130,9 +130,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
 
-        //When you drag'n'drop of items do not need to show itemActions.
-        if (itemsModelCurrent.itemActions && !this._dragEntity) {
-            drawnActions = itemsModelCurrent.itemActions.showed;
+        if (itemsModelCurrent.itemActions) {
+           drawnActions = itemsModelCurrent.itemActions.showed;
         }
         if (this._editingItemData) {
             itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
@@ -178,7 +177,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         if (this._dragTargetPosition && this._dragTargetPosition.item === item) {
-            version = 'DRAG_POSITION_' + version;
+            version = 'DRAG_POSITION_' + this._dragTargetPosition.position + '_' + version;
         }
 
         if (this._markedKey === key) {
@@ -195,12 +194,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return;
         }
         this._markedKey = key;
-        this.updateMarker(key);
+        this._updateMarker(key);
         this._nextModelVersion(true);
+        this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    updateMarker: function(markedKey) {
-
+    _updateMarker: function(markedKey) {
         if (!this.getCount() || this._options.markerVisibility === 'hidden') {
             return;
         }
@@ -209,14 +208,20 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return;
         }
 
-        var markedItem = _private.getItemByMarkedKey(this, markedKey);
-        if (markedItem) {
-            this._markedKey = markedKey;
-        } else {
+        // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
+        if (this._markedKey === null || !_private.getItemByMarkedKey(this, markedKey)) {
             this._markedKey = this._items.at(0).getId();
         }
+    },
 
-        this._notify('onMarkedKeyChanged', this._markedKey);
+    updateMarker: function(markedKey) {
+        var
+           curMarkedKey = this._markedKey;
+        this._updateMarker(markedKey);
+        if (curMarkedKey !== this._markedKey) {
+            this._notify('onMarkedKeyChanged', this._markedKey);
+            this._nextModelVersion(true);
+        }
     },
 
     setMarkerVisibility: function(markerVisibility) {

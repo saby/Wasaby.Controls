@@ -1,6 +1,14 @@
 import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
 import GridViewModel = require('Controls/List/Grid/GridViewModel');
 
+function isLastColumn(
+   itemData: object,
+   colspan: boolean
+): boolean {
+   const columnWidth = itemData.multiSelectVisibility === 'hidden' ? 1 : 2;
+   return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
+}
+
 var
     TreeGridViewModel = GridViewModel.extend({
         _onNodeRemovedFn: null,
@@ -48,10 +56,12 @@ var
                 current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments),
                 superGetCurrentColumn = current.getCurrentColumn;
 
+            current.isLastColumn = isLastColumn;
+
             current.getCurrentColumn = function () {
                 let
                     currentColumn = superGetCurrentColumn(),
-                    nodeType = current.item.get(current.nodeProperty);
+                    nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.cellClasses += ' controls-TreeGrid__row-cell';

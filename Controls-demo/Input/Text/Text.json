@@ -1,0 +1,19 @@
+{
+  "Controls/Input/Text": {
+    "properties": {
+      "ws-config": {
+        "options": {
+          "maxLength": {
+            "type": "Number"
+          },
+          "constraint": {
+            "type": "String"
+          },
+          "trim": {
+            "type": "Boolean"
+          }
+        }
+      }
+    }
+  }
+}

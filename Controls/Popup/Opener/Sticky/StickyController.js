@@ -278,7 +278,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                },
                sizes: sizes,
                revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-               locationStrategy: cfg.popupOptions.locationStrategy
+               fittingMode: cfg.popupOptions.fittingMode
             };
          },
          _private: _private

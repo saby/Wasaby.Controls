@@ -101,7 +101,7 @@
       <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
-      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
+      <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
          <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
       </ws:for>
    </ws:else>
@@ -128,7 +128,7 @@
             <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
          </ws:if>
          <ws:else>
-            <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
+            <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
                <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </ws:else>
@@ -146,7 +146,7 @@
          <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
       </ws:if>
       <ws:else>
-         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
+         <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
             <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </ws:else>

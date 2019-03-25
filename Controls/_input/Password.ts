@@ -13,7 +13,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
-       * @demo Controls-demo/Input/Password/Password
        * @demo Controls-demo/Input/Password/PasswordPG
        *
        * @author Журавлев М.С.
