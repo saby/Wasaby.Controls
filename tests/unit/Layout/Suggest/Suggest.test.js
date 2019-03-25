@@ -135,7 +135,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             self._inputActive = false;
             self._dependenciesDeferred.addCallback(function() {
                assert.isFalse(state);
-               done();
+   
+               self._inputActive = true;
+               self._stackWithSearchResultsOpened = true;
+               Suggest._private.open(self);
+   
+               self._dependenciesDeferred.addCallback(function() {
+                  assert.isFalse(state);
+                  done();
+               });
             });
          });
       });
@@ -603,7 +611,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._markedKeyChangedHandler(null, 'test2');
          assert.equal(suggestComponent._suggestMarkedKey, 'test2');
       });
-
+   
+      it('Suggest::_stackWithSearchResultsClosed', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._stackWithSearchResultsOpened = true;
+         suggestComponent._stackWithSearchResultsClosed();
+         assert.isFalse(suggestComponent._stackWithSearchResultsOpened);
+      });
+   
+   
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
          var eventPreventDefault = false;
