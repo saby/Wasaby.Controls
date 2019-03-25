@@ -428,7 +428,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getActiveItem: function() {
@@ -442,7 +442,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setMultiSelectVisibility: function(multiSelectVisibility) {
         this._options.multiSelectVisibility = multiSelectVisibility;
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getMultiSelectVisibility: function() {
