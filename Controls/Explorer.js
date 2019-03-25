@@ -192,7 +192,7 @@ define('Controls/Explorer', [
          this._hoveredBreadCrumb = item ? item.getId() : undefined;
       },
       _onItemClick: function(event, item, clickEvent) {
-         if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+         if (!this._options.withoutItemOpen && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
@@ -200,8 +200,10 @@ define('Controls/Explorer', [
          this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
-         _private.setRoot(this, item.getId());
-         this._notify('rootChanged', [this._root]);
+         if (!this._options.withoutItemOpen) {
+            _private.setRoot(this, item.getId());
+            this._notify('rootChanged', [this._root]);
+         }
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
