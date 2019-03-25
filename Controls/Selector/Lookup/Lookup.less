@@ -29,20 +29,25 @@
 
 .controls-Lookup__fieldWrapper.controls-InputBase__field {
   margin: 0;
+  box-sizing: border-box;
+  border-right: @spacing_Lookup-between-input-afterFieldWrapper solid transparent;
+}
+
+.controls-Lookup__inputRender_collection_with_input .controls-InputBase__field {
+  border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
 }
 
 .controls-Lookup__fieldWrapper_content_width_custom {
   display: inline-flex;
-  width: auto;
 }
 
 .controls-Lookup__fieldWrapper_content_width_default {
   line-height: @line-height_Lookup-input-wrapper;
+  width: auto;
 }
 
 .controls-Lookup__afterFieldWrapper {
   flex-shrink: 0;
-  margin-right: @spacing_Lookup-between-afterFieldWrapper-rightBorderInputRenderWrapper;
   display: inline-flex;
   height: 100%;
 }

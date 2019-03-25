@@ -23,7 +23,7 @@
                   hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                   isEdge="{{_isEdge}}"
                   attr:class="controls-Lookup__fieldWrapper
-                     controls-Lookup__fieldWrapper_content_width_{{_options.inputWidth ? 'custom' : 'default'}}
+                     controls-Lookup__fieldWrapper_content_width_{{_options.multiline && _options.inputWidth ? 'custom' : 'default'}}
                      {{!_options.isInputVisible ? 'controls-Lookup__fieldWrapper_hidden'}}"
                   attr:style="width: {{_options.inputWidth}}px;"/>
    </ws:content>
