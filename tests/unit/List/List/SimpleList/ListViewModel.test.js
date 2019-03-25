@@ -74,10 +74,18 @@ define([
          assert.exists(version, 'DRAG_ITEM');
 
          model._dragTargetPosition = {
-            item: item.item
+            item: item.item,
+            position: "AFTER"
          };
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'DRAG_POSITION');
+         assert.exists(version, 'DRAG_POSITION_AFTER');
+
+         model._dragTargetPosition = {
+            item: item.item,
+            position: "BEFORE"
+         };
+         version = model._calcItemVersion(item, item.key);
+         assert.exists(version, 'DRAG_POSITION_BEFORE');
       });
 
       it('getCurrent', function() {
@@ -178,10 +186,18 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
-         
+
+         var
+            markedKeyChangedCalled = false,
+            cb = function() {
+               markedKeyChangedCalled = true;
+            };
+         model.subscribe('onMarkedKeyChanged', cb);
          assert.equal(modelWithoutItems._markedKey, null);
          modelWithoutItems.setItems(items);
          assert.equal(modelWithoutItems._markedKey, 1);
+         model.unsubscribe('onMarkedKeyChanged', cb);
+         assert.isFalse(markedKeyChangedCalled);
       });
 
       it('should set markerFrom state', function () {
@@ -467,7 +483,10 @@ define([
             };
             target = { index: 1, key: 2, position: 'after' };
             lvm = new ListViewModel({
-               items: data,
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
                keyProperty: 'id',
                markedKey: null
             });
@@ -490,6 +509,13 @@ define([
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isUndefined(item.isVisible);
+
+            lvm.setItemActions(lvm.getItemById('2', 'id').getContents(), {
+               all: [1, 2],
+               showed: [1]
+            });
+            item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.isTrue(!!item.drawActions);
          });
 
          it('setDragTargetPosition', function() {

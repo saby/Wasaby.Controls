@@ -13,9 +13,10 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Utils/tmplNotify',
    'Core/helpers/Object/isEqual',
    'Controls/Selector/SelectedCollection/Utils',
+   'Env/Env',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
    'use strict';
 
    var
@@ -433,6 +434,18 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
+      },
+
+      _keyDown: function(event) {
+         var items = this._options.items;
+
+         //If press backspace, the input field is empty and there are selected entries -  remove last item
+         if (event.nativeEvent.keyCode === Env.constants.key.backspace &&
+            !this._simpleViewModel.getValue() && !this._isEmpty()) {
+
+
+            this._notify('removeItem', [items.at(items.getCount() - 1)]);
+         }
       }
    });
 
