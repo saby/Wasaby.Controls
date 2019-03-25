@@ -213,6 +213,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                container = container.get ? container.get(0) : container;
                setTimeout(function() {
                   container.style.webkitTransform = 'scale(1)';
+
+                  // Если внутри контейнера верстка написана абсолютами с большой вложенностью, ios при scale(1) просто ее не показывает.
+                  // Пример ошибки https://online.sbis.ru/opendoc.html?guid=bb492dee-cc34-4e60-9174-5224ef47f047
+                  setTimeout(function() {
+                     container.style.webkitTransform = '';
+                  }, 200);
                }, 100);
             }
          },
