@@ -157,7 +157,7 @@
 }
 
 .controls-InfoBox_style_outline {
-   @variants: default,  danger, info, secondary, warning, success;
+   @variants: default,  danger;
    .for(@variants, { &_@{_item} {
       background: @background-color_Infobox_default;
       box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;

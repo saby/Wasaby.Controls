@@ -33,6 +33,7 @@ define('Controls/Validate/Controller',
                var cfg = {
                   target: self._container,
                   style: 'danger',
+                  styleType: 'outline',
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {

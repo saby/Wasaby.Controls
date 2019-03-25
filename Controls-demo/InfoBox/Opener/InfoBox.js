@@ -13,81 +13,118 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _template: template,
          _blocks: null,
          _icons: null,
+         _cfgRight: null,
+         _cfgLeft: null,
+         _cfgTop: null,
+         _cfgBottom: null,
          _minTargetMode: false,
          _beforeMount: function() {
+            this._cfgRight = {
+               message: message,
+               targetSide: 'right',
+               alignment: 'start'
+            };
+            this._cfgLeft = {
+               message: message,
+               targetSide: 'left',
+               alignment: 'start'
+            };
+            this._cfgTop = {
+               message: message,
+               targetSide: 'top',
+               alignment: 'start'
+            };
+            this._cfgBottom = {
+               message: message,
+               targetSide: 'bottom',
+               alignment: 'start'
+            };
             this._blocks = [{
                header: 'POSITION',
                items: [{
-                  text: 'TL',
+                  text: 'TOP START',
                   cfg: {
                      message: message,
-                     position: 'tl'
+                     targetSide: 'top',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'TC',
+                  text: 'TOP CENTER',
                   cfg: {
                      message: message,
-                     position: 'tc'
+                     targetSide: 'top',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'TR',
+                  text: 'TOP END',
                   cfg: {
                      message: message,
-                     position: 'tr'
+                     targetSide: 'top',
+                     alignment: 'end'
+
                   }
                }, {
-                  text: 'BL',
+                  text: 'BOTTOM START',
                   cfg: {
                      message: message,
-                     position: 'bl'
+                     targetSide: 'bottom',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'BC',
+                  text: 'BOTTOM CENTER',
                   cfg: {
                      message: message,
-                     position: 'bc'
+                     targetSide: 'bottom',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'BR',
+                  text: 'BOTTOM END',
                   cfg: {
                      message: message,
-                     position: 'br'
+                     targetSide: 'bottom',
+                     alignment: 'end'
                   }
                }, {
-                  text: 'LT',
+                  text: 'LEFT START',
                   cfg: {
                      message: message,
-                     position: 'lt'
+                     targetSide: 'left',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'LC',
+                  text: 'LEFT CENTER',
                   cfg: {
                      message: message,
-                     position: 'lc'
+                     targetSide: 'left',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'LB',
+                  text: 'LEFT END',
                   cfg: {
                      message: message,
-                     position: 'lb'
+                     targetSide: 'left',
+                     alignment: 'end'
                   }
                }, {
-                  text: 'RT',
+                  text: 'RIGHT START',
                   cfg: {
                      message: message,
-                     position: 'rt'
+                     targetSide: 'right',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'RC',
+                  text: 'RIGHT CENTER',
                   cfg: {
                      message: message,
-                     position: 'rc'
+                     targetSide: 'right',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'RB',
+                  text: 'RIGHT END',
                   cfg: {
                      message: message,
-                     position: 'rb'
+                     targetSide: 'right',
+                     alignment: 'end'
                   }
                }]
             }, {
@@ -99,10 +136,37 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                      style: 'default'
                   }
                }, {
-                  text: 'ERROR',
+                  text: 'DANGER',
                   cfg: {
                      message: message,
-                     style: 'error'
+                     style: 'danger'
+                  }
+               }, {
+                  text: 'WARNING',
+                  cfg: {
+                     message: message,
+                     style: 'warning'
+
+                  }
+               }, {
+                  text: 'SUCCESS',
+                  cfg: {
+                     message: message,
+                     style: 'success'
+
+                  }
+               }, {
+                  text: 'SECONDARY',
+                  cfg: {
+                     message: message,
+                     style: 'secondary'
+
+                  }
+               }, {
+                  text: 'INFO',
+                  cfg: {
+                     message: message,
+                     style: 'info'
                   }
                }]
             }, {
