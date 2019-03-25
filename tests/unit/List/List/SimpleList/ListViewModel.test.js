@@ -483,7 +483,10 @@ define([
             };
             target = { index: 1, key: 2, position: 'after' };
             lvm = new ListViewModel({
-               items: data,
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
                keyProperty: 'id',
                markedKey: null
             });
@@ -506,6 +509,13 @@ define([
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isUndefined(item.isVisible);
+
+            lvm.setItemActions(lvm.getItemById('2', 'id').getContents(), {
+               all: [1, 2],
+               showed: [1]
+            });
+            item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.isTrue(!!item.drawActions);
          });
 
          it('setDragTargetPosition', function() {

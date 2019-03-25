@@ -130,9 +130,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
 
-        //When you drag'n'drop of items do not need to show itemActions.
-        if (itemsModelCurrent.itemActions && !this._dragEntity) {
-            drawnActions = itemsModelCurrent.itemActions.showed;
+        if (itemsModelCurrent.itemActions) {
+           drawnActions = itemsModelCurrent.itemActions.showed;
         }
         if (this._editingItemData) {
             itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
