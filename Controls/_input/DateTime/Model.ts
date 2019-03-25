@@ -100,13 +100,8 @@ import dateUtils = require('Controls/Utils/Date');
          this._textValue = value;
          newValue = this._stringValueConverter.getValueByString(value, this._lastValue);
          if (!dateUtils.isDatesEqual(this._value, newValue)) {
-            var oldValue = this._value;
             this._value = newValue;
-
-            // если ничего не поменялось - не надо изменять версию
-            if (oldValue !== newValue) {
-               this._nextVersion();
-            }
+            this._nextVersion();
 
             _private.updateLastValue(this);
             this._notify('valueChanged', [this._value, this._textValue]);

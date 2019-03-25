@@ -20,28 +20,16 @@ define('Controls/Date/model/DateRange', [
          if (DateUtil.isDatesEqual(self._startValue, value)) {
             return false;
          }
-         var oldValue = self._startValue;
          self._startValue = value;
-
-         // если ничего не поменялось - не надо изменять версию
-         if (oldValue !== value) {
-            self._nextVersion();
-         }
-
+         self._nextVersion();
          return true;
       },
       setEndValue: function(self, value) {
          if (DateUtil.isDatesEqual(self._endValue, value)) {
             return false;
          }
-         var oldValue = self._endValue;
          self._endValue = value;
-
-         // если ничего не поменялось - не надо изменять версию
-         if (oldValue !== value) {
-            self._nextVersion();
-         }
-
+         self._nextVersion();
          return true;
       }
    };
