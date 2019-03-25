@@ -37,20 +37,16 @@ define('Controls/Popup/InfoBox',
        * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
        *
        * @css @background-color_Infobox_default Default background color.
-       * @css @background-color_Infobox_lite Background color when option style is set to lite.
-       * @css @background-color_Infobox_help Background color when option style is set to help.
-       * @css @background-color_Infobox_error Background color when option style is set to error.
        *
        * @css @border-color_Infobox_default Default border color.
-       * @css @border-color_Infobox_lite Border color when option style is set to lite.
-       * @css @border-color_Infobox_help Border color when option style is set to help.
-       * @css @border-color_Infobox_error Border color when option style is set to error.
+       * @css @border-color_Infobox_danger Border color when option style is set to danger.
+       * @css @border-color_Infobox_info Border color when option style is set to info.
+       * @css @border-color_Infobox_warning Border color when option style is set to warning.
+       * @css @border-color_Infobox_success Border color when option style is set to success.
+       * @css @border-color_Infobox_secondary Border color when option style is set to secondary.
        * @css @border-width_Infobox Thickness of border.
        *
        * @css @color_Infobox-shadow_default Default color of shadow.
-       * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
-       * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
-       * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
        * @css @box-shadow_Infobox Size of shadow.
        */
 
@@ -140,7 +136,6 @@ define('Controls/Popup/InfoBox',
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
-               styleType: self._options.styleType,
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler,
@@ -329,7 +324,6 @@ define('Controls/Popup/InfoBox',
             targetSide: 'top',
             alignment: 'start',
             style: 'default',
-            styleType: 'outline',
             showDelay: 300,
             hideDelay: 300,
             trigger: 'hover'

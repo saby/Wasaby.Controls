@@ -2040,15 +2040,6 @@
               "success": "success"
             }
           },
-          "styleType": {
-            "type": "enum",
-            "default": "outline",
-            "title": "Infobox display style.",
-            "enum": {
-              "outline": "outline",
-             "marker": "marker"
-            }
-          },
           "trigger": {
             "type": "enum",
             "default": "hover",

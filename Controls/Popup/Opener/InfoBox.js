@@ -193,7 +193,7 @@ define('Controls/Popup/Opener/InfoBox',
                   floatCloseButton: cfg.floatCloseButton
                },
                className: 'controls-InfoBox__popup controls-PreviewerController ' +
-                  'controls-InfoBox_style_' + (cfg.styleType || 'outline') + '_' + (cfg.style || 'default'),
+                  'controls-InfoBox_style_' + (cfg.styleType || 'marker') + '_' + (cfg.style || 'default'),
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },

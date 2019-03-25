@@ -203,6 +203,8 @@
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBoxPG">InfoBox PG</a>
        <br />
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FOpener%252FInfoBox">Opener/InfoBox</a>
+      <br/>
+      <a href="/Controls-demo/app/Controls-demo%252FInput%252FValidate%252FValidateInfobox"> ValidateInfoBox</a>
 
       <h1>Confirmation</h1>
       <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">
