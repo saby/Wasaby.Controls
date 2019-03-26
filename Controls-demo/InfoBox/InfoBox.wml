@@ -1,7 +1,7 @@
 <div>
    <Controls.Popup.InfoBox trigger="hover">
       <ws:content>
-         <div>Наведите</div>
+         <div class="controls-InfoBoxDemo-target">Наведите</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
@@ -9,7 +9,7 @@
    </Controls.Popup.InfoBox>
    <Controls.Popup.InfoBox trigger="click">
       <ws:content>
-         <div>Нажмите</div>
+         <div class="controls-InfoBoxDemo-target">Нажмите</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
@@ -17,7 +17,7 @@
    </Controls.Popup.InfoBox>
    <Controls.Popup.InfoBox trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox">
       <ws:content>
-         <div>Нажмите 2 раза</div>
+         <div class="controls-InfoBoxDemo-target">Нажмите 2 раза</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка, открывая методом open. Закроется через 5 секунд</div>

@@ -1,7 +1,7 @@
 <Controls.lists:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
    <div>
       <Controls.lists:Mover name="listMover"/>
-      <Controls.Container.MultiSelector bind:selectedKeys="_options.selectedKeys">
+      <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
          <Controls.lists:Container>
             <Controls.List.MultiSelector>
                <Controls.grids:View

@@ -2,6 +2,7 @@ define('Controls-demo/InfoBox/InfoBox',
    [
       'Core/Control',
       'wml!Controls-demo/InfoBox/InfoBox',
+      'css!Controls-demo/InfoBox/resources/Infobox',
 
       'Controls/Popup/InfoBox'
    ],

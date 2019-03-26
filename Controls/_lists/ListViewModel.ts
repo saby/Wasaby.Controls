@@ -199,7 +199,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    _updateMarker: function(markedKey) {
+    _updateMarker: function(markedKey):void {
         if (!this.getCount() || this._options.markerVisibility === 'hidden') {
             return;
         }
@@ -209,14 +209,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (this._markedKey === null || !_private.getItemByMarkedKey(this, markedKey)) {
+        if (_private.getItemByMarkedKey(this, markedKey)) {
+            this._markedKey = markedKey;
+        } else {
             this._markedKey = this._items.at(0).getId();
         }
     },
 
-    updateMarker: function(markedKey) {
-        var
-           curMarkedKey = this._markedKey;
+    updateMarker: function(markedKey):void {
+        const curMarkedKey = this._markedKey;
+
         this._updateMarker(markedKey);
         if (curMarkedKey !== this._markedKey) {
             this._notify('onMarkedKeyChanged', this._markedKey);

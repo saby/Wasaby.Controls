@@ -48,8 +48,10 @@ define('Controls/Popup/Opener/InfoBox',
 
       // Default popup configuration
       var DEFAULT_CONFIG = {
-         position: 'tl',
          style: 'default',
+         position: 'tl',
+         targetSide: 'top',
+         alignment: 'start',
          floatCloseButton: false,
          hideDelay: INFOBOX_HIDE_DELAY,
          showDelay: INFOBOX_SHOW_DELAY
@@ -65,10 +67,30 @@ define('Controls/Popup/Opener/InfoBox',
                resColor = 'danger';
             }
             if (color === 'help') {
-               resColor = 'primary';
+               resColor = 'warning';
             }
             return resColor;
-         }
+         },
+         preparePosition: function(targetSide, alignment) {
+            var position = targetSide[0];
+            var leftRight = {
+               'start': 't',
+               'center': 'c',
+               'end': 'b'
+            };
+            var topBottom = {
+               'start': 'l',
+               'center': 'c',
+               'end': 'r'
+            };
+            if (targetSide === 'left' || targetSide === 'right') {
+               position += leftRight[alignment];
+            } else {
+               position += topBottom[alignment];
+            }
+            return position;
+         },
+
       };
 
       var InfoBox = Base.extend({
@@ -110,7 +132,7 @@ define('Controls/Popup/Opener/InfoBox',
          _beforeMount: function(options) {
             InfoBox.superclass._beforeMount.apply(this, arguments);
             if (options.float) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
             }
          },
 
@@ -137,16 +159,17 @@ define('Controls/Popup/Opener/InfoBox',
             if (cfg.float) {
                newCfg.floatCloseButton = cfg.float;
             }
-            if (cfg.style === 'lite') {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
-            }
-            if (cfg.style === 'help') {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style help, используйте primary');
-            }
             if (cfg.style === 'error') {
                Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
             }
+            if (cfg.position) {
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
+            }
             newCfg.style = _private.prepareDisplayStyle(cfg.style);
+
+            if (cfg.targetSide || cfg.alignment) {
+               newCfg.position = _private.preparePosition(cfg.targetSide, cfg.alignment);
+            }
 
             if (newCfg.showDelay > 0) {
                this._openId = setTimeout(this._open.bind(this, newCfg), newCfg.showDelay);
@@ -169,7 +192,8 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   floatCloseButton: cfg.floatCloseButton
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + (cfg.style || 'default'),
+               className: 'controls-InfoBox__popup controls-PreviewerController ' +
+                  'controls-InfoBox_style_' + (cfg.styleType || 'marker') + '_' + (cfg.style || 'default'),
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
