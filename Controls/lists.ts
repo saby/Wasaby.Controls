@@ -1,6 +1,5 @@
 import AddButton = require('Controls/_lists/AddButton');
 import Container = require('Controls/_lists/Container');
-import DialogMover = require('Controls/_lists/Mover/MoveDialog');
 import EmptyTemplate = require('wml!Controls/_lists/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_lists/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_lists/ItemTemplate');
@@ -29,7 +28,6 @@ import BaseControl = require('Controls/_lists/BaseControl');
 export {
     AddButton,
     Container,
-    DialogMover,
     EmptyTemplate,
     GroupTemplate,
     ItemTemplate,

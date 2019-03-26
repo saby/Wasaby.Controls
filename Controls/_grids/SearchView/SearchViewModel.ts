@@ -1,5 +1,5 @@
-import TreeViewModel = require('Controls/_lists/Tree/TreeViewModel');
-import SearchItemsUtil = require('Controls/_lists/resources/utils/SearchItemsUtil');
+import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
+import SearchItemsUtil = require('Controls/List/resources/utils/SearchItemsUtil');
 
 var
     SearchViewModel = TreeViewModel.extend({
