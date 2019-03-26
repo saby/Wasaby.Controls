@@ -352,12 +352,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
        * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputTag
-       * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       *
-       * @mixes Controls/_input/Base/Styles
-       * @mixes Controls/_input/Render/Styles
+       * @mixes Controls/Input/interface/IInputBase
        *
        * @private
        * @demo Controls-demo/Input/Base/Base
