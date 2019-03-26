@@ -11,7 +11,11 @@ define('Controls-demo/IndexOld', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _template: template
+         _template: template,
+         _afterMount: function() {
+            this._successfullyMounted = true;
+            this._forceUpdate();
+         }
       });
 
    return ModuleClass;
