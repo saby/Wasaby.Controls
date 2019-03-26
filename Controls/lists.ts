@@ -24,7 +24,7 @@ import SwipeHorizontalMeasurer = require('Controls/_lists/Swipe/HorizontalMeasur
 import 'css!Controls/_lists/Swipe/Swipe';
 import GroupContentResultsTemplate = require('wml!Controls/_lists/GroupContentResultsTemplate');
 import ItemOutputWrapper = require('wml!Controls/_lists/resources/ItemOutputWrapper');
-import BaseControl = require('wml!Controls/_lists/BaseControl');
+import BaseControl = require('Controls/_lists/BaseControl');
 
 export {
     AddButton,

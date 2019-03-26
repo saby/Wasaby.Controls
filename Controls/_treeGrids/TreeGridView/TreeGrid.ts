@@ -30,7 +30,7 @@ import 'Controls/_treeGrids/TreeControl';
     * @mixes Controls/_lists/BaseControlStyles
     * @mixes Controls/_lists/ListStyles
     * @mixes Controls/_lists/Grid/GridStyles
-    * @mixes Controls/_lists/TreeGrid/Styles
+    * @mixes Controls/_treeGrids/TreeGrid/Styles
     * @mixes Controls/_lists/ItemActions/ItemActionsStyles
     * @mixes Controls/_lists/Swipe/SwipeStyles
     *
