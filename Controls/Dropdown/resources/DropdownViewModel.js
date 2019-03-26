@@ -3,14 +3,14 @@
  */
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
-      'Controls/List/BaseViewModel',
+      'Controls/lists',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'Types/entity',
       'Controls/List/ItemActions/Utils/getStyle'
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, entity, getStyle) {
+   function(lists, ItemsUtil, ItemsViewModel, entity, getStyle) {
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -57,7 +57,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
       };
 
-      var DropdownViewModel = BaseViewModel.extend({
+      var DropdownViewModel = lists.BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 

@@ -1,9 +1,9 @@
 define('Controls/Tile', [
-   'Controls/List',
+   'Controls/lists',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeControl'
-], function(List, TreeTileViewModel) {
+], function(lists, TreeTileViewModel) {
    'use strict';
 
    /**
@@ -11,7 +11,7 @@ define('Controls/Tile', [
     * <a href="/materials/demo/demo-ws4-tile?v=19.200">Demo examples</a>.
     *
     * @class Controls/Tile
-    * @extends Controls/List
+    * @extends Controls/lists:View
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
@@ -41,7 +41,7 @@ define('Controls/Tile', [
     * @category List
     */
 
-   return List.extend({
+   return lists.View.extend({
       _viewName: 'Controls/List/TreeTileView/TreeTileView',
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {

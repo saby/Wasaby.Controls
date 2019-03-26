@@ -36,7 +36,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * @example
     * The following example shows how to use a standard dragging template.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
@@ -47,7 +47,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
     *          </ws:partial>
     *       </ws:draggingTemplate>
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -76,7 +76,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * @example
     * The following example shows how to use a standard dragging template.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
@@ -87,7 +87,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
     *          </ws:partial>
     *       </ws:draggingTemplate>
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -117,7 +117,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * @example
     * The following example shows how to use a standard dragging template.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
@@ -128,7 +128,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
     *          </ws:partial>
     *       </ws:draggingTemplate>
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -158,7 +158,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * @example
     * The following example shows how to use a standard dragging template.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
@@ -169,7 +169,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
     *          </ws:partial>
     *       </ws:draggingTemplate>
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     *
     * <pre>

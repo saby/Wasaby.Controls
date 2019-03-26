@@ -1,4 +1,4 @@
-import List = require('Controls/List');
+import {View as List} from 'Controls/lists';
 import GridViewModel = require('Controls/List/Grid/GridViewModel');
 import 'Controls/List/Grid/GridView';
 import 'Controls/List/BaseControl';

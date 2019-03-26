@@ -2,10 +2,10 @@
    <span>Demo Controls/Explorer</span>
    <Controls.buttons:Button attr:class="demo-Explorer__viewButton" on:click="_changeViewMode()" style="secondary" viewMode="link" icon="icon-medium icon-primary {{_changeViewIcon}}"/>
    <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
-      <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+      <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"
                                            bind:excludedKeys="_excludedKeys">
-            <Controls.List.Container>
+            <Controls.lists:Container>
                <Controls.List.MultiSelector>
                   <Controls.Explorer
                      bind:root="_root"
@@ -33,8 +33,8 @@
                      </ws:tileItemTemplate>
                   </Controls.Explorer>
                </Controls.List.MultiSelector>
-            </Controls.List.Container>
+            </Controls.lists:Container>
          </Controls.Container.MultiSelector>
-      </Controls.Container.Data>
+      </Controls.lists:DataContainer>
    </Controls.Container.Scroll>
 </div>
