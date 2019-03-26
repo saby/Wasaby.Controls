@@ -137,6 +137,8 @@ var BreadCrumbsPath = Control.extend({
 
     _onResize: function () {
         // Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+       // todo здесь нужно звать _forceUpdate чтобы произошла перерисовка, потому что логика пересчета в _beforeUpdate. нужно оттуда логику выносить сюда!
+       this._forceUpdate();
     },
 
     _onHomeClick: function () {

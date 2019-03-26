@@ -154,6 +154,9 @@ define('Controls/Operations/Panel', [
 
       _onResize: function() {
          _private.checkToolbarWidth(this);
+
+         // todo зову _forceUpdate потому что нужно отрисовать пересчет, произошедший в checkToolbarWidth. добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
+         this._forceUpdate();
       },
 
       _toolbarItemClick: function(event, item) {
