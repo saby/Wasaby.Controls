@@ -383,26 +383,24 @@ define(
             var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
             assert.equal(secondResult, false);
          });
-         it('contentClick', function() {
+         it('mousedownHandler', function() {
             let Manager = getManager();
             let deactivatedCount = 0;
             Manager._private.popupDeactivated = () => deactivatedCount++;
             Manager._private.isIgnoreActivationArea = () => false;
             let id1 = Manager.show({
-               testOption: 'created'
+               testOption: 'created',
+               autofocus: false
             }, new BaseController());
             let id2 = Manager.show({
                testOption: 'created'
             }, new BaseController());
             let id3 = Manager.show({
-               testOption: 'created'
+               testOption: 'created',
+               autofocus: false
             }, new BaseController());
-            Manager._mouseDownHandler();
-            Manager._contentClick({});
-            assert.equal(deactivatedCount, 0);
-            Manager._private.popupItems = null;
-            Manager._contentClick({});
-            assert.equal(deactivatedCount, 0);
+            Manager._mouseDownHandler({});
+            assert.equal(deactivatedCount, 2);
             Manager.destroy();
          });
          it('Linked Popups', function() {
