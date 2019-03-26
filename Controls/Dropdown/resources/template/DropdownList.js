@@ -76,6 +76,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: options.nodeProperty,
                   selectedKeys: options.selectedKeys,
                   rootKey: item.get(options.keyProperty),
+                  iconSize: options.iconSize,
                   showHeader: false,
                   dropdownClassName: options.dropdownClassName,
                   defaultItemTemplate: options.defaultItemTemplate
