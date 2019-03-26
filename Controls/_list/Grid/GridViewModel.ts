@@ -804,7 +804,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         getVersion: function() {
-                           return self._calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
                         },
                         _preferVersionAPI: true
                     };
