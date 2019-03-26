@@ -37,41 +37,40 @@ define('Controls/Popup/InfoBox',
        * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
        *
        * @css @background-color_Infobox_default Default background color.
-       * @css @background-color_Infobox_lite Background color when option style is set to lite.
-       * @css @background-color_Infobox_help Background color when option style is set to help.
-       * @css @background-color_Infobox_error Background color when option style is set to error.
        *
        * @css @border-color_Infobox_default Default border color.
-       * @css @border-color_Infobox_lite Border color when option style is set to lite.
-       * @css @border-color_Infobox_help Border color when option style is set to help.
-       * @css @border-color_Infobox_error Border color when option style is set to error.
+       * @css @border-color_Infobox_danger Border color when option style is set to danger.
+       * @css @border-color_Infobox_info Border color when option style is set to info.
+       * @css @border-color_Infobox_warning Border color when option style is set to warning.
+       * @css @border-color_Infobox_success Border color when option style is set to success.
+       * @css @border-color_Infobox_secondary Border color when option style is set to secondary.
        * @css @border-width_Infobox Thickness of border.
        *
        * @css @color_Infobox-shadow_default Default color of shadow.
-       * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
-       * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
-       * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
        * @css @box-shadow_Infobox Size of shadow.
        */
 
       /**
-       * @name Controls/Popup/InfoBox#position
-       * @cfg {String} Point positioning of the target relative to infobox.
-       * Popup displayed on the top of the target and aligned by left border.
-       * @variant tl Popup displayed on the top of the target and aligned by left border.
-       * @variant tc Popup displayed on the top of the target and aligned by center.
-       * @variant tr Popup displayed on the top of the target and aligned by right border.
-       * @variant bl Popup displayed on the bottom of the target and aligned by left border.
-       * @variant bc Popup displayed on the bottom of the target and aligned by center.
-       * @variant br Popup displayed on the bottom of the target and aligned by right border.
-       * @variant rt Popup displayed on the right of the target and aligned by top border.
-       * @variant rc Popup displayed on the right of the target and aligned by center.
-       * @variant rb Popup displayed on the right of the target and aligned by bottom border.
-       * @variant lt Popup displayed on the left of the target and aligned by top border.
-       * @variant lc Popup displayed on the left of the target and aligned by center.
-       * @variant lb Popup displayed on the left of the target and aligned by bottom border
-       * @default tl
+       * @name Controls/Popup/InfoBox#targetSide
+       * @cfg {String} Side positioning of the target relative to infobox.
+       * Popup displayed on the top of the target.
+       * @variant top Popup displayed on the top of the target.
+       * @variant bottom Popup displayed on the bottom of the target.
+       * @variant left Popup displayed on the left of the target.
+       * @variant right Popup displayed on the right of the target.
+       * @default top
        */
+
+      /**
+       * @name Controls/Popup/InfoBox#alignment
+       * @cfg {String} Alignment of the infobox relative to target
+       * Popup aligned by start of the target.
+       * @variant start Popup aligned by start of the target.
+       * @variant center Popup aligned by center of the target.
+       * @variant end Popup aligned by end of the target.
+       * @default start
+       */
+
       /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
@@ -120,6 +119,10 @@ define('Controls/Popup/InfoBox',
        * @cfg {String} Infobox display style.
        * @variant default
        * @variant danger
+       * @variant warning
+       * @variant info
+       * @variant secondary
+       * @variant success
        */
 
 
@@ -130,6 +133,8 @@ define('Controls/Popup/InfoBox',
                target: self._container,
                template: OpenerTemplate,
                position: self._options.position,
+               targetSide: self._options.targetSide,
+               alignment: self._options.alignment,
                style: self._options.style,
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
@@ -323,6 +328,8 @@ define('Controls/Popup/InfoBox',
       InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
+            targetSide: 'top',
+            alignment: 'start',
             style: 'default',
             showDelay: 300,
             hideDelay: 300,

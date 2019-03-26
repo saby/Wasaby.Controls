@@ -114,6 +114,7 @@ define([
          'smb://ya.ru'
       ],
       decoratedLinkService,
+      currentVersion = '1.0',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
@@ -148,26 +149,41 @@ define([
          });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
-
+         it('version', function() {
+            assert.deepEqual(Converter.htmlToJson('<p>No attributes</p>'), [
+               ['p',
+                  { version: currentVersion },
+                  'No attributes'
+               ]
+            ]);
+            assert.deepEqual(Converter.htmlToJson('<p style="text-align: center;">With attributes</p>'), [
+               ['p',
+                  { version: currentVersion, style: 'text-align: center;' },
+                  'With attributes'
+               ]
+            ]);
+            assert.deepEqual(Converter.htmlToJson(''), []);
+            assert.deepEqual(Converter.htmlToJson('just a string'), ['just a string']);
+         });
          it('trim', function() {
             var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
-            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
             assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
          });
 
          it('undecorate link', function() {
             var html = '<p>' + decoratedLinkHtml + '</p>';
-            var json = [['p', linkNode]];
+            var json = [['p', { version: currentVersion }, linkNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
          it('long html', function() {
             var text = 'a'.repeat(2000);
-            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', text]]);
+            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', { version: currentVersion }, text]]);
          }).timeout(1000);
 
          it('Wrapping url', function() {
@@ -196,7 +212,7 @@ define([
                '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
-               ['p', linkNode],
+               ['p', { version: currentVersion }, linkNode],
                ['p', ' a '],
                ['p', 'text', linkNode, '. More text'],
                ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
