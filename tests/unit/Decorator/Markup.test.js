@@ -333,7 +333,7 @@ define([
                         ['meta', { charset: 'utf-8' }],
                         ['script', 'alert("Test script");'],
                         ['style', '.testStyle { color: red; }'],
-                        ['link', { rel: 'stylesheet', type: 'text/css', href: 'http://localhost:999/resources/WS.Core/css/core-min.css' }]
+                        ['link', { rel: 'stylesheet', type: 'text/css', href: '/resources/WS.Core/css/core-min.css' }]
                      ],
                      ['body',
                         ['div', 'Test division'],
