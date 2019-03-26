@@ -15,6 +15,7 @@ define('Controls-demo/DragNDrop/Tree', [
       _gridHeader: null,
 
       _beforeMount: function() {
+         this._selectedKeys = [];
          this._itemsReadyCallback = this._itemsReady.bind(this);
          this._viewSource = new source.HierarchicalMemory({
             idProperty: 'id',
