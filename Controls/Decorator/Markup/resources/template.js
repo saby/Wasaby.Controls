@@ -76,6 +76,7 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
+      replaceDecoratedLink(value);
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
@@ -87,7 +88,6 @@ define('Controls/Decorator/Markup/resources/template', [
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
-      replaceDecoratedLink(valueToBuild);
       var children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
