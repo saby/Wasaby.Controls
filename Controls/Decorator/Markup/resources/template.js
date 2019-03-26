@@ -60,7 +60,6 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
-      replaceDecoratedLink(value);
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
