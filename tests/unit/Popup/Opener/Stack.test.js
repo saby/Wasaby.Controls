@@ -274,6 +274,30 @@ define(
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
          });
+
+         it('stack compatible popup', () => {
+            let item = {
+               popupOptions: {
+                  template: {},
+                  minWidth: 800,
+                  maxWidth: 900,
+                  isCompoundTemplate: true
+               }
+            };
+            StackController.getDefaultConfig(item);
+            assert.equal(item.position.top, -10000);
+            assert.equal(item.position.left, -10000);
+
+            let targetPos = {
+               top: 0,
+               right: 0
+            };
+
+            StackController._private.getStackParentCoords = () => targetPos;
+
+            StackController.elementCreated(item);
+            assert.equal(item.position.width, 900);
+         });
       });
    }
 );

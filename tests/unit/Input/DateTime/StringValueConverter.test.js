@@ -122,6 +122,7 @@ define([
             { mask: 'HH:mm:ss', stringValue: '10:10:80', value: new Date(1900, 0, 1, 10, 10, 59) },
             { mask: 'HH:mm', stringValue: '80:80', value: new Date(1900, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '10:80', value: new Date(1900, 0, 1, 10, 59, 0) },
+            { mask: 'HH:mm', stringValue: '24:60', value: new Date(1900, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {

@@ -343,6 +343,11 @@ define('Controls/Application',
          }
       });
 
+      Page.getDefaultOptions = function() {
+         return {
+            title: ''
+         };
+      };
 
       Page.contextTypes = function contextTypes() {
          return {

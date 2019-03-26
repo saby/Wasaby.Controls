@@ -223,8 +223,8 @@ define('Controls/Popup/InfoBox',
                if (!this._opened) {
                   this._open(event);
                }
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function() {
