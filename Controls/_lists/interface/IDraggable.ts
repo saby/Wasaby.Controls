@@ -133,7 +133,7 @@
  *        <Controls.List on:dragEnd="_dragEnd()"
  *                       itemsDragNDrop="allow">
  *        </Controls.List>
- *        <Controls.List.Mover name="listMover">
+ *        <Controls._lists.Mover name="listMover">
  *     <Controls.Container.Data>
  * </pre>
  *
