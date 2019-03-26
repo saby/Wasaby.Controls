@@ -2332,9 +2332,8 @@
             "title": "Determines whether focus is set to the template when popup is opened.",
             "type": "Boolean"
           },
-          "isModal": {
+          "modal": {
             "title": "Determines whether the window is modal.",
-            "newName": "modal",
             "type": "Boolean"
           },
           "className": {
@@ -2394,19 +2393,17 @@
             "title": "Шаблон отображения внутреннего содержимого",
             "type": "Object"
           },
-          "isModal": {
+          "modal": {
             "title": "Determines whether the window is modal.",
-            "type": "Boolean",
-            "newName": "modal"
+            "type": "Boolean"
           },
           "className": {
             "title": "Class names of popup.",
             "type": "String"
           },
-          "closeByExternalClick": {
+          "closeOnOutsideClick": {
             "title": "Determines whether possibility of closing the popup when clicking past.",
-            "type": "Boolean",
-            "newName": "closeOnOutsideClick"
+            "type": "Boolean"
           },
           "template": {
             "title": "Template inside popup.",

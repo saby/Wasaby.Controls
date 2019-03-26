@@ -49,7 +49,7 @@ define('Controls/interface/IInfoboxOptions', [
     * userControl.wml
     * <pre>
     *     <Controls.Popup.Opener.Stack name="stack">
-    *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}" autofocus="{{false}}">
+    *         <ws:popupOptions template="Controls-demo/Popup/TestStack" modal="{{true}}" autofocus="{{false}}">
     *            <ws:templateOptions key="111"/>
     *            <ws:eventHandlers onResult="{{_onResultHandler}}" onClose="{{_onCloseHandler}}" />
     *         </ws:popupOptions>
