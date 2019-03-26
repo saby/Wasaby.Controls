@@ -29,6 +29,7 @@ define('Controls/Decorator/Markup/resources/template', [
          'src': true,
          'usemap': true
       },
+      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):\/\/|mailto:|\/)/,
       dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       longSpaceRegExp = /\u00a0/g;
@@ -40,7 +41,7 @@ define('Controls/Decorator/Markup/resources/template', [
    // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
    // This is a way to call any javascript code after such a start.
    function isLinkAttributeWithJavascript(attributeName, attributeValue) {
-      return linkAttributesMap[attributeName] && attributeValue.indexOf('javascript:') === 0;
+      return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
    function validAttributesInsertion(to, from) {
