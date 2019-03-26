@@ -1,1 +1,12 @@
-<invisible-node />
+<ws:if data="{{_options.content}}">
+   <ws:partial
+         template="{{_options.content}}"
+         scope="{{_options}}"
+         ranges="{{_model.ranges}}"
+         bindType="{{_model.bindType}}"
+         on:relationWrapperRangeChanged="_onRelationWrapperRangeChanged()"
+         on:relationButtonBindTypeChanged="_onRelationButtonBindTypeChanged()"/>
+</ws:if>
+<ws:else>
+   <invisible-node />
+</ws:else>
