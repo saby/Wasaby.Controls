@@ -195,6 +195,7 @@ define([
          };
          let FC = new FormController();
          FC.saveOptions({dataSource});
+         FC._source = dataSource;
          FC._record = {
             getId: () => 'id1'
          };
@@ -210,7 +211,7 @@ define([
       it('delete new record', () => {
          let FC = new FormController();
          let isDestroyCalled = false;
-         FC._options.dataSource = {
+         FC._source = {
             destroy: () => {
                isDestroyCalled = true;
             }

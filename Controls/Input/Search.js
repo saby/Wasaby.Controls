@@ -45,7 +45,7 @@ define('Controls/Input/Search',
 
       var _private = {
          isVisibleResetButton: function() {
-            return !!this._options.value;
+            return !!this._options.value && !this._options.readOnly;
          },
 
          calculateStateButton: function() {
@@ -152,6 +152,8 @@ define('Controls/Input/Search',
 
          return defaultOptions;
       };
+
+      Search._private = _private;
 
       return Search;
    });
