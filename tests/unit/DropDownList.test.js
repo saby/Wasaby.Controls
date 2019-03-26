@@ -238,6 +238,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
                   rootKey: items.at(0).get(dropDownList._options.keyProperty),
+                  iconSize: dropDownList._options.iconSize,
                   showHeader: false,
                   defaultItemTemplate: dropDownList._options.defaultItemTemplate,
                   dropdownClassName: dropDownList._options.dropdownClassName
