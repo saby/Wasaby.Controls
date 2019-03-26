@@ -474,13 +474,13 @@ define('Controls/Popup/Manager',
                      var popupInstance = ManagerController.getContainer().getPopupById(item.id);
 
                      // Check the link between target and popup
-                     if (parentControls.indexOf(popupInstance) === -1) {
+                     if (_private.needClosePopupByDeactivated(item) && parentControls.indexOf(popupInstance) === -1) {
                         deactivatedPopups.push(item.id);
                      }
                   }
                });
                for (var i = 0; i < deactivatedPopups.length; i++) {
-                  _private.popupDeactivated(deactivatedPopups[i]);
+                  this.remove(deactivatedPopups[i]);
                }
             }
          },

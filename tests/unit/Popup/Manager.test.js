@@ -386,8 +386,9 @@ define(
          it('mousedownHandler', function() {
             let Manager = getManager();
             let deactivatedCount = 0;
-            Manager._private.popupDeactivated = () => deactivatedCount++;
+            Manager.remove = () => deactivatedCount++;
             Manager._private.isIgnoreActivationArea = () => false;
+            Manager._private.needClosePopupByDeactivated = () => true;
             let id1 = Manager.show({
                testOption: 'created',
                autofocus: false
