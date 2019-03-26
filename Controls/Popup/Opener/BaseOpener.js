@@ -81,7 +81,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             self._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+               requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
                   Layer.load().addCallback(function() {
                      self._openPopup(cfg, controller);
                   });
