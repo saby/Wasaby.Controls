@@ -69,6 +69,10 @@ define('Controls-demo/Popup/PopupPage',
             this._children.notifyStack.open();
          },
 
+         openChildStack: function() {
+            this._children.childStack.open();
+         },
+
          _notifyCloseHandler: function() {
             this._notifyStackText = 'Стековая панель закрылась';
          },

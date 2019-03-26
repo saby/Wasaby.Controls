@@ -25,6 +25,7 @@ define('Controls/Search/Controller',
                   searchDelay: self._options.searchDelay,
                   filter: clone(options.filter),
                   source: options.source,
+                  sorting: options.sorting,
                   navigation: options.navigation,
                   searchCallback: _private.searchCallback.bind(self, self),
                   abortCallback: _private.abortCallback.bind(self, self),
@@ -43,8 +44,8 @@ define('Controls/Search/Controller',
             self._viewMode = 'search';
             self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
-            self._notify('filterChanged', [filter], {bubbling: true});
-            self._notify('itemsChanged', [result.data], {bubbling: true});
+            self._notify('filterChanged', [filter]);
+            self._notify('itemsChanged', [result.data]);
             
             if (switcherStr) {
                self._misspellValue = switcherStr;
@@ -60,7 +61,7 @@ define('Controls/Search/Controller',
                self._inputSearchValue = '';
                self._misspellValue = '';
                self._forceUpdate();
-               self._notify('filterChanged', [filter], {bubbling: true});
+               self._notify('filterChanged', [filter]);
             }
          },
    
@@ -74,6 +75,7 @@ define('Controls/Search/Controller',
          
          needUpdateSearchController: function(options, newOptions) {
             return !isEqual(options.navigation, newOptions.navigation) ||
+                   !isEqual(options.sorting, newOptions.sorting) ||
                    options.searchDelay !== newOptions.searchDelay ||
                    options.source !== newOptions.source ||
                    options.searchParam !== newOptions.searchParam ||

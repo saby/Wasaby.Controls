@@ -351,9 +351,9 @@ define(
             StickyController._private.isTargetVisible = () => true;
          });
 
-         it('Sticky with option locationStrategy=fixed', () => {
+         it('Sticky with option fittingMode=fixed', () => {
             var position = StickyStrategy.getPosition({
-               locationStrategy: 'fixed',
+               fittingMode: 'fixed',
                corner: {
                   vertical: 'bottom',
                   horizontal: 'left'
@@ -383,13 +383,13 @@ define(
             assert.isTrue(position.left === -190);
          });
 
-         it('Sticky with option locationStrategy=overflow', () => {
+         it('Sticky with option fittingMode=overflow', () => {
             let left = 1700;
             let right = 1900;
             let targetC = {...targetCoords, left, right};
 
             var position = StickyStrategy.getPosition({
-               locationStrategy: 'overflow',
+               fittingMode: 'overflow',
                corner: {
                   vertical: 'top',
                   horizontal: 'left'
@@ -416,7 +416,7 @@ define(
             }, targetC);
 
             assert.equal(position.top, 0);
-            assert.equal(position.left, 1490);
+            assert.equal(position.left, 1520);
          });
 
          it ('Sticky [new position]', () => {
@@ -551,13 +551,13 @@ define(
             assert.equal(Object.keys(position).length, 2);
          });
 
-         it ('Sticky [new position] location strategy fixed', () => {
+         it ('Sticky [new position] fittingMode fixed', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
             });
             let cfg = getPositionConfig();
-            cfg.locationStrategy = 'fixed';
+            cfg.fittingMode = 'fixed';
             cfg.sizes.height = 400;
             let position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 200);
@@ -566,7 +566,7 @@ define(
             assert.equal(Object.keys(position).length, 3);
 
             cfg = getPositionConfig();
-            cfg.locationStrategy = 'fixed';
+            cfg.fittingMode = 'fixed';
             cfg.sizes.width = 400;
             cfg.corner.horizontal = 'left';
             cfg.corner.vertical = 'bottom';

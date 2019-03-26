@@ -296,9 +296,11 @@ define([
                         ['p', 'Test paragraph'],
                         ['span', 'Test span'],
                         ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
+                        ['img', { alt: 'javascript:alert(123)', src: 'javascript:alert(123)' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
                         ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
+                        ['a', { alt: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss link'],
                         ['pre', 'Test pretty print'],
                         ['label', 'Test label'],
                         ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
@@ -356,8 +358,10 @@ define([
                '<p>Test paragraph</p>' +
                '<span>Test span</span>' +
                '<img alt="Test image" src="test.gif" />' +
+               '<img alt="javascript:alert(123)" />' +
                '<br />' +
                '<a rel="noreferrer" target="_blank">Test link</a>' +
+               '<a alt="javascript:alert(123)">xss link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
                '<font>Test font</font>' +
@@ -388,7 +392,9 @@ define([
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
-               ['p', linkNode, nbsp + '   '],
+               ['pre', linkNode],
+               ['div', linkNode],
+               ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
                ['p', linkNode, ['br'], 'text'],
@@ -408,7 +414,9 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
-               '<p>' + decoratedLinkHtml + nbsp + '   </p>' +
+               '<pre>' + decoratedLinkHtml + '</pre>' +
+               '<div>' + decoratedLinkHtml + '</div>' +
+               '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
@@ -615,6 +623,30 @@ define([
                },
                'https://ya.ru'
             ], '      ', ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 5', function() {
+            var parentNode = ['pre', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 6', function() {
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
       });

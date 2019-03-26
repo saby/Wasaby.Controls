@@ -8,7 +8,6 @@ import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
 import isEqualObject = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
-import Env = require('Env/Env');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
@@ -18,6 +17,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_lists/BaseControl/Footer';
 import 'css!theme?Controls/List/BaseControl/BaseControl';
+import { error as dataSourceError } from 'Controls/dataSource';
+import { constants, IoC } from 'Env/Env';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -27,18 +28,73 @@ var
 
 var
     HOT_KEYS = {
-        moveMarkerToNext: Env.constants.key.down,
-        moveMarkerToPrevious: Env.constants.key.up,
-        toggleSelection: Env.constants.key.space,
-        enterHandler: Env.constants.key.enter
+        moveMarkerToNext: constants.key.down,
+        moveMarkerToPrevious: constants.key.up,
+        toggleSelection: constants.key.space,
+        enterHandler: constants.key.enter
     };
 
 var LOAD_TRIGGER_OFFSET = 100;
 
+/**
+ * Object with state from server side rendering
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+ */
+type ReceivedState = {
+    data?: any;
+    errorConfig?: dataSourceError.ViewConfig;
+}
+
+/**
+ * @typedef {Object}
+ * @name CrudResult
+ * @property {*} [data]
+ * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+ * @property {Error} [error]
+ */
+type CrudResult = ReceivedState & {
+    error: Error;
+}
+
+type ErrbackConfig = {
+    dataLoadErrback?: (error: Error) => any;
+    mode?: dataSourceError.Mode;
+    error: Error;
+}
+
+/**
+ * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
+ * @param {CrudResult} crudResult
+ * @return {ReceivedState}
+ */
+let getState = (crudResult: CrudResult): ReceivedState => {
+    delete crudResult.error;
+    return crudResult;
+};
+
+/**
+ * getting result from <CrudResult> wrapper
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+let getData = (crudResult: CrudResult): Promise<any> => {
+    if (!crudResult) {
+        return Promise.resolve();
+    }
+    if (crudResult.hasOwnProperty('data')) {
+        return Promise.resolve(crudResult.data);
+    }
+    return Promise.reject(crudResult.error);
+};
+
 var _private = {
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
     },
 
@@ -54,6 +110,7 @@ var _private = {
         }
         if (self._sourceController) {
             _private.showIndicator(self);
+            _private.hideError(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -90,25 +147,35 @@ var _private = {
 
                 _private.prepareFooter(self, navigation, self._sourceController);
 
-                resDeferred.callback(list);
+                resDeferred.callback({
+                    data: list
+                });
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
                 }
             }).addErrback(function(error) {
-                _private.processLoadError(self, error, cfg.dataLoadErrback);
-                resDeferred.callback(null);
+                _private.hideIndicator(self);
+                return _private.processError(self, {
+                    error: error,
+                    dataLoadErrback: cfg.dataLoadErrback
+                }).then(function(result: CrudResult) {
+                    resDeferred.callback({
+                        data: null,
+                        ...result
+                    });
+                });
             });
         } else {
             resDeferred.callback();
-            Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
-        resDeferred.addCallback(function(items) {
+        resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
                 cfg.afterReloadCallback();
             }
-            return items;
+            return result;
         });
         return resDeferred;
     },
@@ -231,12 +298,15 @@ var _private = {
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 return addedItems;
-
             }).addErrback(function(error) {
-                return _private.processLoadError(self, error, userErrback);
+                _private.hideIndicator(self);
+                return _private.crudErrback(self, {
+                    error: error,
+                    dataLoadErrback: userErrback
+                });
             });
         }
-        Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
     },
 
     // Основной метод пересчета состояния Virtual Scroll
@@ -255,30 +325,6 @@ var _private = {
         self._listViewModel.setIndexes(indexes.start, indexes.stop);
         self._topPlaceholderHeight = placeholdersSizes.top;
         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
-    },
-
-    processLoadError: function(self, error, dataLoadErrback) {
-        if (!error.canceled) {
-            _private.hideIndicator(self);
-
-            if (dataLoadErrback instanceof Function) {
-                dataLoadErrback(error);
-            }
-
-            // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
-            if (!(error.processed || error._isOfflineMode)) {
-                // Control show messagebox only in clientside
-                if (self._children && self._children.errorMsgOpener) {
-                    self._children.errorMsgOpener.open({
-                        message: error.message,
-                        style: 'error',
-                        type: 'ok'
-                    });
-                }
-                error.processed = true;
-            }
-        }
-        return error;
     },
 
     checkLoadToDirectionCapability: function(self) {
@@ -304,7 +350,11 @@ var _private = {
     loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
         if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
-            _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
+            _private.loadToDirection(
+                self, direction,
+                self._options.dataLoadCallback,
+                self._options.dataLoadErrback
+            );
         }
     },
 
@@ -445,7 +495,7 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction) {
+    showIndicator: function(self, direction?) {
         self._loadingState = direction || 'all';
         self._loadingIndicatorState = self._loadingState;
         if (!self._loadingIndicatorTimer) {
@@ -745,8 +795,56 @@ var _private = {
         }
 
         return sorting;
-    }
+    },
 
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {ErrbackConfig} config
+     * @return {Promise}
+     * @private
+     */
+    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<CrudResult>{
+        return _private.processError(self, config).then(getData);
+    },
+
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {ErrbackConfig} config
+     * @return {Promise.<CrudResult>}
+     * @private
+     */
+    processError(self: BaseControl, config: ErrbackConfig): Promise<CrudResult> {
+        if (config.dataLoadErrback instanceof Function) {
+            config.dataLoadErrback(config.error);
+        }
+        return self.__errorController.process({
+            error: config.error,
+            mode: config.mode || dataSourceError.Mode.include
+        }).then((errorConfig) => {
+            _private.showError(self, errorConfig);
+            return {
+                error: config.error,
+                errorConfig: errorConfig
+            };
+        });
+    },
+
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {Controls/dataSource:error.ViewConfig} errorConfig
+     * @private
+     */
+    showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
+        self.__error = errorConfig;
+        self._forceUpdate();
+    },
+
+    hideError(self: BaseControl): void {
+        if (self.__error) {
+            self.__error = null;
+            self._forceUpdate();
+        }
+    },
 };
 
 /**
@@ -802,9 +900,24 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _popupOptions: null,
     _hasUndrawChanges: false,
 
-    _beforeMount: function(newOptions, context, receivedState) {
-        var
-            self = this;
+    constructor(options) {
+        BaseControl.superclass.constructor.apply(this, arguments);
+        options = options || {};
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
+    },
+
+    /**
+     * @param {Object} newOptions
+     * @param {Object} context
+     * @param {ReceivedState} receivedState
+     * @return {Promise}
+     * @protected
+     */
+    _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
+        var self = this;
+
+        let receivedError = receivedState.errorConfig;
+        let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
 
@@ -831,8 +944,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
-                if (receivedState) {
-                    viewModelConfig.items = receivedState;
+                if (receivedData) {
+                    viewModelConfig.items = receivedData;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                 _private.initListViewModelHandler(self, self._listViewModel);
@@ -844,8 +957,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                 });
 
-                if (receivedState) {
-                    self._sourceController.calculateState(receivedState);
+                if (receivedData) {
+                    self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
@@ -856,9 +969,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                         _private.applyVirtualScroll(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-                } else {
-                    return _private.reload(self, newOptions);
+                    return;
                 }
+                if (receivedError) {
+                    return _private.showError(self, receivedError);
+                }
+                return _private.reload(self, newOptions).addCallback(getState);
             }
         });
     },
@@ -1004,7 +1120,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             });
         }
 
-        return reloadItemDeferred
+        return reloadItemDeferred.addErrback((error) => {
+            return _private.crudErrback(this, {
+                error: error,
+                mode: dataSourceError.Mode.dialog
+            });
+        });
     },
 
     _beforeUnmount: function() {
@@ -1140,7 +1261,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     reload: function() {
-        return _private.reload(this, this._options);
+        return _private.reload(this, this._options).addCallback(getData);
     },
 
     getVirtualScroll: function() {
@@ -1167,6 +1288,17 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         this._listViewModel.setMarkedKey(newKey);
         e.blockUpdate = true;
+
+        // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+        // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+        // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
+        // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
+        var target = originalEvent.target;
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender, .controls-Dropdown, .controls-Suggest_list')) {
+            this._focusTimeout = setTimeout(() => {
+                this._children.fakeFocusElem.focus();
+            }, 0);
+        }
     },
 
     _viewResize: function() {
@@ -1251,15 +1383,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     self._itemDragData = itemData;
                 }
             });
-        }
-
-        // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
-        // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        var target = domEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true') {
-            this._focusTimeout = setTimeout(() => {
-                this._children.fakeFocusElem.focus();
-            }, 0);
         }
         event.blockUpdate = true;
     },

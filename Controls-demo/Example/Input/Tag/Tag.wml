@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text tagStyle="primary"
+                  <Controls.Input.Text tagStyle="primary" class="ControlsDemo-ExampleInput_fieldWithTag"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"

@@ -66,8 +66,7 @@ define('Controls/Selector/Suggest',
             return new HistorySource({
                originSource: source,
                historySource: new HistoryService({
-                  historyId: historyId,
-                  frequent: true
+                  historyId: historyId
                })
             });
          }

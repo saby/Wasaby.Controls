@@ -171,7 +171,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], { bubbling: true });
+               this._close();
             }
             clearTimeout(this._openId);
          },
@@ -182,6 +182,10 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], { bubbling: true });
             } else {
+
+               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
+               this._notify('openInfoBox', [config]);
+
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
@@ -200,6 +204,9 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('closeInfoBox', [], { bubbling: true });
             } else {
+
+               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
+               this._notify('closeInfoBox');
                this._children.infoBoxOpener.close();
             }
 
@@ -216,8 +223,8 @@ define('Controls/Popup/InfoBox',
                if (!this._opened) {
                   this._open(event);
                }
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function() {

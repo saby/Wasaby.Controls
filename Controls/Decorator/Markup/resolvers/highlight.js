@@ -28,7 +28,7 @@ define('Controls/Decorator/Markup/resolvers/highlight', [
     * @public
     * @author Кондаков Р.Н.
     */
-   return function linkDecorate(value, parent, resolverParams) {
+   return function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
          return value;

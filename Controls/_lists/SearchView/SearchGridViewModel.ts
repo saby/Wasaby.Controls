@@ -13,7 +13,7 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         current.getCurrentColumn = function() {
             var currentColumn = superGetCurrentColumn();
 
-            if (currentColumn.columnIndex === 0 && current.item.getId) {
+            if (currentColumn.columnIndex === 0 && current.item.getId && current.multiSelectVisibility === 'hidden') {
                 currentColumn.cellClasses += ' controls-Grid__cell_spacingFirstCol_search';
             }
 

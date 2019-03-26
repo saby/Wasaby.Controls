@@ -1,7 +1,8 @@
 define(
    [
       'Controls/Dropdown/Opener',
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/polyfill/PromiseAPIDeferred'
    ],
    (Opener, BaseOpener) => {
       describe('Dropdown/Opener', () => {

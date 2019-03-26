@@ -35,7 +35,7 @@ define('Controls/Popup/Opener/Sticky',
           * @property {Number} maxHeight The maximum height of popup.
           * @property {Number} height The height of popup.
           * @property {Number} width The width of popup.
-          * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
+          * @property {String} fittingMode A method of adjusting the popup panel to the free space next to the target.
           */
 
          /**
@@ -221,6 +221,6 @@ define('Controls/Popup/Opener/Sticky',
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#locationStrategy
+ * @name Controls/Popup/Opener/Sticky#fittingMode
  * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
  */

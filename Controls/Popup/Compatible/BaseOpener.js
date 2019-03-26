@@ -194,7 +194,7 @@ function(cMerge,
 
       _prepareConfigFromOldToOldByNewEnvironment: function(cfg) {
          if (cfg.flipWindow === 'vertical') {
-            cfg.locationStrategy = 'overflow';
+            cfg.fittingMode = 'overflow';
          }
          if (cfg.cssClassName) {
             cfg.className = cfg.cssClassName;
@@ -495,7 +495,7 @@ function(cMerge,
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
-            if (cfg.locationStrategy === 'fixed') {
+            if (cfg.locationStrategy === 'fixed' || cfg.fittingMode === 'fixed') {
                newCfg.dialogOptions.flipWindow = false;
             }
          }

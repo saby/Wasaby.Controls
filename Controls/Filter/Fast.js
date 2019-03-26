@@ -150,13 +150,19 @@ define('Controls/Filter/Fast',
 
          isNeedReload: function(oldItems, newItems) {
             var isChanged = false;
-            chain.factory(newItems).each(function(item, index) {
-               if (!isEqual(item.properties.source, oldItems[index].properties.source) ||
-                  !isEqual(item.properties.filter, oldItems[index].properties.filter) ||
-                  !isEqual(item.properties.navigation, oldItems[index].properties.navigation)) {
-                  isChanged = true;
-               }
-            });
+            
+            if (newItems.length !== oldItems.length) {
+               isChanged = true;
+            } else {
+               chain.factory(newItems).each(function(item, index) {
+                  if (!isEqual(item.properties.source, oldItems[index].properties.source) ||
+                     !isEqual(item.properties.filter, oldItems[index].properties.filter) ||
+                     !isEqual(item.properties.navigation, oldItems[index].properties.navigation)) {
+                     isChanged = true;
+                  }
+               });
+            }
+
             return isChanged;
          }
       };

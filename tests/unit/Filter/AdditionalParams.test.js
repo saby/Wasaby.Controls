@@ -39,6 +39,51 @@ define(
             assert.equal(addParams._isItemVisible(items[2]), false);
          });
 
+         it('_beforeUpdate', function() {
+            let addParams = getAddParams(items);
+            let newItems = [
+               {
+                  id: 'list',
+                  value: 1,
+                  resetValue: 1
+               },
+               {
+                  id: 'text',
+                  value: '123',
+                  resetValue: '',
+                  visibility: false
+               },
+               {
+                  id: 'bool',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               },
+               {
+                  id: 'bool1',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               },
+               {
+                  id: 'bool2',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               },
+               {
+                  id: 'bool3',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               }
+            ];
+            addParams._beforeUpdate({items: newItems});
+            assert.deepEqual(addParams.items, newItems);
+            assert.deepEqual(addParams._columns, { leftColumn: [1, 2, 3], rightColumn: [4, 5] });
+            assert.isFalse(addParams._arrowVisible);
+         });
+
          it('_private::getColumnsByItems', function() {
             let items2 = [
                {

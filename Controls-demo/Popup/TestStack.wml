@@ -11,6 +11,9 @@
                <ws:componentOptions type="stack"/>
             </ws:popupOptions>
          </Controls.Popup.Opener.Stack>
+         <Controls.Popup.Opener.Stack name="formControllerOpener" template="Controls-demo/Popup/Edit/MyFormController">
+            <ws:templateOptions type="stack" width="650"/>
+         </Controls.Popup.Opener.Stack>
          <Controls.Popup.Opener.Dialog name="modalDialog">
             <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
                <ws:templateOptions type="dialog"/>
@@ -42,6 +45,9 @@
          <br/>
          <Controls.buttons:Button caption="Открыть modalDialog" on:click="_openModalDialog()"
                           attr:class="ControlsDemo-TestStack__modalDialog"/>
+         <br/>
+         <Controls.buttons:Button name="FCButton" caption="Открыть FormController" on:click="_openFC()"
+                                  attr:class="ControlsDemo-TestStack__FC"/>
          <br/>
          <Controls.buttons:Button name="infoboxButton" caption="Открыть Инфобокс" on:click="_openInfobox()"
                           attr:class="ControlsDemo-TestStack__infobox"/>

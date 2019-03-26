@@ -1,71 +1,28 @@
 define('Controls-demo/Input/Money/Money',
    [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/Input/Money/Money',
-
-      'css!Controls-demo/Input/Money/Money'
+      'Core/core-merge',
+      'Controls-demo/Input/Base/Base',
+      'json!Controls-demo/Input/Money/Money'
    ],
 
-   function(Control, template, config) {
+   function(cMerge, Base, config) {
       'use strict';
 
-      var Money = Control.extend({
-         _template: template,
+      var _private = {
+         CONTENT: 'Controls/Input/Money'
+      };
 
-         _metaData: null,
-
-         _dataObject: null,
-
-         _componentOptions: null,
-
-         _content: 'Controls/Input/Money',
+      var Money = Base.extend({
+         _content: _private.CONTENT,
 
          _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               },
-               style: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
-               },
-               fontStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
-               },
-               textAlign: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
-               },
-               tagStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title'
-               }
-            };
-            this._componentOptions = {
-               name: 'MoneyField',
-               placeholder: 'Text...',
-               tooltip: 'Please enter text',
-               value: '0.00',
-               style: undefined,
-               tagStyle: undefined,
-               readOnly: undefined,
-               fontStyle: undefined,
-               textAlign: undefined
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+            Money.superclass._beforeMount.apply(this, arguments);
+
+            this._componentOptions.value = '0.00';
+            this._componentOptions.name = 'InputMoney';
+            this._componentOptions.onlyPositive = false;
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
 

@@ -86,6 +86,7 @@ define('Controls/History/Source', [
                   }
                });
             }
+            self._recentCount = recent.getCount();
          } else {
             self._history = data;
          }
@@ -138,7 +139,7 @@ define('Controls/History/Source', [
          var filteredFrequent = [];
 
          // рассчитываем количество популярных пунктов
-         var frequentLength = (Constants.MAX_HISTORY - rawHistoryData.pinned.getCount() - (self.countRecent > Constants.MIN_RECENT ? self.countRecent : Constants.MIN_RECENT));
+         var frequentLength = (Constants.MAX_HISTORY - rawHistoryData.pinned.getCount() - (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT));
          var countFrequent = 0;
          var item;
 
@@ -157,7 +158,7 @@ define('Controls/History/Source', [
       filterRecent: function(self, rawHistoryData, countAll, filteredFrequent) {
          var filteredRecent = [];
          var countRecent = 0;
-         var maxCountRecent = (self.countRecent > Constants.MIN_RECENT ? self.countRecent : Constants.MIN_RECENT);
+         var maxCountRecent = (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT);
          var item, id;
 
          rawHistoryData.recent.forEach(function(element) {
@@ -296,11 +297,11 @@ define('Controls/History/Source', [
 
       updateRecent: function(self, item, meta) {
          var id = item.getId();
-         var recent = self._history.recent;
-         var hItem = recent.getRecordById(id);
+         var recent = self._history && self._history.recent;
          var records;
 
-         if (!(self._nodeProperty && item.get(self._nodeProperty))) {
+         if (!(self._nodeProperty && item.get(self._nodeProperty)) && recent) {
+            var hItem = recent.getRecordById(id);
             if (hItem) {
                recent.remove(hItem);
             }

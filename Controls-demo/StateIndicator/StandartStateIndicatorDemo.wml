@@ -44,7 +44,7 @@
       <h2>With three values</h2>
       <h3>20 sectors</h3>
       <div class="demo__block">
-         <div class="demo__label">10%, 0%, 50% filled</div>
+         <div class="demo__label">10%, 30%, 50% filled</div>
          <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="9"  data="{{_datas[9]}}" scale="{{_scales[9]}}" />
       </div>
       <div class="demo__block">
@@ -54,7 +54,7 @@
       <h2>With several values</h2>
       <h3>Custom number of sectors and colors</h3>
       <div class="demo__block">
-         <div class="demo__label">34%, 33%, 33% filled</div>
+         <div class="demo__label">33%, 33%, 33%, 1% filled</div>
          <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="11"  data="{{_datas[11]}}" scale="{{_scales[11]}}" />
       </div>      
       <div class="demo__block">

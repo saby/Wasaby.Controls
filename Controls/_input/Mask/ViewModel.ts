@@ -16,6 +16,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
                return;
             }
             self._formatMaskChars = formatMaskChars;
+            self._nextVersion();
             self.formatMaskCharsRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('') + ']', 'g');
          },
 
@@ -40,6 +41,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
          },
          _convertToDisplayValue: function(value) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            this._nextVersion();
             var fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             if (fDate && fDate.value) {
@@ -52,6 +54,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
          },
          handleInput: function(splitValue, inputType) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             var result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
             return ViewModel.superclass.handleInput.call(this, _private.prepareSplitValue(result));
