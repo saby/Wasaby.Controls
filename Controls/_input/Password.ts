@@ -102,7 +102,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
          }
       });
 
-      Password._theme.push('Controls/_input/Password/Password');
+      Password._theme.push('Controls/input');
 
       Password.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();

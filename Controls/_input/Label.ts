@@ -90,5 +90,7 @@ import 'css!theme?Controls/Label/Label';
          };
       };
 
+      Label._theme = ['Controls/input'];
+
       export = Label;
    
