@@ -2604,7 +2604,7 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
-            _forceUpdate: () = {}
+            _forceUpdate: () => {}
          };
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
