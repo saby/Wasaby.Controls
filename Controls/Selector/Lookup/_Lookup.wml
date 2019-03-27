@@ -27,6 +27,7 @@
          inputWidth="{{ _inputWidth }}"
          isInputVisible="{{_isInputVisible()}}"
          multiline="{{ _multiLineState }}"
+         spacingLeftInput="{{!_multiLineState && !_isEmpty() || _multiLineState && _inputWidth}}"
          size="{{ _options.size }}"
          trim="{{ _options.trim }}"
          style="{{ _options.style }}"
@@ -38,8 +39,7 @@
          on:valueChanged="_changeValueHandler()"
          on:inputCompleted="_notifyHandler('inputCompleted')"
          on:keyDown="_keyDown()"
-         attr:class="controls-Lookup__inputRender controls-Lookup__inputRender_{{_multiLineState ? 'multiLine' : 'singleLine'}}
-            {{!_multiLineState && !_isEmpty() || _multiLineState && _inputWidth ? 'controls-Lookup__inputRender_collection_with_input'}}">
+         attr:class="controls-Lookup__inputRender controls-Lookup__inputRender_{{_multiLineState ? 'multiLine' : 'singleLine'}}">
 
       <ws:beforeFieldWrapper>
          <ws:if data="{{!_isEmpty() && (_maxVisibleItems || _options.readOnly)}}">

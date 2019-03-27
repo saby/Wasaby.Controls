@@ -27,13 +27,18 @@
   display: none;
 }
 
+/*
+  Border is used as an indent for the input field.
+  Padding is not suitable because a non-native placeholder is used, which is positioned through absolute.
+  Margin is not suitable, because in  mode multi line for input, we set the width, which is determined by before update, and do not know what left space will be, since it is not constant.
+*/
 .controls-Lookup__fieldWrapper.controls-InputBase__field {
   margin: 0;
   box-sizing: border-box;
   border-right: @spacing_Lookup-between-input-afterFieldWrapper solid transparent;
 }
 
-.controls-Lookup__inputRender_collection_with_input .controls-InputBase__field {
+.controls-Lookup__fieldWrapper-left-spacing {
   border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
 }
 
