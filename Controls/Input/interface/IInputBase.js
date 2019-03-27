@@ -4,6 +4,13 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * Interface for Input.Base.
     *
     * @interface Controls/Input/interface/IInputBase
+    *
+    * @mixes Controls/Input/interface/IInputTag
+    * @mixes Controls/Input/interface/IInputPlaceholder
+    *
+    * @mixes Controls/_input/Base/Styles
+    * @mixes Controls/Input/Render/Styles
+    *
     * @public
     * @author Журавлев М.С.
     */

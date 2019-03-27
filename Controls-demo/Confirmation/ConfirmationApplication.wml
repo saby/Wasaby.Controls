@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Confirmation" demoname="Controls-demo/Confirmation/Confirmation.wml">
+    <ws:content>
+        <Controls-demo.Confirmation.Confirmation/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>
