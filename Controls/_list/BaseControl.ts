@@ -951,7 +951,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            _private.reload(this, newOptions).addCallback(function () {
+            //return result here is for unit tests
+            return _private.reload(this, newOptions).addCallback(function () {
 
                 /*
                 * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
@@ -961,7 +962,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 if (self._listViewModel.getCount() && self._isScrollShown) {
-                    self._keyDisplayedItem = self._listViewModel.getFirstItem().getId();
+                    const firstItem = self._listViewModel.getFirstItem();
+
+                    //the first item may be missing, if, for example, only groups are drawn in the list
+                    if (firstItem) {
+                        self._keyDisplayedItem = firstItem.getId();
+                    }
                 }
             });
         }
