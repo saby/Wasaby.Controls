@@ -52,8 +52,3 @@
 /tests/**/preprocessor_logs
 /tests/**/screenshots
 /tests/**/__pycache__
-.nyc_output/d4f526b7c39cec5752f0599e9ca735be.json
-tslint.json
-.gitignore
-.nyc_output/3b9ff19302bd4e48ca149fd40094146d.json
-.gitignore
