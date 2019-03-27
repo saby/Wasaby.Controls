@@ -131,7 +131,7 @@ define('Controls/Popup/InfoBox',
             return {
                opener: self,
                target: self._container,
-               template: OpenerTemplate,
+               template: self._options.templateName || self._options.template,
                position: self._options.position,
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
@@ -141,10 +141,7 @@ define('Controls/Popup/InfoBox',
                   onResult: self._resultHandler,
                   onClose: self._closeHandler
                },
-               templateOptions: {
-                  template: self._options.templateName || self._options.template,
-                  templateOptions: self._options.templateOptions,
-               }
+               templateOptions: self._options.templateOptions
             };
          }
       };
