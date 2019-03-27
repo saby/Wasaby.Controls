@@ -279,6 +279,44 @@ define([
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
+         it('no XSS', function() {
+            var
+               json = [
+                  ['p',
+                     ['script', 'alert(123);']
+                  ],
+                  ['p',
+                     { onclick: 'alert(123)' },
+                     'click me'
+                  ],
+                  ['p',
+                     ['iframe', { name: 'javascript:alert(123)', src: 'javascript:alert(123)' }]
+                  ],
+                  ['p',
+                     ['a', { name: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss']
+                  ],
+                  ['p',
+                     ['a', { href: '  javascript:alert(123)  ' }, 'leading spaces']
+                  ],
+                  ['p',
+                     ['a', { href: 'jAvAsCrIpT:alert(123)' }, 'upper and lower case']
+                  ],
+                  ['p',
+                     ['iframe', { src: 'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==' }, 'base64 alert']
+                  ],
+               ],
+               goodHtml = '<div>' +
+                  '<p></p>' +
+                  '<p>click me</p>' +
+                  '<p><iframe name="javascript:alert(123)"></iframe></p>' +
+                  '<p><a name="javascript:alert(123)">xss</a></p>' +
+                  '<p><a>leading spaces</a></p>' +
+                  '<p><a>upper and lower case</a></p>' +
+                  '<p><iframe>base64 alert</iframe></p>' +
+                  '</div>',
+               checkHtml = Converter.jsonToHtml(json);
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
          it('all valid tags and attributes', function() {
             var json = [
                ['p',
@@ -295,12 +333,10 @@ define([
                         ['code', 'Test code'],
                         ['p', 'Test paragraph'],
                         ['span', 'Test span'],
-                        ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
-                        ['img', { alt: 'javascript:alert(123)', src: 'javascript:alert(123)' }],
+                        ['img', { alt: 'Test image', src: '/test.gif', onclick: 'alert("Test")' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
                         ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
-                        ['a', { alt: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss link'],
                         ['pre', 'Test pretty print'],
                         ['label', 'Test label'],
                         ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
@@ -333,12 +369,12 @@ define([
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
                      height: 'testHeight',
-                     href: 'testHref',
+                     href: 'http://testHref.com',
                      id: 'testId',
                      name: 'testName',
                      rel: 'testRel',
                      rowspan: 'testRowspan',
-                     src: 'testSrc',
+                     src: '/testSrc',
                      style: 'testStyle',
                      tabindex: 'testTabindex',
                      target: 'testTarget',
@@ -357,11 +393,9 @@ define([
                '<code>Test code</code>' +
                '<p>Test paragraph</p>' +
                '<span>Test span</span>' +
-               '<img alt="Test image" src="test.gif" />' +
-               '<img alt="javascript:alert(123)" />' +
+               '<img alt="Test image" src="/test.gif" />' +
                '<br />' +
                '<a rel="noreferrer" target="_blank">Test link</a>' +
-               '<a alt="javascript:alert(123)">xss link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
                '<font>Test font</font>' +
@@ -383,7 +417,7 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="testHref" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="/testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
