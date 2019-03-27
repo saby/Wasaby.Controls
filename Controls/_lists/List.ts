@@ -6,8 +6,8 @@ import ListControlTpl = require('wml!Controls/_lists/List');
 import ListViewModel = require('Controls/_lists/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import 'Controls/_lists/ListView';
-import 'Controls/_lists/ListControl';
+import viewName = require('Controls/_lists/ListView');
+import viewTemplate = require('Controls/_lists/ListControl');
 
 /**
  * Plain list with custom item template. Can load data from data source.
@@ -43,8 +43,8 @@ import 'Controls/_lists/ListControl';
 
 var ListControl = Control.extend(/** @lends Controls/List.prototype */{
     _template: ListControlTpl,
-    _viewName: 'Controls/_lists/ListView',
-    _viewTemplate: 'Controls/_lists/ListControl',
+    _viewName: viewName,
+    _viewTemplate: viewTemplate,
     _viewModelConstructor: null,
 
     _beforeMount: function() {
