@@ -34,8 +34,6 @@ define('Controls/Popup/Templates/Notification/Base',
        * @demo Controls-demo/Popup/Templates/NotificationTemplatePG
        */
 
-      var timeAutoClose = 5000;
-
       var Notification = Control.extend({
          _template: template,
 
@@ -50,9 +48,6 @@ define('Controls/Popup/Templates/Notification/Base',
                Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
             }
             this._style = _private.prepareDisplayStyle(options.style);
-            if (options.autoClose) {
-               this._autoClose();
-            }
             if (options.iconClose) {
                Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
             }
@@ -66,24 +61,6 @@ define('Controls/Popup/Templates/Notification/Base',
 
          _closeClick: function() {
             this._notify('close', []);
-         },
-
-         _mouseenterHandler: function() {
-            clearTimeout(this._timerId);
-         },
-
-         _mouseleaveHandler: function() {
-            if (this._options.autoClose) {
-               this._autoClose();
-            }
-         },
-
-         _autoClose: function() {
-            var self = this;
-
-            this._timerId = setTimeout(function() {
-               self._notify('close', []);
-            }, timeAutoClose);
          }
       });
 
