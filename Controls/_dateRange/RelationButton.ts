@@ -44,8 +44,10 @@ const Component = Control.extend({
     },
 
     _onValueChanged: function (event, value) {
+        let bindType = value ? 'normal' : 'byCapacity';
         event.stopImmediatePropagation();
-        this._notify('valueChanged', [value ? 'normal' : 'byCapacity']);
+        this._notify('valueChanged', [bindType]);
+        this._notify('relationButtonBindTypeChanged', [bindType], { bubbling: true });
     }
 });
 
