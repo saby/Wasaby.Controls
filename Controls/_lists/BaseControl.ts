@@ -124,8 +124,6 @@ var _private = {
                     cfg.dataLoadCallback(list);
                 }
 
-                _private.hideIndicator(self);
-
                 if (listModel) {
                     if (self._isActive) {
                         isActive = true;
@@ -147,6 +145,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
+                _private.resolveIndicatorStateAfterReload(self, list);
 
                 resDeferred.callback({
                     data: list
@@ -180,6 +179,24 @@ var _private = {
         });
         return resDeferred;
     },
+
+    resolveIndicatorStateAfterReload: function(self, list):void {
+        const hasMoreDataDown = self._sourceController.hasMoreData('down');
+        const hasMoreDataUp = self._sourceController.hasMoreData('up');
+
+        if (!list.getCount()) {
+            //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
+            //otherwise empty template will shown
+            if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+            } else {
+                _private.hideIndicator(self);
+            }
+        } else {
+            _private.hideIndicator(self);
+        }
+    },
+
     scrollToItem: function(self, key) {
         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
@@ -310,7 +327,7 @@ var _private = {
                     // Обновляем общее количество записей
                     self._virtualScroll.ItemsCount = self._listViewModel.getCount();
 
-                    _private.applyVirtualScroll(self, direction);
+                    _private.applyVirtualScroll(self);
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -512,8 +529,8 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction?) {
-        self._loadingState = direction || 'all';
+    showIndicator: function(self, direction = 'all') {
+        self._loadingState = direction;
         self._loadingIndicatorState = self._loadingState;
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -1190,7 +1207,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading) {
                 _private.showIndicator(this);
-            } else if (!this._sourceController.isLoading()) {
+            } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
         }

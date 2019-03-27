@@ -17,7 +17,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, ListView, entity, collection) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -2598,7 +2598,24 @@ define([
          });
 
       });
-   
+
+      it('resolveIndicatorStateAfterReload', function() {
+         var baseControlMock = {
+            _needScrollCalculation: true,
+            _sourceController: {hasMoreData: () => {return true;}},
+            _forceUpdate: () => {}
+         };
+         var emptyList = new collection.List();
+         var list = new collection.List({items: [{test: 'testValue'}]});
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         assert.equal(baseControlMock._loadingState, 'down');
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         assert.isNull(baseControlMock._loadingState);
+
+      });
+
       it('reloadItem', function() {
          var filter = {};
          var cfg = {
