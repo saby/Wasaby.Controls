@@ -21,12 +21,10 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Typ
             current.resetColumnIndex();
             assert.isFalse(!!current.getCurrentColumn().column.needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
-            assert.include(current.getCurrentColumn().cellClasses, ' controls-Grid__cell_spacingFirstCol_search');
             
             current.goToNextColumn();
             assert.isTrue(!!current.getCurrentColumn().column.needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
-            assert.notInclude(current.getCurrentColumn().cellClasses, ' controls-Grid__cell_spacingFirstCol_search');
          });
 
          it('should not add spacing to first column because multiSelectVisibility is "visible"', function() {
@@ -43,8 +41,6 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Typ
             model._curIndex = 0;
             var current = model.getCurrent();
             current.resetColumnIndex();
-
-            assert.notInclude(current.getCurrentColumn().cellClasses, ' controls-Grid__cell_spacingFirstCol_search');
          });
       });
    });
