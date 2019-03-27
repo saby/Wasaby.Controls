@@ -113,30 +113,10 @@ define('Controls/Decorator/Markup/Converter', [
     */
    var htmlToJson = function(html) {
       var div = document.createElement('div'),
-         rootNode,
-         rootNodeTagName,
-         rootNodeAttributes,
          result;
       div.innerHTML = wrapUrl(html).trim();
       result = nodeToJson(div).slice(1);
       div = null;
-
-      // Add version.
-      rootNode = result[0];
-      if (Array.isArray(rootNode)) {
-         // TODO: replace this "magic" getting of attributes with a function from result of task to wrap JsonML.
-         // https://online.sbis.ru/opendoc.html?guid=475ea157-8996-47e8-9842-6d4e6533bba5
-         if (typeof rootNode[1] === 'object' && !Array.isArray(rootNode[1])) {
-            rootNodeAttributes = rootNode[1];
-         } else {
-            rootNodeAttributes = {};
-            rootNodeTagName = rootNode.shift();
-            rootNode.unshift(rootNodeAttributes);
-            rootNode.unshift(rootNodeTagName);
-         }
-         rootNodeAttributes.version = '1.0';
-      }
-
       return result;
    };
 
