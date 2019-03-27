@@ -30,6 +30,7 @@ define(
                {
                   testName: 'Invalid 12 => 12a',
                   controlConfig: {
+                     precision: 0,
                      useGrouping: true
                   },
                   splitValue: {
@@ -83,7 +84,8 @@ define(
                   testName: 'Invalid 123 => -123',
                   controlConfig: {
                      useGrouping: true,
-                     onlyPositive: true
+                     onlyPositive: true,
+                     precision: 0
                   },
                   splitValue: {
                      before: '',
@@ -101,30 +103,13 @@ define(
                   testName: 'Max length integers part 12 345.0 => 12 345.6',
                   controlConfig: {
                      useGrouping: true,
-                     integersLength: 5
+                     integersLength: 5,
+                     precision: 1
                   },
                   splitValue: {
                      before: '12 345',
                      insert: '6',
                      after: '.0',
-                     delete: ''
-                  },
-                  result: {
-                     value: '12 345.6',
-                     position: 7
-                  },
-                  inputType: 'insert'
-               },
-               {
-                  testName: 'Max length integers part 12 345 => 12 345.6',
-                  controlConfig: {
-                     useGrouping: true,
-                     integersLength: 5
-                  },
-                  splitValue: {
-                     before: '12 345',
-                     insert: '6',
-                     after: '',
                      delete: ''
                   },
                   result: {
@@ -235,7 +220,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '0.0',
+                     value: '',
                      position: 2
                   },
                   inputType: 'insert'
@@ -260,7 +245,8 @@ define(
                {
                   testName: 'Delete space operation removes symbol before space and moves cursor left',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     precision: 0
                   },
                   splitValue: {
                      before: '123',
@@ -328,7 +314,8 @@ define(
                {
                   testName: 'Remove space using \'delete\' button',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     precision: 0
                   },
                   splitValue: {
                      before: '123',
@@ -571,7 +558,7 @@ define(
                      delete: '.'
                   },
                   result: {
-                     value: '123.56',
+                     value: '123.456',
                      position: 4
                   },
                   inputType: 'deleteForward'
@@ -598,7 +585,8 @@ define(
                {
                   testName: 'Delete last symbol',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     precision: 0
                   },
                   splitValue: {
                      before: '',
@@ -681,8 +669,8 @@ define(
                      delete: '6'
                   },
                   result: {
-                     value: '123.450',
-                     position: 6
+                     value: '123.45',
+                     position: 5
                   },
                   inputType: 'deleteBackward'
                },
@@ -699,7 +687,7 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '123.',
+                     value: '123.0',
                      position: 3
                   },
                   inputType: 'deleteBackward'
@@ -762,7 +750,8 @@ define(
                {
                   testName: '0',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     precision: 0
                   },
                   splitValue: {
                      before: '',
@@ -907,7 +896,8 @@ define(
                {
                   testName: 'Insert first symbol in decimal part: 123.0 => 123.4',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     precision: 1
                   },
                   splitValue: {
                      before: '123.',
@@ -973,8 +963,8 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '129.45',
-                     position: 4
+                     value: '-129.45',
+                     position: 5
                   },
                   inputType: 'insert'
                },
@@ -1057,7 +1047,8 @@ define(
                   testName: 'Insert long integer number in field with integersLength option',
                   controlConfig: {
                      useGrouping: true,
-                     integersLength: 5
+                     integersLength: 5,
+                     precision: 0
                   },
                   splitValue: {
                      before: '',
@@ -1066,7 +1057,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12 345.0',
+                     value: '12 345',
                      position: 6
                   },
                   inputType: 'insert'
@@ -1085,8 +1076,8 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12 345.0',
-                     position: 6
+                     value: '12 345.6789',
+                     position: 11
                   },
                   inputType: 'insert'
                },
@@ -1104,7 +1095,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12 345.789',
+                     value: '12 345.6789',
                      position: 10
                   },
                   inputType: 'insert'

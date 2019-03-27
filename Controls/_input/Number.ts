@@ -75,6 +75,9 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
             if (options.integersLength <= 0) {
                Env.IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
+         },
+         convertToNumber: function (value) {
+             return value === null ? void 0 : value;
          }
       };
 
@@ -83,10 +86,10 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
             _private.validateOptions(options);
 
             return {
-               precision: options.precision,
+               precision: _private.convertToNumber(options.precision),
                useGrouping: options.useGrouping,
                onlyPositive: options.onlyPositive,
-               integersLength: options.integersLength,
+               integersLength: _private.convertToNumber(options.integersLength),
                showEmptyDecimals: options.showEmptyDecimals
             };
          },
