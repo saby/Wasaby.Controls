@@ -14,9 +14,8 @@ define([
    'Env/Env',
    'Core/core-clone',
    'Types/entity',
-   'Types/collection',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, ListView, entity, collection) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
