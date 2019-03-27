@@ -42,7 +42,7 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
     // @ts-ignore
     let details = config.error.details;
     return {
-        mode: Mode.dialog,
+        mode: config.mode || Mode.dialog,
         template: "Controls/dataSource:error.DefaultTemplate",
         options: {
             message,
