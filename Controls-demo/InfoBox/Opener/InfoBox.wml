@@ -14,7 +14,33 @@
       </div>
    </ws:for>
 
-  <div>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; right: 0px; top: 6px"
+                              on:mouseenter="_open(_cfgRight)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; right: 0px; bottom: 5px"
+                              on:mouseenter="_open(_cfgRight)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; left: 0px; top: 6px"
+                              on:mouseenter="_open(_cfgLeft)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; left: 0px; bottom: 5px"
+                              on:mouseenter="_open(_cfgLeft)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute"
+                              on:mouseenter="_open(_cfgTop)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; bottom: 0px"
+                              on:mouseenter="_open(_cfgBottom)"/>
+
+
+  <div style="margin-bottom: 30px ">
       <div class="controls-InfoBoxDemo-block">
          <div class="controls-InfoBoxDemo-header">{{'ICONS'}}</div>
       </div>

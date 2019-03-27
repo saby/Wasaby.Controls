@@ -132,7 +132,6 @@ define([
       it('_beforeMount', function() {
          var lookup = new Lookup();
          lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true});
-         assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
          lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
@@ -148,14 +147,6 @@ define([
          lookup._beforeMount({items: getItems(5), value: 'test'});
          assert.equal(lookup._maxVisibleItems, 1);
          assert.equal(lookup._inputValue, 'test');
-      });
-
-      it('_beforeUnmount', function() {
-         var lookup = new Lookup();
-         lookup._simpleViewModel = true;
-         lookup._beforeUnmount();
-
-         assert.isNull(lookup._simpleViewModel);
       });
 
       it('_afterUpdate', function() {

@@ -20,14 +20,12 @@
         sorting="{{_options.sorting}}"
         value="{{_options.value}}"
         bind:suggestState="_suggestState">
-    <Controls.Input.resources.InputRender.InputRender
+    <Controls.Input.Suggest.InputRender
             size="{{ _options.size }}"
             tooltip="{{_options.tooltip}}"
-            viewModel="{{_simpleViewModel}}"
             trim="{{_options.trim}}"
             autocomplete="{{_options.autocomplete}}"
             selectOnClick="{{_options.selectOnClick}}"
-            inputCharRegExp="{{_options.inputCharRegExp}}"
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
             fontStyle="{{_options.fontStyle}}"
@@ -36,14 +34,10 @@
             placeholder="{{_options.placeholder}}"
             maxLength="{{_options.maxLength}}"
             constraint="{{_options.constraint}}"
-            validationErrors="{{_options.validationErrors}}"
             on:tagClick="_notifyHandler('tagClick')"
             on:tagHover="_notifyHandler('tagHover')"
             on:valueChanged="_changeValueHandler()"
             on:inputCompleted="_inputCompletedHandler()">
-        <ws:content>
-            <ws:partial template="wml!Controls/Input/resources/input"/>
-        </ws:content>
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly && (_searchState || _options.value)}}">
                 <div class="controls-SuggestV__afterFieldWrapper">
@@ -52,5 +46,5 @@
                 </div>
             </ws:if>
         </ws:afterFieldWrapper>
-    </Controls.Input.resources.InputRender.InputRender>
+    </Controls.Input.Suggest.InputRender>
 </Controls.Container.Suggest.Layout>
