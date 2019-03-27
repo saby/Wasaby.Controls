@@ -326,4 +326,7 @@
          </a>
       </div>
    </div>
+   <ws:if data="{{_successfullyMounted}}">
+      <div class="test-mount"></div>
+   </ws:if>
 </div>
