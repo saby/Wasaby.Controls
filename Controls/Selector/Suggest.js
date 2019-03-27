@@ -3,7 +3,6 @@ define('Controls/Selector/Suggest',
       'Core/Control',
       'wml!Controls/Selector/Suggest/Suggest',
       'Controls/Controllers/SourceController',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/History/Source',
       'Controls/History/Service',
       'Types/util',
@@ -11,7 +10,7 @@ define('Controls/Selector/Suggest',
       'Core/core-merge',
       'css!Controls/Selector/Suggest/Suggest'
    ],
-   function(Control, template, SourceController, BaseViewModel, HistorySource, HistoryService, util, entity, Merge) {
+   function(Control, template, SourceController, HistorySource, HistoryService, util, entity, Merge) {
       'use strict';
 
       /**
