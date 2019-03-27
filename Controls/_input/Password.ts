@@ -86,6 +86,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
             var passwordVisible = !this._passwordVisible;
 
             this._passwordVisible = passwordVisible;
+            this._forceUpdate();
             this._type = _private.calculateType(passwordVisible, this._options.autoComplete);
          },
 
