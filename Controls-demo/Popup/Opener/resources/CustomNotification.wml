@@ -1,4 +1,5 @@
-<ws:partial template="wml!Controls/Popup/Templates/Notification/Simple"
-            text="{{value}}"
-            style="primary">
-</ws:partial>
+<Controls.Popup.Templates.Notification.Simple
+        text="{{value}}"
+        style="primary"
+        icon="Admin">
+</Controls.Popup.Templates.Notification.Simple>

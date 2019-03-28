@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Stack" demoname="Controls-demo/Popup/Opener/StackDemo.wml">
+    <ws:content>
+        <Controls-demo.Popup.Opener.StackDemo/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

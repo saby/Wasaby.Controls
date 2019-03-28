@@ -229,7 +229,7 @@ function(cMerge,
          }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
-            cfg.isModal = true;
+            cfg.modal = true;
             cfg.closeOnOutsideClick = false;
          }
 
@@ -294,7 +294,7 @@ function(cMerge,
          }
 
          if (cfg.hasOwnProperty('modal')) {
-            cfg.isModal = cfg.modal;
+            cfg.modal = cfg.modal;
          }
 
          if (cfg._popupComponent === 'dialog') { // у window всегда есть drag
@@ -384,7 +384,7 @@ function(cMerge,
                _isCompatibleArea: true,
                isStack: cfg._type === 'stack',
                target: cfg.target,
-               modal: cfg.isModal,
+               modal: cfg.modal,
                handlers: cfg.handlers,
                border: !isVDOMTemplate(template) // Если шаблон вдомный - кнопка закрытия не нужна
             },

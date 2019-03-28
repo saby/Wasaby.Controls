@@ -95,11 +95,6 @@ define('Controls/Application/Core',
                result = false;
             }
             return result;
-         },
-         _getChildContext: function() {
-            return {
-               AppData: this.ctxData
-            };
          }
 
       });

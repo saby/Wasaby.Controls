@@ -2,19 +2,16 @@
    <script>
       window.receivedStates = '{"ThemesController": { "themes" : {"' + (window.defaultStaticTheme || 'default') + '": true}}}';
 
-      require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'Application/Env', 'Core/app-init', 'Core/Control', 'View/Executor/TClosure'],
-      function(AppData, AppStart, HeadData, Env, appInit, Core) {
+      require(['Core/app-start', 'Controls/Application/HeadData', 'Application/Env', 'Core/app-init', 'Core/Control', 'View/Executor/TClosure'],
+      function(AppStart, HeadData, AppEnv, appInit, Core) {
 
          /*Первый шаг - иницализация ядра и темы. Второй шаг - загрузка ресурсов*/
          appInit();
 
          var headData = new HeadData([], true);
-         Env.setStore('HeadData', headData);
+         AppEnv.setStore('HeadData', headData);
 
-         AppData.initAppData({});
-         var appData = AppData.getAppData();
-
-         window.startContextData = { AppData: appData };
+         window.startContextData = { };
          require([ {{_options.dependencies | unescape}} ], function (){
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;

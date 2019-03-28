@@ -349,11 +349,5 @@ define('Controls/Application',
          };
       };
 
-      Page.contextTypes = function contextTypes() {
-         return {
-            AppData: AppData
-         };
-      };
-
       return Page;
    });

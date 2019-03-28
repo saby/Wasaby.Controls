@@ -151,7 +151,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
          openFloat: function() {
             var self = this;
 
-            requirejs(['Controls/Popup/Compatible/Layer'],
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'],
                function(CompatiblePopup) {
                   CompatiblePopup.load().addCallback(function () {
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
@@ -187,7 +187,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
          },
          openDialog: function() {
             var self = this;
-            requirejs(['Controls/Popup/Compatible/Layer'],
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'],
                function(CompatiblePopup) {
                   CompatiblePopup.load().addCallback(function() {
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
@@ -225,7 +225,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
          openSticky: function() {
             var self = this;
 
-            requirejs(['Controls/Popup/Compatible/Layer'],
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'],
                function(CompatiblePopup) {
                   CompatiblePopup.load().addCallback(function() {
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
@@ -291,7 +291,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
          openDimension: function() {
             var self = this;
 
-            requirejs(['Controls/Popup/Compatible/Layer'],
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'],
                function(CompatiblePopup) {
                   CompatiblePopup.load().addCallback(function() {
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {

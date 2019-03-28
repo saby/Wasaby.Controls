@@ -3,23 +3,26 @@ define(
       'Env/Event',
       'Env/Env',
       'Core/core-instance',
+      'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Controls/Input/Base',
       'unit/resources/ProxyCall',
       'unit/Input/Base/InputUtility',
       'unit/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EnvEvent, Env, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
+   function(EnvEvent, Env, instance, makeInstanceCompatible, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
          var calls;
          var ctrl = new Base();
+         makeInstanceCompatible(ctrl);
          ctrl._template({});
 
          beforeEach(function() {
             calls = [];
             ctrl = new Base();
+            makeInstanceCompatible(ctrl);
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
 
             var beforeMount = ctrl._beforeMount;

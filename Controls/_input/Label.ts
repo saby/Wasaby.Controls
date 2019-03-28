@@ -2,8 +2,6 @@ import Env = require('Env/Env');
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import template = require('wml!Controls/Label/Label');
-import 'css!theme?Controls/Label/Label';
-      
 
       /**
        * Label.
@@ -89,6 +87,8 @@ import 'css!theme?Controls/Label/Label';
             required: entity.descriptor(Boolean)
          };
       };
+
+      Label._theme = ['Controls/input'];
 
       export = Label;
    

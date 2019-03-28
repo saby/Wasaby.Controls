@@ -43,8 +43,8 @@
    },
    "nyc": {
       "include": [
-         "SBIS3.CONTROLS/**/*.js",
-         "Controls/**/*.js"
+         "application/SBIS3.CONTROLS/**/*.js",
+         "application/Controls/**/*.js"
       ],
       "reporter": [
          "text",
