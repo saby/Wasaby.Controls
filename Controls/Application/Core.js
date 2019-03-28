@@ -19,7 +19,7 @@ define('Controls/Application/Core',
       template,
       AppInit,
       PresentationService,
-      Env,
+      AppEnv,
       StateReceiver,
       ThemesController,
       AppData,
@@ -65,7 +65,7 @@ define('Controls/Application/Core',
             }
 
             var headData = new HeadData([], true);
-            Env.setStore('HeadData', headData);
+            AppEnv.setStore('HeadData', headData);
 
             AppCore.superclass.constructor.apply(this, arguments);
 
@@ -74,7 +74,7 @@ define('Controls/Application/Core',
 
             // Put Application/Core instance into the current request where
             // other modules can get it from
-            Env.setStore('CoreInstance', { instance: this });
+            AppEnv.setStore('CoreInstance', { instance: this });
          },
          coreTheme: '',
          setTheme: function(ev, theme) {
@@ -87,7 +87,7 @@ define('Controls/Application/Core',
             var result;
             if (this._application !== app) {
                this._applicationForChange = app;
-               var headData = Env.getStore('HeadData');
+               var headData = AppEnv.getStore('HeadData');
                headData && headData.resetRenderDeferred();
                this._forceUpdate();
                result = true;
