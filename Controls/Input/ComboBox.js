@@ -53,9 +53,6 @@ define('Controls/Input/ComboBox',
             this._onOpen = _private.popupVisibilityChanged.bind(this, true);
             this._placeholder = options.placeholder;
             this._value = options.value;
-            this._simpleViewModel = new BaseViewModel({
-               value: this._value
-            });
             this._setText = this._setText.bind(this);
          },
 
@@ -90,9 +87,6 @@ define('Controls/Input/ComboBox',
                this._value = getPropValue(selectedItems[0], this._options.displayProperty);
                this._placeholder = this._options.placeholder;
             }
-            this._simpleViewModel.updateOptions({
-               value: this._value
-            });
          }
 
       });

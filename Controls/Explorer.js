@@ -17,7 +17,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeControl',
    'Types/entity',
    'Controls/TreeGrid',
-   'Controls/crumbs'
+   'Controls/breadcrumbs'
 ], function(
    Control,
    template,
@@ -175,9 +175,6 @@ define('Controls/Explorer', [
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
-         }
-         if (this._options.root !== cfg.root) {
-            _private.setRoot(this, cfg.root);
          }
       },
       _getRoot: function() {

@@ -2,7 +2,7 @@ import Env = require('Env/Env');
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Number/ViewModel');
-      
+
 
       /**
        * Controls that allows user to enter single-line number.
@@ -11,8 +11,9 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @class Controls/_input/Number
        * @extends Controls/_input/Base
        *
+       * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IOnlyPositive
-       * @mixes Controls/_input/interface/IInputNumber
+       * @mixes Controls/Input/interface/IInputNumber
        *
        * @public
        * @demo Controls-demo/Input/Number/NumberPG

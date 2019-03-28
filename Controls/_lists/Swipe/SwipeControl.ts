@@ -174,7 +174,7 @@ export default class SwipeControl extends Control {
 
       if (this._options.swipeDirection !== newOptions.swipeDirection) {
          import(MEASURER_NAMES[newOptions.swipeDirection]).then((result) => {
-            this._measurer = result;
+            this._measurer = result.default;
             this._forceUpdate();
          });
       }

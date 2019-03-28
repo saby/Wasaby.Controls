@@ -39,7 +39,7 @@ define('Controls/Popup/Opener/Stack',
           * Open stack with specified configuration.
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
           *             <ws:templateOptions key="111"/>
           *     </Controls.Popup.Opener.Stack>
           *
@@ -106,7 +106,7 @@ define('Controls/Popup/Opener/Stack',
  * @example
  * wml
  * <pre>
- *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+ *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
  *             <ws:templateOptions key="111"/>
  *     </Controls.Popup.Opener.Stack>
  *

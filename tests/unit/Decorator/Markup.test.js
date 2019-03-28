@@ -114,6 +114,7 @@ define([
          'smb://ya.ru'
       ],
       decoratedLinkService,
+      currentVersion = '1.0',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
@@ -148,26 +149,41 @@ define([
          });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
-
+         it('version', function() {
+            assert.deepEqual(Converter.htmlToJson('<p>No attributes</p>'), [
+               ['p',
+                  { version: currentVersion },
+                  'No attributes'
+               ]
+            ]);
+            assert.deepEqual(Converter.htmlToJson('<p style="text-align: center;">With attributes</p>'), [
+               ['p',
+                  { version: currentVersion, style: 'text-align: center;' },
+                  'With attributes'
+               ]
+            ]);
+            assert.deepEqual(Converter.htmlToJson(''), []);
+            assert.deepEqual(Converter.htmlToJson('just a string'), ['just a string']);
+         });
          it('trim', function() {
             var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
-            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
             assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
          });
 
          it('undecorate link', function() {
             var html = '<p>' + decoratedLinkHtml + '</p>';
-            var json = [['p', linkNode]];
+            var json = [['p', { version: currentVersion }, linkNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
          it('long html', function() {
             var text = 'a'.repeat(2000);
-            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', text]]);
+            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', { version: currentVersion }, text]]);
          }).timeout(1000);
 
          it('Wrapping url', function() {
@@ -196,7 +212,7 @@ define([
                '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
-               ['p', linkNode],
+               ['p', { version: currentVersion }, linkNode],
                ['p', ' a '],
                ['p', 'text', linkNode, '. More text'],
                ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
@@ -279,6 +295,44 @@ define([
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
+         it('no XSS', function() {
+            var
+               json = [
+                  ['p',
+                     ['script', 'alert(123);']
+                  ],
+                  ['p',
+                     { onclick: 'alert(123)' },
+                     'click me'
+                  ],
+                  ['p',
+                     ['iframe', { name: 'javascript:alert(123)', src: 'javascript:alert(123)' }]
+                  ],
+                  ['p',
+                     ['a', { name: 'javascript:alert(123)', href: 'javascript:alert(123)' }, 'xss']
+                  ],
+                  ['p',
+                     ['a', { href: '  javascript:alert(123)  ' }, 'leading spaces']
+                  ],
+                  ['p',
+                     ['a', { href: 'jAvAsCrIpT:alert(123)' }, 'upper and lower case']
+                  ],
+                  ['p',
+                     ['iframe', { src: 'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==' }, 'base64 alert']
+                  ],
+               ],
+               goodHtml = '<div>' +
+                  '<p></p>' +
+                  '<p>click me</p>' +
+                  '<p><iframe name="javascript:alert(123)"></iframe></p>' +
+                  '<p><a name="javascript:alert(123)">xss</a></p>' +
+                  '<p><a>leading spaces</a></p>' +
+                  '<p><a>upper and lower case</a></p>' +
+                  '<p><iframe>base64 alert</iframe></p>' +
+                  '</div>',
+               checkHtml = Converter.jsonToHtml(json);
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
          it('all valid tags and attributes', function() {
             var json = [
                ['p',
@@ -295,7 +349,7 @@ define([
                         ['code', 'Test code'],
                         ['p', 'Test paragraph'],
                         ['span', 'Test span'],
-                        ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
+                        ['img', { alt: 'Test image', src: '/test.gif', onclick: 'alert("Test")' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
                         ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
@@ -331,12 +385,12 @@ define([
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
                      height: 'testHeight',
-                     href: 'testHref',
+                     href: 'http://testHref.com',
                      id: 'testId',
                      name: 'testName',
                      rel: 'testRel',
                      rowspan: 'testRowspan',
-                     src: 'testSrc',
+                     src: '/testSrc',
                      style: 'testStyle',
                      tabindex: 'testTabindex',
                      target: 'testTarget',
@@ -355,7 +409,7 @@ define([
                '<code>Test code</code>' +
                '<p>Test paragraph</p>' +
                '<span>Test span</span>' +
-               '<img alt="Test image" src="test.gif" />' +
+               '<img alt="Test image" src="/test.gif" />' +
                '<br />' +
                '<a rel="noreferrer" target="_blank">Test link</a>' +
                '<pre>Test pretty print</pre>' +
@@ -379,7 +433,7 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="testHref" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="/testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
@@ -388,6 +442,8 @@ define([
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
+               ['pre', linkNode],
+               ['div', linkNode],
                ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
@@ -408,6 +464,8 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
+               '<pre>' + decoratedLinkHtml + '</pre>' +
+               '<div>' + decoratedLinkHtml + '</div>' +
                '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
@@ -615,6 +673,30 @@ define([
                },
                'https://ya.ru'
             ], '      ', ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 5', function() {
+            var parentNode = ['pre', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 6', function() {
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
       });

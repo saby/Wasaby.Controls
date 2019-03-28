@@ -6,7 +6,6 @@ import itemTemplate = require('wml!Controls/_crumbs/View/resources/itemTemplate'
 import itemsTemplate = require('wml!Controls/_crumbs/View/resources/itemsTemplate');
 import menuItemTemplate = require('wml!Controls/_crumbs/resources/menuItemTemplate');
 import 'wml!Controls/_crumbs/resources/menuContentTemplate';
-import 'css!theme?Controls/_crumbs/View/View';
 
 /**
  * BreadCrumbs/View.
@@ -65,6 +64,8 @@ var BreadCrumbsView = Control.extend({
 
     _onResize: function () {
         this._children.menuOpener.close();
+        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
+       this._forceUpdate();
     },
 
     _onResult: function (args) {
@@ -82,5 +83,7 @@ BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
         itemTemplate: itemTemplate
     };
 };
+
+BreadCrumbsView._theme = ['Controls/crumbs'];
 
 export default BreadCrumbsView;

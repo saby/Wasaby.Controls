@@ -261,14 +261,22 @@ define(
          });
 
          it('_private::itemsPropertiesChanged', function() {
-            var oldItems = Clone(source),
-               newItems = Clone(source),
-               newItems2 = Clone(source);
+            let oldItems = Clone(source);
+            let newItems = Clone(source);
+            let newItems2 = Clone(source);
+            let newItems3 = Clone(source);
+            let result;
+            
             newItems[0].properties.navigation = {page: 2};
-            var result = FastData._private.isNeedReload(oldItems, newItems);
+            result = FastData._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
+            
             result = FastData._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
+   
+            newItems3.splice(0, 1);
+            result = FastData._private.isNeedReload(oldItems, newItems3);
+            assert.isTrue(result);
          });
 
          it('_private::getItemPopupConfig', function() {

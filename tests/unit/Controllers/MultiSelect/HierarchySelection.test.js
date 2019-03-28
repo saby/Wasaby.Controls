@@ -510,5 +510,16 @@ define([
          selectionInstance = new HierarchySelection(cfg);
          assert.deepEqual({ 2: true }, selectionInstance.getSelectedKeysForRender());
       });
+
+      it('if an item is in selectedKeys, it should get counted even if it is not loaded', function() {
+         cfg = {
+            selectedKeys: [8], //item with this key doesn't exist in recordset
+            excludedKeys: [],
+            items: allData,
+            keyProperty: 'id'
+         };
+         selectionInstance = new HierarchySelection(cfg);
+         assert.equal(1, selectionInstance.getCount());
+      });
    });
 });

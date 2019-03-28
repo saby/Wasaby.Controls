@@ -315,5 +315,21 @@ define([
          assert.equal(current.isHiddenGroup, false, 'Invalid value isHiddenGroup for current item.');
          assert.equal(current.isGroupExpanded, false, 'Invalid value isGroupExpanded for current item.');
       });
+
+      it('isLast', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+
+         var iv = new ItemsViewModel(cfg);
+
+         var condResult = iv.isLast();
+         assert.isFalse(condResult);
+         iv.goToNext();
+         iv.goToNext();
+         condResult = iv.isLast();
+         assert.isTrue(condResult);
+      });
    })
 });

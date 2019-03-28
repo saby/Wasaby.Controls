@@ -17,7 +17,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, ListView, entity, collection) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -140,7 +140,6 @@ define([
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
             assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
-            assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -151,7 +150,6 @@ define([
                   }
                };
                ctrl._afterUpdate({});
-               assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
                done();
             }, 100);
@@ -720,7 +718,7 @@ define([
          }, 100);
       });
 
-      it('onScrollLoadEdge', function(done) {
+      it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
          var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
@@ -758,17 +756,16 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = true;
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
-               assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
-
-               ctrl._hasUndrawChanges = false;
-               BaseControl._private.onScrollLoadEdge(ctrl, 'down');
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\\\'t load');
-                  done();
-               }, 100);
+               assert.equal(6, ctrl._listViewModel.getCount(), 'Items weren\\\'t loaded');
+               done();
             }, 100);
          }, 100);
       });
@@ -811,7 +808,12 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = false; // _afterUpdate
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
@@ -1240,6 +1242,10 @@ define([
                       type: 2
                    }]
              }),
+             lnSource3 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: []
+             }),
              lnCfg = {
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
@@ -1262,11 +1268,17 @@ define([
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
-                  lnBaseControl._beforeUpdate(lnCfg);
-
-                  setTimeout(function() {
+                  lnBaseControl._beforeUpdate(lnCfg).addCallback(function() {
                      assert.equal(lnBaseControl._keyDisplayedItem, 4);
-                     resolve();
+                     lnBaseControl._keyDisplayedItem = null;
+
+                     lnCfg = clone(lnCfg);
+                     lnCfg.source = lnSource3;
+                     lnBaseControl._beforeUpdate(lnCfg).addCallback(function(res) {
+                        assert.equal(lnBaseControl._keyDisplayedItem, null);
+                        resolve();
+                        return res;
+                     });
                   });
                }, 10);
             },10);
@@ -2596,7 +2608,24 @@ define([
          });
 
       });
-   
+
+      it('resolveIndicatorStateAfterReload', function() {
+         var baseControlMock = {
+            _needScrollCalculation: true,
+            _sourceController: {hasMoreData: () => {return true;}},
+            _forceUpdate: () => {}
+         };
+         var emptyList = new collection.List();
+         var list = new collection.List({items: [{test: 'testValue'}]});
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         assert.equal(baseControlMock._loadingState, 'down');
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         assert.isNull(baseControlMock._loadingState);
+
+      });
+
       it('reloadItem', function() {
          var filter = {};
          var cfg = {

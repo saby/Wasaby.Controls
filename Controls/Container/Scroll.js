@@ -18,7 +18,6 @@ define('Controls/Container/Scroll',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
    function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
-
       'use strict';
 
       /**
@@ -156,7 +155,7 @@ define('Controls/Container/Scroll',
              * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
              */
             updateFixationState: function(self, data) {
-               if (!!data.fixedPosition) {
+               if (data.fixedPosition) {
                   self._stickyHeadersIds[data.fixedPosition].push(data.id);
                   if (data.mode === 'stackable') {
                      self._stickyHeadersHeight[data.fixedPosition] += data.offsetHeight;
@@ -172,10 +171,10 @@ define('Controls/Container/Scroll',
          Scroll = Control.extend({
             _template: template,
 
-            //Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
-            //Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
-            //прокидываем руками
-            //EVENTSPROXY
+            // Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
+            // Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
+            // прокидываем руками
+            // EVENTSPROXY
             _tmplNotify: tmplNotify,
 
             /**
@@ -399,7 +398,7 @@ define('Controls/Container/Scroll',
 
             _scrollbarTaken: function() {
                if (this._showScrollbarOnHover && this._displayState.hasScroll) {
-                  this._notify('scrollbarTaken', [], {bubbling: true});
+                  this._notify('scrollbarTaken', [], { bubbling: true });
                }
             },
 
@@ -443,17 +442,25 @@ define('Controls/Container/Scroll',
 
             _mouseleaveHandler: function(event) {
                if (this._showScrollbarOnHover) {
-                  this._notify('scrollbarReleased', [], {bubbling: true});
+                  this._notify('scrollbarReleased', [], { bubbling: true });
                }
             },
 
             _scrollbarTakenHandler: function() {
                this._showScrollbarOnHover = false;
+
+               // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+               // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
+               this._forceUpdate();
             },
 
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
+
+                  // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+                  // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
+                  this._forceUpdate();
                   event.preventDefault();
                }
             },
@@ -489,7 +496,7 @@ define('Controls/Container/Scroll',
                }
                this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
 
-               //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
+               // Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
                this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
 
                event.stopPropagation();
@@ -572,6 +579,16 @@ define('Controls/Container/Scroll',
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('excludedKeysChanged', args);
                }
+            },
+
+            _saveScrollPosition: function(e) {
+               e.stopPropagation();
+               this._savedScrollPosition = this._children.content.scrollHeight;
+            },
+
+            _restoreScrollPosition: function(e) {
+               e.stopPropagation();
+               this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
             }
          });
 
@@ -591,5 +608,4 @@ define('Controls/Container/Scroll',
       Scroll._private = _private;
 
       return Scroll;
-   }
-);
+   });

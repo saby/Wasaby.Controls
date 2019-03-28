@@ -3,9 +3,19 @@ define('Controls/Popup/Opener/Notification/NotificationController',
       'Core/Deferred',
       'Types/collection',
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Notification/NotificationStrategy'
+      'Controls/Popup/Opener/Notification/NotificationStrategy',
+      'Controls/Popup/Manager/ManagerController',
+      'Controls/Popup/Opener/Notification/NotificationContent'
    ],
-   function(Deferred, collection, BaseController, NotificationStrategy) {
+   function(Deferred, collection, BaseController, NotificationStrategy, ManagerController) {
+      var timeAutoClose = 5000;
+
+      var _private = {
+         setNotificationContent: function(item) {
+            item.popupOptions.content = 'Controls/Popup/Opener/Notification/NotificationContent';
+         }
+      };
+
       /**
        * Notification Popup Controller
        * @class Controls/Popup/Opener/Notification/NotificationController
@@ -22,11 +32,16 @@ define('Controls/Popup/Opener/Notification/NotificationController',
 
          elementCreated: function(item, container) {
             item.height = container.offsetHeight;
+            _private.setNotificationContent(item);
             this._stack.add(item, 0);
             this._updatePositions();
+            if (item.popupOptions.autoClose) {
+               this._closeByTimeout(item);
+            }
          },
 
          elementUpdated: function(item, container) {
+            _private.setNotificationContent(item);
             item.height = container.offsetHeight;
             this._updatePositions();
          },
@@ -38,6 +53,24 @@ define('Controls/Popup/Opener/Notification/NotificationController',
             NotificationController.superclass.elementDestroyed.call(item);
 
             return new Deferred().callback();
+         },
+
+         popupMouseEnter: function(item) {
+            if (item.popupOptions.autoClose) {
+               clearTimeout(item.closeId);
+            }
+         },
+
+         popupMouseLeave: function(item) {
+            if (item.popupOptions.autoClose) {
+               this._closeByTimeout(item);
+            }
+         },
+
+         _closeByTimeout: function(item) {
+            item.closeId = setTimeout(function() {
+               ManagerController.remove(item.id);
+            }, timeAutoClose);
          },
 
          getCustomZIndex: function(popupItems) {

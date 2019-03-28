@@ -1992,23 +1992,23 @@
             "title": "Indicates whether control will react to user actions.",
             "default": "False"
           },
-          "position": {
+          "targetSide": {
             "type": "enum",
-            "default": "tl",
-            "title": "Point positioning of the target relative to infobox.",
+            "default": "top",
             "enum": {
-              "tl": "Popup displayed on the top of the target and aligned by left border.",
-              "tc": "Popup displayed on the top of the target and aligned by center.",
-              "tr": "Popup displayed on the top of the target and aligned by right border.",
-              "bl": "Popup displayed on the bottom of the target and aligned by left border.",
-              "bc": "Popup displayed on the bottom of the target and aligned by center.",
-              "br": "Popup displayed on the bottom of the target and aligned by right border.",
-              "rt": "Popup displayed on the right of the target and aligned by top border.",
-              "rc": "Popup displayed on the right of the target and aligned by center.",
-              "rb": "Popup displayed on the right of the target and aligned by bottom border.",
-              "lt": "Popup displayed on the left of the target and aligned by top border.",
-              "lc": "Popup displayed on the left of the target and aligned by center.",
-              "lb": "Popup displayed on the left of the target and aligned by bottom border"
+              "top": "top",
+              "left": "left",
+              "right": "right",
+              "bottom": "bottom"
+            }
+          },
+          "alignment": {
+            "type": "enum",
+            "default": "start",
+            "enum": {
+              "start": "start",
+              "center": "center",
+              "end": "end"
             }
           },
           "hideDelay": {
@@ -2033,7 +2033,11 @@
             "title": "Infobox display style.",
             "enum": {
               "default": "default",
-              "danger": "danger"
+              "danger": "danger",
+              "warning": "warning",
+              "secondary": "secondary",
+              "info": "info",
+              "success": "success"
             }
           },
           "trigger": {
@@ -2328,9 +2332,8 @@
             "title": "Determines whether focus is set to the template when popup is opened.",
             "type": "Boolean"
           },
-          "isModal": {
+          "modal": {
             "title": "Determines whether the window is modal.",
-            "newName": "modal",
             "type": "Boolean"
           },
           "className": {
@@ -2390,19 +2393,17 @@
             "title": "Шаблон отображения внутреннего содержимого",
             "type": "Object"
           },
-          "isModal": {
+          "modal": {
             "title": "Determines whether the window is modal.",
-            "type": "Boolean",
-            "newName": "modal"
+            "type": "Boolean"
           },
           "className": {
             "title": "Class names of popup.",
             "type": "String"
           },
-          "closeByExternalClick": {
+          "closeOnOutsideClick": {
             "title": "Determines whether possibility of closing the popup when clicking past.",
-            "type": "Boolean",
-            "newName": "closeOnOutsideClick"
+            "type": "Boolean"
           },
           "template": {
             "title": "Template inside popup.",

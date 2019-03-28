@@ -343,5 +343,11 @@ define('Controls/Application',
          }
       });
 
+      Page.getDefaultOptions = function() {
+         return {
+            title: ''
+         };
+      };
+
       return Page;
    });

@@ -10,7 +10,6 @@ import backButtonTemplate = require('wml!Controls/_crumbs/HeadingPath/Back');
 import {Model} from 'Types/entity';
 import Common from './HeadingPath/Common';
 import 'Controls/Heading/Back';
-import 'css!theme?Controls/_crumbs/HeadingPath/HeadingPath';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {
@@ -137,6 +136,8 @@ var BreadCrumbsPath = Control.extend({
 
     _onResize: function () {
         // Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+       // todo здесь нужно звать _forceUpdate чтобы произошла перерисовка, потому что логика пересчета в _beforeUpdate. нужно оттуда логику выносить сюда!
+       this._forceUpdate();
     },
 
     _onHomeClick: function () {
@@ -164,5 +165,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
         showActionButton: true,
     };
 };
+
+BreadCrumbsPath._theme = ['Controls/crumbs'];
 
 export default BreadCrumbsPath;
