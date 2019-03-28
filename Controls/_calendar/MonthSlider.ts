@@ -6,7 +6,6 @@ import Slider from './MonthSlider/Slider';
 import calendarUtils = require('Controls/Calendar/Utils');
 import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
-import 'css!theme?Controls/_calendar/MonthSlider/MonthSlider';
 
 /**
  * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
@@ -88,6 +87,8 @@ Component.getDefaultOptions = function () {
 Component.getOptionTypes = function () {
     return coreMerge({}, IMonth.getOptionTypes());
 };
+
+Component._theme = ['Controls/calendar'];
 
 Component._private = _private;
 
