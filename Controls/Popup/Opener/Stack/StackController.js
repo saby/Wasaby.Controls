@@ -79,11 +79,11 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          addShadowClass: function(item) {
             _private.removeShadowClass(item);
-            item.popupOptions.stackClassName += ' controls-Stack__shadow';
+            item.popupOptions.className += ' controls-Stack__shadow';
          },
 
          removeShadowClass: function(item) {
-            item.popupOptions.stackClassName = item.popupOptions.stackClassName.replace(/controls-Stack__shadow/ig, '').trim();
+            item.popupOptions.className = item.popupOptions.className.replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
