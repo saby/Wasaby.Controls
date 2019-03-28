@@ -347,8 +347,13 @@ define(
 
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config);
+
             dropdownController._selectedItems = [];
             Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id');
+            assert.deepEqual(dropdownController._selectedItems, [null]);
+
+            dropdownController._selectedItems = [];
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [], 'id');
             assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 
