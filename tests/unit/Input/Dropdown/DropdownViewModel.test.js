@@ -161,7 +161,7 @@ define(
          });
 
          it('_private::updateSelection', function() {
-            let configSelection = Clone(config);
+            let configSelection = clone(config);
             configSelection.selectedKeys = ['1', '3', '5'];
             let expectedKeys = [ '1', '3', '5', '6' ];
             let viewModelSelection = new DropdownViewModel(configSelection);
