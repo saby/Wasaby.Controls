@@ -71,7 +71,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeShadowClass: function(item) {
-            item.popupOptions.className = item.popupOptions.className.replace(/controls-Stack__shadow/ig, '').trim();
+            item.popupOptions.className = (item.popupOptions.className || '').replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
@@ -198,7 +198,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             _private.prepareSizes(item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
-            item.popupOptions.stackClassName = '';
             if (StackStrategy.isMaximizedPanel(item)) {
                // set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
