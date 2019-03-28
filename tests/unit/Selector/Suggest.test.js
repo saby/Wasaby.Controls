@@ -3,11 +3,10 @@ define(
       'Controls/Selector/Suggest',
       'Core/core-clone',
       'Types/source',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/entity',
       'Controls/History/Source'
    ],
-   (Suggest, Clone, sourceLib, BaseViewModel, entity, HistorySource) => {
+   (Suggest, Clone, sourceLib, entity, HistorySource) => {
       describe('Selector.Suggest', () => {
          let items = [
             {
@@ -41,13 +40,12 @@ define(
          let getSuggest = function(config) {
             let suggest = new Suggest(config);
             suggest.saveOptions(config);
-            suggest._simpleViewModel = new BaseViewModel();
             return suggest;
          };
 
          it('_beforeMount', function(done) {
             let suggest = getSuggest(config);
-            suggest._beforeMount(config).addCallback(function(items) {
+            suggest._beforeMount(config).addCallback(function() {
                assert.equal(suggest._value, 'Запись 2');
                done();
             });
@@ -94,8 +92,8 @@ define(
             let newConfig = Clone(config);
             newConfig.selectedKey = '3';
             let suggest = getSuggest(config);
-            suggest._beforeUpdate(newConfig).addCallback(function(items) {
-               assert.equal(suggest._simpleViewModel.getDisplayValue(), 'Запись 3');
+            suggest._beforeUpdate(newConfig).addCallback(function() {
+               assert.equal(suggest._value, 'Запись 3');
                done();
             });
          });
@@ -111,7 +109,7 @@ define(
                }
             };
             suggest._changeValueHandler('valueChanged', 'New Text');
-            assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
+            assert.equal(suggest._value, 'New Text');
             assert.equal(newValue, 'New Text');
             assert.equal(suggest._searchValue, 'New Text');
             assert.isNull(key);

@@ -8,20 +8,35 @@
   width: 100%;
 }
 
-.controls-Lookup__inputRender_fieldWrapper_hidden .controls-InputRender__fieldWrapper {
-  display: none;
+.controls-Lookup__inputRender {
+  padding-left: @spacing_Lookup-between-inputRender-leftBorder;
+  padding-right: @spacing_Lookup-between-inputRender-rightBorder;
 }
 
-.controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
+.controls-Lookup__inputRender .controls-Render__wrapper {
+  align-items: center;
+  position: relative;
+}
+
+.controls-Lookup__inputRender_multiLine .controls-Render__wrapper {
   display: inline-block;
   width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup})";
 }
 
-.controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
+.controls-Lookup__fieldWrapper_hidden {
+  display: none;
+}
+
+.controls-Lookup__fieldWrapper.controls-InputBase__field {
+  margin: 0;
+}
+
+.controls-Lookup__fieldWrapper_content_width_custom {
+  display: inline-flex;
   width: auto;
 }
 
-.controls-Lookup__inputRender_content_width_default .controls-InputRender__fieldWrapper {
+.controls-Lookup__fieldWrapper_content_width_default {
   line-height: @line-height_Lookup-input-wrapper;
 }
 
@@ -88,12 +103,12 @@
   order: 1;
 }
 
-
-.controls-Lookup__collection_single {
+// https://online.sbis.ru/opendoc.html?guid=731dbb95-6655-4ccd-ae34-e3b212e18bce
+.controls-SelectedCollection__collection.controls-Lookup__collection_single {
   .flex-shrink(1);
 }
 
-.controls-Lookup__collection_multi {
+.controls-SelectedCollection__collection.controls-Lookup__collection_multi {
   .flex-shrink(0);
 }
 

@@ -32,7 +32,7 @@ define('Controls/Selector/Button/_SelectorButton', [
 
    SelectorButton.getDefaultOptions = function() {
       return {
-         style: 'info',
+         style: 'secondary',
          maxVisibleItems: 7,
          itemTemplate: itemTemplate
       };
