@@ -7,7 +7,6 @@ import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
 import baseTemplate = require('wml!Controls/_input/Base/Base');
 import MaskTpl = require('wml!Controls/_input/Mask/Mask');
-import 'css!Controls/_input/Mask/Mask';
 
       
 
@@ -188,6 +187,8 @@ import 'css!Controls/_input/Mask/Mask';
       };
 
       Mask._private = _private;
+
+      Mask._theme.push('Controls/input');
 
       export = Mask;
    
