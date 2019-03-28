@@ -12,7 +12,6 @@ define('Controls/Popup/Opener/Stack/StackController',
    ],
    function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cClone, Vdom) {
       'use strict';
-      var HAS_ANIMATION = false;
       var STACK_CLASS = 'controls-Stack';
       var _private = {
 
@@ -66,17 +65,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             return StackStrategy.getPosition(targetCoords, item);
          },
 
-         elementDestroyed: function(instance, item) {
-            instance._stack.remove(item);
-            instance._update();
-            instance._destroyDeferred[item.id].callback();
-            delete instance._destroyDeferred[item.id];
-         },
-
-         removeAnimationClasses: function(className) {
-            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
-         },
-
          addShadowClass: function(item) {
             _private.removeShadowClass(item);
             item.popupOptions.className += ' controls-Stack__shadow';
@@ -87,7 +75,6 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          prepareUpdateClassses: function(item) {
-            item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.addStackClasses(item.popupOptions);
             _private.updatePopupOptions(item);
          },
@@ -147,12 +134,9 @@ define('Controls/Popup/Opener/Stack/StackController',
        */
 
       var StackController = BaseController.extend({
-         _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
             this._stack = new collection.List();
-            _private.elementDestroyed.bind(this);
-            this._fixTemplateAnimation.bind(this);
          },
 
          elementCreated: function(item, container) {
@@ -178,33 +162,9 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementDestroyed: function(item) {
-            this._destroyDeferred[item.id] = new Deferred();
-            if (HAS_ANIMATION) {
-               item.popupOptions.stackClassName += ' controls-Stack__close';
-               _private.updatePopupOptions(item);
-               this._fixTemplateAnimation(item);
-
-               /**
-                * Perfoming animation. Changing rAF for rIC
-                */
-               Vdom.animationWaiter(true);
-            } else {
-               _private.elementDestroyed(this, item);
-               return (new Deferred()).callback();
-            }
-            return this._destroyDeferred[item.id];
-         },
-
-         elementAnimated: function(item) {
-            item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
-            _private.updatePopupOptions(item);
-            if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
-               Vdom.animationWaiter(false);
-               _private.elementDestroyed(this, item);
-            } else {
-               item.popupState = BaseController.POPUP_STATE_CREATED;
-               return true;
-            }
+            this._stack.remove(item);
+            this._update();
+            return (new Deferred()).callback();
          },
 
          _update: function() {
@@ -259,17 +219,6 @@ define('Controls/Popup/Opener/Stack/StackController',
                this._stack.add(item);
                this._update();
             }
-         },
-
-         // TODO: For Compatible
-         _fixTemplateAnimation: function(element) {
-            var self = this;
-            setTimeout(function() {
-               var destroyDef = self._destroyDeferred[element.id];
-               if (destroyDef && !destroyDef.isReady()) {
-                  _private.elementDestroyed(self, element);
-               }
-            }, 500);
          },
 
          _private: _private
