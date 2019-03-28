@@ -3,11 +3,10 @@ define('Controls/Input/Suggest',
       'Core/Control',
       'wml!Controls/Input/Suggest/Suggest',
       'Types/entity',
-      'Controls/Input/OldText/OldViewModel',
       'Controls/Utils/tmplNotify',
       'css!theme?Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, entity, BaseViewModel, tmplNotify) {
+   function(Control, template, entity, tmplNotify) {
       
       /**
        * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
