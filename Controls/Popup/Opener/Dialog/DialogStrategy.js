@@ -55,11 +55,14 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
             height = undefined;
          }
 
+         var availableMaxWidth = Math.min(popupOptions.maxWidth || windowData.width, windowData.width);
+         var availableMaxHeight = Math.min(popupOptions.maxHeight || windowData.height, windowData.height);
+
          return {
             width: width,
             height: height,
-            maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
-            maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width),
+            maxHeight: Math.max(availableMaxHeight, popupOptions.minHeight || 0),
+            maxWidth: Math.max(availableMaxWidth, popupOptions.minWidth || 0),
             left: left,
             top: top
          };
