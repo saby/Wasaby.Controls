@@ -30,7 +30,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
          compatibleOpen: function(self, cfg, controller) {
-            requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
                Layer.load().addCallback(function() {
                   self._openPopup(cfg, controller);
                });
