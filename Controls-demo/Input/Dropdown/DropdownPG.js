@@ -160,7 +160,8 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
                emptyText: '',
                displayProperty: 'title',
                keyProperty: 'id',
-               readOnly: false
+               readOnly: false,
+               multiSelect: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
