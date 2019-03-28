@@ -38,7 +38,6 @@
 
 .controls-Notification__simpleTemplate {
   display: flex;
-  align-items: center;
 }
 
 .controls-Notification__simpleTemplate-icon {
@@ -48,6 +47,10 @@
 .controls-Notification__simpleTemplate-message {
   font-size: @font-size_NotificationBase-message;
   font-weight: @font-weight_NotificationBase-message;
+  &:before {
+    content: '\200b';
+    font-size: @spacing_NotificationBase-between-border-top-message;
+  }
 }
 
 .controls-Notification__content-spacing {

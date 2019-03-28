@@ -214,6 +214,11 @@ define('Controls/Popup/Opener/BaseOpener',
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
+            if (baseCfg.hasOwnProperty('isModal')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "modal" instead of "isModal"');
+               baseCfg.modal = baseCfg.isModal;
+            }
+
             if (baseCfg.hasOwnProperty('locationStrategy')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
                baseCfg.fittingMode = baseCfg.locationStrategy;

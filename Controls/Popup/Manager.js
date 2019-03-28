@@ -25,7 +25,7 @@ define('Controls/Popup/Manager',
 
          addElement: function(element) {
             _private.popupItems.add(element);
-            if (element.isModal) {
+            if (element.modal) {
                ManagerController.getContainer().setOverlay(_private.popupItems.getCount() - 1);
             }
          },
@@ -133,7 +133,7 @@ define('Controls/Popup/Manager',
          },
 
          updateOverlay: function() {
-            var indices = _private.popupItems.getIndicesByValue('isModal', true);
+            var indices = _private.popupItems.getIndicesByValue('modal', true);
             ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
          },
 
@@ -422,7 +422,7 @@ define('Controls/Popup/Manager',
             var popupId = randomId('popup-');
             var popupConfig = {
                id: popupId,
-               isModal: options.isModal,
+               modal: options.modal,
                controller: controller,
                popupOptions: options,
                isActive: false,

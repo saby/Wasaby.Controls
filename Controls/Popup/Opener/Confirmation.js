@@ -9,6 +9,8 @@ define('Controls/Popup/Opener/Confirmation',
 
       /**
        * Component that opens the confirmation popup.
+       * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
+       *
        * @class Controls/Popup/Opener/Confirmation
        * @control
        * @public
@@ -147,7 +149,7 @@ define('Controls/Popup/Opener/Confirmation',
             templateOptions.closeHandler = this._closeHandler;
             return {
                template: 'Controls/Popup/Opener/Confirmation/Dialog',
-               isModal: true,
+               modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions
             };
