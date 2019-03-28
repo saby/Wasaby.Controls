@@ -238,7 +238,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._isItemSelected(item);
+               emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';

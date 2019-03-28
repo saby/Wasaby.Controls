@@ -75,7 +75,7 @@ define('Controls/Dropdown/Controller',
 
          updateSelectedItems: function(self, emptyText, selectedKeys, keyProperty, dataLoadCallback) {
             var selectedItems = [];
-            if (selectedKeys[0] === null && emptyText) {
+            if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
                selectedItems.push(null);
             } else {
                chain.factory(self._items).each(function(item) {
