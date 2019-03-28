@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Notification',
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
+       * <a href="/materials/demo-ws4-notification">Demo-example</a>.
        * @class Controls/Popup/Opener/Notification
        * @control
        * @public

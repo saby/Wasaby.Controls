@@ -1,0 +1,38 @@
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Задача в разработку" maximized="{{_options.maximized}}" showMaximizedButton="{{_options.showMaximizedButton}}">
+    <ws:headerContentTemplate>
+        <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+            <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
+        </div>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+            <div class="demo-Grid__container">
+                <Controls.Container.Data source="{{_viewSource}}"
+                                         keyProperty="id"
+                                         attr:class="ControlsDemo-Grid__Container">
+                    <Controls.Container.MultiSelector>
+                        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                            <Controls.List.Container>
+                                <Controls.List.MultiSelector>
+                                    <Controls.TreeGrid
+                                            attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
+                                            parentProperty="Раздел"
+                                            groupingKeyCallback="{{_groupingKeyCallback}}"
+                                            nodeProperty="Раздел@"
+                                            columns="{{gridColumns}}"
+                                            multiSelectVisibility="visible"
+                                            itemActions="{{_itemActions}}"
+                                            itemActionsPosition="outside"
+                                            on:itemActionsClick="_onActionClick()"
+                                            itemActionVisibilityCallback="{{_showAction}}">
+                                        <ws:nodeFooterTemplate>
+                                            <Controls.List.AddButton caption="Новая запись"/>
+                                        </ws:nodeFooterTemplate>
+                                    </Controls.TreeGrid>
+                                </Controls.List.MultiSelector>
+                            </Controls.List.Container>
+                        </Controls.Container.Scroll>
+                    </Controls.Container.MultiSelector>
+                </Controls.Container.Data>
+            </div>
+    </ws:bodyContentTemplate>
+</Controls.Popup.Templates.Stack.StackTemplate>
