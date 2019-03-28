@@ -6,7 +6,7 @@ define('Controls/Application/Compatible', [
    'Env/Event',
    'Core/Deferred',
    'Env/Env',
-   'Controls/Popup/Compatible/Layer',
+   'Lib/Control/LayerCompatible/LayerCompatible',
    'wml!Controls/Application/Compatible',
    'wml!Controls/Application/CompatibleScripts'
 ], function(Base,
