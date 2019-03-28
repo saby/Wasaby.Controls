@@ -43,6 +43,7 @@ define('Controls/Popup/Previewer',
          getCfg: function(self) {
             var config = {
                autofocus: false,
+               fittingMode: 'overflow',
                opener: self,
                target: self._container,
                template: 'Controls/Popup/Previewer/OpenerTemplate',
