@@ -356,7 +356,7 @@ define('Controls/FormController', [
          // If its not saved but was created, previous record trying to delete.
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
-            this._updateIsNewRecord(false);
+            this._updateIsNewRecord(true);
             this._wasCreated = true;
             this._forceUpdate();
          }.bind(this));
@@ -375,7 +375,7 @@ define('Controls/FormController', [
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
             this._wasRead = true;
-            this._updateIsNewRecord(true);
+            this._updateIsNewRecord(false);
             this._forceUpdate();
          }.bind(this));
          this._hideError();
