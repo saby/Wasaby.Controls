@@ -128,6 +128,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             return this._itemsModel.goToNext();
          },
 
+         isLast: function() {
+            return this._itemsModel.isLast();
+         },
+
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
 

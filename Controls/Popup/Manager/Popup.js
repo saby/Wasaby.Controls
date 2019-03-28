@@ -112,6 +112,14 @@ define('Controls/Popup/Manager/Popup',
             this._notify('popupDragEnd', [this._options.id], { bubbling: true });
          },
 
+         _popupMouseEnter: function(event, popupEvent) {
+            this._notify('popupMouseEnter', [this._options.id, popupEvent], { bubbling: true });
+         },
+
+         _popupMouseLeave: function(event, popupEvent) {
+            this._notify('popupMouseLeave', [this._options.id, popupEvent], { bubbling: true });
+         },
+
          _animated: function(ev) {
             this._children.resizeDetect.start(ev);
             this._notify('popupAnimated', [this._options.id], { bubbling: true });

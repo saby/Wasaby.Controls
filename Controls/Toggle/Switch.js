@@ -1,9 +1,7 @@
 define('Controls/Toggle/Switch', [
    'Core/Control',
    'wml!Controls/Toggle/Switch/Switch',
-   'Types/entity',
-   'css!theme?Controls/Toggle/Switch/Switch',
-   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'Types/entity'
 ], function(Control, template, entity) {
 
    /**
@@ -63,6 +61,9 @@ define('Controls/Toggle/Switch', [
          ])
       };
    };
+
+
+   Switch._theme = [ 'Controls/toggle' ];
 
    return Switch;
 });

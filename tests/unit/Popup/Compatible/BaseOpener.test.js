@@ -108,7 +108,7 @@ define(
             assert.equal(config.templateOptions.target, config.target);
             assert.equal(config.className, 'testClass');
             assert.equal(config.templateOptions.draggable, config.draggable);
-            assert.isTrue(config.isModal);
+            assert.isTrue(config.modal);
             assert.isFalse(config.closeOnOutsideClick);
             assert.isTrue(cInstance.instanceOfModule(config.context, 'Core/Abstract'));
             config.side = null;
@@ -125,7 +125,7 @@ define(
             assert.isFalse(config.closeOnOutsideClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);
-            assert.isTrue(config.isModal);
+            assert.isTrue(config.modal);
             config.direction = 'right';
             config.horizontalAlign = 'left';
             BaseOpener._preparePopupCfgFromOldToNew(config);

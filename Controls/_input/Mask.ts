@@ -19,6 +19,8 @@ import 'css!Controls/_input/Mask/Mask';
        *
        * @class Controls/_input/Mask
        * @extends Control/_input/Base
+       *
+       * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/_input/interface/IInputMaskValue
        * @public
        * @author Миронов А.Ю.

@@ -14,6 +14,7 @@ define('Controls/Popup/InfoBox',
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
+       * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
        * @class Controls/Popup/InfoBox
        * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *

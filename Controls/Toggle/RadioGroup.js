@@ -2,9 +2,7 @@ define('Controls/Toggle/RadioGroup', [
    'Core/Control',
    'Controls/Controllers/SourceController',
    'wml!Controls/Toggle/RadioGroup/RadioGroup',
-   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate',
-   'css!theme?Controls/Toggle/RadioGroup/RadioGroup',
-   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
@@ -173,6 +171,8 @@ define('Controls/Toggle/RadioGroup', [
          direction: 'vertical'
       };
    };
+
+   Radio._theme = [ 'Controls/toggle' ];
 
    Radio._private = _private;
 
