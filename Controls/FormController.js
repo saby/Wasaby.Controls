@@ -356,7 +356,7 @@ define('Controls/FormController', [
          // If its not saved but was created, previous record trying to delete.
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
-            this._isNewRecord = true;
+            this._updateIsNewRecord(true);
             this._wasCreated = true;
             this._forceUpdate();
          }.bind(this));
@@ -375,7 +375,7 @@ define('Controls/FormController', [
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
             this._wasRead = true;
-            this._isNewRecord = false;
+            this._updateIsNewRecord(true);
             this._forceUpdate();
          }.bind(this));
          this._hideError();
@@ -431,7 +431,6 @@ define('Controls/FormController', [
             if (!isError) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var isChanged = self._record.isChanged();
                var res = self._children.crud.update(record, self._isNewRecord);
 
                // fake deferred used for code refactoring
@@ -440,7 +439,7 @@ define('Controls/FormController', [
                   res.callback();
                }
                res.addCallback(function(arg) {
-                  self._isNewRecord = false;
+                  self._updateIsNewRecord(false);
 
                   updateDef.callback({ data: true });
                   return arg;
@@ -466,13 +465,12 @@ define('Controls/FormController', [
       delete: function(destroyMetaData) {
          destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
          var self = this;
-         var record = this._record;
-         var resultDef = this._children.crud.delete(record, destroyMetaData);
+         var resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
          resultDef.addCallbacks(function(record) {
             self._setRecord(null);
             self._wasDestroyed = true;
-            self._isNewRecord = false;
+            self._updateIsNewRecord(false);
             self._forceUpdate();
             return record;
          }, function(error) {
@@ -498,6 +496,13 @@ define('Controls/FormController', [
        */
       _crudErrback: function(error, mode) {
          return this._processError(error, mode).then(getData);
+      },
+
+      _updateIsNewRecord: function(value) {
+         if (this._isNewRecord !== value) {
+            this._isNewRecord = value;
+            this._notify('isNewRecordChanged', [value]);
+         }
       },
 
       /**
