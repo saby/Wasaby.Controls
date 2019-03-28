@@ -28,6 +28,13 @@ define('Controls/Popup/Opener/BaseOpener',
             if (!opened && displayMode === 'single') {
                popupIds.length = 0;
             }
+         },
+         compatibleOpen: function(self, cfg, controller) {
+            requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+               Layer.load().addCallback(function() {
+                  self._openPopup(cfg, controller);
+               });
+            });
          }
       };
 
@@ -72,20 +79,14 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          open: function(popupOptions, controller) {
-            var self = this;
             var cfg = this._getConfig(popupOptions);
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
-            self._toggleIndicator(true);
+            this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                  Layer.load().addCallback(function() {
-                     self._openPopup(cfg, controller);
-                  });
-               });
+               _private.compatibleOpen(this, cfg, controller);
             } else {
-               self._openPopup(cfg, controller);
+               this._openPopup(cfg, controller);
             }
          },
 
@@ -162,6 +163,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
                'closeByExternalClick',
+               'autoClose',
                'type',
                'style',
                'message',
