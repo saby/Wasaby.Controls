@@ -984,6 +984,9 @@
             "type": "Boolean",
             "title": "Determines whether control will react to user actions."
           },
+          "multiSelect": {
+            "type": "Boolean"
+          },
           "contentTemplate": {
             "type": "function",
             "title": "Template that will be render calling element."

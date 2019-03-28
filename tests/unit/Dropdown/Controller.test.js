@@ -120,12 +120,14 @@ define(
          });
 
          it('received state, selectedItems = [null], emptyText is set', () => {
-            let dataLoadCallbackCalled = false;
+            let dataLoadCallbackCalled = false,
+               selectedItems = [];
             const config = {
                selectedKeys: [null],
                keyProperty: 'id',
                emptyText: '123',
-               dataLoadCallback: function() {
+               dataLoadCallback: function(items) {
+                  selectedItems = items;
                   dataLoadCallbackCalled = true;
                },
                source: new sourceLib.Memory({
@@ -135,16 +137,18 @@ define(
             };
             const dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config, null, itemsRecords);
-            assert.deepEqual(dropdownController._selectedItems, [null]);
+            assert.deepEqual(selectedItems, [null]);
             assert.isTrue(dataLoadCallbackCalled);
          });
 
          it('received state, selectedItems = [null], emptyText is NOT set', () => {
-            let dataLoadCallbackCalled = false;
+            let dataLoadCallbackCalled = false,
+               selectedItems = [];
             const config = {
                selectedKeys: [null],
                keyProperty: 'id',
-               dataLoadCallback: function() {
+               dataLoadCallback: function(items) {
+                  selectedItems = items;
                   dataLoadCallbackCalled = true;
                },
                source: new sourceLib.Memory({
@@ -154,27 +158,8 @@ define(
             };
             const dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config, null, itemsRecords);
-            assert.deepEqual(dropdownController._selectedItems, []);
+            assert.deepEqual(selectedItems, []);
             assert.isTrue(dataLoadCallbackCalled);
-         });
-
-         it('check selectedItemsChanged event', () => {
-            let dropdownController = getDropdownController(config);
-            dropdownController._items = itemsRecords;
-            let selectedKeys,
-               selectedItem;
-
-            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
-            //(дефолтный метод для vdom компонент который стреляет событием).
-            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
-            //событие и оно полетит с корректными параметрами.
-            dropdownController._notify = (e, args) => {
-               if (e == 'selectedItemsChanged') {
-                  selectedItem = args[0];
-               }
-            };
-            Dropdown._private.selectItem.call(dropdownController, dropdownController._items.at(5));
-            assert.deepEqual(selectedItem, dropdownController._items.at(5));
          });
 
          it('before update source', () => {
@@ -334,22 +319,31 @@ define(
          });
 
          it('before update new key', () => {
-            let dropdownController = getDropdownController(config);
+            let dropdownController = getDropdownController(config),
+               selectedItems = [];
+            let dataLoadCallback = function(items) {
+               selectedItems = items;
+            };
             dropdownController._selectedItems = [];
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
                selectedKeys: '[6]',
                keyProperty: 'id',
-               filter: config.filter
+               filter: config.filter,
+               dataLoadCallback: dataLoadCallback
             });
-            assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
+            assert.deepEqual(selectedItems[0].getRawData(), items[5]);
          });
 
          it('check empty item update', () => {
-            let dropdownController = getDropdownController(config);
+            let dropdownController = getDropdownController(config),
+               selectedItems = [];
             dropdownController._selectedItems = [];
-            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id');
-            assert.deepEqual(dropdownController._selectedItems, [null]);
+            let dataLoadCallback = function(items) {
+               selectedItems = items;
+            };
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id', dataLoadCallback);
+            assert.deepEqual(selectedItems, [null]);
          });
 
          it('_open dropdown', () => {
@@ -376,6 +370,7 @@ define(
          });
 
          it('_open one item', () => {
+            let selectedItems;
             let dropdownController = getDropdownController(config);
             let item = new collection.RecordSet({
                idProperty: 'id',
@@ -383,10 +378,12 @@ define(
             });
             dropdownController._items = item;
             dropdownController._notify = (e, data) => {
-               assert.equal(e, 'selectedItemsChanged');
-               assert.deepEqual(data[0], [item.at(0)]);
+               if (e === 'selectedItemsChanged') {
+                  selectedItems = data[0];
+               }
             };
             dropdownController._open();
+            assert.deepEqual(selectedItems, item.at(0));
          });
 
          it('_open lazyLoad', () => {

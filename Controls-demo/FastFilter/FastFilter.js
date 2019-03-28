@@ -27,14 +27,15 @@ define('Controls-demo/FastFilter/FastFilter',
                data: [
                   {
                      id: 'filter1',
-                     resetValue: 'все страны',
-                     value: 'Россия',
+                     resetValue: [null],
+                     value: [1],
                      properties: {
-                        keyProperty: 'title',
+                        multiSelect: true,
+                        emptyText: 'Все страны',
+                        keyProperty: 'key',
                         displayProperty: 'title',
                         source: new sourceLib.Memory({
                            data: [
-                              { key: 0, title: 'все страны' },
                               { key: 1, title: 'Россия' },
                               { key: 2, title: 'США' },
                               { key: 3, title: 'Великобритания' }
