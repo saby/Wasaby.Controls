@@ -114,7 +114,7 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
+         updateHistory: function(filterButtonItems, fastFilterItems, historyId) {
             var meta = {
                '$_addFromData': true
             };
@@ -322,13 +322,24 @@ define('Controls/Filter/Controller',
                def.errback(err);
                throw err;
             }
-            def.callback(calculatedFilter);
+            def.callback({
+               filter: calculatedFilter,
+               historyItems: items
+            });
             return items;
          }).addErrback(function(err) {
             def.errback(err);
             return err;
          });
          return def;
+      }
+
+      function updateFilterHistory(cfg) {
+         if (!cfg.historyId) {
+            throw new Error('Controls/Filter/Controller::historyId is required');
+         }
+         _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
+         _private.updateHistory(cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
       }
 
       /**
@@ -474,7 +485,7 @@ define('Controls/Filter/Controller',
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               _private.updateHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
+               _private.updateHistory(this._filterButtonItems, this._fastFilterItems, this._options.historyId);
             }
 
             _private.applyItemsToFilter(this, this._filter, items);
@@ -482,6 +493,8 @@ define('Controls/Filter/Controller',
          },
 
          _filterChanged: function(event, filter) {
+            //Controller should stop bubbling of 'filterChanged' event, that container-control fired
+            event.stopPropagation();
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
@@ -490,5 +503,6 @@ define('Controls/Filter/Controller',
 
       Container._private = _private;
       Container.getCalculatedFilter = getCalculatedFilter;
+      Container.updateFilterHistory = updateFilterHistory;
       return Container;
    });

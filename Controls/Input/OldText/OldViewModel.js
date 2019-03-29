@@ -66,12 +66,30 @@ define('Controls/Input/OldText/OldViewModel',
                position: splitValue.before.length + insert.length
             };
          },
-
          updateOptions: function(options) {
-            this._options.constraint = options.constraint;
-            this._options.maxLength = options.maxLength;
+            var oldValue = this._options.value;
             this._options.value = options.value;
-            this._nextVersion();
+
+            // если ничего не поменялось - не надо изменять версию
+            if (oldValue !== options.value) {
+               this._nextVersion();
+            }
+
+            var oldMaxLength = this._options.maxLength;
+            this._options.maxLength = options.maxLength;
+
+            // если ничего не поменялось - не надо изменять версию
+            if (oldMaxLength !== options.maxLength) {
+               this._nextVersion();
+            }
+
+            var oldConstraint = this._options.constraint;
+            this._options.constraint = options.constraint;
+
+            // если ничего не поменялось - не надо изменять версию
+            if (oldConstraint !== options.constraint) {
+               this._nextVersion();
+            }
          }
       });
 

@@ -9,6 +9,19 @@ define('Controls/FormController', [
    'use strict';
 
    /**
+    * Record editing controller
+    * @category FormController
+    * @class Controls/FormController
+    * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IFormController
+    * @demo Controls-demo/Popup/Edit/Opener
+    * @control
+    * @public
+    * @author Красильников А.С.
+    */
+
+
+   /**
     * Object with state from server side rendering
     * @typedef {Object}
     * @name ReceivedState
@@ -58,7 +71,7 @@ define('Controls/FormController', [
       readRecordBeforeMount: function(instance, cfg) {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-         return cfg.dataSource.read(cfg.key, cfg.readMetaData).then(function(record) {
+         return instance._source.read(cfg.key, cfg.readMetaData).then(function(record) {
             instance._setRecord(record);
             instance._readInMounting = { isError: false, result: record };
 
@@ -90,7 +103,7 @@ define('Controls/FormController', [
       createRecordBeforeMount: function(instance, cfg) {
          // если ни рекорда, ни ключа, создаем новый рекорд и используем его
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
-         return cfg.dataSource.create(cfg.initValues).then(function(record) {
+         return instance._source.create(cfg.initValues || cfg.createMetaData).then(function(record) {
             instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
@@ -119,22 +132,6 @@ define('Controls/FormController', [
       }
    };
 
-   /**
-    * @name Controls/FormController#initValues
-    * @cfg {Object} initial values what will be argument of create method called when key option and record option are not exist.
-    * Also its default value for read method.
-    */
-   /**
-    * @name Controls/FormController#readMetaData
-    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
-    * Also its default value for read method.
-    */
-   /**
-    * @name Controls/FormController#destroyMeta
-    * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
-    * Also its default value for destroy method.
-    */
-
    var FormController = Control.extend({
       _template: tmpl,
       _record: null,
@@ -146,6 +143,20 @@ define('Controls/FormController', [
          this.__errorController = options.errorController || new dataSource.error.Controller({});
       },
       _beforeMount: function(cfg, _, receivedState) {
+         this._source = cfg.source || cfg.dataSource;
+         if (cfg.dataSource) {
+            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "source" instead of "dataSource"');
+         }
+         if (cfg.initValues) {
+            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "createMetaData" instead of "initValues"');
+         }
+         if (cfg.destroyMeta) {
+            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "destroyMetaData " instead of "destroyMeta"');
+         }
+         if (cfg.idProperty) {
+            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "keyProperty " instead of "idProperty"');
+         }
+
          receivedState = receivedState || {};
          var receivedError = receivedState.errorConfig;
          var receivedData = receivedState.data;
@@ -184,6 +195,9 @@ define('Controls/FormController', [
          this._isMount = true;
       },
       _beforeUpdate: function(newOptions) {
+         if (newOptions.dataSource || newOptions.source) {
+            this._source = newOptions.source || newOptions.dataSource;
+         }
          if (newOptions.record && this._options.record !== newOptions.record) {
             this._setRecord(newOptions.record);
 
@@ -208,10 +222,9 @@ define('Controls/FormController', [
             } else {
                self.read(newOptions.key, newOptions.readMetaData);
             }
-
          }
          if (newOptions.key === undefined && !newOptions.record) {
-            this.create(newOptions.initValues);
+            this.create(newOptions.initValues || newOptions.createMetaData);
          }
       },
       _afterUpdate: function() {
@@ -233,19 +246,17 @@ define('Controls/FormController', [
          }
       },
       _getRecordId: function() {
-         if (!this._record.getId && !this._options.idProperty) {
+         if (!this._record.getId && !this._options.idProperty && !this._options.keyProperty) {
             Env.IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
-            return;
+            return null;
          }
-
-         return this._options.idProperty
-            ? this._record.get(this._options.idProperty)
-            : this._record.getId();
+         var keyProperty = this._options.idProperty || this._options.keyProperty;
+         return keyProperty ? this._record.get(keyProperty) : this._record.getId();
       },
 
       _tryDeleteNewRecord: function() {
          if (this._needDestroyRecord()) {
-            return this._options.dataSource.destroy(this._getRecordId(), this._options.destroyMeta);
+            return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
          }
          return (new Deferred()).callback();
       },
@@ -334,9 +345,9 @@ define('Controls/FormController', [
          });
       },
 
-      create: function(initValues) {
-         initValues = initValues || this._options.initValues;
-         return this._children.crud.create(initValues).addCallbacks(
+      create: function(createMetaData) {
+         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
+         return this._children.crud.create(createMetaData).addCallbacks(
             this._createHandler.bind(this),
             this._crudErrback.bind(this)
          );
@@ -346,7 +357,7 @@ define('Controls/FormController', [
          // If its not saved but was created, previous record trying to delete.
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
-            this._isNewRecord = true;
+            this._updateIsNewRecord(true);
             this._wasCreated = true;
             this._forceUpdate();
          }.bind(this));
@@ -365,7 +376,7 @@ define('Controls/FormController', [
          var deleteDef = this._tryDeleteNewRecord();
          deleteDef.addBoth(function() {
             this._wasRead = true;
-            this._isNewRecord = false;
+            this._updateIsNewRecord(false);
             this._forceUpdate();
          }.bind(this));
          this._hideError();
@@ -421,7 +432,6 @@ define('Controls/FormController', [
             if (!isError) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var isChanged = self._record.isChanged();
                var res = self._children.crud.update(record, self._isNewRecord);
 
                // fake deferred used for code refactoring
@@ -430,7 +440,7 @@ define('Controls/FormController', [
                   res.callback();
                }
                res.addCallback(function(arg) {
-                  self._isNewRecord = false;
+                  self._updateIsNewRecord(false);
 
                   updateDef.callback({ data: true });
                   return arg;
@@ -453,16 +463,15 @@ define('Controls/FormController', [
          });
          return updateDef;
       },
-      delete: function(destroyMeta) {
-         destroyMeta = destroyMeta || this._options.destroyMeta;
+      delete: function(destroyMetaData) {
+         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
          var self = this;
-         var record = this._record;
-         var resultDef = this._children.crud.delete(record, destroyMeta);
+         var resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
          resultDef.addCallbacks(function(record) {
             self._setRecord(null);
             self._wasDestroyed = true;
-            self._isNewRecord = false;
+            self._updateIsNewRecord(false);
             self._forceUpdate();
             return record;
          }, function(error) {
@@ -488,6 +497,13 @@ define('Controls/FormController', [
        */
       _crudErrback: function(error, mode) {
          return this._processError(error, mode).then(getData);
+      },
+
+      _updateIsNewRecord: function(value) {
+         if (this._isNewRecord !== value) {
+            this._isNewRecord = value;
+            this._notify('isNewRecordChanged', [value]);
+         }
       },
 
       /**

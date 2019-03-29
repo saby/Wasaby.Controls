@@ -1,38 +1,44 @@
 <div class="controlsDemo-dateRange-RelationController">
    <h1>Controls.dateRange.RelationController</h1>
 
-   <Controls.dateRange:RelationController
-         name="dateRelation"
-         bind:startValue0="_startValue0"
-         bind:endValue0="_endValue0"
-         bind:startValue1="_startValue1"
-         bind:endValue1="_endValue1"
-         bind:startValue2="_startValue2"
-         bind:endValue2="_endValue2"
-         bind:bindType="_bindType"
-   />
    <div class="controlsDemo-dateRange-RelationController__row">
       <Controls.buttons:Button
          icon="icon-medium icon-MarkLeftBold icon-primary"
          on:click="dateRelation.shiftBackward()"/>
-      <Controls.Input.Date.RangeLinkLite
-         attr:class="controlsDemo-dateRange-RelationController__selector"
-         bind:startValue="_startValue0"
-         bind:endValue="_endValue0"/>
-      <Controls.Input.Date.RangeLinkLite
-         attr:class="controlsDemo-dateRange-RelationController__selector"
-         bind:startValue="_startValue1"
-         bind:endValue="_endValue1"/>
-      <Controls.Input.Date.RangeLinkLite
-         attr:class="controlsDemo-dateRange-RelationController__selector"
-         bind:startValue="_startValue2"
-         bind:endValue="_endValue2"/>
-      <Controls.dateRange:RelationButton
-         attr:class="controlsDemo-dateRange-RelationController__relationButton"
-         bind:value="_bindType"/>
+      <Controls.dateRange:RelationController
+            name="dateRelation"
+            bind:startValue0="_startValue0"
+            bind:endValue0="_endValue0"
+            bind:startValue1="_startValue1"
+            bind:endValue1="_endValue1"
+            bind:startValue2="_startValue2"
+            bind:endValue2="_endValue2">
+         <div>
+            <Controls.dateRange:RelationWrapper
+                  number="{{0}}"
+                  ranges="{{content.ranges}}">
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            </Controls.dateRange:RelationWrapper>
+            <Controls.dateRange:RelationWrapper
+                  number="{{1}}"
+                  ranges="{{content.ranges}}"
+                  >
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            </Controls.dateRange:RelationWrapper>
+            <Controls.dateRange:RelationWrapper
+                  number="{{2}}"
+                  ranges="{{content.ranges}}">
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            </Controls.dateRange:RelationWrapper>
+            <Controls.dateRange:RelationButton
+               attr:class="controlsDemo-dateRange-RelationController__relationButton"
+               value="{{content.bindType}}"/>
+         </div>
+      </Controls.dateRange:RelationController>
       <Controls.buttons:Button
          icon="icon-medium icon-MarkRightBold icon-primary"
          on:click="dateRelation.shiftForward()"/>
+
    </div>
 
    <Controls.dateRange:RelationController
@@ -41,23 +47,26 @@
          bind:endValue0="_endValue2_0"
          bind:startValue1="_startValue2_1"
          bind:endValue1="_endValue2_1"
-         bind:bindType="_bindType2"
-   />
-   <div class="controlsDemo-dateRange-RelationController__row">
-      <Controls.buttons:Button
-         icon="icon-medium icon-MarkLeftBold icon-primary"
-         on:click="dateRelation2.shiftBackward()"/>
-      <Controls.Input.Date.RangeLinkLite
-         attr:class="controlsDemo-dateRange-RelationController__selector"
-         bind:startValue="_startValue2_0"
-         bind:endValue="_endValue2_0"/>
-      <Controls.dateRange:RelationButton bind:value="_bindType2"/>
-      <Controls.Input.Date.RangeLinkLite
-         attr:class="controlsDemo-dateRange-RelationController__selector"
-         bind:startValue="_startValue2_1"
-         bind:endValue="_endValue2_1"/>
-      <Controls.buttons:Button
-         icon="icon-medium icon-MarkRightBold icon-primary"
-         on:click="dateRelation2.shiftForward()"/>
-   </div>
+         bind:bindType="_bindType2">
+      <div class="controlsDemo-dateRange-RelationController__row">
+         <Controls.buttons:Button
+            icon="icon-medium icon-MarkLeftBold icon-primary"
+            on:click="dateRelation2.shiftBackward()"/>
+         <Controls.dateRange:RelationWrapper
+               number="{{0}}"
+               ranges="{{content.ranges}}">
+            <Controls.Input.Date.RangeLinkLite attr:class="controlsDemo-dateRange-RelationController__selector"/>
+         </Controls.dateRange:RelationWrapper>
+         <Controls.dateRange:RelationButton bind:value="_bindType2"/>
+         <Controls.dateRange:RelationWrapper
+               number="{{1}}"
+               ranges="{{content.ranges}}">
+            <Controls.Input.Date.RangeLinkLite attr:class="controlsDemo-dateRange-RelationController__selector"/>
+         </Controls.dateRange:RelationWrapper>
+         <Controls.buttons:Button
+            icon="icon-medium icon-MarkRightBold icon-primary"
+            on:click="dateRelation2.shiftForward()"/>
+      </div>
+   </Controls.dateRange:RelationController>
+
 </div>

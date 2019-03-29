@@ -1,5 +1,4 @@
-
-<div class="controls-InfoBox controls-Container__popup-scrolling-content" on:mouseenter="_sendResult()" on:mouseleave="_sendResult()">
+<div class="controls-InfoBox controls-Container__popup-scrolling-content" on:mouseenter="_sendResult()" on:mouseleave="_sendResult()" on:mousedown="_mousedownHandler()">
 
       <Controls.Button.Close attr:class="controls-InfoBox__closeButton" on:click="_close()" style="light"/>
    <ws:if data="{{_options.floatCloseButton}}">
@@ -10,7 +9,6 @@
       <ws:partial
          template="{{_options.template}}"
          scope="{{_options.templateOptions}}"
-         isPopupInfoBox="{{true}}"
          class="controls-InfoBox__content{{!_options.floatCloseButton ? ' controls-InfoBox__message_margin'}}">
       </ws:partial>
    </ws:if>

@@ -343,10 +343,9 @@ define('Controls/Application',
          }
       });
 
-
-      Page.contextTypes = function contextTypes() {
+      Page.getDefaultOptions = function() {
          return {
-            AppData: AppData
+            title: ''
          };
       };
 

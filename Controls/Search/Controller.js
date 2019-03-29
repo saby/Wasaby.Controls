@@ -44,8 +44,8 @@ define('Controls/Search/Controller',
             self._viewMode = 'search';
             self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
-            self._notify('filterChanged', [filter], {bubbling: true});
-            self._notify('itemsChanged', [result.data], {bubbling: true});
+            self._notify('filterChanged', [filter]);
+            self._notify('itemsChanged', [result.data]);
             
             if (switcherStr) {
                self._misspellValue = switcherStr;
@@ -61,7 +61,7 @@ define('Controls/Search/Controller',
                self._inputSearchValue = '';
                self._misspellValue = '';
                self._forceUpdate();
-               self._notify('filterChanged', [filter], {bubbling: true});
+               self._notify('filterChanged', [filter]);
             }
          },
    

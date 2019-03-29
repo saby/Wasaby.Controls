@@ -4,8 +4,9 @@
 define([
    'Controls/Selector/Lookup/_Lookup',
    'Types/entity',
-   'Types/collection'
-], function(Lookup, entity, collection) {
+   'Types/collection',
+   'Env/Env'
+], function(Lookup, entity, collection, Env) {
 
    function getItems(countItems) {
       for (var items = []; countItems; countItems--) {
@@ -131,7 +132,6 @@ define([
       it('_beforeMount', function() {
          var lookup = new Lookup();
          lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true});
-         assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
          lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
@@ -147,14 +147,6 @@ define([
          lookup._beforeMount({items: getItems(5), value: 'test'});
          assert.equal(lookup._maxVisibleItems, 1);
          assert.equal(lookup._inputValue, 'test');
-      });
-
-      it('_beforeUnmount', function() {
-         var lookup = new Lookup();
-         lookup._simpleViewModel = true;
-         lookup._beforeUnmount();
-
-         assert.isNull(lookup._simpleViewModel);
       });
 
       it('_afterUpdate', function() {
@@ -408,6 +400,50 @@ define([
 
          Lookup._private.getItemsSizesLastRow = getItemsSizesLastRow;
          Lookup._private.getCounterWidth = getCounterWidth;
+      });
+
+      it('_keyDown', function() {
+         var
+            isNotifyRemoveItems = false,
+            lookup = new Lookup(),
+            eventBackspace = {
+               nativeEvent: {
+                  keyCode: Env.constants.key.backspace
+               },
+               stopImmediatePropagation: function() {}
+            },
+            eventNotBackspace = {
+               nativeEvent: {},
+               stopImmediatePropagation: function() {}
+            };
+
+         lookup._notify = function(eventName, result) {
+            if (eventName === 'removeItem') {
+               isNotifyRemoveItems = true;
+               assert.equal(lookup._options.items.at(lookup._options.items.getCount() - 1), result[0]);
+            }
+         };
+
+         lookup._beforeMount({
+            value: ''
+         });
+         lookup._options.items = getItems(0);
+         lookup._keyDown(eventBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+
+         lookup._options.items = getItems(5);
+         lookup._keyDown(eventNotBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+
+         lookup._keyDown(eventBackspace);
+         assert.isTrue(isNotifyRemoveItems);
+         isNotifyRemoveItems = false;
+
+         lookup._beforeMount({
+            value: 'not empty valeue'
+         });
+         lookup._keyDown(eventBackspace);
+         assert.isFalse(isNotifyRemoveItems);
       });
    });
 });

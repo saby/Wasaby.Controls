@@ -121,7 +121,14 @@ import InputProcessor = require('Controls/_input/Number/InputProcessor');
             var trimmedValue = this._displayValue.match(regExp)[0];
 
             if (this._displayValue !== trimmedValue) {
+               var oldValue = this._displayValue;
                this._displayValue = trimmedValue;
+
+               // если ничего не поменялось - не надо изменять версию
+               if (oldValue !== trimmedValue) {
+                  this._nextVersion();
+               }
+
                this._shouldBeChanged = true;
 
                return true;
@@ -133,6 +140,7 @@ import InputProcessor = require('Controls/_input/Number/InputProcessor');
          addTrailingZero: function() {
             if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
                this._displayValue += '.0';
+               this._nextVersion();
                this._shouldBeChanged = true;
 
                return true;

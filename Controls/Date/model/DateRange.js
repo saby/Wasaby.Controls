@@ -47,12 +47,26 @@ define('Controls/Date/model/DateRange', [
       update: function(options) {
          var changed = false;
          if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
+            var oldValue = this._startValue;
             this._startValue = options.startValue;
+
+            // если ничего не поменялось - не надо изменять версию
+            if (oldValue !== options.startValue) {
+               this._nextVersion();
+            }
+
             this._state.startValue = options.startValue;
             changed = true;
          }
          if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
+            var oldValue2 = this._endValue;
             this._endValue = options.endValue;
+
+            // если ничего не поменялось - не надо изменять версию
+            if (oldValue2 !== options.endValue) {
+               this._nextVersion();
+            }
+
             this._state.endValue = options.endValue;
             changed = true;
          }

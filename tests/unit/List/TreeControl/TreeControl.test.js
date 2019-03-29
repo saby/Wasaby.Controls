@@ -431,7 +431,7 @@ define([
             }, 1);
          }, 1);
       });
-      it('TreeControl._beforeUpdate', function(done) {
+      it('TreeControl._beforeUpdate', function() {
          var
             reloadCalled = false,
             setRootCalled = false,
@@ -472,30 +472,33 @@ define([
             setFilter: function() {}
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
-         setTimeout(function() {
 
+         return new Promise(function(resolve) {
             treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
             };
-            treeControl._children.baseControl.reload().addCallback(function(res) {
-               var newFilter = {
-                  parent: null
-               };
-               treeControl._beforeUpdate({root: 'testRoot'});
-               assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-               assert.deepEqual(filterOnOptionChange, newFilter);
+            treeControl._children.baseControl._sourceController._loader.addCallback(function(result) {
+               treeControl._children.baseControl.reload().addCallback(function(res) {
+                  var newFilter = {
+                     parent: null
+                  };
+                  treeControl._beforeUpdate({root: 'testRoot'});
+                  assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
+                  assert.deepEqual(filterOnOptionChange, newFilter);
 
-               treeControl._afterUpdate({root: null});
-               setTimeout(function() {
-                  assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-                  assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-                  assert.isTrue(isSourceControllerDestroyed);
-                  done();
-               }, 10);
-               return res;
+                  treeControl._afterUpdate({root: null});
+                  treeControl._children.baseControl._sourceController._loader.addCallback(function() {
+                     assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                     assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                     assert.isTrue(isSourceControllerDestroyed);
+                     resolve();
+                  });
+                  return res;
+               });
+               return result;
             });
-         }, 10);
+         });
       });
       it('TreeControl._private.prepareHasMoreStorage', function() {
          var

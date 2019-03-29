@@ -7,9 +7,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'Core/helpers/Function/debounce'
+      'Core/helpers/Function/debounce',
+      'Core/helpers/Object/isEqual',
+      'Core/core-clone'
    ],
-   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce) {
+   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce, isEqual, Clone) {
    
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -76,6 +78,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: options.nodeProperty,
                   selectedKeys: options.selectedKeys,
                   rootKey: item.get(options.keyProperty),
+                  iconSize: options.iconSize,
                   showHeader: false,
                   dropdownClassName: options.dropdownClassName,
                   defaultItemTemplate: options.defaultItemTemplate
@@ -84,6 +87,26 @@ define('Controls/Dropdown/resources/template/DropdownList',
                horizontalAlign: subMenuPosition.horizontalAlign,
                target: event.target
             };
+         },
+
+         needShowApplyButton: function(newKeys, oldKeys) {
+            return !isEqual(newKeys, oldKeys);
+         },
+
+         getResult: function(self, event, action) {
+            var result = {
+               action: action,
+               event: event
+            };
+            result.selectedKeys = self._listModel.getSelectedKeys();
+            return result;
+         },
+
+         isNeedUpdateSelectedKeys: function(self, target, item) {
+            var clickOnEmptyItem = item.get(self._options.keyProperty) === null,
+               clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
+               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null;
+            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
          }
 
       };
@@ -146,7 +169,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
                   rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
-                  selectedKeys: newOptions.selectedKeys,
+                  selectedKeys: Clone(newOptions.selectedKeys) || [],
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
@@ -154,6 +177,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
+                  multiSelect: newOptions.multiSelect,
                   groupTemplate: newOptions.groupTemplate,
                   groupingKeyCallback: newOptions.groupingKeyCallback,
                   groupMethod: newOptions.groupMethod
@@ -166,8 +190,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          _beforeUpdate: function(newOptions) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
-               itemsChanged = newOptions.items !== this._options.items,
-               selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
+               itemsChanged = newOptions.items !== this._options.items;
 
             if (rootChanged) {
                this._listModel.setRootKey(newOptions.rootKey);
@@ -178,10 +201,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                if (this._hasHierarchy) {
                   this._children.subDropdownOpener.close();
                }
-            }
-
-            if (selectedKeysChanged) {
-               this._listModel.setSelectedKeys(newOptions.selectedKeys);
             }
 
             if (rootChanged || itemsChanged) {
@@ -259,16 +278,25 @@ define('Controls/Dropdown/resources/template/DropdownList',
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
-            var result = {
-               action: pinClicked ? 'pinClicked' : 'itemClick',
-               event: event,
-               data: [item]
-            };
+            if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+               this._listModel.updateSelection(item);
+               this._needShowApplyButton = _private.needShowApplyButton(this._listModel.getSelectedKeys(), this._options.selectedKeys);
+            } else {
+               var result = {
+                  action: pinClicked ? 'pinClicked' : 'itemClick',
+                  event: event,
+                  data: [item]
+               };
 
-            // means that pin button was clicked
-            if (pinClicked) {
-               event.stopPropagation();
+               // means that pin button was clicked
+               if (pinClicked) {
+                  event.stopPropagation();
+               }
+               this._notify('sendResult', [result]);
             }
+         },
+         _applySelection: function(event) {
+            var result = _private.getResult(this, event, 'applyClick');
             this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {

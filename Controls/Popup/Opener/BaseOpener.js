@@ -4,7 +4,6 @@ define('Controls/Popup/Opener/BaseOpener',
       'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Vdom/Vdom',
-      'View/Executor/Utils',
       'Core/core-clone',
       'Core/core-merge',
       'Env/Env',
@@ -17,7 +16,6 @@ define('Controls/Popup/Opener/BaseOpener',
       Template,
       ManagerController,
       Vdom,
-      Utils,
       coreClone,
       CoreMerge,
       Env,
@@ -30,6 +28,13 @@ define('Controls/Popup/Opener/BaseOpener',
             if (!opened && displayMode === 'single') {
                popupIds.length = 0;
             }
+         },
+         compatibleOpen: function(self, cfg, controller) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
+               Layer.load().addCallback(function() {
+                  self._openPopup(cfg, controller);
+               });
+            });
          }
       };
 
@@ -74,20 +79,14 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          open: function(popupOptions, controller) {
-            var self = this;
             var cfg = this._getConfig(popupOptions);
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
-            self._toggleIndicator(true);
+            this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                  Layer.load().addCallback(function() {
-                     self._openPopup(cfg, controller);
-                  });
-               });
+               _private.compatibleOpen(this, cfg, controller);
             } else {
-               self._openPopup(cfg, controller);
+               this._openPopup(cfg, controller);
             }
          },
 
@@ -164,6 +163,8 @@ define('Controls/Popup/Opener/BaseOpener',
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
                'closeByExternalClick',
+               'isCompoundTemplate',
+               'autoClose',
                'type',
                'style',
                'message',
@@ -214,6 +215,11 @@ define('Controls/Popup/Opener/BaseOpener',
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
+            }
+
+            if (baseCfg.hasOwnProperty('isModal')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "modal" instead of "isModal"');
+               baseCfg.modal = baseCfg.isModal;
             }
 
             if (baseCfg.hasOwnProperty('locationStrategy')) {
