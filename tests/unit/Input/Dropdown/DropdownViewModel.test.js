@@ -3,9 +3,11 @@ define(
       'Controls/Dropdown/resources/DropdownViewModel',
       'Types/collection',
       'Controls/Constants',
-      'Types/entity'
+      'Types/entity',
+      'Controls/List/resources/utils/ItemsUtil',
+      'Core/core-clone'
    ],
-   (DropdownViewModel, collectionLib, ControlsConstants, entity) => {
+   (DropdownViewModel, collectionLib, ControlsConstants, entity, ItemsUtil, clone) => {
       describe('DropdownViewModel', () => {
          let rs = new collectionLib.RecordSet({
             idProperty: 'id',
@@ -296,6 +298,22 @@ define(
             assert.isFalse(!!viewModel.hasAdditional(rs));
             setViewModelItems(viewModel, rs2);
             assert.isFalse(!!viewModel.hasAdditional(rs2));
+         });
+
+         it('getEmptyItem', function() {
+            let emptyConfig = clone(config);
+            emptyConfig.emptyText = 'Не выбрано';
+            emptyConfig.displayProperty = 'title';
+            let viewModel = new DropdownViewModel(emptyConfig);
+            let emptyItem = viewModel.getEmptyItem();
+            assert.isFalse(emptyItem.isSelected);
+            assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
+
+            emptyConfig.selectedKeys = [];
+            viewModel = new DropdownViewModel(emptyConfig);
+            emptyItem = viewModel.getEmptyItem();
+            assert.isTrue(emptyItem.isSelected);
+            assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
          });
       })
    });
