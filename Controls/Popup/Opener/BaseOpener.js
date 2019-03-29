@@ -163,6 +163,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
                'closeByExternalClick',
+               'isCompoundTemplate',
                'autoClose',
                'type',
                'style',
