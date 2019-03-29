@@ -43,7 +43,7 @@ define(['Controls/Filter/Button/Panel/Lookup'
          pLookup.showSelector();
          assert.isFalse(isShowSelector);
 
-         pLookup._options.lookupTemplate = 'string';
+         pLookup._options.lookupTemplateName = 'string';
          pLookup.showSelector();
          assert.isTrue(isShowSelector);
       });
