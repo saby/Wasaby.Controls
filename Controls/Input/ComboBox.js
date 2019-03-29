@@ -2,13 +2,12 @@ define('Controls/Input/ComboBox',
    [
       'Core/Control',
       'wml!Controls/Input/ComboBox/ComboBox',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/util',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify'
    ],
 
-   function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
+   function(Control, template, Utils, dropdownUtils, tmplNotify) {
       /**
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.

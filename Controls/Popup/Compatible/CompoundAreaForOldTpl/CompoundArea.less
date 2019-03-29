@@ -80,6 +80,8 @@ body:not(.rtl-Body) .controls-CompoundArea {
    }
 
    &.ws-window {
+      border: none; //перебиваю стили, затащившиеся с areaAbstract
+      max-height: 100vh;
       .ws-window-titlebar {
          left: 1px;
          right: 1px;
@@ -92,11 +94,6 @@ body:not(.rtl-Body) .controls-CompoundArea {
 
    .controls-CompoundArea__move-cursor {
       cursor: move;
-   }
-
-   //перебиваю стили, затащившиеся с areaAbstract
-   &.ws-window {
-      border: none;
    }
 
    &.ws-float-area-has-maximized-button .controls-StackTemplate__maximized_button{
@@ -128,4 +125,8 @@ body:not(.rtl-Body) .controls-CompoundArea {
    left: 0;
    right: 0;
    height: 40px;
+}
+
+.ws-float-area__block-layout .controls-Stack__content-wrapper {
+   background-color: @background-color_StackTemplate;
 }

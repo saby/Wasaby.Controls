@@ -176,9 +176,6 @@ define('Controls/Explorer', [
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
-         if (this._options.root !== cfg.root) {
-            _private.setRoot(this, cfg.root);
-         }
       },
       _getRoot: function() {
          return _private.getRoot(this);

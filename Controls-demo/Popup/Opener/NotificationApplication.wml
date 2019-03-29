@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Notification" demoname="Controls-demo/NotificationDemo/NotificationDemo.wml">
+    <ws:content>
+        <Controls-demo.NotificationDemo.NotificationDemo/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

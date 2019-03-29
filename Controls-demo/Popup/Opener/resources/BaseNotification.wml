@@ -1,4 +1,4 @@
-<ws:partial template="wml!Controls/Popup/Templates/Notification/Simple"
-            text="{{value}}"
-            style="success">
-</ws:partial>
+<Controls.Popup.Templates.Notification.Simple
+    text="{{value}}"
+    style="success">
+</Controls.Popup.Templates.Notification.Simple>

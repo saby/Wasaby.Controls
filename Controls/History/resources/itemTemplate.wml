@@ -1,5 +1,6 @@
 <div attr:class="controls-DropdownList__row
                  controls-HistoryMenu__row
+                 controls-DropdownList__item-leftPadding_default
                  {{itemData.isSelected ? 'controls-DropdownList__selected'}}
                  {{ itemData.getPropValue(itemData.item, 'pinned')=== true && !itemData.hasParent ?  'controls-HistoryMenu__row_pinned'}}
                   theme_{{_options.theme}}"

@@ -1,4 +1,4 @@
-<Controls.Input.Mask
+<Controls._input.DateTime.Mask
    value="{{_model.clearTextValue}}"
    replacer="{{_model._replacer}}"
    mask="{{_options.mask}}"
@@ -16,4 +16,4 @@
    on:tagHover="_proxyEvent('tagHover')"
    on:keydown="_onKeyDown()"
    on:deactivated="_onDeactivated()">
-</Controls.Input.Mask>
+</Controls._input.DateTime.Mask>

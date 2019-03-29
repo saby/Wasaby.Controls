@@ -14,9 +14,8 @@ define([
    'Env/Env',
    'Core/core-clone',
    'Types/entity',
-   'Types/collection',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -1241,6 +1240,10 @@ define([
                       type: 2
                    }]
              }),
+             lnSource3 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: []
+             }),
              lnCfg = {
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
@@ -1263,11 +1266,17 @@ define([
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
-                  lnBaseControl._beforeUpdate(lnCfg);
-
-                  setTimeout(function() {
+                  lnBaseControl._beforeUpdate(lnCfg).addCallback(function() {
                      assert.equal(lnBaseControl._keyDisplayedItem, 4);
-                     resolve();
+                     lnBaseControl._keyDisplayedItem = null;
+
+                     lnCfg = clone(lnCfg);
+                     lnCfg.source = lnSource3;
+                     lnBaseControl._beforeUpdate(lnCfg).addCallback(function(res) {
+                        assert.equal(lnBaseControl._keyDisplayedItem, null);
+                        resolve();
+                        return res;
+                     });
                   });
                }, 10);
             },10);
@@ -2597,7 +2606,24 @@ define([
          });
 
       });
-   
+
+      it('resolveIndicatorStateAfterReload', function() {
+         var baseControlMock = {
+            _needScrollCalculation: true,
+            _sourceController: {hasMoreData: () => {return true;}},
+            _forceUpdate: () => {}
+         };
+         var emptyList = new collection.List();
+         var list = new collection.List({items: [{test: 'testValue'}]});
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         assert.equal(baseControlMock._loadingState, 'down');
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         assert.isNull(baseControlMock._loadingState);
+
+      });
+
       it('reloadItem', function() {
          var filter = {};
          var cfg = {

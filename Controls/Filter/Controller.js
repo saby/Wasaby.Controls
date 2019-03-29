@@ -322,7 +322,10 @@ define('Controls/Filter/Controller',
                def.errback(err);
                throw err;
             }
-            def.callback(calculatedFilter);
+            def.callback({
+               filter: calculatedFilter,
+               historyItems: items
+            });
             return items;
          }).addErrback(function(err) {
             def.errback(err);

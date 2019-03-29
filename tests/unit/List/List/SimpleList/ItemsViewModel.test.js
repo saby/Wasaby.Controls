@@ -110,6 +110,58 @@ define([
 
       });
 
+      it('getItemData key of breadcrumbs', function () {
+         // Simple item
+
+         var
+             cfg = {
+                items: data,
+                keyProperty: 'id',
+                displayProperty: 'title'
+             },
+             iv = new ItemsViewModel(cfg),
+             dispItem = {
+                getContents: function () {
+                   return {
+                      getId: function () {
+                         return '123';
+                      }
+                   }
+                }
+             },
+             itemData = iv.getItemDataByItem(dispItem);
+
+
+         assert.equal('123', itemData.key);
+
+         // Breadcrumbs item
+         dispItem = {
+            getContents: function () {
+               return [
+                  {
+                     getId: function () {
+                        return '1';
+                     }
+                  },
+                  {
+                     getId: function () {
+                        return '2';
+                     }
+                  },
+                  {
+                     getId: function () {
+                        return '3';
+                     }
+                  }
+               ]
+            }
+         };
+
+         itemData = iv.getItemDataByItem(dispItem);
+         assert.equal('3', itemData.key);
+
+      });
+
       it('setItems', function () {
          var rs1 = new collection.RecordSet({
             rawData: data,
@@ -260,8 +312,7 @@ define([
          itemsViewModel.setFilter(function testFilter(){});
          assert.isTrue(itemsViewModel._prefixItemVersion > modelVersion, 'setFilter should change model version')
       });
-   
-   
+
       it('groupingKeyCallback', function() {
          var
             current,
@@ -314,6 +365,22 @@ define([
          assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
          assert.equal(current.isHiddenGroup, false, 'Invalid value isHiddenGroup for current item.');
          assert.equal(current.isGroupExpanded, false, 'Invalid value isGroupExpanded for current item.');
+      });
+
+      it('isLast', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+
+         var iv = new ItemsViewModel(cfg);
+
+         var condResult = iv.isLast();
+         assert.isFalse(condResult);
+         iv.goToNext();
+         iv.goToNext();
+         condResult = iv.isLast();
+         assert.isTrue(condResult);
       });
    })
 });

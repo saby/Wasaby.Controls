@@ -2,7 +2,6 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import tmpl = require('wml!Controls/_calendar/MonthSlider/Slider/Slider');
-import 'css!theme?Controls/_calendar/MonthSlider/Slider/Slider';
 
 /**
  * Slider. Renders the element by template. Redraws with animation when changing data.
@@ -149,6 +148,8 @@ Component.getDefaultOptions = function () {
  * @variant 'slideLeft' Move the animated element to the left.
  */
 
+Component._theme = ['Controls/calendar'];
+
 Component.getOptionTypes = function () {
     return coreMerge({
 
@@ -191,5 +192,6 @@ Component.getOptionTypes = function () {
          */
     });
 };
+
 
 export default Component;

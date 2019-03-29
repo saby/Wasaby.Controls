@@ -54,7 +54,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
             return self._itemsModel._display.getGroupItems(key).length === 0;
-         },
+         }
       };
 
       var DropdownViewModel = lists.BaseViewModel.extend({
@@ -88,6 +88,21 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._itemsModel.setFilter(filter);
          },
 
+         updateSelection: function(item) {
+            var key = item.get(this._options.keyProperty);
+            if (this._options.selectedKeys.indexOf(key) !== -1) {
+               var index = this._options.selectedKeys.indexOf(key);
+               this._options.selectedKeys.splice(index, 1);
+            } else {
+               this._options.selectedKeys.push(key);
+            }
+            this._nextVersion();
+         },
+
+         getSelectedKeys: function() {
+            return this._options.selectedKeys;
+         },
+
          getDisplayFilter: function() {
             var filter = [];
             filter.push(_private.filterHierarchy.bind(this));
@@ -98,11 +113,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          setItems: function(options) {
             this._options.items = options.items;
             this._itemsModel.setItems(options.items);
-         },
-
-         setSelectedKeys: function(selectedKeys) {
-            this._options.selectedKeys = selectedKeys;
-            this._nextVersion();
          },
 
          setRootKey: function(key) {
@@ -126,6 +136,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          goToNext: function() {
             return this._itemsModel.goToNext();
+         },
+
+         isLast: function() {
+            return this._itemsModel.isLast();
          },
 
          getCurrent: function() {
@@ -154,6 +168,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
+            itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
@@ -223,9 +238,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._isItemSelected(item);
+               emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
+               emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';
                return emptyItem;
             }
          }

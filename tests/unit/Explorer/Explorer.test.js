@@ -184,30 +184,6 @@ define([
          assert.equal(explorer._items, items);
       });
 
-      it('_beforeUpdate.setRoot', function() {
-         var
-            cfg = {
-               root: 'rootNode',
-               viewMode: 'tree'
-            },
-            newCfg = {
-               root: 'someNewRoot',
-               viewMode: 'tree'
-            },
-            instance = new Explorer(cfg),
-            rootFromState = instance._root;
-
-         instance.saveOptions(cfg);
-         instance._beforeUpdate(cfg);
-         assert.equal(instance._options.root, 'rootNode');
-         assert.equal(instance._root, rootFromState);
-
-         instance.saveOptions(newCfg);
-         instance._beforeUpdate(newCfg);
-         assert.equal(instance._options.root, 'someNewRoot');
-         assert.equal(instance._root, rootFromState);
-      });
-
       it('setViewMode', function() {
          var
             cfg = {
@@ -355,7 +331,7 @@ define([
                viewMode: null
             });
 
-            assert.isTrue(isNotified);
+            assert.isFalse(isNotified);
             isNotified = false;
 
          });

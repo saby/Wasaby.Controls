@@ -60,7 +60,6 @@ define('Controls-demo/Demo/PageThemes',
             DemoPage.superclass.constructor.apply(this, arguments);
 
             AppData.initAppData(cfg);
-            this.ctxData = new AppData.getAppData();
 
             this.scrollData = new ScrollData({
                pagingVisible: false
@@ -69,7 +68,6 @@ define('Controls-demo/Demo/PageThemes',
 
          _getChildContext: function() {
             return {
-               AppData: this.ctxData,
                ScrollData: this.scrollData
             };
          }
