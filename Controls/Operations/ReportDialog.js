@@ -71,6 +71,6 @@ define('Controls/Operations/ReportDialog', [
          this._notify('close', [], {bubbling: true});
       }
    });
-   ReportDialog._theme = ['Controls/operations'];
+   ReportDialog._theme = ['Controls/operationsPopup'];
    return ReportDialog;
 });
