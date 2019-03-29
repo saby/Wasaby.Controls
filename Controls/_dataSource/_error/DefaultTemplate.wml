@@ -3,4 +3,5 @@
     style="error"
     message="{{ _options.message || message }}"
     details="{{ _options.details || details }}"
+    closeHandler="{{ _closeHandler }}"
 />
