@@ -31,18 +31,19 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
                insert: '',
                delete: ''
             };
-         }
+         },
       };
 
-      var ViewModel = BaseViewModel.extend({
-         _convertToValue: function(displayValue) {
-            var value = Formatter.getClearData(this._format, displayValue).value;
+      class ViewModel extends BaseViewModel {
+         _convertToValue(displayValue) {
+            this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            const value = Formatter.getClearData(this._format, displayValue).value;
             return value;
-         },
-         _convertToDisplayValue: function(value) {
+         }
+         _convertToDisplayValue(value) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
-            var fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
+            const fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             if (fDate && fDate.value) {
                return fDate.value;
@@ -51,15 +52,14 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
                return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
             }
             return '';
-         },
-         handleInput: function(splitValue, inputType) {
+         }
+         handleInput(splitValue, inputType) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            var result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
-            return ViewModel.superclass.handleInput.call(this, _private.prepareSplitValue(result));
+            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
+            return super.handleInput.call(this, _private.prepareSplitValue(result));
          }
-      });
+      }
 
-      export = ViewModel;
-   
+export = ViewModel;
