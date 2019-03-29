@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Stack/StackTemplateStyles', [],
    function() {}
 
    /**
-     * @mixin Controls/Popup/Templates/Stack/StackTemplate
+     * @mixin Controls/Popup/Templates/Stack/StackTemplateStyles
      * @private
      *
      * @css @background-color_StackTemplate Background color

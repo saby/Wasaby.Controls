@@ -7,7 +7,9 @@ define('Controls/Selector/SelectedCollection',
       'Controls/Utils/tmplNotify',
       'Controls/Selector/SelectedCollection/Utils',
       'Types/util',
-      'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
+      'css!theme?Controls/Selector/SelectedCollection/SelectedCollection',
+      'wml!Controls/Selector/SelectedCollection/_ContentTemplate',
+      'wml!Controls/Selector/SelectedCollection/_CrossTemplate'
    ],
 
    function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils, utils) {
@@ -23,6 +25,11 @@ define('Controls/Selector/SelectedCollection',
        * @public
        * @author Капустин И.А.
        */
+
+
+      var
+         JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption',
+         JS_CLASS_CROSS_ITEM  = '.js-controls-SelectedCollection__item__cross';
 
       var _private = {
          clickCallbackPopup: function(eventType, item) {
@@ -109,11 +116,11 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _itemClick: function(event, item) {
-            this._notify('itemClick', [item]);
-         },
-
-         _crossClick: function(event, index) {
-            this._notify('crossClick', [this._visibleItems[index]]);
+            if (event.target.closest(JS_CLASS_CAPTION_ITEM)) {
+               this._notify('itemClick', [item]);
+            } else if (event.target.closest(JS_CLASS_CROSS_ITEM)) {
+               this._notify('crossClick', [item]);
+            }
          },
 
          _openInfoBox: function(event, config) {

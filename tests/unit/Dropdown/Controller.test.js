@@ -344,6 +344,9 @@ define(
             };
             Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id', dataLoadCallback);
             assert.deepEqual(selectedItems, [null]);
+
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [], 'id');
+            assert.deepEqual(selectedItems, [null]);
          });
 
          it('_open dropdown', () => {

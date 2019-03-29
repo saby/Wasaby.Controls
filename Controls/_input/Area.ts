@@ -211,7 +211,7 @@ import 'Controls/Decorator/WrapURLs';
          }
       });
 
-      Area._theme.push('Controls/_input/Area/Area');
+      Area._theme.push('Controls/input');
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();
