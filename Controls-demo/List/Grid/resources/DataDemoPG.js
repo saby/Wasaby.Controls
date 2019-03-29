@@ -170,7 +170,8 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
              },
              {
                 title: 'Rating',
-                align: 'right'
+                align: 'right',
+                template: 'wml!Controls-demo/List/Grid/resources/BasePG/HeaderMoneyTemplate'
              },
              {
                 title: 'Box Office',
