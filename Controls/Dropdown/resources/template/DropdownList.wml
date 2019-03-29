@@ -44,10 +44,10 @@
          </ws:if>
          <ws:if data="{{_needShowApplyButton}}">
             <div class="controls-DropdownList__applyButton">
-               <Controls.Button viewMode="toolButton"
-                                icon="icon-Yes icon-medium"
-                                iconStyle="success"
-                                on:click="_applySelection()"/>
+               <Controls.buttons:Button viewMode="toolButton"
+                                        icon="icon-Yes icon-medium"
+                                        iconStyle="success"
+                                        on:click="_applySelection()"/>
             </div>
          </ws:if>
       </div>
