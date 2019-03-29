@@ -14,7 +14,7 @@
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
-            <Controls.Label name="myLabel1" caption="style:"/>
+            <Controls.input:Label name="myLabel1" caption="style:"/>
             <Controls.Input.ComboBox
                     source="{{_styleSource}}"
                     keyProperty="title"
@@ -24,7 +24,7 @@
                     selectedKey="{{_selectedStyle}}"
                     on:selectedKeyChanged="changeStyle()"
             />
-            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.input:Label name="myLabel1" caption="size:"/>
             <Controls.Input.ComboBox
                     source="{{_sizeSource}}"
                     keyProperty="title"
@@ -34,13 +34,13 @@
                     selectedKey="{{_selectedSize}}"
                     on:selectedKeyChanged="changeSize()"
             />
-            <Controls.Label name="myLabel1" caption="caption:"/>
-            <Controls.Input.Text bind:value="_caption"/>
-            <Controls.Label name="myLabel1" caption="icon:"/>
-            <Controls.Input.Text placeholder="icon-16 icon-Send" bind:value="_icon"/>
-            <Controls.Label name="myLabel1" caption="tooltip:"/>
-            <Controls.Input.Text bind:value="_tooltip"/>
-            <Controls.Label name="myLabel1" caption="iconStyle(if there is an icon):"/>
+            <Controls.input:Label name="myLabel1" caption="caption:"/>
+            <Controls.input:Text bind:value="_caption"/>
+            <Controls.input:Label name="myLabel1" caption="icon:"/>
+            <Controls.input:Text placeholder="icon-16 icon-Send" bind:value="_icon"/>
+            <Controls.input:Label name="myLabel1" caption="tooltip:"/>
+            <Controls.input:Text bind:value="_tooltip"/>
+            <Controls.input:Label name="myLabel1" caption="iconStyle(if there is an icon):"/>
             <Controls.Input.ComboBox
                     source="{{_iconStyleSource}}"
                     keyProperty="title"

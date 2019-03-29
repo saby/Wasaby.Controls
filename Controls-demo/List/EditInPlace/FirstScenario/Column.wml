@@ -3,7 +3,7 @@
       <ws:contentTemplate>
          <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
             <ws:if data="{{itemData.isEditing}}">
-               <Controls.Input.Number attr:class="controls-EditingTemplateText__editor"
+               <Controls.input:Number attr:class="controls-EditingTemplateText__editor"
                                       bind:value="itemData.item[itemData.column.displayProperty]"
                                       selectOnClick="{{ false }}"
                                       precision="{{ 2 }}"
@@ -30,11 +30,11 @@
                      enabled="{{true}}">
             <ws:editorTemplate>
                <ws:if data="{{itemData.columnIndex < 1}}">
-                  <Controls.Input.Text bind:value="itemData.item[itemData.column.displayProperty]"
+                  <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty]"
                                        selectOnClick="{{ false }}" />
                </ws:if>
                <ws:else>
-                  <Controls.Input.Number bind:value="itemData.item[itemData.column.displayProperty]"
+                  <Controls.input:Number bind:value="itemData.item[itemData.column.displayProperty]"
                                          selectOnClick="{{ false }}"
                                          precision="{{ 2 }}"
                                          textAlign="right"

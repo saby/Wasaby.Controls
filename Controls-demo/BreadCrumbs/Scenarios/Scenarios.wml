@@ -15,7 +15,7 @@
       <Controls.Heading caption="Реестр с однострочными заголовками"
                         size="xl"/>
       <div>
-         <Controls.Label caption='Без строки "Итого"' />
+         <Controls.input:Label caption='Без строки "Итого"' />
       </div>
       <Controls.Explorer
          keyProperty="id"
@@ -30,7 +30,7 @@
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
-         <Controls.Label caption='Со строкой "Итого"' />
+         <Controls.input:Label caption='Со строкой "Итого"' />
       </div>
       <Controls.Explorer
          keyProperty="id"
@@ -45,7 +45,7 @@
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
-         <Controls.Label caption='На выезжающей панели' />
+         <Controls.input:Label caption='На выезжающей панели' />
       </div>
       <div>
          <Controls.Popup.Templates.Stack.StackTemplate

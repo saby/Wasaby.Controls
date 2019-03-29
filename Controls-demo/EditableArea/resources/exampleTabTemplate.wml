@@ -12,7 +12,7 @@
                attr:class="ControlsDemo-EditableArea__date ControlsDemo-EditableArea__tabEditor"
             >
                <ws:editorTemplate>
-                  <Controls.Input.Text selectOnClick="{{ false }}" />
+                  <Controls.input:Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
             </Controls.EditableArea.Templates.Editors.Base>
          </div>
@@ -22,7 +22,7 @@
             attr:class="controls-Tabs__content_additionaltext ControlsDemo-EditableArea__number ControlsDemo-EditableArea__tabEditor"
          >
             <ws:editorTemplate>
-               <Controls.Input.Text selectOnClick="{{ false }}" />
+               <Controls.input:Text selectOnClick="{{ false }}" />
             </ws:editorTemplate>
          </Controls.EditableArea.Templates.Editors.Base>
       </div>

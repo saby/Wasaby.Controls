@@ -5,7 +5,7 @@
                     itemData="{{itemData}}"
                     enabled="{{true}}">
             <ws:editorTemplate>
-                <Controls.Input.Text bind:value="itemData.item[itemData.column.displayProperty || 'title']"
+                <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty || 'title']"
                                      selectOnClick="{{ false }}" />
             </ws:editorTemplate>
         </ws:partial>

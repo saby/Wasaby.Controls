@@ -5,6 +5,6 @@
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-        <Controls.Input.Text placeholder="maximized" value="{{value}}"/>
+        <Controls.input:Text placeholder="maximized" value="{{value}}"/>
     </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>

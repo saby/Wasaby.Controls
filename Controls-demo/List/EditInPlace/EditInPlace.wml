@@ -26,7 +26,7 @@
                                     <ws:Function value="{{ itemTemplate.itemData.item.title }}">Controls/Validate/Validators/IsRequired</ws:Function>
                                 </ws:validators>
                                 <ws:content>
-                                    <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                    <Controls.input:Text bind:value="itemTemplate.itemData.item.title"
                                                          selectOnClick="{{ false }}" />
                                 </ws:content>
                             </Controls.Validate.Input>
@@ -82,7 +82,7 @@
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
                             <ws:editorTemplate>
-                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                <Controls.input:Text bind:value="itemTemplate.itemData.item.title"
                                                      selectOnClick="{{ false }}" />
                             </ws:editorTemplate>
                         </ws:partial>
@@ -111,7 +111,7 @@
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
                             <ws:editorTemplate>
-                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                <Controls.input:Text bind:value="itemTemplate.itemData.item.title"
                                                      selectOnClick="{{ false }}" />
                             </ws:editorTemplate>
                         </ws:partial>
@@ -139,7 +139,7 @@
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
                             <ws:editorTemplate>
-                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                <Controls.input:Text bind:value="itemTemplate.itemData.item.title"
                                                      selectOnClick="{{ false }}" />
                             </ws:editorTemplate>
                         </ws:partial>

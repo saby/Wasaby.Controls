@@ -11,11 +11,11 @@
          </div>
          <div class="demo-EditableGrid__editor-flexWrapper">
             <span class="demo-EditableGrid__editor-description">Номер ТД</span>
-            <Controls.Input.Text bind:value="itemData.item.documentNum" placeholder="Номер"/>
+            <Controls.input:Text bind:value="itemData.item.documentNum" placeholder="Номер"/>
          </div>
          <div class="demo-EditableGrid__editor-flexWrapper">
             <span class="demo-EditableGrid__editor-description">Налоговая база</span>
-            <Controls.Input.Number bind:value="itemData.item.taxBase" placeholder="Сумма"/>
+            <Controls.input:Number bind:value="itemData.item.taxBase" placeholder="Сумма"/>
          </div>
       </div>
       <div class="demo-EditableGrid__editor-description demo-EditableGrid__editor-rowTopSpacing">Сведения о виде ТС и транспортном документе</div>
@@ -23,12 +23,12 @@
       <div class="demo-EditableGrid__editor-flexWrapper demo-EditableGrid__editor-rowTopSpacing" style="width: 100%;">
          <div>
             <span class="demo-EditableGrid__editor-description">Документ</span>
-            <Controls.Input.Text bind:value="itemData.item.document" placeholder="б/н"/>
-            <Controls.Input.Date.Picker bind:value="itemData.item.documentDate"/>
+            <Controls.input:Text bind:value="itemData.item.document" placeholder="б/н"/>
+            <Controls.input:Date bind:value="itemData.item.documentDate"/>
          </div>
          <div>
          <span class="demo-EditableGrid__editor-description">Договор на оказание услуг</span>
-         <Controls.Input.Text bind:value="itemData.item.serviceContract" placeholder="Номер"/>
+         <Controls.input:Text bind:value="itemData.item.serviceContract" placeholder="Номер"/>
          </div>
       </div>
       <div class="demo-EditableGrid__editor-rowTopSpacing">
@@ -38,7 +38,7 @@
       <div class="demo-EditableGrid__editor-description demo-EditableGrid__editor-rowTopSpacing">Сведения о маршрутном поручении (телеграмме)</div>
       <div class="demo-EditableGrid__editor-flexWrapper demo-EditableGrid__editor-rowTopSpacing" style="width: 100%;">
          <span class="demo-EditableGrid__editor-description">Примечание</span>
-         <Controls.Input.Text bind:value="itemData.item.description" placeholder="примечание" attr:style="width: 100%;"/>
+         <Controls.input:Text bind:value="itemData.item.description" placeholder="примечание" attr:style="width: 100%;"/>
       </div>
    </div>
 </ws:partial>

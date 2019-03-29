@@ -1,1 +1,1 @@
-<Controls.Input.Text bind:value="item.value" />
+<Controls.input:Text bind:value="item.value" />

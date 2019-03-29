@@ -40,11 +40,11 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * <pre>
     *    <div class="form">
     *       <div class="fio">
-    *          <Controls.Input.Text name="firstName" font="primary"/>
-    *          <Controls.Input.Text name="lastName" font="primary"/>
+    *          <Controls.input:Text name="firstName" font="primary"/>
+    *          <Controls.input:Text name="lastName" font="primary"/>
     *       </div>
     *       <div class="residence">
-    *          <Controls.Input.Text name="street"/>
+    *          <Controls.input:Text name="street"/>
     *       </div>
     *    </div>
     * </pre>
@@ -59,7 +59,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, we align the text to the left.
     * <pre>
-    *    <Controls.Input.Text textAlign="left"/>
+    *    <Controls.input:Text textAlign="left"/>
     * </pre>
     */
 
@@ -71,7 +71,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
     * <pre>
-    *    <Controls.Input.Text tooltip="Enter your name"/>
+    *    <Controls.input:Text tooltip="Enter your name"/>
     * </pre>
     */
 
@@ -86,7 +86,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when the field is clicked, all text in it will be selected.
     * <pre>
-    *    <Controls.Input.Text selectOnClick={{true}}/>
+    *    <Controls.input:Text selectOnClick={{true}}/>
     * </pre>
     */
 
@@ -105,7 +105,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
     * <pre>
-    *    <Controls.Input.Text autoComplete={{true}}/>
+    *    <Controls.input:Text autoComplete={{true}}/>
     * </pre>
     */
 
@@ -126,15 +126,15 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * <pre>
     *    <div class="form">
     *       <div class="fio">
-    *          <Controls.Input.Text name="firstName" style="primary" bind:value="_firstName"/>
-    *          <Controls.Input.Text name="lastName" style="primary" bind:value="_lastName"/>
+    *          <Controls.input:Text name="firstName" style="primary" bind:value="_firstName"/>
+    *          <Controls.input:Text name="lastName" style="primary" bind:value="_lastName"/>
     *       </div>
     *       <div class="residence">
-    *          <Controls.Input.Text name="street" style="info" bind:value="_street"/>
-    *          <Controls.Input.Text name="houseNumber" style="info" bind:value="_houseNumber"/>
+    *          <Controls.input:Text name="street" style="info" bind:value="_street"/>
+    *          <Controls.input:Text name="houseNumber" style="info" bind:value="_houseNumber"/>
     *       </div>
-    *       <Controls.Input.Text name="login" style="primary" bind:value="_login"/>
-    *       Controls.Input.Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
+    *       <Controls.input:Text name="login" style="primary" bind:value="_login"/>
+    *       Controls.input:Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
     *       <Controls.Button name="register" caption="register" on:click="_sendDataClick()"/>
     *    </div>
     * </pre>

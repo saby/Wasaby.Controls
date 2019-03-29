@@ -3,7 +3,7 @@
         <ws:partial template="wml!Controls/List/EditInPlace/EditingTemplate"
                     value="{{ contentTemplate.itemData.item.title }}" enabled="{{true}}">
             <ws:editorTemplate>
-                <Controls.Input.Text bind:value="itemData.item.title"
+                <Controls.input:Text bind:value="itemData.item.title"
                                      selectOnClick="{{ false }}" />
             </ws:editorTemplate>
         </ws:partial>

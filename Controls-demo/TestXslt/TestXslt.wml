@@ -1,6 +1,6 @@
 <div>
 
-   <Controls.Input.Area
+   <Controls.input:Area
       name="xml"
       placeholder="xml"
       attr:class="xml ControlsDemo-TestXslt__xml ControlsDemo-TestXslt__area"
@@ -8,7 +8,7 @@
       bind:value="_xml"
    />
 
-   <Controls.Input.Area
+   <Controls.input:Area
       name="xsl"
       placeholder="xsl"
       attr:class="xsl ControlsDemo-TestXslt__xsl ControlsDemo-TestXslt__area"
@@ -16,7 +16,7 @@
       bind:value="_xsl"
    />
 
-   <Controls.Input.Area
+   <Controls.input:Area
       name="result"
       placeholder="result"
       attr:class="result ControlsDemo-TestXslt__result ControlsDemo-TestXslt__area"
