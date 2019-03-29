@@ -14,6 +14,7 @@ define('Controls/FormController', [
     * @class Controls/FormController
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IFormController
+    * @demo Controls-demo/Popup/Edit/Opener
     * @control
     * @public
     * @author Красильников А.С.
