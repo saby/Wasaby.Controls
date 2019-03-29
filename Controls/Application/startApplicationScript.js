@@ -6,7 +6,7 @@ define('Controls/Application/startApplicationScript',
       'wml!Controls/Application/startApplicationScript'
    ],
 
-   function(Base, Deferred, Env, template) {
+   function(Base, Deferred, AppEnv, template) {
       'use strict';
 
       var Page = Base.extend({
