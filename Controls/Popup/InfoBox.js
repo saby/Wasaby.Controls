@@ -265,8 +265,10 @@ define('Controls/Popup/InfoBox',
             }, self._options.hideDelay);
          },
 
-         _mousedownHandler: function() {
-            this._close();
+         _mousedownHandler: function(e, args) {
+            if (!args.target.closest('.controls-Popup__template')) {
+               this._close();
+            }
          },
 
 
@@ -352,5 +354,3 @@ define('Controls/Popup/InfoBox',
        * @property {Number} showDelay Delay before closing.
        */
    });
-
-

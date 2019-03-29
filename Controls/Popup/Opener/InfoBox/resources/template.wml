@@ -1,4 +1,4 @@
-<div class="controls-InfoBox controls-Container__popup-scrolling-content" on:mouseenter="_sendResult()" on:mouseleave="_sendResult()" on:mousedown="_mousedownHandler()">
+<div class="controls-InfoBox controls-Container__popup-scrolling-content" on:mouseenter="_sendResult()" on:mouseleave="_sendResult()">
 
       <Controls.Button.Close attr:class="controls-InfoBox__closeButton" on:click="_close()" style="light"/>
    <ws:if data="{{_options.floatCloseButton}}">
