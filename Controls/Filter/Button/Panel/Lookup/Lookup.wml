@@ -4,7 +4,7 @@
            on:click="showSelector()"/>
    <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
       <Controls.Event.Registrator name="controlResize" register="controlResize">
-         <ws:partial template="{{_options.lookupTemplate}}"
+         <ws:partial template="{{_options.lookupTemplateName}}"
                      name="lookup"
                      class="controls-FilterPanel__LookupSelector"
                      on:selectedKeysChanged="_selectedKeysChanged()"
