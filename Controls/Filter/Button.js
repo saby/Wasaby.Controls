@@ -37,7 +37,7 @@ define('Controls/Filter/Button',
       var _private = {
          getFilterButtonCompatible: function(self) {
             var result = new Deferred();
-            requirejs(['Controls/Popup/Compatible/Layer'], (function(Layer) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
                Layer.load().addCallback(function(res) {
                   requirejs(['Controls/Filter/Button/_FilterCompatible'], function(_FilterCompatible) {
                      if (!self._filterCompatible) {

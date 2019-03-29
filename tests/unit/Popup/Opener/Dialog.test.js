@@ -14,6 +14,13 @@ define(
             height: 300
          };
 
+         let windowSize = {
+            width: 1920,
+            height: 960
+         };
+
+         DialogController._private.getWindowSize = () => windowSize;
+
          it('Opener: getConfig', () => {
             let getDialogConfig = DialogOpener._private.getDialogConfig;
             let config = getDialogConfig();
@@ -113,9 +120,16 @@ define(
                   maxHeight: 100
                }
             };
-            let position = DialogController.getDefaultConfig(item);
-            assert.equal(item.position.width, 100);
-            assert.equal(item.position.height, 100);
+            DialogController.getDefaultConfig(item);
+            assert.equal(item.position.maxWidth, 100);
+            assert.equal(item.position.maxHeight, 100);
+
+            DialogController._private.getWindowSize = () => windowSize;
+
+            item.popupOptions = {};
+            DialogController.getDefaultConfig(item);
+            assert.equal(item.position.maxWidth, 1920);
+            assert.equal(item.position.maxHeight, 960);
          });
 
          it('dialog drag start', function() {

@@ -104,7 +104,7 @@ define([
             // the date is more than maybe
             { mask: 'DD.MM.YY', stringValue: '55.12.00', value: new Date(2000, 11, 31) },
 
-            // incorrect date
+            // incorrect year
             { mask: 'DD.MM.YYYY', stringValue: '11.12.__20', value: new Date(2020, 11, 11) },
             { mask: 'DD.MM.YYYY', stringValue: '11.12._20_', value: new Date(2020, 11, 11) },
             { mask: 'DD.MM.YYYY', stringValue: '11.12.20__', value: new Date(2020, 11, 11) },

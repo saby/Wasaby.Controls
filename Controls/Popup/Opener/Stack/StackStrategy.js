@@ -2,9 +2,6 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
-   // Container indent for shadow
-   var PANEL_SHADOW_WIDTH = 8;
-
    // Minimum popup indentation from the right edge
    var MINIMAL_PANEL_DISTANCE = 20;
 
@@ -72,7 +69,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        * @function Controls/Popup/Opener/Stack/StackController#getMaxPanelWidth
        */
       getMaxPanelWidth: function() {
-         return window.innerWidth - MINIMAL_PANEL_DISTANCE - PANEL_SHADOW_WIDTH;
+         return window.innerWidth - MINIMAL_PANEL_DISTANCE;
       },
 
       isMaximizedPanel: _private.isMaximizedPanel

@@ -320,6 +320,19 @@ define([
             ctrl._onCollectionChange({}, 'indexesChanged');
             assert.equal(1, listViewModel.getVersion() - oldVersion);
          });
+
+         it('items should update once if items were moved', function() {
+            var
+               cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               ctrl = new ItemActionsControl(cfg),
+               oldVersion = listViewModel.getVersion();
+            ctrl.saveOptions(cfg);
+            ctrl._onCollectionChange({}, 'collectionChanged', collection.IObservable.ACTION_MOVE);
+            assert.equal(1, listViewModel.getVersion() - oldVersion);
+         });
       });
 
       it('_onItemActionClick', function() {

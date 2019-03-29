@@ -235,6 +235,22 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupMouseEnter: function(id, event) {
+            var item = _private.find(id);
+            if (item) {
+               item.controller.popupMouseEnter(item, _private.getItemContainer(id), event);
+            }
+            return false;
+         },
+
+         popupMouseLeave: function(id, event) {
+            var item = _private.find(id);
+            if (item) {
+               item.controller.popupMouseLeave(item, _private.getItemContainer(id), event);
+            }
+            return false;
+         },
+
          popupControlResize: function(id) {
             var element = _private.find(id);
             if (element) {

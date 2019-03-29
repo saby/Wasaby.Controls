@@ -46,6 +46,25 @@
                                source="{{_getMultiData()}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
+      <h3>MultiSelect</h3>
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysMultiSelect"
+                               keyProperty="id"
+                               displayProperty="title"
+                               multiSelect="{{true}}"
+                               emptyText="All categories"
+                               attr:class="ControlsDemo-InputDropdown__item"
+                               source="{{_createMemory(_multiSelectItems)}}">
+      </Controls.Input.Dropdown>
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysMultiSelect2"
+                               keyProperty="id"
+                               displayProperty="title"
+                               multiSelect="{{true}}"
+                               emptyText="All categories"
+                               attr:class="ControlsDemo-InputDropdown__item-limitWidth"
+                               source="{{_createMemory(_multiSelectItems)}}">
+      </Controls.Input.Dropdown>
+   </div>
+   <div class="ControlsDemo-InputDropdown__wrapper">
       <h3>With comment(and icon on the right)</h3>
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysMyTemplate"
                                keyProperty="id"

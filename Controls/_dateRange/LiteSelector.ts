@@ -29,7 +29,7 @@ var Component = BaseControl.extend({
 
     _beforeMount: function (options) {
         this._rangeModel = new DateRangeModel();
-        CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+        CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         this._rangeModel.update(options);
     },
 
@@ -71,8 +71,7 @@ var Component = BaseControl.extend({
     },
 
     _onResult: function (startValue, endValue) {
-        this._rangeModel.startValue = startValue;
-        this._rangeModel.endValue = endValue;
+        this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._forceUpdate();
     },
