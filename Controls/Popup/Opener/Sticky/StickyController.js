@@ -55,9 +55,13 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                }
             }
             if (config.targetPoint) {
-               if ('vertical' in config.targetPoint || 'horisontal' in config.targetPoint) {
+               if ('vertical' in config.targetPoint) {
                   newCfg.corner = {
-                     vertical: config.targetPoint.vertical,
+                     vertical: config.targetPoint.vertical
+                  };
+               }
+               if ('horizontal' in config.targetPoint) {
+                  newCfg.corner = {
                      horizontal: config.targetPoint.horizontal
                   };
                }
