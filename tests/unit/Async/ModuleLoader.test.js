@@ -99,10 +99,31 @@ define([
          };
          var res = ml.loadAsync('Controls/List');
          var res2 = ml.loadAsync('Controls/List');
-         res2.then(function() {
-            done();
+         res.then(function() {
+            res2.then(function() {
+               done();
+            });
          });
-         assert.equal(res, res2);
+         assert.equal(ml.loadedAsync.length, 1);
+      });
+      it('Load async with cached promise lib', function(done) {
+         var lib = { MyList: {}, MyList2: {} };
+         ml.loadedAsync = [];
+         ml.requireAsync = function(name) {
+            return new Promise(function(resolve) {
+               ml.loadedAsync.push(name);
+               resolve(lib);
+            });
+         };
+         var promiseRes = ml.loadAsync('Controls/List:MyList');
+         var promiseRes2 = ml.loadAsync('Controls/List:MyList2');
+         promiseRes.then(function(res) {
+            assert.equal(res, lib.MyList);
+            promiseRes2.then(function(res2) {
+               assert.equal(res2, lib.MyList2);
+               done();
+            });
+         });
          assert.equal(ml.loadedAsync.length, 1);
       });
       it('Load async with cached module', function(done) {
@@ -124,6 +145,27 @@ define([
             });
          });
       });
+      it('Load async with cached lib', function(done) {
+         var lib = { MyList: {}, MyList2: {} };
+         ml.loadedAsync = [];
+         ml.requireAsync = function(name) {
+            return new Promise(function(resolve) {
+               ml.loadedAsync.push(name);
+               resolve(lib);
+            });
+         };
+         var res = ml.loadAsync('Controls/lists:MyList');
+         res.then(function(loaded) {
+            var res2 = ml.loadAsync('Controls/lists:MyList2');
+            checkError(logErrors, 'Module Controls/List is already loaded.');
+            res2.then(function(loaded2) {
+               assert.equal(loaded, lib.MyList);
+               assert.equal(loaded2, lib.MyList2);
+               assert.equal(ml.loadedAsync.length, 1);
+               done();
+            });
+         });
+      });
       it('Load async error', function(done) {
          ml.loadedAsync = [];
          ml.requireAsync = function(name) {
@@ -138,5 +180,16 @@ define([
             done();
          });
       });
+      it('IsLoaded simple', function() {
+         let module = {};
+         ml.cacheModule('Test/TestModule', module)
+         assert.isTrue(ml.isLoaded('Test/TestModule'));
+      });
+      it('IsLoaded lib', function() {
+         let module = {};
+         ml.cacheModule('Test/TestLib', module)
+         assert.isTrue(ml.isLoaded('Test/TestLib:TestModule'));
+      });
    });
 });
+;
