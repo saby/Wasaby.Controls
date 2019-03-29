@@ -2,7 +2,7 @@
    <div class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
 </ws:if>
 <ws:else>
-   <div class="controls-DropdownList__group_content-{{_options.theme}}">
+   <div class="controls-DropdownList__group_content theme_{{_options.theme}}">
       <ws:if data="{{textAlign !== 'left' && showText !== false}}">
          <div class="controls-DropdownList__group_separator_left controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
       </ws:if>
