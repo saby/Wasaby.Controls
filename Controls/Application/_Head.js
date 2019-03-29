@@ -41,7 +41,7 @@ define('Controls/Application/_Head',
             * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
             * head-custom-block */
             this.head = options.head;
-
+            this.wasServerSide = false;
             if (typeof window !== 'undefined') {
 
                /*всем элементам в head назначается атрибут data-vdomignore
@@ -52,6 +52,10 @@ define('Controls/Application/_Head',
 
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
+               }
+
+               if (document.getElementsByClassName('head-server-block').length > 0) {
+                  this.wasServerSide = true;
                }
                this.themedCss = [];
                this.simpleCss = [];
