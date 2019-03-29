@@ -32,9 +32,13 @@ define('Controls/Filter/Button/Panel/Lookup', [
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Lookup#lookupTemplate
-    * @cfg {String} Link to Lookup
+    * @name Controls/Filter/Button/Panel/Lookup#lookupTemplateName
+    * @cfg {String} Name of the control with same interface as Lookup.
     * @default Controls/Selector/Lookup
+    * @example
+    * <pre>
+    *   <Controls.Filter.Button.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
+    * </pre>
     */
 
    'use strict';
@@ -52,10 +56,10 @@ define('Controls/Filter/Button/Panel/Lookup', [
       },
 
       showSelector: function() {
-         if (typeof this._options.lookupTemplate === 'string') {
+         if (typeof this._options.lookupTemplateName === 'string') {
             this._children.lookup.showSelector();
          } else {
-            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplate" only supports string type');
+            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplateName" only supports string type');
          }
       },
 
@@ -67,7 +71,7 @@ define('Controls/Filter/Button/Panel/Lookup', [
 
    Lookup.getDefaultOptions = function() {
       return {
-         lookupTemplate: 'Controls/Selector/Lookup'
+         lookupTemplateName: 'Controls/Selector/Lookup'
       };
    };
 
