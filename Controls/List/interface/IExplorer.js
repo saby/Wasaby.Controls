@@ -8,8 +8,8 @@ define('Controls/List/interface/IExplorer', ['Controls/_lists/interface/IExplore
  */
    /**
  * @typedef {String} explorerViewMode
- * @variant grid Table.
- * @variant list List.
+ * @variant table Table.
+ * @variant search Search.
  * @variant tile Tiles.
  */
    /**
@@ -35,8 +35,7 @@ define('Controls/List/interface/IExplorer', ['Controls/_lists/interface/IExplore
    /**
  * @name Controls/List/interface/IExplorer#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
- * @default
- * true
+ * @default true
  */
    return Control;
 });
