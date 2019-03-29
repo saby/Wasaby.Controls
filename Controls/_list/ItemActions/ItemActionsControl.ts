@@ -6,7 +6,7 @@ import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
-import { RecordSet } from 'Types/collection';
+import { RecordSet, IObservable } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/_list/ItemActions/ItemActionsControl';
 import { CollectionItem } from 'Types/display';
@@ -183,6 +183,14 @@ var ItemActionsControl = Control.extend({
     ): void {
         if (type !== 'collectionChanged' && type !== 'indexesChanged') {
             return;
+        }
+
+        if (action === IObservable.ACTION_MOVE) {
+           /**
+            * We don't know which items were moved (newItems and removedItems contain the same items), so we have to update everything.
+            */
+           _private.updateActions(this, this._options);
+           return;
         }
 
         if (type === 'collectionChanged' && newItems) {
