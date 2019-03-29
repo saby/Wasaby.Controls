@@ -327,7 +327,7 @@ define([
                   listModel: listViewModel,
                   itemActions: actions
                },
-               ctrl = new ItemActionsControl(cfg),
+               ctrl = new lists.ItemActionsControl(cfg),
                oldVersion = listViewModel.getVersion();
             ctrl.saveOptions(cfg);
             ctrl._onCollectionChange({}, 'collectionChanged', collection.IObservable.ACTION_MOVE);
