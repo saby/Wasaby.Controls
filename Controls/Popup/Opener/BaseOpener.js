@@ -30,7 +30,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
          compatibleOpen: function(self, cfg, controller) {
-            requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
                Layer.load().addCallback(function() {
                   self._openPopup(cfg, controller);
                });
@@ -163,6 +163,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
                'closeByExternalClick',
+               'isCompoundTemplate',
                'autoClose',
                'type',
                'style',

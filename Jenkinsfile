@@ -17,6 +17,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
                                     ])
         helper = load "./jenkins_pipeline/platforma/branch/helper"
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileControls"
+        run_unit = load "./jenkins_pipeline/platforma/branch/run_unit"
         start.start(version, workspace, helper)
     }
 }

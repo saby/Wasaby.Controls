@@ -947,7 +947,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          }
       });
 
-      Base._theme = ['Controls/_input/Base/Base'];
+      Base._theme = ['Controls/input'];
 
       Base.getDefaultOptions = function() {
          return {

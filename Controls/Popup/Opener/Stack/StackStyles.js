@@ -2,7 +2,7 @@ define('Controls/Popup/Opener/Stack/StackStyles', [],
    function() {}
 
 /**
- * @mixin Controls/Popup/Opener/Stack/Stack
+ * @mixin Controls/Popup/Opener/Stack/StackStyles
  * @private
  *
  *@css @size_Stack-border-left   Thickness of left border

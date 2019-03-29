@@ -49,7 +49,6 @@ define('Controls/Application/Core',
             //и так и сяк
 
             if (typeof window === 'undefined' || window.__hasRequest === undefined) {
-
                //need create request for SSR
                //on client request will create in app-init.js
                var req = new Request(createDefault.default(Request));
@@ -91,11 +90,6 @@ define('Controls/Application/Core',
                result = false;
             }
             return result;
-         },
-         _getChildContext: function() {
-            return {
-               AppData: this.ctxData
-            };
          }
 
       });

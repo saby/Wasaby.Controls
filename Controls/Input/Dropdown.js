@@ -119,10 +119,14 @@ define('Controls/Input/Dropdown',
             return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
+         _selectedKeysChanged: function(event, selectedKeys) {
+            return this._notify('selectedKeysChanged', [selectedKeys]);
+         },
+
          _setText: function(items) {
-            if (items.length) {
+            if (items.length || this._options.emptyText) {
                this._item = items[0];
-               this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || items[0] === null);
+               this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || !items[0]);
                if (this._isEmptyItem) {
                   this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
                   this._icon = null;
@@ -131,7 +135,9 @@ define('Controls/Input/Dropdown',
                   this._icon = getPropValue(items[0], 'icon');
                }
                if (items.length > 1) {
-                  this._text += ', еще ' + (items.length - 1);
+                  this._hasMoreText = ', ' + rk('еще ') + (items.length - 1);
+               } else {
+                  this._hasMoreText = '';
                }
                this._tooltip = _private.getTooltip(items, this._options.displayProperty);
             }

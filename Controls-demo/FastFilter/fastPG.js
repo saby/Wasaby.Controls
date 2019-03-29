@@ -15,6 +15,7 @@ define('Controls-demo/FastFilter/fastPG',
          _dataObject: null,
          _sourceProjects: null,
          _sourceContacts: null,
+         _sourceMulti: null,
          _eventType: 'filterChanged',
          _nameOption: 'filter',
          _componentOptions: null,
@@ -80,11 +81,39 @@ define('Controls-demo/FastFilter/fastPG',
                   }
                ]
             });
+            this._sourceMulti = new sourceLib.Memory({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: 'type',
+                     resetValue: [1],
+                     value: [1],
+                     properties: {
+                        keyProperty: 'id',
+                        displayProperty: 'title',
+                        multiSelect: true,
+                        source: new sourceLib.Memory({
+                           idProperty: 'id',
+                           data: [
+                              { id: 1, title: 'Banking and financial services, credit' },
+                              { id: 2, title: 'Gasoline, diesel fuel, light oil products' },
+                              { id: 3, title: 'Transportation, logistics, customs' },
+                              { id: 4, title: 'Oil and oil products' },
+                              { id: 5, title: 'Pipeline transportation services' },
+                              { id: 6, title: 'Services in tailoring and repair of clothes, textiles' },
+                              { id: 7, title: 'Computers and components, computing, office equipment' }
+                           ]
+                        })
+                     }
+                  }
+               ]
+            });
             this._dataObject = {
                source: {
                   items: [
                      { id: '1', title: 'Fast filter for projects', items: this._sourceProjects },
-                     { id: '2', title: 'Fast filter for contacts', items: this._sourceContacts }
+                     { id: '2', title: 'Fast filter for contacts', items: this._sourceContacts },
+                     { id: '3', title: 'Fast filter with multiSelect', items: this._sourceMulti }
                   ],
                   value: 'Fast filter for contacts'
                }

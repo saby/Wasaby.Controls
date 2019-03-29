@@ -1,7 +1,6 @@
 define('Controls/Selector/Lookup/_Lookup', [
    'Core/Control',
    'wml!Controls/Selector/Lookup/_Lookup',
-   'Controls/Input/resources/InputRender/BaseViewModel',
    'Types/chain',
    'Core/core-merge',
    'Controls/Utils/getWidth',
@@ -16,7 +15,7 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Env/Env',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
+], function(Control, template, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
    'use strict';
 
    var
