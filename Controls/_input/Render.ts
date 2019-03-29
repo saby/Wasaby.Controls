@@ -1,14 +1,9 @@
-define('Controls/Input/Render',
-   [
-      'Env/Env',
-      'Core/Control',
-      'Types/entity',
-      'Controls/Utils/tmplNotify',
-
-      'wml!Controls/Input/Render/Render',
-   ],
-   function(Env, Control, entity, tmplNotify, template) {
-      'use strict';
+import Env = require('Env/Env');
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import template = require('wml!Controls/_input/Render/Render');
+      
 
       var Render = Control.extend({
          _template: template,
@@ -47,7 +42,7 @@ define('Controls/Input/Render',
          }
       });
 
-      Render._theme = ['Controls/Input/Render/Render'];
+      Render._theme = ['Controls/_input/Render/Render'];
 
       Render.getDefaultTypes = function() {
          return {
@@ -83,5 +78,5 @@ define('Controls/Input/Render',
          };
       };
 
-      return Render;
-   });
+      export = Render;
+   

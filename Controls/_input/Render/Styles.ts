@@ -1,8 +1,6 @@
-define('Controls/Input/Render/Styles',
-   [],
-   function() {
+
       /**
-       * @interface Controls/Input/Render/Styles
+       * @interface Controls/_input/Render/Styles
        * @css @color_Render-placeholder Tooltip color of the input field.
        *
        * @css @border-width_Render Size of the border of the input field.
@@ -128,4 +126,4 @@ define('Controls/Input/Render/Styles',
        * @public
        * @author Журавлев М.С.
        */
-   });
+   
