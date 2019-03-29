@@ -19,7 +19,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        * @class Controls/_input/Mask
        * @extends Control/_input/Base
        *
-       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/_input/interface/IInputBase
        * @mixes Controls/_input/interface/IInputMaskValue
        * @public
        * @author Миронов А.Ю.
@@ -45,19 +45,19 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        * @example
        * The input mask time:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="dd.dd"/>
+       *    <Controls._input.Mask mask="dd.dd"/>
        * </pre>
        * The input mask date:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="dd.dd.dddd"/>
+       *    <Controls._input.Mask mask="dd.dd.dddd"/>
        * </pre>
        * The input mask from 1-3 digits followed by 1-3 letters.
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="d\{1,3}l\{1,3}"/>
+       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
        * </pre>
        * The input mask infinity number of digits:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="d\*"/>
+       *    <Controls._input.Mask mask="d\*"/>
        * </pre>
        *
        * @see formatMaskChars
@@ -72,7 +72,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        *
        * @example
        * <pre>
-       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */
@@ -94,7 +94,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        * </pre>
        * tmpl:
        * <pre>
-       *    <Controls.Input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
        */
 

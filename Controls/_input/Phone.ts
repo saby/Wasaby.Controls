@@ -13,7 +13,7 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @class Controls/_input/Phone
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/_input/interface/IInputBase
        *
        * @public
        * @demo Controls-demo/Input/Phone/PhonePG
