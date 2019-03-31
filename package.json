@@ -69,12 +69,12 @@
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#19.300/feature/env/sp",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.300",
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.300",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.300",
       "sbis-cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.300",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.300"
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#19.300/feature/env/sp"
    }
 }
