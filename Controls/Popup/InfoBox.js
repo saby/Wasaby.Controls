@@ -185,7 +185,6 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], { bubbling: true });
             } else {
-
                // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
                this._notify('openInfoBox', [config]);
 
@@ -207,7 +206,6 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('closeInfoBox', [], { bubbling: true });
             } else {
-
                // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
                this._notify('closeInfoBox');
                this._children.infoBoxOpener.close();
@@ -266,7 +264,7 @@ define('Controls/Popup/InfoBox',
          },
 
          _mousedownHandler: function(e, args) {
-			//we shouldn't close InfoBox, when the click event was on the container
+            // we shouldn't close InfoBox, when the click event was on the container
             if (!args.target.closest('.controls-InfoBox__popup')) {
                this._close();
             }
