@@ -266,7 +266,8 @@ define('Controls/Popup/InfoBox',
          },
 
          _mousedownHandler: function(e, args) {
-            if (!args.target.closest('.controls-Popup__template')) {
+			//we shouldn't close InfoBox, when the click event was on the container
+            if (!args.target.closest('.controls-InfoBox__popup')) {
                this._close();
             }
          },
