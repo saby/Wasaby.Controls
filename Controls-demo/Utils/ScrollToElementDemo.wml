@@ -1,12 +1,12 @@
 <div>
    <Controls.Container.Scroll attr:style="height: 300px;">
-      <Controls.List
+      <Controls.lists:View
          class="test_list_1"
          name="list"
          source="{{_viewSource}}"
          allowEmptySelection="{{false}}"
          keyProperty="id">
-      </Controls.List>
+      </Controls.lists:View>
    </Controls.Container.Scroll>
    <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top')" />
    <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom')" />

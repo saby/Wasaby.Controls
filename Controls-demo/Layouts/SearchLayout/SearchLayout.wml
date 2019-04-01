@@ -2,7 +2,7 @@
                             filterButtonSource="{{_filterSource}}"
                             fastFilterSource="{{_fastFilterData}}"
                             attr:class="controls-demo__FilterLayout">
-   <Controls.Container.Data source="{{_dataSource}}" navigation="{{_navigation}}" keyProperty="id">
+   <Controls.lists:DataContainer source="{{_dataSource}}" navigation="{{_navigation}}" keyProperty="id">
       <Controls.Search.Controller searchParam="firstName">
          <div class="controls-demo__LayoutInner">
             <div class="controls-demo__Layouts_filterComponents">
@@ -19,10 +19,10 @@
                   </Controls.Filter.Button.Container>
                </div>
             </div>
-            <Controls.List.Container>
-               <Controls.List emptyTemplate="Не найдено">
+            <Controls.lists:Container>
+               <Controls.lists:View emptyTemplate="Не найдено">
                   <ws:itemTemplate>
-                     <ws:partial template="wml!Controls/List/ItemTemplate">
+                     <ws:partial template="Controls/lists:ItemTemplate">
                         <ws:contentTemplate>
                            <div style="padding: 4px; display: flex; justify-content: space-between">
                               <div style="width: 200px">
@@ -38,9 +38,9 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.List>
-            </Controls.List.Container>
+               </Controls.lists:View>
+            </Controls.lists:Container>
          </div>
       </Controls.Search.Controller>
-   </Controls.Container.Data>
+   </Controls.lists:DataContainer>
 </Controls.Filter.Controller>

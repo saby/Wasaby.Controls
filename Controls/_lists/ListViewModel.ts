@@ -1,9 +1,9 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-import ItemsViewModel = require('Controls/List/ItemsViewModel');
+import ItemsViewModel = require('Controls/_lists/ItemsViewModel');
 import entityLib = require('Types/entity');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
@@ -169,8 +169,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _calcItemVersion: function(item, key) {
-        var
-            version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+        var version;
+        if (this._editingItemData && this._editingItemData.key === key) {
+           version = 'EDITING_';
+        } else {
+           version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+        }
 
         if (this._dragEntity && this._dragEntity.getItems().indexOf(key) !== -1) {
             version = 'DRAG_ITEM_' + version;
@@ -430,7 +434,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getActiveItem: function() {
@@ -444,7 +448,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setMultiSelectVisibility: function(multiSelectVisibility) {
         this._options.multiSelectVisibility = multiSelectVisibility;
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getMultiSelectVisibility: function() {

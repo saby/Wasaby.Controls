@@ -3,14 +3,14 @@
  */
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
-      'Controls/List/BaseViewModel',
+      'Controls/lists',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'Types/entity',
       'Controls/List/ItemActions/Utils/getStyle'
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, entity, getStyle) {
+   function(lists, ItemsUtil, ItemsViewModel, entity, getStyle) {
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -57,7 +57,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          }
       };
 
-      var DropdownViewModel = BaseViewModel.extend({
+      var DropdownViewModel = lists.BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 
@@ -238,7 +238,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._isItemSelected(item);
+               emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';

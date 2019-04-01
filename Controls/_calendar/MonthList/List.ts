@@ -1,10 +1,10 @@
-import List = require('Controls/List');
+import {View as List} from 'Controls/lists';
 import 'wml!Controls/List/List';
-import 'Controls/List/ListViewModel';
+
 import 'Core/Deferred';
 import 'Controls/Utils/tmplNotify';
-import 'Controls/List/ListView';
-import 'Controls/List/ListControl';
+
+
 import 'Controls/_calendar/MonthList/ListControl'
 
 /**

@@ -5,7 +5,7 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
-import 'css!theme?Controls/List/EditInPlace/Text';
+import 'css!theme?Controls/_lists/EditInPlace/Text';
 
 var
     typographyStyles = [
@@ -239,14 +239,14 @@ var
     };
 
 /**
- * @class Controls/List/EditInPlace
+ * @class Controls/_lists/EditInPlace
  * @extends Core/Control
  * @mixes Controls/interface/IEditableList
  * @author Зайцев А.С.
  * @private
  */
 
-var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace.prototype */{
+var EditInPlace = Control.extend(/** @lends Controls/_lists/EditInPlace.prototype */{
     _template: template,
 
     constructor: function () {
