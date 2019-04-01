@@ -429,8 +429,9 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _onClickClearRecords: function() {
-         this._suggestState = false;
          this._notify('updateItems', [[]]);
+
+         // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
          this.activate();
       },
 
