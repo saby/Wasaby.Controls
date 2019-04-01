@@ -1,6 +1,6 @@
 <div>
    <Controls.Container.Scroll attr:class="Demo-ExpandAll__scroll">
-      <Controls.TreeGrid
+      <Controls.treeGrids:View
               source="{{_viewSource}}"
               displayProperty="title"
               keyProperty="id"

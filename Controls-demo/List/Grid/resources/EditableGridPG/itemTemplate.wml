@@ -1,6 +1,6 @@
-<ws:partial template="wml!Controls/List/Grid/Item" scope="{{_options}}">
+<ws:partial template="Controls/grids:ItemTemplate" scope="{{_options}}">
     <ws:contentTemplate>
-        <ws:partial template="wml!Controls/List/EditInPlace/EditingTemplate"
+        <ws:partial template="Controls/lists:EditingTemplate"
                     value="{{ contentTemplate.itemData.item.title }}" enabled="{{true}}">
             <ws:editorTemplate>
                 <Controls.input:Text bind:value="itemData.item.title"

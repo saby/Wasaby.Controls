@@ -1,5 +1,5 @@
 import cDeferred = require('Core/Deferred');
-import ListView = require('Controls/List/ListView');
+import {ListView} from 'Controls/lists';
 import GridViewTemplateChooser = require('wml!Controls/_grids/GridViewTemplateChooser');
 import DefaultItemTpl = require('wml!Controls/_grids/Item');
 import ColumnTpl = require('wml!Controls/_grids/Column');
@@ -11,8 +11,8 @@ import NewGridView = require('wml!Controls/_grids/NewGridView');
 import 'wml!Controls/_grids/Header';
 import 'wml!Controls/_grids/Results';
 import 'wml!Controls/_grids/ColGroup';
-import 'css!theme?Controls/List/Grid/Grid';
-import 'css!theme?Controls/List/Grid/OldGrid';
+import 'css!theme?Controls/_grids/Grid';
+import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced

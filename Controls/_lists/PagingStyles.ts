@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/PagingStyles
+ * @mixin Controls/_lists/PagingStyles
  * @public
  *
  *

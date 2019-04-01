@@ -15,10 +15,10 @@ define('Controls/interface/ISource', [
     * @example
     * The list will be rendered data from _source
     * <pre>
-    *    <Controls.List
+    *    <Controls.lists:View
     *       source = "{{_source}}"
     *       keyProperty="key">
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     * <pre>
     *    _source: new Memory({
@@ -48,10 +48,10 @@ define('Controls/interface/ISource', [
     * @remark For example, the identifier may be the primary key of the record in the database.
     * @example
     * <pre>
-    *    <Controls.List
+    *    <Controls.lists:View
     *       source = "{{_source}}"
     *       keyProperty="id">
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     * <pre>
     *    _source: new Memory({

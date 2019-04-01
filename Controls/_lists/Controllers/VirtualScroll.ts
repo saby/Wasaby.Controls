@@ -63,7 +63,7 @@ type PlaceholdersSizes = {
 
 
 /**
- * @class Controls/List/Controllers/VirtualScroll
+ * @class Controls/_lists/Controllers/VirtualScroll
  * @author Rodionov E.A.
  * @public
  * */

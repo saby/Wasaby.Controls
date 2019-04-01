@@ -127,23 +127,23 @@
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Хлебные крошки в результатах поиска"
                         size="xl"/>
-      <Controls.Container.Data source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
+      <Controls.lists:DataContainer source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
          <Controls.Search.Controller searchParam="name" minSearchLength="{{3}}">
             <div class="ws-fragment">
                <Controls.Search.Input.Container>
                   <Controls.Input.Search/>
                </Controls.Search.Input.Container>
-               <Controls.List.Container>
+               <Controls.lists:Container>
                   <Controls.Explorer
                      displayProperty="department"
                      parentProperty="parent"
                      nodeProperty="@parent"
                      columns="{{_columns}}">
                   </Controls.Explorer>
-               </Controls.List.Container>
+               </Controls.lists:Container>
             </div>
          </Controls.Search.Controller>
-      </Controls.Container.Data>
+      </Controls.lists:DataContainer>
    </div>
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Заголовки занимают всю доступную ширину"

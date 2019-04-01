@@ -1,6 +1,6 @@
 /**
  * @author Gerasimov A.M.
- * @mixin Controls/List/Grid/SortButtonStyles
+ * @mixin Controls/_grids/SortButtonStyles
  * @public
  *
  * @css @font-size_SortButton-icon Font-size of the button icon.
