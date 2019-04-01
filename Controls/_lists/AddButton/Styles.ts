@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/AddButton/Styles
+ * @mixin Controls/_lists/AddButton/Styles
  * @public
  *
  *

@@ -13,7 +13,7 @@
       </ws:navigation>
 
       <ws:itemTemplate>
-         <ws:partial template="wml!Controls/List/ItemTemplate"
+         <ws:partial template="Controls/lists:ItemTemplate"
                      itemData="{{itemTemplate.itemData}}"
          >
             <ws:contentTemplate>
