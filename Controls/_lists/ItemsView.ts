@@ -3,7 +3,7 @@
  */
 import BaseControl = require('Core/Control');
 import ItemsRenderTpl = require('wml!Controls/_lists/ItemsView');
-import ItemsViewModel = require('Controls/List/ItemsViewModel');
+import ItemsViewModel = require('Controls/_lists/ItemsViewModel');
 
 var _private = {
     createListModel: function (cfg) {
