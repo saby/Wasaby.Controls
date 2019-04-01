@@ -429,6 +429,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _onClickClearRecords: function() {
+         this._suggestState = false;
          this._notify('updateItems', [[]]);
          this.activate();
       },
