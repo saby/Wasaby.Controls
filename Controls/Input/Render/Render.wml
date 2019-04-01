@@ -2,7 +2,7 @@
             controls-Render_theme_{{_options.theme}}_style
             controls-Render_theme_{{_options.theme}}_fontStyle_{{_options.fontStyle}}
             controls-Render_textAlign_{{_options.textAlign}}
-            controls-Render_theme_{{_options.theme}}_style_{{_options.style}}{{_getState()}}
+            controls-Render_theme_{{_options.theme}}_style_{{_options.style}}{{_getState(_contentActive)}}
             controls-Render_theme_{{_options.theme}}_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
             {{_options.multiline ?
             'controls-Render_multiline' :

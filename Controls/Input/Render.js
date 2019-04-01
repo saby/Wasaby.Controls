@@ -21,7 +21,7 @@ define('Controls/Input/Render',
 
          _notifyHandler: tmplNotify,
 
-         _getState: function() {
+         _getState: function(contentActive) {
             if (this._options.readOnly) {
                if (this._options.multiline) {
                   return '_readOnly_multiline';
@@ -31,7 +31,7 @@ define('Controls/Input/Render',
             }
 
             //return "_active" state only for ie and edge. Other browsers can work with :focus-within pseudo selector
-            if (this._contentActive && Env.detection.isIE) {
+            if (contentActive && Env.detection.isIE) {
                return '_active';
             }
 
