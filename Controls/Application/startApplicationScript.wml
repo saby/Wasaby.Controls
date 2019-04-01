@@ -6,8 +6,8 @@
 <ws:else data="{{ _options.onServer }}">
    <div key="scripts">
       <script key="init_script">
-         require(['Core/polyfill', 'Core/app', 'Controls/Application/AppData'], function(polyfill, app, AppData){
-            window.startContextData = {AppData: new AppData({})};
+         require(['Core/polyfill', 'Core/app'], function(polyfill, app){
+            window.startContextData = {};
             var deps = {{ __setHTMLUnsafe(getDeps()) }};
             app(deps);
          });

@@ -7,21 +7,26 @@
               multiLine="{{true}}"
               clickable="{{true}}"
               on:itemClick="_itemClickHandler()"
-              on:crossClick="_crossClick()">
+              on:crossClick="_crossClick()"
+              attr:class="{{!_options.readOnly && _options.multiSelect ? 'controls-Selectorbutton_selectedCollection_multiSelect'}}">
          <ws:itemTemplate>
-            <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect}}"></ws:partial>
+            <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect && !_options.readOnly}}"
+                        attr:class="{{!_options.readOnly ? 'controls-Selectorbutton_selectedItem_' + (_options.multiSelect ? 'multi' : 'single')}}"/>
          </ws:itemTemplate>
       </Controls.Selector.SelectedCollection>
       <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
-         <Controls.buttons:Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
-                          attr:class="controls-Selectorbutton_button-more"/>
+         <span on:click="_open()" attr:class="controls-Selectorbutton_button-more">{[+еще]}</span>
       </ws:if>
       <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
-         <Controls.buttons:Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"
-                          attr:class="controls-Selectorbutton__button-reset"/>
+         <span on:click="_reset()" attr:class="controls-Selectorbutton__button-reset">{[Очистить]}</span>
       </ws:if>
    </ws:if>
    <ws:else>
-      <Controls.buttons:Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
+      <ws:if data="{{_options.readOnly}}">
+         <span attr:class="controls-Selectorbutton_button-select_readOnly">{{_options.caption}}</span>
+      </ws:if>
+      <ws:else>
+         <Controls.buttons:Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
+      </ws:else>
    </ws:else>
 </div>

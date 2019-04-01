@@ -3,9 +3,13 @@
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">
                 <ws:if data="{{_options.caption || _options.headingCaption}}">
-                    <div class="controls-StackTemplate__caption controls-StackTemplate__caption_style_{{_options.headingStyle || _options.captionStyle }}"
-                         title="{{_options.caption || _options.headingCaption}}">
-                        <div class="controls-StackTemplate__caption_text">{{_options.caption || _options.headingCaption}}</div>
+                    <div class="controls-StackTemplate__caption">
+                        <Controls.Heading attr:class="controls-StackTemplate__caption_text"
+                                          caption="{{_options.caption || _options.headingCaption}}"
+                                          style="{{_options.headingStyle}}"
+                                          size="l"
+                                          readOnly="{{true}}"
+                                          tooltip="{{_options.caption || _options.headingCaption}}"/>
                     </div>
                 </ws:if>
                 <ws:if data="{{_options.topArea || _options.headerContentTemplate}}">

@@ -6,7 +6,7 @@ define('Controls/List', [
    /**
     * Plain list with custom item template. Can load data from data source.
     *
-    * @class Controls/List
+    * @class Controls/lists:View
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate

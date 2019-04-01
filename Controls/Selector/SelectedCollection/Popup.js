@@ -2,26 +2,19 @@ define('Controls/Selector/SelectedCollection/Popup',
    [
       'Core/Control',
       'wml!Controls/Selector/SelectedCollection/Popup',
-      'Types/collection',
       'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
       'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
    ],
 
-   function(Control, template, collection) {
+   function(Control, template) {
       'use strict';
 
       var itemHiddenTemplate = Control.extend({
          _template: template,
 
          _beforeMount: function(options) {
-            // support type array for options.items
-            if (options.items instanceof Array) {
-               this._items = new collection.List({
-                  items: options.items
-               });
-            } else {
-               this._items = options.items.clone();
-            }
+            // Clone in order to delete items from the list when clicking on the cross.
+            this._items = options.items.clone();
          },
 
          _itemClick: function(event, item) {

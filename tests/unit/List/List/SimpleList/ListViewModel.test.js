@@ -2,11 +2,11 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListViewModel',
+   'Controls/lists',
    'Types/collection',
    'Types/entity'
 ], function(
-   ListViewModel,
+   lists,
    collection,
    entity
 ) {
@@ -42,7 +42,7 @@ define([
                keyProperty: 'id',
                displayProperty: 'title'
             },
-            model = new ListViewModel(cfg);
+            model = new lists.ListViewModel(cfg);
          assert.equal(model.getFirstItem(), model.getItems().at(0));
          assert.equal(model.getLastItem(), model.getItems().at(2));
       });
@@ -58,7 +58,7 @@ define([
                keyProperty: 'id',
                displayProperty: 'title'
             },
-            model = new ListViewModel(cfg),
+            model = new lists.ListViewModel(cfg),
             item = model.getItemDataByItem(model.getItemById(1));
 
          model._markedKey = 1;
@@ -98,7 +98,7 @@ define([
             selectedKeys: {1: true}
          };
 
-         var iv = new ListViewModel(cfg);
+         var iv = new lists.ListViewModel(cfg);
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
@@ -120,7 +120,7 @@ define([
                ],
                idProperty: 'id'
             }),
-            model = new ListViewModel({
+            model = new lists.ListViewModel({
                keyProperty: 'id',
                items: new collection.RecordSet({
                   rawData: [],
@@ -154,7 +154,7 @@ define([
                 ],
                 idProperty: 'id'
              }),
-             model = new ListViewModel({
+             model = new lists.ListViewModel({
                 keyProperty: 'id',
                 items: new collection.RecordSet({
                    rawData: [],
@@ -162,7 +162,7 @@ define([
                 }),
                 markedKey: null
              }),
-            modelWithoutItems = new ListViewModel({
+            modelWithoutItems = new lists.ListViewModel({
                markerVisibility: 'visible',
                keyProperty: 'id',
                markedKey: 1
@@ -210,7 +210,7 @@ define([
                 ],
                 idProperty: 'id'
              }),
-             model = new ListViewModel({
+             model = new lists.ListViewModel({
                 keyProperty: 'id',
                 items: new collection.RecordSet({
                    rawData: [
@@ -247,17 +247,17 @@ define([
          // Should not set marker
          cfg.markedKey = null;
          cfg.markerVisibility = 'onactivated';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(undefined, model._markedKey);
 
          cfg.markedKey = null;
          cfg.markerVisibility = 'hidden';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(undefined, model._markedKey);
 
          cfg.markedKey = 1;
          cfg.markerVisibility = 'hidden';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(undefined, model._markedKey);
 
 
@@ -265,27 +265,27 @@ define([
          // Should set marker
          cfg.markedKey = 2;
          cfg.markerVisibility = 'onactivated';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(2, model._markedKey);
 
          cfg.markedKey = null;
          cfg.markerVisibility = 'always';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(1, model._markedKey);
 
          cfg.markedKey = null;
          cfg.markerVisibility = 'visible';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(1, model._markedKey);
 
          cfg.markedKey = 2;
          cfg.markerVisibility = 'always';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(2, model._markedKey);
 
          cfg.markedKey = 2;
          cfg.markerVisibility = 'visible';
-         model = new ListViewModel(cfg);
+         model = new lists.ListViewModel(cfg);
          assert.equal(2, model._markedKey);
 
 
@@ -300,7 +300,7 @@ define([
             markedKey: 2
          };
 
-         var iv = new ListViewModel(cfg);
+         var iv = new lists.ListViewModel(cfg);
          var marItem = iv.getMarkedItem();
          assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
          assert.equal(iv._markedKey, 2, 'Incorrect _markedKey value');
@@ -321,7 +321,7 @@ define([
                markerVisibility: 'visible',
                markedKey: null
             },
-            listModel = new ListViewModel(cfg),
+            listModel = new lists.ListViewModel(cfg),
             markedKeyChangedFired = false;
 
          listModel.subscribe('onMarkedKeyChanged', function(e, key) {
@@ -341,7 +341,7 @@ define([
                markerVisibility: 'visible',
                markedKey: null
             },
-            listModel = new ListViewModel(cfg);
+            listModel = new lists.ListViewModel(cfg);
 
          listModel.setItemActions(new entity.Record({
             rawData: {
@@ -365,10 +365,23 @@ define([
             markedKey: null
          };
 
-         var iv = new ListViewModel(cfg);
+         var iv = new lists.ListViewModel(cfg);
          assert.deepEqual(iv._selectedKeys, [1]);
+         var curPrefixItemVersion = iv._prefixItemVersion;
          iv.updateSelection([2, 3]);
          assert.deepEqual(iv._selectedKeys, [2, 3]);
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
+      });
+
+      it('setMultiSelectVisibility', function() {
+         var cfg = {
+            items: data,
+            multiSelectVisibility: 'hidden'
+         };
+         var iv = new ListViewModel(cfg);
+         var curPrefixItemVersion = iv._prefixItemVersion;
+         iv.setMultiSelectVisibility('visible');
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
       });
 
       it('setSwipeItem', function() {
@@ -385,7 +398,7 @@ define([
             },
             nextVersionCalled = false;
 
-         var lv = new ListViewModel(cfg);
+         var lv = new lists.ListViewModel(cfg);
          lv._nextVersion = function() {
             nextVersionCalled = true;
          };
@@ -406,7 +419,7 @@ define([
             itemData = {
                test: 'test'
             },
-            lv = new ListViewModel(cfg);
+            lv = new lists.ListViewModel(cfg);
 
          lv.setSwipeItem(itemData);
          lv.setSwipeItem(itemData);
@@ -424,7 +437,7 @@ define([
                markerVisibility: 'visible',
                markedKey: 1
             };
-         var lv = new ListViewModel(cfg);
+         var lv = new lists.ListViewModel(cfg);
          assert.equal(lv.getMarkedKey(), 1);
       });
 
@@ -442,7 +455,7 @@ define([
             },
             nextVersionCalled = false;
 
-         var lv = new ListViewModel(cfg);
+         var lv = new lists.ListViewModel(cfg);
          lv._nextVersion = function() {
             nextVersionCalled = true;
          };
@@ -460,7 +473,7 @@ define([
                selectedKeys: [1],
                markedKey: null
             },
-            lv = new ListViewModel(cfg),
+            lv = new lists.ListViewModel(cfg),
             itemData,
             version;
          itemData = lv.getCurrent();
@@ -482,7 +495,7 @@ define([
                }
             };
             target = { index: 1, key: 2, position: 'after' };
-            lvm = new ListViewModel({
+            lvm = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
@@ -593,7 +606,7 @@ define([
                assert.equal(current.draggingItemData, dragItemData);
             });
             it('getSpacingClassList', function() {
-               assert.equal(ListViewModel._private.getSpacingClassList({
+               assert.equal(lists.ListViewModel._private.getSpacingClassList({
                   itemPadding: {
                      left: 'm',
                      right: 'XS'
@@ -601,7 +614,7 @@ define([
                   multiSelectVisibility: 'hidden'
                }), ' controls-ListView__itemContent controls-ListView__item-topPadding_default controls-ListView__item-bottomPadding_default' +
                   ' controls-ListView__item-rightPadding_xs controls-ListView__item-leftPadding_m');
-               assert.equal(ListViewModel._private.getSpacingClassList({
+               assert.equal(lists.ListViewModel._private.getSpacingClassList({
                   itemPadding: {
                      left: 'XS',
                      right: 'm',

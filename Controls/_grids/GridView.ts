@@ -1,5 +1,5 @@
 import cDeferred = require('Core/Deferred');
-import ListView = require('Controls/List/ListView');
+import {ListView} from 'Controls/lists';
 import GridViewTemplateChooser = require('wml!Controls/_grids/GridViewTemplateChooser');
 import DefaultItemTpl = require('wml!Controls/_grids/Item');
 import ColumnTpl = require('wml!Controls/_grids/Column');
@@ -11,8 +11,8 @@ import NewGridView = require('wml!Controls/_grids/NewGridView');
 import 'wml!Controls/_grids/Header';
 import 'wml!Controls/_grids/Results';
 import 'wml!Controls/_grids/ColGroup';
-import 'css!theme?Controls/List/Grid/Grid';
-import 'css!theme?Controls/List/Grid/OldGrid';
+import 'css!theme?Controls/_grids/Grid';
+import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
@@ -148,19 +148,6 @@ var
 
         _calcFooterPaddingClass: function(params) {
             return _private.calcFooterPaddingClass(params);
-        },
-        activate: function () {
-            var result;
-            if (this._options.fixScrollTempOption) {
-               // todo костыль для подскрола после фокуса, в 300 буду чинить глобально https://online.sbis.ru/opendoc.html?guid=56ce116b-374b-4a61-a9cb-019b5c24d755
-               var scroll = this._container.closest('.controls-Scroll__content');
-               var scrollTop = scroll && scroll.scrollTop;
-               result = ListView.prototype.activate.apply(this, arguments);
-               scroll.scrollTop = scrollTop || scroll.scrollTop;
-            } else {
-               result = ListView.prototype.activate.apply(this, arguments);
-            }
-            return result;
         },
 
         _afterMount: function() {

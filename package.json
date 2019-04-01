@@ -43,8 +43,8 @@
    },
    "nyc": {
       "include": [
-         "SBIS3.CONTROLS/**/*.js",
-         "Controls/**/*.js"
+         "application/SBIS3.CONTROLS/**/*.js",
+         "application/Controls/**/*.js"
       ],
       "reporter": [
          "text",
@@ -74,6 +74,6 @@
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.300",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.300",
-      "sbis-cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.300"
+      "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.300"
    }
 }

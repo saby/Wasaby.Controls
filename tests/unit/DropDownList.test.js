@@ -213,6 +213,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
                rootKey: null,
                selectedKeys: [2],
                keyProperty: 'id',
+               multiSelect: undefined,
                displayProperty: 'title',
                nodeProperty: 'parent@',
                parentProperty: 'parent',
@@ -263,6 +264,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
                   rootKey: items.at(0).get(dropDownList._options.keyProperty),
+                  iconSize: dropDownList._options.iconSize,
                   showHeader: false,
                   defaultItemTemplate: dropDownList._options.defaultItemTemplate,
                   dropdownClassName: dropDownList._options.dropdownClassName
@@ -301,6 +303,105 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
                }
             };
             dropdownList._resultHandler({ action: 'pinClicked' });
+         });
+
+         it('_private::needShowApplyButton', function() {
+            assert.isTrue(DropdownList._private.needShowApplyButton(['1', '2', '3'], ['3']));
+            assert.isFalse(DropdownList._private.needShowApplyButton(['1', '2', '3'], ['1', '2', '3']));
+         });
+
+         it('_private::getResult', function() {
+            let dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            dropdownList._beforeMount(getDropDownConfig());
+            let expectedResult = {
+               event: 'itemClick',
+               action: 'itemClick',
+               selectedKeys: dropdownList._listModel.getSelectedKeys()
+            };
+            let result = DropdownList._private.getResult(dropdownList, 'itemClick', 'itemClick');
+            assert.deepEqual(result, expectedResult);
+         });
+
+         it('_private::isNeedUpdateSelectedKeys', function() {
+            let config = getDropDownConfig();
+            let dropdownList = getDropDownListWithConfig(config);
+            let isCheckBox = false;
+            let target = { closest: () => {return isCheckBox;} };
+
+            // multiSelect = false
+            config.multiSelect = false;
+            dropdownList._beforeMount(config);
+            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+
+            // multiSelect = true && has selected items
+            config.multiSelect = true;
+            config.selectedKeys = [3];
+            dropdownList._beforeMount(config);
+            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+
+            // multiSelect = true && click on checkbox
+            isCheckBox = true;
+            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            config.selectedKeys = [];
+            dropdownList._beforeMount(config);
+            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+
+            // multiSelect = true && click on empty item
+            isCheckBox = false;
+            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, { get: () => {return null;} }));
+
+            // multiSelect = true && selected empty item
+            isCheckBox = false;
+            config.selectedKeys = [null];
+            dropdownList._beforeMount(config);
+            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+
+         });
+
+         it('_applySelection', function() {
+            let dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            let result;
+            dropdownList._beforeMount(getDropDownConfig());
+            dropdownList._notify = function(event, data) {
+               if (event === 'sendResult') {
+                  result = data[0];
+               }
+            };
+            let expectedResult = {
+               event: 'itemClick',
+               action: 'applyClick',
+               selectedKeys: dropdownList._listModel.getSelectedKeys()
+            };
+            dropdownList._applySelection('itemClick');
+            assert.deepEqual(result, expectedResult);
+         });
+
+         it('_itemClickHandler', function() {
+            let config = getDropDownConfig();
+            config.selectedKeys = [3];
+            config.multiSelect = true;
+            let dropdownList = getDropDownListWithConfig(config);
+            dropdownList._beforeMount(config);
+            let result,
+               event = { target: { closest: () => { return false; } } };
+            dropdownList._notify = function(e, d) {
+               if (e === 'sendResult') {
+                  result = d[0];
+               }
+            };
+            let expectedResult = {
+               event:  event,
+               action: 'itemClick',
+               data: [items.at(1)]
+            };
+            dropdownList._itemClickHandler(event, items.at(1));
+            assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3, 2]);
+            assert.isTrue(dropdownList._needShowApplyButton);
+
+            config.selectedKeys = [];
+            dropdownList._beforeMount(config);
+            dropdownList._itemClickHandler(event, items.at(1));
+            assert.deepEqual(result, expectedResult);
          });
       });
    });

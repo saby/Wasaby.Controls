@@ -69,13 +69,14 @@ define('Controls-demo/InfoBox/InfoBoxPG',
             };
             this._componentOptions = {
                content: 'wml!Controls-demo/InfoBox/resources/DefaultContent',
-               position: 'tl',
+               targetSide: 'top',
+               alignment: 'start',
                name: 'InfoBox',
                hideDelay: 300,
                showDelay: 300,
                trigger: 'hover',
                floatCloseButton: true,
-               templateOptions:{ value: 'My text' },
+               templateOptions: { value: 'My text' },
                style: 'default',
                template: 'wml!Controls-demo/InfoBox/resources/DefaultTemplate'
             };

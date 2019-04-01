@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lists/ItemActions/ItemActionsControl');
 import tUtil = require('Controls/Utils/Toolbar');
-import aUtil = require('Controls/List/ItemActions/Utils/Actions');
+import aUtil = require('Controls/_lists/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
-import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
+import getStyle = require('Controls/_lists/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
-import { RecordSet } from 'Types/collection';
+import { RecordSet, IObservable } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/_lists/ItemActions/ItemActionsControl';
 import { CollectionItem } from 'Types/display';
@@ -185,7 +185,16 @@ var ItemActionsControl = Control.extend({
         if (type !== 'collectionChanged' && type !== 'indexesChanged') {
             return;
         }
-       if (type === 'collectionChanged' && newItems) {
+
+        if (action === IObservable.ACTION_MOVE) {
+           /**
+            * We don't know which items were moved (newItems and removedItems contain the same items), so we have to update everything.
+            */
+           _private.updateActions(this, this._options);
+           return;
+        }
+
+        if (type === 'collectionChanged' && newItems) {
           newItems.forEach((item) => {
              const contents = item.getContents();
              if (contents.get) {

@@ -62,7 +62,7 @@ export default class Container extends Control {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
-            constants.isBrowserPlatform && this._children.dialogOpener
+            constants.isBrowserPlatform && !this._children.dialogOpener
         ) {
             return;
         }

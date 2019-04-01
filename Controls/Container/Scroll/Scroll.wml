@@ -22,6 +22,8 @@
                               attr:class="controls-Scroll__userContent"
                               on:fixed="_fixedHandler()"
                               on:stickyRegister="_stickyRegisterHandler()"
+                              on:saveScrollPosition="_saveScrollPosition()"
+                              on:restoreScrollPosition="_restoreScrollPosition()"
                               on:selectedKeysChanged="selectedKeysChanged()"
                               on:excludedKeysChanged="excludedKeysChanged()"
                               on:checkboxClick="_tmplNotify('checkboxClick')"
@@ -58,7 +60,7 @@
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">
-         <Controls.List.Paging class="controls-Scroll__paging"
+         <Controls.lists:Paging class="controls-Scroll__paging"
                                stateBegin="{{_pagingState.stateUp}}"
                                statePrev="{{_pagingState.stateUp}}"
                                stateEnd="{{_pagingState.stateDown}}"

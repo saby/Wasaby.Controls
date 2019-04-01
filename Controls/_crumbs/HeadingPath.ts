@@ -10,7 +10,6 @@ import backButtonTemplate = require('wml!Controls/_crumbs/HeadingPath/Back');
 import {Model} from 'Types/entity';
 import Common from './HeadingPath/Common';
 import 'Controls/Heading/Back';
-import 'css!theme?Controls/_crumbs/HeadingPath/HeadingPath';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {
@@ -166,5 +165,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
         showActionButton: true,
     };
 };
+
+BreadCrumbsPath._theme = ['Controls/crumbs'];
 
 export default BreadCrumbsPath;

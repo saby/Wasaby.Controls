@@ -1,7 +1,6 @@
 define('Controls/Selector/Lookup/_Lookup', [
    'Core/Control',
    'wml!Controls/Selector/Lookup/_Lookup',
-   'Controls/Input/resources/InputRender/BaseViewModel',
    'Types/chain',
    'Core/core-merge',
    'Controls/Utils/getWidth',
@@ -16,7 +15,7 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Env/Env',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
+], function(Control, template, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
    'use strict';
 
    var
@@ -43,12 +42,6 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       notifyValue: function(self, value) {
          self._notify('valueChanged', [value]);
-      },
-
-      updateModel: function(self) {
-         self._simpleViewModel.updateOptions({
-            value: self._inputValue
-         });
       },
 
       getFieldWrapperWidth: function(self, recount) {
@@ -270,7 +263,6 @@ define('Controls/Selector/Lookup/_Lookup', [
       _notifyHandler: tmplNotify,
       _inputValue: '',
       _suggestState: false,
-      _simpleViewModel: null,
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
@@ -282,9 +274,6 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _beforeMount: function(options) {
          this._inputValue = options.value;
-         this._simpleViewModel = new BaseViewModel({
-            value: options.value
-         });
 
          // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
          if (!options.multiSelect) {
@@ -323,8 +312,6 @@ define('Controls/Selector/Lookup/_Lookup', [
             this._inputValue = newOptions.value;
          }
 
-         _private.updateModel(this);
-
          if (!isNeedUpdate) {
             listOfDependentOptions.forEach(function(optName) {
                if (newOptions[optName] !== currentOptions[optName]) {
@@ -353,10 +340,6 @@ define('Controls/Selector/Lookup/_Lookup', [
          }
       },
 
-      _beforeUnmount: function() {
-         this._simpleViewModel = null;
-      },
-
       _changeValueHandler: function(event, value) {
          this._inputValue = value;
          _private.notifyValue(this, value);
@@ -365,7 +348,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _choose: function(event, item) {
          this._notify('addItem', [item]);
 
-         if (this._simpleViewModel.getValue() !== '') {
+         if (this._inputValue !== '') {
             this._inputValue = '';
             _private.notifyValue(this, '');
          }
@@ -445,8 +428,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
          //If press backspace, the input field is empty and there are selected entries -  remove last item
          if (event.nativeEvent.keyCode === Env.constants.key.backspace &&
-            !this._simpleViewModel.getValue() && !this._isEmpty()) {
-
+            !this._inputValue && !this._isEmpty()) {
 
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
          }

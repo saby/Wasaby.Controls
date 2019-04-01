@@ -8,26 +8,51 @@
   width: 100%;
 }
 
-.controls-Lookup__inputRender_fieldWrapper_hidden .controls-InputRender__fieldWrapper {
-  display: none;
+.controls-Lookup__inputRender {
+  padding-left: @spacing_Lookup-between-inputRender-leftBorder;
+  padding-right: @spacing_Lookup-between-inputRender-rightBorder;
 }
 
-.controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
+.controls-Lookup__inputRender .controls-Render__wrapper {
+  align-items: center;
+  position: relative;
+}
+
+.controls-Lookup__inputRender_multiLine .controls-Render__wrapper {
   display: inline-block;
   width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup})";
 }
 
-.controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
-  width: auto;
+.controls-Lookup__fieldWrapper_hidden {
+  display: none;
 }
 
-.controls-Lookup__inputRender_content_width_default .controls-InputRender__fieldWrapper {
+/*
+  Border is used as an indent for the input field.
+  Padding is not suitable because a non-native placeholder is used, which is positioned through absolute.
+  Margin is not suitable, because in  mode multi line for input, we set the width, which is determined by before update, and do not know what left space will be, since it is not constant.
+*/
+.controls-Lookup__fieldWrapper.controls-InputBase__field {
+  margin: 0;
+  box-sizing: border-box;
+  border-right: @spacing_Lookup-between-input-afterFieldWrapper solid transparent;
+}
+
+.controls-Lookup__fieldWrapper-left-spacing {
+  border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
+}
+
+.controls-Lookup__fieldWrapper_content_width_custom {
+  display: inline-flex;
+}
+
+.controls-Lookup__fieldWrapper_content_width_default {
   line-height: @line-height_Lookup-input-wrapper;
+  width: auto;
 }
 
 .controls-Lookup__afterFieldWrapper {
   flex-shrink: 0;
-  margin-right: @spacing_Lookup-between-afterFieldWrapper-rightBorderInputRenderWrapper;
   display: inline-flex;
   height: 100%;
 }
@@ -88,12 +113,12 @@
   order: 1;
 }
 
-
-.controls-Lookup__collection_single {
+// https://online.sbis.ru/opendoc.html?guid=731dbb95-6655-4ccd-ae34-e3b212e18bce
+.controls-SelectedCollection__collection.controls-Lookup__collection_single {
   .flex-shrink(1);
 }
 
-.controls-Lookup__collection_multi {
+.controls-SelectedCollection__collection.controls-Lookup__collection_multi {
   .flex-shrink(0);
 }
 

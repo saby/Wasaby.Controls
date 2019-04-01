@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Container/Data',
+      'Controls/lists',
       'Types/source',
       'Controls/Container/Data/ContextOptions',
       'Core/Deferred'
    ],
-   function(Data, sourceLib, ContextOptions, Deferred) {
+   function(lists, sourceLib, ContextOptions, Deferred) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -32,7 +32,7 @@ define(
          });
 
          var getDataWithConfig = function(config) {
-            var data = new Data(config);
+            var data = new lists.DataContainer(config);
             data.saveOptions(config);
             return data;
          };

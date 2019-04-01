@@ -23,8 +23,12 @@ define(
          });
 
          it('elementCreated', function() {
-            const item1 = {};
-            const item2 = {};
+            const item1 = {
+               popupOptions: {}
+            };
+            const item2 = {
+               popupOptions: {}
+            };
 
             NotificationController.elementCreated(item1, containers[1]);
             assert.equal(NotificationController._stack.getCount(), 1);
@@ -51,7 +55,9 @@ define(
          });
 
          it('elementUpdated', function() {
-            const item = {};
+            const item = {
+               popupOptions: {}
+            };
 
             NotificationController.elementCreated(item, containers[1]);
             NotificationController.elementUpdated(item, containers[2]);
@@ -65,7 +71,9 @@ define(
          });
 
          it('elementDestroyed', function() {
-            const item = {};
+            const item = {
+               popupOptions: {}
+            };
 
             NotificationController.elementCreated(item, containers[1]);
             NotificationController.elementDestroyed(item);

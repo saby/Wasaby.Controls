@@ -2,9 +2,7 @@ define('Controls/Toggle/Button', [
    'Core/Control',
    'Controls/Toggle/Button/Classes',
    'wml!Controls/Button/Button',
-   'Controls/buttons',
-   'css!theme?Controls/Button/Button',
-   'css!theme?Controls/Toggle/Button/Button'
+   'Controls/buttons'
 ], function(Control, Classes, template, buttons) {
    /**
     * Button that switches between two states: on-state and off-state.
@@ -112,7 +110,7 @@ define('Controls/Toggle/Button', [
       }
    });
 
-   ToggleButton._theme = ['Controls/_buttons/Button', 'Controls/Toggle/Button/Button'];
+   ToggleButton._theme = ['Controls/buttons', 'Controls/toggle'];
 
    ToggleButton.getDefaultOptions = function() {
       return {

@@ -15,6 +15,7 @@ define('Controls/Input/Money',
        * @class Controls/Input/Money
        * @extends Controls/Input/Base
        *
+       * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IOnlyPositive
        *
        * @public
