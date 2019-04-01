@@ -331,6 +331,10 @@ var
         _ladder: null,
         _columnsVersion: 0,
 
+        _isFullGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.Full,
+        _isPartialGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.Partial,
+        _isNoGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.None,
+
         constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
@@ -498,7 +502,7 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function() {
+        getResultsPosition: function(): string {
             if (this._options.results) {
                 return this._options.results.position;
             }
@@ -552,7 +556,7 @@ var
 
             if (GridLayoutUtil.supportStatus === SupportStatusEnum.Partial) {
                 let
-                    resultsPosition: string = this.getResultsPosition() || 'top',
+                    resultsPosition: string = this.getResultsPosition(),
                     rowIndex = resultsPosition === 'top' ? 0 : this._model.getStopIndex();
 
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
@@ -754,9 +758,9 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isFullGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.Full;
-            current.isPartialGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.Partial;
-            current.isNoGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.None;
+            current.isFullGridSupport = this._isFullGridSupport;
+            current.isPartialGridSupport = this._isPartialGridSupport;
+            current.isNoGridSupport = this._isNoGridSupport;
 
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
@@ -854,10 +858,7 @@ var
                     }
                 }
                 if (current.isPartialGridSupport) {
-                    let
-                        resultsPosition: string = self.getResultsPosition(),
-                        rowOffset: number = resultsPosition !== 'top' ? 1 : 0;
-
+                    let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
                 }
                 return currentColumn;
@@ -886,6 +887,16 @@ var
             this._options.stickyColumn = stickyColumn;
             this._ladder = _private.prepareLadder(this);
             this._nextModelVersion();
+        },
+
+        isFullGridSupport: function():boolean{
+            return this._isFullGridSupport;
+        },
+        isPartialGridSupport: function():boolean{
+            return this._isPartialGridSupport;
+        },
+        isNoGridSupport: function():boolean{
+            return this._isNoGridSupport;
         },
 
         setLadderProperties: function(ladderProperties) {

@@ -2,10 +2,9 @@
     <!--<ws:if data="{{_listModel.getHeader()}}">-->
         <!--<ws:partial template="wml!Controls/_grids/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>-->
     <!--</ws:if>-->
-    <!--<ws:if data="{{_listModel.getResultsPosition() === 'top'}}">-->
-        <!--<ws:partial template="wml!Controls/_grids/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>-->
-    <!--</ws:if>-->
-    {{debug()}}
+    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
+        <ws:partial template="wml!Controls/_grids/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+    </ws:if>
     <ws:partial template="Controls/lists:_forTemplate"
                 listModel="{{_listModel}}"
                 itemTemplate="{{_itemTemplate}}"
