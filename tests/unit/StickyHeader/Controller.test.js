@@ -29,7 +29,8 @@ define([
             inst: {
                getOffset: function() {
                   return 0;
-               }
+               },
+               height: 10
             }
          };
 
@@ -197,5 +198,21 @@ define([
             });
          });
       });
+
+      describe('getHeadersHeight', function() {
+         var event = {
+            stopImmediatePropagation: function() {}
+         };
+         it('should return the correct height without registred headers.', function () {
+            assert.equal(component.getHeadersHeight('top'), 0);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+         it('should return the correct height after a new header has been registered.', function () {
+            component._stickyRegisterHandler(event, data, true);
+            assert.equal(component.getHeadersHeight('top'), 10);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+      });
+
    });
 });

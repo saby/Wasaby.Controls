@@ -35,8 +35,16 @@ class Component extends Control {
      * Returns the tru if there is at least one fixed header.
      * @param position
      */
-    hasFixed(position): boolean {
+    hasFixed(position: string): boolean {
         return !!this._fixedHeadersStack[position].length;
+    }
+
+    getHeadersHeight(position: string): number {
+        let height: number = 0;
+        for (let headerId of this._headersStack[position]) {
+            height += this._headers[headerId].inst.height
+        }
+        return height;
     }
 
     _stickyRegisterHandler(event, data: object, register: boolean) {
