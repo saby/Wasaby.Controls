@@ -1,2 +1,2 @@
-<Controls.HighChartsLight chartOptions="{{_chartOptions}}"/>
+<Graphs.HighChartsLight chartOptions="{{_chartOptions}}"/>
 
