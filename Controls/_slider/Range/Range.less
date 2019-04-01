@@ -27,7 +27,6 @@ controls-Slider-Range_big_theme-@{themeName} {
 
 .controls-Slider-Range__point_theme-@{themeName} {
   position: absolute;
-  cursor: pointer;
   display: inline-block;
   border: @Slider-Range_point-border;
   background-color: @Slider-Range_point-background-color;
@@ -37,6 +36,7 @@ controls-Slider-Range_big_theme-@{themeName} {
 .controls-Slider-Range__point_enabled_theme-@{themeName} {
   border: @Slider-Range_point-border;
   background-color: @Slider-Range_point-background-color;
+  cursor: pointer;
 }
 
 .controls-Slider-Range__point_disabled_theme-@{themeName} {
@@ -96,8 +96,13 @@ controls-Slider-Range_big_theme-@{themeName} {
 }
 
 .controls-Slider-Range__line__wrapper_theme-@{themeName} {
-  cursor: pointer;
   position: absolute;
+}
+.controls-Slider-Range__line__wrapper_enabled_theme-@{themeName} {
+  cursor: pointer;
+}
+.controls-Slider-Range__line__wrapper_disabled_theme-@{themeName} {
+  cursor: auto;
 }
 
 .controls-Slider-Range__line__wrapper_big_theme-@{themeName} {
@@ -132,6 +137,7 @@ controls-Slider-Range_big_theme-@{themeName} {
   -ms-flex-pack: center;
   justify-content: center;
   width: 0;
+  z-index: -1;
   position: relative;
 }
 

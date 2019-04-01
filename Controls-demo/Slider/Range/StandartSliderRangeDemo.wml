@@ -1,6 +1,6 @@
 <div class="demo__wrapper">
    <div >
-      <h1>Slider Base</h1>
+      <h1>Slider Range</h1>
       <h2>Horizontal</h2>
       <div class="demo__block">
          <div class="demo__label">
@@ -18,19 +18,21 @@
             simple
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
-               bind:value="_myValue1"
+               bind:startValue="_myStartValue1"
+               bind:endValue="_myEndValue1"
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
-               bind:value="_myValue2"
+               bind:startValue="_myStartValue2"
+               bind:endValue="_myEndValue2"
             />
          </div>
       </div>
@@ -39,21 +41,23 @@
             bordered
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:value="_myValue3"
+               bind:startValue="_myStartValue3"
+               bind:endValue="_myEndValue3"
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:value="_myValue4"
+               bind:startValue="_myStartValue4"
+               bind:endValue="_myEndValue4"
             />
          </div>
       </div>
@@ -62,21 +66,23 @@
             with scale
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:value="_myValue5"
+               bind:startValue="_myStartValue5"
+               bind:endValue="_myEndValue5"
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:value="_myValue6"
+               bind:startValue="_myStartValue6"
+               bind:endValue="_myEndValue6"
             />
          </div>
       </div>
@@ -85,23 +91,25 @@
             readOnly
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="s"
                readOnly="{{true}}"
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:value="_myValue7"
+               bind:startValue="_myStartValue7"
+               bind:endValue="_myEndValue7"
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Range
                size="m"
                readOnly="{{true}}"
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:value="_myValue8"
+               bind:startValue="_myStartValue8"
+               bind:endValue="_myEndValue8"
             />
          </div>
       </div>

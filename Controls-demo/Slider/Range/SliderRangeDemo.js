@@ -1,14 +1,14 @@
-define('Controls-demo/Slider/Range/SliderDemo',
+define('Controls-demo/Slider/Range/SliderRangeDemo',
    [
       'Core/Control',
       'Types/source',
-      'wml!Controls-demo/Slider/Range/SliderDemo',
-      'css!Controls-demo/Slider/Range/SliderDemo',
+      'wml!Controls-demo/Slider/Range/SliderRangeDemo',
+      'css!Controls-demo/Slider/Range/SliderRangeDemo',
       'Controls/slider'
    ],
    function(Control, source, template) {
       'use strict';
-      var SliderDemo = Control.extend({
+      var SliderRangeDemo = Control.extend({
          _template: template,
          _template: template,
          _minValue: undefined,
@@ -48,10 +48,14 @@ define('Controls-demo/Slider/Range/SliderDemo',
             this._event = 'none';
          },
          changeMinValue: function(e, val) {
-            this._minValue = val;
+            if (val < this._maxValue){
+               this._minValue = val;
+            }
          },
          changeMaxValue: function(e, val) {
-            this._maxValue = val;
+            if (val > this._minValue){
+               this._maxValue = val;
+            }
          },
          changeStartValue: function(e, val){
             this._startValue = Math.max(this._minValue, Math.min(val, this._endValue));
@@ -78,6 +82,6 @@ define('Controls-demo/Slider/Range/SliderDemo',
          },
       });
 
-      return SliderDemo;
+      return SliderRangeDemo;
    }
 );

@@ -1,6 +1,6 @@
-define('Controls-demo/Slider/StandartSliderDemoWithApplication', [
+define('Controls-demo/Slider/StandartSliderRangeDemoWithApplication', [
    'Core/Control',
-   'wml!Controls-demo/Slider/StandartSliderDemoWithApplication'
+   'wml!Controls-demo/Slider/StandartSliderRangeDemoWithApplication'
 ], function(Control, template) {
    'use strict';
 

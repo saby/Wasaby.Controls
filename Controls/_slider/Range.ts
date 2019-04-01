@@ -13,8 +13,8 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  */
 
 const _private = {
-   _round(val, perc) {
-      return parseFloat(val.toFixed(perc));
+   _round(val, prec) {
+      return parseFloat(val.toFixed(prec));
    },
    _calcValue(pos) {
       const box = this._children.area.getBoundingClientRect();
@@ -27,7 +27,10 @@ const _private = {
       if (opts.minValue === undefined || opts.maxValue === undefined) {
          Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
       }
-      if (opts.alue < opts.minValue || opts.startValue > opts.maxValue) {
+      if (opts.minValue >= opts.maxValue) {
+         Env.IoC.resolve('ILogger').error('Slider', 'minValue must be less than maxValue.');
+      }
+      if (opts.startValue < opts.minValue || opts.startValue > opts.maxValue) {
          Env.IoC.resolve('ILogger').error('Slider', 'startValue must be in the range [minValue..maxValue].');
       }
       if (opts.endValue < opts.minValue || opts.endValue > opts.maxValue) {
@@ -70,15 +73,17 @@ const _private = {
       }
    },
    _setStartValue(val) {
+      this._startValue = val;
       this._notify('startValueChanged', [val]);
    },
    _setEndValue(val) {
+      this._endValue = val;
       this._notify('endValueChanged', [val]);
    },
    _render(options) {
       const rangeLength = options.maxValue - options.minValue;
-      const left = (options.startValue - options.minValue) / rangeLength * 100;
-      const right = (options.endValue - options.minValue) / rangeLength * 100;
+      const left =  Math.min(Math.max((this._startValue - options.minValue), 0), rangeLength) / rangeLength * 100;
+      const right =  Math.min(Math.max((this._endValue - options.minValue), 0), rangeLength) / rangeLength * 100;
       const width = right - left;
       this._pointEndPos = right;
       this._pointStartPos = left;
@@ -112,12 +117,16 @@ const Range = Control.extend({
    },
 
    _beforeUpdate(options) {
-      _private._checkBuildOptions(options);
       if (options.scaleStep !== this._options.scaleStep ||
             options.minValue !== this._options.minValue ||
-            options.maxValue !== this._options.maxValue) {
+            options.maxValue !== this._options.maxValue ||
+            options.startValue !== this._options.startValue ||
+            options.endValue !== this._options.endValue) {
          _private._prepareScale.call(this, options);
+         _private._checkBuildOptions(options);
       }
+      this._endValue =  Math.min(options.maxValue, options.endValue) || options.maxValue;
+      this._startValue =  Math.max(options.minValue, options.startValue) || options.minValue;
       _private._render.call(this, options);
    },
    /**
@@ -145,7 +154,7 @@ const Range = Control.extend({
    _onDragMoveHandler(e, dragObject) {
       if (!this._options.readOnly) {
          this._value = _private._calcValue.call(this, dragObject.position.x);
-         this._value = _private._round(this._value, this._options.percision);
+         this._value = _private._round(this._value, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {
             _private._setStartValue.call(this, this._value);
          }

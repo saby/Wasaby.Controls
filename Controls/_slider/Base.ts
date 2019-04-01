@@ -12,10 +12,10 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  * @author Колесов В.А.
  */
 var _private = {
-   _round: function(val, perc) {
+   _round: function (val, perc) {
       return parseFloat(val.toFixed(perc));
    },
-   _calcValue: function(pos) {
+   _calcValue: function (pos) {
       const box = this._children.area.getBoundingClientRect();
       const rangeLength = this._options.maxValue - this._options.minValue;
       const ratio = (pos - box.left - window.pageXOffset) / box.width;
@@ -25,6 +25,9 @@ var _private = {
    _checkBuildOptions: function(opts) {
       if (opts.minValue === undefined || opts.maxValue === undefined) {
          Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
+      }
+      if (opts.minValue >= opts.maxValue) {
+         Env.IoC.resolve('ILogger').error('Slider', 'minValue must be less than maxValue.');
       }
       if (opts.value < opts.minValue || opts.value > opts.maxValue) {
          Env.IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
@@ -49,13 +52,12 @@ var _private = {
    },
    _render: function(options) {
       const rangeLength = options.maxValue - options.minValue;
-      const left = (options.minValue) / rangeLength * 100;
-      const right =  Math.min(Math.max((options.value - options.minValue), options.minValue), options.maxValue) / rangeLength * 100;
-      const width = right - left;
+      const right =  Math.min(Math.max((options.value - options.minValue), 0), rangeLength) / rangeLength * 100;
       this._pointPos = right;
-      this._lineWidth = width;
+      this._lineWidth = right;
    }
 };
+
 
 var Base = Control.extend({
    _template: template,
@@ -71,11 +73,13 @@ var Base = Control.extend({
       this._pointPos = 100;
    },
    _beforeUpdate: function(options) {
-      _private._checkBuildOptions(options);
+
       if (options.scaleStep !== this._options.scaleStep ||
             options.minValue !== this._options.minValue ||
-            options.maxValue !== this._options.maxValue) {
+            options.maxValue !== this._options.maxValue ||
+            options.value !== this._options.value) {
          _private._prepareScale.call(this, options);
+         _private._checkBuildOptions(options);
       }
       _private._render.call(this, options);
    },
