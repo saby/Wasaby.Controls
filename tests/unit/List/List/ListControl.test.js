@@ -1,9 +1,9 @@
 define([
-   'Controls/List/ListControl',
+   'Controls/lists',
    'Core/Deferred',
    'Core/core-instance'
 ], function(
-   ListControl,
+   lists,
    Deferred,
    cInstance
 ) {
@@ -14,7 +14,7 @@ define([
                test: '123'
             };
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl._children = {
                baseControl: {
                   beginEdit: function(options) {
@@ -33,7 +33,7 @@ define([
                test: '123'
             };
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl.saveOptions({ readOnly: true });
             var result = listControl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -45,7 +45,7 @@ define([
                test: '123'
             };
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl._children = {
                baseControl: {
                   beginAdd: function(options) {
@@ -64,7 +64,7 @@ define([
                test: '123'
             };
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl.saveOptions({ readOnly: true });
             var result = listControl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -73,7 +73,7 @@ define([
 
          it('cancelEdit', function() {
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl._children = {
                baseControl: {
                   cancelEdit: function() {
@@ -88,7 +88,7 @@ define([
 
          it('cancelEdit, readOnly: true', function() {
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl.saveOptions({ readOnly: true });
             var result = listControl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -97,7 +97,7 @@ define([
 
          it('commitEdit', function() {
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl._children = {
                baseControl: {
                   commitEdit: function() {
@@ -112,7 +112,7 @@ define([
 
          it('commitEdit, readOnly: true', function() {
             var
-               listControl = new ListControl({});
+               listControl = new lists.ListControl({});
             listControl.saveOptions({ readOnly: true });
             var result = listControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -120,7 +120,7 @@ define([
          });
    
          it('reloadItem', function() {
-            var list = new ListControl({});
+            var list = new lists.ListControl({});
             list._children = {
                baseControl: {
                   reloadItem: function(key, readMeta, direction) {

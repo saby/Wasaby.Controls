@@ -2,12 +2,10 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/ListView',
-   'Controls/List/ListViewModel',
+   'Controls/lists',
    'Types/collection'
 ], function(
-   ListView,
-   ListViewModel,
+   lists,
    collection
 ) {
    describe('Controls.List.ListView', function() {
@@ -51,7 +49,7 @@ define([
       });
 
       it('Item click', function () {
-         var model = new ListViewModel({
+         var model = new lists.ListViewModel({
             items: data,
             keyProperty: 'id',
             markedKey: null
@@ -61,7 +59,7 @@ define([
             keyProperty: 'id',
             markedKey: 2
          };
-         var lv = new ListView(cfg);
+         var lv = new lists.ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
@@ -75,7 +73,7 @@ define([
       });
 
       it('_beforeUpdate', function () {
-         var model = new ListViewModel({
+         var model = new lists.ListViewModel({
             items: data,
             keyProperty: 'id',
             markedKey: null
@@ -85,12 +83,12 @@ define([
             keyProperty: 'id',
             markedKey: 2
          };
-         var lv = new ListView(cfg);
+         var lv = new lists.ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
 
-         model = new ListViewModel({
+         model = new lists.ListViewModel({
             items: data2,
             keyProperty: 'id',
             markedKey: null
@@ -107,7 +105,7 @@ define([
       });
 
       it('_private.resizeNotifyOnListChanged', function () {
-         var listView = new ListView(),
+         var listView = new lists.ListView(),
              eventNotifyed = false;
 
          listView._notify = function(event) {
@@ -117,25 +115,25 @@ define([
          };
 
          listView._listChanged = false;
-         ListView._private.resizeNotifyOnListChanged(listView);
+         lists.ListView._private.resizeNotifyOnListChanged(listView);
 
          assert.isFalse(eventNotifyed);
 
          listView._listChanged = true;
-         ListView._private.resizeNotifyOnListChanged(listView);
+         lists.ListView._private.resizeNotifyOnListChanged(listView);
 
          assert.isTrue(eventNotifyed);
       });
       it('ListView updating queue', function () {
          var
             cfg = {
-               listModel: new ListViewModel({
+               listModel: new lists.ListViewModel({
                   items: [],
                   keyProperty: 'id'
                }),
                keyProperty: 'id'
             },
-            listView = new ListView(cfg);
+            listView = new lists.ListView(cfg);
          listView.saveOptions(cfg);
          listView._beforeMount(cfg);
          assert.isFalse(listView._lockForUpdate, 'Incorrect initial "_lockForUpdate" value.');
@@ -168,7 +166,7 @@ define([
                item: {}
             },
             eventQueue = [],
-            model = new ListViewModel({
+            model = new lists.ListViewModel({
                items: data,
                keyProperty: 'id',
                markedKey: null
@@ -177,7 +175,7 @@ define([
                listModel: model,
                keyProperty: 'id'
             },
-            lv = new ListView(cfg);
+            lv = new lists.ListView(cfg);
          lv._notify = function(eventName, eventArgs, eventOptions) {
             eventQueue.push({
                eventName: eventName,
@@ -206,7 +204,7 @@ define([
       describe('_onItemContextMenu', function() {
          it('contextMenuVisibility: true', function() {
             var
-               model = new ListViewModel({
+               model = new lists.ListViewModel({
                   items: data,
                   keyProperty: 'id',
                   markedKey: null
@@ -216,7 +214,7 @@ define([
                   keyProperty: 'id',
                   contextMenuVisibility: true
                },
-               lv = new ListView(cfg),
+               lv = new lists.ListView(cfg),
                fakeItemData = {},
                fakeNativeEvent = {};
             lv.saveOptions(cfg);
@@ -234,7 +232,7 @@ define([
          });
          it('contextMenuVisibility: false', function() {
             var
-               model = new ListViewModel({
+               model = new lists.ListViewModel({
                   items: data,
                   keyProperty: 'id',
                   markedKey: null
@@ -244,7 +242,7 @@ define([
                   keyProperty: 'id',
                   contextMenuVisibility: false
                },
-               lv = new ListView(cfg),
+               lv = new lists.ListView(cfg),
                fakeItemData = {},
                fakeNativeEvent = {};
             lv.saveOptions(cfg);
@@ -259,7 +257,7 @@ define([
 
       describe('_afterMount', function() {
          it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
-            var model = new ListViewModel({
+            var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
@@ -272,7 +270,7 @@ define([
                keyProperty: 'id',
                markerVisibility: 'visible'
             };
-            var lv = new ListView(cfg);
+            var lv = new lists.ListView(cfg);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
 
@@ -287,7 +285,7 @@ define([
          });
 
          it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
-            var model = new ListViewModel({
+            var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
@@ -301,7 +299,7 @@ define([
                markerVisibility: 'visible',
                markedKey: null
             };
-            var lv = new ListView(cfg);
+            var lv = new lists.ListView(cfg);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
 
@@ -317,7 +315,7 @@ define([
          });
 
          it('should not fire markedKeyChanged if _options.markerVisibility is not \'visible\'', function() {
-            var model = new ListViewModel({
+            var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
@@ -328,7 +326,7 @@ define([
                listModel: model,
                keyProperty: 'id'
             };
-            var lv = new ListView(cfg);
+            var lv = new lists.ListView(cfg);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
 

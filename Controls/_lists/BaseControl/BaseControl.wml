@@ -12,12 +12,12 @@
         </div>
     </ws:if>
     <ws:if data="{{_shouldDrawFooter}}">
-        <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
+        <ws:partial template="wml!Controls/_lists/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
     </ws:if>
 </ws:template>
 <ws:template name="multiSelectTplIf">
     <ws:if data="{{_options.multiSelectVisibility}}">
-        <ws:partial template="wml!Controls/List/BaseControl/multiSelect" scope="{{multiSelectTpl.templateOptions}}" />
+        <ws:partial template="wml!Controls/_lists/BaseControl/multiSelect" scope="{{multiSelectTpl.templateOptions}}" />
     </ws:if>
 </ws:template>
 <ws:template name="emptyTemplateIf">
@@ -104,7 +104,7 @@
         <ws:if data="{{_listViewModel}}">
             <ws:partial template="fullView" name="listView"/>
 
-            <Controls.List.EditInPlace
+            <Controls._lists.EditInPlace
                 ws:content="listView"
                 name="editInPlace"
                 editingConfig="{{_options.editingConfig}}"
@@ -114,7 +114,7 @@
                 on:afterEndEdit="_notifyHandler('afterEndEdit')"
                 listModel="{{_listViewModel}}"
                 source="{{_sourceController}}"/>
-            <Controls.List.ItemActions.ItemActionsControl
+            <Controls._lists.ItemActions.ItemActionsControl
                 ws:content="listView"
                 on:commitActionClick="_commitEditActionHandler()"
                 on:cancelActionClick="_cancelEditActionHandler()"
@@ -150,12 +150,12 @@
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">
-            <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+            <Controls._lists.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
             <div class="controls-BaseControl__pagingContainer">
-                <Controls.List.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.List.Paging>
+                <Controls._lists.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls._lists.Paging>
             </div>
         </ws:if>
         <Controls.Dropdown.Opener
@@ -164,7 +164,7 @@
             menuStyle="cross"/>
         <ws:if data="{{ _items && _needSelectionController }}">
             <!--TODO: нельзя сюда добавлять Container.Async, т.к. события перестают стрелять. Ошибка на эту тему: https://online.sbis.ru/opendoc.html?guid=e3ad3d85-8cfc-4dc4-84dd-84b08db05e26-->
-            <Controls.List.BaseControl.SelectionController
+            <Controls._lists.BaseControl.SelectionController
                 name="selectionController"
                 keyProperty="{{ _options.keyProperty }}"
                 parentProperty="{{ _options.parentProperty }}"

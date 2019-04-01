@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/TreeGrid/Styles
+ * @mixin Controls/_treeGrids/TreeGrid/Styles
  * @public
  *
  *

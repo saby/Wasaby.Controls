@@ -11,9 +11,8 @@ define('Controls-demo/List/Grid/Base', [
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
-   'Controls/Grid',
+   'Controls/grids',
    'Controls/Render/Money/Money',
-   'Controls/List/Grid/SortButton',
    'css!Controls-demo/List/Grid/resources/Base/Base'
 ], function(BaseControl, GridData, template, source) {
    'use strict';

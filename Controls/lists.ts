@@ -1,6 +1,5 @@
 import AddButton = require('Controls/_lists/AddButton');
 import Container = require('Controls/_lists/Container');
-import DialogMover = require('Controls/_lists/Mover/MoveDialog');
 import EmptyTemplate = require('wml!Controls/_lists/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_lists/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_lists/ItemTemplate');
@@ -23,11 +22,12 @@ import SwipeTemplate = require('wml!Controls/_lists/Swipe/resources/SwipeTemplat
 import SwipeHorizontalMeasurer = require('Controls/_lists/Swipe/HorizontalMeasurer');
 import 'css!Controls/_lists/Swipe/Swipe';
 import GroupContentResultsTemplate = require('wml!Controls/_lists/GroupContentResultsTemplate');
+import ItemOutputWrapper = require('wml!Controls/_lists/resources/ItemOutputWrapper');
+import BaseControl = require('Controls/_lists/BaseControl');
 
 export {
     AddButton,
     Container,
-    DialogMover,
     EmptyTemplate,
     GroupTemplate,
     ItemTemplate,
@@ -48,5 +48,7 @@ export {
     ListView,
     SwipeTemplate,
     SwipeHorizontalMeasurer,
-    GroupContentResultsTemplate
+    GroupContentResultsTemplate,
+    ItemOutputWrapper,
+    BaseControl
 };
