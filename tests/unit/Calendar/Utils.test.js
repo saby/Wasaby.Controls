@@ -74,6 +74,12 @@ define([
          assert.isTrue(DateUtil.isDatesEqual(weeks[0][0], new Date(2016, 11, 26)));
       });
 
+      it('getWeekdaysCaptions should return the same array if locale has not changed', function() {
+         const result1 = Utils.getWeekdaysCaptions();
+         const result2 = Utils.getWeekdaysCaptions();
+         assert.equal(result1, result2);
+      })
+
       describe('updateRangeByQuantum', function() {
          const tests = [{
             baseDate: new Date(2018, 0, 15),
