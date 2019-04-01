@@ -765,6 +765,8 @@ var
                 current.columns = this._columns;
             }
 
+            current.isHovered = current.item === self._model.getHoveredItem();
+
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                 current.stickyColumnIndex = stickyColumn.index;
@@ -906,6 +908,14 @@ var
 
         getItems: function() {
             return this._model.getItems();
+        },
+
+        setHoveredItem: function (item) {
+            this._model.setHoveredItem(item);
+        },
+
+        getHoveredItem: function () {
+            return this._model.getHoveredItem();
         },
 
         setActiveItem: function(itemData) {
