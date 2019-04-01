@@ -2,13 +2,12 @@ define('Controls/Popup/InfoBox',
    [
       'Core/Control',
       'wml!Controls/Popup/InfoBox/InfoBox',
-      'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
       'Controls/Context/TouchContextField',
       'Controls/Utils/getZIndex',
       'Env/Env'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, Env) {
+   function(Control, template, InfoBoxOpener, TouchContext, getZIndex, Env) {
       'use strict';
 
       /**
