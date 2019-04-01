@@ -115,6 +115,7 @@ var TileView = ListView.extend({
             this._listModel.setHoveredItem({
                 key: hoveredItem.key,
                 isAnimated: true,
+                zoomCoefficient: this._getZoomCoefficient(),
                 position: hoveredItem.endPosition
             });
         }
@@ -196,6 +197,7 @@ var TileView = ListView.extend({
     _setHoveredItem: function (itemData, position, startPosition) {
         this._listModel.setHoveredItem({
             key: itemData.key,
+            zoomCoefficient: this._getZoomCoefficient(),
             position: _private.getPositionStyle(startPosition || position),
             endPosition: _private.getPositionStyle(position)
         });
