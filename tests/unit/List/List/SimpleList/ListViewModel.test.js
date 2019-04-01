@@ -378,7 +378,7 @@ define([
             items: data,
             multiSelectVisibility: 'hidden'
          };
-         var iv = new ListViewModel(cfg);
+         var iv = new lists.ListViewModel(cfg);
          var curPrefixItemVersion = iv._prefixItemVersion;
          iv.setMultiSelectVisibility('visible');
          assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
