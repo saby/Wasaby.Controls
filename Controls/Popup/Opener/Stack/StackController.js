@@ -62,16 +62,20 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            return StackStrategy.getPosition(targetCoords, item);
+            item.position = StackStrategy.getPosition(targetCoords, item);
+            item.popupOptions.stackWidth = item.position.stackWidth;
+            item.popupOptions.stackMinWidth = item.position.stackMinWidth;
+            item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+            return item.position;
          },
 
          addShadowClass: function(item) {
             _private.removeShadowClass(item);
-            item.popupOptions.className += ' controls-Stack__shadow';
+            item.popupOptions.stackClassName += ' controls-Stack__shadow';
          },
 
          removeShadowClass: function(item) {
-            item.popupOptions.className = (item.popupOptions.className || '').replace(/controls-Stack__shadow/ig, '').trim();
+            item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
@@ -174,7 +178,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.width || item.position.maxWidth;
+                  var currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
                   if (currentWidth > maxWidth) {
@@ -212,7 +216,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                   top: -10000,
                   left: -10000,
                   height: _private.getWindowSize().height,
-                  width: position.width || undefined
+                  stackWidth: position.stackWidth || undefined
                };
             } else {
                this._stack.add(item);

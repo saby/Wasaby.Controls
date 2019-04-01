@@ -56,8 +56,9 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          var width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
 
          return {
-            width: width,
-            maxWidth: width ? undefined : maxPanelWidth,
+            stackWidth: width,
+            stackMinWidth: item.popupOptions.minWidth,
+            stackMaxWidth: Math.min(item.popupOptions.maxWidth || 0, maxPanelWidth),
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
