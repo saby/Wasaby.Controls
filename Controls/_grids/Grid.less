@@ -1,4 +1,5 @@
 .controls-Grid {
+   display: -ms-grid;
    display: grid;
    width: 100%;
 }
@@ -127,7 +128,8 @@
 }
 
 .ws-is-no-touch {
-   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
+   .controls-Grid__row_highlightOnHover_default.controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {

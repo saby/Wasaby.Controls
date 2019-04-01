@@ -4,7 +4,7 @@
             _itemOutputWrapper="{{_itemOutputWrapper}}"
             _itemTemplate="{{_itemTemplate}}"
             _groupTemplate="{{_groupTemplate}}"
-            _prepareGridTemplateColumns="{{_prepareGridTemplateColumns }}"
+            _getGridTemplateColumns="{{ _getGridTemplateColumns }}"
             _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
             _resultsTemplate="{{_resultsTemplate}}"
             _options="{{_options}}"/>

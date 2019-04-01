@@ -7,6 +7,7 @@ import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import { GridLayoutUtil, SupportStatusEnum } from './utils/GridLayoutUtil';
 
 var
     _private = {
@@ -363,10 +364,10 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
+        _prepareCrossBrowserColumn: function(column) {
             var
                 result = cClone(column);
-            if (isNotFullGridSupport) {
+            if (GridLayoutUtil.supportStatus === SupportStatusEnum.None) {
                 if (result.width === '1fr') {
                     result.width = 'auto';
                 }
@@ -378,7 +379,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
+                result.push(this._prepareCrossBrowserColumn(columns[i]));
             }
             return result;
         },
@@ -529,7 +530,11 @@ var
         getCurrentResultsColumn: function() {
             var
                 columnIndex = this._curResultsColumnIndex,
-                cellClasses = 'controls-Grid__results-cell';
+                cellClasses = 'controls-Grid__results-cell',
+                resultsColumn = {
+                    column: this._resultsColumns[columnIndex],
+                    index: columnIndex
+                };
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
@@ -543,12 +548,17 @@ var
                     itemPadding: this._model.getItemPadding()
                 });
             }
+            resultsColumn.cellClasses = cellClasses;
 
-            return {
-                column: this._resultsColumns[columnIndex],
-                cellClasses: cellClasses,
-                index: columnIndex
-            };
+            if (GridLayoutUtil.supportStatus === SupportStatusEnum.Partial) {
+                let
+                    resultsPosition: string = this.getResultsPosition() || 'top',
+                    rowIndex = resultsPosition === 'top' ? 0 : this._model.getStopIndex();
+
+                resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
+            }
+
+            return resultsColumn;
         },
 
         goToNextResultsColumn: function() {
@@ -744,7 +754,10 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isNotFullGridSupport = Env.detection.isNotFullGridSupport;
+            current.isFullGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.Full;
+            current.isPartialGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.Partial;
+            current.isNoGridSupport = GridLayoutUtil.supportStatus === SupportStatusEnum.None;
+
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -837,6 +850,13 @@ var
                             'span 1 / ' +
                             'span 1;';
                     }
+                }
+                if (current.isPartialGridSupport) {
+                    let
+                        resultsPosition: string = self.getResultsPosition(),
+                        rowOffset: number = resultsPosition !== 'top' ? 1 : 0;
+
+                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
                 }
                 return currentColumn;
             };
