@@ -24,8 +24,10 @@ define('Controls/Container/Suggest/Layout',
       var ENTER_KEY = Env.constants.key.enter;
 
       var PROCESSED_KEYDOWN_KEYS = {
+
          /* hot keys that should processed on input */
          INPUT: [Env.constants.key.esc],
+
          /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
          SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
       };
