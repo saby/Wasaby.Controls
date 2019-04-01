@@ -14,8 +14,10 @@ define('Controls/Popup/Opener/Edit',
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * @class Controls/Popup/Opener/Edit
+       * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
        * @control
        * @public
+       * @demo Controls-demo/Popup/Edit/Opener
        * @category Popup
        */
 
