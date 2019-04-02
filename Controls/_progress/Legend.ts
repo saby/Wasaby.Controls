@@ -1,19 +1,17 @@
-/// <amd-module name="Controls/_progress/Legend" />
-/**
- * Legend for StateIndicator
- * @class Controls/_progress/Legend 
- * @author Колесов В.А.
- */
-
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_progress/Legend/Legend');
 
 var Legend;
-   
+   /// <amd-module name="Controls/_progress/Legend" />
+/**
+ * Legend for StateIndicator
+ * @class Controls/_progress/Legend
+ * @author Колесов В.А.
+ */
 var Legend = Control.extend(
    {
-      _template: template      
+      _template: template
    });
 
 Legend.getDefaultOptions = function getDefaultOptions() {
@@ -28,7 +26,7 @@ Legend.getDefaultOptions = function getDefaultOptions() {
       /**
        * @cfg {Array.<IndicatorCategory>} Array of indicator categories
        * <pre class="brush:html">
-       *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>      
+       *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
        * </pre>
        */
       data: [{value:0, className:'', title:''}],

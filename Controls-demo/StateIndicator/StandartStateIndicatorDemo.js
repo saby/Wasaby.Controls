@@ -1,7 +1,7 @@
 define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
    'Core/Control',
    'wml!Controls-demo/StateIndicator/StandartStateIndicatorDemo',
-   'wml!Controls-demo/StateIndicator/template/template',    
+   'wml!Controls-demo/StateIndicator/template/template',
    'css!Controls-demo/StateIndicator/StandartStateIndicatorDemo',
 ], function(Control, template, popupTemplate) {
    'use strict';
@@ -25,15 +25,15 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
                5,
                5,
                6,
-               7,
+               7.6,
                ]
             this._datas = [
-               [{value: 0, className: '', title: 'Положительно'}],               
+               [{value: 0, className: '', title: 'Положительно'}],
                [{value: 3, className: '', title: 'Положительно'}],
                [{value: 53, className: '', title: 'Положительно'}],
                [{value: 100, className: '', title: 'Положительно'}],
 
-               [{value: 0, className: '', title: 'Положительно'}, 
+               [{value: 0, className: '', title: 'Положительно'},
                   {value: 30, className: '', title: 'В работе'}],
 
                [{value: 20, className: '', title: 'Положительно'},
@@ -50,16 +50,16 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
 
                [{value: 10, className: '', title: 'Положительно'},
                   {value: 30, className: '', title: 'В работе'},
-                  {value: 50, className: '', title: 'Отрицательно'}], 
+                  {value: 50, className: '', title: 'Отрицательно'}],
 
                [{value: 25, className: '', title: 'Положительно'},
                   {value: 25, className: '', title: 'В работе'},
-                  {value: 25, className: '', title: 'Отрицательно'}], 
+                  {value: 25, className: '', title: 'Отрицательно'}],
 
                [{value: 33, className: '', title: 'Положительно'},
                   {value: 33, className: '', title: 'В работе'},
                   {value: 33, className: '', title: 'Отрицательно'},
-                  {value: 1, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}], 
+                  {value: 1, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}],
 
                [{value: 20, className: '', title: 'Положительно'},
                   {value: 30, className: '', title: 'В работе'},
