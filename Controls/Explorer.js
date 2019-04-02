@@ -246,7 +246,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary'
+         backButtonStyle: 'secondary',
+         stickyHeader: true
       };
    };
 

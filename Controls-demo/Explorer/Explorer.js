@@ -18,6 +18,13 @@ define('Controls-demo/Explorer/Explorer', [
          _selectedKeys: [],
          _excludedKeys: [],
          _changeViewIcon: 'icon-ArrangePreview',
+
+         _gridHeader: [
+            {
+               title: 'Документ'
+            }
+         ],
+
          _beforeMount: function() {
             this._viewColumns = [
                {
@@ -126,6 +133,48 @@ define('Controls-demo/Explorer/Explorer', [
                   image: explorerImages[4],
                   isDocument: true
                }, {
+                  id: 14,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
+                  id: 15,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
+                  id: 16,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
+                  id: 17,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
+                  id: 18,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
+                  id: 19,
+                  'parent': 1,
+                  'parent@': null,
+                  title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+                  image: explorerImages[4],
+                  isDocument: true
+               }, {
                   id: 111,
                   'parent': 11,
                   'parent@': true,
@@ -184,6 +233,118 @@ define('Controls-demo/Explorer/Explorer', [
 
                }, {
                   id: 7,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 71,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 72,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 73,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 74,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 75,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 76,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 77,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 78,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 79,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 80,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 81,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 82,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 83,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 84,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 85,
+                  'parent': null,
+                  'parent@': null,
+                  title: 'Скриншот от 25.12.16, 11-37-16',
+                  image: explorerImages[2],
+                  isDocument: true
+               }, {
+                  id: 86,
                   'parent': null,
                   'parent@': null,
                   title: 'Скриншот от 25.12.16, 11-37-16',
