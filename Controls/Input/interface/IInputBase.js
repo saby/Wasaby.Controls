@@ -112,11 +112,12 @@ define('Controls/Input/interface/IInputBase', [], function() {
    /**
     * @name Controls/Input/interface/IInputBase#style
     * @cfg {String} Display style of the field.
-    * @variant primary - display style to attract attention.
+    * @variant info - information field display style.
+    * @variant invalid - the display style of the field with invalid value.
+    * @variant danger - the display style of the field with danger.
     * @variant success -  the display style of the field with success.
     * @variant warning -  the display style of the field with warning.
-    * @variant danger - the display style of the field with danger.
-    * @variant info - information field display style.
+    * @variant primary - display style to attract attention.
     * @default info
     * @remark
     * The choice of value depends on the context in which the field is used. Use the 'info' value to enter information that does not require attention. But if you want to draw the user's attention, use 'primary'. If the field is validated, use 'success' otherwise 'danger'. If the field is valid, but you want to show that the entered data can be dangerous, use the 'warning' value.
