@@ -113,6 +113,10 @@ define('Controls/Popup/Opener/Notification',
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
                popupOptions.autoClose = popupOptions.templateOptions.autoClose;
             }
+            if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
+               this._options.autoClose = this._options.templateOptions.autoClose;
+            }
             return popupOptions;
          }
       });

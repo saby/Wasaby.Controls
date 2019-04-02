@@ -5,17 +5,18 @@
          <Controls.buttons:Button caption="Кликни чтобы закрыть {{index}} опенер" on:click="_closeNotification(index)" class="ControlsDemo-NotificationDemo_close{{index}}"/>
          <span>autoClose={{index > 5}}</span>
       </div>
-      <Controls.Popup.Opener.Notification name="myOpener{{index}}">
-         <ws:popupOptions template="Controls/Popup/Templates/Notification/Simple">
-            <ws:templateOptions style="done" text="Hello world from the {{index}} opener!!!"
-                                icon="Admin" autoClose="{{index > 5}}"></ws:templateOptions>
-         </ws:popupOptions>
+      <Controls.Popup.Opener.Notification name="myOpener{{index}}"
+                                          template="Controls/Popup/Templates/Notification/Simple"
+                                          autoClose="{{index > 5}}">
+            <ws:templateOptions style="done"
+                                text="Hello world from the {{index}} opener!!!"
+                                icon="Admin"></ws:templateOptions>
       </Controls.Popup.Opener.Notification>
    </ws:for>
    <Controls.buttons:Button caption="Кликни чтобы открыть опенер c кастомным шаблоном" on:click="_openNotification('Custom')"/>
-   <Controls.buttons:Button caption="Кликни чтобы закрыть {{index}} опенер" on:click="_closeNotification('Custom')"/>
-   <Controls.Popup.Opener.Notification name="myOpenerCustom">
-      <ws:popupOptions template="wml!Controls-demo/NotificationDemo/Custom">
-      </ws:popupOptions>
+   <Controls.buttons:Button caption="Кликни чтобы закрыть опенер c кастомным шаблоном" on:click="_closeNotification('Custom')"/>
+   <Controls.Popup.Opener.Notification name="myOpenerCustom"
+                                       template="wml!Controls-demo/Popup/Opener/resources/CustomNotification">
+      <ws:templateOptions value="It is custom template"></ws:templateOptions>
    </Controls.Popup.Opener.Notification>
 </div>
