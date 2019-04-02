@@ -5,12 +5,10 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Core/core-clone',
-      'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cClone, Vdom) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred) {
       'use strict';
       var STACK_CLASS = 'controls-Stack';
       var _private = {
@@ -63,6 +61,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.stackWidth = item.position.stackWidth;
             item.popupOptions.stackMinWidth = item.position.stackMinWidth;
             item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+            _private.updatePopupOptions(item);
             return item.position;
          },
 
@@ -89,7 +88,13 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          updatePopupOptions: function(item) {
             // for vdom synchronizer. Updated the link to the options when className was changed
-            item.popupOptions = cClone(item.popupOptions);
+            if (!item.popupOptions._version) {
+               item.popupOptions.getVersion = function() {
+                  return this._version;
+               };
+               item.popupOptions._version = 0;
+            }
+            item.popupOptions._version++;
          },
 
          prepareMaximizedState: function(maxPanelWidth, item) {

@@ -62,7 +62,8 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          };
 
          if (item.popupOptions.minWidth) {
-            position.stackMinWidth = item.popupOptions.minWidth;
+            //todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
          }
          if (item.popupOptions.maxWidth) {
             position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
