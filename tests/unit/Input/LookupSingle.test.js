@@ -325,6 +325,19 @@ define([
          assert.isFalse(lookup._suggestState);
       });
 
+      it('_onClickClearRecords', function() {
+         var
+            activated = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            activated = true;
+         };
+
+         lookup._onClickClearRecords();
+         assert.isTrue(activated);
+      });
+
       it('_keyDown', function() {
          var
             isNotifyRemoveItems = false,
