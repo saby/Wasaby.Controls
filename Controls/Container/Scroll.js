@@ -572,6 +572,16 @@ define('Controls/Container/Scroll',
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('excludedKeysChanged', args);
                }
+            },
+
+            _saveScrollPosition: function(e) {
+               e.stopPropagation();
+               this._savedScrollPosition = this._children.content.scrollHeight;
+            },
+
+            _restoreScrollPosition: function(e) {
+               e.stopPropagation();
+               this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
             }
          });
 
