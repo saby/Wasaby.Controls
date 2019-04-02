@@ -43,13 +43,17 @@ define('Controls-demo/Slider/Base/SliderBaseDemo',
             this._event = 'none';
          },
          changeMinValue: function(e, val) {
-            this._minValue = val;
+            if (val < this._maxValue){
+               this._minValue = val;
+            }
          },
          changeMaxValue: function(e, val) {
-            this._maxValue = val;
+            if (val > this._minValue){
+               this._maxValue = val;
+            }
          },
          changeValue: function(e, val) {
-            this._value = Math.min(this._maxValue, Math.max(val, this._minValue));
+            this._value = val;
             this._event = 'valueChanged';
          },
          changePrecision: function(e, val) {

@@ -58,11 +58,11 @@ define('Controls-demo/Slider/Range/SliderRangeDemo',
             }
          },
          changeStartValue: function(e, val){
-            this._startValue = Math.max(this._minValue, Math.min(val, this._endValue));
+            this._startValue = val;
             this._event = 'startValueChanged';
          },
          changeEndValue: function(e, val){
-            this._endValue = Math.min(this._maxValue, Math.max(val, this._startValue));
+            this._endValue = val;
             this._event = 'endValueChanged';
          },
          changePrecision: function(e, val) {
