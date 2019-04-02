@@ -1,6 +1,6 @@
 {
         "title": "Базовая конфигурация",
-        "Controls/List": {
+        "Controls/list:View": {
           "properties": {
             "ws-config": {
               "options": {
