@@ -112,17 +112,6 @@ define('Controls/Explorer', [
 
             return result;
          },
-         getDataRoot: function(self) {
-            var result;
-
-            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
-               result = self._breadCrumbsItems[0].get(self._options.parentProperty);
-            } else {
-               result = self._root;
-            }
-
-            return result;
-         },
          dragItemsFromRoot: function(self, dragItems) {
             var
                item,
