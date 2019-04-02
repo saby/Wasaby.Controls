@@ -29,6 +29,10 @@ define('Controls/Selector/Lookup/InputRender', [
          }
 
          return tooltip;
+      },
+
+      _keyDownInput: function(event) {
+         this._notify('keyDownInput', [event]);
       }
    });
 

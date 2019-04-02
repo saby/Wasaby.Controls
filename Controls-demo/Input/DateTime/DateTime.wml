@@ -22,13 +22,33 @@
       </ws:for>
    </ws:for>
 
+   <h3>Two time fields</h3>
+   <div class="controlsDemo-Input-DateTime__row">
+      <div class="controlsDemo-Input-DateTime__row-item">
+         Two time fields
+      </div>
+      <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+         <Controls.Input.DateTime
+                 bind:value="_startTime"
+                 mask="HH:mm"/>
+         -
+         <Controls.Input.DateTime
+                 bind:value="_endTime"
+                 mask="HH:mm"/>
+      </div>
+   </div>
+
    <h3>Baseline with inline blocks</h3>
-   <div>
-      Text:
-      <Controls.input:DateBase
-         value="{{_date}}"
-         mask="{{mask}}"
-         tagStyle="{{'primary'}}"/>
+   <div class="controlsDemo-Input-DateTime__row">
+      <div class="controlsDemo-Input-DateTime__row-item">
+         Text:
+      </div>
+      <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+         <Controls.input:DateBase
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 tagStyle="{{'primary'}}"/>
+      </div>
    </div>
 
 </div>

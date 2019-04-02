@@ -21,7 +21,8 @@ define('Controls/Selector/Lookup/_Lookup', [
    var
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
-      CLEAR_RECORDS_WIDTH = 0;
+      CLEAR_RECORDS_WIDTH = 0,
+      KEY_KODE_F2 = 113;
 
    var _private = {
       initializeConstants: function() {
@@ -423,13 +424,17 @@ define('Controls/Selector/Lookup/_Lookup', [
          this._notify('itemClick', [item]);
       },
 
-      _keyDown: function(event) {
-         var items = this._options.items;
+      _keyDown: function(event, keyboardEvent) {
+         var
+            items = this._options.items,
+            keyCodeEvent = keyboardEvent.nativeEvent.keyCode;
 
-         //If press backspace, the input field is empty and there are selected entries -  remove last item
-         if (event.nativeEvent.keyCode === Env.constants.key.backspace &&
+         if (keyCodeEvent === KEY_KODE_F2) {
+            this._notify('showSelector');
+         } else if (keyCodeEvent === Env.constants.key.backspace &&
             !this._inputValue && !this._isEmpty()) {
 
+            //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
          }
       }
