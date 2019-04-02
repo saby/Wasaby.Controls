@@ -1529,7 +1529,8 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
-        markedKey: null
+        markedKey: null,
+        stickyHeader: true
     };
 };
 export = BaseControl;
