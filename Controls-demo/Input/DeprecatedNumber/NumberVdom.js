@@ -1,7 +1,7 @@
 define('Controls-demo/Input/DeprecatedNumber/NumberVdom', [
 	'Core/Control',
 	'wml!Controls-demo/Input/DeprecatedNumber/NumberVdom',
-	'Controls/Input/Number',
+	'Controls/input',
 	'css!Controls-demo/Input/DeprecatedNumber/NumberVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';

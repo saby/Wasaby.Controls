@@ -23,7 +23,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @mixes Controls/_input/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
  * @mixes Controls/_input/interface/IInputTag
- * @mixes Controls/Input/interface/IInputBase
+ * @mixes Controls/_input/interface/IInputBase
  * @mixes Controls/_input/interface/IInputPlaceholder
  *
  * @control

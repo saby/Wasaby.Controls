@@ -31,17 +31,17 @@
           </Controls.Container.Scroll>
       </ws:componentClass>
       <ws:componentProperty>
-          <Controls.Label name="myLabel1" caption="value"/>
-          <Controls.Input.Text attr:id="value" bind:value="_text1" readOnly="{{true}}" attr:class="demo-TextBox"/>
-          <Controls.Label name="myLabel1" caption="placeholder"/>
-          <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
-          <Controls.Label name="myLabel1" caption="emptyText"/>
-          <Controls.Input.Text attr:id="emptyText" bind:value="_emptyText" attr:class="demo-TextBox"/>
-          <Controls.Label name="myLabel1" caption="selectedKey"/>
-          <Controls.Input.Text attr:id="selectedKey" bind:value="_selectedKey" attr:class="demo-TextBox" on:valueChanged="_selectedKeyChangedHandler()"/>
-          <Controls.Label name="myLabel1" caption="tagStyle"/>
+          <Controls.input:Label name="myLabel1" caption="value"/>
+          <Controls.input:Text attr:id="value" bind:value="_text1" readOnly="{{true}}" attr:class="demo-TextBox"/>
+          <Controls.input:Label name="myLabel1" caption="placeholder"/>
+          <Controls.input:Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+          <Controls.input:Label name="myLabel1" caption="emptyText"/>
+          <Controls.input:Text attr:id="emptyText" bind:value="_emptyText" attr:class="demo-TextBox"/>
+          <Controls.input:Label name="myLabel1" caption="selectedKey"/>
+          <Controls.input:Text attr:id="selectedKey" bind:value="_selectedKey" attr:class="demo-TextBox" on:valueChanged="_selectedKeyChangedHandler()"/>
+          <Controls.input:Label name="myLabel1" caption="tagStyle"/>
           <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
-          <Controls.Label name="myLabel1" caption="itemTemplate"/>
+          <Controls.input:Label name="myLabel1" caption="itemTemplate"/>
           <Controls.Input.Suggest
                   bind:value="_flag"
                   displayProperty="title"
@@ -57,7 +57,7 @@
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
           </Controls.Input.Suggest>
-          <Controls.Label name="myLabel1" caption="source"/>
+          <Controls.input:Label name="myLabel1" caption="source"/>
           <Controls.Input.Suggest
                   bind:value="_resources"
                   displayProperty="title"
@@ -73,7 +73,7 @@
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
           </Controls.Input.Suggest>
-          <Controls.Label name="myLabel1" caption="keyProperty"/>
+          <Controls.input:Label name="myLabel1" caption="keyProperty"/>
           <Controls.Input.Suggest
                   bind:value="_keyProperty"
                   displayProperty="title"
@@ -89,7 +89,7 @@
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
           </Controls.Input.Suggest>
-          <Controls.Label name="myLabel1" caption="displayProperty"/>
+          <Controls.input:Label name="myLabel1" caption="displayProperty"/>
           <Controls.Input.Suggest
                   bind:value="_displayProperty"
                   displayProperty="title"

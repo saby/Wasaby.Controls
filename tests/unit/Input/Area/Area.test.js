@@ -1,14 +1,14 @@
 define(
    [
       'Env/Env',
-      'Controls/Input/Area',
+      'Controls/input',
       'unit/resources/ProxyCall',
       'unit/resources/TemplateUtil',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
 
       'wml!unit/Input/Area/LinkInReadMode'
    ],
-   function(Env, Area, ProxyCall, TemplateUtil, SyntheticEvent, linkInReadMode) {
+   function(Env, input, ProxyCall, TemplateUtil, SyntheticEvent, linkInReadMode) {
       'use strict';
 
       describe('Controls.Input.Area', function() {
@@ -16,7 +16,7 @@ define(
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Area();
+            ctrl = new input.Area();
          });
          describe('Template', function() {
             describe('ReadOnly', function() {
