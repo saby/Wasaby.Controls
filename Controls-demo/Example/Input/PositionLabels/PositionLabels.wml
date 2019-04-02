@@ -3,24 +3,24 @@
    <div class="example-Base__specify">Left alignment</div>
    <div class="ws-flexbox">
       <div class="example-PositionLabe__wrapper">
-         <Controls.Label caption="Label1"
+         <Controls.input:Label caption="Label1"
                          on:click="_labelClickHandler('text1')"/>
-         <Controls.Label caption="Label2 with long name"
+         <Controls.input:Label caption="Label2 with long name"
                          attr:class="example-BaseDemoInput__content_normalSpacing"
                          on:click="_labelClickHandler('text2')"/>
-         <Controls.Label caption="Label3"
+         <Controls.input:Label caption="Label3"
                          attr:class="example-BaseDemoInput__content_normalSpacing"
                          on:click="_labelClickHandler('text3')"/>
       </div>
       <div class="example-Base__wrapper example-BaseDemoInput__content">
-         <Controls.Input.Text name="text1" class="ControlsDemo-ExampleInput_leftLabel"
+         <Controls.input:Text name="text1" class="ControlsDemo-ExampleInput_leftLabel"
                               placeholder="Tooltip"
                               bind:value="_value1"/>
-         <Controls.Input.Text name="text2"
+         <Controls.input:Text name="text2"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
                               bind:value="_value2"/>
-         <Controls.Input.Text name="text3"
+         <Controls.input:Text name="text3"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
                               bind:value="_value3"/>
@@ -29,25 +29,25 @@
    <div class="example-Base__specify example-BaseDemoInput__content_normalSpacing">Right alignment</div>
    <div class="ws-flexbox">
       <div class="example-PositionLabe__wrapper example-PositionLabe__wrapper_right">
-         <Controls.Label caption="Label1"
+         <Controls.input:Label caption="Label1"
                          attr:class="ws-flexbox ws-justify-content-end"
                          on:click="_labelClickHandler('text4')"/>
-         <Controls.Label caption="Label2 with long name"
+         <Controls.input:Label caption="Label2 with long name"
                          attr:class="example-BaseDemoInput__content_normalSpacing ws-flexbox ws-justify-content-end"
                          on:click="_labelClickHandler('text5')"/>
-         <Controls.Label caption="Label3"
+         <Controls.input:Label caption="Label3"
                          attr:class="example-BaseDemoInput__content_normalSpacing ws-flexbox ws-justify-content-end"
                          on:click="_labelClickHandler('text6')"/>
       </div>
       <div class="example-Base__wrapper example-BaseDemoInput__content">
-         <Controls.Input.Text name="text4"
+         <Controls.input:Text name="text4"
                               placeholder="Tooltip"
                               bind:value="_value4"/>
-         <Controls.Input.Text name="text5"
+         <Controls.input:Text name="text5"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
                               bind:value="_value5"/>
-         <Controls.Input.Text name="text6"
+         <Controls.input:Text name="text6"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
                               bind:value="_value6"/>

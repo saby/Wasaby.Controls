@@ -9,7 +9,7 @@
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox"
                                 bind:value="_value"
                                 placeholder="{{_placeholder}}"
@@ -23,7 +23,7 @@
                         <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox"
                                 bind:value="_value3"
                                 placeholder="{{_placeholder}}"
@@ -36,7 +36,7 @@
                          <ws:Function value="{{_value6 }}">Controls-demo/Input/Validate/Validator</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox"
                                 bind:value="_value6"
                                 placeholder="{{_placeholder}}"
@@ -61,7 +61,7 @@
                         <ws:Function value="{{_value2 }}" >Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox2"
                                 bind:value="_value2"
                                 placeholder="Email"
@@ -74,7 +74,7 @@
                         <ws:Function value="{{_value5 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox5"
                                 bind:value="_value5"
                                 placeholder="Email"

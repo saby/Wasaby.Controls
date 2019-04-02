@@ -23,7 +23,7 @@
       on:linkClick="_headerLinkClick()"
    />
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">
-      <Controls.Input.DateTime
+      <Controls.input:DateBase
          mask="{{_options.mask}}"
          autocompleteMode="start"
          value="{{_rangeModel.startValue}}"
@@ -32,7 +32,7 @@
       />
       <div if="{{_options.selectionType !== 'single'}}" class="controls-PeriodDialog__dateInputEnd-wrapper">
          <div class="controls-PeriodDialog__header-rangeDash"></div>
-         <Controls.Input.DateTime
+         <Controls.input:DateBase
             mask="{{_options.mask}}"
             autocompleteMode="start"
             value="{{_rangeModel.endValue}}"

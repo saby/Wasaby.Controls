@@ -1,7 +1,7 @@
 <Controls-demo.Wrapper.Wrapper title="Text">
    <ws:componentClass>
       <Controls.Popup.Opener.InfoBox name="infoBox"/>
-      <Controls.Input.Text
+      <Controls.input:Text
          attr:id="main_field"
          name="textBox"
          bind:value="_text1"
@@ -22,17 +22,17 @@
       />
    </ws:componentClass>
    <ws:componentProperty>
-      <Controls.Label name="myLabel1" caption="placeholder"/>
-      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
-      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls.input:Label name="myLabel1" caption="placeholder"/>
+      <Controls.input:Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+      <Controls.input:Label name="myLabel1" caption="tagStyle"/>
       <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
-      <Controls.Label name="myLabel1" caption="constraint"/>
+      <Controls.input:Label name="myLabel1" caption="constraint"/>
       <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint" source="{{_items}}"
                                       attr:class="demo-TextBox"/>
-      <Controls.Label name="myLabel1" caption="maxLength"/>
-      <Controls.Input.Number attr:id="maxLength" bind:value="_maxLength" precision="{{0}}" attr:class="demo-TextBox"/>
-       <Controls.Label caption="tooltip"/>
-       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
+      <Controls.input:Label name="myLabel1" caption="maxLength"/>
+      <Controls.input:Number attr:id="maxLength" bind:value="_maxLength" precision="{{0}}" attr:class="demo-TextBox"/>
+       <Controls.input:Label caption="tooltip"/>
+       <Controls.input:Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
          <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick" attr:class="ControlsDemo-Text__propertyGrid"

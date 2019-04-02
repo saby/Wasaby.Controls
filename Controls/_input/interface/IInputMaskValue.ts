@@ -15,7 +15,7 @@
  * @example
  * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
  * <pre>
- *    <Controls.Input.Mask bind:value="_inputValue" />
+ *    <Controls._input.Mask bind:value="_inputValue" />
  *    <Controls.Button on:click="_sendButtonClick()" />
  * </pre>
  *
@@ -43,9 +43,9 @@
  * @example
  * In this example, we show how you can 'bind' control's value to the field. In the first field, we do it manually using valueChanged event. In the second field we use bind notation. Both fields in this examples will have identical behavior.
  * <pre>
- *    <Controls.Input.Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+ *    <Controls._input.Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
  *
- *    <Controls.Input.Text bind:value="_anotherFieldValue" />
+ *    <Controls._input.Text bind:value="_anotherFieldValue" />
  * </pre>
  *
  * <pre>
@@ -74,7 +74,7 @@
  * @example
  * In this example, we subscribe to inputCompleted event and save field's value to the database.
  * <pre>
- *    <Controls.Input.Text on:inputCompleted="_inputCompletedHandler()" />
+ *    <Controls._input.Text on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  *
  * <pre>
