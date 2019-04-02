@@ -2,8 +2,8 @@
 <div>
    <div class="event-example__wrapper">
       <div class="exampleBlock">
-         <h3>Example</h3>                         
-            <Controls.progress:StateIndicator on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" data="{{_data}}" scale="{{_scale}}"/>                       
+         <h3>Example</h3>
+            <Controls.progress:StateIndicator on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" data="{{_data}}" scale="{{_scale}}"/>
       </div>
       <div class="eventBlock">
          <div class="reset-header__wrapper">
@@ -17,7 +17,7 @@
    <div class="optionsBlock">
       <h3>Options</h3>
       <Controls.Label caption="Scale:"/>
-      <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScale()" bind:value="_scale" />
+      <Controls.Input.Number precision="{{1}}" on:valueChanged="changeScale()" bind:value="_scale" />
       <br/>
       <Controls.Label caption="data:"/>
       <Controls.Input.Text on:valueChanged="changeData0()" bind:value="_data0" />
