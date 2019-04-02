@@ -234,6 +234,7 @@ define('Controls/Application',
             } else {
                this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
             }
+            this._forceUpdate();
          },
 
 
