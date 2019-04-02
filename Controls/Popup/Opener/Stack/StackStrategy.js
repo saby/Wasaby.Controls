@@ -54,15 +54,21 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       getPosition: function(tCoords, item) {
          var maxPanelWidth = this.getMaxPanelWidth();
          var width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-
-         return {
+         var position = {
             stackWidth: width,
-            stackMinWidth: item.popupOptions.minWidth,
-            stackMaxWidth: Math.min(item.popupOptions.maxWidth || 0, maxPanelWidth),
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
          };
+
+         if (item.popupOptions.minWidth) {
+            position.stackMinWidth = item.popupOptions.minWidth;
+         }
+         if (item.popupOptions.maxWidth) {
+            position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+         }
+
+         return position;
       },
 
       /**
