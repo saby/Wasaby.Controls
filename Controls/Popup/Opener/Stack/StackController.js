@@ -23,9 +23,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
 
             // Validate the configuration
-            item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
-            item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
-
             if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
@@ -35,7 +32,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
 
             // optimization: don't calculate the size of the container, if the configuration is set
-            if (container && !item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
+            if (container && !item.popupOptions.width) {
                item.containerWidth = _private.getContainerWidth(item, container);
             }
          },
