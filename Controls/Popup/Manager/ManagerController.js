@@ -15,6 +15,9 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
          setManager: function(manager) {
             this._manager = manager;
          },
+         getManager: function() {
+            return this._manager;
+         },
          setContainer: function(container) {
             this._container = container;
          },
