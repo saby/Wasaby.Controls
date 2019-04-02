@@ -1085,7 +1085,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
-        this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
+        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
