@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             if (cfg.popupOptions.top) {
                cfg.position.top = cfg.popupOptions.top;
             }
-            if (cfg.position.left) {
+            if (cfg.popupOptions.left) {
                cfg.position.left = cfg.popupOptions.left;
             }
          },
