@@ -66,6 +66,8 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          }
          if (item.popupOptions.maxWidth) {
             position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+         } else {
+            position.stackMaxWidth = maxPanelWidth;
          }
 
          return position;
