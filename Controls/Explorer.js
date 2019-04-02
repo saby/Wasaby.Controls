@@ -182,8 +182,8 @@ define('Controls/Explorer', [
          }
       },
       _dragHighlighter: function(itemKey, hasArrow) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ?
-            'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
