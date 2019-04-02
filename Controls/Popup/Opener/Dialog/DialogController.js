@@ -14,8 +14,10 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
          fixCompatiblePosition: function(cfg) {
             // COMPATIBLE: for old windows user can set the coordinates relative to the body
-            if (cfg.popupOptions.top && cfg.popupOptions.left) {
+            if (cfg.popupOptions.top) {
                cfg.position.top = cfg.popupOptions.top;
+            }
+            if (cfg.popupOptions.left) {
                cfg.position.left = cfg.popupOptions.left;
             }
          },
