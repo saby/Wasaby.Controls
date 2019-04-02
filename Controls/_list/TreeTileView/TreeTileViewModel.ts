@@ -33,6 +33,7 @@ var TreeTileViewModel = TreeViewModel.extend({
                 current.position = hoveredItem.position;
             }
             current.isAnimated = hoveredItem.isAnimated;
+            current.zoomCoefficient = hoveredItem.zoomCoefficient;
         }
 
         current = cMerge(current, this.getTileItemData());
