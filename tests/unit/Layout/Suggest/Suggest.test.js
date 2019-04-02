@@ -623,6 +623,8 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
          var eventPreventDefault = false;
+         var eventStopPropagation = false;
+         var suggestStateChanged = false;
          var eventTriggered = false;
          suggestComponent._children = {
             inputKeydown: {
@@ -631,24 +633,35 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                }
             }
          };
+
+         suggestComponent._notify = (event) => {
+            if (event === 'suggestStateChanged') {
+               suggestStateChanged = true;
+            }
+         };
          
          function getEvent(keyCode) {
             return {
                nativeEvent: {
                   keyCode: keyCode
                },
-               preventDefault: function() {
+               preventDefault: () => {
                   eventPreventDefault = true;
+               },
+               stopPropagation: () => {
+                  eventStopPropagation = true;
                }
             };
          }
          suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isFalse(eventPreventDefault);
+         assert.isFalse(eventStopPropagation);
    
          suggestComponent._options.suggestState = true;
    
          suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isTrue(eventPreventDefault);
+         assert.isTrue(eventStopPropagation);
          eventPreventDefault = false;
          
          suggestComponent._keydown(getEvent(Env.constants.key.up));
@@ -667,6 +680,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._keydown(getEvent('test'));
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
+
+         eventPreventDefault = false;
+         suggestComponent._keydown(getEvent(Env.constants.key.esc));
+         assert.isTrue(suggestStateChanged);
       });
 
       it('Suggest::_private.openWithHistory', function () {
