@@ -66,6 +66,13 @@
  * @name Controls/List/interface/IGridControl#header
  * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * @remark
+ * Base header content template for Controls/Grid: "Controls/grids:HeaderContent".
+ * @example
+ * Add header text spacing for columns with money fields:
+ * <pre>
+ *    <ws:partial template="Controls/grids:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ * </pre>
  */
 
 /**
