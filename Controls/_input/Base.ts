@@ -327,18 +327,15 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          getTextWidthThroughCreationElement: function(value) {
-            if (document) {
-               var element = document.createElement('div');
-               element.classList.add('controls-InputBase__forCalc');
-               element.innerHTML = value;
+            var element = document.createElement('div');
+            element.classList.add('controls-InputBase__forCalc');
+            element.innerHTML = value;
 
-               document.body.appendChild(element);
-               var width = element.scrollWidth;
-               document.body.removeChild(element);
+            document.body.appendChild(element);
+            var width = element.scrollWidth;
+            document.body.removeChild(element);
 
-               return width;
-            }
-            return 0;
+            return width;
          }
       };
 
@@ -504,7 +501,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @private
           */
          _getActiveElement: function() {
-            return document && document.activeElement;
+            return document.activeElement;
          },
 
          constructor: function(cfg) {
@@ -514,6 +511,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             this._isMobileAndroid = Env.detection.isMobileAndroid;
             this._isMobileIOS = Env.detection.isMobileIOS;
             this._isEdge = Env.detection.isIE12;
+            this._isBrowserPlatform = Env.constants.isBrowserPlatform;
 
             /**
              * Hide in chrome because it supports auto-completion of the field when hovering over an item
@@ -583,7 +581,10 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
                scope: {
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
-                  isFieldFocused: _private.isFieldFocused.bind(_private, this)
+                  isFieldFocused: this._isBrowserPlatform ?
+                      _private.isFieldFocused.bind(_private, this) : function () {
+                         return false;
+                      }
                }
             };
             this._readOnlyField = {
@@ -921,13 +922,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
             if (displayValue.length === selection.end) {
-               var inaccuracy = 1;
-
-               /**
-                * When scaling, scrollWidth and clientWidth are rounded differently on different platforms.
-                * The inaccuracy is within 1.
-                */
-               field.scrollLeft = field.scrollWidth - field.clientWidth + inaccuracy;
+               field.scrollLeft = field.scrollWidth;
 
                return;
             }
