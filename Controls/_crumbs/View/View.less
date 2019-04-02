@@ -24,18 +24,27 @@
    position: relative;
 }
 
-.controls-BreadCrumbsView__dropTarget:after {
-   content: '';
-   height: @height_BreadCrumbs-items;
-   border: @border-width_BreadCrumbs-item_dropTarget solid @border-color_BreadCrumbs-item_dropTarget;
-   box-sizing: border-box;
-   position: absolute;
-   display: block;
-   border-radius: @border-radius_BreadCrumbs-item_dropTarget;
-   z-index: 10;
-   align-self: center;
-   width: calc(100% + 2 * @border-width_BreadCrumbs-item_dropTarget);
-   left: -@border-width_BreadCrumbs-item_dropTarget;
+.controls-BreadCrumbsView__dropTarget_withArrow, .controls-BreadCrumbsView__dropTarget_withoutArrow {
+   &:after {
+      content: '';
+      height: @height_BreadCrumbs-items;
+      border: @border-width_BreadCrumbs-item_dropTarget solid @border-color_BreadCrumbs-item_dropTarget;
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      border-radius: @border-radius_BreadCrumbs-item_dropTarget;
+      z-index: 10;
+      align-self: center;
+      width: calc(100% + 2 * @spacing_BreadCrumbs-between-item-border);
+   }
+}
+
+.controls-BreadCrumbsView__dropTarget_withArrow:after {
+   left: 0;
+}
+
+.controls-BreadCrumbsView__dropTarget_withoutArrow:after {
+   left: -@spacing_BreadCrumbs-between-item-border;
 }
 
 .controls-BreadCrumbsView__titleWrapper {
