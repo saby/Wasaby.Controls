@@ -112,6 +112,17 @@ define('Controls/Explorer', [
 
             return result;
          },
+         getDataRoot: function(self) {
+            var result;
+
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               result = self._breadCrumbsItems[0].get(self._options.parentProperty);
+            } else {
+               result = self._root;
+            }
+
+            return result;
+         },
          dragItemsFromRoot: function(self, dragItems) {
             var
                item,
@@ -180,8 +191,9 @@ define('Controls/Explorer', [
       _getRoot: function() {
          return _private.getRoot(this);
       },
-      _dragHighlighter: function(itemKey) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      _dragHighlighter: function(itemKey, hasArrow) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {

@@ -4,7 +4,7 @@
             <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{itemData}}" on:click="_onItemClick(itemData)"/>
         </ws:if>
         <ws:else>
-            <ws:partial attr:class="{{applyHighlighter(highlighter, itemData.item.getId())}}"
+            <ws:partial attr:class="{{applyHighlighter(highlighter, itemData.item.getId(), itemData.hasArrow)}}"
                         template="{{itemTemplate}}"
                         itemData="{{itemData}}"
                         displayProperty="{{ displayProperty }}"
