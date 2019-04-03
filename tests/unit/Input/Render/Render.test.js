@@ -20,23 +20,28 @@ define(
             describe('_getState', function() {
                it('Control in read mode.', function() {
                   ctrl._options.readOnly = true;
+                  ctrl._options.multiline = false;
 
-                  assert.equal(ctrl._getState(), '_readOnly');
+                  assert.equal(ctrl._getState(false), '_readOnly');
+               });
+               it('Control in read mode and multiline.', function() {
+                  ctrl._options.readOnly = true;
+                  ctrl._options.multiline = true;
+
+                  assert.equal(ctrl._getState(false), '_readOnly_multiline');
                });
                it('Control in active mode.', function() {
                   ctrl._options.readOnly = false;
-                  ctrl._contentActive = true;
                   if (Env.detection.isIE) {
-                     assert.equal(ctrl._getState(), '_active');
+                     assert.equal(ctrl._getState(true), '_active');
                   } else {
-                     assert.equal(ctrl._getState(), '');
+                     assert.equal(ctrl._getState(true), '');
                   }
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;
-                  ctrl._contentActive = false;
 
-                  assert.equal(ctrl._getState(), '');
+                  assert.equal(ctrl._getState(false), '');
                });
             });
          });
