@@ -92,6 +92,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                parent = parent.parentElement;
             }
             return false;
-         }
+         },
+         _private: _private
       });
    });
