@@ -25,13 +25,13 @@
         <h3>Options</h3>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
-        <Controls.Label caption="First caption"/>
-        <Controls.Input.Text bind:value="_caption1" attr:class="ControlsDemo__caption"/>
-        <Controls.Label caption="Second caption"/>
-        <Controls.Input.Text bind:value="_caption2" attr:class="ControlsDemo__caption2"/>
-        <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
-        <Controls.Label caption="Orientation:"/>
+        <Controls.input:Label caption="First caption"/>
+        <Controls.input:Text bind:value="_caption1" attr:class="ControlsDemo__caption"/>
+        <Controls.input:Label caption="Second caption"/>
+        <Controls.input:Text bind:value="_caption2" attr:class="ControlsDemo__caption2"/>
+        <Controls.input:Label caption="Tooltip"/>
+        <Controls.input:Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
+        <Controls.input:Label caption="Orientation:"/>
         <Controls.Input.ComboBox
                 source="{{_orientationSource}}"
                 keyProperty="title"

@@ -1,4 +1,4 @@
-<Controls.Input.resources.InputRender.InputRender
+<Controls._input.resources.InputRender.InputRender
    autocomplete="{{_options.autocomplete}}"
    value="{{_options.value}}"
    viewModel="{{_viewModel}}"
@@ -19,4 +19,4 @@
          readOnly="{{_options.readOnly}}"
       />
    </ws:content>
-</Controls.Input.resources.InputRender.InputRender>
+</Controls._input.resources.InputRender.InputRender>

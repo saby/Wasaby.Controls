@@ -1,26 +1,40 @@
 <div>
-   <Controls.Popup.InfoBox trigger="hover">
+  <div class="controls-InfoBoxDemo-rows">
+     <div class="controls-InfoBoxDemo-heading">Наведите на иконку</div>
+   <Controls.Popup.InfoBox trigger="hover" attr:style = "display:inline-block; vertical-align:bottom;">
       <ws:content>
-         <div class="controls-InfoBoxDemo-target">Наведите</div>
+         <Controls._buttons.Button viewMode ='link'
+                                   icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
+  </div>
+
+   <div class="controls-InfoBoxDemo-rows">
+      <div class="controls-InfoBoxDemo-heading">Нажмите на иконку</div>
    <Controls.Popup.InfoBox trigger="click">
       <ws:content>
-         <div class="controls-InfoBoxDemo-target">Нажмите</div>
+         <Controls._buttons.Button viewMode ='link'
+                                   icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
+   </div>
+
+   <div class="controls-InfoBoxDemo-rows">
+      <div class="controls-InfoBoxDemo-heading">Нажмите два раза на иконку</div>
    <Controls.Popup.InfoBox trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox">
       <ws:content>
-         <div class="controls-InfoBoxDemo-target">Нажмите 2 раза</div>
+          <Controls._buttons.Button viewMode ='link'
+                                    icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка, открывая методом open. Закроется через 5 секунд</div>
       </ws:template>
    </Controls.Popup.InfoBox>
+   </div>
 </div>

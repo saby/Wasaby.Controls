@@ -21,7 +21,7 @@ define('Controls-demo/List/Grid/StickyPG',
          _template: template,
          _metaData: null,
          _dataOptions: null,
-         _content: 'Controls/Grid',
+         _content: 'Controls/grid:View',
          _dataObject: null,
          _componentOptions: null,
 

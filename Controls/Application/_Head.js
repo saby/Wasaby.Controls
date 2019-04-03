@@ -42,6 +42,8 @@ define('Controls/Application/_Head',
             * head-custom-block */
             this.head = options.head;
 
+            // Flag that the head block is built on server side.
+            this.wasServerSide = false;
             if (typeof window !== 'undefined') {
 
                /*всем элементам в head назначается атрибут data-vdomignore
@@ -52,6 +54,12 @@ define('Controls/Application/_Head',
 
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
+               }
+
+               if (document.getElementsByClassName('head-server-block').length > 0) {
+                  // Element with right class name is already existed in "_beforeMount" hook on client side.
+                  // All nodes in this block have true value of data-vdomignore attribute, so inferno never redraw them.
+                  this.wasServerSide = true;
                }
                this.themedCss = [];
                this.simpleCss = [];

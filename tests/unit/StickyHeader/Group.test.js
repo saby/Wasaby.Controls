@@ -185,45 +185,66 @@ define([
          });
       });
 
-      describe('_updateStickyHeight', function() {
-         it('should transfer an event if group is not fixed', function() {
-            const
-               component = createComponent(StickyHeader, options);
-
-            component._fixed = false;
-            component._children.stickyHeaderHeight = {
-               start: sinon.fake()
-            };
-
-            component._updateStickyHeight(10);
-            sinon.assert.calledWith(component._children.stickyHeaderHeight.start, 10);
+      describe('set bottom', function() {
+         it('should update bottom on internal headers', function () {
+            const component = createComponent(StickyHeader, {});
+            component._headers[0] = {
+               inst: {
+                  top: 0
+               }
+            }
+            component.top = 20;
+            assert.strictEqual(component._headers[0].inst.top, 20);
          });
+      });
 
-         it('should not transfer an event if group is fixed', function() {
-            const
-               component = createComponent(StickyHeader, options);
-
-            component._fixed = true;
-            component._children.stickyHeaderHeight = {
-               start: sinon.fake()
-            };
-
-            component._updateStickyHeight(10);
-            sinon.assert.notCalled(component._children.stickyHeaderHeight.start);
+      describe('set bottom', function() {
+         it('should update bottom on internal headers', function () {
+            const component = createComponent(StickyHeader, {});
+            component._headers[0] = {
+               inst: {
+                  bottom: 0
+               }
+            }
+            component.bottom = 20;
+            assert.strictEqual(component._headers[0].inst.bottom, 20);
          });
       });
 
       describe('_stickyRegisterHandler', function() {
-         it('should update blockUpdate event field', function() {
+         it('should stopImmediatePropagation event', function() {
             const
                component = createComponent(StickyHeader, options);
             let event = {
                blockUpdate: false,
                stopImmediatePropagation: sinon.fake()
             };
-            component._stickyRegisterHandler(event);
-            assert.isTrue(event.blockUpdate);
+            component._stickyRegisterHandler(event, { id: 2 }, true);
             sinon.assert.calledOnce(event.stopImmediatePropagation);
+         });
+         it('should register new header', function() {
+            const
+               component = createComponent(StickyHeader, options);
+            let
+               event = {
+                  blockUpdate: false,
+                  stopImmediatePropagation: sinon.fake()
+               },
+               param = { id: 2 };
+            component._stickyRegisterHandler(event, { id: 2 }, true);
+            assert.deepEqual(component._headers, { 2: param });
+         });
+         it('should unregister deleted header', function() {
+            const
+               component = createComponent(StickyHeader, options);
+            let event = {
+               blockUpdate: false,
+               stopImmediatePropagation: sinon.fake()
+            },
+            id = 2;
+            component._headers[id] = { id: 2 };
+            component._stickyRegisterHandler(event, { id: 2 }, false);
+            assert.isUndefined(component._headers[2]);
          });
       });
    });

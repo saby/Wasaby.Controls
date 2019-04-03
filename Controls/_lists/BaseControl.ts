@@ -115,7 +115,7 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-               self._loadedItems = list;
+                self._loadedItems = list;
                 var
                     isActive,
                     listModel = self._listViewModel;
@@ -1085,7 +1085,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
-        this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
+        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
@@ -1529,7 +1529,8 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
-        markedKey: null
+        markedKey: null,
+        stickyHeader: true
     };
 };
 export = BaseControl;

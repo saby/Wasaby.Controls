@@ -7,7 +7,7 @@
         </ws:topArea>
         <ws:contentArea>
             <div style="margin-left: 8px; margin-top: 8px;">
-                <Controls.Input.Text />
+                <Controls.input:Text />
                 <Controls.Popup.Opener.Stack name="stack">
                     <ws:popupOptions template="Controls-demo/Popup/TestDialog">
                         <ws:templateOptions type="stack"/>

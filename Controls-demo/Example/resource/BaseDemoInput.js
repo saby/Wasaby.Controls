@@ -3,7 +3,7 @@ define('Controls-demo/Example/resource/BaseDemoInput',
       'Core/Control',
       'wml!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput',
 
-      'Controls/Label',
+      'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'css!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'
    ],

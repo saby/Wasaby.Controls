@@ -1,16 +1,16 @@
 define(
    [
       'Env/Env',
-      'Controls/Input/Mask',
+      'Controls/input',
       'unit/Calendar/Utils'
    ],
-   function(Env, Mask, testUtils) {
+   function(Env, input, testUtils) {
 
       'use strict';
 
       describe('Controls.Input.Mask', function() {
          it('findLastUserEnteredCharPosition', function() {
-            var findLastUserEnteredCharPosition = Mask._private.findLastUserEnteredCharPosition;
+            var findLastUserEnteredCharPosition = input.Mask._private.findLastUserEnteredCharPosition;
 
             assert.equal(findLastUserEnteredCharPosition('12.34.56', ' '), 8);
             assert.equal(findLastUserEnteredCharPosition('12.34.  ', ' '), 6);
@@ -21,7 +21,7 @@ define(
          it('validateReplacer', function() {
             var message = '';
             var error = Env.IoC.resolve('ILogger').error;
-            var validateReplacer = Mask._private.validateReplacer;
+            var validateReplacer = input.Mask._private.validateReplacer;
 
             Env.IoC.resolve('ILogger').error = function(arg1, arg2) {
                message = arg1 + ': ' + arg2;
@@ -40,7 +40,7 @@ define(
          });
 
          it('calcReplacer', function() {
-            var calcReplacer = Mask._private.calcReplacer;
+            var calcReplacer = input.Mask._private.calcReplacer;
 
             assert.equal(calcReplacer(' ', 'dd.dd'), ' ');
             assert.equal(calcReplacer(' ', 'd\\*'), '');

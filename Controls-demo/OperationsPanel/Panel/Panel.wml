@@ -22,16 +22,16 @@
       </div>
       <div class="optionsBlock">
          <h3>Опции</h3>
-         <Controls.Label caption="expanded:"/>
+         <Controls.input:Label caption="expanded:"/>
          <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
-         <Controls.Label caption="source:"/>
+         <Controls.input:Label caption="source:"/>
          <Controls.Toggle.RadioGroup
             attr:class="ControlsDemo-OperationsPanel__source"
             on:selectedKeyChanged="sourceChange()"
             keyProperty="id"
             selectedKey="{{_sourceNumber}}"
             source="{{_sourceConfig}}"/>
-         <Controls.Label caption="rightTemplate:"/>
+         <Controls.input:Label caption="rightTemplate:"/>
          <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
       </div>
       <div class="eventBlock">
