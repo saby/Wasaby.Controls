@@ -4,14 +4,14 @@
         </div>
         <div class="control_wrapper__demo">
             <div class="control__demo">
-                <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+                <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
                     <Controls.Container.MultiSelector
                             bind:selectedKeys="_firstSelectedKeys"
                             name="multiSelector">
                         <Controls.Container.Scroll attr:class="grid-scroll-container" attr:test_name="default">
-                            <Controls.List.Container>
+                            <Controls.lists:Container>
                                 <Controls.List.MultiSelector>
-                                    <Controls.Grid
+                                    <Controls.grids:View
                                             displayProperty="title"
                                             markedKey="{{448390}}"
                                             rowSeparatorVisibility="{{true}}"
@@ -23,15 +23,15 @@
                                             itemActionsPosition="outside"
                                             columns="{{gridColumns}}"
                                             bind:sorting="_sorting">
-                                    </Controls.Grid>
+                                    </Controls.grids:View>
                                 </Controls.List.MultiSelector>
-                            </Controls.List.Container>
+                            </Controls.lists:Container>
                         </Controls.Container.Scroll>
                     </Controls.Container.MultiSelector>
-                </Controls.Container.Data>
+                </Controls.lists:DataContainer>
             </div>
             <div class="events__demo">
-                <Controls.Input.Area readonly="{{true}}" minLines="{{3}}" maxLines="{{3}}"/>
+                <Controls.input:Area readonly="{{true}}" minLines="{{3}}" maxLines="{{3}}"/>
             </div>
         </div>
 

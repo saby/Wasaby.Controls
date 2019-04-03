@@ -7,9 +7,9 @@
    </ws:topArea>
    <ws:contentArea>
       <div class="ControlsDemo-InputDropdown__inputBlock">
-         <Controls.Input.Text bind:value="_value1" placeholder="Name of template "
+         <Controls.input:Text bind:value="_value1" placeholder="Name of template "
                               attr:class="ControlsDemo-InputDropdown__textBox"/>
-         <Controls.Input.Text bind:value="_value2" placeholder="Short description" minLines="{{3}}"
+         <Controls.input:Text bind:value="_value2" placeholder="Short description" minLines="{{3}}"
                               attr:class="ControlsDemo-InputDropdown__textBox"/>
       </div>
    </ws:contentArea>

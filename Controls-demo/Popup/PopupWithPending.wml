@@ -9,7 +9,7 @@
       <ws:contentArea>
          <div style="margin-left: 8px; margin-top: 8px;">
             <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-            <Controls.Input.Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText" attr:class="ControlsDemo-PopupPage__withPendingInput"/>
+            <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText" attr:class="ControlsDemo-PopupPage__withPendingInput"/>
          </div>
       </ws:contentArea>
    </Controls.Popup.Templates.Stack.StackTemplate>

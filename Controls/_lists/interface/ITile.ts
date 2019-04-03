@@ -1,13 +1,13 @@
 /**
  * Interface for lists in which items are displayed as tiles.
  *
- * @interface Controls/List/interface/ITile
+ * @interface Controls/_lists/interface/ITile
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/List/interface/ITile#tileHeight
+ * @name Controls/_lists/interface/ITile#tileHeight
  * @cfg {Number} The height of the tile items.
  * @default 150
  * @remark This option is required to calculate element sizes when rendering on the server.
@@ -24,7 +24,7 @@
  */
 
 /**
- * @name Controls/List/interface/ITile#tileScalingMode
+ * @name Controls/_lists/interface/ITile#tileScalingMode
  * @cfg {String} Scale mode for items when you hover over them.
  * @variant none On hover the size of the items is not changed.
  * @variant outside On hover the size of the items increases. The increased item is located within the browser window.
@@ -45,7 +45,7 @@
  */
 
 /**
- * @name Controls/List/interface/ITile#imageProperty
+ * @name Controls/_lists/interface/ITile#imageProperty
  * @cfg {String} Name of the item property that contains the link to the image.
  * @default image
  * @remark The increased item is positioned in the center relative to the initial position.

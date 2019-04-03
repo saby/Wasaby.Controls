@@ -12,7 +12,7 @@
             style="accentHeader"
          >
             <ws:editorTemplate>
-               <Controls.Input.Text selectOnClick="{{ false }}"
+               <Controls.input:Text selectOnClick="{{ false }}"
                                     size="l"
                                     fontStyle="secondary" />
             </ws:editorTemplate>

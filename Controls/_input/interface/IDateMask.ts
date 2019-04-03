@@ -26,7 +26,7 @@
  * In this example, the mask is set so that only the time can be entered in the input field.
  * After a user has entered a “01:01:2018”, the value of the _inputValue will be equal 01.01:2018 00:00.000
  * <pre>
- *    <Controls.Input.Date.Picker bind:value="_inputValue" mask=”DD.MM.YYYY”/>
+ *    <Controls._input.Date.Picker bind:value="_inputValue" mask=”DD.MM.YYYY”/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -35,7 +35,7 @@
  * </pre>
  * In next example after a user has entered a “01:01:2018”, the value of the _inputValue will be equal “01.01.2018 14:15.000.
  * <pre>
- *    <Controls.Input.Date.Picker bind:value="_inputValue" mask=”DD.MM.YYYY”/>
+ *    <Controls._input.Date.Picker bind:value="_inputValue" mask=”DD.MM.YYYY”/>
  * </pre>
  * <pre>
  *    Control.extend({

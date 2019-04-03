@@ -3,12 +3,12 @@ define('Controls/Application/_JsLinks',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_JsLinks',
-      'View/Request'
+      'Application/Env'
    ],
 
    // Component for adding jsLinks into html. Waits for Application's content drawn,
 
-   function(Base, Deferred, template, Request) {
+   function(Base, Deferred, template, AppEnv) {
       'use strict';
 
       var Page = Base.extend({
@@ -25,7 +25,7 @@ define('Controls/Application/_JsLinks',
             if (typeof window !== 'undefined') {
                return;
             }
-            var headData = Request.getCurrent().getStorage('HeadData');
+            var headData = AppEnv.getStore('HeadData');
             var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();

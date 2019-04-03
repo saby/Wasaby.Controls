@@ -1,20 +1,20 @@
 /**
  * Interface for lists.
  *
- * @interface Controls/List/interface/IList
+ * @interface Controls/_lists/interface/IList
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/List/interface/IList#contextMenuVisibility
+ * @name Controls/_lists/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @default true
  */
 
 /**
- * @name Controls/List/interface/IList#emptyTemplate
+ * @name Controls/_lists/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @remark
@@ -36,18 +36,18 @@
  */
 
 /**
- * @name Controls/List/interface/IList#footerTemplate
+ * @name Controls/_lists/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /**
- * @name Controls/List/interface/IList#resultsTemplate
+ * @name Controls/_lists/interface/IList#resultsTemplate
  * @cfg {Function} Results row template.
  */
 
 /**
- * @name Controls/List/interface/IList#resultsPosition
+ * @name Controls/_lists/interface/IList#resultsPosition
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
@@ -59,12 +59,12 @@
  */
 
 /**
- * @name Controls/List/interface/IList#virtualScrollConfig
+ * @name Controls/_lists/interface/IList#virtualScrollConfig
  * @cfg {VirtualScrollConfig} Virtual scroll config.
  */
 
 /**
- * @name Controls/List/interface/IList#sorting
+ * @name Controls/_lists/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
  * [
@@ -74,7 +74,7 @@
  */
 
 /**
- * @name Controls/List/interface/IList#multiSelectVisibility
+ * @name Controls/_lists/interface/IList#multiSelectVisibility
  * @cfg {String} Whether multiple selection is enabled.
  * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
  * @variant visible Show.
@@ -97,13 +97,13 @@
  */
 
 /**
- * @name Controls/List/interface/IList#itemActions
+ * @name Controls/_lists/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  */
 
 /**
- * @name Controls/List/interface/IList#itemActionsPosition
+ * @name Controls/_lists/interface/IList#itemActionsPosition
  * @cfg {String} Position of item actions.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
@@ -111,7 +111,7 @@
  */
 
 /**
- * @event Controls/List/interface/IList#itemActionsClick
+ * @event Controls/_lists/interface/IList#itemActionsClick
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
@@ -119,7 +119,7 @@
  */
 
 /**
- * @name Controls/List/interface/IList#itemActionVisibilityCallback
+ * @name Controls/_lists/interface/IList#itemActionVisibilityCallback
  * @cfg {function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
@@ -127,18 +127,18 @@
  */
 
 /**
- * @name Controls/List/interface/IList#itemActionsProperty
+ * @name Controls/_lists/interface/IList#itemActionsProperty
  * @cfg {String} Name of the item's property that contains item actions.
  */
 
 /**
- * @name Controls/List/interface/IList#markedKey
+ * @name Controls/_lists/interface/IList#markedKey
  * @cfg {Number} Identifier of the marked collection item.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /**
- * @name Controls/List/interface/IList#markerVisibility
+ * @name Controls/_lists/interface/IList#markerVisibility
  * @cfg {String} Determines when marker is visible.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @variant visible The marker is always displayed, even if the marked key entry is not specified.
@@ -148,7 +148,7 @@
  */
 
 /**
- * @name Controls/List/interface/IList#uniqueKeys
+ * @name Controls/_lists/interface/IList#uniqueKeys
  * @cfg {String} Strategy for loading new list items.
  * @remark
  * true - Merge, items with the same identifier will be combined into one.
@@ -156,22 +156,22 @@
  */
 
 /**
- * @name Controls/List/interface/IList#itemsReadyCallback
+ * @name Controls/_lists/interface/IList#itemsReadyCallback
  * @cfg {Function} Callback function that will be called when list data instance is ready.
  */
 
 /**
- * @name Controls/List/interface/IList#dataLoadCallback
+ * @name Controls/_lists/interface/IList#dataLoadCallback
  * @cfg {Function} Callback function that will be called when list data loaded by source
  */
 
 /**
- * @name Controls/List/interface/IList#dataLoadErrback
+ * @name Controls/_lists/interface/IList#dataLoadErrback
  * @cfg {Function} Callback function that will be called when data loading fail
  */
 
 /**
- * @function Controls/List/interface/IList#reload
+ * @function Controls/_lists/interface/IList#reload
  * Reloads list data and view.
  */
 
@@ -183,7 +183,7 @@
  */
 
 /**
- * @function Controls/List/interface/IList#reloadItem
+ * @function Controls/_lists/interface/IList#reloadItem
  * Loads model from data source, merges changes into the current data and renders the item.
  * @param {String} key Identifier of the collection item, that should be reloaded from source.
  * @param {Object} readMeta Meta information, that which will be passed to the query/read method.
@@ -201,21 +201,21 @@
  */
 
 /**
- * @event Controls/List/interface/IList#itemClick Occurs when list item is clicked.
+ * @event Controls/_lists/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /**
- * @event Controls/List/interface/IList#itemSwipe Occurs when list item is swiped.
+ * @event Controls/_lists/interface/IList#itemSwipe Occurs when list item is swiped.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
- * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/List/interface/IList#itemClick itemClick}.
+ * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_lists/interface/IList#itemClick itemClick}.
  */
 
 /**
- * @event Controls/List/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+ * @event Controls/_lists/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
@@ -223,7 +223,7 @@
  */
 
 /**
- * @event  Controls/List/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
+ * @event  Controls/_lists/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Number} key Key of the selected item.
  */
@@ -257,5 +257,5 @@
 
 /**
  * @cfg {ItemPadding} Configuration inner paddings in the item.
- * @name Controls/List/interface/IList#itemPadding
+ * @name Controls/_lists/interface/IList#itemPadding
  */

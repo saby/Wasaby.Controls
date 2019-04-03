@@ -51,8 +51,8 @@
         <div attr:class="demo-Button_margin-10 ControlsDemo__simpleLink">
             <div attr:class="test_element_two_column demo-Button__testBlock_column">
                 <Controls.buttons:Button readOnly="{{false}}" caption="Main link" style="secondary" viewMode="link" size="m"/>
-                <Controls.Label underline="hovered" caption="Inactive link 1"/>
-                <Controls.Label underline="fixed" caption="Inactive link 2"/>
+                <Controls.input:Label underline="hovered" caption="Inactive link 1"/>
+                <Controls.input:Label underline="fixed" caption="Inactive link 2"/>
                 <Controls.buttons:Button readOnly="{{false}}" caption="Inactive link 3" style="info" viewMode="link" size="m"/>
             </div>
             <div attr:class="test_element_two_column test_element demo-Button__testBlock_column">
@@ -68,7 +68,7 @@
         </div>
         <h3>Button-link for table</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__linkForTable">
-            <Controls.List.AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
+            <Controls.lists:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
         </div>
     </div>
     <h2 class="ControlsDemo__Button-icon-text">Button-icon</h2>

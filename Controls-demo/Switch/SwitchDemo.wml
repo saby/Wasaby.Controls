@@ -17,11 +17,11 @@
         <h3>Options</h3>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
-        <Controls.Label caption="Caption"/>
-        <Controls.Input.Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
-        <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
-        <Controls.Label caption="Caption position:"/>
+        <Controls.input:Label caption="Caption"/>
+        <Controls.input:Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
+        <Controls.input:Label caption="Tooltip"/>
+        <Controls.input:Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
+        <Controls.input:Label caption="Caption position:"/>
         <Controls.Input.ComboBox
                 attr:class="ControlsDemo__direction"
                 source="{{_captionPositionSource}}"

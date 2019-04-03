@@ -11,7 +11,6 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
     * @mixes Controls/Input/interface/ISuggest
     * @mixes Controls/interface/ILookup

@@ -61,6 +61,8 @@ define('Controls/StickyHeader/_StickyHeader',
 
          _index: null,
 
+         _height: 0,
+
          constructor: function() {
             StickyHeader.superclass.constructor.call(this);
             this._observeHandler = this._observeHandler.bind(this);
@@ -74,7 +76,12 @@ define('Controls/StickyHeader/_StickyHeader',
          _afterMount: function() {
             var children = this._children;
 
-            this._notify('stickyRegister', [this._index, true], { bubbling: true });
+            this._notify('stickyRegister', [{
+               id: this._index,
+               inst: this,
+               position: this._options.position,
+               mode: this._options.mode
+            }, true], { bubbling: true });
 
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
@@ -94,7 +101,42 @@ define('Controls/StickyHeader/_StickyHeader',
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
             this._observeHandler = undefined;
-            this._notify('stickyRegister', [this._index, false], { bubbling: true });
+            this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
+         },
+
+         getOffset: function(parentElement, position) {
+            return stickyUtils.getOffset(parentElement, this._container, position);
+         },
+
+         get height() {
+            // If the header is hidden we cannot calculate its current height.
+            // Use the height that it had before it was hidden.
+            if (this._container.offsetParent !== null) {
+               this._height = this._container.offsetHeight;
+            }
+            return this._height;
+         },
+
+         get top() {
+            return this._stickyHeadersHeight.top;
+         },
+
+         set top(value) {
+            this._stickyHeadersHeight.top = value;
+            this._forceUpdate();
+         },
+
+         get bottom() {
+            return this._stickyHeadersHeight.bottom;
+         },
+
+         set bottom(value) {
+            this._stickyHeadersHeight.bottom = value;
+            this._forceUpdate();
+         },
+
+         _resizeHandler: function() {
+            this._notify('stickyHeaderResize', [], {bubbling: true});
          },
 
          /**
@@ -198,12 +240,6 @@ define('Controls/StickyHeader/_StickyHeader',
 
          _updateStickyShadow: function(e, ids) {
             this._shadowVisible = ids.indexOf(this._index) !== -1;
-         },
-
-         _updateStickyHeight: function(e, height) {
-            if (!this._model.fixedPosition) {
-               this._stickyHeadersHeight = height;
-            }
          },
 
          _isShadowVisible: function(shadowPosition) {

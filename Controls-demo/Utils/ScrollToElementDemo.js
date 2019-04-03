@@ -28,9 +28,9 @@ define('Controls-demo/Utils/ScrollToElementDemo', [
          });
       },
 
-      _scrollTo: function(e, direction) {
+      _scrollTo: function(e, direction, elementNumber) {
          var listChildren = this._children.list._container.querySelectorAll('.controls-ListView__itemV');
-         scrollToElement(direction === 'top' ? listChildren[0] : listChildren[listChildren.length - 1]);
+         scrollToElement(direction === 'top' ? listChildren[0 + elementNumber] : listChildren[listChildren.length - 1 - elementNumber], direction === 'bottom');
       }
    });
 

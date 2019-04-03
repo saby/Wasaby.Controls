@@ -8,8 +8,9 @@ import ListViewTpl = require('wml!Controls/_lists/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_lists/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_lists/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_lists/resources/ItemOutputWrapper');
+import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import 'wml!Controls/_lists/resources/ItemOutput';
-import 'css!theme?Controls/List/ListView/ListView';
+import 'css!theme?Controls/_lists/ListView/ListView';
 
 var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
@@ -36,28 +37,19 @@ var _private = {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
         }
         if (cfg.markerVisibility === 'always') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/_lists/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
         }
         if (cfg.markerVisibility === 'demand') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/_lists/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
         }
         if (cfg.results) {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
         }
     },
 
-    onListChange: function(self) {
-        self._listChanged = true;
-        self._forceUpdate();
-    },
-
     resizeNotifyOnListChanged: function(self) {
-        if (self._listChanged) {
-            self._listChanged = false;
-
-            //command to scroll watcher
-            self._notify('controlResize', [], {bubbling: true});
-        }
+       //command to scroll watcher
+       self._notify('controlResize', [], {bubbling: true});
     },
 
     setHoveredItem: cDebounce(function(self, item, nativeEvent) {
@@ -72,25 +64,26 @@ var _private = {
 var ListView = BaseControl.extend(
     {
         _listModel: null,
-        _lockForUpdate: false,
-        _queue: null,
         _hoveredItem: null,
         _template: ListViewTpl,
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
-        _listChanged: false,
         _itemOutputWrapper: ItemOutputWrapper,
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
-            var self = this;
-            this._queue = [];
-            this._onListChangeFnc = function(e) {
-                if (self._lockForUpdate) {
-                    self._queue.push(_private.onListChange.bind(null, self));
-                } else {
-                    _private.onListChange(self);
-                }
+            let pendingRedraw = false;
+            this._onListChangeFnc = () => {
+               if (!pendingRedraw) {
+                  pendingRedraw = true;
+                  scheduleCallbackAfterRedraw(
+                     this,
+                     () => {
+                        pendingRedraw = false;
+                        _private.resizeNotifyOnListChanged(this);
+                     }
+                  );
+               }
             };
         },
 
@@ -139,24 +132,12 @@ var ListView = BaseControl.extend(
                 this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
-            this._lockForUpdate = true;
         },
 
         _afterMount: function() {
             _private.resizeNotifyOnListChanged(this);
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
-            }
-        },
-
-        _afterUpdate: function() {
-            this._lockForUpdate = false;
-            _private.resizeNotifyOnListChanged(this);
-            if (this._queue.length > 0) {
-                for (var i = 0; i < this._queue.length; i++) {
-                    this._queue[i]();
-                }
-                this._queue = [];
             }
         },
 
@@ -227,8 +208,6 @@ var ListView = BaseControl.extend(
             this._notify('markedKeyChanged', [key]);
         }
     });
-
-ListView._private = _private;
 
 ListView.getDefaultOptions = function() {
     return {

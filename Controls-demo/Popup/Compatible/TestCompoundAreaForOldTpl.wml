@@ -44,6 +44,6 @@
         <Controls.buttons:Button attr:class="openDialogButton" name="dialogButton" caption="Dialog Test" on:click="openDialog()"/>
     </div>
     <div>
-        <Controls.Input.Text attr:class="outerTextInput" attr:tabindex="{{1}}" placeholder="For catching focus"/>
+        <Controls.input:Text attr:class="outerTextInput" attr:tabindex="{{1}}" placeholder="For catching focus"/>
     </div>
 </div>

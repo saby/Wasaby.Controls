@@ -1,6 +1,6 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{[Выбор раздела]}" attr:class="controls-MoveDialog">
    <ws:contentArea>
-      <Controls.Container.Data source="{{_options.source}}"
+      <Controls.lists:DataContainer source="{{_options.source}}"
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
@@ -17,7 +17,7 @@
                                            icon="icon-small icon-primary icon-Home3"/>
                </ws:if>
                <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
-                  <Controls.List.Container>
+                  <Controls._lists.Container>
                      <Controls.Explorer
                         name="explorer"
                         itemActions="{{_itemActions}}"
@@ -33,10 +33,10 @@
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
                         columns="{{_options.columns}}"/>
-                  </Controls.List.Container>
+                  </Controls._lists.Container>
                </Controls.Container.Scroll>
             </div>
          </Controls.Search.Controller>
-      </Controls.Container.Data>
+      </Controls.lists:DataContainer>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
