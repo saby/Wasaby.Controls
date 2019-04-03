@@ -3,6 +3,7 @@
       <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>
    <input
+      readOnly="{{readOnly || ''}}"
       autocorrect="off"
       type="{{type}}"
       name="{{fieldName}}"

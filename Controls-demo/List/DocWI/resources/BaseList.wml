@@ -1,4 +1,4 @@
-<Controls.List
+<Controls.lists:View
         source="{{_viewSource}}"
         keyProperty="id">
-</Controls.List>
+</Controls.lists:View>

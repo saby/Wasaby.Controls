@@ -1,4 +1,4 @@
-define(['Controls/List/Container'], function(Container) {
+define(['Controls/lists'], function(lists) {
    
    describe('Controls.List.Container', function() {
       

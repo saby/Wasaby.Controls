@@ -20,27 +20,19 @@
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
         layerName="Controls/Container/Suggest/__PopupLayer">
-   <Controls.Input.resources.InputRender.InputRender
+   <Controls.Input.Suggest.InputRender
            size="{{_options.size}}"
+           style="{{_options.style}}"
            tooltip="{{_options.tooltip}}"
            tagStyle="{{_options.tagStyle}}"
-           viewModel="{{_simpleViewModel}}"
            style="{{_options.style}}"
            on:tagClick="_notifyHandler('tagClick')"
            on:tagHover="_notifyHandler('tagHover')"
            on:valueChanged="_changeValueHandler()"
            placeholder="{{_options.placeholder}}"
-           validationErrors="{{_options.validationErrors}}"
            class="controls-ComboBox-InputRender">
-
-      <ws:content>
-         <ws:partial
-                 template="wml!Controls/Input/resources/input"/>
-      </ws:content>
-
       <ws:afterFieldWrapper>
-         <Controls.Button.Separator attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
+         <Controls.Button.Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
       </ws:afterFieldWrapper>
-
-   </Controls.Input.resources.InputRender.InputRender>
+   </Controls.Input.Suggest.InputRender>
 </Controls.Container.Suggest.Layout>

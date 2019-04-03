@@ -1,5 +1,5 @@
 <div class="controls-demo__search-container">
-    <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
+    <Controls.lists:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
         <ws:content>
             <Controls.Search.Controller searchParam="department">
                 <div>
@@ -7,10 +7,10 @@
                         <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
                     </Controls.Search.Input.Container>
 
-                    <Controls.List.Container>
-                        <Controls.List emptyTemplate="Не найдено">
+                    <Controls.lists:Container>
+                        <Controls.lists:View emptyTemplate="Не найдено">
                             <ws:itemTemplate>
-                                <ws:partial template="wml!Controls/List/ItemTemplate">
+                                <ws:partial template="Controls/lists:ItemTemplate">
                                     <ws:contentTemplate>
                                         <div style="padding: 4px; display: flex; justify-content: space-between">
                                             <div style="width: 300px">{{itemTemplate.itemData.item.get('department')}}</div>
@@ -20,10 +20,10 @@
                                     </ws:contentTemplate>
                                 </ws:partial>
                             </ws:itemTemplate>
-                        </Controls.List>
-                    </Controls.List.Container>
+                        </Controls.lists:View>
+                    </Controls.lists:Container>
                 </div>
             </Controls.Search.Controller>
         </ws:content>
-    </Controls.Container.Data>
+    </Controls.lists:DataContainer>
 </div>

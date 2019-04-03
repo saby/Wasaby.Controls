@@ -1,5 +1,5 @@
 /**
- * @mixin Controls/List/TreeTileView/Styles
+ * @mixin Controls/_lists/TreeTileView/Styles
  * @public
  *
  * @css @font-size_TreeTileView-title Font size of nodes title.

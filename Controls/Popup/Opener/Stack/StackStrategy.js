@@ -2,9 +2,6 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
-   // Container indent for shadow
-   var PANEL_SHADOW_WIDTH = 8;
-
    // Minimum popup indentation from the right edge
    var MINIMAL_PANEL_DISTANCE = 20;
 
@@ -57,14 +54,24 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       getPosition: function(tCoords, item) {
          var maxPanelWidth = this.getMaxPanelWidth();
          var width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-
-         return {
-            width: width,
-            maxWidth: width ? undefined : maxPanelWidth,
+         var position = {
+            stackWidth: width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
          };
+
+         if (item.popupOptions.minWidth) {
+            //todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+         }
+         if (item.popupOptions.maxWidth) {
+            position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+         } else {
+            position.stackMaxWidth = maxPanelWidth;
+         }
+
+         return position;
       },
 
       /**
@@ -72,7 +79,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        * @function Controls/Popup/Opener/Stack/StackController#getMaxPanelWidth
        */
       getMaxPanelWidth: function() {
-         return window.innerWidth - MINIMAL_PANEL_DISTANCE - PANEL_SHADOW_WIDTH;
+         return window.innerWidth - MINIMAL_PANEL_DISTANCE;
       },
 
       isMaximizedPanel: _private.isMaximizedPanel

@@ -1,9 +1,9 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-import ItemsViewModel = require('Controls/List/ItemsViewModel');
+import ItemsViewModel = require('Controls/_lists/ItemsViewModel');
 import entityLib = require('Types/entity');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
@@ -186,6 +186,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
+        if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
+            version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
+        }
         return version;
     },
 
@@ -199,7 +202,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    _updateMarker: function(markedKey) {
+    _updateMarker: function(markedKey):void {
         if (!this.getCount() || this._options.markerVisibility === 'hidden') {
             return;
         }
@@ -209,14 +212,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (this._markedKey === null || !_private.getItemByMarkedKey(this, markedKey)) {
+        if (_private.getItemByMarkedKey(this, markedKey)) {
+            this._markedKey = markedKey;
+        } else {
             this._markedKey = this._items.at(0).getId();
         }
     },
 
-    updateMarker: function(markedKey) {
-        var
-           curMarkedKey = this._markedKey;
+    updateMarker: function(markedKey):void {
+        const curMarkedKey = this._markedKey;
+
         this._updateMarker(markedKey);
         if (curMarkedKey !== this._markedKey) {
             this._notify('onMarkedKeyChanged', this._markedKey);

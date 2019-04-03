@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text tagStyle="primary"
+                  <Controls.input:Text tagStyle="primary" class="ControlsDemo-ExampleInput_fieldWithTag"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -13,7 +13,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="success"
+                  <Controls.input:Text tagStyle="success"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -22,7 +22,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="warning"
+                  <Controls.input:Text tagStyle="warning"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -31,7 +31,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="danger"
+                  <Controls.input:Text tagStyle="danger"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -40,7 +40,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="info"
+                  <Controls.input:Text tagStyle="info"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"

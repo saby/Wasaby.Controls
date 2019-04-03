@@ -11,7 +11,7 @@ define('Controls/Application',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'Core/LinkResolver/LinkResolver',
-      'View/Request',
+      'Application/Env',
       'Core/Themes/ThemesController',
       'css!theme?Controls/Application/Application'
    ],
@@ -120,7 +120,7 @@ define('Controls/Application',
       AppData,
       ScrollContext,
       LinkResolver,
-      Request,
+      AppEnv,
       ThemesController) {
       'use strict';
 
@@ -280,7 +280,7 @@ define('Controls/Application',
                ThemesController.getInstance().themes = {};
                ThemesController.getInstance().setTheme(cfg.theme);
             }
-            var headData = Request.getCurrent().getStorage('HeadData');
+            var headData = AppEnv.getStore('HeadData');
 
             self.linkResolver = new LinkResolver(headData.isDebug,
                self.buildnumber,
@@ -343,10 +343,9 @@ define('Controls/Application',
          }
       });
 
-
-      Page.contextTypes = function contextTypes() {
+      Page.getDefaultOptions = function() {
          return {
-            AppData: AppData
+            title: ''
          };
       };
 

@@ -169,6 +169,14 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         popupMouseEnter: function() {
+
+         },
+
+         popupMouseLeave: function() {
+
+         },
+
          popupResize: function(element, container) {
             return this._elementUpdated(element, container);
          },

@@ -12,8 +12,10 @@
     <div class="controls-demo_event-example__wrapper " style="">
         <div class="controls-demo_example-wrapper">
             <Controls.buttons:Button caption="Open" on:click="_openHandler()"/>
+            <!-- scope1 нужен потому что без него dirtyChecking не смотрит на scope при вычислении изменений https://online.sbis.ru/opendoc.html?guid=83c8c334-0e38-413e-9ef0-640d63408c01-->
             <ws:partial template="{{_options.content}}"
                         scope="{{_exampleControlOptions}}"
+                        scope1="{{_exampleControlOptions}}"
                         name="{{_options.nameOpener}}"
                         attr:class="js-Controls_{{_demoName}}_mainField{{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
              <ws:if data="{{_options.dialogResult}}">Result : {{_result }}</ws:if>

@@ -12,6 +12,7 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
        * @extends Controls/_input/Base
        *
        * @mixes Controls/_input/interface/IInputText
+       * @mixes Controls/_input/interface/IInputBase
        *
        * @public
        * @demo Controls-demo/Input/Text/TextPG

@@ -6,18 +6,16 @@ define([
    'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
-   'Controls/List/ListViewModel',
+   'Controls/lists',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
    'Core/core-clone',
-   'Controls/List/ListView',
    'Types/entity',
-   'Types/collection',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -88,7 +86,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             source: source,
             filter: filter
          };
@@ -140,7 +138,6 @@ define([
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
             assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
-            assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -151,7 +148,6 @@ define([
                   }
                };
                ctrl._afterUpdate({});
-               assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
                done();
             }, 100);
@@ -172,7 +168,7 @@ define([
                view: 'infinity'
             },
             virtualScrolling: true,
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             source: source
          };
          var ctrl = new BaseControl(cfg);
@@ -225,7 +221,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel
+            viewModelConstructor: lists.ListViewModel
          };
 
          var ctrl = new BaseControl(cfg);
@@ -274,7 +270,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {}
          };
 
@@ -296,7 +292,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                view: 'infinity'
             }
@@ -334,7 +330,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -382,7 +378,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                view: 'demand',
                source: 'page',
@@ -450,7 +446,7 @@ define([
                      items: [],
                      keyProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   navigation: {
                      source: 'position',
                      sourceConfig: {
@@ -596,7 +592,7 @@ define([
                    items: [],
                    idProperty: 'id'
                 },
-                viewModelConstructor: ListViewModel,
+                viewModelConstructor: lists.ListViewModel,
                 markedKey: 0,
                 source: source,
                 navigation: {
@@ -697,7 +693,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -720,7 +716,7 @@ define([
          }, 100);
       });
 
-      it('onScrollLoadEdge', function(done) {
+      it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
          var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
@@ -741,7 +737,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                view: 'infinity',
                source: 'page',
@@ -758,17 +754,16 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = true;
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
-               assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
-
-               ctrl._hasUndrawChanges = false;
-               BaseControl._private.onScrollLoadEdge(ctrl, 'down');
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\\\'t load');
-                  done();
-               }, 100);
+               assert.equal(6, ctrl._listViewModel.getCount(), 'Items weren\\\'t loaded');
+               done();
             }, 100);
          }, 100);
       });
@@ -794,7 +789,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                view: 'infinity',
                source: 'page',
@@ -811,7 +806,12 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = false; // _afterUpdate
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
@@ -902,7 +902,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -948,7 +948,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                view: 'infinity',
                source: 'page',
@@ -1053,7 +1053,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -1110,7 +1110,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -1178,7 +1178,7 @@ define([
                items: rs,
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -1240,12 +1240,16 @@ define([
                       type: 2
                    }]
              }),
+             lnSource3 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: []
+             }),
              lnCfg = {
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
                 keyProperty: 'id',
                 markedKey: 3,
-                viewModelConstructor: ListViewModel
+                viewModelConstructor: lists.ListViewModel
              },
              lnBaseControl = new BaseControl(lnCfg);
 
@@ -1262,11 +1266,17 @@ define([
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
-                  lnBaseControl._beforeUpdate(lnCfg);
-
-                  setTimeout(function() {
+                  lnBaseControl._beforeUpdate(lnCfg).addCallback(function() {
                      assert.equal(lnBaseControl._keyDisplayedItem, 4);
-                     resolve();
+                     lnBaseControl._keyDisplayedItem = null;
+
+                     lnCfg = clone(lnCfg);
+                     lnCfg.source = lnSource3;
+                     lnBaseControl._beforeUpdate(lnCfg).addCallback(function(res) {
+                        assert.equal(lnBaseControl._keyDisplayedItem, null);
+                        resolve();
+                        return res;
+                     });
                   });
                }, 10);
             },10);
@@ -1290,7 +1300,7 @@ define([
                source: lnSource,
                keyProperty: 'id',
                markedKey: 1,
-               viewModelConstructor: ListViewModel
+               viewModelConstructor: lists.ListViewModel
             },
             lnCfg2 = {
                viewName: 'Controls/List/ListView',
@@ -1303,7 +1313,7 @@ define([
                }),
                keyProperty: 'id',
                markedKey: 1,
-               viewModelConstructor: ListViewModel
+               viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new BaseControl(lnCfg);
 
@@ -1392,7 +1402,7 @@ define([
                keyProperty: 'id',
                selectedKeys: [1, 3]
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -1445,7 +1455,7 @@ define([
             viewName: 'Controls/List/ListView',
             source: source,
             items: rs,
-            viewModelConstructor: ListViewModel
+            viewModelConstructor: lists.ListViewModel
          };
          var originalEvent = {
             target: {
@@ -1487,7 +1497,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1530,7 +1540,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1570,7 +1580,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1609,7 +1619,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1643,7 +1653,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1682,7 +1692,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1719,7 +1729,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1756,7 +1766,7 @@ define([
                   keyProperty: 'id',
                   selectedKeys: [1, 3]
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                navigation: {
                   source: 'page',
                   sourceConfig: {
@@ -1918,7 +1928,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -1979,7 +1989,7 @@ define([
                      idProperty: 'id'
                   },
                   markedKey: null,
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2028,7 +2038,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2071,7 +2081,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2107,7 +2117,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2173,7 +2183,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2237,7 +2247,7 @@ define([
          it('closeActionsMenu item with children', function() {
             var cfg = {
                   viewName: 'Controls/List/ListView',
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg);
@@ -2298,7 +2308,7 @@ define([
                         items: rs,
                         idProperty: 'id'
                      },
-                     viewModelConstructor: ListViewModel,
+                     viewModelConstructor: lists.ListViewModel,
                      source: source,
                      multiSelectVisibility: multiSelectVisibility,
                      selectedKeysCount: 1
@@ -2354,7 +2364,7 @@ define([
                         items: rs,
                         idProperty: 'id'
                      },
-                     viewModelConstructor: ListViewModel,
+                     viewModelConstructor: lists.ListViewModel,
                      source: source,
                      itemActions: []
                   },
@@ -2385,7 +2395,7 @@ define([
                         items: rs,
                         idProperty: 'id'
                      },
-                     viewModelConstructor: ListViewModel,
+                     viewModelConstructor: lists.ListViewModel,
                      source: source,
                      selectedKeysCount: 1
                   },
@@ -2416,7 +2426,7 @@ define([
                         items: rs,
                         idProperty: 'id'
                      },
-                     viewModelConstructor: ListViewModel,
+                     viewModelConstructor: lists.ListViewModel,
                      source: source
                   },
                   instance = new BaseControl(cfg),
@@ -2450,7 +2460,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2507,7 +2517,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2555,7 +2565,7 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
-                  viewModelConstructor: ListViewModel,
+                  viewModelConstructor: lists.ListViewModel,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -2596,7 +2606,24 @@ define([
          });
 
       });
-   
+
+      it('resolveIndicatorStateAfterReload', function() {
+         var baseControlMock = {
+            _needScrollCalculation: true,
+            _sourceController: {hasMoreData: () => {return true;}},
+            _forceUpdate: () => {}
+         };
+         var emptyList = new collection.List();
+         var list = new collection.List({items: [{test: 'testValue'}]});
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         assert.equal(baseControlMock._loadingState, 'down');
+
+         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         assert.isNull(baseControlMock._loadingState);
+
+      });
+
       it('reloadItem', function() {
          var filter = {};
          var cfg = {
@@ -2608,7 +2635,7 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             source: source,
             filter: filter

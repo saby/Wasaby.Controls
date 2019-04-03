@@ -1,17 +1,17 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lists/Mover/MoveDialog/MoveDialog');
-import 'css!theme?Controls/List/Mover/MoveDialog/MoveDialog';
+import 'css!theme?Controls/_lists/Mover/MoveDialog/MoveDialog';
 
    /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo/demo-ws4-operations-panel">Demo examples.</a>.
-    * @class Controls/List/Mover/MoveDialog
+    * @class Controls/_lists/Mover/MoveDialog
     * @extends Core/Control
-    * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/_lists/interface/IHierarchy
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/ISource
     *
-    * @mixes Controls/List/Mover/MoveDialog/Styles
+    * @mixes Controls/_lists/Mover/MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -19,7 +19,7 @@ import 'css!theme?Controls/List/Mover/MoveDialog/MoveDialog';
     */
 
    /**
-    * @name Controls/List/Mover/MoveDialog#root
+    * @name Controls/_lists/Mover/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
     */

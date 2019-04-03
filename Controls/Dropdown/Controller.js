@@ -74,18 +74,19 @@ define('Controls/Dropdown/Controller',
          },
 
          updateSelectedItems: function(self, emptyText, selectedKeys, keyProperty, dataLoadCallback) {
-            if (selectedKeys[0] === null && emptyText) {
-               self._selectedItems.push(null);
+            var selectedItems = [];
+            if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
+               selectedItems.push(null);
             } else {
                chain.factory(self._items).each(function(item) {
                   // fill the array of selected items from the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-                     self._selectedItems.push(item);
+                     selectedItems.push(item);
                   }
                });
             }
             if (dataLoadCallback) {
-               dataLoadCallback(self._selectedItems);
+               dataLoadCallback(selectedItems);
             }
          },
 
@@ -96,11 +97,17 @@ define('Controls/Dropdown/Controller',
                   this._items = this._options.source.getItems();
                   this._open();
                   break;
+               case 'applyClick':
+                  this._notify('selectedKeysChanged', [result.selectedKeys]);
+                  this._children.DropdownOpener.close();
+                  break;
                case 'itemClick':
-                  var res = _private.selectItem.call(this, result.data);
+                  var res = this._notify('selectedItemsChanged', [result.data]);
+
+                  var item = result.data[0];
 
                   if (historyUtils.isHistorySource(this._options.source)) {
-                     this._options.source.update(result.data[0], historyUtils.getMetaHistory());
+                     this._options.source.update(item, historyUtils.getMetaHistory());
                   }
 
                   // FIXME тут необходимо перевести на кэширующий источник,
@@ -113,7 +120,7 @@ define('Controls/Dropdown/Controller',
 
                   // dropDown must close by default, but user can cancel closing, if returns false from event
                   // res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
-                  if (res === true || !(result.data[0].get(this._options.nodeProperty) || res === false)) {
+                  if (res === true || !(item && item.get(this._options.nodeProperty) || res === false)) {
                      this._children.DropdownOpener.close();
                   }
                   break;
@@ -121,11 +128,6 @@ define('Controls/Dropdown/Controller',
                   this._notify('footerClick', [result.event]);
                   this._children.DropdownOpener.close();
             }
-         },
-
-         selectItem: function(item) {
-            this._selectedItems = item;
-            return this._notify('selectedItemsChanged', [this._selectedItems]);
          },
 
          // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
@@ -142,7 +144,6 @@ define('Controls/Dropdown/Controller',
          _items: null,
 
          _beforeMount: function(options, context, receivedState) {
-            this._selectedItems = [];
             this._onResult = _private.onResult.bind(this);
             this._onClose = _private.closeHandler.bind(this);
             if (!options.lazyItemsLoad) {
@@ -157,7 +158,6 @@ define('Controls/Dropdown/Controller',
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
-               this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
             if ((newOptions.source && newOptions.source !== this._options.source) ||
@@ -167,7 +167,6 @@ define('Controls/Dropdown/Controller',
                   /* source changed, items is not actual now */
                   this._items = null;
                } else {
-                  this._selectedItems = [];
                   var self = this;
                   return _private.loadItems(this, newOptions).addCallback(function() {
                      self._forceUpdate();
@@ -199,6 +198,9 @@ define('Controls/Dropdown/Controller',
                   target: self._container,
                   corner: self._options.corner,
                   opener: self,
+                  autofocus: false,
+                  closeOnOutsideClick: true,
+
 
                   // TODO: https://online.sbis.ru/opendoc.html?guid=b2116aaf-e4f5-46f9-881d-587384a4ec5d
                   revertPositionStyle: self._options.revertPositionStyle
@@ -207,7 +209,7 @@ define('Controls/Dropdown/Controller',
             }
             function itemsLoadCallback(items) {
                if (items.getCount() === 1) {
-                  _private.selectItem.call(self, [items.at(0)]);
+                  self._notify('selectedItemsChanged', [items.at(0)]);
                } else if (items.getCount() > 1) {
                   open();
                }

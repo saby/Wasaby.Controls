@@ -2,10 +2,10 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/ItemActions/Helpers',
+   'Controls/lists',
    'Types/entity',
    'Types/collection'
-], function(Helpers, entity, collection) {
+], function(lists, entity, collection) {
 
    describe('Controls.List.ItemActions.Helpers', function() {
       describe('reorderMoveActionsVisibility', function() {
@@ -43,43 +43,43 @@ define([
          });
 
          it('move first item up', function() {
-            assert.isFalse(Helpers.reorderMoveActionsVisibility('up', rs.at(0), rs));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.at(0), rs));
          });
 
          it('move first item down', function() {
-            assert.isTrue(Helpers.reorderMoveActionsVisibility('down', rs.at(0), rs));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.at(0), rs));
          });
 
          it('move last item down', function() {
-            assert.isFalse(Helpers.reorderMoveActionsVisibility('down', rs.at(rs.getCount() - 1), rs));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.at(rs.getCount() - 1), rs));
          });
 
          it('move last item up', function() {
-            assert.isTrue(Helpers.reorderMoveActionsVisibility('up', rs.at(rs.getCount() - 1), rs));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.at(rs.getCount() - 1), rs));
          });
 
          it('move first item up in folder', function() {
-            assert.isFalse(Helpers.reorderMoveActionsVisibility('up', rs.getRecordById(2), rs, 'parent'));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(2), rs, 'parent'));
          });
 
          it('move first item down in folder', function() {
-            assert.isTrue(Helpers.reorderMoveActionsVisibility('down', rs.getRecordById(2), rs, 'parent'));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(2), rs, 'parent'));
          });
 
          it('move last item down in folder', function() {
-            assert.isFalse(Helpers.reorderMoveActionsVisibility('down', rs.getRecordById(3), rs, 'parent'));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(3), rs, 'parent'));
          });
 
          it('move last item up in folder', function() {
-            assert.isTrue(Helpers.reorderMoveActionsVisibility('up', rs.getRecordById(3), rs, 'parent'));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(3), rs, 'parent'));
          });
 
          it('change order list and folder', function() {
-            assert.isFalse(Helpers.reorderMoveActionsVisibility('down', rs.getRecordById(4), rs, 'parent', 'parent@'));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(4), rs, 'parent', 'parent@'));
          });
 
          it('change order list and list', function() {
-            assert.isTrue(Helpers.reorderMoveActionsVisibility('down', rs.getRecordById(5), rs, 'parent', 'parent@'));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(5), rs, 'parent', 'parent@'));
          });
       });
    });

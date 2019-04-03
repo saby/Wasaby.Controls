@@ -58,7 +58,7 @@ var resourcesPath = path.join('', 'application');
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/', serveStatic(resourcesPath));
-app.use('/cdn/', serveStatic('./node_modules/sbis-cdn'));
+app.use('/cdn/', serveStatic('./node_modules/cdn'));
 
 
 var port = process.env.PORT || 777;

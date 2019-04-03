@@ -1,7 +1,7 @@
 define('Controls-demo/Input/DeprecatedText/TextVdom', [
 	'Core/Control',
 	'wml!Controls-demo/Input/DeprecatedText/TextVdom',
-	'Controls/Input/Text',
+	'Controls/input',
 	'css!Controls-demo/Input/DeprecatedText/TextVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';

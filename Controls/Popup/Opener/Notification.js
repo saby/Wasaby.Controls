@@ -1,12 +1,14 @@
 define('Controls/Popup/Opener/Notification',
    [
       'Controls/Popup/Opener/BaseOpener',
-      'Core/helpers/isNewEnvironment'
+      'Core/helpers/isNewEnvironment',
+      'Env/Env'
    ],
-   function(Base, isNewEnvironment) {
+   function(Base, isNewEnvironment, Env) {
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
+       * <a href="/materials/demo-ws4-notification">Demo-example</a>.
        * @class Controls/Popup/Opener/Notification
        * @control
        * @public
@@ -95,11 +97,8 @@ define('Controls/Popup/Opener/Notification',
           * @see close
           */
          open: function(popupOptions) {
-            popupOptions = popupOptions || {};
-            popupOptions.autofocus = false;
-
             if (isNewEnvironment()) {
-               Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
+               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/Popup/Opener/Notification/NotificationController');
             } else {
                _private.compatibleOpen(this, popupOptions);
             }
@@ -109,12 +108,24 @@ define('Controls/Popup/Opener/Notification',
             _private.compatibleClose(this);
          },
 
-
+         _preparePopupOptions: function(popupOptions) {
+            if (popupOptions && popupOptions.templateOptions && popupOptions.templateOptions.hasOwnProperty('autoClose')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
+               popupOptions.autoClose = popupOptions.templateOptions.autoClose;
+            }
+            if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
+               this._options.autoClose = this._options.templateOptions.autoClose;
+            }
+            return popupOptions;
+         }
       });
 
       Notification.getDefaultOptions = function() {
          return {
-            displayMode: 'multiple'
+            autofocus: false,
+            displayMode: 'multiple',
+            autoClose: true
          };
       };
 

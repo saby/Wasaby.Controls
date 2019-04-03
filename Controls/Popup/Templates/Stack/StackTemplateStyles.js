@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Stack/StackTemplateStyles', [],
    function() {}
 
    /**
-     * @mixin Controls/Popup/Templates/Stack/StackTemplate
+     * @mixin Controls/Popup/Templates/Stack/StackTemplateStyles
      * @private
      *
      * @css @background-color_StackTemplate Background color
@@ -15,6 +15,7 @@ define('Controls/Popup/Templates/Stack/StackTemplateStyles', [],
      * @css @spacing_StackTemplate-between-maximized-button-content-top  Spacing between maximized button and content on top
      * @css @spacing_StackTemplate-between-content-close-button  Spacing between content and close button
      * @css @spacing_StackTemplate-between-maximized-button-close-button  Spacing between maximized-button and close-button
+      * @css @spacing_StackTemplate-between-caption-border-top Spacing between caption and border-top
      *
      * @css @color_StackTemplate-caption_default          Default color of heading
      * @css @font-size_StackTemplate-caption_default     Default size of heading

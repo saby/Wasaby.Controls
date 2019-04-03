@@ -6,7 +6,7 @@
       <ws:partial template="wml!Controls/_grids/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
    </ws:if>
    <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
-      <ws:partial template="wml!Controls/_lists/resources/For"
+      <ws:partial template="Controls/lists:_forTemplate"
                   listModel="{{_listModel}}"
                   itemTemplate="{{_itemTemplate}}"
                   multiSelectTpl="{{_options.multiSelectTpl}}"

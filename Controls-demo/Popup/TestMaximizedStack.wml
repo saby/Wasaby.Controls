@@ -5,6 +5,6 @@
         </div>
     </ws:topArea>
     <ws:contentArea>
-        <Controls.Input.Text value="maximized: {{_options.maximized}} | showMaximizedButton: {{_options.showMaximizedButton}}" />
+        <Controls.input:Text value="maximized: {{_options.maximized}} | showMaximizedButton: {{_options.showMaximizedButton}}" />
     </ws:contentArea>
 </Controls.Popup.Templates.Stack.StackTemplate>

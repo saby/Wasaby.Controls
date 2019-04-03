@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/TreeGrid',
+   'Controls/treeGrids',
    'Controls/breadcrumbs'
 ], function(
    Control,
@@ -176,15 +176,13 @@ define('Controls/Explorer', [
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
-         if (this._options.root !== cfg.root) {
-            _private.setRoot(this, cfg.root);
-         }
       },
       _getRoot: function() {
          return _private.getRoot(this);
       },
-      _dragHighlighter: function(itemKey) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      _dragHighlighter: function(itemKey, hasArrow) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
@@ -249,7 +247,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary'
+         backButtonStyle: 'secondary',
+         stickyHeader: true
       };
    };
 

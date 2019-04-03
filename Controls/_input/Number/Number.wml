@@ -1,4 +1,4 @@
-<Controls.Input.resources.InputRender.InputRender
+<Controls._input.resources.InputRender.InputRender
    name="inputRender"
    autocomplete="{{_options.autocomplete}}"
    size="{{ _options.size }}"
@@ -25,4 +25,4 @@
       />
 
    </ws:content>
-</Controls.Input.resources.InputRender.InputRender>
+</Controls._input.resources.InputRender.InputRender>

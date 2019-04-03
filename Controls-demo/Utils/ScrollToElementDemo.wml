@@ -1,13 +1,25 @@
 <div>
    <Controls.Container.Scroll attr:style="height: 300px;">
-      <Controls.List
-         class="test_list_1"
-         name="list"
-         source="{{_viewSource}}"
-         allowEmptySelection="{{false}}"
-         keyProperty="id">
-      </Controls.List>
+      <div>
+         <Controls.StickyHeader>
+            <div>Top header</div>
+         </Controls.StickyHeader>
+         <Controls.lists:View
+            class="test_list_1"
+            name="list"
+            source="{{_viewSource}}"
+            allowEmptySelection="{{false}}"
+            keyProperty="id">
+         </Controls.lists:View>
+         <Controls.StickyHeader position="bottom">
+            <div>Bottom header</div>
+         </Controls.StickyHeader>
+      </div>
    </Controls.Container.Scroll>
-   <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top')" />
-   <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom')" />
+   <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top', 0)" />
+   <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom', 0)" />
+   <Controls.buttons:Button caption="scroll to top 2 element" on:click="_scrollTo('top', 1)" />
+   <Controls.buttons:Button caption="scroll to bottom 2 element" on:click="_scrollTo('bottom', 1)" />
+   <Controls.buttons:Button caption="scroll to top 10 element" on:click="_scrollTo('top', 9)" />
+   <Controls.buttons:Button caption="scroll to bottom 10 element" on:click="_scrollTo('bottom', 8)" />
 </div>

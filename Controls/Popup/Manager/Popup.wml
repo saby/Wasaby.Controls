@@ -8,6 +8,8 @@
          on:close="_close()"
          on:popupDragStart="_popupDragStart()"
          on:popupDragEnd="_popupDragEnd()"
+         on:popupMouseEnter="_popupMouseEnter()"
+         on:popupMouseLeave="_popupMouseLeave()"
          on:maximized="_maximized()"
          on:keyup="_keyUp()"
          on:keydown="_keyDown()"

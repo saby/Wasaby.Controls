@@ -3,23 +3,26 @@ define(
       'Env/Event',
       'Env/Env',
       'Core/core-instance',
-      'Controls/Input/Base',
+      'Core/helpers/Hcontrol/makeInstanceCompatible',
+      'Controls/input',
       'unit/resources/ProxyCall',
       'unit/Input/Base/InputUtility',
       'unit/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EnvEvent, Env, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
+   function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
          var calls;
-         var ctrl = new Base();
+         var ctrl = new inputMod.Base();
+         makeInstanceCompatible(ctrl);
          ctrl._template({});
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Base();
+            ctrl = new inputMod.Base();
+            makeInstanceCompatible(ctrl);
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
 
             var beforeMount = ctrl._beforeMount;
@@ -41,8 +44,8 @@ define(
          });
 
          it('getDefault', function() {
-            Base.getOptionTypes();
-            Base.getDefaultOptions();
+            inputMod.Base.getOptionTypes();
+            inputMod.Base.getDefaultOptions();
          });
          it('Public method paste.', function() {
             ctrl._beforeMount({

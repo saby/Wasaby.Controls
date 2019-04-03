@@ -1,25 +1,28 @@
 <head key="1_1_">
-   <title class="head-title-tag" key="title">{{ _options.title }}</title>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-   <meta name="viewport" content="{{_options.viewport || 'width=1024'}}"/>
-   <meta charset="utf-8"/>
-   <script key="ws-config">
-      window.wsConfig = {
-         wsRoot: '{{_options.wsRoot}}',
-         resourceRoot: '{{_options.resourceRoot}}',
-         appRoot: '{{_options.appRoot}}',
-         RUMEnabled: '{{ _options.RUMEnabled }}',
-         pageName: '{{ _options.pageName }}',
-         userConfigSupport: true,
-         staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
-         defaultServiceUrl: '{{_options.servicesPath}}',
-         compatible: {{ _options.compat }},
-         lite: {{ _options.lite || false }},
-         product: '{{ _options.product }}'
-      };
-      window.buildnumber = '{{ _options.buildnumber }}';
-      {{__setHTMLUnsafe(_options.preInitScript)}}
-   </script>
+   <ws:if data="{{ !wasServerSide }}">
+      <title class="head-title-tag head-server-block" key="title" data-vdomignore="true">{{ _options.title }}</title>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" data-vdomignore="true"/>
+      <meta name="viewport" content="{{_options.viewport || 'width=1024'}}" data-vdomignore="true"/>
+      <meta charset="utf-8" data-vdomignore="true"/>
+      <script key="ws-config" data-vdomignore="true">
+         window.wsConfig = {
+            wsRoot: '{{_options.wsRoot}}',
+            resourceRoot: '{{_options.resourceRoot}}',
+            appRoot: '{{_options.appRoot}}',
+            RUMEnabled: '{{ _options.RUMEnabled }}',
+            pageName: '{{ _options.pageName }}',
+            userConfigSupport: true,
+            staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
+            defaultServiceUrl: '{{_options.servicesPath}}',
+            compatible: {{ _options.compat }},
+            lite: {{ _options.lite || false }},
+            product: '{{ _options.product }}'
+         };
+         window.buildnumber = '{{ _options.buildnumber }}';
+         {{__setHTMLUnsafe(_options.preInitScript)}}
+      </script>
+   </ws:if>
+
    <ws:if data="{{!_options.compat}}">
       <script>
          window.themesActive = true;

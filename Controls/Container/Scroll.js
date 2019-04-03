@@ -18,7 +18,6 @@ define('Controls/Container/Scroll',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
    function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
-
       'use strict';
 
       /**
@@ -149,33 +148,15 @@ define('Controls/Container/Scroll',
                self._displayState.heightFix = displayState.heightFix;
                self._displayState.contentHeight = displayState.contentHeight;
                self._displayState.shadowPosition = displayState.shadowPosition;
-            },
-
-            /**
-             * Update information about the fixation state.
-             * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
-             */
-            updateFixationState: function(self, data) {
-               if (!!data.fixedPosition) {
-                  self._stickyHeadersIds[data.fixedPosition].push(data.id);
-                  if (data.mode === 'stackable') {
-                     self._stickyHeadersHeight[data.fixedPosition] += data.offsetHeight;
-                  }
-               } else if (!!data.prevPosition && self._stickyHeadersIds[data.prevPosition].indexOf(data.id) !== -1) {
-                  self._stickyHeadersIds[data.prevPosition].splice(self._stickyHeadersIds[data.prevPosition].indexOf(data.id), 1);
-                  if (data.mode === 'stackable') {
-                     self._stickyHeadersHeight[data.prevPosition] -= data.offsetHeight;
-                  }
-               }
             }
          },
          Scroll = Control.extend({
             _template: template,
 
-            //Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
-            //Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
-            //прокидываем руками
-            //EVENTSPROXY
+            // Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
+            // Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
+            // прокидываем руками
+            // EVENTSPROXY
             _tmplNotify: tmplNotify,
 
             /**
@@ -206,15 +187,6 @@ define('Controls/Container/Scroll',
 
             _pagingState: null,
 
-            _registeredHeadersIds: null,
-
-            /**
-             * @type {Object|null}
-             * @private
-             */
-            _stickyHeadersIds: null,
-            _stickyHeadersHeight: null,
-
             /**
              * @type {Controls/StickyHeader/Context|null}
              * @private
@@ -233,15 +205,6 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
-               this._registeredHeadersIds = [];
-               this._stickyHeadersIds = {
-                  top: [],
-                  bottom: []
-               };
-               this._stickyHeadersHeight = {
-                  top: 0,
-                  bottom: 0
-               };
                this._displayState = {};
                this._stickyHeaderContext = new StickyHeaderContext({
                   shadowPosition: options.shadowVisible ? 'bottom' : ''
@@ -361,7 +324,7 @@ define('Controls/Container/Scroll',
             },
 
             _shadowVisible: function(position) {
-               return this._displayState.shadowPosition.indexOf(position) !== -1 && this._stickyHeadersIds[position].length === 0;
+               return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
             },
 
             /**
@@ -399,7 +362,7 @@ define('Controls/Container/Scroll',
 
             _scrollbarTaken: function() {
                if (this._showScrollbarOnHover && this._displayState.hasScroll) {
-                  this._notify('scrollbarTaken', [], {bubbling: true});
+                  this._notify('scrollbarTaken', [], { bubbling: true });
                }
             },
 
@@ -443,17 +406,25 @@ define('Controls/Container/Scroll',
 
             _mouseleaveHandler: function(event) {
                if (this._showScrollbarOnHover) {
-                  this._notify('scrollbarReleased', [], {bubbling: true});
+                  this._notify('scrollbarReleased', [], { bubbling: true });
                }
             },
 
             _scrollbarTakenHandler: function() {
                this._showScrollbarOnHover = false;
+
+               // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+               // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
+               this._forceUpdate();
             },
 
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
+
+                  // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
+                  // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
+                  this._forceUpdate();
                   event.preventDefault();
                }
             },
@@ -472,37 +443,6 @@ define('Controls/Container/Scroll',
 
             _draggingChangedHandler: function(event, dragging) {
                this._dragging = dragging;
-            },
-
-            /**
-             * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event
-             * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
-             * @private
-             */
-            _fixedHandler: function(event, fixedHeaderData) {
-               _private.updateFixationState(this, fixedHeaderData);
-
-               // If the header is single, then it makes no sense to send notifications.
-               // Thus, we prevent unnecessary force updates on receiving messages.
-               if (this._registeredHeadersIds.length < 2) {
-                  return;
-               }
-               this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
-
-               //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
-               this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
-
-               event.stopPropagation();
-            },
-
-            _stickyRegisterHandler: function(event, stickyId, register) {
-               var index = this._registeredHeadersIds.indexOf(stickyId);
-               event.blockUpdate = true;
-               if (register && index === -1) {
-                  this._registeredHeadersIds.push(stickyId);
-               } else if (!register && index !== -1) {
-                  this._registeredHeadersIds.splice(index, 1);
-               }
             },
 
             /**
@@ -572,6 +512,24 @@ define('Controls/Container/Scroll',
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('excludedKeysChanged', args);
                }
+            },
+
+            _saveScrollPosition: function(e) {
+               /**
+                * Only closest scroll container should react to this event, so we have to stop propagation here.
+                * Otherwise we can accidentally scroll a wrong element.
+                */
+               e.stopPropagation();
+               this._savedScrollPosition = this._children.content.scrollHeight;
+            },
+
+            _restoreScrollPosition: function(e) {
+               /**
+                * Only closest scroll container should react to this event, so we have to stop propagation here.
+                * Otherwise we can accidentally scroll a wrong element.
+                */
+               e.stopPropagation();
+               this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
             }
          });
 
@@ -591,5 +549,4 @@ define('Controls/Container/Scroll',
       Scroll._private = _private;
 
       return Scroll;
-   }
-);
+   });

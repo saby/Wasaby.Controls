@@ -56,7 +56,11 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
             testName.splice(0, 1);
             this._dialogRes= opts.dialogResult;
             this._demoName = testName.join('');
+
+            opts.componentOpt._version = 0;
+            opts.componentOpt.getVersion = function() { return this._version; };
             this._exampleControlOptions = opts.componentOpt;
+
             this._nameOpener = opts.nameOpener;
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
@@ -98,6 +102,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
+            this._exampleControlOptions._version++;
             this._notify('optionsChanged', [this._options]);
          },
          reset: function() {

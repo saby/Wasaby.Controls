@@ -50,12 +50,12 @@
                                     </Controls.Operations.Panel>
                                 </ws:operationsPanel>
                                 <ws:actions>
-                                    <Controls.List.Remover name="remover"
+                                    <Controls.lists:Remover name="remover"
                                                            nodeProperty="Раздел@"
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"
                                                            on:afterItemsRemove="_afterItemsRemove()"/>
-                                    <Controls.List.Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
+                                    <Controls.lists:Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
                                         <ws:moveDialogTemplate>
                                             <Controls.List.Mover.MoveDialog
                                                root="{{null}}"
@@ -70,10 +70,10 @@
                                                hasChildrenProperty="Раздел$"
                                                nodeProperty="Раздел@"/>
                                         </ws:moveDialogTemplate>
-                                    </Controls.List.Mover>
+                                    </Controls.lists:Mover>
                                 </ws:actions>
                                 <ws:content>
-                                    <Controls.TreeGrid
+                                    <Controls.treeGrids:View
                                        name="list"
                                        attr:class="demo-Grid__control"
                                        itemsReadyCallback="{{_itemsReadyCallback}}"

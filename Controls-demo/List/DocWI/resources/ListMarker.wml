@@ -1,6 +1,6 @@
-<Controls.List
+<Controls.lists:View
         source="{{_viewSource}}"
         keyProperty="id"
         markerVisibility="onactivated"
         markedKey="{{2}}">
-</Controls.List>
+</Controls.lists:View>

@@ -25,7 +25,7 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                if (isNewEnvironment()) {
                   var dfr = new Deferred();
                   var deps = _private.prepareDeps(config);
-                  requirejs(['Controls/Popup/Compatible/Layer'], function(CompatiblePopup) {
+                  requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(CompatiblePopup) {
                      CompatiblePopup.load().addCallback(function() {
                         require(deps, function(BaseOpener, Strategy) {
                            var CoreTemplate = require(config.template);

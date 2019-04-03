@@ -3,9 +3,7 @@ define('Controls/Toggle/DoubleSwitch', [
    'wml!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
    'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
-   'Types/entity',
-   'css!theme?Controls/Toggle/DoubleSwitch/DoubleSwitch',
-   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'Types/entity'
 ], function(Control, template, toggleTemplate, textTemplate, entity) {
 
    /**
@@ -96,6 +94,8 @@ define('Controls/Toggle/DoubleSwitch', [
          value: false
       };
    };
+
+   Switch._theme = [ 'Controls/toggle' ];
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
