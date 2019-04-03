@@ -18,7 +18,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    background: @background_SelectedCollection;
+    background: @background_SelectedCollection-counter;
 }
 
 .controls-SelectedCollection__InfoBox_fixed:after {
@@ -28,7 +28,7 @@
     width: @width_SelectedCollection-counter-shadow;
     top: 0;
     bottom: 0;
-    .horizontal-gradient(@background_SelectedCollection, rgba(255, 255, 255, 0));
+    .horizontal-gradient(@background_SelectedCollection-counter, rgba(255, 255, 255, 0));
     background-color: transparent;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .controls-SelectedCollection__counter-ellipsis {
-    margin-left: @spacing_SelectedCollection-between-counter-items;
+    margin-left: @spacing_SelectedCollection-between-counter-ellipsis;
 }
 
 .ws-is-no-touch {
