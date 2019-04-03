@@ -118,8 +118,8 @@ define('Controls/Application/_Head',
          isArrayHead: function() {
             return Array.isArray(this.head);
          },
-         headTagResolver: function(value, parent, resolverParams) {
-            return noOuterTagResolver(value, parent, resolverParams);
+         headTagResolver: function(value) {
+            return Array.isArray(value) && value[0] === 'div' ? value[1] : value;
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);
