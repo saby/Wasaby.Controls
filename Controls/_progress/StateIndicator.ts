@@ -23,6 +23,7 @@ var defaultColors = [
          }
          return colors;
       },
+      
       /**
        * Calculates sector categories corresponding to options
        * @param {Object} opts Options
@@ -32,7 +33,7 @@ var defaultColors = [
        */
       calculateColorState: function(opts, _colors, _numSectors) {
          var
-            sectorSize = (opts.scale <= 0 || opts.scale > 100 ?  10 : opts.scale),
+            sectorSize = (opts.scale <= 0 || opts.scale > 100 ?  10 : Math.floor(opts.scale)),
             colorValues = [],
             curSector = 0,
             totalSectorsUsed = 0,
@@ -66,6 +67,7 @@ var defaultColors = [
          }
          return colorValues;
       },
+
       /**
        * Checks if options are valid
        * @param {Object} opts Options
@@ -154,6 +156,7 @@ var StateIndicator = Control.extend(
       _mouseEnterIndicatorHandler: function(e) {
          this._notify('itemEnter', [e.target]);
       },
+
       /**
        * Processes and applies new options
        * @param {Object} opts Options
