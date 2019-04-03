@@ -115,6 +115,7 @@ define('Controls/Application/HeadData', [
             self.defRender.callback({
                js: files.js,
                tmpl: files.tmpl || [],
+               wml: files.wml || [],
                css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serialized,

@@ -1,12 +1,12 @@
-<ws:partial template="wml!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
+<ws:partial template="Controls/grids:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
    <ws:contentTemplate>
-      <ws:partial template="wml!Controls/List/EditInPlace/EditingTemplate"
+      <ws:partial template="Controls/lists:EditingTemplate"
                   attr:class="ControlsDemo-EipScenarios__editorWrapper"
                   value="{{ itemData.item[itemData.column.displayProperty] }}"
                   itemData="{{itemData}}"
                   enabled="{{itemData.index !== 0}}">
          <ws:editorTemplate>
-            <Controls.Input.Number bind:value="itemData.item[itemData.column.displayProperty]"
+            <Controls.input:Number bind:value="itemData.item[itemData.column.displayProperty]"
                                    selectOnClick="{{ false }}"
                                    textAlign="right"
                                    precision="{{ 0 }}" />

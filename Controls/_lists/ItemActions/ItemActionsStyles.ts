@@ -1,6 +1,6 @@
 /**
  * @author Зайцев А.С.
- * @mixin Controls/List/ItemActions/ItemActionsStyles
+ * @mixin Controls/_lists/ItemActions/ItemActionsStyles
  * @public
  *
  * @css @height_ItemActions_inside Height of the item actions when they're positioned inside a row.

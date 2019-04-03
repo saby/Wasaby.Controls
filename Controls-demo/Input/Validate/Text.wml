@@ -7,7 +7,7 @@
                     <ws:Function value="{{_value4 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                 </ws:validators>
                 <ws:content>
-                    <Controls.Input.Text
+                    <Controls.input:Text
                             name="textBox"
                             bind:value="_value4"
                             placeholder="input"

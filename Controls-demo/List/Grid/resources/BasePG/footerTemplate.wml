@@ -1,1 +1,1 @@
-<Controls.List.AddButton caption="Наименование"/>
+<Controls.lists:AddButton caption="Наименование"/>

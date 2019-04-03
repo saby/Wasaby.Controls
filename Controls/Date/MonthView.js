@@ -110,14 +110,16 @@ define('Controls/Date/MonthView', [
 
    MonthView._private = _private;
 
+   var defaultOptions = coreMerge({
+      dayTemplate: dayTemplate,
+   }, IMonth.getDefaultOptions());
+
    MonthView.getDefaultOptions = function() {
-      return coreMerge({
-         dayTemplate: dayTemplate,
-      }, IMonth.getDefaultOptions());
+      return defaultOptions;
    };
 
    MonthView.getOptionTypes = function() {
-      return coreMerge({}, IMonth.getOptionTypes());
+      return IMonth.getOptionTypes();
    };
 
    return MonthView;

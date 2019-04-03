@@ -87,7 +87,7 @@ define('Controls/Search/Controller',
       };
    
       /**
-       * The search controller allows you to search data in a {@link Controls/List}
+       * The search controller allows you to search data in a {@link Controls/lists:View}
        * using any component with {@link Controls/Input/interface/IInputField} interface.
        * Search controller allows you:
        * 1) set delay before searching

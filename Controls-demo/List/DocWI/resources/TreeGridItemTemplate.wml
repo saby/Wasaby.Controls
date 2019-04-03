@@ -1,10 +1,10 @@
-<Controls.TreeGrid
+<Controls.treeGrids:View
         source="{{_viewSource}}"
         keyProperty="id"
         columns="{{_columns}}"
         nodeProperty="type"
         parentProperty="parent">
     <ws:itemTemplate>
-        <ws:partial template="wml!Controls/List/TreeGridView/Item" expanderIcon="hiddenNode" expanderSize="xl"/>
+        <ws:partial template="Controls/treeGrids:ItemTemplate" expanderIcon="hiddenNode" expanderSize="xl"/>
     </ws:itemTemplate>
-</Controls.TreeGrid>
+</Controls.treeGrids:View>

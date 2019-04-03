@@ -1,7 +1,7 @@
 <Controls-demo.Wrapper.Wrapper title="Number">
    <ws:componentClass>
       <Controls.Popup.Opener.InfoBox name="infoBoxNumber"/>
-      <Controls.Input.Number
+      <Controls.input:Number
          attr:id="main_field"
          name="textNumber"
          bind:value="_text1"
@@ -24,21 +24,21 @@
       />
    </ws:componentClass>
    <ws:componentProperty>
-      <Controls.Label name="myLabel1" caption="placeholder"/>
-      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox test_input"/>
-      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls.input:Label name="myLabel1" caption="placeholder"/>
+      <Controls.input:Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox test_input"/>
+      <Controls.input:Label name="myLabel1" caption="tagStyle"/>
       <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
-      <Controls.Label name="myLabel1" caption="integersLength"/>
-      <Controls.Input.Number attr:id="integersLength" bind:value="_integersLength"  attr:class="demo-TextBox test_integersLength"
+      <Controls.input:Label name="myLabel1" caption="integersLength"/>
+      <Controls.input:Number attr:id="integersLength" bind:value="_integersLength"  attr:class="demo-TextBox test_integersLength"
                              onlyPositive="{{true}}" precision="{{0}}"/>
-      <Controls.Label name="myLabel1" caption="precision"/>
-      <Controls.Input.Number attr:id="precision" bind:value="_precision" attr:class="demo-TextBox test_precision"
+      <Controls.input:Label name="myLabel1" caption="precision"/>
+      <Controls.input:Number attr:id="precision" bind:value="_precision" attr:class="demo-TextBox test_precision"
                              onlyPositive="{{true}}" precision="{{0}}"/>
-      <Controls.Label name="myLabel1" caption="textAlign"/>
+      <Controls.input:Label name="myLabel1" caption="textAlign"/>
       <Controls.Input.ComboBox source="{{_createMemory()}}" keyProperty="title" displayProperty="title"
                                bind:selectedKey="_textAlign" attr:class="demo-TextBox"/>
-       <Controls.Label caption="tooltip"/>
-       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
+       <Controls.input:Label caption="tooltip"/>
+       <Controls.input:Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive"
                                    caption="onlyPositive"/>

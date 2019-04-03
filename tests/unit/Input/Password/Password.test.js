@@ -1,15 +1,15 @@
 define(
    [
       'Core/core-instance',
-      'Controls/Input/Password'
+      'Controls/input'
    ],
-   function(instance, Password) {
+   function(instance, input) {
       describe('Controls.Input.Password', function() {
          var ctrl, calls;
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Password();
+            ctrl = new input.Password();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
@@ -26,7 +26,7 @@ define(
          });
 
          it('Checking default values of options.', function() {
-            assert.deepEqual(Password.getDefaultOptions(), {
+            assert.deepEqual(input.Password.getDefaultOptions(), {
                value: '',
                tooltip: '',
                style: 'info',
@@ -40,7 +40,7 @@ define(
             });
          });
          it('Checking types of options.', function() {
-            assert.deepEqual(Object.keys(Password.getOptionTypes()).sort(), [
+            assert.deepEqual(Object.keys(input.Password.getOptionTypes()).sort(), [
                'size',
                'style',
                'tooltip',

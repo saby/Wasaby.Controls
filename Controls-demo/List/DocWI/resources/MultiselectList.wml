@@ -1,10 +1,10 @@
 <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
-    <Controls.List.Container>
+    <Controls.lists:Container>
         <Controls.List.MultiSelector>
-            <Controls.List
+            <Controls.lists:View
                     source="{{_viewSource}}"
                     keyProperty="id"
                     multiSelectVisibility="visible" />
         </Controls.List.MultiSelector>
-    </Controls.List.Container>
+    </Controls.lists:Container>
 </Controls.Container.MultiSelector>

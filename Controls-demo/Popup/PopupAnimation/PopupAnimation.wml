@@ -7,7 +7,7 @@
    <Controls.buttons:Button name="stackButton" caption="Открыть задачу" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
    <br />
    <br />
-   <Controls.Input.Number bind:value="_animationDelay" on:valueChanged="_inputHandlerHandler('_animationDelay')" precision="{{0}}"/> Длительность анимации в мс. Допустимое значение от 0 до 1500
+   <Controls.input:Number bind:value="_animationDelay" on:valueChanged="_inputHandlerHandler('_animationDelay')" precision="{{0}}"/> Длительность анимации в мс. Допустимое значение от 0 до 1500
    <br />
-   <Controls.Input.Number bind:value="_fullCreateDelay" on:valueChanged="_inputHandlerHandler('_fullCreateDelay')" precision="{{0}}"/> Задержка до полного построения шаблона. Допустимое значение от 0 до 1500
+   <Controls.input:Number bind:value="_fullCreateDelay" on:valueChanged="_inputHandlerHandler('_fullCreateDelay')" precision="{{0}}"/> Задержка до полного построения шаблона. Допустимое значение от 0 до 1500
 </div>

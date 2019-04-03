@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/TreeGrid',
+   'Controls/treeGrids',
    'Controls/breadcrumbs'
 ], function(
    Control,
@@ -246,7 +246,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary'
+         backButtonStyle: 'secondary',
+         stickyHeader: true
       };
    };
 

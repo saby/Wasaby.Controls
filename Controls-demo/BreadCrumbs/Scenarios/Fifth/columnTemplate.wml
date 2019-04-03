@@ -1,4 +1,4 @@
-<ws:partial template="wml!Controls/List/Grid/Column"
+<ws:partial template="Controls/grids:ColumnTemplate"
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>

@@ -23,10 +23,6 @@
   width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup})";
 }
 
-.controls-Lookup__fieldWrapper_hidden {
-  display: none;
-}
-
 /*
   Border is used as an indent for the input field.
   Padding is not suitable because a non-native placeholder is used, which is positioned through absolute.
@@ -49,6 +45,10 @@
 .controls-Lookup__fieldWrapper_content_width_default {
   line-height: @line-height_Lookup-input-wrapper;
   width: auto;
+}
+
+.controls-Lookup__fieldWrapper_hidden {
+  display: none;
 }
 
 .controls-Lookup__afterFieldWrapper {

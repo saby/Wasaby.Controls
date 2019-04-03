@@ -163,14 +163,14 @@ define('Controls/interface/IEditableArea', [
     * @name Controls/interface/IEditableArea#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
-    * If you want content to look exactly as {@link Controls/Input/Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
+    * If you want content to look exactly as {@link Controls.input:Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
     * Using Controls.EditableArea.Templates.Editors.Base:
     * <pre>
     *     <Controls.EditableArea editObject="{{_editObject}}">
     *        <Controls.EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
-    *              <Controls.Input.Text />
+    *              <Controls.input:Text />
     *           </ws:editorTemplate>
     *        </Controls.EditableArea.Templates.Editors.Base>
     *     </Controls.EditableArea>
@@ -180,7 +180,7 @@ define('Controls/interface/IEditableArea', [
     *    <ws:template name="editingTemplate">
     *       <div class="myEditingTemplate">
     *          <ws:if data="{{isEditing}}">
-    *             <Controls.Input.Text value="{{editObject.text}}" />
+    *             <Controls.input:Text value="{{editObject.text}}" />
     *          </ws:if>
     *          <ws:else>
     *             <span>{{editObject.text}}</span>
