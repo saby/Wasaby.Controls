@@ -3,8 +3,8 @@
  */
 define('Controls/Application/AppData', [
    'Core/core-extend',
-   'View/Request'
-], function(extend, Request) {
+   'Application/Env'
+], function(extend, AppEnv) {
 
    var AppData = extend.extend({
       constructor: function(cfg) {
@@ -31,10 +31,10 @@ define('Controls/Application/AppData', [
       }
    });
    AppData.initAppData = function(cfg) {
-      Request.getCurrent().setStorage('AppData', new AppData(cfg));
+      AppEnv.setStore('AppData', new AppData(cfg));
    };
    AppData.getAppData = function() {
-      return Request.getCurrent().getStorage('AppData');
+      return AppEnv.getStore('AppData');
    };
    return AppData;
 });

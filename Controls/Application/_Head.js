@@ -3,10 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'View/Request',
+      'Application/Env',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Request, ThemesControllerNew) {
+   function(Base, Deferred, template, Env, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -65,7 +65,7 @@ define('Controls/Application/_Head',
                this.simpleCss = [];
                return;
             }
-            var headData = Request.getCurrent().getStorage('HeadData');
+            var headData = Env.getStore('HeadData');
             var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
