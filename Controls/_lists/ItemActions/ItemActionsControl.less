@@ -142,6 +142,86 @@
   display: inline-flex;
 }
 
+.controls-itemActionsV__applyButton,
+.controls-itemActionsV__closeButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.controls-itemActionsV__applyButton {
+  border: solid @border-color_ItemActions-editAtPlace-applyButton;
+  border-width: @border-width_ItemActions-editAtPlace-applyButton;
+  border-radius: @border-radius_ItemActions-editAtPlace-applyButton;
+  box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton;
+  background-color: @background-color_ItemActions-editAtPlace-applyButton;
+  color: @color_ItemActions-editAtPlace-applyButton;
+  width: @width_ItemActions-editAtPlace-applyButton;
+  height: @height_ItemActions-editAtPlace-applyButton;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-applyButton;
+}
+
+.controls-itemActionsV__applyButton .icon-size {
+  .icon(@icon-size_ItemActions-editAtPlace-applyButton, @font-family_ItemActions-editAtPlace-applyButton);
+}
+
+.controls-itemActionsV__applyButton:hover {
+  border-color: @border-color_ItemActions-editAtPlace-applyButton_hovered;
+  background-color: @background-color_ItemActions-editAtPlace-applyButton_hovered;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-applyButton_hovered;
+  box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton_hovered;
+  color: @color_ItemActions-editAtPlace-applyButton_hovered;
+}
+.controls-itemActionsV__applyButton:active {
+  border-color: @border-color_ItemActions-editAtPlace-applyButton_active;
+  background-color: @background-color_ItemActions-editAtPlace-applyButton_active;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-applyButton_active;
+  box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton_active;
+  color: @color_ItemActions-editAtPlace-applyButton_active;
+}
+
+.controls-itemActionsV__closeButton {
+  border: solid @border-color_ItemActions-editAtPlace-closeButton;
+  border-top-width: @border-top-width_ItemActions-editAtPlace-closeButton;
+  border-right-width: @border-right-width_ItemActions-editAtPlace-closeButton;
+  border-bottom-width: @border-bottom-width_ItemActions-editAtPlace-closeButton;
+  border-left-width: @border-left-width_ItemActions-editAtPlace-closeButton;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-closeButton;
+  .border-radiuses(
+          @border-top-right-radius_ItemActions-editAtPlace-closeButton,
+          @border-bottom-right-radius_ItemActions-editAtPlace-closeButton,
+          @border-bottom-left-radius_ItemActions-editAtPlace-closeButton,
+          @border-top-left-radius_ItemActions-editAtPlace-closeButton
+  );
+  background-color: @background-color_ItemActions-editAtPlace-closeButton;
+  color: @color_ItemActions-editAtPlace-closeButton;
+  box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton;
+  width: @width_ItemActions-editAtPlace-closeButton;
+  height: @height_ItemActions-editAtPlace-closeButton;
+}
+
+.controls-itemActionsV__closeButton .icon-size {
+  .icon(@icon-size_ItemActions-editAtPlace-closeButton, @font-family_ItemActions-editAtPlace-applyButton);
+}
+
+.controls-itemActionsV__closeButton:hover {
+  box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton_hovered;
+  background-color: @background-color_ItemActions-editAtPlace-closeButton_hovered;
+  border-color: @border-color_ItemActions-editAtPlace-closeButton_hovered;
+  color: @color_ItemActions-editAtPlace-closeButton_hovered;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-closeButton_hovered;
+}
+
+.controls-itemActionsV__closeButton:active {
+  border-color: @border-color_ItemActions-editAtPlace-closeButton_active;
+  background-color: @background-color_ItemActions-editAtPlace-closeButton_active;
+  text-shadow: @text-shadow_ItemActions-editAtPlace-closeButton_active;
+  box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton_active;
+  color: @color_ItemActions-editAtPlace-closeButton_active;
+}
+
 .ws-is-no-touch {
    .controls-itemActionsV__action_title:hover {
       color: @color_ItemActions-title_hover;
