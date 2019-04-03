@@ -55,6 +55,9 @@ define('Controls/StickyHeader/Group',
 
          _stickyHeadersIds: null,
          _shadowVisible: false,
+         _height: 0,
+
+         _headers: null,
 
          _beforeMount: function(options, context, receivedState) {
             this._isStickySupport = stickyUtils.isStickySupport();
@@ -63,18 +66,45 @@ define('Controls/StickyHeader/Group',
                top: [],
                bottom: []
             };
+            this._headers = {};
          },
 
          _afterMount: function() {
             this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
-            this._notify('register', ['updateStickyHeight', this, this._updateStickyHeight], {bubbling: true});
-            this._notify('stickyRegister', [this._index, true], { bubbling: true });
+            this._notify('stickyRegister', [{
+               id: this._index,
+               inst: this,
+               position: 'top',
+            }, true], { bubbling: true });
          },
 
          _beforeUnmount: function() {
             this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
-            this._notify('unregister', ['updateStickyHeight', this], {bubbling: true});
-            this._notify('stickyRegister', [this._index, false], { bubbling: true });
+            this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
+         },
+
+         getOffset: function(parentElement, position) {
+            return stickyUtils.getOffset(parentElement, this._container, position);
+         },
+
+         get height() {
+            // If the header is hidden we cannot calculate its current height.
+            // Use the height that it had before it was hidden.
+            if (this._container.offsetParent !== null) {
+               this._height = this._container.offsetHeight;
+            }
+            return this._height;
+         },
+
+         set top(value) {
+            for (var id in this._headers) {
+               this._headers[id].inst.top = value;
+            }
+         },
+         set bottom(value) {
+            for (var id in this._headers) {
+               this._headers[id].inst.bottom = value;
+            }
          },
 
          _fixedHandler: function(event, fixedHeaderData) {
@@ -106,15 +136,13 @@ define('Controls/StickyHeader/Group',
             }
          },
 
-         _updateStickyHeight: function(height) {
-            if (!this._fixed) {
-               this._children.stickyHeaderHeight.start(height);
-            }
-         },
-
-         _stickyRegisterHandler: function(event) {
-            event.blockUpdate = true;
+         _stickyRegisterHandler: function(event, data, register) {
             event.stopImmediatePropagation();
+            if (register) {
+               this._headers[data.id] = data;
+            } else {
+               delete this._headers[data.id];
+            }
          }
       });
 

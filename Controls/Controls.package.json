@@ -133,10 +133,8 @@
 }, {
   "include": [
     "Controls/List/*",
-    "Controls/List",
     "Controls/_lists/*",
     "Controls/_lists",
-    "Controls/Grid",
     "Controls/List/ItemActions/Utils/Actions",
     "Controls/_lists/ItemActions/Utils/Actions"
   ],

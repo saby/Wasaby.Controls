@@ -47,7 +47,7 @@ define('unit/Input/Base/InputUtility',
       return {
 
          /**
-          * @param {Controls/Input/Base} input
+          * @param {Controls/input:Base} input
           * @param [value]
           * @param {Number} [start]
           * @param {Number} [end]
@@ -70,7 +70,7 @@ define('unit/Input/Base/InputUtility',
          },
 
          /**
-          * @param {Controls/Input/Base} input
+          * @param {Controls/input:Base} input
           * @param {Number} start
           * @param {Number} end
           */
@@ -79,7 +79,7 @@ define('unit/Input/Base/InputUtility',
          },
 
          /**
-          * @param {Controls/Input/Base} input
+          * @param {Controls/input:Base} input
           * @param {String} text
           */
          insert: function(input, text) {
@@ -87,14 +87,14 @@ define('unit/Input/Base/InputUtility',
          },
 
          /**
-          * @param {Controls/Input/Base} input
+          * @param {Controls/input:Base} input
           */
          backspace: function(input) {
             _private.cleaningKeys(input, 'backspace');
          },
 
          /**
-          * @param {Controls/Input/Base} input
+          * @param {Controls/input:Base} input
           */
          delete: function(input) {
             _private.cleaningKeys(input, 'delete');

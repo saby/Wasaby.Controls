@@ -17,7 +17,7 @@ define('Controls-demo/List/Grid/MultiselectPG',
         var Component = Control.extend({
             _template: template,
             _metaData: null,
-            _content: 'Controls/Grid',
+            _content: 'Controls/grid:View',
             _dataObject: {},
             _componentOptions: null,
 

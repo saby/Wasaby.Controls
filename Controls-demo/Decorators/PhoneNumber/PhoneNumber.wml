@@ -3,7 +3,7 @@
    <div class="controlsDemo-Number_offsetG">
       <div class="controlsDemo-Number_offsetV">
          <div>phoneNumber</div>
-         <Controls.Input.Text bind:value="_number"/>
+         <Controls.input:Text bind:value="_number"/>
       </div>
       <Controls.Decorator.PhoneNumber number="{{_number}}"/>
    </div>

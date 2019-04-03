@@ -1,6 +1,6 @@
 <div>
-    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
-        <Controls.Input.Number value="{{_options.value}}"
+    <Controls.input:Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+        <Controls.input:Number value="{{_options.value}}"
                                readOnly="{{_options.readOnly}}"
                                precision="{{_options.precision}}"
                                onlyPositive="{{_options.onlyPositive}}"

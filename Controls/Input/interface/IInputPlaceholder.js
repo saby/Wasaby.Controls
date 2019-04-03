@@ -17,15 +17,15 @@ define('Controls/Input/interface/IInputPlaceholder', [], function() {
     * @example
     * In this example, we create a text field with simple text placeholder.
     * <pre>
-    *    <Controls.Input.Text placeholder="Enter your name" />
+    *    <Controls.input:Text placeholder="Enter your name" />
     * </pre>
     * In this example, we render a custom template in field's placeholder. We put a Button in the placeholder that user can click on to open the list to pick from.
     * <pre>
-    *    <Controls.Input.Text>
+    *    <Controls.input:Text>
     *        <ws:placeholder>
     *           <span>Enter your name or <Controls.Button caption="choose from the list" on:click="openListHandler()"/></span>
     *        </ws:placeholder>
-    *    </Controls.Input.Text>
+    *    </Controls.input:Text>
     * </pre>
     */
 });

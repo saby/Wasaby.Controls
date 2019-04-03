@@ -10,6 +10,7 @@ define('Controls/Calendar/Utils', [
    'use strict';
 
    var locale = locales.current;
+   var weekdaysCaptions;
 
    var getDayRange = function(startDate, endDate, quantum) {
       var date = new Date(startDate);
@@ -29,12 +30,15 @@ define('Controls/Calendar/Utils', [
         * @returns {Array}
         */
       getWeekdaysCaptions: function() {
-         var days = locale.config.daysSmall.slice(1);
-         days.push(locale.config.daysSmall[0]);
+         if (!weekdaysCaptions || locale !== locales.current) {
+            var days = locale.config.daysSmall.slice(1);
+            days.push(locale.config.daysSmall[0]);
 
-         return days.map(function(value, index) {
-            return {caption: value, weekend: index === 5 || index === 6};
-         });
+            weekdaysCaptions = days.map(function(value, index) {
+               return {caption: value, weekend: index === 5 || index === 6};
+            });
+         }
+         return weekdaysCaptions;
       },
 
       /**

@@ -6,9 +6,10 @@ define('Controls/Popup/Compatible/ManagerWrapper',
       'Core/Control',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
+      'Controls/Popup/Manager/ManagerController',
       'Vdom/Vdom'
    ],
-   function(Control, Controller, template, Vdom) {
+   function(Control, Controller, template, ManagerController, Vdom) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
@@ -23,7 +24,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
             this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
             this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
-            this._mousedownPage = this._eventRegistratorHandler.bind(this, 'mousedownDetect');
+            this._mousedownPage = this._mouseDownHandler.bind(this);
             this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
 
             this._toggleWindowHandlers(true);
@@ -50,6 +51,14 @@ define('Controls/Popup/Compatible/ManagerWrapper',
          _eventRegistratorHandler: function(registratorName, event) {
             // vdom control used synthetic event
             this._children[registratorName].start(new Vdom.SyntheticEvent(event));
+         },
+
+         _mouseDownHandler: function(event) {
+            this._eventRegistratorHandler('mousedownDetect', event);
+            var Manager = ManagerController.getManager();
+            if (Manager) {
+               Manager._mouseDownHandler(event);
+            }
          },
 
          registerListener: function(event, registerType, component, callback) {
