@@ -77,6 +77,11 @@
       "path": "./tests/unit"
     },
     {
+      "name": "Application",
+      "path": "./node_modules/wasaby-app/src/Application",
+      "required": true
+    },
+    {
       "name": "File",
       "path": "./node_modules/rmi/src/client/File"
     },
@@ -88,6 +93,11 @@
     {
       "name": "Browser",
       "path": "./node_modules/rmi/src/client/Browser",
+      "required": true
+    },
+    {
+      "name": "SbisEnv",
+      "path": "./node_modules/rmi/src/client/SbisEnv",
       "required": true
     },
     {
