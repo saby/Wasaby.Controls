@@ -20,7 +20,7 @@ export const GridLayoutUtil = {
             rules['-ms-grid-column'] = columnIndex + 1;
             rules['-ms-grid-row'] = rowIndex + 1;
         }
-        return toCssString(rules);
+        return GridLayoutUtil.toCssString(rules);
     },
 
     getTemplateColumnsStyle(columnsWidth: Array<string>) {
@@ -34,7 +34,15 @@ export const GridLayoutUtil = {
             rules["-ms-grid-columns"] = widths;
         }
 
-        return toCssString(rules);
+        return GridLayoutUtil.toCssString(rules);
+    },
+
+    toCssString(cssRules: object): string {
+        let cssString: string = '';
+        for (let ruleName in cssRules) {
+            cssString += (ruleName + ': ' + cssRules[ruleName] + '; ');
+        }
+        return cssString.trim();
     }
 };
 
@@ -49,12 +57,4 @@ function getSupportStatus(): SupportStatusEnum {
     }
 
     return SupportStatusEnum.None
-}
-
-function toCssString(cssRules: object): string {
-    let cssString: string = '';
-    for (let ruleName in cssRules) {
-        cssString += (ruleName + ': ' + cssRules[ruleName] + '; ');
-    }
-    return cssString.trim();
 }

@@ -483,6 +483,10 @@ var
                );
             }
 
+            if (this._isPartialGridSupport) {
+                headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
+            }
+
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -555,9 +559,11 @@ var
             resultsColumn.cellClasses = cellClasses;
 
             if (GridLayoutUtil.supportStatus === SupportStatusEnum.Partial) {
-                let
-                    resultsPosition: string = this.getResultsPosition(),
-                    rowIndex = resultsPosition === 'top' ? 0 : this._model.getStopIndex();
+                let resultsPosition: string = this.getResultsPosition(),
+                    rowIndex = 0;
+
+                rowIndex += resultsPosition === 'top' ? 0 : this._model.getStopIndex();
+                rowIndex += this.getHeader() ? 1 : 0;
 
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
             }
@@ -779,6 +785,13 @@ var
             if (this._options.groupingKeyCallback) {
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
+
+                    if (this._isPartialGridSupport) {
+                        current.gridGroupStyles = GridLayoutUtil.toCssString({
+                            '-ms-grid-row': current.index + 1
+                        });
+                    }
+
                     return current;
                 }
             }
@@ -859,6 +872,7 @@ var
                 }
                 if (current.isPartialGridSupport) {
                     let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
+                    rowOffset += self.getHeader() ? 1 : 0;
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
                 }
                 return currentColumn;
@@ -974,6 +988,24 @@ var
                 version = 'LAST_ITEM_' + version;
             }
             return version;
+        },
+
+        getEmptyTemplateStyles() {
+          let styles = '';
+
+          if (!this._isNoGridSupport) {
+              let
+                  columnsLength = this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
+                  rowIndex = 0;
+
+              styles += GridLayoutUtil.toCssString({'-ms-grid-column-span': columnsLength});
+              rowIndex += this.getHeader() ? 1 : 0;
+              rowIndex += this.getResultsPosition() === 'top' ? 1 : 0;
+
+              styles += GridLayoutUtil.getCellStyles(rowIndex, 0);
+          }
+
+          return styles;
         },
 
         _prepareDisplayItemForAdd: function(item) {
