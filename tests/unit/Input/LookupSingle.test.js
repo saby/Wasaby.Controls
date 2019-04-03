@@ -402,6 +402,19 @@ define([
          Lookup._private.getCounterWidth = getCounterWidth;
       });
 
+      it('_onClickClearRecords', function() {
+         var
+            activated = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            activated = true;
+         };
+
+         lookup._onClickClearRecords();
+         assert.isTrue(activated);
+      });
+
       it('_keyDown', function() {
          var
             isNotifyShowSelector= false,

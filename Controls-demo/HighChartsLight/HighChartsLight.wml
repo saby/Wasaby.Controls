@@ -4,11 +4,11 @@
     <Controls.buttons:Button class="test-demo-button" name="toggleButton" caption="{{toggleCaption}}"
                      on:click="toggleChart()" />
     <ws:if data="{{need}}">
-        <Graphs.HighChartsLight
+        <Controls.HighChartsLight
                 chartOptions="{{highChartOptions1}}"
         />
     </ws:if>
-    <Graphs.HighChartsLight
+    <Controls.HighChartsLight
             chartOptions="{{highChartOptions2}}"
     />
 </div>

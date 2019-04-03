@@ -14,7 +14,7 @@ define('Controls-demo/List/List/GroupPG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/List',
+         _content: 'Controls/list:View',
          _dataObject: null,
          _componentOptions: null,
 

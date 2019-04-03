@@ -186,6 +186,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
+        if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
+            version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
+        }
         return version;
     },
 

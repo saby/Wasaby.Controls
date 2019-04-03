@@ -3,7 +3,7 @@ define('Controls-demo/Example/Input/Mask',
       'Core/Control',
       'wml!Controls-demo/Example/Input/Mask/Mask',
 
-      'Controls/Input/Mask',
+      'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],

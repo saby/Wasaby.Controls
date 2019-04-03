@@ -33,7 +33,7 @@
                      <ws:Function value="{{ _record && _record.get('nameText') }}">Controls/Validate/Validators/IsRequired</ws:Function>
                   </ws:validators>
                   <ws:content>
-                     <Controls.Input.Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText"/>
+                     <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText"/>
                   </ws:content>
                </Controls.Validate.Controller>
             </div>
@@ -44,7 +44,7 @@
                      <ws:Function value="{{ _record && _record.get('emailText') }}">Controls/Validate/Validators/IsEmail</ws:Function>
                   </ws:validators>
                   <ws:content>
-                     <Controls.Input.Text validationErrors="{{content.validationErrors}}" bind:value="_record.emailText" placeholder="validator e-mail" name="emailText"/>
+                     <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.emailText" placeholder="validator e-mail" name="emailText"/>
                   </ws:content>
                </Controls.Validate.Controller>
             </div>

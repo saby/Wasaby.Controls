@@ -1,4 +1,4 @@
-<Controls.Input.Render attr:title="{{_tooltip}}"
+<Controls._input.Render attr:title="{{_tooltip}}"
                        style="{{_renderStyle}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
@@ -39,4 +39,4 @@
                   scope="{{_afterFieldWrapper.scope}}"
                   template="{{_afterFieldWrapper.template}}"/>
    </ws:afterFieldWrapper>
-</Controls.Input.Render>
+</Controls._input.Render>

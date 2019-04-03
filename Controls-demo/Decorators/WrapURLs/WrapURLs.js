@@ -3,7 +3,7 @@ define('Controls-demo/Decorators/WrapURLs/WrapURLs',
       'Core/Control',
       'wml!Controls-demo/Decorators/WrapURLs/WrapURLs',
 
-      'Controls/Input/Area',
+      'Controls/input',
       'Controls/Decorator/WrapURLs',
       'css!Controls-demo/Decorators/WrapURLs/WrapURLs'
    ],

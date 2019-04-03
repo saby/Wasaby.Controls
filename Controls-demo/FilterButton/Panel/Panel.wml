@@ -51,7 +51,7 @@
    </div>
 
    <div>
-      <Controls.Input.Area
+      <Controls.input:Area
               attr:id="area"
               bind:value="_text"/>
    </div>

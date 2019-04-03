@@ -17,7 +17,7 @@ define('Controls/Selector/Suggest',
        * Combobox input that suggests options as you are typing.
        *
        * @class Controls/Input/ComboBox/Suggest
-       * @extends Controls/Input/Text
+       * @extends Controls/input:Text
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter

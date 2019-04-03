@@ -1,6 +1,6 @@
 <div style="padding-left: 12px;">
     <div>
-        <Controls.Label caption="left" attr:class="demo-TextBox"/>
+        <Controls.input:Label caption="left" attr:class="demo-TextBox"/>
         <Controls.Input.ComboBox
                 keyProperty="id"
                 displayProperty="title"
@@ -9,7 +9,7 @@
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
-        <Controls.Label caption="right" attr:class="demo-TextBox"/>
+        <Controls.input:Label caption="right" attr:class="demo-TextBox"/>
         <Controls.Input.ComboBox
                 keyProperty="id"
                 displayProperty="title"
@@ -18,7 +18,7 @@
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
-        <Controls.Label caption="top" attr:class="demo-TextBox"/>
+        <Controls.input:Label caption="top" attr:class="demo-TextBox"/>
         <Controls.Input.ComboBox
                 keyProperty="id"
                 displayProperty="title"
@@ -27,7 +27,7 @@
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
-        <Controls.Label caption="bottom" attr:class="demo-TextBox"/>
+        <Controls.input:Label caption="bottom" attr:class="demo-TextBox"/>
         <Controls.Input.ComboBox
                 keyProperty="id"
                 displayProperty="title"

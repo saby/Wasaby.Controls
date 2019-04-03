@@ -22,7 +22,7 @@ define('Controls/Input/interface/IInputTag', [
     * @example
     * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
+    *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *
@@ -49,7 +49,7 @@ define('Controls/Input/interface/IInputTag', [
     * @example
     * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
+    *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *
@@ -76,7 +76,7 @@ define('Controls/Input/interface/IInputTag', [
     * @example
     * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text tagStyle="danger" on:tagHover="_tagHoverHandler()"/>
+    *    <Controls.input:Text tagStyle="danger" on:tagHover="_tagHoverHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *

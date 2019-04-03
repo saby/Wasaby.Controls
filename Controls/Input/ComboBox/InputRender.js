@@ -1,9 +1,9 @@
 define('Controls/Input/ComboBox/InputRender', [
-   'Controls/Input/Base'
-], function(InputBase) {
+   'Controls/input'
+], function(input) {
    'use strict';
 
-   var SuggestInputRender = InputBase.extend({
+   var SuggestInputRender = input.Base.extend({
       _initProperties: function(options) {
          SuggestInputRender.superclass._initProperties.call(this, options);
          

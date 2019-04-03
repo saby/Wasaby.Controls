@@ -8,14 +8,14 @@ define('Controls/HighChartsLight',
       'browser!/cdn/Highcharts/7.0.3/highcharts-more.js',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
-      'i18n!Graphs/HighChartsLight'
+      'i18n!Controls/HighChartsLight'
    ],
    function(Control, template, Env, cClone, Highcharts, More) {
       'use strict';
 
       /**
        * Component HighChartsLight
-       * @class Graphs/HighChartsLight
+       * @class Controls/HighChartsLight
        * @extends Core/Control
        * @mixes Controls/interface/IHighCharts
        * @control
