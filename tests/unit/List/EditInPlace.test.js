@@ -4,7 +4,7 @@ define([
    'Types/entity',
    'Core/Deferred',
    'Types/source',
-   'Controls/List/ListViewModel',
+   'Controls/lists',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Constants'
 ], function(
@@ -13,7 +13,7 @@ define([
    entity,
    Deferred,
    sourceLib,
-   ListViewModel,
+   lists,
    TreeViewModel,
    Constants
 ) {
@@ -108,7 +108,7 @@ define([
             },
             idProperty: 'id'
          });
-         listModel = new ListViewModel({
+         listModel = new lists.ListViewModel({
             items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title'
@@ -122,7 +122,7 @@ define([
             parentProperty: 'parent',
             nodeProperty: 'parent@'
          });
-         listModelWithGroups = new ListViewModel({
+         listModelWithGroups = new lists.ListViewModel({
             items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title',

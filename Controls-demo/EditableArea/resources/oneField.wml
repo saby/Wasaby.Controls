@@ -5,7 +5,7 @@
       isEditing="{{isEditing}}"
    >
       <ws:editorTemplate>
-         <Controls.Input.Text selectOnClick="{{ false }}" />
+         <Controls.input:Text selectOnClick="{{ false }}" />
       </ws:editorTemplate>
    </Controls.EditableArea.Templates.Editors.Base>
 </div>

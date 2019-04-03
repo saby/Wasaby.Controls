@@ -1,10 +1,10 @@
 define('Controls/Selector/Lookup/InputRender', [
-   'Controls/Input/Text',
+   'Controls/input',
    'wml!Controls/Selector/Lookup/InputRender/InputRender'
-], function(InputText, template) {
+], function(input, template) {
    'use strict';
 
-   var InputRenderLookup = InputText.extend({
+   var InputRenderLookup = input.Text.extend({
       _template: template,
 
       _getField: function() {
@@ -29,6 +29,10 @@ define('Controls/Selector/Lookup/InputRender', [
          }
 
          return tooltip;
+      },
+
+      _keyDownInput: function(event) {
+         this._notify('keyDownInput', [event]);
       }
    });
 

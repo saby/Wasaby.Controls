@@ -9,7 +9,7 @@ import defaultItemTemplate = require('wml!Controls/_lists/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_lists/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_lists/resources/ItemOutputWrapper');
 import 'wml!Controls/_lists/resources/ItemOutput';
-import 'css!theme?Controls/List/ListView/ListView';
+import 'css!theme?Controls/_lists/ListView/ListView';
 
 var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
@@ -36,10 +36,10 @@ var _private = {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
         }
         if (cfg.markerVisibility === 'always') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/_lists/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
         }
         if (cfg.markerVisibility === 'demand') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/_lists/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
         }
         if (cfg.results) {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');

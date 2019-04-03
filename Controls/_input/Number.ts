@@ -11,9 +11,9 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @class Controls/_input/Number
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IOnlyPositive
-       * @mixes Controls/Input/interface/IInputNumber
+       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/_input/interface/IOnlyPositive
+       * @mixes Controls/_input/interface/IInputNumber
        *
        * @public
        * @demo Controls-demo/Input/Number/NumberPG
@@ -30,7 +30,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue state of the control will store a number with a fractional part of equal 2 signs.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" precision="{{2}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" precision="{{2}}"/>
        * </pre>
        */
 
@@ -42,7 +42,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue in the control state will store a number with a integer part of no more than 10 signs.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" integersLength="{{10}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
        * </pre>
        */
 
@@ -57,7 +57,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" showEmptyDecimals="{{true}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" showEmptyDecimals="{{true}}"/>
        * </pre>
        */
 

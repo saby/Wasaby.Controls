@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-import BaseViewModel = require('Controls/List/BaseViewModel');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import BaseViewModel = require('Controls/_lists/BaseViewModel');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
 import Env = require('Env/Env');

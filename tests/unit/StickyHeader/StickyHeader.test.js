@@ -64,33 +64,25 @@ define([
          });
       });
 
-      describe('_updateStickyHeight', function() {
-         it('should update height if header not fixed', function() {
+      describe('set top', function() {
+         it('should update top', function () {
             const component = createComponent(StickyHeader, {});
-            component._model = { fixedPosition: '' };
+            component._model = {fixedPosition: ''};
 
             assert.strictEqual(component._stickyHeadersHeight.top, 0);
-            assert.strictEqual(component._stickyHeadersHeight.bottom, 0);
-            component._updateStickyHeight(null, {
-               top: 10,
-               bottom: 20
-            });
-            assert.strictEqual(component._stickyHeadersHeight.top, 10);
-            assert.strictEqual(component._stickyHeadersHeight.bottom, 20);
+            component.top = 20;
+            assert.strictEqual(component._stickyHeadersHeight.top, 20);
          });
+      });
 
-         it('should not update height if header fixed', function() {
+      describe('set bottom', function() {
+         it('should update bottom', function () {
             const component = createComponent(StickyHeader, {});
-            component._model = { fixedPosition: 'top' };
+            component._model = {fixedPosition: ''};
 
-            assert.strictEqual(component._stickyHeadersHeight.top, 0);
             assert.strictEqual(component._stickyHeadersHeight.bottom, 0);
-            component._updateStickyHeight(null, {
-               top: 10,
-               bottom: 20
-            });
-            assert.strictEqual(component._stickyHeadersHeight.top, 0);
-            assert.strictEqual(component._stickyHeadersHeight.bottom, 0);
+            component.bottom = 20;
+            assert.strictEqual(component._stickyHeadersHeight.bottom, 20);
          });
       });
 
