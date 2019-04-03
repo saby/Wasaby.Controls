@@ -20,9 +20,9 @@
       </Controls.Search.Input.Container>
    </div>
 <div>Стреляет valueChanged:
-   <Controls.Input.Area value="{{textValue}}" attr:test_name="valueChanged"></Controls.Input.Area>
+   <Controls.input:Area value="{{textValue}}" attr:test_name="valueChanged"></Controls.input:Area>
 </div>
    <div>Стреляет search:
-   <Controls.Input.Area value="{{textSearchValue}}" attr:test_name="search"></Controls.Input.Area>
+   <Controls.input:Area value="{{textSearchValue}}" attr:test_name="search"></Controls.input:Area>
 </div>
 </div>

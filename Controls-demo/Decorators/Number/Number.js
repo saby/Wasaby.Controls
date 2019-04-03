@@ -3,7 +3,7 @@ define('Controls-demo/Decorators/Number/Number',
       'Core/Control',
       'wml!Controls-demo/Decorators/Number/Number',
 
-      'Controls/Input/Number',
+      'Controls/input',
       'Controls/Decorator/Number',
       'css!Controls-demo/Decorators/Number/Number'
    ],

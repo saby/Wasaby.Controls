@@ -1,7 +1,7 @@
 define('Controls-demo/Input/DeprecatedArea/AreaVdom', [
 	'Core/Control',
 	'wml!Controls-demo/Input/DeprecatedArea/AreaVdom',
-	'Controls/Input/Area',
+	'Controls/input',
 	'css!Controls-demo/Input/DeprecatedArea/AreaVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';

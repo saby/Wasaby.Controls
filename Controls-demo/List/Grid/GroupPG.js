@@ -17,7 +17,7 @@ define('Controls-demo/List/Grid/GroupPG',
         'use strict';
         var Component = Control.extend({
             _template: template,
-            _content: 'Controls/Grid',
+            _content: 'Controls/grid:View',
 
             _beforeMount: function() {
 

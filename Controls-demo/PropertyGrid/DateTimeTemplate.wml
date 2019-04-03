@@ -1,6 +1,6 @@
 <div>
-    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
-     <Controls.Input.DateTime
+    <Controls.input:Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+     <Controls.input:DateBase
            value="{{_options.value}}"
            mask="DD.MM.YYYY HH:mm:ss"
            readOnly="{{_options.readOnly}}"

@@ -11,7 +11,6 @@ define('Controls/Selector/Button', ['Core/Control', 'wml!Controls/Selector/Butto
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IItemTemplate
     * @extends Core/Control
     * @control
     * @public

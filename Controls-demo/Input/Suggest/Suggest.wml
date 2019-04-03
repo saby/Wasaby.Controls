@@ -46,35 +46,35 @@
         </Controls.Container.Scroll>
     </ws:componentClass>
     <ws:componentProperty>
-        <Controls.Label name="myLabel1" caption="value"/>
-        <Controls.Input.Text attr:id="value" bind:value="_suggestValue" readOnly="{{true}}" attr:class="demo-TextBox"/>
-        <Controls.Label name="myLabel1" caption="placeholder"/>
-        <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+        <Controls.input:Label name="myLabel1" caption="value"/>
+        <Controls.input:Text attr:id="value" bind:value="_suggestValue" readOnly="{{true}}" attr:class="demo-TextBox"/>
+        <Controls.input:Label name="myLabel1" caption="placeholder"/>
+        <Controls.input:Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
 
-        <Controls.Label caption="navigation"/>
+        <Controls.input:Label caption="navigation"/>
         <Controls-demo.Wrapper.SuperObjectEditor value="{{navigationConfig}}">
             <ws:stringEditor>
-                <Controls.Input.Text attr:class="demo-TextBox"/>
+                <Controls.input:Text attr:class="demo-TextBox"/>
             </ws:stringEditor>
             <ws:numberEditor>
-                <Controls.Input.Number attr:class="demo-TextBox"/>
+                <Controls.input:Number attr:class="demo-TextBox"/>
             </ws:numberEditor>
         </Controls-demo.Wrapper.SuperObjectEditor>
 
 
-        <Controls.Label name="myLabel1" caption="minSearchLentgh"/>
-        <Controls.Input.Number attr:id="minSearchLength" bind:value="_minSearchLength" attr:class="demo-TextBox"
+        <Controls.input:Label name="myLabel1" caption="minSearchLentgh"/>
+        <Controls.input:Number attr:id="minSearchLength" bind:value="_minSearchLength" attr:class="demo-TextBox"
                                onlyPositive="{{true}}" precision="{{0}}"/>
 
-        <Controls.Label name="myLabel1" caption="maxLength"/>
-        <Controls.Input.Number attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox"
+        <Controls.input:Label name="myLabel1" caption="maxLength"/>
+        <Controls.input:Number attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox"
                                onlyPositive="{{true}}" precision="{{0}}"/>
 
-        <Controls.Label name="myLabel1" caption="tagStyle"/>
+        <Controls.input:Label name="myLabel1" caption="tagStyle"/>
         <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle"
                                                 attr:class="demo-TextBox"/>
 
-        <Controls.Label name="myLabel1" caption="searchParam"/>
+        <Controls.input:Label name="myLabel1" caption="searchParam"/>
         <Controls.Input.Suggest
                 bind:value="_searchParam"
                 displayProperty="title"
@@ -91,7 +91,7 @@
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
-        <Controls.Label name="myLabel1" caption="displayProperty"/>
+        <Controls.input:Label name="myLabel1" caption="displayProperty"/>
         <Controls.Input.Suggest
                 bind:value="_displayProperty"
                 displayProperty="title"
@@ -108,7 +108,7 @@
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
-        <Controls.Label name="myLabel1" caption="keyProperty"/>
+        <Controls.input:Label name="myLabel1" caption="keyProperty"/>
         <Controls.Input.Suggest
                 bind:value="_keyProperty"
                 displayProperty="title"
@@ -125,7 +125,7 @@
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
-        <Controls.Label name="myLabel1" caption="source"/>
+        <Controls.input:Label name="myLabel1" caption="source"/>
         <Controls.Input.Suggest
                 bind:value="_resources"
                 displayProperty="title"
@@ -142,11 +142,11 @@
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
-        <Controls.Label name="myLabel1" caption="constraint"/>
+        <Controls.input:Label name="myLabel1" caption="constraint"/>
         <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint"
                                                        source="{{_items}}" attr:class="demo-TextBox"/>
 
-        <Controls.Label name="myLabel1" caption="suggestTemplate"/>
+        <Controls.input:Label name="myLabel1" caption="suggestTemplate"/>
         <Controls.Input.Suggest
                 bind:value="_flag"
                 displayProperty="title"

@@ -1,5 +1,5 @@
 <div class="controlsDemo-Input-DateTime">
-   <h1>Controls.Input.DateTime</h1>
+   <h1>Controls.input:DateBase</h1>
 
    <ws:for data="masksGroup in _masks">
       <h3>{{masksGroup.title}}</h3>
@@ -9,12 +9,12 @@
                {{mask}}
             </div>
             <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.Input.DateTime
+               <Controls.input:DateBase
                   value="{{null}}"
                   mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.Input.DateTime
+               <Controls.input:DateBase
                   bind:value="_date"
                   mask="{{mask}}"/>
             </div>
@@ -44,7 +44,7 @@
          Text:
       </div>
       <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-         <Controls.Input.DateTime
+         <Controls.input:DateBase
                  value="{{_date}}"
                  mask="{{mask}}"
                  tagStyle="{{'primary'}}"/>

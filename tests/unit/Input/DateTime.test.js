@@ -1,12 +1,12 @@
 define([
    'Core/core-merge',
-   'Controls/Input/DateTime',
+   'Controls/input',
    'Controls/Input/DateTime/StringValueConverter',
    'unit/Calendar/Utils',
    'Core/constants'
 ], function(
    cMerge,
-   DateTime,
+   input,
    StringValueConverter,
    calendarTestUtils,
    constants
@@ -22,7 +22,7 @@ define([
    describe('Controls/Input/DateTime', function() {
       describe('Initialisation', function() {
          it('should create correct model', function() {
-            const component = calendarTestUtils.createComponent(DateTime, options);
+            const component = calendarTestUtils.createComponent(input.DateBase, options);
             assert(component._model);
             assert.strictEqual(component._model._mask, options.mask);
             assert.strictEqual(component._model.value, options.value);
@@ -34,7 +34,7 @@ define([
 
       describe('_beforeUpdate', function() {
          it('should update the model', function() {
-            const component = calendarTestUtils.createComponent(DateTime, options),
+            const component = calendarTestUtils.createComponent(input.DateBase, options),
                value = new Date(2017, 11, 1);
 
             component._beforeUpdate(cMerge({ value: value }, options, { preferSource: true }));
@@ -47,7 +47,7 @@ define([
       describe('_inputCompletedHandler', function() {
          it('should update model and generate events', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                textValue = '01.12.2017',
                value = new Date(2017, 11, 1);
 
@@ -70,7 +70,7 @@ define([
                event = {
                   stopImmediatePropagation: sinon.fake()
                },
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                textValue = '01.12.2017',
                value = new Date(2017, 11, 1);
 
@@ -90,7 +90,7 @@ define([
       describe('_beforeUnmount', function() {
          it('should destroy the model', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options);
+               component = calendarTestUtils.createComponent(input.DateBase, options);
 
             sandbox.stub(component._model, 'destroy');
             component._beforeUnmount();
@@ -104,7 +104,7 @@ define([
       describe('_onKeyDown', function() {
          it('should set current date on insert key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert
@@ -120,7 +120,7 @@ define([
 
          it('should generate "inputCompleted" event after  insert key pressed and focus out.', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert
@@ -137,7 +137,7 @@ define([
 
          it('should increase current date on one day by plus key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.plus
@@ -157,7 +157,7 @@ define([
 
          it('should decrease current date on one day by minus key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateTime, options),
+               component = calendarTestUtils.createComponent(input.DateBase, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.minus

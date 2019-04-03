@@ -3,8 +3,7 @@ define('Controls-demo/Example/Input/PositionLabels',
       'Core/Control',
       'wml!Controls-demo/Example/Input/PositionLabels/PositionLabels',
 
-      'Controls/Label',
-      'Controls/Input/Text',
+      'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'css!Controls-demo/Example/Input/PositionLabels/PositionLabels',
       'css!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'

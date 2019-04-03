@@ -6,8 +6,8 @@
     </Controls-demo.PropertyGrid.ArrayTemplate>
 </ws:if>
 <ws:else data="{{item.readOnly}}">
-    <Controls.Label caption="{{name}}" attr:class="demo-TextBox"/>
-    <Controls.Input.Text value="{{'[' + itemValue[name] + ']'}}"
+    <Controls.input:Label caption="{{name}}" attr:class="demo-TextBox"/>
+    <Controls.input:Text value="{{'[' + itemValue[name] + ']'}}"
                      readOnly="{{true}}"
                      attr:class="demo-TextBox"/>
 </ws:else>

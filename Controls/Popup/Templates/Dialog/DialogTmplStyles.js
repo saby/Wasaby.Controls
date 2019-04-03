@@ -25,5 +25,9 @@ define('Controls/Popup/Templates/Dialog/DialogTmplStyles', [],
     *
     * @css @spacing_DialogTemplate-between-content-close-button: Spacing between close-button and content.
     * @css @spacing_DialogTemplate-between-border-close-button:  Spacing between close-button and border-top.
+    *
+    * @css @background-color_dialogTemplate-footer Background-color of footer.
+    * @css @height_dialogTemplate_footer Height of footer.
+    * @css @color_DialogTemplate-border-top-footer Color of footer border-bottom.
     */
 );

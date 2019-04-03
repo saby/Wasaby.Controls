@@ -29,7 +29,7 @@
             caption="ReadOnly"
         />
         <br/>
-        <Controls.Label caption="Direction:"/>
+        <Controls.input:Label caption="Direction:"/>
         <Controls.Input.ComboBox
             attr:class="comboboxWidth ControlsDemo__direction"
             source="{{_directionSource}}"
@@ -39,7 +39,7 @@
             selectedKey="{{_selectedDirection}}"
             on:selectedKeyChanged="changeDirection()"
         />
-        <Controls.Label caption="Source:"/>
+        <Controls.input:Label caption="Source:"/>
         <Controls.Input.ComboBox
             attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__changeSource"
             source="{{_sourceOfSource}}"
@@ -57,7 +57,7 @@
             caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."
         />
         <br/>
-        <Controls.Label caption="Content template:"/>
+        <Controls.input:Label caption="Content template:"/>
         <Controls.Input.ComboBox
             attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__content_tmpl"
             source="{{_sourceContentTemplate}}"
@@ -67,14 +67,14 @@
             selectedKey="{{_selectedContentTemplate}}"
             on:selectedKeyChanged="changeContentTemplate()"
         />
-        <Controls.Label caption="Display property:"/>
+        <Controls.input:Label caption="Display property:"/>
         <Controls.Toggle.DoubleSwitch 
             attr:class="ControlsDemo-RadioGroupDemo__displayProperty"
             on:valueChanged="changedDisplayProperty()" 
             captions="{{['caption', 'title']}}" 
             bind:value="_displayPropertyValue"
         />
-        <Controls.Label caption="Selected key:"/>
+        <Controls.input:Label caption="Selected key:"/>
         <Controls.Toggle.RadioGroup
             attr:class="ControlsDemo-RadioGroupDemo__selectedKey"
             on:selectedKeyChanged="changeSelectedKey()"
