@@ -9,7 +9,10 @@ function getScrollableParents(element: HTMLElement): HTMLElement[] {
    while (currentElement) {
       let currentStyle = window.getComputedStyle(currentElement);
 
-      if ((currentStyle.overflowY === 'auto' || currentStyle.overflowY === 'scroll') && currentElement.scrollHeight > currentElement.clientHeight) {
+      if ((currentStyle.overflowY === 'auto'
+          || currentStyle.overflowY === 'scroll'
+          //TODO fix for Container/Scroll, which has "overflow: hidden" in content block while mounting
+          || currentElement.className.indexOf('controls-Scroll__content_hidden') >= 0) && currentElement.scrollHeight > currentElement.clientHeight) {
          scrollableParents.push(currentElement);
       }
 
