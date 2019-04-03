@@ -23,7 +23,7 @@ var defaultColors = [
          }
          return colors;
       },
-      
+
       /**
        * Calculates sector categories corresponding to options
        * @param {Object} opts Options
