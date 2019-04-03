@@ -578,17 +578,21 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @protected
           */
          _initProperties: function() {
+            var CONTROL_NAME = 'InputBase';
+
             this._field = {
                template: fieldTemplate,
                scope: {
-                  controlName: 'InputBase',
+                  controlName: CONTROL_NAME,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
                template: readOnlyFieldTemplate,
-               scope: {}
+               scope: {
+                  controlName: CONTROL_NAME
+               }
             };
             this._beforeFieldWrapper = {
                template: null,
