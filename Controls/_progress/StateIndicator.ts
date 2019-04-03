@@ -32,7 +32,7 @@ var defaultColors = [
        */
       calculateColorState: function(opts, _colors, _numSectors) {
          var
-            sectorSize = (opts.scale <= 0 || opts.scale > 100 ?  10 : opts.scale),
+            sectorSize = (opts.scale <= 0 || opts.scale > 100 ?  10 : Math.floor(opts.scale)),
             colorValues = [],
             curSector = 0,
             totalSectorsUsed = 0,
