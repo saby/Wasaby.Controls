@@ -572,6 +572,24 @@ define('Controls/Container/Scroll',
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('excludedKeysChanged', args);
                }
+            },
+
+            _saveScrollPosition: function(e) {
+               /**
+                * Only closest scroll container should react to this event, so we have to stop propagation here.
+                * Otherwise we can accidentally scroll a wrong element.
+                */
+               e.stopPropagation();
+               this._savedScrollPosition = this._children.content.scrollHeight;
+            },
+
+            _restoreScrollPosition: function(e) {
+               /**
+                * Only closest scroll container should react to this event, so we have to stop propagation here.
+                * Otherwise we can accidentally scroll a wrong element.
+                */
+               e.stopPropagation();
+               this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
             }
          });
 
