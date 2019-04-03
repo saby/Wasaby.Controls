@@ -101,14 +101,26 @@ define('Controls/Explorer', [
                self._notify('rootChanged', [self._root]);
             }
          },
+         getDataRoot: function(self) {
+            var result;
+
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               result = self._breadCrumbsItems[0].get(self._options.parentProperty);
+            } else {
+               result = self._root;
+            }
+
+            return result;
+         },
          dragItemsFromRoot: function(self, dragItems) {
             var
                item,
-               itemFromRoot = true;
+               itemFromRoot = true,
+               root = _private.getDataRoot(self);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
-               if (!item || item.get(self._options.parentProperty) !== self._root) {
+               if (!item || item.get(self._options.parentProperty) !== root) {
                   itemFromRoot = false;
                   break;
                }
@@ -169,8 +181,9 @@ define('Controls/Explorer', [
             _private.setRoot(this, cfg.root);
          }
       },
-      _dragHighlighter: function(itemKey) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      _dragHighlighter: function(itemKey, hasArrow) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
@@ -185,7 +198,7 @@ define('Controls/Explorer', [
          if (this._options.itemsDragNDrop && cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = this._root !== this._options.root || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = this._root !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
