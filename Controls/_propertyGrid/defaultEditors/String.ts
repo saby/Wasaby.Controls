@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/PropertyGrid/defaultEditors/String');
+import template = require('wml!Controls/_propertyGrid/defaultEditors/String');
 
-import IEditorOptions from 'Controls/PropertyGrid/IEditorOptions';
-import IEditor from 'Controls/PropertyGrid/IEditor';
+import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
+import IEditor from 'Controls/_propertyGrid/IEditor';
 import 'Controls/Input';
 
 // @ts-ignore

@@ -1,14 +1,14 @@
 import {Model} from 'Types/entity';
 
 const DEFAULT_EDITORS: object = {
-    string: 'Controls/PropertyGrid/defaultEditors/String',
-    boolean: 'Controls/PropertyGrid/defaultEditors/Boolean',
-    date: 'Controls/PropertyGrid/defaultEditors/Date',
-    number: 'Controls/PropertyGrid/defaultEditors/Number'
+    string: 'Controls/_propertyGrid/defaultEditors/String',
+    boolean: 'Controls/_propertyGrid/defaultEditors/Boolean',
+    date: 'Controls/_propertyGrid/defaultEditors/Date',
+    number: 'Controls/_propertyGrid/defaultEditors/Number'
 };
 
 class PropertyGridItem extends Model {
-    _moduleName: string = 'Controls/PropertyGrid/PropertyGridItem';
+    _moduleName: string = 'Controls/_propertyGrid/PropertyGridItem';
 
     _$idProperty: string = 'name';
     _$properties: object = {

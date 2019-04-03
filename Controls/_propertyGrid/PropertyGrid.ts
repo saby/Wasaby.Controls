@@ -1,16 +1,16 @@
 import Control = require('Core/Control');
 import ItemsViewModel = require('Controls/List/ItemsViewModel');
-import template = require('wml!Controls/PropertyGrid/PropertyGrid');
-import defaultGroupTemplate = require('wml!Controls/PropertyGrid/groupTemplate');
-import defaultItemTemplate = require('wml!Controls/PropertyGrid/itemTemplate');
-import PropertyGridItem = require('Controls/PropertyGrid/PropertyGridItem');
+import template = require('wml!Controls/_propertyGrid/PropertyGrid');
+import defaultGroupTemplate = require('wml!Controls/_propertyGrid/groupTemplate');
+import defaultItemTemplate = require('wml!Controls/_propertyGrid/itemTemplate');
+import PropertyGridItem = require('Controls/_propertyGrid/PropertyGridItem');
 
 import { factory } from 'Types/chain';
 import { object } from 'Types/util';
 import { RecordSet } from 'Types/collection';
 
-import IPropertyGridOptions from './PropertyGrid/IPropertyGridOptions';
-import IProperty from './PropertyGrid/IProperty';
+import IPropertyGridOptions from 'Controls/_propertyGrid/IPropertyGridOptions';
+import IProperty from 'Controls/_propertyGrid/IProperty';
 
 interface IPropertyGridItem extends IProperty {
     propertyValue: any;
@@ -111,10 +111,10 @@ function getGroupingKeyCallback(items: PropertyGridItems): Function|null {
 /**
  * Represents a control that allows users to inspect and edit the properties of an object.
  * You can use the standard editors that are provided with the PropertyGrid or you can use custom editors.
- * By default the propertyGrid will autogenerateall the properties for a given object
- * @class Controls/PropertyGrid
+ * By default the propertyGrid will autogenerate all the properties for a given object
+ * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
- * @interface Controls/PropertyGrid/IPropertyGridOptions
+ * @interface Controls/_propertyGrid/IPropertyGridOptions
  * @control
  * @public
  * @author Герасимов А.М.
@@ -165,6 +165,6 @@ class PropertyGrid extends Control  {
     }
 }
 
-PropertyGrid._theme = ['Controls/PropertyGrid/PropertyGrid'];
+PropertyGrid._theme = ['Controls/_propertyGrid/PropertyGrid'];
 
 export = PropertyGrid;

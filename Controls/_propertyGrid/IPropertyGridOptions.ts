@@ -3,14 +3,14 @@ import IPropertyGridProperty from './IProperty';
 /**
  * Property grid options
  *
- * @interface Controls/PropertyGrid/IPropertyGridOptions
+ * @interface Controls/_propertyGrid/IPropertyGridOptions
  * @public
  * @author Герасимов А.М.
  */
 export default interface IPropertyGridOptions {
     /**
-     * @name Controls/PropertyGrid/IProperty#editingObject
-     * @cfg {Object} data object that will be displayed as editors with values in PropertyGrid
+     * @name Controls/_propertyGrid/IPropertyGridOptions#editingObject
+     * @cfg {Object} data object that will be displayed as editors with values in _propertyGrid
      */
     editingObject: Object;
     /**
@@ -27,17 +27,17 @@ export default interface IPropertyGridOptions {
      */
 
     /**
-     * @name Controls/PropertyGrid/IProperty#source
+     * @name Controls/_propertyGrid/IPropertyGridOptions#source
      * @cfg {Array[IPropertyGridProperty]}
      */
     source: IPropertyGridProperty[];
     /**
-     * @name Controls/PropertyGrid/IProperty#groupTemplate
+     * @name Controls/_propertyGrid/IPropertyGridOptions#groupTemplate
      * @cfg {Function} Group template.
      */
     groupTemplate?: Function;
     /**
-     * @name Controls/PropertyGrid/IProperty#collapsedGroups
+     * @name Controls/_propertyGrid/IPropertyGridOptions#collapsedGroups
      * @cfg {Array} List of collapsed group identifiers.
      * Identifiers of groups are obtained as a result of calling the groupingKeyCallback.
      */

@@ -1,4 +1,4 @@
-define(["Controls/PropertyGrid"], function(PropertyGrid) {
+define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
 
     "use strict";
 
@@ -60,8 +60,8 @@ define(["Controls/PropertyGrid"], function(PropertyGrid) {
                 assert.deepStrictEqual(pg.items.getRawData(), configWithEditingObject.result);
 
                 /* testing default templates */
-                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/PropertyGrid/defaultEditors/String");
-                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/PropertyGrid/defaultEditors/Boolean");
+                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/String");
+                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
             });
 
             it("config with editingObject and source", () => {
@@ -72,9 +72,9 @@ define(["Controls/PropertyGrid"], function(PropertyGrid) {
                 assert.deepEqual(pg.items.getRawData(), configWithEditingObjectAndSource.result);
 
                 /* testing default and custom templates */
-                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/PropertyGrid/defaultEditors/Boolean");
+                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
                 assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/input/Text");
-                assert.strictEqual(pg.items.at(2).get("editorTemplateName"), "Controls/PropertyGrid/defaultEditors/String");
+                assert.strictEqual(pg.items.at(2).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/String");
             });
 
             it("config with editingObject and source (with group) ", () => {

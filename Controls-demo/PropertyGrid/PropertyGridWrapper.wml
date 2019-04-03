@@ -1,14 +1,14 @@
 <div class="controls-demo_Wrapper">
     <div class="controls-demo_options-wrapper">
 
-        <Controls.PropertyGrid items="{{_options.description}}"
+        <Controls-demo.PropertyGridForDemo.PropertyGrid items="{{_options.description}}"
                                data="{{_options.dataObject}}"
                                scopeObject="{{_exampleControlOptions}}"
                                name="PropertyGrid"
                                dataTemplates="{{dataTemplates}}"
                                templateName="wml!Controls-demo/PropertyGrid/PropertyGridTemplate"
                                on:itemsChanged="_valueChangedHandler()">
-        </Controls.PropertyGrid>
+        </Controls-demo.PropertyGridForDemo.PropertyGrid>
     </div>
     <div class="controls-demo_event-example__wrapper " >
         <div class="controls-demo_example-wrapper">

@@ -1,5 +1,5 @@
 <div class="controls-Demo__propertyGrid">
-    <Controls.PropertyGrid
+    <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
             source="{{_source}}"
             on:editingObjectChanged="_editingObjectChanged()"

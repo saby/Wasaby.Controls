@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/PropertyGrid/defaultEditors/Boolean');
+import template = require('wml!Controls/_propertyGrid/defaultEditors/Boolean');
 
-import IEditorOptions from 'Controls/PropertyGrid/IEditorOptions';
-import IEditor from 'Controls/PropertyGrid/IEditor';
+import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
+import IEditor from 'Controls/_propertyGrid/IEditor';
 import 'Controls/Toggle/Checkbox';
 
 // @ts-ignore

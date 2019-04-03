@@ -1,8 +1,8 @@
-define('Controls/PropertyGrid/Styles', [], function() {}
+define('Controls/_propertyGrid/Styles', [], function() {}
 
    /**
     * @author Герасимов А.М.
-    * @mixin Controls/PropertyGrid/Styles
+    * @mixin Controls/_propertyGrid/Styles
     * @public
     *
     * @css @spacing_PropertyGrid-between-top-border-content Empty spacing between top border and content

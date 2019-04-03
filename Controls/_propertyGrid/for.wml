@@ -6,7 +6,7 @@
     </ws:if>
     <ws:else>
         <ws:partial
-                template="wml!Controls/PropertyGrid/itemTemplate"
+                template="wml!Controls/_propertyGrid/itemTemplate"
                 itemData="{{itemsViewModel.getCurrent()}}"
                 on:propertyValueChanged="_propertyValueChanged(itemsViewModel.getCurrent().item)"/>
     </ws:else>
