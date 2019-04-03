@@ -115,7 +115,7 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-               self._loadedItems = list;
+                self._loadedItems = list;
                 var
                     isActive,
                     listModel = self._listViewModel;
