@@ -4,7 +4,9 @@ define('Controls/Filter/Button/Panel/Select', [
    'wml!Controls/Filter/Button/Panel/Select/Select'
 ], function(Control, Utils, template) {
    /**
-    * Control that displays items through delimiter
+    * Control that displays items through delimiter.
+    *
+    * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
     * @class Controls/Filter/Button/Panel/Select
     * @extends Controls/Control
     * @control
@@ -23,6 +25,11 @@ define('Controls/Filter/Button/Panel/Select', [
     * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
+   /**
+    * @name Controls/Filter/Button/Panel/Select#displayProperty
+    * @cfg {String} The name of the field whose value is displayed.
+    */
+
    'use strict';
 
    var FilterSelect = Control.extend({
@@ -30,7 +37,7 @@ define('Controls/Filter/Button/Panel/Select', [
 
       _clickHandler: function(event, item) {
          this._notify('textValueChanged', [Utils.object.getPropertyValue(item, this._options.displayProperty)]);
-         this._notify('valueChanged', [[Utils.object.getPropertyValue(item, this._options.keyProperty)]]);
+         this._notify('selectedKeysChanged', [[Utils.object.getPropertyValue(item, this._options.keyProperty)]]);
       }
 
    });
