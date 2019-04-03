@@ -113,7 +113,11 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          isFieldFocused: function(self) {
-            return self._getActiveElement() === self._getField();
+            if (self._isBrowserPlatform) {
+               return self._getActiveElement() === self._getField();
+            }
+
+            return false;
          },
 
          isReAutoCompleteInEdge: function(isEdge, model, valueField) {
@@ -581,10 +585,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
                scope: {
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
-                  isFieldFocused: this._isBrowserPlatform ?
-                      _private.isFieldFocused.bind(_private, this) : function () {
-                         return false;
-                      }
+                  isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
