@@ -129,11 +129,14 @@
 
 .ws-is-no-touch {
    .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
-   .controls-Grid__row_highlightOnHover_default.controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
       background-color: @background-color_Grid-row_hover;
    }
-   .controls-Grid__row:hover .controls-itemActionsV {
-      display: inline-block;
+   .controls-Grid__row:hover,
+   .controls-Grid_row-cell_hovered {
+      .controls-itemActionsV {
+         display: inline-block;
+      }
    }
 }
 

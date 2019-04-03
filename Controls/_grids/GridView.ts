@@ -174,10 +174,6 @@ var
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
-        },
-
-        _onItemMouseOver: function(event, itemData) {
-            this._listModel.setHoveredItem(itemData.item);
         }
     });
 

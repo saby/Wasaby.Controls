@@ -373,7 +373,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setHoveredItem: function(item){
         this._hoveredItem = item;
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getHoveredItem: function () {

@@ -68,65 +68,70 @@
       </ws:for>
    </tr>
 </ws:if>
-<ws:else>
-   <ws:if data="{{itemData.isPartialGridSupport}}">
-      <!--<ws:if data="{{itemData.styleLadderHeading}}">-->
-         <!--<div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"-->
-              <!--attr:style="{{itemData.styleLadderHeading}}">-->
-            <!--<ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>-->
-         <!--</div>-->
-      <!--</ws:if>-->
-      <!--<ws:if data="{{itemData.isSticky}}">-->
-         <!--<Controls.StickyHeader.Group>-->
-            <!--<div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">-->
-               <!--&lt;!&ndash; The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. &ndash;&gt;-->
-               <!--&lt;!&ndash; Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d &ndash;&gt;-->
-               <!--{{itemData.resetColumnIndex()}}-->
-               <!--<ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">-->
-                  <!--<ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>-->
-               <!--</ws:for>-->
-            <!--</div>-->
-         <!--</Controls.StickyHeader.Group>-->
-      <!--</ws:if>-->
-      <!--<ws:else>-->
-         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-            <ws:partial template="colTpl"
-                        attr:key="{{itemData.getCurrentColumn().getKey()}}"
-                        currentColumn="{{ itemData.getCurrentColumn() }}"
-                        on:click="_onItemClick(itemData.dispItem)"
-                        on:mouseenter="_onItemMouseEnter(itemData)"
-                        on:mouseover="_onItemMouseOver(itemData)"
-                        attr:style="{{ itemData.getCurrentColumn().gridCellStyles }}"
-                        attr:class="{{ highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}"/>
-         </ws:for>
-
-      <!--</ws:else>-->
+<ws:else data="{{itemData.isPartialGridSupport}}">
+   <ws:if data="{{itemData.styleLadderHeading}}">
+      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+           attr:style="{{itemData.styleLadderHeading}}">
+         <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
+      </div>
    </ws:if>
-   <ws:else>
-      <ws:if data="{{itemData.styleLadderHeading}}">
-         <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-              attr:style="{{itemData.styleLadderHeading}}">
-            <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
-         </div>
-      </ws:if>
-      <ws:if data="{{itemData.isSticky}}">
-         <Controls.StickyHeader.Group>
-            <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
-               <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
-               <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
-               {{itemData.resetColumnIndex()}}
-               <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-                  <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
-               </ws:for>
-            </div>
-         </Controls.StickyHeader.Group>
-      </ws:if>
-      <ws:else>
+   <ws:if data="{{itemData.isSticky}}">
+      <Controls.StickyHeader.Group>
          <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+            <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+            <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+            {{itemData.resetColumnIndex()}}
             <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-               <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
-      </ws:else>
+      </Controls.StickyHeader.Group>
+   </ws:if>
+   <ws:else>
+      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
+         <ws:partial template="colTpl"
+                     currentColumn="{{ itemData.getCurrentColumn() }}"
+                     attr:key="{{itemData.getCurrentColumn().getKey()}}"
+                     on:click="_onItemClick(itemData.dispItem)"
+                     on:contextmenu="_onItemContextMenu(itemData)"
+                     on:swipe="_onItemSwipe(itemData)"
+                     on:mousedown="_onItemMouseDown(itemData)"
+                     on:mouseenter="_onItemMouseEnter(itemData)"
+                     on:mouseleave="_onItemMouseLeave(itemData)"
+                     on:mousemove="_onItemMouseMove(itemData)"
+                     on:wheel="_onItemWheel(itemData)"
+                     attr:style="{{ itemData.getCurrentColumn().gridCellStyles }}"
+                     attr:class="controls-ListView__itemV
+                           {{ highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
+                           controls-Grid__row_{{itemData.style || 'default'}}
+                           {{itemData.isHovered ? 'controls-Grid_row-cell_hovered'}}" />
+      </ws:for>
+   </ws:else>
+</ws:else>
+<ws:else>
+   <ws:if data="{{itemData.styleLadderHeading}}">
+      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+           attr:style="{{itemData.styleLadderHeading}}">
+         <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
+      </div>
+   </ws:if>
+   <ws:if data="{{itemData.isSticky}}">
+      <Controls.StickyHeader.Group>
+         <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+            <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+            <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+            {{itemData.resetColumnIndex()}}
+            <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            </ws:for>
+         </div>
+      </Controls.StickyHeader.Group>
+   </ws:if>
+   <ws:else>
+      <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         </ws:for>
+      </div>
    </ws:else>
 </ws:else>

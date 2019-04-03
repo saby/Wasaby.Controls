@@ -52,13 +52,17 @@ var _private = {
        self._notify('controlResize', [], {bubbling: true});
     },
 
-    setHoveredItem: cDebounce(function(self, item, nativeEvent) {
+    setHoveredItem: function(self, item, nativeEvent) {
         if (item !== self._hoveredItem) {
+            self._listModel.setHoveredItem(item);
             self._hoveredItem = item;
             var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
+            // if (container) {
+            //     container.className+=' controls-Grid_row-cell_hovered';
+            // }
             self._notify('hoveredItemChanged', [item, container]);
         }
-    }, DEBOUNCE_HOVERED_ITEM_CHANGED)
+    }
 };
 
 var ListView = BaseControl.extend(

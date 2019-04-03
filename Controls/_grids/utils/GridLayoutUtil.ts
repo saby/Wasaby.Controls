@@ -10,6 +10,10 @@ export const GridLayoutUtil = {
 
     supportStatus: getSupportStatus(),
 
+    isFullGridSupport: this.supportStatus === SupportStatusEnum.Full,
+    isPartialGridSupport: this.supportStatus === SupportStatusEnum.Partial,
+    isNoGridSupport: this.supportStatus === SupportStatusEnum.None,
+
     getCellStyles(rowIndex: number, columnIndex: number): string {
         let rules = {
             'grid-column': columnIndex + 1,
