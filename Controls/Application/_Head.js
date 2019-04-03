@@ -4,12 +4,39 @@ define('Controls/Application/_Head',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
       'View/Request',
+      'Controls/Decorator/Markup/resolvers/noOuterTag',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Request, ThemesControllerNew) {
+   function(Base, Deferred, template, Request, noOuterTagResolver, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
+
+      function generateHeadValidHtml() {
+         // Tag names and attributes allowed in the head.
+         return {
+            validNodes: {
+               link: true,
+               style: true,
+               script: true,
+               meta: true,
+               title: true
+            },
+            validAttributes: {
+               rel: true,
+               as: true,
+               name: true,
+               sizes: true,
+               crossorigin: true,
+               type: true,
+               href: true,
+               'http-equiv': true,
+               content: true,
+               id: true,
+               'class': true
+            }
+         };
+      }
 
       var Page = Base.extend({
          _template: template,
@@ -41,6 +68,8 @@ define('Controls/Application/_Head',
             * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
             * head-custom-block */
             this.head = options.head;
+            this.headJson = options.headJson;
+            this.headValidHtml = generateHeadValidHtml();
 
             // Flag that the head block is built on server side.
             this.wasServerSide = false;
@@ -54,6 +83,8 @@ define('Controls/Application/_Head',
 
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
+                  this.headJson = undefined;
+                  this.headValidHtml = undefined;
                }
 
                if (document.getElementsByClassName('head-server-block').length > 0) {
@@ -86,6 +117,9 @@ define('Controls/Application/_Head',
          },
          isArrayHead: function() {
             return Array.isArray(this.head);
+         },
+         headTagResolver: function(value, parent, resolverParams) {
+            return noOuterTagResolver(value, parent, resolverParams);
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);

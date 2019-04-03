@@ -39,6 +39,15 @@
          <ws:partial template="{{ head }}"  attr:data-vdomignore="true" attr:class="head-custom-block"/>
       </ws:else>
    </ws:if>
+   <ws:if data="{{ headJson }}">
+      <ws:for data="json in headJson">
+         <Controls.Decorator.Markup attr:data-vdomignore="true"
+                                    attr:class="head-custom-block"
+                                    value="{{ json }}"
+                                    tagResolver="{{ headTagResolver }}"
+                                    validHtml="{{ headValidHtml }}" />
+      </ws:for>
+   </ws:if>
 
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
