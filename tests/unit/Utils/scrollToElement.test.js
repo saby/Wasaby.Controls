@@ -101,7 +101,7 @@ define([
                mockDOM(10, 100);
                var element = {
                   parentElement: document.body,
-                  className: ''
+                  className: '',
                   getBoundingClientRect: function() {
                      return {
                         top: 15,
