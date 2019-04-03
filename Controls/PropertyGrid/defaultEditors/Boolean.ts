@@ -6,7 +6,7 @@ import IEditor from 'Controls/PropertyGrid/IEditor';
 import 'Controls/Toggle/Checkbox';
 
 // @ts-ignore
-class StringEditor extends Control implements IEditor {
+class BooleanEditor extends Control implements IEditor {
     protected _template: Function = template;
     protected _options: IEditorOptions;
 
@@ -22,4 +22,4 @@ class StringEditor extends Control implements IEditor {
     }
 }
 
-export = StringEditor;
+export = BooleanEditor;
