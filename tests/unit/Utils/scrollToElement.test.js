@@ -16,7 +16,8 @@ define([
             body: {
                overflowY: 'scroll',
                scrollTop: bodyScrollTop || 0,
-               clientHeight: bodyClientHeight || 0
+               clientHeight: bodyClientHeight || 0,
+               className: ''
             },
             documentElement: documentElement
          };
@@ -53,7 +54,8 @@ define([
                         height: this.clientHeight
                      };
                   },
-                  scrollTop: 0
+                  scrollTop: 0,
+                  className: ''
                },
                getBoundingClientRect: function() {
                   return {
@@ -80,7 +82,8 @@ define([
                         height: this.clientHeight
                      };
                   },
-                  scrollTop: 0
+                  scrollTop: 0,
+                  className: ''
                },
                getBoundingClientRect: function() {
                   return {
@@ -98,6 +101,7 @@ define([
                mockDOM(10, 100);
                var element = {
                   parentElement: document.body,
+                  className: ''
                   getBoundingClientRect: function() {
                      return {
                         top: 15,
@@ -118,7 +122,8 @@ define([
                         top: 15,
                         height: 150
                      };
-                  }
+                  },
+                  className: ''
                };
                scrollToElement(element, true);
                assert.equal(element.parentElement.scrollTop, 75);
@@ -135,6 +140,7 @@ define([
                   scrollHeight: 160,
                   clientHeight: 150,
                   top: 15,
+                  className: '',
                   getBoundingClientRect: function() {
                      return {
                         top: this.top,
@@ -162,6 +168,7 @@ define([
                   scrollHeight: 160,
                   clientHeight: 150,
                   top: 15,
+                  className: '',
                   getBoundingClientRect: function() {
                      return {
                         top: this.top,
@@ -186,6 +193,7 @@ define([
                mockDOM(15, 150);
                var element = {
                   parentElement: document.body,
+                  className: '',
                   getBoundingClientRect: function() {
                      return {
                         top: 10,
@@ -201,6 +209,7 @@ define([
                mockDOM(15, 150);
                var element = {
                   parentElement: document.body,
+                  className: '',
                   getBoundingClientRect: function() {
                      return {
                         top: 10,
