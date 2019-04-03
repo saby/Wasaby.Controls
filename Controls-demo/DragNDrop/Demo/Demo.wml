@@ -48,6 +48,7 @@
          <Controls.lists:Mover name="listMoverSecond" parentProperty="parent"/>
          <Controls.lists:Container>
             <Controls.Explorer
+               bind:root="_root"
                on:dragStart="_dragStartSecond()"
                on:dragEnd="_dragEndSecond()"
                itemsDragNDrop="{{true}}"
