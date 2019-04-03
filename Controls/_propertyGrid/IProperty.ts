@@ -1,5 +1,5 @@
 /**
- * Options for PropertyGrid.
+ * Interface of PropertyGrid property.
  *
  * @interface Controls/_propertyGrid/IProperty
  * @public
