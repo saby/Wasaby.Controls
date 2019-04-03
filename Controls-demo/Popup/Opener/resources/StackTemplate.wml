@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Задача в разработку" maximized="{{_options.maximized}}" showMaximizedButton="{{_options.showMaximizedButton}}">
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Задача в разработку" maximized="{{_options.maximized}}" maximizeButtonVisibility="{{_options.showMaximizedButton}}">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
