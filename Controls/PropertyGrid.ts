@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import ItemsViewModel = require('Controls/List/ItemsViewModel');
 import template = require('wml!Controls/PropertyGrid/PropertyGrid');
-import defaultGroupTemplate = require('wml!Controls/PropertyGrid/GroupTemplate');
+import defaultGroupTemplate = require('wml!Controls/PropertyGrid/groupTemplate');
 import PropertyGridItem = require('Controls/PropertyGrid/PropertyGridItem');
 
 import { factory } from 'Types/chain';
