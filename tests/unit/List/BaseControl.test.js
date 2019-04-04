@@ -132,6 +132,10 @@ define([
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             ctrl._beforeUpdate(cfg);
+
+            // check saving loaded items after new viewModelConstructor
+            // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
+            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
             assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
             ctrl.saveOptions(cfg);
