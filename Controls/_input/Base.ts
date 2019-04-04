@@ -923,6 +923,16 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
             if (displayValue.length === selection.end) {
+               /**
+                * When the carriage is at the end, you need to set the maximum possible value of scrollLeft.
+                *
+                * Theoretically, the value is defined as the difference between scrollWidth and clientWidth.
+                * In different browsers, this value is different. Because scrollWidth and clientWidth can be different,
+                * or fractional and rounded in different directions. Therefore, this method can not be used.
+                *
+                * If you set a value higher than the maximum, the browser will automatically set the maximum.
+                * The scrollWidth property is always greater than the maximum scrollLeft, so set it.
+                */
                field.scrollLeft = field.scrollWidth;
 
                return;
