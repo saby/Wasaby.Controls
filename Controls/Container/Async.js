@@ -1,6 +1,7 @@
 define('Controls/Container/Async',
    [
       'Core/Control',
+      'Application/Env',
       'Env/Env',
       'Core/constants',
       'wml!Controls/Container/Async/Async',
@@ -10,6 +11,7 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
+      AppEnv,
       Env,
       constants,
       template,
@@ -78,7 +80,9 @@ define('Controls/Container/Async',
                return;
             }
             if (opts.templateName === this._options.templateName) {
-               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, opts.templateOptions, opts.templateName);
+               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate,
+                  opts.templateOptions,
+                  opts.templateName);
             } else if (this._isLoaded(opts.templateName)) {
                this._loadContentSync(opts.templateName, opts.templateOptions);
             }
