@@ -416,20 +416,12 @@ function(cMerge,
          if (cfg.targetPoint) {
             cfg.corner = cfg.targetPoint;
          }
-         if (cfg.direction) {
-            if (cfg.horizontalAlign) {
-               cfg.horizontalAlign.side = cfg.direction.horizontal;
-            } else {
-               cfg.horizontalAlign = { side: cfg.direction.horizontal };
-            }
-            if (cfg.verticalAlign) {
-               cfg.verticalAlign.side = cfg.direction.vertical;
-            } else {
-               cfg.verticalAlign = { side: cfg.direction.vertical };
-            }
+         if (cfg.direction && typeof cfg.direction === 'object') {
+            cfg.horizontalAlign = { side: cfg.direction.horizontal };
+            cfg.verticalAlign = { side: cfg.direction.vertical };
             cfg.direction = null;
          }
-         if (cfg.offset) {
+         if (cfg.offset && typeof cfg.offset === 'object') {
             if (cfg.horizontalAlign) {
                cfg.horizontalAlign.offset = cfg.offset.horizontal;
             } else {
