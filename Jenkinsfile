@@ -4,9 +4,8 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            //branches: [[name: "rc-${version}"]],
-			branches: [[name: "19.400/feature/may/test-sbisplugin-040419"]],
-            doGenerateSubmoduleConfigurations: false,
+            branches: [[name: "rc-${version}"]],
+			doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "jenkins_pipeline"
