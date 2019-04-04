@@ -3,7 +3,7 @@ define([
 ], function(
    Async
 ) {
-   describe('Controls.Container.Async', function() {
+   describe('Dynamic loading Controls.Container.Async', function() {
       var async;
 
 
