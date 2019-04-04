@@ -17,6 +17,8 @@ define('Controls/Decorator/Money',
        * @class Controls/Decorator/Money
        * @extends Core/Control
        *
+       * @mixes Controls/Decorator/Money/Styles
+       *
        * @public
        * @demo Controls-demo/Decorators/Money/Money
        *

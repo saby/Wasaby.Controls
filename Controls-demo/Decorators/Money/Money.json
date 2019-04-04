@@ -6,6 +6,9 @@
           "number": {
             "type": "String"
           },
+          "title": {
+            "type": "String"
+          },
           "style": {
             "type": "enum",
             "enum": {

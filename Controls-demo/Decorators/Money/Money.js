@@ -34,8 +34,10 @@ define('Controls-demo/Decorators/Money/Money',
                }
             };
             this._componentOptions = {
+               title: '',
                number: '0.00',
                style: 'default',
+               name: 'DecoratorMoney',
                useGrouping: true
             };
             this._metaData = config[_private.CONTENT].properties['ws-config'].options;
