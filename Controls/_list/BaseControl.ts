@@ -929,7 +929,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+                items: this._listViewModel.getItems()
+            }));
             _private.initListViewModelHandler(this, this._listViewModel);
         }
 
