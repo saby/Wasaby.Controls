@@ -199,11 +199,7 @@ define('Controls/Dropdown/Controller',
                   corner: self._options.corner,
                   opener: self,
                   autofocus: false,
-                  closeOnOutsideClick: true,
-
-
-                  // TODO: https://online.sbis.ru/opendoc.html?guid=b2116aaf-e4f5-46f9-881d-587384a4ec5d
-                  revertPositionStyle: self._options.revertPositionStyle
+                  closeOnOutsideClick: true
                };
                self._children.DropdownOpener.open(config, self);
             }
