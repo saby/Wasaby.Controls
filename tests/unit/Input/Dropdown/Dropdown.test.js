@@ -90,6 +90,19 @@ define(
             assert.equal(ddl._icon, null);
          });
 
+         it('_setText hasMoreText', () => {
+            let ddl = getDropdown(config);
+            ddl._setText([itemsRecords.at(1), itemsRecords.at(3), itemsRecords.at(5)]);
+            assert.equal(ddl._text, 'Запись 2');
+            assert.equal(ddl._tooltip, 'Запись 2, Запись 4, Запись 6');
+            assert.equal(ddl._hasMoreText, ', еще 2');
+
+            ddl._setText([itemsRecords.at(1)]);
+            assert.equal(ddl._text, 'Запись 2');
+            assert.equal(ddl._tooltip, 'Запись 2');
+            assert.equal(ddl._hasMoreText, '');
+         });
+
          it('check selectedItemsChanged event', () => {
             let ddl = getDropdown(config);
             ddl._notify = (e, data) => {

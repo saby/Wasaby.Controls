@@ -5,7 +5,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
 
 /**
- * @class Controls/List/BaseControl/SelectionController
+ * @class Controls/_lists/BaseControl/SelectionController
  * @extends Core/Control
  * @control
  * @author Зайцев А.С.
@@ -99,7 +99,7 @@ var _private = {
     }
 };
 
-var SelectionController = Control.extend(/** @lends Controls/List/BaseControl/SelectionController.prototype */{
+var SelectionController = Control.extend(/** @lends Controls/_lists/BaseControl/SelectionController.prototype */{
     _beforeMount: function (options) {
         var self = this;
         return _private.getMultiselection(options).addCallback(function (multiselectionInstance) {

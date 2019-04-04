@@ -117,6 +117,15 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }, 0);
          },
 
+         getSelectedButNotLoadedItemsCount: function(selectedKeys, items) {
+            return selectedKeys.reduce(function(acc, key) {
+               if (key !== null && !items.getRecordById(key)) {
+                  return acc + 1;
+               }
+               return acc;
+            }, 0);
+         },
+
          hasExcludedChildren: function(hierarchyRelation, rootId, excludedKeys, items) {
             var
                hasExcludedChildren = false,
@@ -199,7 +208,19 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       },
 
       getCount: function() {
-         return _private.getSelectedChildrenCount(this._hierarchyRelation, null, this._selectedKeys, this._excludedKeys, this._items);
+         return (
+            _private.getSelectedChildrenCount(
+               this._hierarchyRelation,
+               null,
+               this._selectedKeys,
+               this._excludedKeys,
+               this._items
+            ) +
+            _private.getSelectedButNotLoadedItemsCount(
+               this._selectedKeys,
+               this._items
+            )
+         );
       },
 
       _getSelectionStatus: function(item) {

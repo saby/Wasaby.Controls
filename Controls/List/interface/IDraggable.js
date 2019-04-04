@@ -9,7 +9,7 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @name Controls/List/interface/IDraggable#itemsDragNDrop
+    * @name Controls.lists:View/interface/IDraggable#itemsDragNDrop
     * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
     * @variant none Dragging items is not allowed.
     * @variant allow Dragging items is allowed.
@@ -17,10 +17,10 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to enable the ability to move items using drag'n'drop.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   itemsDragNDrop="allow">
-    *     </Controls.List>
+    *     </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -35,14 +35,14 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @name Controls/List/interface/IDraggable#draggingTemplate
+    * @name Controls.lists:View/interface/IDraggable#draggingTemplate
     * @cfg {Function} Template of the entity to be moved.
     * @default Controls/DragNDrop/DraggingTemplate
     * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
     * @example
     * The following example shows how to use a standard dragging template.
     * <pre>
-    *    <Controls.List source="{{_viewSource}}"
+    *    <Controls.lists:View source="{{_viewSource}}"
     *                   keyProperty="id"
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="allow">
@@ -53,7 +53,7 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
     *          </ws:partial>
     *       </ws:draggingTemplate>
-    *    </Controls.List>
+    *    </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -77,7 +77,7 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @event Controls/List/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
+    * @event Controls.lists:View/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>} items An array of identifiers for items to be moved.
     * @returns {Controls/DragNDrop/Entity/Items)
@@ -85,11 +85,11 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to start moving items using drag'n'drop if all items are of the same type.
     * <pre>
-    *     <Controls.List source="{{_viewSource}}"
+    *     <Controls.lists:View source="{{_viewSource}}"
     *                    keyProperty="id"
     *                    on:dragStart="_dragStart()"
     *                    itemsDragNDrop="allow">
-    *     </Controls.List>
+    *     </Controls.lists:View>
     * </pre>
     *
     * <pre>
@@ -122,19 +122,19 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @event Controls/List/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
+    * @event Controls.lists:View/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @param {Types/entity:Record} target Target item to move.
     * @param {MovePosition} position Position to move.
     * @example
-    * The following example shows how to move items using Controls/List/Mover after the drag is complete.
+    * The following example shows how to move items using Controls.lists:View/Mover after the drag is complete.
     * <pre>
     *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-    *        <Controls.List on:dragEnd="_dragEnd()"
+    *        <Controls.lists:View on:dragEnd="_dragEnd()"
     *                       itemsDragNDrop="allow">
-    *        </Controls.List>
-    *        <Controls.List.Mover name="listMover">
+    *        </Controls.lists:View>
+    *        <Controls.lists:View.Mover name="listMover">
     *     <Controls.Container.Data>
     * </pre>
     *
@@ -160,7 +160,7 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @event Controls/List/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
+    * @event Controls.lists:View/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @returns {DragEnterResult}
@@ -169,14 +169,14 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * The following example shows how to allow dragging to a list of entities of a particular type.
     * <pre>
     *     <Controls.Container.Data source="{{_firstSource}}" keyProperty="id">
-    *        <Controls.List on:dragStart="_dragStart()"
+    *        <Controls.lists:View on:dragStart="_dragStart()"
     *                       itemsDragNDrop="allow">
-    *        </Controls.List>
+    *        </Controls.lists:View>
     *     <Controls.Container.Data>
     *     <Controls.Container.Data source="{{_secondSource}}" keyProperty="id">
-    *        <Controls.List on:dragEnter="_dragEnter()"
+    *        <Controls.lists:View on:dragEnter="_dragEnter()"
     *                       itemsDragNDrop="allow">
-    *        </Controls.List>
+    *        </Controls.lists:View>
     *     <Controls.Container.Data>
     * </pre>
     *
@@ -205,7 +205,7 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     */
 
    /**
-    * @event Controls/List/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
+    * @event Controls.lists:View/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @param {Types/entity:Record} target Target item to move.
@@ -216,9 +216,9 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * The following example shows how to prevent the change of the order of a pinned item.
     * <pre>
     *    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-    *       <Controls.List on:changeDragTarget="_changeDragTarget()"
+    *       <Controls.lists:View on:changeDragTarget="_changeDragTarget()"
     *                      itemsDragNDrop="allow">
-    *       </Controls.List>
+    *       </Controls.lists:View>
     *    <Controls.Container.Data>
     * </pre>
     *

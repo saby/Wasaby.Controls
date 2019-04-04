@@ -1,11 +1,11 @@
 define(
    [
       'Core/core-instance',
-      'Controls/Input/Number',
+      'Controls/input',
       'unit/resources/ProxyCall',
       'Vdom/Vdom'
    ],
-   function(instance, NumberInput, ProxyCall, Vdom) {
+   function(instance, inputMod, ProxyCall, Vdom) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
@@ -13,7 +13,7 @@ define(
 
          beforeEach(function() {
             calls = [];
-            ctrl = new NumberInput();
+            ctrl = new inputMod.Number();
 
             var beforeMount = ctrl._beforeMount;
 
@@ -31,7 +31,7 @@ define(
          });
 
          it('Checking default values of options.', function() {
-            assert.deepEqual(NumberInput.getDefaultOptions(), {
+            assert.deepEqual(inputMod.Number.getDefaultOptions(), {
                value: 0,
                tooltip: '',
                style: 'info',
@@ -47,7 +47,7 @@ define(
             });
          });
          it('Checking types of options.', function() {
-            assert.deepEqual(Object.keys(NumberInput.getOptionTypes()).sort(), [
+            assert.deepEqual(Object.keys(inputMod.Number.getOptionTypes()).sort(), [
                'size',
                'style',
                'tooltip',

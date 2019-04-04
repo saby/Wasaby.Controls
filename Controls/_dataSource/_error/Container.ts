@@ -2,9 +2,10 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dataSource/_error/Container');
 // @ts-ignore
-import {constants} from 'Env/Env';
-import {ViewConfig} from 'Controls/_dataSource/_error/Handler';
+import { constants } from 'Env/Env';
+import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
+import 'css!Controls/_dataSource/_error/Container';
 
 type Options = {
     /**
@@ -62,7 +63,7 @@ export default class Container extends Control {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
-            constants.isBrowserPlatform && this._children.dialogOpener
+            constants.isBrowserPlatform && !this._children.dialogOpener
         ) {
             return;
         }

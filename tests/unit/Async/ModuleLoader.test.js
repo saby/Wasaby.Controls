@@ -58,8 +58,8 @@ define([
          ml.clearCache();
       });
       it('Load sync no cache', function() {
-         var res = ml.loadSync('Controls/List');
-         assert.equal(ml.loadedSync['Controls/List'], res);
+         var res = ml.loadSync('Controls/list');
+         assert.equal(ml.loadedSync['Controls/list'], res);
       });
       it('Load sync with cache', function() {
          ml.loadedSync = [];
@@ -67,8 +67,8 @@ define([
             this.loadedSync.push(name);
             return {};
          };
-         var res = ml.loadSync('Controls/List');
-         var res2 = ml.loadSync('Controls/List');
+         var res = ml.loadSync('Controls/list');
+         var res2 = ml.loadSync('Controls/list');
          assert.equal(res, res2);
          assert.equal(ml.loadedSync.length, 1);
       });
@@ -77,15 +77,15 @@ define([
          ml.requireSync = function(name) {
             throw new Error('test error');
          };
-         var res = ml.loadSync('Controls/List');
+         var res = ml.loadSync('Controls/list');
          assert.equal(ml.loadedSync.length, 0);
-         checkError(logErrors, 'Couldn\'t load module Controls/List', 'test error');
+         checkError(logErrors, 'Couldn\'t load module Controls/list', 'test error');
       });
 
       it('Load async no cache', function(done) {
-         var promiseResult = ml.loadAsync('Controls/List');
+         var promiseResult = ml.loadAsync('Controls/list');
          promiseResult.then(function(res) {
-            assert.equal(ml.loadedAsync['Controls/List'], res);
+            assert.equal(ml.loadedAsync['Controls/list'], res);
             done();
          });
       });
@@ -97,12 +97,33 @@ define([
                resolve({});
             });
          };
-         var res = ml.loadAsync('Controls/List');
-         var res2 = ml.loadAsync('Controls/List');
-         res2.then(function() {
-            done();
+         var res = ml.loadAsync('Controls/list');
+         var res2 = ml.loadAsync('Controls/list');
+         res.then(function() {
+            res2.then(function() {
+               done();
+            });
          });
-         assert.equal(res, res2);
+         assert.equal(ml.loadedAsync.length, 1);
+      });
+      it('Load async with cached promise lib', function(done) {
+         var lib = { MyList: {}, MyList2: {} };
+         ml.loadedAsync = [];
+         ml.requireAsync = function(name) {
+            return new Promise(function(resolve) {
+               ml.loadedAsync.push(name);
+               resolve(lib);
+            });
+         };
+         var promiseRes = ml.loadAsync('Controls/List:MyList');
+         var promiseRes2 = ml.loadAsync('Controls/List:MyList2');
+         promiseRes.then(function(res) {
+            assert.equal(res, lib.MyList);
+            promiseRes2.then(function(res2) {
+               assert.equal(res2, lib.MyList2);
+               done();
+            });
+         });
          assert.equal(ml.loadedAsync.length, 1);
       });
       it('Load async with cached module', function(done) {
@@ -113,12 +134,33 @@ define([
                resolve({});
             });
          };
-         var res = ml.loadAsync('Controls/List');
+         var res = ml.loadAsync('Controls/list');
          res.then(function(loaded) {
-            var res2 = ml.loadAsync('Controls/List');
-            checkError(logErrors, 'Module Controls/List is already loaded.');
+            var res2 = ml.loadAsync('Controls/list');
+            checkError(logErrors, 'Module Controls/list is already loaded.');
             res2.then(function(loaded2) {
                assert.equal(loaded, loaded2);
+               assert.equal(ml.loadedAsync.length, 1);
+               done();
+            });
+         });
+      });
+      it('Load async with cached lib', function(done) {
+         var lib = { MyList: {}, MyList2: {} };
+         ml.loadedAsync = [];
+         ml.requireAsync = function(name) {
+            return new Promise(function(resolve) {
+               ml.loadedAsync.push(name);
+               resolve(lib);
+            });
+         };
+         var res = ml.loadAsync('Controls/lists:MyList');
+         res.then(function(loaded) {
+            var res2 = ml.loadAsync('Controls/lists:MyList2');
+            checkError(logErrors, 'Module Controls/List is already loaded.');
+            res2.then(function(loaded2) {
+               assert.equal(loaded, lib.MyList);
+               assert.equal(loaded2, lib.MyList2);
                assert.equal(ml.loadedAsync.length, 1);
                done();
             });
@@ -131,12 +173,23 @@ define([
                reject('test error');
             });
          };
-         var res = ml.loadAsync('Controls/List');
+         var res = ml.loadAsync('Controls/list');
          res.catch(function(res) {
             assert.equal(ml.loadedAsync.length, 0);
-            checkError(logErrors, 'Couldn\'t load module Controls/List', 'test error');
+            checkError(logErrors, 'Couldn\'t load module Controls/list', 'test error');
             done();
          });
       });
+      it('IsLoaded simple', function() {
+         let module = {};
+         ml.cacheModule('Test/TestModule', module)
+         assert.isTrue(ml.isLoaded('Test/TestModule'));
+      });
+      it('IsLoaded lib', function() {
+         let module = {};
+         ml.cacheModule('Test/TestLib', module)
+         assert.isTrue(ml.isLoaded('Test/TestLib:TestModule'));
+      });
    });
 });
+;

@@ -3,8 +3,8 @@ import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import BaseControlTpl = require('wml!Controls/_lists/BaseControl/BaseControl');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
+import VirtualScroll = require('Controls/_lists/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
 import isEqualObject = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
@@ -12,11 +12,11 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
 import tUtil = require('Controls/Utils/Toolbar');
-import aUtil = require('Controls/List/ItemActions/Utils/Actions');
+import aUtil = require('Controls/_lists/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_lists/BaseControl/Footer';
-import 'css!theme?Controls/List/BaseControl/BaseControl';
+import 'css!theme?Controls/_lists/BaseControl/BaseControl';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 
@@ -115,6 +115,7 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
+                self._loadedItems = list;
                 var
                     isActive,
                     listModel = self._listViewModel;
@@ -122,8 +123,6 @@ var _private = {
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
-
-                _private.hideIndicator(self);
 
                 if (listModel) {
                     if (self._isActive) {
@@ -146,6 +145,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
+                _private.resolveIndicatorStateAfterReload(self, list);
 
                 resDeferred.callback({
                     data: list
@@ -179,6 +179,24 @@ var _private = {
         });
         return resDeferred;
     },
+
+    resolveIndicatorStateAfterReload: function(self, list):void {
+        const hasMoreDataDown = self._sourceController.hasMoreData('down');
+        const hasMoreDataUp = self._sourceController.hasMoreData('up');
+
+        if (!list.getCount()) {
+            //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
+            //otherwise empty template will shown
+            if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+            } else {
+                _private.hideIndicator(self);
+            }
+        } else {
+            _private.hideIndicator(self);
+        }
+    },
+
     scrollToItem: function(self, key) {
         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
@@ -199,6 +217,18 @@ var _private = {
         }
     },
     restoreScrollPosition: function(self) {
+        if (self._hasSavedScrollPosition) {
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+            self._notify('restoreScrollPosition', [], {
+                bubbling: true
+            });
+            self._hasSavedScrollPosition = false;
+            return;
+        }
+
         if (self._keyDisplayedItem !== null) {
             _private.scrollToItem(self, self._keyDisplayedItem);
             self._keyDisplayedItem = null;
@@ -247,20 +277,24 @@ var _private = {
     },
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
-        _private.showIndicator(self, direction);
-
-        //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
-        //при добавлении пачки в начало (подгрузка по скроллу вверх нужно чтоб был минимальный проскролл, чтоб пачка ушла за границы видимой части как и должна а не отобразилась сверху)
-        //Опция нужна, т.к. есть проблемы с queue при отрисовке изменений ViewModel, поэтому данный функционал включаем только по месту (в календаре)
-        //разобраться с queue по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63
-        if (self._options.fix1176592913 && direction === 'up') {
-            self._notify('doScroll', ['scrollCompensation'], {bubbling: true});
+        if (direction === 'up') {
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+           self._notify('saveScrollPosition', [], {
+               bubbling: true
+           });
+           self._hasSavedScrollPosition = true;
         }
+
+        _private.showIndicator(self, direction);
 
         /**/
 
         if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
+                self._loadedItems = addedItems;
                 if (userCallback && userCallback instanceof Function) {
                     userCallback(addedItems, direction);
                 }
@@ -293,7 +327,7 @@ var _private = {
                     // Обновляем общее количество записей
                     self._virtualScroll.ItemsCount = self._listViewModel.getCount();
 
-                    _private.applyVirtualScroll(self, direction);
+                    _private.applyVirtualScroll(self);
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -349,7 +383,7 @@ var _private = {
 
     loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
-        if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
+        if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
             _private.loadToDirection(
                 self, direction,
                 self._options.dataLoadCallback,
@@ -452,7 +486,7 @@ var _private = {
 
     createScrollPagingController: function(self) {
         var def = new Deferred();
-        require(['Controls/List/Controllers/ScrollPaging'], function(ScrollPagingController) {
+        require(['Controls/_lists/Controllers/ScrollPaging'], function(ScrollPagingController) {
             var scrollPagingCtr;
             scrollPagingCtr = new ScrollPagingController({
                 mode: self._options.navigation.viewConfig.pagingMode,
@@ -495,8 +529,8 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction?) {
-        self._loadingState = direction || 'all';
+    showIndicator: function(self, direction = 'all') {
+        self._loadingState = direction;
         self._loadingIndicatorState = self._loadingState;
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -529,7 +563,7 @@ var _private = {
         var hasMoreData;
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
-        if (self._virtualScroll && !self._hasUndrawChanges) {
+        if (self._virtualScroll) {
             self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop);
             _private.applyVirtualScroll(self);
         }
@@ -594,7 +628,6 @@ var _private = {
                     _private.applyVirtualScroll(self);
                 }
             }
-            self._hasUndrawChanges = true;
             self._forceUpdate();
         });
 
@@ -740,7 +773,7 @@ var _private = {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            requirejs(['Controls/_lists/resources/utils/GroupUtil'], function(GroupUtil) {
                 GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
             });
         }
@@ -750,7 +783,7 @@ var _private = {
         var
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            requirejs(['Controls/_lists/resources/utils/GroupUtil'], function(GroupUtil) {
                 GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
                     result.callback(collapsedGroupsFromStore || config.collapsedGroups);
                 });
@@ -798,7 +831,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {ErrbackConfig} config
      * @return {Promise}
      * @private
@@ -808,7 +841,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {ErrbackConfig} config
      * @return {Promise.<CrudResult>}
      * @private
@@ -830,7 +863,7 @@ var _private = {
     },
 
     /**
-     * @param {Controls/List/BaseControl} self
+     * @param {Controls/_lists/BaseControl} self
      * @param {Controls/dataSource:error.ViewConfig} errorConfig
      * @private
      */
@@ -849,7 +882,7 @@ var _private = {
 
 /**
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
- * @class Controls/List/BaseControl
+ * @class Controls/_lists/BaseControl
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -858,16 +891,16 @@ var _private = {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IBaseControl
+ * @mixes Controls/_lists/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/BaseControl/Styles
+ * @mixes Controls/_lists/BaseControl/Styles
  * @control
  * @public
  * @author Авраменко А.С.
  * @category List
  */
 
-var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype */{
+var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototype */{
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
@@ -898,7 +931,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _menuIsShown: null,
 
     _popupOptions: null,
-    _hasUndrawChanges: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1002,9 +1034,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         if (this._virtualScroll) {
             this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
         }
-        if (this._options.fix1176592913 && this._hasUndrawChanges) {
-            this._hasUndrawChanges = false;
-        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -1016,7 +1045,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+                items: this._listViewModel.getItems()
+            }));
             _private.initListViewModelHandler(this, this._listViewModel);
         }
 
@@ -1056,7 +1087,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
-        this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
+        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
@@ -1067,7 +1098,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            _private.reload(this, newOptions).addCallback(function () {
+            //return result here is for unit tests
+            return _private.reload(this, newOptions).addCallback(function () {
 
                 /*
                 * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
@@ -1077,11 +1109,19 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 if (self._listViewModel.getCount() && self._isScrollShown) {
-                    self._keyDisplayedItem = self._listViewModel.getFirstItem().getId();
+                    const firstItem = self._listViewModel.getFirstItem();
+
+                    //the first item may be missing, if, for example, only groups are drawn in the list
+                    if (firstItem) {
+                        self._keyDisplayedItem = firstItem.getId();
+                    }
                 }
             });
         }
 
+        if (this._loadedItems) {
+            this._shouldNotifyOnDrawItems = true;
+        }
     },
 
     reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
@@ -1147,16 +1187,21 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     _afterUpdate: function(oldOptions) {
-        /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
-        if (!this._options.fix1176592913 && this._hasUndrawChanges) {
-            this._hasUndrawChanges = false;
+        if (this._shouldNotifyOnDrawItems) {
             _private.restoreScrollPosition(this);
-            _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
-                this._virtualScroll.updateItemsSizes();
-                this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
-                this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
+               this._virtualScroll.updateItemsSizes();
+               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
+               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
+            this._notify('drawItems', [this._loadedItems]);
+            this._loadedItems = null;
+            this._shouldNotifyOnDrawItems = false;
+            this._checkShouldLoadToDirection = true;
+            this._forceUpdate();
+        } else if (this._checkShouldLoadToDirection) {
+           _private.checkLoadToDirectionCapability(this);
+           this._checkShouldLoadToDirection = false;
         }
         if (this._delayedSelect && this._children.selectionController) {
             this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
@@ -1170,7 +1215,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading) {
                 _private.showIndicator(this);
-            } else if (!this._sourceController.isLoading()) {
+            } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
         }
@@ -1294,7 +1339,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender')) {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 this._children.fakeFocusElem.focus();
             }, 0);
@@ -1302,14 +1347,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     _viewResize: function() {
-        /*TODO переношу сюда костыль сделанный по https://online.sbis.ru/opendoc.html?guid=ce307671-679e-4373-bc0e-c11149621c2a*/
-        /*только под опцией для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
-        if (this._options.fix1176592913 && this._hasUndrawChanges) {
-            this._hasUndrawChanges = false;
-            _private.restoreScrollPosition(this);
-            if (this._virtualScroll) {
-                this._virtualScroll.updateItemsSizes();
-            }
+        if (this._virtualScroll) {
+            this._virtualScroll.updateItemsSizes();
         }
     },
 
@@ -1492,7 +1531,8 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
-        markedKey: null
+        markedKey: null,
+        stickyHeader: true
     };
 };
 export = BaseControl;

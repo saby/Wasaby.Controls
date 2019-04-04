@@ -32,7 +32,7 @@
             <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
         </div>
        <ws:if data="{{ _options.footerContentTemplate }}">
-                       <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__bottomArea"></ws:partial>
+                       <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer"></ws:partial>
                </ws:if>
     </div>
 </Controls.DragNDrop.Controller>

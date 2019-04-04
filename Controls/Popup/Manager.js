@@ -25,7 +25,7 @@ define('Controls/Popup/Manager',
 
          addElement: function(element) {
             _private.popupItems.add(element);
-            if (element.isModal) {
+            if (element.modal) {
                ManagerController.getContainer().setOverlay(_private.popupItems.getCount() - 1);
             }
          },
@@ -133,7 +133,7 @@ define('Controls/Popup/Manager',
          },
 
          updateOverlay: function() {
-            var indices = _private.popupItems.getIndicesByValue('isModal', true);
+            var indices = _private.popupItems.getIndicesByValue('modal', true);
             ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
          },
 
@@ -218,8 +218,12 @@ define('Controls/Popup/Manager',
             return document && document.activeElement;
          },
 
+         goUpByControlTree: function(target) {
+            return Vdom.DOMEnvironment._goUpByControlTree(target);
+         },
+
          getActiveControl: function() {
-            return Vdom.DOMEnvironment._goUpByControlTree(_private.getActiveElement())[0];
+            return _private.goUpByControlTree(_private.getActiveElement())[0];
          },
 
          popupDragStart: function(id, offset) {
@@ -227,6 +231,22 @@ define('Controls/Popup/Manager',
             if (element) {
                element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
                return true;
+            }
+            return false;
+         },
+
+         popupMouseEnter: function(id, event) {
+            var item = _private.find(id);
+            if (item) {
+               item.controller.popupMouseEnter(item, _private.getItemContainer(id), event);
+            }
+            return false;
+         },
+
+         popupMouseLeave: function(id, event) {
+            var item = _private.find(id);
+            if (item) {
+               item.controller.popupMouseLeave(item, _private.getItemContainer(id), event);
             }
             return false;
          },
@@ -418,11 +438,11 @@ define('Controls/Popup/Manager',
             var popupId = randomId('popup-');
             var popupConfig = {
                id: popupId,
-               isModal: options.isModal,
+               modal: options.modal,
                controller: controller,
                popupOptions: options,
                isActive: false,
-               waitDeactivated: false,
+               waitDeactivated: options.autofocus === false,
                sizes: {},
                activeControlAfterDestroy: _private.getActiveControl(),
                activeNodeAfterDestroy: _private.getActiveElement(), // TODO: COMPATIBLE
@@ -460,27 +480,24 @@ define('Controls/Popup/Manager',
             return control;
          },
 
-         _contentClick: function(event) {
-            if (_private.popupItems) {
+         _mouseDownHandler: function(event) {
+            if (_private.popupItems && !_private.isIgnoreActivationArea(event.target)) {
                var deactivatedPopups = [];
                _private.popupItems.each(function(item) {
-                  // Закрываем только те окна, которые были открыты до mousedown'a
-                  // todo: https://online.sbis.ru/opendoc.html?guid=00a8e7a6-c4b7-4301-a4eb-700d2ef01e9f
-                  if (item && item.waitDeactivated && _private.popupItemsClone && _private.popupItemsClone.getIndexByValue('id', item.id) > -1) {
-                     if (!_private.isIgnoreActivationArea(event.target)) {
+                  // if we have deactivated popup
+                  if (item && item.waitDeactivated) {
+                     var parentControls = _private.goUpByControlTree(event.target);
+                     var popupInstance = ManagerController.getContainer().getPopupById(item.id);
+
+                     // Check the link between target and popup
+                     if (_private.needClosePopupByDeactivated(item) && parentControls.indexOf(popupInstance) === -1) {
                         deactivatedPopups.push(item.id);
                      }
                   }
                });
                for (var i = 0; i < deactivatedPopups.length; i++) {
-                  _private.popupDeactivated(deactivatedPopups[i]);
+                  this.remove(deactivatedPopups[i]);
                }
-            }
-         },
-
-         _mouseDownHandler: function() {
-            if (_private.popupItems) {
-               _private.popupItemsClone = _private.popupItems.clone();
             }
          },
 

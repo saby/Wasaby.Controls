@@ -3,21 +3,21 @@ define('Controls/Selector/Suggest',
       'Core/Control',
       'wml!Controls/Selector/Suggest/Suggest',
       'Controls/Controllers/SourceController',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/History/Source',
       'Controls/History/Service',
       'Types/util',
       'Types/entity',
-      'Core/core-merge'
+      'Core/core-merge',
+      'css!Controls/Selector/Suggest/Suggest'
    ],
-   function(Control, template, SourceController, BaseViewModel, HistorySource, HistoryService, util, entity, Merge) {
+   function(Control, template, SourceController, HistorySource, HistoryService, util, entity, Merge) {
       'use strict';
 
       /**
        * Combobox input that suggests options as you are typing.
        *
        * @class Controls/Input/ComboBox/Suggest
-       * @extends Controls/Input/Text
+       * @extends Controls/input:Text
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
@@ -38,23 +38,13 @@ define('Controls/Selector/Suggest',
             });
             return self._sourceController.load(filter).addCallback(function(items) {
                var value = util.object.getPropertyValue(items.at(0), options.displayProperty);
-               _private.createViewModel(self, value);
+               _private.updateValue(self, value);
                return items;
-            });
-         },
-
-         createViewModel: function(self, value) {
-            self._value = value;
-            self._simpleViewModel = new BaseViewModel({
-               value: value
             });
          },
 
          updateValue: function(self, value) {
             self._value = value;
-            self._simpleViewModel.updateOptions({
-               value: value
-            });
          },
 
          prepareSuggestTemplate: function(displayProperty, suggestTemplate) {
@@ -89,7 +79,7 @@ define('Controls/Selector/Suggest',
                   return items;
                });
             }
-            _private.createViewModel(this, '');
+            _private.updateValue(this, '');
             this._searchValue = '';
          },
 

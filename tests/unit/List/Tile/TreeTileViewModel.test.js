@@ -33,6 +33,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
          var cur;
          treeTileViewModel.setHoveredItem({
             key: 2,
+            zoomCoefficient: 1.5,
             position: 'string with style'
          });
          cur = treeTileViewModel.getCurrent();
@@ -40,6 +41,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
          assert.equal(cur.tileMode, 'static');
          assert.equal(cur.itemsHeight, 300);
          assert.equal(cur.imageProperty, 'image');
+         assert.isUndefined(cur.zoomCoefficient);
          assert.isFalse(!!cur.isHovered);
          assert.isFalse(!!cur.hasSeparator);
 
@@ -48,6 +50,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
          assert.isTrue(!!cur.isHovered);
          assert.isTrue(!!cur.hasSeparator);
          assert.equal(cur.position, 'string with style');
+         assert.equal(cur.zoomCoefficient, 1.5);
       });
 
       it('setTileMode', function() {

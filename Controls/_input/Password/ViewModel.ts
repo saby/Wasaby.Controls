@@ -44,6 +44,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
             this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
+            this._nextVersion();
 
             return result;
          }

@@ -21,31 +21,43 @@ class ModuleClass {
      */
     update(options) {
         let ranges = this._getRangesFromOptions(options),
-            changedRangeIndex = this._getChangedIndex(ranges),
-            newRanges, periodType, start, end;
+            changedRangeIndex = this._getChangedIndex(ranges);
         if (changedRangeIndex !== -1) {
-            start = options['startValue' + changedRangeIndex];
-            end = options['endValue' + changedRangeIndex];
-            this._autoRelation(this.ranges,[start, end], changedRangeIndex);
-            newRanges = this._getUpdatedRanges(
-                this.ranges,
-                changedRangeIndex,
-                [options['startValue' + changedRangeIndex], options['endValue' + changedRangeIndex]],
-                options.bindType,
-                this._steps
+            this.updateRanges(
+                options['startValue' + changedRangeIndex],
+                options['endValue' + changedRangeIndex],
+                changedRangeIndex
             );
-            this.ranges = newRanges;
-            if (options.bindType !== this._bindType && options.bindType === 'normal') {
-                this._updateSteps(this.ranges);
-            }
         } else {
-            this._bindType = options.bindType;
+            // this._bindType = options.bindType;
+            this._updateSteps(this.ranges);
+        }
+    }
+
+    updateRanges(start, end, changedRangeIndex) {
+        let
+            oldBindType = this._bindType,
+            newRanges;
+        this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+        newRanges = this._getUpdatedRanges(
+            this.ranges,
+            changedRangeIndex,
+            [start, end],
+            oldBindType,
+            this._steps
+        );
+        this.ranges = newRanges;
+        if (oldBindType !== this._bindType && oldBindType === 'normal') {
             this._updateSteps(this.ranges);
         }
     }
 
     get bindType() {
         return this._bindType;
+    }
+
+    set bindType(value) {
+        this._bindType = value;
     }
 
     shiftForward() {
@@ -58,7 +70,7 @@ class ModuleClass {
 
     private _shift(delta) {
         this.ranges = this.ranges.map(function (range) {
-            return dateRangeUtil.shiftPeriod(range[0], range[1], delta)
+            return dateRangeUtil.shiftPeriod(range[0], range[1], delta);
         });
     }
 

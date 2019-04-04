@@ -1,11 +1,11 @@
 define('Controls/Application/_Wait',
    [
       'Core/Control',
-      'View/Request',
+      'Application/Env',
       'wml!Controls/Application/_Wait'
    ],
 
-   function(Base, Request, template) {
+   function(Base, AppEnv, template) {
       'use strict';
 
       var asyncTemplate = function() {
@@ -41,7 +41,7 @@ define('Controls/Application/_Wait',
          },
          _beforeMount: function() {
             this._createPromise();
-            Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);
+            AppEnv.getStore('HeadData').pushWaiterDeferred(this.waitDef);
             if (typeof window !== 'undefined') {
                this._resolvePromiseFn();
                this._createPromise();

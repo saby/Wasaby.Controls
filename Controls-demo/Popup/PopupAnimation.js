@@ -13,6 +13,19 @@ define('Controls-demo/Popup/PopupAnimation',
          _fullCreateDelay: 1000,
          _template: template,
          openStack: function() {
+            var self = this;
+            if (this._animationDelay) {
+               self._children.loadingIndicator.show();
+               setTimeout(function() {
+                  self._children.loadingIndicator.hide();
+                  self._openStack();
+               }, this._animationDelay);
+            } else {
+               this._openStack();
+            }
+
+         },
+         _openStack: function() {
             this._children.stack.open({
                className: 'ControlsDemo-PopupAnimation_duration-' + this._animationDelay,
                templateOptions: {
@@ -23,8 +36,8 @@ define('Controls-demo/Popup/PopupAnimation',
          _inputHandlerHandler: function(event, param, value) {
             if (value < 0) {
                this[param] = 0;
-            } else if (value > 1500) {
-               this[param] = 1500;
+            } else if (value > 10000) {
+               this[param] = 10000;
             }
          }
       });

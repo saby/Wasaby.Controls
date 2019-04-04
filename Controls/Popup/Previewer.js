@@ -42,6 +42,8 @@ define('Controls/Popup/Previewer',
          },
          getCfg: function(self) {
             var config = {
+               autofocus: false,
+               fittingMode: 'overflow',
                opener: self,
                target: self._container,
                template: 'Controls/Popup/Previewer/OpenerTemplate',
@@ -56,8 +58,7 @@ define('Controls/Popup/Previewer',
                templateOptions: {
                   template: self._options.templateName || self._options.template,
                   templateOptions: self._options.templateOptions
-               },
-               closeChildWindows: self._options.closeChildWindows
+               }
             };
 
             if (self._options.corner) {

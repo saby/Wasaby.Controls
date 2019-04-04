@@ -5,8 +5,9 @@ define('Controls/Application/Core',
    [
       'Core/Control',
       'wml!Controls/Application/Core',
-      'View/Request',
-      'View/_Request/createDefault',
+      'Application/Initializer',
+      'SbisEnv/PresentationService',
+      'Application/Env',
       'Controls/Application/StateReceiver',
       'Core/Themes/ThemesController',
       'Controls/Application/AppData',
@@ -16,8 +17,9 @@ define('Controls/Application/Core',
    ],
    function(Control,
       template,
-      Request,
-      createDefault,
+      AppInit,
+      PresentationService,
+      AppEnv,
       StateReceiver,
       ThemesController,
       AppData,
@@ -47,21 +49,25 @@ define('Controls/Application/Core',
 
             //__hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
             //и так и сяк
-
-            if (typeof window === 'undefined' || window.__hasRequest === undefined) {
-
-               //need create request for SSR
-               //on client request will create in app-init.js
-               var req = new Request(createDefault.default(Request));
-               req.setStateReceiver(new StateReceiver());
-               if (typeof window !== 'undefined' && window.receivedStates) {
-                  req.stateReceiver.deserialize(window.receivedStates);
+            if (!AppInit.isInit()) {
+               var stateReceiverInst = new StateReceiver();
+               var environmentFactory = undefined;
+               if (typeof window === 'undefined') {
+                  environmentFactory = PresentationService.default;
                }
-               Request.setCurrent(req);
+               AppInit.default(cfg, environmentFactory, stateReceiverInst);
+
+               if (typeof window === 'undefined' || window.__hasRequest === undefined) {
+                  //need create request for SSR
+                  //on client request will create in app-init.js
+                  if (typeof window !== 'undefined' && window.receivedStates) {
+                     stateReceiverInst.deserialize(window.receivedStates);
+                  }
+               }
             }
 
             var headData = new HeadData([], true);
-            Request.getCurrent().setStorage('HeadData', headData);
+            AppEnv.setStore('HeadData', headData);
 
             AppCore.superclass.constructor.apply(this, arguments);
 
@@ -70,7 +76,7 @@ define('Controls/Application/Core',
 
             // Put Application/Core instance into the current request where
             // other modules can get it from
-            Request.getCurrent().setStorage('CoreInstance', { instance: this });
+            AppEnv.setStore('CoreInstance', { instance: this });
          },
          coreTheme: '',
          setTheme: function(ev, theme) {
@@ -83,7 +89,7 @@ define('Controls/Application/Core',
             var result;
             if (this._application !== app) {
                this._applicationForChange = app;
-               var headData = Request.getCurrent().getStorage('HeadData');
+               var headData = AppEnv.getStore('HeadData');
                headData && headData.resetRenderDeferred();
                this._forceUpdate();
                result = true;
@@ -91,11 +97,6 @@ define('Controls/Application/Core',
                result = false;
             }
             return result;
-         },
-         _getChildContext: function() {
-            return {
-               AppData: this.ctxData
-            };
          }
 
       });

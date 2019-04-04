@@ -3,7 +3,7 @@ define('Controls-demo/List/List/LoadMore', [
    'wml!Controls-demo/List/List/resources/LoadMore/LoadMore',
    'Types/source',
    'Controls-demo/List/List/resources/Data',
-   'Controls/List',
+   'Controls/lists',
    'css!Controls-demo/List/List/resources/LoadMore/LoadMore'
 ], function (Control, template, sourceLib, ListData) {
    'use strict';

@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/Grid/GridStyles
+ * @mixin Controls/_grids/GridStyles
  * @public
  *
  *

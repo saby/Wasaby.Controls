@@ -1,28 +1,41 @@
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import simpleExtend = require('Core/core-simpleExtend');
+import { VersionableMixin } from "Types/entity";
 import isEqual = require('Core/helpers/Object/isEqual');
       
 
       var _private = {
          setValue: function(self, value) {
             if (self._value !== value) {
+               var oldValue = self._value;
                self._value = value;
+
+               // если ничего не поменялось - не надо изменять версию
+               if (oldValue !== value) {
+                  self._nextVersion();
+               }
 
                self._shouldBeChanged = true;
             }
          },
          setDisplayValue: function(self, displayValue) {
             if (self._displayValue !== displayValue) {
+               var oldValue = self._displayValue;
                self._displayValue = displayValue;
                self.selection = displayValue.length;
+
+               // если ничего не поменялось - не надо изменять версию
+               if (oldValue !== displayValue) {
+                  self._nextVersion();
+               }
 
                self._shouldBeChanged = true;
             }
          }
       };
 
-      var ViewModel = simpleExtend.extend({
+      var ViewModel = simpleExtend.extend([VersionableMixin], {
          _convertToValue: function(displayValue) {
             return displayValue;
          },
@@ -84,6 +97,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 
             if (!isEqual(this._selection, newSelection)) {
                merge(this._selection, newSelection);
+               this._nextVersion();
                this._shouldBeChanged = true;
             }
          },
@@ -113,6 +127,10 @@ import isEqual = require('Core/helpers/Object/isEqual');
             var hasChangedDisplayValue = this._displayValue !== displayValue;
 
             this._displayValue = displayValue;
+
+            // здесь нельзя добавлять проверку, иначе нельзя будет поставить точку в тексте. например Number.js пишем 123.456, вот когда будем писать точку, число при этом не изменилось, но _nextVersion звать надо..
+            this._nextVersion();
+
             this._value = this._convertToValue(displayValue);
             this._selection.start = position;
             this._selection.end = position;

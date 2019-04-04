@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" size="xl" scope="{{_options}}"/>

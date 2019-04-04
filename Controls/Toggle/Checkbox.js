@@ -1,8 +1,7 @@
 define('Controls/Toggle/Checkbox', [
    'Core/Control',
    'wml!Controls/Toggle/Checkbox/Checkbox',
-   'Types/entity',
-   'css!theme?Controls/Toggle/Checkbox/Checkbox'
+   'Types/entity'
 ], function(Control, template, entity) {
 
    /**
@@ -145,6 +144,8 @@ define('Controls/Toggle/Checkbox', [
          triState: false
       };
    };
+
+   Checkbox._theme = ['Controls/toggle'];
 
    Checkbox._ptivate = _private;
 

@@ -29,7 +29,7 @@ define(
 
          it('stack with config sizes', () => {
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.isTrue(position.width === item.popupOptions.maxWidth);
+            assert.isTrue(position.stackWidth === item.popupOptions.maxWidth);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
@@ -39,11 +39,11 @@ define(
             let baseGetItemPosition = StackController._private.getItemPosition;
             StackController._private.getItemPosition = items => (items.position);
             StackController._stack.add({ containerWidth: 840, popupOptions: { stackClassName: '' } });
-            StackController._stack.add({ position: { width: 720 }, popupOptions: { stackClassName: '' } });
+            StackController._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
-            StackController._stack.add({ position: { width: 600 }, popupOptions: { stackClassName: '' } });
-            StackController._stack.add({ position: { width: 1000 }, popupOptions: { stackClassName: '' } });
-            StackController._stack.add({ position: { width: 840 }, popupOptions: { stackClassName: '' } });
+            StackController._stack.add({ position: { stackWidth: 600 }, popupOptions: { stackClassName: '' } });
+            StackController._stack.add({ position: { stackWidth: 1000 }, popupOptions: { stackClassName: '' } });
+            StackController._stack.add({ position: { stackWidth: 840 }, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 200, popupState: 'destroying', popupOptions: { stackClassName: '' } });
@@ -77,7 +77,7 @@ define(
             StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
-            assert.equal(itemConfig.position.width, 800);
+            assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Stack/StackContent');
          });
@@ -149,13 +149,13 @@ define(
             assert.equal(itemConfig.popupOptions.maximized, false);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
             let position = StackStrategy.getPosition({ top: 0, right: 0 }, itemConfig);
-            assert.equal(position.width, popupOptions.minimizedWidth);
+            assert.equal(position.stackWidth, popupOptions.minimizedWidth);
 
             StackController.elementMaximized(itemConfig, {}, true);
             assert.equal(itemConfig.popupOptions.maximized, true);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
             position = StackStrategy.getPosition({ top: 0, right: 0 }, itemConfig);
-            assert.equal(position.width, popupOptions.maxWidth);
+            assert.equal(position.stackWidth, popupOptions.maxWidth);
 
             StackController._private.prepareMaximizedState(1600, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
@@ -213,7 +213,7 @@ define(
 
          it('stack from target container', () => {
             var position = StackStrategy.getPosition({ top: 100, right: 100 }, item);
-            assert.equal(position.width, item.popupOptions.maxWidth);
+            assert.equal(position.stackWidth, item.popupOptions.maxWidth);
             assert.isTrue(position.top === 100);
             assert.isTrue(position.right === 100);
             assert.isTrue(position.bottom === 0);
@@ -225,14 +225,14 @@ define(
                containerWidth: 800
             };
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.equal(position.width, undefined);
+            assert.equal(position.stackWidth, undefined);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
 
             item.containerWidth = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.equal(position.width, StackStrategy.getMaxPanelWidth());
+            assert.equal(position.stackWidth, StackStrategy.getMaxPanelWidth());
          });
 
          it('stack with wrong options type', () => {
@@ -243,7 +243,7 @@ define(
                }
             };
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10));
+            assert.equal(position.stackWidth, parseInt(item.popupOptions.maxWidth, 10));
          });
 
          it('stack reduced width', () => {
@@ -255,7 +255,7 @@ define(
                }
             };
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.isTrue(position.width === StackStrategy.getMaxPanelWidth());
+            assert.isTrue(position.stackWidth === StackStrategy.getMaxPanelWidth());
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
@@ -269,10 +269,27 @@ define(
                }
             };
             var position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
-            assert.equal(position.width, item.popupOptions.minWidth);
+            assert.equal(position.stackWidth, item.popupOptions.minWidth);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
+         });
+
+         it('stack width', () => {
+            let item = {
+               popupOptions: {
+                  minWidth: 800,
+                  width: 900,
+                  maxWidth: 1200
+               }
+            };
+            let position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
+            assert.equal(position.stackWidth, 900);
+
+            item.popupOptions.width = 1200;
+            position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
+            assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
+            assert.equal(position.stackWidth, 1200);
          });
 
          it('stack compatible popup', () => {
@@ -296,7 +313,7 @@ define(
             StackController._private.getStackParentCoords = () => targetPos;
 
             StackController.elementCreated(item);
-            assert.equal(item.position.width, 900);
+            assert.equal(item.position.stackWidth, 900);
          });
       });
    }

@@ -2,13 +2,12 @@ define('Controls/Input/ComboBox',
    [
       'Core/Control',
       'wml!Controls/Input/ComboBox/ComboBox',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/util',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify'
    ],
 
-   function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
+   function(Control, template, Utils, dropdownUtils, tmplNotify) {
       /**
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
@@ -53,9 +52,6 @@ define('Controls/Input/ComboBox',
             this._onOpen = _private.popupVisibilityChanged.bind(this, true);
             this._placeholder = options.placeholder;
             this._value = options.value;
-            this._simpleViewModel = new BaseViewModel({
-               value: this._value
-            });
             this._setText = this._setText.bind(this);
          },
 
@@ -90,9 +86,6 @@ define('Controls/Input/ComboBox',
                this._value = getPropValue(selectedItems[0], this._options.displayProperty);
                this._placeholder = this._options.placeholder;
             }
-            this._simpleViewModel.updateOptions({
-               value: this._value
-            });
          }
 
       });

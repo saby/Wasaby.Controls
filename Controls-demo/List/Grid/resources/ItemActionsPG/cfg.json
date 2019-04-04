@@ -1,6 +1,6 @@
 {
   "title": "Базовая конфигурация",
-  "Controls/Grid": {
+  "Controls/grid:View": {
     "properties": {
       "ws-config": {
         "options": {

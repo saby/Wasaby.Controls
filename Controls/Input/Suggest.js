@@ -3,11 +3,10 @@ define('Controls/Input/Suggest',
       'Core/Control',
       'wml!Controls/Input/Suggest/Suggest',
       'Types/entity',
-      'Controls/Input/OldText/OldViewModel',
       'Controls/Utils/tmplNotify',
       'css!theme?Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, entity, BaseViewModel, tmplNotify) {
+   function(Control, template, entity, tmplNotify) {
       
       /**
        * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
@@ -34,19 +33,6 @@ define('Controls/Input/Suggest',
       
       'use strict';
       
-      var _private = {
-         initViewModel: function(self, options) {
-            self._simpleViewModel = new BaseViewModel(this.getViewModelOptions(options));
-         },
-
-         getViewModelOptions: function(options) {
-            return {
-               value: options.value,
-               maxLength: options.maxLength
-            };
-         }
-      };
-      
       var Suggest = Control.extend({
          
          _template: template,
@@ -56,14 +42,9 @@ define('Controls/Input/Suggest',
          
          // <editor-fold desc="LifeCycle">
          
-         _beforeMount: function(options) {
+         _beforeMount: function() {
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
-            _private.initViewModel(this, options || {});
-         },
-         
-         _beforeUpdate: function(newOptions) {
-            this._simpleViewModel.updateOptions(_private.getViewModelOptions(newOptions));
          },
          
          // </editor-fold>
@@ -129,8 +110,7 @@ define('Controls/Input/Suggest',
       };
       
       // </editor-fold>
-      
-      Suggest._private = _private;
+
       return Suggest;
    }
 );

@@ -24,6 +24,7 @@
                      displayProperty="{{_options.displayProperty}}"
                      groupTemplate="{{_groupTemplate}}"
                      parentProperty="{{_options.parentProperty}}"
+                     multiSelect="{{_options.multiSelect}}"
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_hasAdditional}}">
@@ -36,9 +37,31 @@
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
       <Controls.Button.Close class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
    </ws:if>
-   <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer theme_{{_options.theme}}" on:click="_footerClick()" on:mouseenter="_mouseenterHandler()">
-      <ws:partial template="{{_options.footerTemplate}}"/>
-   </div>
+   <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
+      <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
+         <ws:if data="{{_options.footerTemplate}}">
+            <ws:partial template="{{_options.footerTemplate}}" on:click="_footerClick()"/>
+         </ws:if>
+         <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
+            <div class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton theme_{{_options.theme}}">
+               <Controls.buttons:Button viewMode="link"
+                                        caption="{{_options.moreButtonCaption}}"
+                                        on:click="_openSelectorDialog()"/>
+            </div>
+            <Controls.Selector.Opener name="selectorDialog" on:result="_selectorDialogResult()">
+               <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog" />
+            </Controls.Selector.Opener>
+         </ws:if>
+         <ws:if data="{{_needShowApplyButton}}">
+            <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
+               <Controls.buttons:Button viewMode="toolButton"
+                                        icon="icon-Yes icon-medium"
+                                        iconStyle="success"
+                                        on:click="_applySelection()"/>
+            </div>
+         </ws:if>
+      </div>
+   </ws:if>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
    <Controls.Event.Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"

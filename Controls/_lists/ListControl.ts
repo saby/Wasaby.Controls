@@ -6,7 +6,7 @@ import Deferred = require('Core/Deferred');
  * Plain list control with custom item template. Can load data from data source.
  *
  * @class Controls/List
- * @extends Controls/List/BaseControl
+ * @extends Controls/_lists/BaseControl
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
@@ -14,7 +14,7 @@ import Deferred = require('Core/Deferred');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IList
+ * @mixes Controls/_lists/interface/IList
  * @mixes Controls/interface/IEditableList
  * @control
  * @public
@@ -22,7 +22,7 @@ import Deferred = require('Core/Deferred');
  * @category List
  */
 
-var ListControl = Control.extend(/** @lends Controls/List/ListControl.prototype */{
+var ListControl = Control.extend(/** @lends Controls/_lists/ListControl.prototype */{
     _template: ListControlTpl,
     reload: function () {
         return this._children.baseControl.reload();

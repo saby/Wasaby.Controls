@@ -15,17 +15,12 @@ define('Controls/Popup/Templates/Notification/Simple',
        * @author Красильников А.С.
        */
 
-      var timeAutoClose = 5000;
-
       var Notification = Control.extend({
          _template: template,
 
          _timerId: null,
          _iconStyle: null,
-         _beforeMount: function(options) {
-            if (options.autoClose) {
-               this._autoClose();
-            }
+         _beforeMount: function() {
             this._iconStyle = {
                warning: 'attention',
                attention: 'attention',
@@ -39,24 +34,6 @@ define('Controls/Popup/Templates/Notification/Simple',
 
          _closeClick: function() {
             this._notify('close', []);
-         },
-
-         _mouseenterHandler: function() {
-            clearTimeout(this._timerId);
-         },
-
-         _mouseleaveHandler: function() {
-            if (this._options.autoClose) {
-               this._autoClose();
-            }
-         },
-
-         _autoClose: function() {
-            var self = this;
-
-            this._timerId = setTimeout(function() {
-               self._notify('close', []);
-            }, timeAutoClose);
          }
       });
 

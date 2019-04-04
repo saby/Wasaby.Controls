@@ -11,10 +11,9 @@ define('Controls-demo/List/Grid/Grid', [
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
-   'Controls/Grid',
+   'Controls/grids',
    'wml!Controls-demo/List/Grid/Results',
-   'Controls/Render/Money/Money',
-   'Controls/List/Grid/SortButton'
+   'Controls/Render/Money/Money'
 ], function(BaseControl, GridData, template, source) {
    'use strict';
    var

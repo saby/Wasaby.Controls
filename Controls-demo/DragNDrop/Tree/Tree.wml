@@ -1,8 +1,8 @@
-<Controls.Container.Data name="dataContainer" source="{{_viewSource}}" keyProperty="id">
+<Controls.lists:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
    <div>
-      <Controls.List.Mover name="listMover" parentProperty="Раздел"/>
-      <Controls.Container.MultiSelector bind:selectedKeys="_options.selectedKeys">
-         <Controls.List.Container>
+      <Controls.lists:Mover name="listMover" parentProperty="Раздел"/>
+      <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
+         <Controls.lists:Container>
             <Controls.List.MultiSelector>
                <Controls.Explorer
                        on:dragStart="_dragStart()"
@@ -25,7 +25,7 @@
                   </ws:draggingTemplate>
                </Controls.Explorer>
             </Controls.List.MultiSelector>
-         </Controls.List.Container>
+         </Controls.lists:Container>
       </Controls.Container.MultiSelector>
    </div>
-</Controls.Container.Data>
+</Controls.lists:DataContainer>

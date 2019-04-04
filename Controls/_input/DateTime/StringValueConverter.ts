@@ -13,6 +13,7 @@ var _private = {
    reTimeMaskChars: /[Hms]+/,
    reDateTimeMaskChars: /[YMDHms]+/,
    reNumbers: /\d/,
+   maskRegExp: /^(?:(\d{2})(?:\.(\d{2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/,
 
    isFilled: function(self, value) {
       return value && value.indexOf(self._replacer) === -1;
@@ -54,10 +55,19 @@ var _private = {
             hours: { str: null, value: 0, valid: false },
             minutes: { str: null, value: 0, valid: false },
             seconds: { str: null, value: 0, valid: false }
-         },
-         maskItems = self._mask.split(/[.: /]/g),
-         strItems = str.split(/[.: /]/g),
-         i, valueObject;
+         };
+      if (self._mask) {
+         valueModel = _private.updateModelByMask(self, valueModel, str);
+      } else {
+         valueModel = _private.updateModel(self, valueModel, str);
+      }
+      return valueModel;
+   },
+
+   updateModelByMask: function(self, valueModel, str) {
+      var maskItems = self._mask.split(/[.: /]/g),
+          strItems = str.split(/[.: /]/g),
+          i, valueObject;
 
       for (i = 0; i < maskItems.length; i++) {
          valueObject = valueModel[_private.maskMap[maskItems[i]]];
@@ -68,6 +78,37 @@ var _private = {
             if (maskItems[i] === 'YY') {
                valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
             } else if (maskItems[i] === 'MM') {
+               valueObject.value -= 1;
+            }
+         }
+      }
+      return valueModel;
+   },
+
+   updateModel: function(self, valueModel, str) {
+      var map = {
+         date: 1,
+         month: 2,
+         year: 3,
+         hours: 4,
+         minutes: 5,
+         seconds: 6
+      },
+      strItems,i, valueObject;
+
+      strItems = _private.maskRegExp.exec(str);
+      if (!strItems) {
+         return
+      }
+      for (i in map) {
+         valueObject = valueModel[i];
+         valueObject.str = strItems[map[i]] || null;
+         if (this.isFilled(self, valueObject.str)) {
+            valueObject.valid = true;
+            valueObject.value = parseInt(valueObject.str, 10);
+            if (i=== 'year' && valueObject.value < 100) {
+               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+            } else if (i === 'month') {
                valueObject.value -= 1;
             }
          }
@@ -252,13 +293,13 @@ var _private = {
          if (date > endDateOfMonth) {
             date = endDateOfMonth;
          }
-         if (hours > 24) {
+         if (hours >= 24) {
             hours = 23;
          }
-         if (minutes > 60) {
+         if (minutes >= 60) {
             minutes = 59;
          }
-         if (seconds > 60) {
+         if (seconds >= 60) {
             seconds = 59;
          }
       }
@@ -305,9 +346,9 @@ var ModuleClass = cExtend.extend({
     * @param value
     * @returns {*}
     */
-   getStringByValue: function(value) {
+   getStringByValue: function(value, mask) {
       if (dateUtils.isValidDate(value)) {
-         return formatDate(value, this._mask);
+         return formatDate(value, this._mask || mask);
       }
       return '';
    },
@@ -327,10 +368,13 @@ var ModuleClass = cExtend.extend({
       }
 
       valueModel = _private.parseString(this, str);
+      if (!valueModel) {
+         return new Date('Invalid');
+      }
       _private.fillFromBaseValue(this, valueModel, baseValue);
 
       if (_private.isFilled(this, str) &&
-          (this._mask.indexOf('YYYY') !== -1 && parseInt(valueModel.year.str, 10) < 1000)) {
+          (this._mask && this._mask.indexOf('YYYY') !== -1 && parseInt(valueModel.year.str, 10) < 1000)) {
          // Zero year and year < 1000 does not exist
          return new Date('Invalid');
       }

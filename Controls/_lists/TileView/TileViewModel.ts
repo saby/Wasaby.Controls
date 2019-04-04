@@ -1,4 +1,4 @@
-import ListViewModel = require('Controls/List/ListViewModel');
+import ListViewModel = require('Controls/_lists/ListViewModel');
 import cMerge = require('Core/core-merge');
 
 var

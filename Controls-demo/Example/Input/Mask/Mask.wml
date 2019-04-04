@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">SNILS</div>
-                     <Controls.Input.Mask placeholder="SNILS"
+                     <Controls.input:Mask placeholder="SNILS" class="ControlsDemo-ExampleInput_snilsField"
                                           mask="ddd-ddd-ddd dd"
                                           bind:value="_snils"/>
                   </div>
@@ -16,7 +16,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Bank card number</div>
-                     <Controls.Input.Mask placeholder="Card number"
+                     <Controls.input:Mask placeholder="Card number" class="ControlsDemo-ExampleInput_cardField"
                                           mask="dddd dddd dddd dddd"
                                           bind:value="_cardNumber"/>
                   </div>
@@ -26,7 +26,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify example-Base__specify_detached">Mobile phone</div>
-                     <Controls.Input.Mask mask="+7 (ddd) ddd-dd-dd"
+                     <Controls.input:Mask mask="+7 (ddd) ddd-dd-dd" class="ControlsDemo-ExampleInput_mobilePhoneField"
                                           bind:value="_mobilePhone"/>
                   </div>
                </ws:template>

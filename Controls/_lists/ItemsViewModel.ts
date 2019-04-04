@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-import BaseViewModel = require('Controls/List/BaseViewModel');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import BaseViewModel = require('Controls/_lists/BaseViewModel');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
 import Env = require('Env/Env');
@@ -201,12 +201,21 @@ var ItemsViewModel = BaseViewModel.extend({
                 //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
                 leftSpacing: this._options.leftSpacing || this._options.leftPadding,
                 rightSpacing: this._options.rightSpacing || this._options.rightPadding,
-                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                 _preferVersionAPI: true,
                 getVersion: function() {
                     return self._calcItemVersion(itemData.item, itemData.key);
                 }
             };
+
+        // The key of breadcrumbs row is the key of the last item in the crumbs.
+        if (dispItem.getContents() instanceof Array) {
+            let breadCrumbs = dispItem.getContents();
+            itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length-1], this._options.keyProperty);
+        }
+        else {
+            itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
+        }
+
         if (this._options.groupingKeyCallback) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
                 itemData.isGroup = true;
