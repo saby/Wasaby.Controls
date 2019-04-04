@@ -376,7 +376,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
-               if (compoundArea && !isFormController) {
+               if (compoundArea && compoundArea._moduleName === 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea' && !isFormController) {
                   // Redraw template with new options
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
