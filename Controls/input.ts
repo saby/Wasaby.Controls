@@ -9,6 +9,11 @@ import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
 
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
+import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
+
+
 export {
     Base,
     Area,
@@ -19,5 +24,8 @@ export {
     Phone,
     Password,
     DateBase,
-    Date
+    Date,
+    BaseViewModel,
+    MaskFormatBuilder,
+    MaskInputProcessor
 }
