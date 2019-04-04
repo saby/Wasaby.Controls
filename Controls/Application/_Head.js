@@ -4,10 +4,9 @@ define('Controls/Application/_Head',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
       'Application/Env',
-      'Controls/Decorator/Markup/resolvers/noOuterTag',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Env, noOuterTagResolver, ThemesControllerNew) {
+   function(Base, Deferred, template, Env, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
