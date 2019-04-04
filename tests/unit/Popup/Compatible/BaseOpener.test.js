@@ -354,7 +354,7 @@ define(
                   vertical: 'top'
                },
                verticalAlign: {
-                  horizontal: 10
+                  horizontal: 10,
                   vertical: 15
                },
                targetPoint: {
