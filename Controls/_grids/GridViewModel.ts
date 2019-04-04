@@ -900,6 +900,10 @@ var
             this._model._setEditingItemData(itemData);
         },
 
+        getEditingItemData(): object | null {
+            return this._model.getEditingItemData();
+        },
+
         setItemActionVisibilityCallback: function(callback) {
             this._model.setItemActionVisibilityCallback(callback);
         },
