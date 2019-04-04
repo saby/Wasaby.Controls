@@ -16,16 +16,16 @@ define('Controls/Decorator/Money',
        *
        * @class Controls/Decorator/Money
        * @extends Core/Control
-       * @control
+       *
        * @public
-       * @category Decorator
+       * @demo Controls-demo/Decorators/Money/Money
        *
        * @author Журавлев М.С.
        */
 
       /**
        * @name Controls/Decorator/Money#number
-       * @cfg {Number} Number to convert.
+       * @cfg {String} Number to convert.
        */
 
       /**
@@ -58,13 +58,18 @@ define('Controls/Decorator/Money',
        * @variant accentRegistry
        * @variant noAccentRegistry
        * @variant error
+       * @variant default
+       * @default default
        */
 
       var _private = {
          searchPaths: /(-?[0-9]*?)(\.[0-9]{2})/,
 
          parseNumber: function(number, delimiters) {
-            var exec = this.searchPaths.exec(number.toFixed(2));
+            if (typeof number === 'number') {
+               Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Тип опции number изменился с Number на String.');
+            }
+            var exec = this.searchPaths.exec(parseFloat(number).toFixed(2));
 
             if (!exec) {
                Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option number: ' + number + '.');
@@ -115,14 +120,16 @@ define('Controls/Decorator/Money',
 
       Money.getDefaultOptions = function() {
          return {
+            style: 'default',
             useGrouping: true
          };
       };
 
       Money.getOptionTypes = function() {
          return {
+            style: entity.descriptor(String),
             useGrouping: entity.descriptor(Boolean),
-            number: entity.descriptor(Number).required()
+            number: entity.descriptor(Number, String).required()
          };
       };
 
