@@ -97,7 +97,7 @@ var defaultColors = [
 /// <amd-module name="Controls/_progress/StateIndicator" />
 /**
  * Progress state indicator
- * <a href="/materials/demo/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/demo/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
