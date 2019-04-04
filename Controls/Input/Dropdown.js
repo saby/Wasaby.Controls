@@ -13,6 +13,8 @@ define('Controls/Input/Dropdown',
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
        * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
+       *
+       * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
