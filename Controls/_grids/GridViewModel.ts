@@ -795,7 +795,15 @@ var
                         key: current.key,
                         getPropValue: current.getPropValue,
                         isEditing: current.isEditing,
-                        isActive: current.isActive
+                        isActive: current.isActive,
+                        getVersion: function() {
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                        },
+                        getKey: function() {
+                            return self._columnsVersion + '_' +
+                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+                        },
+                        _preferVersionAPI: true
                     };
                 currentColumn.columnIndex = current.columnIndex;
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
