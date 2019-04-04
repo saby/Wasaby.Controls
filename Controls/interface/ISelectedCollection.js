@@ -29,33 +29,6 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/interface/ISelectedCollection#selectorTemplate
-    * @cfg {Function} Items selection panel template.
-    * @example
-    * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
-    * WML:
-    * <pre>
-    *    <Controls.Selector.Lookup
-    *       source="{{_source}}"
-    *       searchParam="title"
-    *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}"/>
-    *    </Controls.Selector.Lookup>
-    * </pre>
-    * JS:
-    * <pre>
-    *    _beforeMount: function() {
-    *       this._source = new Memory();
-    *       this._templateOptions = {
-    *          handlers: {
-    *             onSelectComplete: function() {}
-    *          }
-    *       };
-    *    }
-    * </pre>
-    */
-
-   /**
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @param {Function|String} contentTemplate Template for render item content.
