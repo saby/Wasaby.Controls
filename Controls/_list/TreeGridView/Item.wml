@@ -95,14 +95,14 @@
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
       {{itemData.resetColumnIndex();}}
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          {{itemData.goToNextColumn();}}
       </ws:if>
-      <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+      <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
       </ws:for>
    </ws:else>
 </tr>
@@ -122,14 +122,14 @@
          <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
             {{itemData.resetColumnIndex();}}
             <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
                {{itemData.goToNextColumn();}}
             </ws:if>
-            <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+            <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
          </ws:if>
          <ws:else>
             <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </ws:else>
       </div>
@@ -140,14 +140,14 @@
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
          <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>
-         <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+         <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getVersion()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </ws:else>
    </div>

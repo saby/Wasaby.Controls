@@ -806,6 +806,10 @@ var
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
                         },
+                        getKey: function() {
+                            return self._columnsVersion + '_' +
+                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+                        },
                         _preferVersionAPI: true
                     };
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
