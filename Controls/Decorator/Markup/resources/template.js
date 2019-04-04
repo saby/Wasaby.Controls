@@ -113,7 +113,7 @@ define('Controls/Decorator/Markup/resources/template', [
       resolver = data._options.tagResolver;
       resolverParams = data._options.resolverParams || {};
       resolverMode = 1;
-      currentValidHtml = data.validHtml || data._options.validHtml || validHtml;
+      currentValidHtml = data._options.validHtml || validHtml;
 
       var elements = [],
          key = (attr && attr.key) || '_',
@@ -131,7 +131,7 @@ define('Controls/Decorator/Markup/resources/template', [
          if (value.length === 1 && isString(value[0])) {
             value = ['div', value[0].split('\n').map(function(str, index) {
                // Newline symbol does not shown in the middle of tag.
-               return index ? ['p', '\n' + str] : ['p', str];
+               return index ? ['p', str] : ['p', str];
             })];
          } else {
             value = ['div', value];
