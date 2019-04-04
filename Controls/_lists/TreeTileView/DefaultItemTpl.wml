@@ -17,11 +17,13 @@
       </ws:if>
       <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
       <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+                  highlightOnHover="{{highlightOnHover}}"
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"/>
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
+                  highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   itemActionsClass="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
    </div>

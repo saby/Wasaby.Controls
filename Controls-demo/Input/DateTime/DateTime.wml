@@ -1,54 +1,54 @@
 <div class="controlsDemo-Input-DateTime">
-   <h1>Controls.input:DateBase</h1>
+    <h1>Controls.input:DateBase</h1>
+    <div class="controlsDemo-Input-DateTime__content">
+        <ws:for data="masksGroup in _masks">
+            <h3>{{masksGroup.title}}</h3>
+            <ws:for data="mask in masksGroup.masks">
+                <div class="controlsDemo-Input-DateTime__row">
+                    <div class="controlsDemo-Input-DateTime__row-item">
+                        {{mask}}
+                    </div>
+                    <div class="controlsDemo-Input-DateTime__row-item">
+                        <Controls.input:DateBase
+                                value="{{null}}"
+                                mask="{{mask}}"/>
+                    </div>
+                    <div class="controlsDemo-Input-DateTime__row-item">
+                        <Controls.input:DateBase
+                                bind:value="_date"
+                                mask="{{mask}}"/>
+                    </div>
+                </div>
+            </ws:for>
+        </ws:for>
 
-   <ws:for data="masksGroup in _masks">
-      <h3>{{masksGroup.title}}</h3>
-      <ws:for data="mask in masksGroup.masks">
-         <div class="controlsDemo-Input-DateTime__row">
+        <h3>Two time fields</h3>
+        <div class="controlsDemo-Input-DateTime__row">
             <div class="controlsDemo-Input-DateTime__row-item">
-               {{mask}}
+                Two time fields
             </div>
+            <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+                <Controls.Input.DateTime
+                        bind:value="_startTime"
+                        mask="HH:mm"/>
+                -
+                <Controls.Input.DateTime
+                        bind:value="_endTime"
+                        mask="HH:mm"/>
+            </div>
+        </div>
+
+        <h3>Baseline with inline blocks</h3>
+        <div class="controlsDemo-Input-DateTime__row">
             <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.input:DateBase
-                  value="{{null}}"
-                  mask="{{mask}}"/>
+                Text:
             </div>
-            <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.input:DateBase
-                  bind:value="_date"
-                  mask="{{mask}}"/>
+            <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+                <Controls.input:DateBase
+                        value="{{_date}}"
+                        mask="{{mask}}"
+                        tagStyle="{{'primary'}}"/>
             </div>
-         </div>
-      </ws:for>
-   </ws:for>
-
-   <h3>Two time fields</h3>
-   <div class="controlsDemo-Input-DateTime__row">
-      <div class="controlsDemo-Input-DateTime__row-item">
-         Two time fields
-      </div>
-      <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-         <Controls.Input.DateTime
-                 bind:value="_startTime"
-                 mask="HH:mm"/>
-         -
-         <Controls.Input.DateTime
-                 bind:value="_endTime"
-                 mask="HH:mm"/>
-      </div>
-   </div>
-
-   <h3>Baseline with inline blocks</h3>
-   <div class="controlsDemo-Input-DateTime__row">
-      <div class="controlsDemo-Input-DateTime__row-item">
-         Text:
-      </div>
-      <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-         <Controls.input:DateBase
-                 value="{{_date}}"
-                 mask="{{mask}}"
-                 tagStyle="{{'primary'}}"/>
-      </div>
-   </div>
-
+        </div>
+    </div>
 </div>

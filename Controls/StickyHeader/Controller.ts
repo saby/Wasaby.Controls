@@ -102,8 +102,10 @@ class Component extends Control {
     }
 
     private _addToHeadersStack(id: number, position: string) {
+        //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        let container = (this._container && this._container.get) ? this._container.get(0) : this._container;
         let index = this._headersStack[position].findIndex((headerId) => {
-            return this._headers[headerId].inst.getOffset(this._container, position) < this._headers[id].inst.getOffset(this._container, position);
+            return this._headers[headerId].inst.getOffset(container, position) < this._headers[id].inst.getOffset(container, position);
         });
         this._headersStack[position].splice(index + 1, 0, id);
         this._updateTopBottom();
