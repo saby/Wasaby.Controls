@@ -40,18 +40,18 @@ define('Controls/Validate/FormController',
                }
             });
 
-            // TODO: willl be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
-            this._validates.reverse();
+            // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
             var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
-               var
-                  key;
+               var key, resultKey;
 
                // Walking through object with errors and focusing first not valid field.
                for (key in results) {
                   if (results[key]) {
-                     this._validates[key].activate();
-                     break;
+                     resultKey = key;
                   }
+               }
+               if (resultKey) {
+                  this._validates[resultKey].activate();
                }
                return results;
             }.bind(this)).addErrback(function(e) {
