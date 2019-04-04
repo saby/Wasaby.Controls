@@ -123,6 +123,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             if (cfg.popupOptions.nativeEvent) {
                var top = cfg.popupOptions.nativeEvent.clientY;
                var left = cfg.popupOptions.nativeEvent.clientX;
+               var size = 1;
                var positionCfg = {
                   verticalAlign: {
                      side: 'bottom'
@@ -134,12 +135,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                cMerge(cfg.popupOptions, positionCfg);
                sizes.margins = { top: 0, left: 0 };
                return {
-                  width: 1,
-                  height: 1,
+                  width: size,
+                  height: size,
                   top: top,
                   left: left,
-                  bottom: document.body.clientHeight - top,
-                  right: document.body.clientWidth - left,
+                  bottom: top + size,
+                  right: left + size,
                   topScroll: 0,
                   leftScroll: 0
                };
