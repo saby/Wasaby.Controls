@@ -1,1 +1,1 @@
-<div class="js-controls-SelectedCollection__item__cross controls-SelectedCollection__item__cross icon-CloseNew"></div>
+<div class="js-controls-SelectedCollection__item__cross controls-SelectedCollection__item__cross icon-Close{{itemsLayout !== 'twoColumns' ? 'New'}}" title="{[Удалить]}"></div>
