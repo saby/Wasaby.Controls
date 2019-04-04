@@ -150,8 +150,8 @@ define('Controls/Container/Async',
          _updateOptionsForComponent: function(tpl, opts, templateName) {
             this.currentTemplateName = templateName;
             this.optionsForComponent = {};
-            for(var key in opts) {
-               if(opts.hasOwnProperty(key)) {
+            for (var key in opts) {
+               if (opts.hasOwnProperty(key)) {
                   this.optionsForComponent[key] = opts[key];
                }
             }
