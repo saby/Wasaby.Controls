@@ -35,6 +35,7 @@
       </ws:else>
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
+                  highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight"/>
    </div>
