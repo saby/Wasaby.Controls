@@ -1,0 +1,11 @@
+<div class="controls-Demo__propertyGrid">
+    <Controls.propertyGrid:PropertyGrid
+            bind:editingObject="_editingObject"
+            source="{{_source}}"
+            on:editingObjectChanged="_editingObjectChanged()"
+            attr:class="controls-Demo__propertyGrid-control"/>
+    <div>
+        <h3>editingObject option</h3><br/>
+        <pre>{{_editingObjectString}}</pre>
+    </div>
+</div>

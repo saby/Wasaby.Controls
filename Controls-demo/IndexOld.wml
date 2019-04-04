@@ -332,6 +332,13 @@
             Bar
          </a>   
       </div>
+
+      <h1>PropertyGrid</h1>
+      <a href="/Controls-demo/app/Controls-demo%252FPropertyGridNew%252FPropertyGrid?withoutLayout=true">
+         PropertyGrid
+      </a>
+
+      <h1>StateIndicator</h1>
       <div>   
          <a href="/Controls-demo/app/Controls-demo%252FStateIndicator%252FStateIndicatorDemo">
             StateIndicator
