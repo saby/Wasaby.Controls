@@ -23,12 +23,25 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * This example shows how to bind 2 range input controls.
  * <pre>
  *    <Controls.dateRange:RelationController
- *          bind:startValue0="_startValue0"
- *          bind:endValue0="_endValue0"
- *          bind:startValue1="_startValue1"
- *          bind:endValue1="_endValue1"/>
- *    <Controls.dateRange.LiteSelector bind:startValue="_startValue0" bind:endValue="_endValue0" />
- *    <Controls.dateRange.LiteSelector bind:startValue="_startValue1" bind:endValue="_endValue1" />
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
+ *    });
  * </pre>
  */
 
@@ -41,12 +54,25 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * This example shows how to bind 2 range input controls.
  * <pre>
  *    <Controls.dateRange:RelationController
- *          bind:startValue0="_startValue0"
- *          bind:endValue0="_endValue0"
- *          bind:startValue1="_startValue1"
- *          bind:endValue1="_endValue1"/>
- *    <Controls.dateRange.LiteSelector bind:startValue="_startValue0" bind:endValue="_endValue0" />
- *    <Controls.dateRange.LiteSelector bind:startValue="_startValue1" bind:endValue="_endValue1" />
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
+ *    });
  * </pre>
  */
 
@@ -58,14 +84,44 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @example
  * This example shows how to set the bind type.
  * <pre>
- *    <Controls.dateRange:RelationButton bind:value="_bindType"/>
- *    <Controls.dateRange:RelationController bind:bindType="_bindType" />
+ *    <Controls.dateRange:RelationController bindType="{{_bindType}}">
+ *        <Controls.dateRange:RelationButton value="{{content.bindType}}"/>
+ *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre>
  *    Control.extend({
- *       ...
- *       _bindType: 'normal',
- *       ...
+ *       _bindType: 'normal'
+ *    });
+ * </pre>
+ */
+
+/**
+ * @name Controls/_dateRange/RelationController#content
+ * @cfg {Content} Component contents. The controller set the period and type of relation options on the template.
+ * An internal template can contain period selection components. Each of the period selection component
+ * must be wrapped in {@link Controls/_dateRange/RelationWrapper}. Also the template may contain a {@link Controls/_dateRange/RelationButton}.
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationButton value="{{content.bindType}}"/>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
  *    });
  * </pre>
  */
@@ -113,11 +169,21 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 /**
  * Shifts periods forward
  * @function Controls/_dateRange/RelationController#shiftForward
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController name="dateRelation"/>
+ *    <Controls.buttons:Button on:click="dateRelation.shiftForward()"/>
+ * </pre>
  */
 
 /**
  * Shifts periods backward
  * @function Controls/_dateRange/RelationController#shiftBackward
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController name="dateRelation"/>
+ *    <Controls.buttons:Button on:click="dateRelation.shiftBackward()"/>
+ * </pre>
  */
 
 var _private = {
@@ -148,12 +214,33 @@ var Component = Control.extend({
     _beforeUpdate: function (options) {
         let ranges = this._model.ranges,
             newRanges;
+        if (options.bindType !== this._options.bindType) {
+            this._model.bindType = options.bindType;
+        }
+
         this._model.update(options);
         newRanges = this._model.ranges;
 
         _private.notifyRangeChanged(this, newRanges, ranges);
 
         if (options.bindType !== this._model.bindType) {
+            this._notify('bindTypeChanged', [this._model.bindType]);
+        }
+    },
+
+    _onRelationWrapperRangeChanged: function(event, start, end, controlNumber) {
+        let ranges = this._model.ranges,
+            oldBindType = this._model.bindType;
+        this._model.updateRanges(start, end, controlNumber);
+        _private.notifyRangeChanged(this, this._model.ranges, ranges);
+        if (oldBindType !== this._model.bindType) {
+            this._notify('bindTypeChanged', [this._model.bindType]);
+        }
+    },
+
+    _onRelationButtonBindTypeChanged: function(event, bindType) {
+        if (bindType !== this._model.bindType) {
+            this._model.bindType = bindType;
             this._notify('bindTypeChanged', [this._model.bindType]);
         }
     },

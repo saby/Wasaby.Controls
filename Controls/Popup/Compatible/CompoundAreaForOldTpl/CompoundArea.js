@@ -213,6 +213,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                container = container.get ? container.get(0) : container;
                setTimeout(function() {
                   container.style.webkitTransform = 'scale(1)';
+
+                  // Если внутри контейнера верстка написана абсолютами с большой вложенностью, ios при scale(1) просто ее не показывает.
+                  // Пример ошибки https://online.sbis.ru/opendoc.html?guid=bb492dee-cc34-4e60-9174-5224ef47f047
+                  setTimeout(function() {
+                     container.style.webkitTransform = '';
+                  }, 200);
                }, 100);
             }
          },
@@ -927,10 +933,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
 
                // Если попап модальный, нужно чтобы Manager показал/скрыл/переместил оверлей
-               // Из popupConfig.popupOptions.isModal узнаем, является ли попап модальным
-               if (popupConfig.popupOptions.isModal) {
+               // Из popupConfig.popupOptions.modal узнаем, является ли попап модальным
+               if (popupConfig.popupOptions.modal) {
                   // Текущее состояние модальности задается в popupConfig
-                  popupConfig.isModal = visible;
+                  popupConfig.modal = visible;
 
                   // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
                   ManagerController.reindex();

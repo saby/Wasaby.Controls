@@ -104,6 +104,17 @@ define([
             // the date is more than maybe
             { mask: 'DD.MM.YY', stringValue: '55.12.00', value: new Date(2000, 11, 31) },
 
+            // incorrect year
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.__20', value: new Date(2020, 11, 11) },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12._20_', value: new Date(2020, 11, 11) },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.20__', value: new Date(2020, 11, 11) },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.020_', value: new Date('Invalid') },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12._020', value: new Date('Invalid') },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.0_20', value: new Date('Invalid') },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12._200', value: new Date('Invalid') },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.200_', value: new Date('Invalid') },
+            { mask: 'DD.MM.YYYY', stringValue: '11.12.0200', value: new Date('Invalid') },
+
             // incorrect time
             { mask: 'HH:mm:ss', stringValue: '80:80:80', value: new Date(1900, 0, 1, 23, 59, 59) },
             { mask: 'HH:mm:ss', stringValue: '80:10:10', value: new Date(1900, 0, 1, 23, 10, 10) },
@@ -111,6 +122,7 @@ define([
             { mask: 'HH:mm:ss', stringValue: '10:10:80', value: new Date(1900, 0, 1, 10, 10, 59) },
             { mask: 'HH:mm', stringValue: '80:80', value: new Date(1900, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '10:80', value: new Date(1900, 0, 1, 10, 59, 0) },
+            { mask: 'HH:mm', stringValue: '24:60', value: new Date(1900, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {

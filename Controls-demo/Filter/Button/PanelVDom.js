@@ -87,7 +87,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'sender', value: '', resetValue: '', visibility: false},
                {id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''},
                {id: 'responsible', value: '', resetValue: '', visibility: false},
-               {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
+               {id: 'tagging', value: false, resetValue: false, textValue: 'Marks', visibility: false},
                {id: 'operation', value: '', resetValue: '', visibility: false},
                {id: 'group', value: [1], resetValue: '', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
@@ -97,7 +97,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                   ]
                })},
                {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
-               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
+               {id: 'own', value: 2, resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
                      { key: 1, title: 'On me' },

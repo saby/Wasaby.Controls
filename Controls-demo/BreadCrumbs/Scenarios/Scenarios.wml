@@ -15,7 +15,7 @@
       <Controls.Heading caption="Реестр с однострочными заголовками"
                         size="xl"/>
       <div>
-         <Controls.Label caption='Без строки "Итого"' />
+         <Controls.input:Label caption='Без строки "Итого"' />
       </div>
       <Controls.Explorer
          keyProperty="id"
@@ -30,7 +30,7 @@
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
-         <Controls.Label caption='Со строкой "Итого"' />
+         <Controls.input:Label caption='Со строкой "Итого"' />
       </div>
       <Controls.Explorer
          keyProperty="id"
@@ -45,7 +45,7 @@
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
-         <Controls.Label caption='На выезжающей панели' />
+         <Controls.input:Label caption='На выезжающей панели' />
       </div>
       <div>
          <Controls.Popup.Templates.Stack.StackTemplate
@@ -90,7 +90,7 @@
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Хлебные крошки вынесены в сервисный блок"
                         size="xl"/>
-      <Controls.crumbs:HeadingPath items="{{_breadCrumbs6}}"
+      <Controls.breadcrumbs:HeadingPath items="{{_breadCrumbs6}}"
                                  backButtonStyle="primary"
                                  keyProperty="id" />
    </div>
@@ -113,7 +113,7 @@
                         source="{{_toolbarSource7}}"
                      />
                   </div>
-                  <Controls.crumbs:Path items="{{_breadCrumbs6}}"
+                  <Controls.breadcrumbs:Path items="{{_breadCrumbs6}}"
                                         readOnly="{{true}}"
                                         keyProperty="id" />
                </div>
@@ -127,23 +127,23 @@
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Хлебные крошки в результатах поиска"
                         size="xl"/>
-      <Controls.Container.Data source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
+      <Controls.lists:DataContainer source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
          <Controls.Search.Controller searchParam="name" minSearchLength="{{3}}">
             <div class="ws-fragment">
                <Controls.Search.Input.Container>
                   <Controls.Input.Search/>
                </Controls.Search.Input.Container>
-               <Controls.List.Container>
+               <Controls.lists:Container>
                   <Controls.Explorer
                      displayProperty="department"
                      parentProperty="parent"
                      nodeProperty="@parent"
                      columns="{{_columns}}">
                   </Controls.Explorer>
-               </Controls.List.Container>
+               </Controls.lists:Container>
             </div>
          </Controls.Search.Controller>
-      </Controls.Container.Data>
+      </Controls.lists:DataContainer>
    </div>
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Заголовки занимают всю доступную ширину"
@@ -160,11 +160,11 @@
       </Controls.Explorer>
    </div>
    <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
-      <Controls.crumbs:Path items="{{_breadCrumbs7}}"
+      <Controls.breadcrumbs:Path items="{{_breadCrumbs7}}"
                             keyProperty="id" />
    </div>
    <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
-      <Controls.crumbs:Path items="{{_breadCrumbs8}}"
+      <Controls.breadcrumbs:Path items="{{_breadCrumbs8}}"
                             keyProperty="id" />
    </div>
 </div>

@@ -1,20 +1,22 @@
 define('Controls/Input/Money',
    [
-      'Controls/Input/Base',
+      'Types/entity',
+      'Controls/input',
       'Controls/Input/Money/ViewModel',
 
       'wml!Controls/Input/Money/ReadOnly'
    ],
-   function(Base, ViewModel, readOnlyFieldTemplate) {
+   function(entity, input, ViewModel, readOnlyFieldTemplate) {
       'use strict';
 
       /**
        * Input for entering currency.
        *
        * @class Controls/Input/Money
-       * @mixes Controls/Input/interface/IInputField
-       * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
+       * @extends Controls/input:Base
+       *
+       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/Input/interface/IOnlyPositive
        *
        * @public
        * @demo Controls-demo/Input/Money/Money
@@ -33,7 +35,7 @@ define('Controls/Input/Money',
          }
       };
 
-      var Money = Base.extend({
+      var Money = input.Base.extend({
          _initProperties: function() {
             Money.superclass._initProperties.apply(this, arguments);
 
@@ -54,6 +56,22 @@ define('Controls/Input/Money',
             return ViewModel;
          }
       });
+
+      Money.getDefaultOptions = function() {
+         var defaultOptions = input.Base.getDefaultOptions();
+
+         defaultOptions.onlyPositive = false;
+
+         return defaultOptions;
+      };
+
+      Money.getOptionTypes = function() {
+         var optionTypes = input.Base.getOptionTypes();
+
+         optionTypes.onlyPositive = entity.descriptor(Boolean);
+
+         return optionTypes;
+      };
 
       Money._theme.push('Controls/Input/Money/Money');
 

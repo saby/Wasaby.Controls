@@ -6,6 +6,7 @@ define('Controls/Popup/Opener/Stack',
       /**
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
+       *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
        * @class Controls/Popup/Opener/Stack
        * @extends Controls/Popup/Opener/BaseOpener
        * @control
@@ -39,7 +40,7 @@ define('Controls/Popup/Opener/Stack',
           * Open stack with specified configuration.
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
           *             <ws:templateOptions key="111"/>
           *     </Controls.Popup.Opener.Stack>
           *
@@ -106,7 +107,7 @@ define('Controls/Popup/Opener/Stack',
  * @example
  * wml
  * <pre>
- *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+ *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
  *             <ws:templateOptions key="111"/>
  *     </Controls.Popup.Opener.Stack>
  *

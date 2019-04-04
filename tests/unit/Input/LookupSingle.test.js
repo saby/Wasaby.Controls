@@ -4,8 +4,9 @@
 define([
    'Controls/Selector/Lookup/_Lookup',
    'Types/entity',
-   'Types/collection'
-], function(Lookup, entity, collection) {
+   'Types/collection',
+   'Env/Env'
+], function(Lookup, entity, collection, Env) {
 
    function getItems(countItems) {
       for (var items = []; countItems; countItems--) {
@@ -131,7 +132,6 @@ define([
       it('_beforeMount', function() {
          var lookup = new Lookup();
          lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true});
-         assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
          lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
@@ -147,14 +147,6 @@ define([
          lookup._beforeMount({items: getItems(5), value: 'test'});
          assert.equal(lookup._maxVisibleItems, 1);
          assert.equal(lookup._inputValue, 'test');
-      });
-
-      it('_beforeUnmount', function() {
-         var lookup = new Lookup();
-         lookup._simpleViewModel = true;
-         lookup._beforeUnmount();
-
-         assert.isNull(lookup._simpleViewModel);
       });
 
       it('_afterUpdate', function() {
@@ -408,6 +400,73 @@ define([
 
          Lookup._private.getItemsSizesLastRow = getItemsSizesLastRow;
          Lookup._private.getCounterWidth = getCounterWidth;
+      });
+
+      it('_onClickClearRecords', function() {
+         var
+            activated = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            activated = true;
+         };
+
+         lookup._onClickClearRecords();
+         assert.isTrue(activated);
+      });
+
+      it('_keyDown', function() {
+         var
+            isNotifyShowSelector= false,
+            isNotifyRemoveItems = false,
+            lookup = new Lookup(),
+            eventBackspace = {
+               nativeEvent: {
+                  keyCode: Env.constants.key.backspace
+               }
+            },
+            eventNotBackspace = {
+               nativeEvent: {}
+            },
+            eventF2 = {
+               nativeEvent: {
+                  keyCode: 113
+               }
+            };
+
+         lookup._notify = function(eventName, result) {
+            if (eventName === 'removeItem') {
+               isNotifyRemoveItems = true;
+               assert.equal(lookup._options.items.at(lookup._options.items.getCount() - 1), result[0]);
+            } else if (eventName === 'showSelector') {
+               isNotifyShowSelector = true;
+            }
+         };
+
+         lookup._beforeMount({
+            value: ''
+         });
+         lookup._options.items = getItems(0);
+         lookup._keyDown(null, eventBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+
+         lookup._options.items = getItems(5);
+         lookup._keyDown(null, eventNotBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+
+         lookup._keyDown(null, eventBackspace);
+         assert.isTrue(isNotifyRemoveItems);
+         isNotifyRemoveItems = false;
+
+         lookup._beforeMount({
+            value: 'not empty valeue'
+         });
+         lookup._keyDown(null, eventBackspace);
+         assert.isFalse(isNotifyRemoveItems);
+         assert.isFalse(isNotifyShowSelector);
+
+         lookup._keyDown(null, eventF2);
+         assert.isTrue(isNotifyShowSelector);
       });
    });
 });

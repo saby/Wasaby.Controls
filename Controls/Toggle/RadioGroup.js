@@ -2,9 +2,7 @@ define('Controls/Toggle/RadioGroup', [
    'Core/Control',
    'Controls/Controllers/SourceController',
    'wml!Controls/Toggle/RadioGroup/RadioGroup',
-   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate',
-   'css!theme?Controls/Toggle/RadioGroup/RadioGroup',
-   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
@@ -27,14 +25,14 @@ define('Controls/Toggle/RadioGroup', [
     */
 
    /**
-    * @name Controls/interface/IItemTemplate#itemTemplate
+    * @name Controls/Toggle/RadioGroup#itemTemplate
     * @cfg {Function} Template for item render.
-    * @default Base template "tmpl!Controls\Toggle\RadioGroup\resources\ItemTemplate"
+    * @default Base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate"
     * @remark
-    * To determine the template, you should call the base template "wml!Controls\Toggle\RadioGroup\resources\ItemTemplate".
+    * To determine the template, you should call the base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate".
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
-    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field.
+    * By default, the base template wml!Controls/Toggle/RadioGroup/resources/ItemTemplate will display only the 'title' field.
     * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
@@ -64,11 +62,11 @@ define('Controls/Toggle/RadioGroup', [
     */
 
    /**
-    * @name Controls/interface/IItemTemplate#itemTemplateProperty
+    * @name Controls/Toggle/RadioGroup#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render.
     * @default If not set, itemTemplate is used instead.
     * @remark
-    * To determine the template, you should call the base template "wml!Controls\Toggle\RadioGroup\resources\ItemTemplate".
+    * To determine the template, you should call the base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate".
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
     * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field.
@@ -173,6 +171,8 @@ define('Controls/Toggle/RadioGroup', [
          direction: 'vertical'
       };
    };
+
+   Radio._theme = [ 'Controls/toggle' ];
 
    Radio._private = _private;
 

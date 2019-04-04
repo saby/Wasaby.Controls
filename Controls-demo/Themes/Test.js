@@ -15,7 +15,7 @@ define('Controls-demo/Themes/Test',
 
          doReqList: function(event) {
             this._doBut = true;
-            require(['Controls/List']);
+            require(['Controls/list']);
          },
 
          changeTheme: function(e){

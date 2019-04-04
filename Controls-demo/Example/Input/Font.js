@@ -3,7 +3,7 @@ define('Controls-demo/Example/Input/Font',
       'Core/Control',
       'wml!Controls-demo/Example/Input/Font/Font',
 
-      'Controls/Input/Text',
+      'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],

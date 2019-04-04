@@ -1,9 +1,9 @@
-import ListView = require('Controls/List/ListView');
+import ListView = require('Controls/_lists/ListView');
 import template = require('wml!Controls/_lists/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_lists/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
-import ItemSizeUtils = require('Controls/List/TileView/resources/ItemSizeUtils');
-import 'css!theme?Controls/List/TileView/TileView';
+import ItemSizeUtils = require('Controls/_lists/TileView/resources/ItemSizeUtils');
+import 'css!theme?Controls/_lists/TileView/TileView';
 
 var _private = {
     getFixedPosition: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
@@ -91,12 +91,15 @@ var TileView = ListView.extend({
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         this._notify('register', ['scroll', this, this._onScroll], {bubbling: true});
+        TileView.superclass._afterMount.apply(this, arguments);
     },
 
     _onResize: function () {
         if (!this._resizeFromSelf) {
             this._listModel.setHoveredItem(null);
         }
+        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
+       this._forceUpdate();
     },
 
     _beforeUpdate: function (newOptions) {
@@ -106,6 +109,7 @@ var TileView = ListView.extend({
         if (this._options.itemsHeight !== newOptions.itemsHeight) {
             this._listModel.setItemsHeight(newOptions.itemsHeight);
         }
+        TileView.superclass._beforeUpdate.apply(this, arguments);
     },
 
     _afterUpdate: function () {
@@ -115,6 +119,7 @@ var TileView = ListView.extend({
             this._listModel.setHoveredItem({
                 key: hoveredItem.key,
                 isAnimated: true,
+                zoomCoefficient: this._getZoomCoefficient(),
                 position: hoveredItem.endPosition
             });
         }
@@ -146,6 +151,7 @@ var TileView = ListView.extend({
             }
         }
         _private.clearMouseMoveTimeout(this);
+        TileView.superclass._onItemMouseLeave.apply(this, arguments);
     },
 
     _onItemMouseMove: function (event, itemData) {
@@ -154,6 +160,7 @@ var TileView = ListView.extend({
 
             this._calculateHoveredItemPosition(event, itemData);
         }
+        TileView.superclass._onItemMouseMove.apply(this, arguments);
     },
 
     _calculateHoveredItemPosition: function (event, itemData) {
@@ -168,7 +175,7 @@ var TileView = ListView.extend({
             itemContainer = event.target.closest('.controls-TileView__item');
             itemContainerRect = itemContainer.getBoundingClientRect();
             containerRect = document.documentElement.getBoundingClientRect();
-            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient());
+            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
             this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
     },
@@ -194,6 +201,7 @@ var TileView = ListView.extend({
     _setHoveredItem: function (itemData, position, startPosition) {
         this._listModel.setHoveredItem({
             key: itemData.key,
+            zoomCoefficient: this._getZoomCoefficient(),
             position: _private.getPositionStyle(startPosition || position),
             endPosition: _private.getPositionStyle(position)
         });

@@ -1,27 +1,21 @@
 define('Controls/Container/Async',
    [
       'Core/Control',
-      'Core/Deferred',
-      'View/Request',
+      'Application/Env',
       'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
-      'View/Executor/Utils',
       'Core/library',
-      'Types/entity',
-      'Env/Env'
+      'Types/entity'
    ],
 
    function(Base,
-      Deferred,
-      Request,
+      AppEnv,
       constants,
       template,
       ModuleLoader,
-      Utils,
       library,
-      entity,
-      Env) {
+      entity) {
       'use strict';
 
 
@@ -147,8 +141,7 @@ define('Controls/Container/Async',
          },
 
          _pushDepToHeadData: function(dep) {
-            var request = Request.getCurrent();
-            var headData = request && request.getStorage('HeadData');
+            var headData = AppEnv.getStore('HeadData');
             if (headData && headData.pushDepComponent) {
                headData.pushDepComponent(dep, true);
             }

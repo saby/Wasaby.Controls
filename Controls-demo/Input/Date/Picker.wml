@@ -1,69 +1,61 @@
-<Controls.Application title="Demo-example: Date fields with popup panel."
-                      appRoot="/materials/">
-   <ws:head>
-      <link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css"/>
-   </ws:head>
-   <ws:content>
-      <div class="controlsDemo-Input-DatePicker">
-         <h1>Controls.Input.Date.Picker</h1>
-
-         <ws:for data="mask in _masks">
-            <div class="controlsDemo-Input-DatePicker__row">
-               <div class="controlsDemo-Input-DatePicker__row-item">
-                  {{mask}}
-               </div>
-               <div class="controlsDemo-Input-DatePicker__row-item">
-                  <Controls.Input.Date.Picker
-                     value="{{null}}"
-                     mask="{{mask}}"/>
-               </div>
-               <div class="controlsDemo-Input-DatePicker__row-item">
-                  <Controls.Input.Date.Picker
-                     bind:value="_date"
-                     mask="{{mask}}"/>
-               </div>
+<div class="controlsDemo-Input-DatePicker">
+   <h1>Controls.input:Date</h1>
+   <div class="controlsDemo-Input-DatePicker__content">
+      <ws:for data="mask in _masks">
+         <div class="controlsDemo-Input-DatePicker__row">
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               {{mask}}
             </div>
-         </ws:for>
-
-         <h3>Baseline with inline blocks</h3>
-         <div>
-            Text:
-            <Controls.Input.Date.Picker
-               value="{{_date}}"
-               mask="{{mask}}"/>
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               <Controls.input:Date
+                       value="{{null}}"
+                       mask="{{mask}}"/>
+            </div>
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               <Controls.input:Date
+                       bind:value="_date"
+                       mask="{{mask}}"/>
+            </div>
          </div>
+      </ws:for>
 
-         <h3>Demo with tagStyle</h3>
-         <div>
-            <Controls.Input.Date.Picker
-               value="{{_date}}"
-               mask="{{mask}}"
-               tagStyle="{{'primary'}}"/>
-            <Controls.Input.Date.Picker
-               value="{{_date}}"
-               mask="{{mask}}"
-               tagStyle="{{'info'}}"/>
-         </div>
-
-         <h3>With custom day renderer</h3>
-         <div>
-            Text:
-            <Controls.Input.Date.Picker
-               value="{{_date}}"
-               mask="{{mask}}"
-               calendarSource="{{_source}}">
-               <ws:dayTemplate>
-                  <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
-                              value="{{dayTemplate.value}}"
-                  >
-                     <ws:contentTemplate>
-                        <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
-                     </ws:contentTemplate>
-                  </ws:partial>
-               </ws:dayTemplate>
-            </Controls.Input.Date.Picker>
-         </div>
-
+      <h3>Baseline with inline blocks</h3>
+      <div>
+         Text:
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"/>
       </div>
-   </ws:content>
-</Controls.Application>
+
+      <h3>Demo with tagStyle</h3>
+      <div>
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 tagStyle="{{'primary'}}"/>
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 tagStyle="{{'info'}}"/>
+      </div>
+
+      <h3>With custom day renderer</h3>
+      <div>
+         Text:
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 calendarSource="{{_source}}">
+            <ws:dayTemplate>
+               <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
+                           value="{{dayTemplate.value}}"
+               >
+                  <ws:contentTemplate>
+                     <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
+                  </ws:contentTemplate>
+               </ws:partial>
+            </ws:dayTemplate>
+         </Controls.input:Date>
+      </div>
+   </div>
+</div>

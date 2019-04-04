@@ -23,7 +23,7 @@
 }
 
 .controls-TileView__item_animated {
-   transition-property: left, right, bottom, top;
+   transition-property: left, right, bottom, top, height;
    transition-duration: 0.05s;
 }
 
@@ -35,6 +35,7 @@
    overflow: hidden;
    white-space: nowrap;
    text-overflow: ellipsis;
+   flex-shrink: 0;
 }
 
 .controls-TileView__imageWrapper {

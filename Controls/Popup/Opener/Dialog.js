@@ -5,6 +5,7 @@ define('Controls/Popup/Opener/Dialog',
    function(Base) {
       /**
        * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
+       * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
        * @class Controls/Popup/Opener/Dialog
        * @extends Controls/Popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener

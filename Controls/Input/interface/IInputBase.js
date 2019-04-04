@@ -4,8 +4,15 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * Interface for Input.Base.
     *
     * @interface Controls/Input/interface/IInputBase
+    *
+    * @mixes Controls/Input/interface/IInputTag
+    * @mixes Controls/Input/interface/IInputPlaceholder
+    *
+    * @mixes Controls/_input/Base/Styles
+    * @mixes Controls/Input/Render/Styles
+    *
     * @public
-    * @author Колесова П.С.
+    * @author Журавлев М.С.
     */
 
    /**
@@ -33,11 +40,11 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * <pre>
     *    <div class="form">
     *       <div class="fio">
-    *          <Controls.Input.Text name="firstName" font="primary"/>
-    *          <Controls.Input.Text name="lastName" font="primary"/>
+    *          <Controls.input:Text name="firstName" font="primary"/>
+    *          <Controls.input:Text name="lastName" font="primary"/>
     *       </div>
     *       <div class="residence">
-    *          <Controls.Input.Text name="street"/>
+    *          <Controls.input:Text name="street"/>
     *       </div>
     *    </div>
     * </pre>
@@ -52,7 +59,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, we align the text to the left.
     * <pre>
-    *    <Controls.Input.Text textAlign="left"/>
+    *    <Controls.input:Text textAlign="left"/>
     * </pre>
     */
 
@@ -64,7 +71,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
     * <pre>
-    *    <Controls.Input.Text tooltip="Enter your name"/>
+    *    <Controls.input:Text tooltip="Enter your name"/>
     * </pre>
     */
 
@@ -79,7 +86,7 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when the field is clicked, all text in it will be selected.
     * <pre>
-    *    <Controls.Input.Text selectOnClick={{true}}/>
+    *    <Controls.input:Text selectOnClick={{true}}/>
     * </pre>
     */
 
@@ -98,18 +105,19 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @example
     * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
     * <pre>
-    *    <Controls.Input.Text autoComplete={{true}}/>
+    *    <Controls.input:Text autoComplete={{true}}/>
     * </pre>
     */
 
    /**
     * @name Controls/Input/interface/IInputBase#style
     * @cfg {String} Display style of the field.
-    * @variant primary - display style to attract attention.
+    * @variant info - information field display style.
+    * @variant invalid - the display style of the field with invalid value.
+    * @variant danger - the display style of the field with danger.
     * @variant success -  the display style of the field with success.
     * @variant warning -  the display style of the field with warning.
-    * @variant danger - the display style of the field with danger.
-    * @variant info - information field display style.
+    * @variant primary - display style to attract attention.
     * @default info
     * @remark
     * The choice of value depends on the context in which the field is used. Use the 'info' value to enter information that does not require attention. But if you want to draw the user's attention, use 'primary'. If the field is validated, use 'success' otherwise 'danger'. If the field is valid, but you want to show that the entered data can be dangerous, use the 'warning' value.
@@ -119,15 +127,15 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * <pre>
     *    <div class="form">
     *       <div class="fio">
-    *          <Controls.Input.Text name="firstName" style="primary" bind:value="_firstName"/>
-    *          <Controls.Input.Text name="lastName" style="primary" bind:value="_lastName"/>
+    *          <Controls.input:Text name="firstName" style="primary" bind:value="_firstName"/>
+    *          <Controls.input:Text name="lastName" style="primary" bind:value="_lastName"/>
     *       </div>
     *       <div class="residence">
-    *          <Controls.Input.Text name="street" style="info" bind:value="_street"/>
-    *          <Controls.Input.Text name="houseNumber" style="info" bind:value="_houseNumber"/>
+    *          <Controls.input:Text name="street" style="info" bind:value="_street"/>
+    *          <Controls.input:Text name="houseNumber" style="info" bind:value="_houseNumber"/>
     *       </div>
-    *       <Controls.Input.Text name="login" style="primary" bind:value="_login"/>
-    *       Controls.Input.Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
+    *       <Controls.input:Text name="login" style="primary" bind:value="_login"/>
+    *       Controls.input:Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
     *       <Controls.Button name="register" caption="register" on:click="_sendDataClick()"/>
     *    </div>
     * </pre>

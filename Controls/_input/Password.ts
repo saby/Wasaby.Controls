@@ -10,10 +10,10 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @class Controls/_input/Password
        * @extends Controls/_input/Base
        *
+       * @mixes Controls/_input/interface/IInputBase
        * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
-       * @demo Controls-demo/Input/Password/Password
        * @demo Controls-demo/Input/Password/PasswordPG
        *
        * @author Журавлев М.С.
@@ -87,6 +87,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
             var passwordVisible = !this._passwordVisible;
 
             this._passwordVisible = passwordVisible;
+            this._forceUpdate();
             this._type = _private.calculateType(passwordVisible, this._options.autoComplete);
          },
 
@@ -103,7 +104,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
          }
       });
 
-      Password._theme.push('Controls/_input/Password/Password');
+      Password._theme.push('Controls/input');
 
       Password.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();

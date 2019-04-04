@@ -2,13 +2,13 @@ define('Controls/Input/Search',
    [
       'Types/entity',
       'Env/Env',
-      'Controls/Input/Base',
+      'Controls/input',
       'Controls/Input/Text/ViewModel',
 
       'wml!Controls/Input/Search/Buttons'
    ],
 
-   function(entity, Env, Base, ViewModel, buttonsTemplate) {
+   function(entity, Env, inputMod, ViewModel, buttonsTemplate) {
       'use strict';
 
       /**
@@ -45,7 +45,7 @@ define('Controls/Input/Search',
 
       var _private = {
          isVisibleResetButton: function() {
-            return !!this._options.value;
+            return !!this._options.value && !this._options.readOnly;
          },
 
          calculateStateButton: function() {
@@ -53,7 +53,7 @@ define('Controls/Input/Search',
          }
       };
 
-      var Search = Base.extend({
+      var Search = inputMod.Base.extend({
          _roundBorder: true,
 
          get _renderStyle() {
@@ -131,7 +131,7 @@ define('Controls/Input/Search',
       Search._theme.push('Controls/Input/Search/Search');
 
       Search.getOptionTypes = function getOptionsTypes() {
-         var optionTypes = Base.getOptionTypes();
+         var optionTypes = inputMod.Base.getOptionTypes();
 
          /**
           * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
@@ -144,7 +144,7 @@ define('Controls/Input/Search',
       };
 
       Search.getDefaultOptions = function getDefaultOptions() {
-         var defaultOptions = Base.getDefaultOptions();
+         var defaultOptions = inputMod.Base.getDefaultOptions();
 
          defaultOptions.value = '';
          defaultOptions.trim = false;
@@ -152,6 +152,8 @@ define('Controls/Input/Search',
 
          return defaultOptions;
       };
+
+      Search._private = _private;
 
       return Search;
    });

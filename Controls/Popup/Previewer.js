@@ -41,7 +41,9 @@ define('Controls/Popup/Previewer',
             return 'click';
          },
          getCfg: function(self) {
-            return {
+            var config = {
+               autofocus: false,
+               fittingMode: 'overflow',
                opener: self,
                target: self._container,
                template: 'Controls/Popup/Previewer/OpenerTemplate',
@@ -56,9 +58,19 @@ define('Controls/Popup/Previewer',
                templateOptions: {
                   template: self._options.templateName || self._options.template,
                   templateOptions: self._options.templateOptions
-               },
-               closeChildWindows: self._options.closeChildWindows
+               }
             };
+
+            if (self._options.corner) {
+               config.corner = self._options.corner;
+            }
+            if (self._options.verticalAlign) {
+               config.verticalAlign = self._options.verticalAlign;
+            }
+            if (self._options.horizontalAlign) {
+               config.horizontalAlign = self._options.horizontalAlign;
+            }
+            return config;
          },
          open: function(self, event, type) {
             if (!self._isPopupOpened()) {
@@ -145,17 +157,16 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            if (this._options.trigger !== 'demand') {
+            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
                /**
                 * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
                 */
                if (!this._isPopupOpened()) {
                   this._debouncedAction('_open', [event]);
                }
+               event.preventDefault();
+               event.stopPropagation();
             }
-
-            event.preventDefault();
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
@@ -198,7 +209,8 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
             }
-         }
+         },
+         _private: _private
       });
 
       Previewer.getDefaultOptions = function() {

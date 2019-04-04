@@ -13,19 +13,50 @@ define('Controls/Decorator/Markup/resources/template', [
       control,
       resolver,
       resolverParams,
-      resolverMode;
+      resolverMode,
+      linkAttributesMap = {
+         'action': true,
+         'background': true,
+         'cite': true,
+         'codebase': true,
+         'formaction': true,
+         'href': true,
+         'icon': true,
+         'longdesc': true,
+         'manifest': true,
+         'poster': true,
+         'profile': true,
+         'src': true,
+         'usemap': true
+      },
+      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):\/\/|mailto:|\/)/,
+      dataAttributeRegExp = /^data-([\w-])*/,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      longSpaceRegExp = /\u00a0/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
    }
 
+   // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
+   // This is a way to call any javascript code after such a start.
+   function isLinkAttributeWithJavascript(attributeName, attributeValue) {
+      return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
+   }
+
    function validAttributesInsertion(to, from) {
-      var validAttributes = validHtml.validAttributes,
-         dataAttributeRegExp = /^data-([\w-])*/;
+      var validAttributes = validHtml.validAttributes;
       for (var key in from) {
-         if (from.hasOwnProperty(key) && (validAttributes[key] || dataAttributeRegExp.test(key))) {
-            to[key] = markupGenerator.escape(from[key]);
+         if (!from.hasOwnProperty(key)) {
+            continue;
          }
+         if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {
+            continue;
+         }
+         if (isLinkAttributeWithJavascript(key, from[key])) {
+            continue;
+         }
+         to[key] = markupGenerator.escape(from[key]);
       }
    }
 
@@ -108,9 +139,15 @@ define('Controls/Decorator/Markup/resources/template', [
          // Protect view of text from needless unescape in inferno.
          oldEscape = markupGenerator.escape;
          markupGenerator.escape = function(str) {
-            return str.replace(/&([^&]*;)/g, function(match, entity) {
+            return str.replace(escapeVdomRegExp, function(match, entity) {
                return '&amp;' + entity;
             });
+         };
+      } else {
+         // Markup Converter should escape long space characters too.
+         oldEscape = markupGenerator.escape;
+         markupGenerator.escape = function(str) {
+            return oldEscape(str).replace(longSpaceRegExp, '&nbsp;');
          };
       }
       try {
@@ -118,9 +155,7 @@ define('Controls/Decorator/Markup/resources/template', [
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       } finally {
-         if (isVdom) {
-            markupGenerator.escape = oldEscape;
-         }
+         markupGenerator.escape = oldEscape;
       }
 
       if (!elements.length) {

@@ -3,7 +3,7 @@ import entity = require('Types/entity');
    /**
     * Interface for date/time inputs mask.
     *
-    * @interface Controls/Input/interface/IDateTimeMask
+    * @interface Controls/_input/interface/IDateTimeMask
     * @public
     * @author Миронов А.Ю.
     */
@@ -13,7 +13,7 @@ import entity = require('Types/entity');
          return {
 
             /**
-             * @name Controls/Input/interface/IDateTimeMask#mask
+             * @name Controls/_input/interface/IDateTimeMask#mask
              * @cfg {String} Date format.
              * @variant 'DD.MM.YYYY'
              * @variant 'DD.MM.YY'
@@ -57,7 +57,7 @@ import entity = require('Types/entity');
              * In this example, the mask is set so that only the time can be entered in the input field.
              * After a user has entered a “09:30”, the value of the _inputValue will be equal 01.01.1900 09:30.000.
              * <pre>
-             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             *    <Controls._input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>
              * <pre>
              *    Control.extend({
@@ -66,7 +66,7 @@ import entity = require('Types/entity');
              * </pre>
              * In the next example after a user has entered a “09:30”, the value of the _inputValue will be equal 10.03.2018 09:30.000
              * <pre>
-             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             *    <Controls._input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>
              * <pre>
              *    Control.extend({

@@ -6,88 +6,125 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
       'css!Controls-demo/InfoBox/Opener/InfoBox'
    ],
    function(Control, contentTpl, template) {
-
       'use strict';
 
       var message = 'MESSAGE';
       var InfoBox = Control.extend({
          _template: template,
          _blocks: null,
+         _icons: null,
+         _cfgRight: null,
+         _cfgLeft: null,
+         _cfgTop: null,
+         _cfgBottom: null,
          _minTargetMode: false,
          _beforeMount: function() {
+            this._cfgRight = {
+               message: message,
+               targetSide: 'right',
+               alignment: 'start'
+            };
+            this._cfgLeft = {
+               message: message,
+               targetSide: 'left',
+               alignment: 'start'
+            };
+            this._cfgTop = {
+               message: message,
+               targetSide: 'top',
+               alignment: 'start'
+            };
+            this._cfgBottom = {
+               message: message,
+               targetSide: 'bottom',
+               alignment: 'start'
+            };
             this._blocks = [{
                header: 'POSITION',
                items: [{
-                  text: 'TL',
+                  text: 'TOP START',
                   cfg: {
                      message: message,
-                     position: 'tl'
+                     targetSide: 'top',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'TC',
+                  text: 'TOP CENTER',
                   cfg: {
                      message: message,
-                     position: 'tc'
+                     targetSide: 'top',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'TR',
+                  text: 'TOP END',
                   cfg: {
                      message: message,
-                     position: 'tr'
+                     targetSide: 'top',
+                     alignment: 'end'
+
                   }
                }, {
-                  text: 'BL',
+                  text: 'BOTTOM START',
                   cfg: {
                      message: message,
-                     position: 'bl'
+                     targetSide: 'bottom',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'BC',
+                  text: 'BOTTOM CENTER',
                   cfg: {
                      message: message,
-                     position: 'bc'
+                     targetSide: 'bottom',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'BR',
+                  text: 'BOTTOM END',
                   cfg: {
                      message: message,
-                     position: 'br'
+                     targetSide: 'bottom',
+                     alignment: 'end'
                   }
                }, {
-                  text: 'LT',
+                  text: 'LEFT START',
                   cfg: {
                      message: message,
-                     position: 'lt'
+                     targetSide: 'left',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'LC',
+                  text: 'LEFT CENTER',
                   cfg: {
                      message: message,
-                     position: 'lc'
+                     targetSide: 'left',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'LB',
+                  text: 'LEFT END',
                   cfg: {
                      message: message,
-                     position: 'lb'
+                     targetSide: 'left',
+                     alignment: 'end'
                   }
                }, {
-                  text: 'RT',
+                  text: 'RIGHT START',
                   cfg: {
                      message: message,
-                     position: 'rt'
+                     targetSide: 'right',
+                     alignment: 'start'
                   }
                }, {
-                  text: 'RC',
+                  text: 'RIGHT CENTER',
                   cfg: {
                      message: message,
-                     position: 'rc'
+                     targetSide: 'right',
+                     alignment: 'center'
                   }
                }, {
-                  text: 'RB',
+                  text: 'RIGHT END',
                   cfg: {
                      message: message,
-                     position: 'rb'
+                     targetSide: 'right',
+                     alignment: 'end'
                   }
                }]
             }, {
@@ -99,22 +136,37 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                      style: 'default'
                   }
                }, {
-                  text: 'LITE',
+                  text: 'DANGER',
                   cfg: {
                      message: message,
-                     style: 'lite'
+                     style: 'danger'
                   }
                }, {
-                  text: 'HELP',
+                  text: 'WARNING',
                   cfg: {
                      message: message,
-                     style: 'help'
+                     style: 'warning'
+
                   }
                }, {
-                  text: 'ERROR',
+                  text: 'SUCCESS',
                   cfg: {
                      message: message,
-                     style: 'error'
+                     style: 'success'
+
+                  }
+               }, {
+                  text: 'SECONDARY',
+                  cfg: {
+                     message: message,
+                     style: 'secondary'
+
+                  }
+               }, {
+                  text: 'INFO',
+                  cfg: {
+                     message: message,
+                     style: 'info'
                   }
                }]
             }, {
@@ -122,17 +174,19 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                items: [{
                   text: 'TRUE',
                   cfg: {
-                     message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+                     message: 'American classical artists have long been known for their remarkable virtuosity.\n' +
+                        ' Every year the level of their music art is getting higher.\n' +
+                        ' Never before have so many unusually gifted American conductors organized\n' +
+                        ' lots of the country’s most prominent orchestras.',
                      float: true
                   }
                }, {
                   text: 'FALSE',
                   cfg: {
-                     message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+                     message: 'American classical artists have long been known for their remarkable virtuosity.\n' +
+                        ' Every year the level of their music art is getting higher.\n' +
+                        ' Never before have so many unusually gifted American conductors organized\n' +
+                        ' lots of the country’s most prominent orchestras.',
                      float: false
                   }
                }]
@@ -148,18 +202,114 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   }
                }]
             }];
+            this._icons = [{
+               items: [
+                  {
+                     cfg: {
+                        size: 'small',
+                        position: 'lc',
+                        message: 'Small left-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'small',
+                        position: 'tc',
+                        message: 'Small top-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'small',
+                        position: 'bc',
+                        message: 'Small bottom-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'small',
+                        position: 'rc',
+                        message: 'Small right-center'
+                     }
+                  }
+               ]
+            },
+            {
+               items: [
+                  {
+                     cfg: {
+                        size: 'medium',
+                        position: 'lc',
+                        message: 'Medium left-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'medium',
+                        position: 'tc',
+                        message: 'Medium top-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'medium',
+                        position: 'bc',
+                        message: 'Medium bottom-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'medium',
+                        position: 'rc',
+                        message: 'Medium right-center'
+                     }
+                  },
+               ]
+            },
+            {
+               items: [
+                  {
+                     cfg: {
+                        size: 'large',
+                        position: 'lc',
+                        message: 'Large left-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'large',
+                        position: 'tc',
+                        message: 'Large top-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'large',
+                        position: 'bc',
+                        message: 'Large bottom-center'
+                     }
+                  },
+                  {
+                     cfg: {
+                        size: 'large',
+                        position: 'rc',
+                        message: 'Large right-center'
+                     }
+                  },
+               ]
+            }
+            ];
          },
 
-         _open: function(e, cfg){
+         _open: function(e, cfg) {
             cfg.target = e.target;
             this._children.IBOpener.open(cfg);
          },
 
-         _toggleMinTargetMode: function(){
+         _toggleMinTargetMode: function() {
             this._minTargetMode = !this._minTargetMode;
          }
       });
 
       return InfoBox;
-   }
-);
+   });

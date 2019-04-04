@@ -2,11 +2,11 @@ define('Controls/Application/startApplicationScript',
    [
       'Core/Control',
       'Core/Deferred',
-      'View/Request',
+      'Application/Env',
       'wml!Controls/Application/startApplicationScript'
    ],
 
-   function(Base, Deferred, Request, template) {
+   function(Base, Deferred, AppEnv, template) {
       'use strict';
 
       var Page = Base.extend({
@@ -22,7 +22,7 @@ define('Controls/Application/startApplicationScript',
             if (typeof window !== 'undefined') {
                return;
             }
-            var def = Request.getCurrent().getStorage('HeadData').waitAppContent();
+            var def = AppEnv.getStore('HeadData').waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             def.addCallback(function onLoad(res) {

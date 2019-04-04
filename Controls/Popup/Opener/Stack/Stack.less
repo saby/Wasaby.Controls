@@ -1,7 +1,6 @@
 .controls-Stack {
    overflow: hidden;
    padding-left: @padding_Stack-shadow;
-   box-sizing: content-box;
 }
 
 .controls-Stack__content-wrapper {
@@ -10,7 +9,6 @@
    flex-shrink: 0;
    position: relative;
    border-left: @size_Stack-border-left solid @color_Stack-border-left;
-   box-sizing: border-box;
 }
 
 .controls-Stack__content {
@@ -22,20 +20,3 @@
 .controls-Stack__shadow {
    box-shadow: @size_Stack-shadow @color_Stack-shadow;
 }
-.controls-Stack__waiting {
-   will-change: transform;
-   transform: translateX(100%);
-}
-
-.controls-Stack__open {
-   will-change: transform;
-   transition: transform @animate-duration_Stack linear;
-   transform: translateX(0%);
-}
-
-.controls-Stack__close {
-   will-change: transform;
-   transition: transform @animate-duration_Stack linear;
-   transform: translateX(100%);
-}
-

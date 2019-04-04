@@ -16,7 +16,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Grid',
+         _content: 'Controls/grid:View',
          _dataObject: null,
          _componentOptions: null,
 

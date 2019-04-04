@@ -1,5 +1,5 @@
-import BaseViewModel = require('Controls/List/BaseViewModel');
-import ListViewModel = require('Controls/List/ListViewModel');
+import {ListViewModel, BaseViewModel} from 'Controls/lists';
+
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
@@ -898,6 +898,10 @@ var
 
         _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
+        },
+
+        getEditingItemData(): object | null {
+            return this._model.getEditingItemData();
         },
 
         setItemActionVisibilityCallback: function(callback) {

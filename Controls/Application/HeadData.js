@@ -4,7 +4,7 @@ define('Controls/Application/HeadData', [
    'Core/Deferred',
    'Env/Env',
    'Core/Themes/ThemesController',
-   'View/Request',
+   'Application/Env',
    'Core/i18n'
 
 ], function(extend,
@@ -12,7 +12,7 @@ define('Controls/Application/HeadData', [
    Deferred,
    Env,
    ThemesController,
-   Request,
+   AppEnv,
    i18n) {
    var bundles, modDeps, contents;
 
@@ -85,7 +85,7 @@ define('Controls/Application/HeadData', [
                });
             }
 
-            var rcsData = Request.getCurrent().stateReceiver.serialize();
+            var rcsData = AppEnv.getStateReceiver().serialize();
             var additionalDepsArray = [];
             for (var key in rcsData.additionalDeps) {
                if (rcsData.additionalDeps.hasOwnProperty(key)) {
@@ -115,6 +115,7 @@ define('Controls/Application/HeadData', [
             self.defRender.callback({
                js: files.js,
                tmpl: files.tmpl || [],
+               wml: files.wml || [],
                css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serialized,

@@ -14,6 +14,50 @@
       </div>
    </ws:for>
 
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; right: 0px; top: 6px"
+                              on:mouseenter="_open(_cfgRight)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; right: 0px; bottom: 5px"
+                              on:mouseenter="_open(_cfgRight)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; left: 0px; top: 6px"
+                              on:mouseenter="_open(_cfgLeft)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; left: 0px; bottom: 5px"
+                              on:mouseenter="_open(_cfgLeft)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute"
+                              on:mouseenter="_open(_cfgTop)"/>
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium"
+                              attr:style="position: absolute; bottom: 0px"
+                              on:mouseenter="_open(_cfgBottom)"/>
+
+
+  <div style="margin-bottom: 30px ">
+      <div class="controls-InfoBoxDemo-block">
+         <div class="controls-InfoBoxDemo-header">{{'ICONS'}}</div>
+      </div>
+        <ws:for data="item in _icons">
+            <div class="controls-InfoBoxDemo-targets">
+            <ws:for data="config in item.items">
+                 <div class="controls-InfoBoxDemo-icon">
+                <Controls._buttons.Button viewMode ='link'
+                                          icon="icon-EmptyMessage icon-{{config.cfg.size}}"
+                                          on:mouseenter="_open(config.cfg)"/>
+                 </div>
+            </ws:for>
+            </div>
+        </ws:for>
+  </div>
+
+
    <div class="controls-InfoBoxDemo-min-targets-mode">Режим маленьких таргетов:
       <span class="controls-InfoBoxDemo-min-targets-mode-button" on:click="_toggleMinTargetMode()">
          {{_minTargetMode ? 'ВЫКЛ' : 'ВКЛ'}}

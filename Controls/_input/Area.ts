@@ -17,12 +17,11 @@ import 'Controls/Decorator/WrapURLs';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
-       * @control
+       *
        * @public
-       * @category Input
        * @demo Controls-demo/Input/Area/AreaPG
        *
-       * @author Колесова П.С.
+       * @author Журавлев М.С.
        */
 
       /**
@@ -212,7 +211,7 @@ import 'Controls/Decorator/WrapURLs';
          }
       });
 
-      Area._theme.push('Controls/_input/Area/Area');
+      Area._theme.push('Controls/input');
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();

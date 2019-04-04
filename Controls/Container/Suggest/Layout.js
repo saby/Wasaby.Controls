@@ -22,9 +22,15 @@ define('Controls/Container/Suggest/Layout',
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
       var ENTER_KEY = Env.constants.key.enter;
-      
-      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
+
+      var PROCESSED_KEYDOWN_KEYS = {
+
+         /* hot keys that should processed on input */
+         INPUT: [Env.constants.key.esc],
+
+         /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+         SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
+      };
       
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
@@ -69,7 +75,7 @@ define('Controls/Container/Suggest/Layout',
          open: function(self) {
             _private.loadDependencies(self).addCallback(function() {
                //focus can be moved out while dependencies loading
-               if (self._inputActive) {
+               if (self._inputActive && !self._stackWithSearchResultsOpened) {
                   _private.suggestStateNotify(self, true);
                }
             });
@@ -144,13 +150,19 @@ define('Controls/Container/Suggest/Layout',
                    hasItems && self._options.historyId && !self._searchValue ||
                   (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
-         precessResultData: function(self, resultData) {
+         processResultData: function(self, resultData) {
             self._searchResult = resultData;
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
                var result = metaData.results;
+               
                _private.setMissSpellingCaption(self, getSwitcherStrFromData(data));
+               
+               if (!data.getCount()) {
+                  _private.setSuggestMarkedKey(self, null);
+               }
+               
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
@@ -268,6 +280,7 @@ define('Controls/Container/Suggest/Layout',
          _showContent: false,
          _inputActive: false,
          _suggestMarkedKey: null,
+         _stackWithSearchResultsOpened: false,
 
          /**
           * three state flag
@@ -401,6 +414,11 @@ define('Controls/Container/Suggest/Layout',
             this._forceUpdate();
          },
    
+         //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+         _stackWithSearchResultsClosed: function() {
+            this._stackWithSearchResultsOpened = false;
+         },
+   
          // <editor-fold desc="List handlers">
          
          _select: function(event, item) {
@@ -443,7 +461,7 @@ define('Controls/Container/Suggest/Layout',
                }
             }
             this._searchDelay = this._options.searchDelay;
-            _private.precessResultData(this, result);
+            _private.processResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
             }
@@ -454,10 +472,15 @@ define('Controls/Container/Suggest/Layout',
          },
          _showAllClick: function() {
             var self = this;
-
+   
+            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
+            //popup manager moves focus to control after closing panel asynchronously, because of this, there are problems with focus
+            //if we close suggest popup and instantly open stack with search results, focus will moved to input, and suggest will opened (if autodropdown option is setter to true)
+            this._stackWithSearchResultsOpened = true;
+            
             //loading showAll templates
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
-               self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
+               self._children.stackOpener.open();
             });
             _private.close(this);
          },
@@ -469,13 +492,23 @@ define('Controls/Container/Suggest/Layout',
 
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
-            var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            var isInputKey = PROCESSED_KEYDOWN_KEYS.INPUT.indexOf(eventKeyCode) !== -1;
+            var isListKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : PROCESSED_KEYDOWN_KEYS.SUGGESTIONS_LIST.indexOf(eventKeyCode) !== -1;
 
-            if (this._options.suggestState && needProcessKey) {
-               event.preventDefault();
+            if (this._options.suggestState) {
+               if (isListKey || isInputKey) {
+                  event.preventDefault();
+                  event.stopPropagation();
+               }
 
-               if (this._children.inputKeydown) {
-                  this._children.inputKeydown.start(event);
+               if (isListKey) {
+                  if (this._children.inputKeydown) {
+                     this._children.inputKeydown.start(event);
+                  }
+               } else if (isInputKey) {
+                  if (eventKeyCode === Env.constants.key.esc) {
+                     _private.close(this);
+                  }
                }
             }
          }

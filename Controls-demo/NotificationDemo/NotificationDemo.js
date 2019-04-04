@@ -2,7 +2,7 @@ define('Controls-demo/NotificationDemo/NotificationDemo',
    [
       'Core/Control',
       'wml!Controls-demo/NotificationDemo/NotificationDemo',
-      'wml!Controls/Popup/Templates/Notification/Simple'
+      'wml!Controls-demo/Popup/Opener/resources/CustomNotification'
    ],
    function(Control, template) {
 

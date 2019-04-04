@@ -83,6 +83,8 @@ function(cMerge,
          }
 
          cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+         cfg.templateOptions.closeOnTargetScroll = cfg.closeOnTargetScroll || false;
+         cfg.templateOptions.closeOnTargetHide = cfg.closeOnTargetHide || false;
 
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
@@ -192,7 +194,7 @@ function(cMerge,
 
       _prepareConfigFromOldToOldByNewEnvironment: function(cfg) {
          if (cfg.flipWindow === 'vertical') {
-            cfg.locationStrategy = 'overflow';
+            cfg.fittingMode = 'overflow';
          }
          if (cfg.cssClassName) {
             cfg.className = cfg.cssClassName;
@@ -227,7 +229,7 @@ function(cMerge,
          }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
-            cfg.isModal = true;
+            cfg.modal = true;
             cfg.closeOnOutsideClick = false;
          }
 
@@ -292,7 +294,7 @@ function(cMerge,
          }
 
          if (cfg.hasOwnProperty('modal')) {
-            cfg.isModal = cfg.modal;
+            cfg.modal = cfg.modal;
          }
 
          if (cfg._popupComponent === 'dialog') { // у window всегда есть drag
@@ -382,7 +384,7 @@ function(cMerge,
                _isCompatibleArea: true,
                isStack: cfg._type === 'stack',
                target: cfg.target,
-               modal: cfg.isModal,
+               modal: cfg.modal,
                handlers: cfg.handlers,
                border: !isVDOMTemplate(template) // Если шаблон вдомный - кнопка закрытия не нужна
             },
@@ -493,7 +495,7 @@ function(cMerge,
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
-            if (cfg.locationStrategy === 'fixed') {
+            if (cfg.locationStrategy === 'fixed' || cfg.fittingMode === 'fixed') {
                newCfg.dialogOptions.flipWindow = false;
             }
          }

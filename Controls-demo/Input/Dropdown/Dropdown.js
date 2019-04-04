@@ -28,8 +28,10 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _footerItems: null,
       _defaultItems: null,
       _historySource: null,
+      _selectedKeysHistoryMulti: null,
       _emptyItems2: null,
       _longItems: null,
+      _multiSelectItems: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -45,8 +47,11 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeys1: null,
       _selectedKeys2: null,
       _selectedKeysHistory: null,
+      _historySourceMulti: null,
       _selectedKeysEmpty2: null,
       _selectedKeysLong: null,
+      _selectedKeysMultiSelect: null,
+      _selectedKeysMultiSelect2: null,
 
       _beforeMount: function() {
          this._simpleItems = [
@@ -164,7 +169,17 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 2, title: 'At work, the client said' },
             { id: 3, title: 'On the test bench' }
          ];
+         this._multiSelectItems = [
+            { id: 1, title: 'Banking and financial services, credit' },
+            { id: 2, title: 'Gasoline, diesel fuel, light oil products' },
+            { id: 3, title: 'Transportation, logistics, customs' },
+            { id: 4, title: 'Oil and oil products' },
+            { id: 5, title: 'Pipeline transportation services' },
+            { id: 6, title: 'Services in tailoring and repair of clothes, textiles' },
+            { id: 7, title: 'Computers and components, computing, office equipment' }
+         ];
          this._historySource = historySource.createMemory();
+         this._historySourceMulti = historySource.createMemory();
          this._selectedKeysSimple = [1];
          this._selectedKeysSub = [1];
          this._selectedKeysHierarchy = [8];
@@ -180,8 +195,11 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeys1 = ['1'];
          this._selectedKeys2 = ['1'];
          this._selectedKeysHistory = [1];
+         this._selectedKeysHistoryMulti = [1];
          this._selectedKeysEmpty2 = [2];
          this._selectedKeysLong = [2];
+         this._selectedKeysMultiSelect = [1];
+         this._selectedKeysMultiSelect2 = [6, 7];
       },
       _createMemory: function(items) {
          return new source.Memory({

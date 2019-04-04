@@ -4,30 +4,37 @@ define('Controls/Popup/Opener/BaseOpener',
       'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Vdom/Vdom',
-      'View/Executor/Utils',
       'Core/core-clone',
       'Core/core-merge',
       'Env/Env',
       'Core/Deferred',
-      'Core/helpers/isNewEnvironment'
+      'Core/helpers/isNewEnvironment',
+      'Core/library'
    ],
    function(
       Control,
       Template,
       ManagerController,
       Vdom,
-      Utils,
       coreClone,
       CoreMerge,
       Env,
       Deferred,
-      isNewEnvironment
+      isNewEnvironment,
+      library
    ) {
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
                popupIds.length = 0;
             }
+         },
+         compatibleOpen: function(self, cfg, controller) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
+               Layer.load().addCallback(function() {
+                  self._openPopup(cfg, controller);
+               });
+            });
          }
       };
 
@@ -72,20 +79,14 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          open: function(popupOptions, controller) {
-            var self = this;
             var cfg = this._getConfig(popupOptions);
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
-            self._toggleIndicator(true);
+            this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                  Layer.load().addCallback(function() {
-                     self._openPopup(cfg, controller);
-                  });
-               });
+               _private.compatibleOpen(this, cfg, controller);
             } else {
-               self._openPopup(cfg, controller);
+               this._openPopup(cfg, controller);
             }
          },
 
@@ -114,38 +115,37 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          // Lazy load template
+
+         /**
+          *
+          * @param config
+          * @param controller
+          * @return {Promise.<{template: Function; controller: Function}>}
+          * @private
+          */
          _requireModules: function(config, controller) {
-            if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return this._openerListDeferred;
+            var self = this;
+            if (this._requireModulesPromise) {
+               return this._requireModulesPromise;
             }
-
-            var deps = [];
-            if (this._needRequireModule(config.template)) {
-               deps.push(config.template);
-            }
-            if (this._needRequireModule(controller)) {
-               deps.push(controller);
-            }
-
-            if (deps.length) {
-               this._openerListDeferred = new Deferred();
-               requirejs(deps, function() {
-                  this._openerListDeferred.callback(this._getRequiredModules(config.template, controller));
-               }.bind(this));
-               return this._openerListDeferred;
-            }
-            return (new Deferred()).callback(this._getRequiredModules(config.template, controller));
+            return Promise.all([
+               self._requireModule(config.template),
+               self._requireModule(controller)
+            ]).then(function(results) {
+               return {
+                  template: results[0],
+                  controller: results[1]
+               };
+            });
          },
 
-         _needRequireModule: function(module) {
-            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
-         },
-
-         _getRequiredModules: function(template, controller) {
-            return {
-               template: typeof template === 'string' ? requirejs(template) : template,
-               controller: typeof controller === 'string' ? requirejs(controller) : controller
-            };
+         /**
+          * @param {String | Function} module
+          * @return {Promise.<Function>}
+          * @private
+          */
+         _requireModule: function(module) {
+            return typeof module === 'string' ? library.load(module) : Promise.resolve(module);
          },
 
          _getConfig: function(popupOptions) {
@@ -163,6 +163,8 @@ define('Controls/Popup/Opener/BaseOpener',
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
                'closeByExternalClick',
+               'isCompoundTemplate',
+               'autoClose',
                'type',
                'style',
                'message',
@@ -215,6 +217,16 @@ define('Controls/Popup/Opener/BaseOpener',
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
+            if (baseCfg.hasOwnProperty('isModal')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "modal" instead of "isModal"');
+               baseCfg.modal = baseCfg.isModal;
+            }
+
+            if (baseCfg.hasOwnProperty('locationStrategy')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
+               baseCfg.fittingMode = baseCfg.locationStrategy;
+            }
+
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
             baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
             this._prepareNotifyConfig(baseCfg);
@@ -252,7 +264,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   message: rk('Загрузка')
                };
                this._indicatorId = this._notify('showIndicator', [cfg], { bubbling: true });
-            } else {
+            } else if (this._indicatorId) {
                this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
                this._indicatorId = null;
             }
@@ -376,7 +388,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
-               if (compoundArea && !isFormController) {
+               if (compoundArea && !isFormController && compoundArea._options.template === newCfg.template) {
                   // Redraw template with new options
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);

@@ -114,7 +114,7 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
+         updateHistory: function(filterButtonItems, fastFilterItems, historyId) {
             var meta = {
                '$_addFromData': true
             };
@@ -322,7 +322,10 @@ define('Controls/Filter/Controller',
                def.errback(err);
                throw err;
             }
-            def.callback(calculatedFilter);
+            def.callback({
+               filter: calculatedFilter,
+               historyItems: items
+            });
             return items;
          }).addErrback(function(err) {
             def.errback(err);
@@ -331,8 +334,16 @@ define('Controls/Filter/Controller',
          return def;
       }
 
+      function updateFilterHistory(cfg) {
+         if (!cfg.historyId) {
+            throw new Error('Controls/Filter/Controller::historyId is required');
+         }
+         _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
+         _private.updateHistory(cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
+      }
+
       /**
-       * The filter controller allows you to filter data in a {@link Controls/List} using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to filter data in a {@link Controls/lists:View} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
@@ -390,13 +401,13 @@ define('Controls/Filter/Controller',
        *    <Controls.Filter.Controller
        *       historyId="myHistoryId"
        *       fastFilterSource="{{_fastFilterSource}}">
-       *       <Controls.Container.Data>
+       *       <Controls.lists:DataContainer>
        *          ...
        *          <Controls.Filter.Fast.Container>
        *             <Controls.Filter.Fast />
        *          </Controls.Filter.Fast.Container>
        *          ...
-       *       </Controls.Container.Data>
+       *       </Controls.lists:DataContainer>
        *    </Controls.Filter.Controller>
        * </pre>
        * JS:
@@ -463,8 +474,8 @@ define('Controls/Filter/Controller',
          _beforeUpdate: function(newOptions) {
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
                _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+               _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
             }
-
             if (!isEqual(this._options.filter, newOptions.filter)) {
                _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
             }
@@ -474,7 +485,7 @@ define('Controls/Filter/Controller',
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               _private.updateHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
+               _private.updateHistory(this._filterButtonItems, this._fastFilterItems, this._options.historyId);
             }
 
             _private.applyItemsToFilter(this, this._filter, items);
@@ -482,6 +493,8 @@ define('Controls/Filter/Controller',
          },
 
          _filterChanged: function(event, filter) {
+            //Controller should stop bubbling of 'filterChanged' event, that container-control fired
+            event.stopPropagation();
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
@@ -490,5 +503,6 @@ define('Controls/Filter/Controller',
 
       Container._private = _private;
       Container.getCalculatedFilter = getCalculatedFilter;
+      Container.updateFilterHistory = updateFilterHistory;
       return Container;
    });

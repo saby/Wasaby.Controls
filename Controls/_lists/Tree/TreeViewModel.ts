@@ -1,6 +1,6 @@
-import ListViewModel = require('Controls/List/ListViewModel');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import TreeItemsUtil = require('Controls/List/resources/utils/TreeItemsUtil');
+import ListViewModel = require('Controls/_lists/ListViewModel');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
+import TreeItemsUtil = require('Controls/_lists/resources/utils/TreeItemsUtil');
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -363,24 +363,31 @@ var
                 }
             }
 
-
-            if (current.item.get && current.item.get(current.nodeProperty) !== null) {
-                if (current.isExpanded) {
-                    current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
-
+           if (current.item.get) {
+              if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
+                 current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
+              }
+              var itemParent = current.dispItem.getParent();
+              var itemParentKey = current.item.get(current.parentProperty);
+              if (itemParentKey !== this._display.getRoot().getContents() && (this._options.nodeFooterTemplate || this._hasMoreStorage && this._hasMoreStorage[itemParentKey])) {
+                 var itemParentChilds = this._hierarchyRelation.getChildren(itemParentKey, this._items);
+                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
+                    current.nodeFooter = {
+                       key: itemParentKey,
+                       item: itemParent.getContents(),
+                       dispItem: itemParent,
+                       multiSelectVisibility: current.multiSelectVisibility,
+                       level: itemParent.getLevel()
+                    };
                     if (this._options.nodeFooterTemplate) {
-                        current.footerStorage = {};
-                        current.footerStorage.template = this._options.nodeFooterTemplate;
+                       current.nodeFooter.template = this._options.nodeFooterTemplate;
                     }
-
-                    if (this._hasMoreStorage && this._hasMoreStorage[current.item.getId()]) {
-                        if (!current.footerStorage) {
-                            current.footerStorage = {};
-                        }
-                        current.footerStorage.hasMoreStorage = this._hasMoreStorage[current.item.getId()];
+                    if (this._hasMoreStorage && this._hasMoreStorage[itemParentKey]) {
+                       current.nodeFooter.hasMoreStorage = this._hasMoreStorage[itemParentKey];
                     }
-                }
-            }
+                 }
+              }
+           }
             return current;
         },
 

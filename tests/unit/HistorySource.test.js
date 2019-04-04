@@ -294,6 +294,25 @@ define(
                hSource.update(myItem, meta);
                historyItems = hSource.getItems();
                assert.equal(hSource._history.recent.at(0).getId(), '7');
+
+               hSource.update([myItem], meta);
+               historyItems = hSource.getItems();
+               assert.equal(historyItems.at(3).get('title'), 'Запись 7');
+               assert.equal(hSource._history.recent.at(0).getId(), '7');
+            });
+            it('updateRecent history not loaded', function() {
+               let config2 = clone(config),
+                  updatedData,
+                  meta = {
+                     $_history: true
+                  };
+               config2.historySource.update = function(data) {
+                  updatedData = data;
+               };
+               let hSource2 = new historySource(config2);
+               hSource2.update(myItem, meta);
+               assert.deepEqual(myItem, updatedData);
+
             });
             it('prepareHistoryBySourceItems', function(done){
                let newData = new sourceLib.DataSet({
@@ -338,6 +357,7 @@ define(
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
+                  assert.equal(self._recentCount, 2);
                   self._history.pinned.forEach(function(pinnedItem){
                      assert.isFalse(pinnedItem.getId()=='9');
                   });

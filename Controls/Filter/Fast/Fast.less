@@ -31,11 +31,17 @@
 }
 
 //Text
-.controls-FastFilter__text {
+.controls-FastFilter__text-wrapper {
    box-sizing: border-box;
-   .text-overflow();
+   width: 100%;
+   overflow: hidden;
+   display: inline-flex;
    font-size: @font-size_FastFilter-text;
 }
+
+.controls-FastFilter__text {
+    .text-overflow();
+ }
 
 .controls-FastFilter__text_state_enabled {
    color: @color_FastFilter-text;
@@ -92,5 +98,5 @@
 
 .controls-FastFilter-popup {
    margin-top: @shift-top_FastFilter-popup;
-   margin-left: @shift-left_FastFilter-popup;
+   margin-left: @font-size_FastFilter-arrow - (@spacing_DropdownList-item-between-leftBorder-content + @border-width_DropdownList);;
 }

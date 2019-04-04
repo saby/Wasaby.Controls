@@ -109,6 +109,19 @@ define('Controls-demo/Popup/Edit/Opener',
             this._children.EditOpener.open();
          },
 
+         _openHandler: function(event) {
+           this._eventText = event.type;
+         },
+
+         _closeHandler: function(event) {
+            this._eventText = event.type;
+         },
+
+         _resultHandler: function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            this._eventText = event.type + ' ' + args.toString();
+         },
+
          _beforeSyncRecord: function(event, action, record, additionaData) {
             if (this._cancelEdit) {
                return 'cancel';

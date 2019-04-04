@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="Диалог редактирования" attr:style="width:900px">
+<Controls.Popup.Templates.Stack.StackTemplate caption="Диалог редактирования" attr:style="width:{{_options.width || 900}}px">
    <ws:topArea>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.buttons:Button icon="icon-medium icon-Erase icon-error" on:click="_delete()" style="linkMain"
@@ -21,33 +21,44 @@
             <div class="controls-MyFormController__block">
                <div class="controls-MyFormController__row controls-MyFormController__title">Название:</div>
                <div class="controls-MyFormController__row">
-                  <Controls.Input.Text bind:value="_record.name" class="demo-MyFormController__name"/>
+                  <Controls.input:Text bind:value="_record.name" class="demo-MyFormController__name"/>
                </div>
             </div>
 
             <div class="controls-MyFormController__block">
                <div class="controls-MyFormController__row controls-MyFormController__title">Цена:</div>
                <div class="controls-MyFormController__row">
-                  <Controls.Input.Number bind:value="_record.price" class="demo-MyFormController__price"/>
+                  <Controls.input:Number bind:value="_record.price" class="demo-MyFormController__price"/>
                </div>
             </div>
 
             <div class="controls-MyFormController__block">
                <div class="controls-MyFormController__row controls-MyFormController__title">Остаток:</div>
                <div class="controls-MyFormController__row">
-                  <Controls.Input.Number bind:value="_record.balance" class="demo-MyFormController__balance"/>
+                  <Controls.input:Number bind:value="_record.balance" class="demo-MyFormController__balance"/>
                </div>
             </div>
 
             <div class="controls-MyFormController__block">
                <div class="controls-MyFormController__row controls-MyFormController__title">Себестоимость:</div>
                <div class="controls-MyFormController__row">
-                  <Controls.Input.Number bind:value="_record.costPrice" class="demo-MyFormController__costPrice"/>
+                  <Controls.input:Number bind:value="_record.costPrice" class="demo-MyFormController__costPrice"/>
                </div>
             </div>
          </Controls.FormController>
 
+         <br />
+         <Controls.buttons:Button caption="Отправить данные" on:click="_sendResult()" class="demo-PopupEditOpener__sendResult"/>
+
          <Controls.Popup.Opener.Confirmation name="popupOpener" />
+
+         <div>
+            <Controls.buttons:Button name="testStack" caption="testStack" on:click="openTestStack()" attr:class="ControlsDemo-PopupPage__testStackFC"/>
+         </div>
+
+         <Controls.Popup.Opener.Stack name="stack" closeByExternalClick="{{false}}" template="Controls-demo/Popup/TestStack">
+            <ws:templateOptions type="stack" width="600px"/>
+         </Controls.Popup.Opener.Stack>
       </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Stack.StackTemplate>

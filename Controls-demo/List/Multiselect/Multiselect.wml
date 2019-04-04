@@ -1,18 +1,18 @@
-<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+<Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
       <Controls.Container.MultiSelector
               bind:selectedKeys="_selectedKeys"
               name="multiSelector">
          <div class="123">
             <h2>Default</h2>
-            <Controls.List.Container>
+            <Controls.lists:Container>
                <Controls.List.MultiSelector>
-                  <Controls.List
+                  <Controls.lists:View
                           markedKey="{{2}}"
                           allowEmptySelection="{{false}}"
                           multiSelectVisibility="visible"
                   />
                </Controls.List.MultiSelector>
-            </Controls.List.Container>
+            </Controls.lists:Container>
          </div>
       </Controls.Container.MultiSelector>
-</Controls.Container.Data>
+</Controls.lists:DataContainer>

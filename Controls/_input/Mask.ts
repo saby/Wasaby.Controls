@@ -7,7 +7,6 @@ import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
 import baseTemplate = require('wml!Controls/_input/Base/Base');
 import MaskTpl = require('wml!Controls/_input/Mask/Mask');
-import 'css!Controls/_input/Mask/Mask';
 
       
 
@@ -18,16 +17,12 @@ import 'css!Controls/_input/Mask/Mask';
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/_input/Mask
-       * @extends Core/Control
-       * @mixes Controls/_input/interface/IInputTag
+       * @extends Control/_input/Base
+       *
+       * @mixes Controls/_input/interface/IInputBase
        * @mixes Controls/_input/interface/IInputMaskValue
-       * @mixes Controls/_input/interface/IValidation
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
-       * @control
        * @public
        * @author Миронов А.Ю.
-       * @category Input
        * @demo Controls-demo/Input/Mask/MaskPG
        */
 
@@ -50,19 +45,19 @@ import 'css!Controls/_input/Mask/Mask';
        * @example
        * The input mask time:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="dd.dd"/>
+       *    <Controls._input.Mask mask="dd.dd"/>
        * </pre>
        * The input mask date:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="dd.dd.dddd"/>
+       *    <Controls._input.Mask mask="dd.dd.dddd"/>
        * </pre>
        * The input mask from 1-3 digits followed by 1-3 letters.
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="d\{1,3}l\{1,3}"/>
+       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
        * </pre>
        * The input mask infinity number of digits:
        * <pre class="brush:xml">
-       *    <Controls.Input.Mask mask="d\*"/>
+       *    <Controls._input.Mask mask="d\*"/>
        * </pre>
        *
        * @see formatMaskChars
@@ -77,7 +72,7 @@ import 'css!Controls/_input/Mask/Mask';
        *
        * @example
        * <pre>
-       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */
@@ -99,20 +94,7 @@ import 'css!Controls/_input/Mask/Mask';
        * </pre>
        * tmpl:
        * <pre>
-       *    <Controls.Input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
-       * </pre>
-       */
-
-      // Add the interface "Controls/_input/interface/IInputBase" and delete "Controls/_input/Mask#tooltip" after remake base control to 'Controls/_input/Base'.
-      /**
-       * @name Controls/_input/Mask#tooltip
-       * @cfg {String} Text of the tooltip shown when the control is hovered over.
-       * @remark
-       * "Title" attribute added to the control's root node and default browser tooltip is shown on hover.
-       * @example
-       * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
-       * <pre>
-       *    <Controls.Input.Mask tooltip="Enter your name"/>
+       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
        */
 
@@ -205,6 +187,8 @@ import 'css!Controls/_input/Mask/Mask';
       };
 
       Mask._private = _private;
+
+      Mask._theme.push('Controls/input');
 
       export = Mask;
    

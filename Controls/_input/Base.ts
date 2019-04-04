@@ -253,10 +253,6 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             }
          },
 
-         getField: function(self) {
-            return self._children[self._fieldName];
-         },
-
          /**
           * Get the beginning and end of the selected portion of the field's text.
           * @param {Controls/_input/Base} self Control instance.
@@ -264,7 +260,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @private
           */
          getFieldSelection: function(self) {
-            var field = _private.getField(self);
+            var field = self._getField();
 
             return {
                start: field.selectionStart,
@@ -283,7 +279,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
              * In read mode, the field does not exist.
              */
             if (!self._options.readOnly) {
-               callback(_private.getField(self));
+               callback(self._getField());
             }
          },
 
@@ -320,6 +316,29 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             data.delete = displayValue.substring(start, end);
             data.before = displayValue.substring(0, start);
             data.after = displayValue.substring(end, displayValue.length);
+         },
+
+         getTextWidth: function(element, value) {
+            element.innerHTML = value;
+            var width = element.scrollWidth;
+            element.innerHTML = '';
+
+            return width;
+         },
+
+         getTextWidthThroughCreationElement: function(value) {
+            if (document) {
+               var element = document.createElement('div');
+               element.classList.add('controls-InputBase__forCalc');
+               element.innerHTML = value;
+
+               document.body.appendChild(element);
+               var width = element.scrollWidth;
+               document.body.removeChild(element);
+
+               return width;
+            }
+            return 0;
          }
       };
 
@@ -329,12 +348,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
        * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputTag
        * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       *
-       * @mixes Controls/_input/Base/Styles
-       * @mixes Controls/_input/Render/Styles
        *
        * @private
        * @demo Controls-demo/Input/Base/Base
@@ -422,7 +436,17 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @type {Controls/Utils/getTextWidth}
           * @private
           */
-         _getTextWidth: getTextWidth,
+         _getTextWidth: function(value) {
+            var element = this._children.forCalc;
+
+            /**
+             * The element for calculations is available only at the moment of field focusing.
+             * The reason is that the main call occurs during input when the field is in focus.
+             * At other times, the element will be used very rarely. So for the rare cases
+             * it is better to create it yourself.
+             */
+            return element ? _private.getTextWidth(element, value) : _private.getTextWidthThroughCreationElement(value);
+         },
 
          /**
           * @type {Controls/Utils/hasHorizontalScroll}
@@ -480,7 +504,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @private
           */
          _getActiveElement: function() {
-            return document.activeElement;
+            return document && document.activeElement;
          },
 
          constructor: function(cfg) {
@@ -558,7 +582,8 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
                template: fieldTemplate,
                scope: {
                   controlName: 'InputBase',
-                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
+                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
+                  isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
@@ -895,6 +920,18 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
+            if (displayValue.length === selection.end) {
+               var inaccuracy = 1;
+
+               /**
+                * When scaling, scrollWidth and clientWidth are rounded differently on different platforms.
+                * The inaccuracy is within 1.
+                */
+               field.scrollLeft = field.scrollWidth - field.clientWidth + inaccuracy;
+
+               return;
+            }
+
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
@@ -910,7 +947,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          }
       });
 
-      Base._theme = ['Controls/_input/Base/Base'];
+      Base._theme = ['Controls/input'];
 
       Base.getDefaultOptions = function() {
          return {

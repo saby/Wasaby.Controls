@@ -1,9 +1,9 @@
 define([
-   'Controls/List',
+   'Controls/lists',
    'Core/Deferred',
    'Core/core-instance'
 ], function(
-   List,
+   lists,
    Deferred,
    cInstance
 ) {
@@ -14,7 +14,7 @@ define([
                test: '123'
             };
             var
-               list = new List({});
+               list = new lists.View({});
             list._children = {
                listControl: {
                   beginEdit: function(options) {
@@ -33,7 +33,7 @@ define([
                test: '123'
             };
             var
-               list = new List({});
+               list = new lists.View({});
             list.saveOptions({ readOnly: true });
             var result = list.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -41,7 +41,7 @@ define([
          });
    
          it('reloadItem', function() {
-            var list = new List({});
+            var list = new lists.View({});
             list._children = {
                listControl: {
                   reloadItem: function(key, readMeta, direction) {
@@ -59,7 +59,7 @@ define([
                test: '123'
             };
             var
-               list = new List({});
+               list = new lists.View({});
             list._children = {
                listControl: {
                   beginAdd: function(options) {
@@ -78,7 +78,7 @@ define([
                test: '123'
             };
             var
-               list = new List({});
+               list = new lists.View({});
             list.saveOptions({ readOnly: true });
             var result = list.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -87,7 +87,7 @@ define([
 
          it('cancelEdit', function() {
             var
-               list = new List({});
+               list = new lists.View({});
             list._children = {
                listControl: {
                   cancelEdit: function() {
@@ -102,7 +102,7 @@ define([
 
          it('cancelEdit, readOnly: true', function() {
             var
-               list = new List({});
+               list = new lists.View({});
             list.saveOptions({ readOnly: true });
             var result = list.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -111,7 +111,7 @@ define([
 
          it('commitEdit', function() {
             var
-               list = new List({});
+               list = new lists.View({});
             list._children = {
                listControl: {
                   commitEdit: function() {
@@ -126,7 +126,7 @@ define([
 
          it('commitEdit, readOnly: true', function() {
             var
-               list = new List({});
+               list = new lists.View({});
             list.saveOptions({ readOnly: true });
             var result = list.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));

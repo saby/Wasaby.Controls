@@ -52,7 +52,7 @@ define(
       });
 
       describe('Controls/Popup/Manager', function() {
-         var id, element;
+         let id, element;
          let Manager = getManager();
 
          it('initialize', function() {
@@ -229,22 +229,22 @@ define(
          it('add modal popup', function() {
             let Manager = getManager();
             let id1 = Manager.show({
-               isModal: false,
+               modal: false,
                testOption: 'created'
             }, new BaseController());
 
             Manager.show({
-               isModal: true,
+               modal: true,
                testOption: 'created'
             }, new BaseController());
 
-            let indices = Manager._private.popupItems.getIndicesByValue('isModal', true);
+            let indices = Manager._private.popupItems.getIndicesByValue('modal', true);
             assert.equal(indices.length, 1);
             assert.equal(indices[0], 1);
 
             Manager.remove(id1);
 
-            indices = Manager._private.popupItems.getIndicesByValue('isModal', true);
+            indices = Manager._private.popupItems.getIndicesByValue('modal', true);
             assert.equal(indices.length, 1);
             assert.equal(indices[0], 0);
          });
@@ -252,7 +252,7 @@ define(
          it('add maximized popup', function() {
             let Manager = getManager();
             let id0 = Manager.show({
-               isModal: false,
+               modal: false,
                maximize: true,
                testOption: 'created'
             }, new BaseController());
@@ -260,7 +260,7 @@ define(
             assert.equal(Manager._hasMaximizePopup, true);
 
             let id1 = Manager.show({
-               isModal: true,
+               modal: true,
                testOption: 'created'
             }, new BaseController());
 
@@ -271,7 +271,7 @@ define(
             assert.equal(Manager._hasMaximizePopup, false);
 
             let id2 = Manager.show({
-               isModal: true,
+               modal: true,
                testOption: 'created'
             }, new BaseController());
 
@@ -315,7 +315,7 @@ define(
 
          it('managerPopupMaximized notified', function() {
             let popupOptions = {
-               isModal: false,
+               modal: false,
                maximize: false,
                testOption: 'created'
             };
@@ -332,7 +332,7 @@ define(
          });
          it('managerPopupUpdated notified', function() {
             let popupOptions = {
-               isModal: false,
+               modal: false,
                maximize: false,
                testOption: 'created'
             };
@@ -383,31 +383,92 @@ define(
             var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
             assert.equal(secondResult, false);
          });
-         it('contentClick', function() {
+         it('mousedownHandler', function() {
             let Manager = getManager();
             let deactivatedCount = 0;
-            Manager._private.popupDeactivated = () => deactivatedCount++;
+            Manager.remove = () => deactivatedCount++;
             Manager._private.isIgnoreActivationArea = () => false;
+            Manager._private.needClosePopupByDeactivated = () => true;
             let id1 = Manager.show({
-               testOption: 'created'
+               testOption: 'created',
+               autofocus: false
             }, new BaseController());
             let id2 = Manager.show({
                testOption: 'created'
             }, new BaseController());
             let id3 = Manager.show({
-               testOption: 'created'
+               testOption: 'created',
+               autofocus: false
+            }, new BaseController());
+            Manager._mouseDownHandler({});
+            assert.equal(deactivatedCount, 2);
+            Manager.destroy();
+         });
+         it('Linked Popups', function() {
+            let Manager = getManager();
+
+            let id1 = Manager.show({
             }, new BaseController());
 
-            Manager._mouseDownHandler();
-            Manager._contentClick({});
+            let fakePopupControl1 = {
+                  _moduleName: 'Controls/Popup/Manager/Popup',
+                  _options: {
+                     id: id1
+                  }
+               };
 
-            assert.equal(deactivatedCount, 0);
+            let id2 = Manager.show({
+               opener: fakePopupControl1
+            }, new BaseController());
+
+            assert.equal(Manager._private.popupItems.at(0).childs[0].id, id2);
+            assert.equal(Manager._private.popupItems.at(1).parentId, id1);
+
+            let item1 = Manager._private.popupItems.at(0);
+            let removeDeferred2 = new Deferred();
+            let baseRemove = Manager._private.removeElement;
+            Manager._private.removeElement = (element, container, popupId) => {
+               if (popupId === id2) {
+                  element.controller._elementDestroyed = () => removeDeferred2;
+               }
+               Manager._private._notify = () => {};
+               return baseRemove.call(Manager._private, element, container, popupId);
+            };
+            Manager.remove(id1);
+            assert.equal(Manager._private.popupItems.getCount(), 2);
+            removeDeferred2.callback();
+            assert.equal(Manager._private.popupItems.getCount(), 0);
+
+            Manager.destroy();
+         });
+
+         it('removeFromParentConfig', function() {
+            let Manager = getManager();
+
+            let id1 = Manager.show({
+            }, new BaseController());
+
+            let fakePopupControl1 = {
+               _moduleName: 'Controls/Popup/Manager/Popup',
+               _options: {
+                  id: id1
+               }
+            };
+
+            let id2 = Manager.show({
+               opener: fakePopupControl1
+            }, new BaseController());
+
+            assert.equal(Manager._private.popupItems.at(0).childs.length, 1);
+            Manager._private.removeFromParentConfig(Manager._private.popupItems.at(1));
+            assert.equal(Manager._private.popupItems.at(0).childs.length, 0);
+
             Manager.destroy();
          });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;
             let popupOptions = {
-               isModal: false,
+               modal: false,
                maximize: false,
                testOption: 'created',
                _events: {

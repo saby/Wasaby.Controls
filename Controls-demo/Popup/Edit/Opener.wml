@@ -1,13 +1,15 @@
-<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+<Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
    <div>
       <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
 
          <Controls.buttons:Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
-         Вставить в позицию <Controls.Input.Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
+         Вставить в позицию <Controls.input:Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
+         <br />
+         События окна <Controls.input:Text bind:value="_eventText" class="demo-PopupEditOpener__eventText"/>
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
-            <Controls.List.Container>
-               <Controls.Grid
+            <Controls.lists:Container>
+               <Controls.grids:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   leftPadding="S"
                   rightPadding="M"
@@ -19,8 +21,8 @@
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                   itemActions="{{_itemActions}}"
                   columns="{{gridColumns}}">
-               </Controls.Grid>
-            </Controls.List.Container>
+               </Controls.grids:View>
+            </Controls.lists:Container>
          </Controls.Container.Scroll>
       </div>
 
@@ -29,12 +31,11 @@
       <Controls.Toggle.Checkbox bind:value="_openRecordByNewKey" caption="Открыть запись на редактирование с другим ключом" class="demo-PopupEditOpener__openRecordByNewKey"/>
 
       <Controls.Popup.Opener.Edit.Container on:beforeItemEndEdit="_beforeSyncRecord()">
-         <Controls.Popup.Opener.Edit name="EditOpener">
+         <Controls.Popup.Opener.Edit name="EditOpener" on:close="_closeHandler()" on:open="_openHandler()" on:result="_resultHandler()">
             <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
                <ws:templateOptions source="{{_viewSource}}" />
             </ws:popupOptions>
          </Controls.Popup.Opener.Edit>
       </Controls.Popup.Opener.Edit.Container>
    </div>
-</Controls.Container.Data>
-
+</Controls.lists:DataContainer>

@@ -5,15 +5,11 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Env/Env',
-      'Core/core-clone',
-      'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, Env, cClone, Vdom) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred) {
       'use strict';
-      var HAS_ANIMATION = false;
       var STACK_CLASS = 'controls-Stack';
       var _private = {
 
@@ -23,11 +19,9 @@ define('Controls/Popup/Opener/Stack/StackController',
 
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
+            item.popupOptions.width = parseInt(item.popupOptions.width || defaultOptions.width, 10);
 
             // Validate the configuration
-            item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
-            item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
-
             if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
@@ -37,7 +31,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
 
             // optimization: don't calculate the size of the container, if the configuration is set
-            if (container && !item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
+            if (container && !item.popupOptions.width) {
                item.containerWidth = _private.getContainerWidth(item, container);
             }
          },
@@ -64,18 +58,12 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            return StackStrategy.getPosition(targetCoords, item);
-         },
-
-         elementDestroyed: function(instance, item) {
-            instance._stack.remove(item);
-            instance._update();
-            instance._destroyDeferred[item.id].callback();
-            delete instance._destroyDeferred[item.id];
-         },
-
-         removeAnimationClasses: function(className) {
-            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
+            item.position = StackStrategy.getPosition(targetCoords, item);
+            item.popupOptions.stackWidth = item.position.stackWidth;
+            item.popupOptions.stackMinWidth = item.position.stackMinWidth;
+            item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+            _private.updatePopupOptions(item);
+            return item.position;
          },
 
          addShadowClass: function(item) {
@@ -84,11 +72,10 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeShadowClass: function(item) {
-            item.popupOptions.stackClassName = item.popupOptions.stackClassName.replace(/controls-Stack__shadow/ig, '').trim();
+            item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
-            item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.addStackClasses(item.popupOptions);
             _private.updatePopupOptions(item);
          },
@@ -102,7 +89,13 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          updatePopupOptions: function(item) {
             // for vdom synchronizer. Updated the link to the options when className was changed
-            item.popupOptions = cClone(item.popupOptions);
+            if (!item.popupOptions._version) {
+               item.popupOptions.getVersion = function() {
+                  return this._version;
+               };
+               item.popupOptions._version = 0;
+            }
+            item.popupOptions._version++;
          },
 
          prepareMaximizedState: function(maxPanelWidth, item) {
@@ -148,12 +141,9 @@ define('Controls/Popup/Opener/Stack/StackController',
        */
 
       var StackController = BaseController.extend({
-         _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
             this._stack = new collection.List();
-            _private.elementDestroyed.bind(this);
-            this._fixTemplateAnimation.bind(this);
          },
 
          elementCreated: function(item, container) {
@@ -179,33 +169,9 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementDestroyed: function(item) {
-            this._destroyDeferred[item.id] = new Deferred();
-            if (HAS_ANIMATION) {
-               item.popupOptions.stackClassName += ' controls-Stack__close';
-               _private.updatePopupOptions(item);
-               this._fixTemplateAnimation(item);
-
-               /**
-                * Perfoming animation. Changing rAF for rIC
-                */
-               Vdom.animationWaiter(true);
-            } else {
-               _private.elementDestroyed(this, item);
-               return (new Deferred()).callback();
-            }
-            return this._destroyDeferred[item.id];
-         },
-
-         elementAnimated: function(item) {
-            item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
-            _private.updatePopupOptions(item);
-            if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
-               Vdom.animationWaiter(false);
-               _private.elementDestroyed(this, item);
-            } else {
-               item.popupState = BaseController.POPUP_STATE_CREATED;
-               return true;
-            }
+            this._stack.remove(item);
+            this._update();
+            return (new Deferred()).callback();
          },
 
          _update: function() {
@@ -215,7 +181,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.width || item.position.maxWidth;
+                  var currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
                   if (currentWidth > maxWidth) {
@@ -239,7 +205,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             _private.prepareSizes(item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
-            item.popupOptions.stackClassName = '';
             if (StackStrategy.isMaximizedPanel(item)) {
                // set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
@@ -254,23 +219,12 @@ define('Controls/Popup/Opener/Stack/StackController',
                   top: -10000,
                   left: -10000,
                   height: _private.getWindowSize().height,
-                  width: position.width || undefined
+                  stackWidth: position.stackWidth || undefined
                };
             } else {
                this._stack.add(item);
                this._update();
             }
-         },
-
-         // TODO: For Compatible
-         _fixTemplateAnimation: function(element) {
-            var self = this;
-            setTimeout(function() {
-               var destroyDef = self._destroyDeferred[element.id];
-               if (destroyDef && !destroyDef.isReady()) {
-                  _private.elementDestroyed(self, element);
-               }
-            }, 500);
          },
 
          _private: _private

@@ -2,26 +2,23 @@ import Env = require('Env/Env');
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Number/ViewModel');
-      
+
 
       /**
        * Controls that allows user to enter single-line number.
        * <a href="/materials/demo-ws4-input">Demo example.</a>.
        *
        * @class Controls/_input/Number
-       * @extends Core/Control
+       * @extends Controls/_input/Base
        *
-       * @mixes Controls/_input/interface/IInputTag
-       * @mixes Controls/_input/interface/IPaste
        * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/_input/interface/IOnlyPositive
        * @mixes Controls/_input/interface/IInputNumber
-       * @mixes Controls/_input/interface/IInputPlaceholder
-       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        *
        * @public
        * @demo Controls-demo/Input/Number/NumberPG
        *
-       * @author Колесова П.С.
+       * @author Журавлев М.С.
        */
 
       /**
@@ -33,21 +30,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue state of the control will store a number with a fractional part of equal 2 signs.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" precision="{{2}}"/>
-       * </pre>
-       */
-
-      /**
-       * @name Controls/_input/Number#onlyPositive
-       * @cfg {Boolean} Determines whether only positive numbers can be entered in the field.
-       * @default false
-       * @remark
-       * true - only positive numbers can be entered in the field.
-       * false - positive and negative numbers can be entered in the field.
-       * @example
-       * In this example you _inputValue in the control state will store only a positive number.
-       * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" onlyPositive="{{true}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" precision="{{2}}"/>
        * </pre>
        */
 
@@ -59,7 +42,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue in the control state will store a number with a integer part of no more than 10 signs.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" integersLength="{{10}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
        * </pre>
        */
 
@@ -74,7 +57,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @example
        * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
        * <pre>
-       *    <Controls.Input.Number bind:value="_inputValue" showEmptyDecimals="{{true}}"/>
+       *    <Controls._input.Number bind:value="_inputValue" showEmptyDecimals="{{true}}"/>
        * </pre>
        */
 

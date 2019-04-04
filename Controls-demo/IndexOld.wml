@@ -199,11 +199,29 @@
    <div class="demo_controls_list_section">
       <h1>InfoBox</h1>
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBox">InfoBox</a>
+      <br />
+      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBoxPG">InfoBox PG</a>
+       <br />
+      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FOpener%252FInfoBox">Opener/InfoBox</a>
+      <br/>
+      <a href="/Controls-demo/app/Controls-demo%252FInput%252FValidate%252FValidateInfobox"> ValidateInfoBox</a>
 
       <h1>Confirmation</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">
-         Confirmation
-      </a>
+      <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">Confirmation</a>
+      <br/>
+      <a href="/Controls-demo/app/Controls-demo%252FPopup%252FOpener%252FConfirmationPG">ConfirmationPG</a>
+      <br/>
+      <a href="/Controls-demo/app/Controls-demo%252FPopup%252FTemplates%252FConfirmationTemplatePG">Confirmation Template</a>
+
+      <h1>Stack</h1>
+       <a href="/Controls-demo/app/Controls-demo%252FPopup%252FOpener%252FStackPG">StackPG</a>
+      <br/>
+      <a href="/Controls-demo/app/Controls-demo%252FPopup%252FTemplates%252FStackTemplatePG">Stack Template</a>
+
+      <h1>Notification</h1>
+      <a href="/Controls-demo/app/Controls-demo%252FNotificationDemo%252FNotificationDemo">Notification</a>
+      <br/>
+       <a href="/Controls-demo/app/Controls-demo%252FPopup%252FOpener%252FNotificationPG">NotificationPG</a>
 
       <h1>TabButtons</h1>
       <a href="/Controls-demo/app/Controls-demo%252FTabs%252FButtons?compat=true">
@@ -235,7 +253,6 @@
    </div>
    <div class="demo_controls_list_section">
       <h1>FastFilter</h1>
-      %252F
       <a href="/Controls-demo/app/Controls-demo%252FFastFilter%252FFastFilter?withoutLayout=true">
          FastData
       </a>
@@ -321,4 +338,7 @@
          </a>
       </div>
    </div>
+   <ws:if data="{{_successfullyMounted}}">
+      <div class="test-mount"></div>
+   </ws:if>
 </div>

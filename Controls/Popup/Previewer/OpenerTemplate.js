@@ -7,7 +7,6 @@ define('Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Container/Async'
    ],
    function(Control, Deferred, template, Utils) {
-
       'use strict';
 
       var OpenerTemplate = Control.extend({

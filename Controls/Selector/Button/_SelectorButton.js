@@ -1,7 +1,7 @@
 define('Controls/Selector/Button/_SelectorButton', [
    'Core/Control',
    'wml!Controls/Selector/Button/_SelectorButton',
-   'wml!Controls/Selector/SelectedCollection/ItemTemplate',
+   'wml!Controls/Selector/Button/itemTemplate',
    'css!theme?Controls/Selector/Button/SelectorButton'
 ], function(Control, template, itemTemplate) {
    'use strict';
@@ -27,12 +27,16 @@ define('Controls/Selector/Button/_SelectorButton', [
          } else if (!this._options.readOnly) {
             this._open();
          }
-      }
+      },
+
+      _openInfoBox: function(event, config) {
+         config.maxWidth = this._container.offsetWidth;
+      },
    });
 
    SelectorButton.getDefaultOptions = function() {
       return {
-         style: 'info',
+         style: 'secondary',
          maxVisibleItems: 7,
          itemTemplate: itemTemplate
       };

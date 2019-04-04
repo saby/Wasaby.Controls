@@ -16,8 +16,8 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/TreeGrid',
-   'Controls/crumbs'
+   'Controls/treeGrids',
+   'Controls/breadcrumbs'
 ], function(
    Control,
    template,
@@ -57,12 +57,17 @@ define('Controls/Explorer', [
       },
       _private = {
          setRoot: function(self, root) {
-            self._root = root;
-            self._notify('itemOpen', [root]);
+            if (!self._options.hasOwnProperty('root')) {
+               self._root = root;
+            }
+            self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
             self._forceUpdate();
+         },
+         getRoot: function(self) {
+            return self._options.hasOwnProperty('root') ? self._options.root : self._root;
          },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
@@ -85,7 +90,7 @@ define('Controls/Explorer', [
          },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
-               self._root = self._options.root;
+               _private.setRoot(self, _private.getDataRoot(self));
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];
@@ -93,22 +98,29 @@ define('Controls/Explorer', [
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
-               if (self._breadCrumbsItems.length > 1) {
-                  _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 2].getId());
-               } else {
-                  _private.setRoot(self, self._options.root);
-               }
-               self._notify('rootChanged', [self._root]);
+               _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
             }
+         },
+         getDataRoot: function(self) {
+            var result;
+
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               result = self._breadCrumbsItems[0].get(self._options.parentProperty);
+            } else {
+               result = _private.getRoot(self);
+            }
+
+            return result;
          },
          dragItemsFromRoot: function(self, dragItems) {
             var
                item,
-               itemFromRoot = true;
+               itemFromRoot = true,
+               root = _private.getDataRoot(self);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
-               if (!item || item.get(self._options.parentProperty) !== self._root) {
+               if (!item || item.get(self._options.parentProperty) !== root) {
                   itemFromRoot = false;
                   break;
                }
@@ -120,7 +132,8 @@ define('Controls/Explorer', [
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo/demo-ws4-explorer?v=19.100">Demo examples</a>.
+    * <a href="/materials/demo/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo/demo-ws4-explorer-with-search">Demo example with search</a>.
     *
     * @class Controls/Explorer
     * @extends Core/Control
@@ -157,7 +170,6 @@ define('Controls/Explorer', [
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
-         this._root = cfg.root;
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
       },
@@ -165,12 +177,13 @@ define('Controls/Explorer', [
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
-         if (this._options.root !== cfg.root) {
-            _private.setRoot(this, cfg.root);
-         }
       },
-      _dragHighlighter: function(itemKey) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      _getRoot: function() {
+         return _private.getRoot(this);
+      },
+      _dragHighlighter: function(itemKey, hasArrow) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
@@ -182,10 +195,10 @@ define('Controls/Explorer', [
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;
 
-         if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
+         if (this._options.itemsDragNDrop && cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = this._root !== this._options.root || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
@@ -194,14 +207,12 @@ define('Controls/Explorer', [
       _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
-            this._notify('rootChanged', [this._root]);
          }
          event.stopPropagation();
          this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
-         this._notify('rootChanged', [this._root]);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
@@ -237,8 +248,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         root: null,
-         backButtonStyle: 'secondary'
+         backButtonStyle: 'secondary',
+         stickyHeader: true
       };
    };
 

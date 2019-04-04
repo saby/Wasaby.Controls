@@ -8,22 +8,25 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
             // we need to return the calculation of the position with the keyboard.
-            var windowData = {
-               width: document.body.clientWidth,
-               height: document.body.clientHeight,
-               scrollTop: 0,
-            };
-
             // Positioning relative to body
-            item.position = DialogStrategy.getPosition(windowData, sizes, item);
+            item.position = DialogStrategy.getPosition(_private.getWindowSize(), sizes, item);
             _private.fixCompatiblePosition(item);
          },
          fixCompatiblePosition: function(cfg) {
             // COMPATIBLE: for old windows user can set the coordinates relative to the body
-            if (cfg.popupOptions.top && cfg.popupOptions.left) {
+            if (cfg.popupOptions.top) {
                cfg.position.top = cfg.popupOptions.top;
+            }
+            if (cfg.popupOptions.left) {
                cfg.position.left = cfg.popupOptions.left;
             }
+         },
+         getWindowSize: function() {
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight,
+               scrollTop: 0,
+            };
          }
       };
 
@@ -67,12 +70,13 @@ define('Controls/Popup/Opener/Dialog/DialogController',
 
          getDefaultConfig: function(item) {
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            item.position = {
-               top: -10000,
-               left: -10000,
-               height: item.popupOptions.maxHeight,
-               width: item.popupOptions.maxWidth
+            var sizes = {
+               width: 0,
+               height: 0
             };
+            _private.prepareConfig(item, sizes);
+            item.position.top = -10000;
+            item.position.left = -10000;
          },
 
          popupDragStart: function(item, container, offset) {

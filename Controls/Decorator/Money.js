@@ -35,7 +35,7 @@ define('Controls/Decorator/Money',
        * @remark
        * true - the number split into triads.
        * false - does not do anything.
-       * @deprecated Use option {@link Controls/Input/Number#useGrouping}
+       * @deprecated Use option {@link Controls/input:Number#useGrouping}
        */
 
       /**

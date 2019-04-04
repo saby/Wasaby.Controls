@@ -1,8 +1,7 @@
 <ws:template name="content">
    <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Registrator name="scrollDetect" register="scroll">
-         <Controls.Event.Registrator name="stickyHeaderShadow" register="updateStickyShadow">
-            <Controls.Event.Registrator name="stickyHeaderHeight" register="updateStickyHeight">
+         <Controls.StickyHeader.Controller name="stickyController">
                <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
                Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
                Таким образом мы избавляемся от лишней вложенности.
@@ -10,6 +9,7 @@
                <span name="content"
                     style="{{_displayState.heightFix ? '' : _contentStyles}}"
                     class="controls-Scroll__content ws-BlockGroup
+                           {{_isStickyInEdge ? 'controls-Scroll__translateZ'}}
                            {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                            {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
                            {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}
@@ -19,15 +19,14 @@
                   <ws:partial template="{{_options.content}}"
                               scope="{{_options}}"
                               attr:class="controls-Scroll__userContent"
-                              on:fixed="_fixedHandler()"
-                              on:stickyRegister="_stickyRegisterHandler()"
+                              on:saveScrollPosition="_saveScrollPosition()"
+                              on:restoreScrollPosition="_restoreScrollPosition()"
                               on:selectedKeysChanged="selectedKeysChanged()"
                               on:excludedKeysChanged="excludedKeysChanged()"
                               on:checkboxClick="_tmplNotify('checkboxClick')"
                               on:itemActionsClick="_tmplNotify('itemActionsClick')"/>
                </span>
-            </Controls.Event.Registrator>
-         </Controls.Event.Registrator>
+         </Controls.StickyHeader.Controller>
       </Controls.Event.Registrator>
    </Controls.Container.Scroll.Watcher>
 </ws:template>
@@ -57,7 +56,7 @@
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">
-         <Controls.List.Paging class="controls-Scroll__paging"
+         <Controls.lists:Paging class="controls-Scroll__paging"
                                stateBegin="{{_pagingState.stateUp}}"
                                statePrev="{{_pagingState.stateUp}}"
                                stateEnd="{{_pagingState.stateDown}}"

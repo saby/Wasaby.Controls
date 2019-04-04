@@ -19,27 +19,19 @@
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-ComboBox">
 
-      <Controls.Input.resources.InputRender.InputRender
+      <Controls.Input.ComboBox.InputRender
               size="{{_options.size}}"
+              style="{{_options.style}}"
+              value="{{_value}}"
               tooltip="{{_options.tooltip}}"
               tagStyle="{{_options.tagStyle}}"
-              viewModel="{{_simpleViewModel}}"
               on:tagClick="_notifyHandler('tagClick')"
               on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
-              validationErrors="{{_options.validationErrors}}"
               class="controls-ComboBox-InputRender theme_{{_options.theme}}">
-
-         <ws:content>
-            <ws:partial
-                    template="wml!Controls/Input/resources/input"
-                    attr:readOnly="true"
-                    value="{{_value}}"/>
-         </ws:content>
-
          <ws:afterFieldWrapper>
-            <Controls.Button.Separator if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
+            <Controls.Button.Separator attr:class="controls-ComboBox-button-separator" if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
          </ws:afterFieldWrapper>
 
-      </Controls.Input.resources.InputRender.InputRender>
+      </Controls.Input.ComboBox.InputRender>
 </Controls.Dropdown.Controller>

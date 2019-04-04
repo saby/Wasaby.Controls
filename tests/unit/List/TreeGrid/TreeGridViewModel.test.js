@@ -92,11 +92,21 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
             itemData,
             originFn = TreeGridViewModel.superclass.getItemDataByItem;
          TreeGridViewModel.superclass.getItemDataByItem = function() {
-            return {};
+            return {
+               item: {},
+               getCurrentColumn: function() {
+                  return {
+                     cellClasses: ''
+                  };
+               }
+            };
          };
          itemData = treeGridViewModel.getItemDataByItem();
          assert.isTrue(!!itemData.getLevelIndentClasses);
          assert.isTrue(!!itemData.getCurrentColumn);
+         var
+            currentColumn = itemData.getCurrentColumn();
+         assert.equal(currentColumn.cellClasses, ' controls-TreeGrid__row-cell controls-TreeGrid__row-cell__item');
          TreeGridViewModel.superclass.getItemDataByItem = originFn;
       });
 

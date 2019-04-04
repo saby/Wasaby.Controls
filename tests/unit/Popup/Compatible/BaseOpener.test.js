@@ -108,7 +108,7 @@ define(
             assert.equal(config.templateOptions.target, config.target);
             assert.equal(config.className, 'testClass');
             assert.equal(config.templateOptions.draggable, config.draggable);
-            assert.isTrue(config.isModal);
+            assert.isTrue(config.modal);
             assert.isFalse(config.closeOnOutsideClick);
             assert.isTrue(cInstance.instanceOfModule(config.context, 'Core/Abstract'));
             config.side = null;
@@ -125,7 +125,7 @@ define(
             assert.isFalse(config.closeOnOutsideClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);
-            assert.isTrue(config.isModal);
+            assert.isTrue(config.modal);
             config.direction = 'right';
             config.horizontalAlign = 'left';
             BaseOpener._preparePopupCfgFromOldToNew(config);
@@ -182,7 +182,7 @@ define(
                flipWindow: 'vertical'
             };
             BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
-            assert.equal(cfg.locationStrategy, 'overflow');
+            assert.equal(cfg.fittingMode, 'overflow');
       })
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
@@ -216,6 +216,8 @@ define(
             config.fixed = true;
             BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
+            assert.equal(config.templateOptions.closeOnTargetHide, false);
+            assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.fixed, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
             assert.equal(config.templateOptions.record, config.record);
@@ -238,8 +240,13 @@ define(
             newConfig.canMaximize = true;
             newConfig.maxWidth = 150;
             newConfig.trackTarget = false;
+            newConfig.closeOnTargetScroll = true;
+            newConfig.closeOnTargetHide = true;
+            newConfig.trackTarget = false;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, false);
+            assert.equal(config.templateOptions.closeOnTargetHide, true);
+            assert.equal(config.templateOptions.closeOnTargetHide, true);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);
             assert.equal(newConfig.maxWidth, newConfig.templateOptions.maxWidth);
@@ -310,7 +317,7 @@ define(
             config.target = 'testTarget';
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
-            config.locationStrategy = 'fixed';
+            config.fittingMode = 'fixed';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.templateOptions, config.templateOptions);

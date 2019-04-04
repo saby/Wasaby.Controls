@@ -5,7 +5,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
     *
     * @interface Controls/Input/interface/IInputNumber
     * @public
-    * @author Колесова П.С.
+    * @author Журалев М.С.
     */
 
    /**
@@ -17,7 +17,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
     * @example
     * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
     * <pre>
-    *    <Controls.Input.Number bind:value="_inputValue" />
+    *    <Controls.input:Number bind:value="_inputValue" />
     *    <Controls.Button on:click="_sendButtonClick()" />
     * </pre>
     *
@@ -45,9 +45,9 @@ define('Controls/Input/interface/IInputNumber', [], function() {
     * @example
     * In this example, we show how you can 'bind' control's value to the field. In the first field, we do it manually using valueChanged event. In the second field we use bind notation. Both fields in this examples will have identical behavior.
     * <pre>
-    *    <Controls.Input.Text value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+    *    <Controls.input:Text value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
     *
-    *    <Controls.Input.Text bind:value="_anotherFieldValue" />
+    *    <Controls.input:Text bind:value="_anotherFieldValue" />
     * </pre>
     *
     * <pre>
@@ -75,7 +75,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
     * @example
     * In this example, we subscribe to inputCompleted event and save field's value to the database.
     * <pre>
-    *    <Controls.Input.Text on:inputCompleted="_inputCompletedHandler()" />
+    *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()" />
     * </pre>
     *
     * <pre>

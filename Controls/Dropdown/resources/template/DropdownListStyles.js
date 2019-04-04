@@ -65,5 +65,10 @@ define('Controls/Dropdown/resources/template/DropdownListStyles', [],
     * @css @spacing_DropdownList-row-between-rightBorder-row-separator Spacing between right border and row separator.
     * @css @spacing_DropdownList-row-between-bottomBorder-row-separator Spacing between bottom border and row separator.
     * @css @spacing_DropdownList-row-between-leftBorder-row-separator Spacing between left border and row separator.
+    * @css @min-height_DropdownList-footer Min height of footer.
+    * @css @spacing_DropdownList-between-applyButton-rightBorder Spacing between right border and apply button.
+    * @css @spacing_DropdownList-between-applyButton-footerContent Spacing between apply button anf footer content.
+    * @css @spacing_DropdownList-between-footer-bottomBorder Spacing between bottom border and footer.
+    * @css @spacing_DropdownList-between-moreButton-leftBorder Spacing between more button and left border.
     */
 );

@@ -2,21 +2,21 @@
  * Created by kraynovdo on 02.03.2018.
  */
 define([
-   'Controls/List/Paging'
-], function(Paging){
+   'Controls/lists'
+], function(lists){
    describe('Controls.List.Paging', function () {
       var result = false;
       it('initArrowDefaultStates', function () {
-         var pg = new Paging();
+         var pg = new lists.Paging();
 
-         Paging._private.initArrowDefaultStates(pg, {});
+         lists.Paging._private.initArrowDefaultStates(pg, {});
          assert.equal('disabled', pg._stateBegin, 'Wrong default state');
          assert.equal('disabled', pg._stateEnd, 'Wrong default state');
          assert.equal('disabled', pg._stateNext, 'Wrong default state');
          assert.equal('disabled', pg._statePrev , 'Wrong default state');
 
 
-         Paging._private.initArrowDefaultStates(pg, {stateEnd : 'normal', stateNext: 'normal'});
+         lists.Paging._private.initArrowDefaultStates(pg, {stateEnd : 'normal', stateNext: 'normal'});
          assert.equal('normal', pg._stateEnd, 'Wrong default state');
          assert.equal('normal', pg._stateNext, 'Wrong default state');
       });
@@ -25,21 +25,21 @@ define([
          var cfg = {
             pagesCount: 5
          };
-         var pg = new Paging(cfg);
+         var pg = new lists.Paging(cfg);
 
-         Paging._private.initArrowStateBySelectedPage(pg, 1, cfg);
+         lists.Paging._private.initArrowStateBySelectedPage(pg, 1, cfg);
          assert.equal('disabled', pg._stateBegin, 'Wrong arrow state in begin position');
          assert.equal('normal', pg._stateEnd, 'Wrong arrow state in begin position');
          assert.equal('normal', pg._stateNext, 'Wrong arrow state in begin position');
          assert.equal('disabled', pg._statePrev , 'Wrong arrow state in begin position');
 
-         Paging._private.initArrowStateBySelectedPage(pg, 3, cfg);
+         lists.Paging._private.initArrowStateBySelectedPage(pg, 3, cfg);
          assert.equal('normal', pg._stateBegin, 'Wrong arrow state in middle position');
          assert.equal('normal', pg._stateEnd, 'Wrong arrow state in middle position');
          assert.equal('normal', pg._stateNext, 'Wrong arrow state in middle position');
          assert.equal('normal', pg._statePrev , 'Wrong arrow state in middle position');
 
-         Paging._private.initArrowStateBySelectedPage(pg, 5, cfg);
+         lists.Paging._private.initArrowStateBySelectedPage(pg, 5, cfg);
          assert.equal('normal', pg._stateBegin, 'Wrong arrow state in end position');
          assert.equal('disabled', pg._stateEnd, 'Wrong arrow state in end position');
          assert.equal('disabled', pg._stateNext, 'Wrong arrow state in end position');
@@ -50,7 +50,7 @@ define([
          var cfg = {
             selectedPage: 3
          };
-         var pg = new Paging(cfg);
+         var pg = new lists.Paging(cfg);
          pg.saveOptions(cfg);
 
          //определяем нотифай, чтоб понять произошел ли он
@@ -59,11 +59,11 @@ define([
          };
 
          result = false;
-         Paging._private.changePage(pg, 1);
+         lists.Paging._private.changePage(pg, 1);
          assert.isTrue(result, 'Wasn\'t notify after change page');
 
          result = false;
-         Paging._private.changePage(pg, 3);
+         lists.Paging._private.changePage(pg, 3);
          assert.isFalse(result, 'Was notify without change page');
       });
       it('life cycle', function () {
@@ -74,7 +74,7 @@ define([
          };
          var cfg2 = {
          };
-         var pg = new Paging(cfg1);
+         var pg = new lists.Paging(cfg1);
          pg.saveOptions(cfg1);
          pg._beforeMount(cfg1);
 
@@ -90,7 +90,7 @@ define([
          assert.equal('disabled', pg._stateNext, 'Wrong arrow state in _beforeUpdate');
          assert.equal('normal', pg._statePrev , 'Wrong arrow state in _beforeUpdate');
 
-         pg = new Paging(cfg1);
+         pg = new lists.Paging(cfg1);
          pg.saveOptions(cfg1);
          pg._beforeMount(cfg2);
          assert.equal('disabled', pg._stateBegin, 'Wrong default state');
@@ -98,7 +98,7 @@ define([
          assert.equal('disabled', pg._stateNext, 'Wrong default state');
          assert.equal('disabled', pg._statePrev , 'Wrong default state');
 
-         pg = new Paging(cfg1);
+         pg = new lists.Paging(cfg1);
          pg.saveOptions(cfg1);
          pg._beforeUpdate(cfg2);
          assert.equal('disabled', pg._stateBegin, 'Wrong default state');
@@ -114,7 +114,7 @@ define([
             pagesCount: 5
          };
 
-         var pg = new Paging(cfg1);
+         var pg = new lists.Paging(cfg1);
          pg.saveOptions(cfg1);
          //определяем нотифай, чтоб понять произошел ли он
          pg._notify = function(eName, args) {

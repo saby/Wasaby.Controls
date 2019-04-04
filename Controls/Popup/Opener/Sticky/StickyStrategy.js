@@ -95,10 +95,10 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
             // Check if the popup is outside the screen
             if (maxOverflowValue > 0) {
-               if (popupCfg.locationStrategy === 'fixed') {
+               if (popupCfg.fittingMode === 'fixed') {
                   // Reduce the size to fit the popup into the screen
                   size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - maxOverflowValue;
-               } else if (popupCfg.locationStrategy === 'overflow' && direction === 'vertical') {
+               } else if (popupCfg.fittingMode === 'overflow') {
                   // todo: переделать на новой схеме
                   coordinate -= maxOverflowValue;
                   if (coordinate < 0) {
@@ -149,14 +149,18 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          };
       },
 
+      getMargins: function(popupCfg, direction) {
+         return popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] + popupCfg.align[direction].offset;
+      },
+
       getPosition: function(popupCfg, targetCoords, direction) {
          var position = {};
          var isHorizontal = direction === 'horizontal';
          if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
             position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'] + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'] + popupCfg.align[direction].offset;
+               targetCoords[popupCfg.corner[direction]] - _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          } else {
-            position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'] + popupCfg.align[direction].offset;
+            position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + _private.getMargins(popupCfg, direction);
          }
          return position;
       },
@@ -166,12 +170,34 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          if (position[isHorizontal ? 'right' : 'bottom']) {
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (targetCoords[popupCfg.corner[direction]] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
-         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
       invertPosition: function(popupCfg, direction) {
          popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
          popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
+         popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      },
+
+      moveContainer: function(popupCfg, position, sizeProperty, positionOverflow) {
+         var positionProperty = Object.keys(position)[0];
+         position[positionProperty] -= positionOverflow;
+         if (position[positionProperty] < 0) {
+            _private.restrictContainer(position, sizeProperty, popupCfg, -position[positionProperty]);
+            position[positionProperty] = 0;
+         }
+      },
+
+      calculateFixedModePosition: function(popupCfg, property, targetCoords, position, positionOverflow) {
+         _private.restrictContainer(position, property, popupCfg, positionOverflow);
+         _private.fixPosition(position, targetCoords);
+         return position;
+      },
+
+      calculateOverflowModePosition: function(popupCfg, property, targetCoords, position, positionOverflow) {
+         _private.moveContainer(popupCfg, position, property, positionOverflow);
+         _private.fixPosition(position, targetCoords);
+         return position;
       },
 
       calculatePosition: function(popupCfg, targetCoords, direction) {
@@ -179,10 +205,11 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var position = _private.getPosition(popupCfg, targetCoords, direction);
          var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          if (positionOverflow > 0) {
-            if (popupCfg.locationStrategy === 'fixed') {
-               _private.restrictContainer(position, property, popupCfg, positionOverflow);
-               _private.fixPosition(position, targetCoords);
-               return position;
+            if (popupCfg.fittingMode === 'fixed') {
+               return _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+            }
+            if (popupCfg.fittingMode === 'overflow') {
+               return _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             }
             _private.invertPosition(popupCfg, direction);
 
@@ -216,6 +243,30 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          }
       },
 
+      setMaxSizes: function(popupCfg, position) {
+         var windowSizes = _private.getWindowSizes();
+
+         if (popupCfg.config.maxWidth) {
+            position.maxWidth = Math.min(popupCfg.config.maxWidth, windowSizes.width);
+         } else {
+            position.maxWidth = windowSizes.width;
+         }
+
+         if (popupCfg.config.minWidth) {
+            position.minWidth = popupCfg.config.minWidth;
+         }
+
+         if (popupCfg.config.maxHeight) {
+            position.maxHeight = Math.min(popupCfg.config.maxHeight, windowSizes.height);
+         } else {
+            position.maxHeight = windowSizes.height;
+         }
+
+         if (popupCfg.config.minHeight) {
+            position.minHeight = popupCfg.config.minHeight;
+         }
+      },
+
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
          var position = {
 
@@ -224,27 +275,27 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
+         _private.setMaxSizes(popupCfg, position);
          return position;
       }
    };
 
    return {
       getPosition: function(popupCfg, targetCoords) {
-         if (popupCfg.revertPositionStyle) {
-            // TODO: https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-            return _private.getPositionCoordinatesFixed(popupCfg, targetCoords);
-         }
-         var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
-         var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
-         var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
-         var position = {
-            left: horizontalPosition.coordinate,
-            width: horizontalPosition.size || popupCfg.config.maxWidth,
-            height: verticalPosition.size || popupCfg.config.maxHeight
-         };
-         position.top = verticalPosition.coordinate;
+         if (popupCfg.corner.vertical === 'center' || popupCfg.corner.horizontal === 'center') {
+            var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+            var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
+            var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
+            var position = {
+               left: horizontalPosition.coordinate,
+               width: horizontalPosition.size || popupCfg.config.maxWidth,
+               height: verticalPosition.size || popupCfg.config.maxHeight
+            };
+            position.top = verticalPosition.coordinate;
 
-         return position;
+            return position;
+         }
+         return _private.getPositionCoordinatesFixed(popupCfg, targetCoords);
       },
       _private: _private
    };

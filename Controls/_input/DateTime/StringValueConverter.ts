@@ -3,345 +3,417 @@ import formatDate = require('Core/helpers/Date/format');
 import dateUtils = require('Controls/Utils/Date');
    
 
-   var _private = {
-      maskMap: {
-         YY: 'year', YYYY: 'year', MM: 'month', DD: 'date', HH: 'hours', mm: 'minutes', ss: 'seconds'
-      },
+var _private = {
+   maskMap: {
+      YY: 'year', YYYY: 'year', MM: 'month', DD: 'date', HH: 'hours', mm: 'minutes', ss: 'seconds'
+   },
 
-      reAllMaskChars: /[YMDHms]+|[. :-]/g,
-      reDateMaskChars: /[YMD]+/,
-      reTimeMaskChars: /[Hms]+/,
-      reDateTimeMaskChars: /[YMDHms]+/,
-      reNumbers: /\d/,
+   reAllMaskChars: /[YMDHms]+|[. :-]/g,
+   reDateMaskChars: /[YMD]+/,
+   reTimeMaskChars: /[Hms]+/,
+   reDateTimeMaskChars: /[YMDHms]+/,
+   reNumbers: /\d/,
+   maskRegExp: /^(?:(\d{2})(?:\.(\d{2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/,
 
-      isFilled: function(self, value) {
-         return value && value.indexOf(self._replacer) === -1;
-      },
+   isFilled: function(self, value) {
+      return value && value.indexOf(self._replacer) === -1;
+   },
 
-      isEmpty: function(value) {
-         return !_private.reNumbers.test(value);
-      },
+   isEmpty: function(value) {
+      return !_private.reNumbers.test(value);
+   },
 
-      isPartlyFilled: function(self, value) {
-         return value && _private.reNumbers.test(value) && value.indexOf(self._replacer) > -1;
-      },
+   isPartlyFilled: function(self, value) {
+      return value && _private.reNumbers.test(value) && value.indexOf(self._replacer) > -1;
+   },
 
-      isValueModelFilled: function(valueModel) {
-         for (var value in valueModel) {
-            if (valueModel.hasOwnProperty(value) && valueModel[value].valid === false) {
-               return false;
-            }
+   isValueModelFilled: function(valueModel) {
+      for (var value in valueModel) {
+         if (valueModel.hasOwnProperty(value) && valueModel[value].valid === false) {
+            return false;
          }
-         return true;
-      },
+      }
+      return true;
+   },
 
-      parseString: function(self, str) {
-         var valueModel = {
-               year: { str: null, value: 1900, valid: false },
-               month: { str: null, value: 0, valid: false },
-               date: { str: null, value: 1, valid: false },
-               hours: { str: null, value: 0, valid: false },
-               minutes: { str: null, value: 0, valid: false },
-               seconds: { str: null, value: 0, valid: false }
-            },
-            curYear = (new Date()).getFullYear(),
-            shortCurYear = curYear % 100,
-            curCentury = (curYear - shortCurYear),
-            maskItems = self._mask.split(/[.: /]/g),
-            strItems = str.split(/[.: /]/g),
-            i, valueObject;
+   getFullYearBy2DigitsYear: function(valueYear) {
+      var
+          curYear = (new Date()).getFullYear(),
+          shortCurYear = curYear % 100,
+          curCentury = (curYear - shortCurYear);
 
-         for (i = 0; i < maskItems.length; i++) {
-            valueObject = valueModel[_private.maskMap[maskItems[i]]];
-            valueObject.str = strItems[i];
-            if (_private.isFilled(self, strItems[i])) {
-               valueObject.valid = true;
-               valueObject.value = parseInt(strItems[i], 10);
-               if (maskItems[i] === 'YY') {
-                  // Если год задаётся двумя числами, то считаем что это текущий век
-                  // если год меньше или равен текущему году + 10, иначе это прошлый век.
-                  valueObject.value = valueObject.value <= shortCurYear + 10
-                     ? curCentury + valueObject.value : (curCentury - 100) + valueObject.value;
-               } else if (maskItems[i] === 'MM') {
-                  valueObject.value -= 1;
-               }
-            }
-         }
-         return valueModel;
-      },
+      // Если год задаётся двумя числами, то считаем что это текущий век
+      // если год меньше или равен текущему году + 10, иначе это прошлый век.
+      return valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+   },
 
-      fillFromBaseValue: function(self, valueModel, baseValue) {
-         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1);
-
-         if (valueModel.year.str === null) {
-            valueModel.year.value = baseValue.getFullYear();
-         }
-         if (valueModel.month.str === null) {
-            valueModel.month.value = baseValue.getMonth();
-         }
-         if (valueModel.date.str === null && !self._mask === 'MM/YYYY') {
-            // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
-            // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
-            // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь
-            // вводит 12 в качесте месяца и мы получаем 30.12.2018...
-            valueModel.date.value = baseValue.getDate();
-         }
-         if (valueModel.hours.str === null) {
-            valueModel.hours.value = baseValue.getHours();
-         }
-         if (valueModel.minutes.str === null) {
-            valueModel.minutes.value = baseValue.getMinutes();
-         }
-         if (valueModel.seconds.str === null) {
-            valueModel.seconds.value = baseValue.getSeconds();
-         }
-         for (var value in valueModel) {
-            if (valueModel.hasOwnProperty(value) && valueModel[value].str === null) {
-               valueModel[value].valid = true;
-            }
-         }
-      },
-
-      autocomplete: function(self, valueModel, autocompleteType, required) {
-         var now = new Date(),
-            maskType = _private.getMaskType(self._mask),
-            item, itemValue;
-
-         var getDate = function(autocompliteDefaultDate) {
-            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
-            if (autocompleteType === 'start') {
-               return 1;
-            } else if (autocompleteType === 'end') {
-               return dateUtils.getEndOfMonth(new Date(valueModel.year.value, valueModel.month.value)).getDate();
-            } else {
-               return autocompliteDefaultDate;
-            }
+   parseString: function(self, str) {
+      var valueModel = {
+            year: { str: null, value: 1900, valid: false },
+            month: { str: null, value: 0, valid: false },
+            date: { str: null, value: 1, valid: false },
+            hours: { str: null, value: 0, valid: false },
+            minutes: { str: null, value: 0, valid: false },
+            seconds: { str: null, value: 0, valid: false }
          };
+      if (self._mask) {
+         valueModel = _private.updateModelByMask(self, valueModel, str);
+      } else {
+         valueModel = _private.updateModel(self, valueModel, str);
+      }
+      return valueModel;
+   },
 
-         var setValue = function(obj, value) {
-            if (!obj.valid) {
-               obj.value = value;
-               obj.valid = true;
+   updateModelByMask: function(self, valueModel, str) {
+      var maskItems = self._mask.split(/[.: /]/g),
+          strItems = str.split(/[.: /]/g),
+          i, valueObject;
+
+      for (i = 0; i < maskItems.length; i++) {
+         valueObject = valueModel[_private.maskMap[maskItems[i]]];
+         valueObject.str = strItems[i];
+         if (_private.isFilled(self, strItems[i])) {
+            valueObject.valid = true;
+            valueObject.value = parseInt(strItems[i], 10);
+            if (maskItems[i] === 'YY') {
+               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+            } else if (maskItems[i] === 'MM') {
+               valueObject.value -= 1;
             }
-         };
+         }
+      }
+      return valueModel;
+   },
 
-         for (item in valueModel) {
-            if (valueModel.hasOwnProperty(item)) {
-               if (!valueModel[item].valid) {
-                  itemValue = parseInt(valueModel[item].str, 10);
-                  if (!isNaN(itemValue)) {
-                     setValue(valueModel[item], itemValue);
-                     if (item === 'month') {
-                        valueModel[item].value -= 1;
-                     }
+   updateModel: function(self, valueModel, str) {
+      var map = {
+         date: 1,
+         month: 2,
+         year: 3,
+         hours: 4,
+         minutes: 5,
+         seconds: 6
+      },
+      strItems,i, valueObject;
+
+      strItems = _private.maskRegExp.exec(str);
+      if (!strItems) {
+         return
+      }
+      for (i in map) {
+         valueObject = valueModel[i];
+         valueObject.str = strItems[map[i]] || null;
+         if (this.isFilled(self, valueObject.str)) {
+            valueObject.valid = true;
+            valueObject.value = parseInt(valueObject.str, 10);
+            if (i=== 'year' && valueObject.value < 100) {
+               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+            } else if (i === 'month') {
+               valueObject.value -= 1;
+            }
+         }
+      }
+      return valueModel;
+   },
+
+   fillFromBaseValue: function(self, valueModel, baseValue) {
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1);
+
+      if (valueModel.year.str === null) {
+         valueModel.year.value = baseValue.getFullYear();
+      }
+      if (valueModel.month.str === null) {
+         valueModel.month.value = baseValue.getMonth();
+      }
+      if (valueModel.date.str === null && !self._mask === 'MM/YYYY') {
+         // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
+         // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
+         // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь
+         // вводит 12 в качесте месяца и мы получаем 30.12.2018...
+         valueModel.date.value = baseValue.getDate();
+      }
+      if (valueModel.hours.str === null) {
+         valueModel.hours.value = baseValue.getHours();
+      }
+      if (valueModel.minutes.str === null) {
+         valueModel.minutes.value = baseValue.getMinutes();
+      }
+      if (valueModel.seconds.str === null) {
+         valueModel.seconds.value = baseValue.getSeconds();
+      }
+      for (var value in valueModel) {
+         if (valueModel.hasOwnProperty(value) && valueModel[value].str === null) {
+            valueModel[value].valid = true;
+         }
+      }
+   },
+
+   autocomplete: function(self, valueModel, autocompleteType, required) {
+      var now = new Date(),
+         maskType = _private.getMaskType(self._mask),
+         item, itemValue, isZeroAtBeginning;
+
+      var getDate = function(autocompliteDefaultDate) {
+         autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
+         if (autocompleteType === 'start') {
+            return 1;
+         } else if (autocompleteType === 'end') {
+            return dateUtils.getEndOfMonth(new Date(valueModel.year.value, valueModel.month.value)).getDate();
+         } else {
+            return autocompliteDefaultDate;
+         }
+      };
+
+      var setValue = function(obj, value) {
+         if (!obj.valid) {
+            obj.value = value;
+            obj.valid = true;
+         }
+      };
+
+      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+
+         // If there is a Replacer between the numbers, then the year is incorrect
+         if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
+            return;
+         }
+
+         // Two-digit years auto-complete if there are no zeros at the beginning
+         itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
+         isZeroAtBeginning = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
+         if (!isNaN(itemValue) && itemValue < 100 && isZeroAtBeginning) {
+            setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
+         } else {
+            return;
+         }
+      }
+
+      for (item in valueModel) {
+         if (valueModel.hasOwnProperty(item)) {
+            if (!valueModel[item].valid) {
+               itemValue = parseInt(valueModel[item].str, 10);
+               if (!isNaN(itemValue)) {
+                  setValue(valueModel[item], itemValue);
+                  if (item === 'month') {
+                     valueModel[item].value -= 1;
                   }
                }
             }
          }
+      }
 
-         // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно
-         // для заполнения. Не автокомплитим поля в периодах
-         // if (isEmpty && (!required || autocompleteType === 'start' || autocompleteType === 'end')) {
-         //    return null;
-         // }
+      // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно
+      // для заполнения. Не автокомплитим поля в периодах
+      // if (isEmpty && (!required || autocompleteType === 'start' || autocompleteType === 'end')) {
+      //    return null;
+      // }
 
-         if (maskType === 'date' || maskType === 'datetime') {
-            if (required && !valueModel.year.valid && valueModel.month.valid && valueModel.date.valid) {
-               setValue(valueModel.year, now.getFullYear());
-               setValue(valueModel.month, now.getMonth());
-               setValue(valueModel.date, now.getDate());
-            } else if (valueModel.year.valid) {
-               if (valueModel.year.value === now.getFullYear()) {
-                  if (valueModel.month.valid) {
-                     if (valueModel.month.value === now.getMonth()) {
-                        // Заполнен текущий год и месяц
-                        setValue(valueModel.date, getDate());
-                     } else {
-                        setValue(valueModel.date, getDate(1));
-                     }
-                  } else {
-                     // Current year is filled
-                     setValue(valueModel.month, now.getMonth());
+      if (maskType === 'date' || maskType === 'datetime') {
+         if (required && !valueModel.year.valid && valueModel.month.valid && valueModel.date.valid) {
+            setValue(valueModel.year, now.getFullYear());
+            setValue(valueModel.month, now.getMonth());
+            setValue(valueModel.date, now.getDate());
+         } else if (valueModel.year.valid) {
+            if (valueModel.year.value === now.getFullYear()) {
+               if (valueModel.month.valid) {
+                  if (valueModel.month.value === now.getMonth()) {
+                     // Заполнен текущий год и месяц
                      setValue(valueModel.date, getDate());
+                  } else {
+                     setValue(valueModel.date, getDate(1));
                   }
                } else {
-                  // A year is different from the current one
-                  if (autocompleteType === 'end') {
-                     setValue(valueModel.month, 11);
-                  } else {
-                     setValue(valueModel.month, 0);
-                  }
-                  if (autocompleteType === 'end') {
-                     setValue(valueModel.date, 31);
-                  } else {
-                     setValue(valueModel.date, 1);
-                  }
+                  // Current year is filled
+                  setValue(valueModel.month, now.getMonth());
+                  setValue(valueModel.date, getDate());
                }
-            } else if (valueModel.date.valid) {
-               setValue(valueModel.month, now.getMonth());
-               setValue(valueModel.year, now.getFullYear());
+            } else {
+               // A year is different from the current one
+               if (autocompleteType === 'end') {
+                  setValue(valueModel.month, 11);
+               } else {
+                  setValue(valueModel.month, 0);
+               }
+               if (autocompleteType === 'end') {
+                  setValue(valueModel.date, 31);
+               } else {
+                  setValue(valueModel.date, 1);
+               }
             }
-         } else if (maskType === 'time') {
-            if (valueModel.hours.valid) {
-               setValue(valueModel.minutes, 0);
-               setValue(valueModel.seconds, 0);
-            }
-            if (valueModel.minutes.valid) {
-               setValue(valueModel.seconds, 0);
-            }
+         } else if (valueModel.date.valid) {
+            setValue(valueModel.month, now.getMonth());
+            setValue(valueModel.year, now.getFullYear());
          }
-      },
+      } else if (maskType === 'time') {
+         if (valueModel.hours.valid) {
+            setValue(valueModel.minutes, 0);
+            setValue(valueModel.seconds, 0);
+         }
+         if (valueModel.minutes.valid) {
+            setValue(valueModel.seconds, 0);
+         }
+      }
+   },
 
-      /**
-       * Get the type of displayed data: date / time / date and time.
-       * @returns (String) Data type ('date' || 'time' || 'datetime').
-       */
-      getMaskType: function(mask) {
-         if (_private.reDateMaskChars.test(mask)) {
-            if (_private.reTimeMaskChars.test(mask)) {
-               return 'datetime';
-            }
-            return 'date';
-         }
+   /**
+    * Get the type of displayed data: date / time / date and time.
+    * @returns (String) Data type ('date' || 'time' || 'datetime').
+    */
+   getMaskType: function(mask) {
+      if (_private.reDateMaskChars.test(mask)) {
          if (_private.reTimeMaskChars.test(mask)) {
-            return 'time';
+            return 'datetime';
          }
-      },
-
-      /**
-       * Creates a date. Unlike the Date constructor, if the year is <100, it does not convert it to 19xx.
-       * @param year
-       * @param month
-       * @param date
-       * @param hours
-       * @param minutes
-       * @param seconds
-       * @param autoCorrect If true, then corrects the date if the wrong values of its elements are passed,
-       * otherwise it returns null. If a date greater than the maximum date in the current month is transmitted,
-       * the maximum date will be set.
-       * @returns {Date}
-       * @private
-       */
-      createDate: function(year, month, date, hours, minutes, seconds, autoCorrect) {
-         var endDateOfMonth;
-
-         if (autoCorrect) {
-            endDateOfMonth = dateUtils.getEndOfMonth(new Date(year, month, 1)).getDate();
-            if (date > endDateOfMonth) {
-               date = endDateOfMonth;
-            }
-            if (hours > 24) {
-               hours = 23;
-            }
-            if (minutes > 60) {
-               minutes = 59;
-            }
-            if (seconds > 60) {
-               seconds = 59;
-            }
-         }
-
-         if (!_private.isValidDate(year, month, date, hours, minutes, seconds)) {
-            return new Date('Invalid');
-         }
-
-         return new Date(year, month, date, hours, minutes, seconds);
-      },
-
-      isValidDate: function(year, month, date, hours, minutes, seconds) {
-         var lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
-         return seconds < 60 && minutes < 60 && hours < 24 && month < 12 && month >= 0 &&
-            date <= lastMonthDay && date > 0;
+         return 'date';
       }
-   };
+      if (_private.reTimeMaskChars.test(mask)) {
+         return 'time';
+      }
+   },
 
-   var ModuleClass = cExtend.extend({
-      _mask: null,
-      _replacer: null,
+   /**
+    * Creates a date. Unlike the Date constructor, if the year is <100, it does not convert it to 19xx.
+    * @param year
+    * @param month
+    * @param date
+    * @param hours
+    * @param minutes
+    * @param seconds
+    * @param autoCorrect If true, then corrects the date if the wrong values of its elements are passed,
+    * otherwise it returns null. If a date greater than the maximum date in the current month is transmitted,
+    * the maximum date will be set.
+    * @returns {Date}
+    * @private
+    */
+   createDate: function(year, month, date, hours, minutes, seconds, autoCorrect) {
+      var endDateOfMonth;
 
-      constructor: function(options) {
-         this.update(options || {});
-      },
-
-      /**
-       * Updates converter settings.
-       * @param options
-       */
-      update: function(options) {
-         this._mask = options.mask;
-         this._replacer = options.replacer;
-      },
-
-      /**
-       * Returns the text displayed value
-       * @param value
-       * @returns {*}
-       */
-      getStringByValue: function(value) {
-         if (dateUtils.isValidDate(value)) {
-            return formatDate(value, this._mask);
+      if (autoCorrect) {
+         endDateOfMonth = dateUtils.getEndOfMonth(new Date(year, month, 1)).getDate();
+         if (date > endDateOfMonth) {
+            date = endDateOfMonth;
          }
-         return '';
-      },
-
-      /**
-       * Get the Date object by the String and the mask.
-       * @param str Date in accordance with the mask.
-       * @param baseValue The base date. Used to fill parts of the date that are not in the mask.
-       * @param autoCompleteType Autocomplete mode.
-       * @returns {Date} Date object
-       */
-      getValueByString: function(str, baseValue, autoCompleteType, required) {
-         var valueModel;
-
-         if (_private.isEmpty(str)) {
-            return null;
+         if (hours >= 24) {
+            hours = 23;
          }
-
-         valueModel = _private.parseString(this, str);
-         _private.fillFromBaseValue(this, valueModel, baseValue);
-
-         if (_private.isFilled(this, str) && valueModel.year.str === '0000') {
-            // Zero year does not exist
-            return new Date('Invalid');
+         if (minutes >= 60) {
+            minutes = 59;
          }
-         if (autoCompleteType && !_private.isValueModelFilled(valueModel) && !(_private.isEmpty(str))) {
-            _private.autocomplete(this, valueModel, autoCompleteType, required);
+         if (seconds >= 60) {
+            seconds = 59;
          }
+      }
 
-         if (_private.isValueModelFilled(valueModel)) {
-            return _private.createDate(valueModel.year.value, valueModel.month.value, valueModel.date.value,
-               valueModel.hours.value, valueModel.minutes.value, valueModel.seconds.value, autoCompleteType);
-         }
-
+      if (!_private.isValidDate(year, month, date, hours, minutes, seconds)) {
          return new Date('Invalid');
-      },
-      getCurrentDate: function(baseValue, mask) {
-         var date = dateUtils.isValidDate(baseValue) ? new Date(baseValue) : new Date(1900, 0, 1);
-         var now = new Date();
-         if (mask.indexOf('YYYY') > -1) {
-            date.setFullYear(now.getFullYear());
-         } else if (mask.indexOf('YY') > -1) {
-            date.setFullYear(now.getFullYear());
-         }
-         if (mask.indexOf('MM') > -1) {
-            date.setMonth(now.getMonth());
-         }
-         if (mask.indexOf('DD') > -1) {
-            date.setDate(now.getDate());
-         }
-         if (mask.indexOf('HH') > -1) {
-            date.setHours(now.getHours());
-         }
-         if (mask.indexOf('mm') > -1) {
-            date.setMinutes(now.getMinutes());
-         }
-         if (mask.indexOf('ss') > -1) {
-            date.setSeconds(now.getSeconds());
-         }
-         return date;
       }
-   });
 
-   export = ModuleClass;
+      return new Date(year, month, date, hours, minutes, seconds);
+   },
 
+   isValidDate: function(year, month, date, hours, minutes, seconds) {
+      var lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
+      return seconds < 60 && minutes < 60 && hours < 24 && month < 12 && month >= 0 &&
+         date <= lastMonthDay && date > 0;
+   }
+};
+
+var ModuleClass = cExtend.extend({
+   _mask: null,
+   _replacer: null,
+   _replacerRegExp: null,
+   _replacerBetweenCharsRegExp: null,
+
+   constructor: function(options) {
+      this.update(options || {});
+   },
+
+   /**
+    * Updates converter settings.
+    * @param options
+    */
+   update: function(options) {
+      this._mask = options.mask;
+      if (this._replacer !== options.replacer) {
+         this._replacer = options.replacer;
+         this._replacerBetweenCharsRegExp = new RegExp('[^' + this._replacer + ']+' + this._replacer + '[^' + this._replacer + ']+');
+         this._replacerRegExp = new RegExp(this._replacer, 'g');
+      }
+   },
+
+   /**
+    * Returns the text displayed value
+    * @param value
+    * @returns {*}
+    */
+   getStringByValue: function(value, mask) {
+      if (dateUtils.isValidDate(value)) {
+         return formatDate(value, this._mask || mask);
+      }
+      return '';
+   },
+
+   /**
+    * Get the Date object by the String and the mask.
+    * @param str Date in accordance with the mask.
+    * @param baseValue The base date. Used to fill parts of the date that are not in the mask.
+    * @param autoCompleteType Autocomplete mode.
+    * @returns {Date} Date object
+    */
+   getValueByString: function(str, baseValue, autoCompleteType, required) {
+      var valueModel;
+
+      if (_private.isEmpty(str)) {
+         return null;
+      }
+
+      valueModel = _private.parseString(this, str);
+      if (!valueModel) {
+         return new Date('Invalid');
+      }
+      _private.fillFromBaseValue(this, valueModel, baseValue);
+
+      if (_private.isFilled(this, str) &&
+          (this._mask && this._mask.indexOf('YYYY') !== -1 && parseInt(valueModel.year.str, 10) < 1000)) {
+         // Zero year and year < 1000 does not exist
+         return new Date('Invalid');
+      }
+      if (autoCompleteType && !_private.isValueModelFilled(valueModel) && !(_private.isEmpty(str))) {
+         _private.autocomplete(this, valueModel, autoCompleteType, required);
+      }
+
+      if (_private.isValueModelFilled(valueModel)) {
+         return _private.createDate(valueModel.year.value, valueModel.month.value, valueModel.date.value,
+            valueModel.hours.value, valueModel.minutes.value, valueModel.seconds.value, autoCompleteType);
+      }
+
+      return new Date('Invalid');
+   },
+   getCurrentDate: function(baseValue, mask) {
+      var date = dateUtils.isValidDate(baseValue) ? new Date(baseValue) : new Date(1900, 0, 1);
+      var now = new Date();
+      if (mask.indexOf('YYYY') > -1) {
+         date.setFullYear(now.getFullYear());
+      } else if (mask.indexOf('YY') > -1) {
+         date.setFullYear(now.getFullYear());
+      }
+      if (mask.indexOf('MM') > -1) {
+         date.setMonth(now.getMonth());
+      }
+      if (mask.indexOf('DD') > -1) {
+         date.setDate(now.getDate());
+      }
+      if (mask.indexOf('HH') > -1) {
+         date.setHours(now.getHours());
+      }
+      if (mask.indexOf('mm') > -1) {
+         date.setMinutes(now.getMinutes());
+      }
+      if (mask.indexOf('ss') > -1) {
+         date.setSeconds(now.getSeconds());
+      }
+      return date;
+   }
+});
+
+export = ModuleClass;

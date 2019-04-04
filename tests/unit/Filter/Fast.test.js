@@ -86,9 +86,39 @@ define(
             data: source
          });
 
+         let configItems = {
+            items: [{
+               id: 'first',
+               value: ['Россия'],
+               resetValue: ['все страны'],
+               textValue: '',
+               properties: {
+                  keyProperty: 'title',
+                  displayProperty: 'title',
+                  multiSelect: true,
+                  source: new sourceLib.Memory({
+                     data: items[0],
+                     idProperty: 'key'
+                  })
+               }}
+            ]
+         };
+
          var getFastFilter = function(configFastFilter) {
             var fastFilter = new FastData(configFastFilter);
             fastFilter.saveOptions(configFastFilter);
+            return fastFilter;
+         };
+
+         var getFastFilterWithItems = function(config) {
+            var fastFilter = new FastData(config);
+            fastFilter._beforeMount(config);
+            fastFilter._configs[0]._items = items[0];
+            fastFilter.lastOpenIndex = 0;
+            fastFilter._children.DropdownOpener = {
+               close: setTrue.bind(this, assert),
+               open: setTrue.bind(this, assert)
+            };
             return fastFilter;
          };
 
@@ -214,7 +244,13 @@ define(
             FastData._private.notifyChanges(fastFilter, [itemsChanges]);
          });
 
-         it('on result itemClick', function(done) {
+         it('setValue', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            FastData._private.setValue(fastData2, ['Россия', 'Великобритания']);
+            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
+         });
+
+         it('onResult itemClick', function(done) {
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
@@ -225,6 +261,38 @@ define(
                   done();
                });
             });
+         });
+
+         it('onResult applyClick', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            fastData2._onResult({ selectedKeys: ['Россия', 'Великобритания'], action: 'applyClick' });
+            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
+
+            fastData2._onResult({ selectedKeys: [], action: 'applyClick' });
+            assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+         });
+
+         it('selectItems', function() {
+            let configMultiSelect = Clone(configItems);
+            let fastData2 = getFastFilterWithItems(configMultiSelect);
+
+            // multi selection
+            FastData._private.selectItems.call(fastData2, [
+               { key: 1, title: 'Россия' },
+               { key: 2, title: 'США' },
+               { key: 3, title: 'Великобритания' }]);
+            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'США', 'Великобритания']);
+
+            // single selection
+            configMultiSelect.items[0].properties.multiSelect = false;
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            FastData._private.selectItems.call(fastData2, [{ key: 3, title: 'Великобритания' }]);
+            assert.deepEqual(fastData2._items.at(0).value, 'Великобритания');
+
+            // empty selection
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            FastData._private.selectItems.call(fastData2, []);
+            assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
          it('setText', function(done) {
@@ -238,6 +306,39 @@ define(
                   done();
                });
             });
+         });
+
+         it('setText multiSelect', function() {
+            let configMultiSelect = Clone(config);
+            configMultiSelect.items = [{
+               id: 'first',
+               value: ['Россия'],
+               resetValue: ['все страны'],
+               textValue: '',
+               properties: {
+                  keyProperty: 'title',
+                  displayProperty: 'title',
+                  source: new sourceLib.Memory({
+                     data: items[0],
+                     idProperty: 'key'
+                  })
+               }
+            }];
+            let fastDataMultiSelect = new FastData(configMultiSelect);
+            fastDataMultiSelect._beforeMount(configMultiSelect);
+            fastDataMultiSelect._configs[0]._items = items[0];
+            fastDataMultiSelect._setText();
+            assert.equal(fastDataMultiSelect._configs[0].text, 'Россия');
+            assert.equal(fastDataMultiSelect._configs[0].title, 'Россия');
+            assert.equal(fastDataMultiSelect._configs[0].hasMoreText, '');
+
+            configMultiSelect.items[0].value = ['Россия', 'Великобритания'];
+            fastDataMultiSelect._beforeMount(configMultiSelect);
+            fastDataMultiSelect._configs[0]._items = items[0];
+            fastDataMultiSelect._setText();
+            assert.equal(fastDataMultiSelect._configs[0].text, 'Россия');
+            assert.equal(fastDataMultiSelect._configs[0].title, 'Россия, Великобритания');
+            assert.equal(fastDataMultiSelect._configs[0].hasMoreText, ', еще 1');
          });
 
          it('reset', function(done) {
@@ -261,14 +362,22 @@ define(
          });
 
          it('_private::itemsPropertiesChanged', function() {
-            var oldItems = Clone(source),
-               newItems = Clone(source),
-               newItems2 = Clone(source);
+            let oldItems = Clone(source);
+            let newItems = Clone(source);
+            let newItems2 = Clone(source);
+            let newItems3 = Clone(source);
+            let result;
+            
             newItems[0].properties.navigation = {page: 2};
-            var result = FastData._private.isNeedReload(oldItems, newItems);
+            result = FastData._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
+            
             result = FastData._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
+   
+            newItems3.splice(0, 1);
+            result = FastData._private.isNeedReload(oldItems, newItems3);
+            assert.isTrue(result);
          });
 
          it('_private::getItemPopupConfig', function() {
@@ -278,12 +387,14 @@ define(
                itemTemplate: 'newItemTemplate',
                itemTemplateProperty: 'myTemplate',
                headerTemplate: 'headerTemplateText',
-               footerTemplate: 'footerTemplateText'
+               footerTemplate: 'footerTemplateText',
+               emptyText: 'empty text',
+               multiSelect: false
             };
             var result = FastData._private.getItemPopupConfig(properties);
             assert.deepEqual(properties, result);
          });
-         
+
          it('_private.prepareItems', function() {
             var self = {};
             var items = [{properties: {source: new HistorySource({})}}];

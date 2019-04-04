@@ -33,6 +33,9 @@ define('Controls-demo/Popup/TestStack',
             };
             this._notify('openInfobox', [cfg], { bubbling: true });
          },
+         _openFC: function() {
+            this._children.formControllerOpener.open();
+         },
          _openModalDialog: function() {
             this._children.modalDialog.open();
          },

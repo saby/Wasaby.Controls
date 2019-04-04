@@ -1,0 +1,25 @@
+{
+  "Controls/Input/Number": {
+    "properties": {
+      "ws-config": {
+        "options": {
+          "integersLength": {
+            "type": "Number"
+          },
+          "precision": {
+            "type": "Number"
+          },
+          "onlyPositive": {
+            "type": "Boolean"
+          },
+          "showEmptyDecimals": {
+            "type": "Boolean"
+          },
+          "useGrouping": {
+            "type": "Boolean"
+          }
+        }
+      }
+    }
+  }
+}

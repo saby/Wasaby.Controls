@@ -61,6 +61,8 @@ define('Controls/Filter/Fast',
             itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
             itemConfig.headerTemplate = properties.headerTemplate;
             itemConfig.footerTemplate = properties.footerTemplate;
+            itemConfig.multiSelect = properties.multiSelect;
+            itemConfig.emptyText = properties.emptyText;
             return itemConfig;
          },
 
@@ -127,16 +129,41 @@ define('Controls/Filter/Fast',
             return filter;
          },
 
-         selectItem: function(item) {
+         setValue: function(self, selectedKeys) {
+            if (!selectedKeys.length) {
+               var resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
+               setPropValue(self._items.at(self.lastOpenIndex), 'value', resetValue);
+            } else if (self._configs[self.lastOpenIndex].multiSelect) {
+               setPropValue(self._items.at(self.lastOpenIndex), 'value', selectedKeys);
+            } else {
+               setPropValue(self._items.at(self.lastOpenIndex), 'value', selectedKeys[0]);
+            }
+         },
+
+         selectItems: function(items) {
+            var self = this,
+               selectedKeys = [];
+
             // Get the key of the selected item
-            var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
-            setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
+            chain.factory(items).each(function(item) {
+               var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
+               selectedKeys.push(key);
+            });
+
+            _private.setValue(this, selectedKeys);
+
             this._setText();
          },
 
          onResult: function(result) {
             if (result.action === 'itemClick') {
-               _private.selectItem.apply(this, result.data);
+               _private.selectItems.call(this, result.data);
+               _private.notifyChanges(this, this._items);
+               this._children.DropdownOpener.close();
+            }
+            if (result.action === 'applyClick') {
+               _private.setValue(this, result.selectedKeys);
+               this._setText();
                _private.notifyChanges(this, this._items);
                this._children.DropdownOpener.close();
             }
@@ -150,13 +177,19 @@ define('Controls/Filter/Fast',
 
          isNeedReload: function(oldItems, newItems) {
             var isChanged = false;
-            chain.factory(newItems).each(function(item, index) {
-               if (!isEqual(item.properties.source, oldItems[index].properties.source) ||
-                  !isEqual(item.properties.filter, oldItems[index].properties.filter) ||
-                  !isEqual(item.properties.navigation, oldItems[index].properties.navigation)) {
-                  isChanged = true;
-               }
-            });
+            
+            if (newItems.length !== oldItems.length) {
+               isChanged = true;
+            } else {
+               chain.factory(newItems).each(function(item, index) {
+                  if (!isEqual(item.properties.source, oldItems[index].properties.source) ||
+                     !isEqual(item.properties.filter, oldItems[index].properties.filter) ||
+                     !isEqual(item.properties.navigation, oldItems[index].properties.navigation)) {
+                     isChanged = true;
+                  }
+               });
+            }
+
             return isChanged;
          }
       };
@@ -228,16 +261,28 @@ define('Controls/Filter/Fast',
          _setText: function() {
             var self = this;
             chain.factory(this._configs).each(function(config, index) {
-               var sKey = getPropValue(self._items.at(index), 'value');
-               if (sKey instanceof Array) {
-                  sKey = sKey[0];
+               var sKey = getPropValue(self._items.at(index), 'value'),
+                  text = [];
+               if (!(sKey instanceof Array)) {
+                  sKey = [sKey];
                }
-               chain.factory(config._items).each(function(item) {
-                  if (getPropValue(item, config.keyProperty) === sKey) {
-                     config.text = getPropValue(item, config.displayProperty);
-                     _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));
-                  }
-               });
+               if (sKey[0] === null && config.emptyText) {
+                  text.push(config.emptyText);
+               } else {
+                  chain.factory(config._items).each(function(item) {
+                     if (sKey.indexOf(getPropValue(item, config.keyProperty)) !== -1) {
+                        text.push(getPropValue(item, config.displayProperty));
+                     }
+                  });
+               }
+               config.text = text[0];
+               config.title = text.join(', ');
+               if (text.length > 1) {
+                  config.hasMoreText = ', ' + rk('еще ') + (text.length - 1);
+               } else {
+                  config.hasMoreText = '';
+               }
+               _private.setTextValue(self._items.at(index), config.title);
             });
          },
 

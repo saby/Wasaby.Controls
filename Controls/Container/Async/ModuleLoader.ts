@@ -27,8 +27,10 @@ class ModuleLoader {
             if(this.isLoaded(parsedInfo.name)) {
                 IoC.resolve("ILogger").error("Module " + parsedInfo.name + ' is already loaded. ' +
                     'Use loadSync to load it synchronous.');
-                return new Promise(function(resolve) {
-                    resolve(cache[parsedInfo.name]);
+                return new Promise((resolve) => {
+                    let cachedLib = cache[parsedInfo.name];
+                    let loadedModule = this.getFromLib(cachedLib, parsedInfo)
+                    resolve(loadedModule);
                 });
             } else {
                 promiseResult = cache[parsedInfo.name];
@@ -37,14 +39,15 @@ class ModuleLoader {
             promiseResult = this.requireAsync(parsedInfo.name);
             this.cacheModule(parsedInfo.name, promiseResult);
         }
-        promiseResult.then((res) => {
+        promiseResult = promiseResult.then((res) => {
             let module = this.getFromLib(res, parsedInfo);
-            this.cacheModule(parsedInfo.name, module);
+            this.cacheModule(parsedInfo.name, res);
             return module;
         }, (e) => {
             this.cacheModule(parsedInfo.name, {});
-            IoC.resolve("ILogger").error("Couldn't load module " + parsedInfo.name, e);
-            return null;
+            let errorMessage = "Couldn't load module " + parsedInfo.name;
+            IoC.resolve("ILogger").error(errorMessage, e);
+            throw new Error(errorMessage);
         });
         return promiseResult;
     };
@@ -71,7 +74,8 @@ class ModuleLoader {
     };
 
     private isLoaded(name) {
-        var cacheValue = cache[name];
+        let parsedInfo = libHelper.parse(name);
+        let cacheValue = cache[parsedInfo.name];
         if(cacheValue && !(cacheValue instanceof Promise)) {
             return true;
         }
