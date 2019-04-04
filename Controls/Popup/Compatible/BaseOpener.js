@@ -427,6 +427,7 @@ function(cMerge,
             } else {
                cfg.verticalAlign = { side: cfg.direction.vertical };
             }
+            cfg.direction = null;
          }
          if (cfg.offset) {
             if (cfg.horizontalAlign) {
