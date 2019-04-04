@@ -50,9 +50,6 @@ var Component = BaseControl.extend({
             opener: this,
             target: this._container,
             className: className,
-            eventHandlers: {
-                onResult: this._onResult.bind(this)
-            },
             templateOptions: {
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
