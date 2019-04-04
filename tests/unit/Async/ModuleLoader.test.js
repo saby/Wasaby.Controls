@@ -55,6 +55,7 @@ define([
          };
       });
       afterEach(function() {
+         IoC.bind('ILogger', originalLogger);
          ml.clearCache();
       });
       it('Load sync no cache', function() {

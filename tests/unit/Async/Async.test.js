@@ -1,24 +1,36 @@
 define([
-   'Controls/Container/Async'
+   'Controls/Container/Async',
+   'Env/Env'
 ], function(
-   Async
+   Async,
+   Env
 ) {
    describe('Dynamic loading Controls.Container.Async', function() {
       var async;
-
-
+      var warns = [];
+      var originalLogger = Env.IoC.resolve('ILogger');
+      function checkWarn(warns, message) {
+         assert.isTrue(warns.length !== 0);
+         if (warns && warns.length) {
+            var logged = warns.shift();
+            logged.indexOf && assert.isTrue(!!~logged.indexOf(message));
+         }
+      }
       beforeEach(function() {
-
+         Env.IoC.bind('ILogger', {
+            warn: function(message) {
+               warns.push(message);
+            },
+            error: originalLogger.error,
+            log: originalLogger.log,
+            info: originalLogger.info
+         });
          async = new Async();
          async._options = {
             templateName: 'myTemplate'
          };
-         async.pushedToHeadData = [];
          async.loadedSync = [];
          async.loadedAsync = [];
-         async._pushDepToHeadData = function(name) {
-            this.pushedToHeadData.push(name);
-         };
          async._loadFileAsync = function(name) {
             return new Promise(function(resolve, reject) {
                async.loadedAsync.push(name);
@@ -38,6 +50,7 @@ define([
          };
       });
       afterEach(function() {
+         Env.IoC.bind('ILogger', originalLogger);
          async.destroy();
       });
       it('Set error state', function() {
@@ -47,16 +60,24 @@ define([
          assert.isNull(async.error);
       });
       it('Loading synchronous', function() {
+         var pushedArray = [];
+         async._pushDepToHeadData = function(dep) {
+            pushedArray.push(dep);
+         };
          async._loadContentSync(async._options.templateName, {opt: '123'});
          assert.deepEqual(async.loadedSync, ["myTemplate"]);
-         assert.deepEqual(async.pushedToHeadData, []);
+         assert.deepEqual(pushedArray, []);
          assert.equal(async.optionsForComponent.opt, '123');
          assert.equal(async.currentTemplateName, 'myTemplate');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
       });
       it('Loading synchronous server-side', function() {
+         var pushedArray = [];
+         async._pushDepToHeadData = function(dep) {
+            pushedArray.push(dep);
+         };
          async._loadContentSync(async._options.templateName, {opt: '123'}, true);
-         assert.deepEqual(async.pushedToHeadData, ["myTemplate"]);
+         assert.deepEqual(pushedArray, ["myTemplate"]);
       });
 
       it('Loading synchronous error', function() {
@@ -118,6 +139,13 @@ define([
          async._updateOptionsForComponent('myTemplate', undefined);
          assert.isTrue(async.optionsForComponent !== undefined);
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
+      });
+      it('Push to head data no head data store', function() {
+         async._getHeadData = function() {
+            return null;
+         };
+         async._pushDepToHeadData('myTemplate');
+         checkWarn(warns, 'HeadData store wasn\'t initialized. Link to myTemplate won\'t be added to server-side generated markup.');
       });
       it('_checkLoadedError error', function() {
          async._checkLoadedError(null);
