@@ -518,7 +518,8 @@ define([
 
             explorer._dragOnBreadCrumbs = true;
             assert.equal(explorer._dragHighlighter(1), '');
-            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget');
+            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget_withoutArrow');
+            assert.equal(explorer._dragHighlighter(2, true), 'controls-BreadCrumbsView__dropTarget_withArrow');
          });
          it('_documentDragStart', function() {
             explorer._documentDragStart({}, {
