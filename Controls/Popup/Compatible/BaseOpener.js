@@ -420,6 +420,10 @@ function(cMerge,
             newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
          }
 
+         if (cfg.targetPoint !== undefined) {
+            newCfg.dialogOptions.corner = cfg.targetPoint;
+         }
+
          // Если задали direction, то берем его (для исключительных случаев, задавать его не должны, т.к. это старое api)
          if (cfg.direction) {
             newCfg.dialogOptions.direction = cfg.direction;
