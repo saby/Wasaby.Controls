@@ -21,7 +21,9 @@ define('Controls/Validate/FormController',
          },
          onValidateCreated: function(e, control) {
             e.blockUpdate = true;
-            this._validates.push(control);
+            if (!control._options.readOnly) {
+               this._validates.push(control);
+            }
          },
          onValidateDestroyed: function(e, control) {
             this._validates = this._validates.filter(function(validate) {
@@ -34,10 +36,8 @@ define('Controls/Validate/FormController',
             // The infobox should be displayed on the first not valid field.
             this._validates.reverse();
             this._validates.forEach(function(validate) {
-               if (!(validate._options && validate._options.readOnly)) {
-                  var def = validate.validate();
-                  parallelDeferred.push(def);
-               }
+               var def = validate.validate();
+               parallelDeferred.push(def);
             });
 
             // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
@@ -53,6 +53,7 @@ define('Controls/Validate/FormController',
                if (resultKey) {
                   this._validates[resultKey].activate();
                }
+               this._validates.reverse();
                return results;
             }.bind(this)).addErrback(function(e) {
                Env.IoC.resolve('ILogger').error('Form', 'Submit error', e);
