@@ -280,7 +280,7 @@ define([
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
             assert.equal(Converter.jsonToHtml(['']), '<div><p></p></div>');
             assert.equal(Converter.jsonToHtml(['some text']), '<div><p>some text</p></div>');
-            assert.equal(Converter.jsonToHtml(['some\ntext']), '<div><p>some</p><p>text</p></div>');
+            assert.equal(Converter.jsonToHtml(['some\ntext']), '<div><p>some</p><p>\ntext</p></div>');
             assert.equal(Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
          });
          it('escape', function() {
