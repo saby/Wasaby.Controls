@@ -11,7 +11,7 @@ define([
    'Controls/Utils/Toolbar'
 ], function(lists, source, entity, collection, display, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
-      var data, listViewModel, rs, actions;
+      var data, listViewModel, rs, actions, sandbox;
       beforeEach(function() {
          data = [
             {
@@ -109,6 +109,11 @@ define([
                }
             }
          ];
+         sandbox = sinon.createSandbox();
+      });
+
+      afterEach(function() {
+         sandbox.restore();
       });
 
 
@@ -275,10 +280,11 @@ define([
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
             ctrl._onCollectionChange({}, 'test');
-            assert.equal(listViewModel.getVersion(), oldVersion);
+
+            assert.isFalse(spy.called);
          });
 
          it('items should update once if the type is collectionChanged', function() {
@@ -288,24 +294,12 @@ define([
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange(
-               {},
-               'collectionChanged',
-               collection.IObservable.ACTION_CHANGE,
-               [new display.CollectionItem({
-                  contents: new entity.Record({
-                     rawData: {
-                        id: 1,
-                        title: 'Первый',
-                        type: 1
-                     }
-                  })
-               })]
-            );
+            ctrl._onCollectionChange({}, 'collectionChanged');
 
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
+            assert.isTrue(spy.calledOnce);
+            assert.isTrue(spy.firstCall.args[0]);
          });
 
          it('items should update once if the type is indexesChanged', function() {
@@ -315,23 +309,12 @@ define([
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
             ctrl._onCollectionChange({}, 'indexesChanged');
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
-         });
 
-         it('items should update once if items were moved', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged', collection.IObservable.ACTION_MOVE);
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
+            assert.isTrue(spy.calledOnce);
+            assert.isFalse(spy.firstCall.args[0]);
          });
       });
 
