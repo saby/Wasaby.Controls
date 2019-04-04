@@ -57,7 +57,7 @@ var _private = {
         });
     },
 
-    updateActions: function(self, options) {
+    updateActions: function(self, options, collectionChanged: boolean = false): void {
         if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
@@ -68,7 +68,7 @@ var _private = {
                 }
             }
 
-            options.listModel.nextModelVersion();
+            options.listModel.nextModelVersion(collectionChanged);
         }
     },
 
@@ -178,45 +178,30 @@ var ItemActionsControl = Control.extend({
 
     _onCollectionChange(
        e: EventObject,
-       type: string,
-       action: string,
-       newItems: CollectionItem[]
+       type: string
     ): void {
-        if (type !== 'collectionChanged' && type !== 'indexesChanged') {
-            return;
-        }
-
-        if (action === IObservable.ACTION_MOVE) {
+        if (type === 'collectionChanged' || type === 'indexesChanged') {
            /**
-            * We don't know which items were moved (newItems and removedItems contain the same items), so we have to update everything.
+            * In general, we don't know what we should update.
+            * For example, if a user adds an item we can't just calculate actions for the newest item, we should also calculate
+            * actions for it's neighbours. They may have arrows for moving, so they should also get updated.
+            *
+            * It's logical to think that we should update the item and it's neighbours if items get added\removed.
+            * This wouldn't work because sometimes items can be far away from each other.
+            * For example:
+            * folder
+            * -child
+            * -child
+            * -child
+            * new folder
+            *
+            * In this example we should update actions of both folders, but they're not neighbours.
+            * And sometimes people can add\remove actions based on number of items in the list, so it becomes even harder to know what we should update.
+            *
+            * So, we should calculate actions for every item everytime.
             */
-           _private.updateActions(this, this._options);
-           return;
+           _private.updateActions(this, this._options, type === 'collectionChanged');
         }
-
-        if (type === 'collectionChanged' && newItems) {
-          newItems.forEach((item) => {
-             const contents = item.getContents();
-             if (contents.get) {
-                _private.updateItemActions(this, contents, this._options);
-             }
-          });
-
-          /**
-           * Item's version consists of two parts:
-           * 1) Version from item.getVersion()
-           * 2) Version from list model which all items share.
-           *
-           * If we pass true as the first argument to nextModelVersion then the version inside list model will not get incremented,
-           * but the changed items will still get redrawn because their inner version was changed.
-           *
-           * We can use this behavior here to make updates a faster - if we know that the collection has changed then we don't need
-           * to update the version inside list model.
-           */
-          this._options.listModel.nextModelVersion(true);
-       } else if (type === 'indexesChanged') {
-          _private.updateActions(this, this._options);
-       }
     },
 
    getChildren(
