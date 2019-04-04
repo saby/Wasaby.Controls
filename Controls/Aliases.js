@@ -6,7 +6,6 @@ define('Controls/Aliases',
       /**
        * @interface Controls/Aliases
        * @css @color_shadow_default shadow color used by default
-       * @css @color_shadow_secondary secondary shadow color
        * @css @color_shadow_danger color of shadows using with elements meaning "danger"
        * @css @color_overlay_default overlay color used by default
        * @css @color_warning color of functional elements meaning "warning"
