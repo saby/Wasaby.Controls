@@ -420,27 +420,40 @@ function(cMerge,
             newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
          }
 
-         if (cfg.targetPoint !== undefined) {
-            newCfg.dialogOptions.corner = cfg.targetPoint;
+         if (cfg.direction && typeof (cfg.direction) === 'object') {
+            if ('horizontal' in cfg.direction) {
+               newCfg.horizontalAlign = {
+                  side: cfg.direction.horizontal
+               };
+            }
+            if ('vertical' in cfg.direction) {
+               newCfg.verticalAlign = {
+                  side: cfg.direction.vertical
+               };
+            }
          }
-
-         // Если задали direction, то берем его (для исключительных случаев, задавать его не должны, т.к. это старое api)
-         if (cfg.direction) {
-            newCfg.dialogOptions.direction = cfg.direction;
-         } else {
-            // Пытаемся совместить старое и новое api
-            if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
-               newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
-               if (newCfg.dialogOptions.direction === 'center') {
-                  newCfg.dialogOptions.direction = '';
-               }
-            } else {
-               // Для стека всегда значение left, иначе ломается анимация
-               if (cfg._type === 'stack') {
-                  newCfg.dialogOptions.direction = 'left';
-               } else {
-                  newCfg.dialogOptions.direction = 'right';
-               }
+         if (cfg.offset) {
+            if ('horizontal' in cfg.offset) {
+               newCfg.horizontalAlign = {
+                  offset: cfg.offset.horizontal
+               };
+            }
+            if ('vertical' in cfg.offset) {
+               newCfg.verticalAlign = {
+                  offset: cfg.offset.vertical
+               };
+            }
+         }
+         if (cfg.targetPoint) {
+            if ('vertical' in cfg.targetPoint) {
+               newCfg.corner = {
+                  vertical: cfg.targetPoint.vertical
+               };
+            }
+            if ('horizontal' in cfg.targetPoint) {
+               newCfg.corner = {
+                  horizontal: cfg.targetPoint.horizontal
+               };
             }
          }
          if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
