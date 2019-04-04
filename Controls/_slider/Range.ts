@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
-import template = require('wml!Controls/_slider/Range/Range');
+import template = require('wml!Controls/_slider/sliderTemplate');
 import DragNDrop = require('Controls/DragNDrop/Controller');
 
 /**
@@ -24,7 +24,7 @@ const _private = {
       const val = Math.max(Math.min(ratio, 1), 0) * rangeLength;
       return minValue + val;
    },
-   _checkBuildOptions: function(opts) {
+   _checkOptions: function(opts) {
       if (opts.minValue === undefined || opts.maxValue === undefined) {
          Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
       }
@@ -42,14 +42,14 @@ const _private = {
       }
    },
    _prepareScale: function(self, minValue, maxValue, scaleStep) {
-      self._scaleArr = [];
+      self._scaleData = [];
       if (scaleStep) {
          const scaleRange = maxValue - minValue;
-         self._scaleArr.push({value: minValue, position: 0});
+         self._scaleData.push({value: minValue, position: 0});
          for (let i = minValue + scaleStep; i <= maxValue - scaleStep / 2; i += scaleStep) {
-            self._scaleArr.push({value: i, position: (i - minValue) / scaleRange * 100});
+            self._scaleData.push({value: i, position: (i - minValue) / scaleRange * 100});
          }
-         self._scaleArr.push({value: maxValue, position: 100});
+         self._scaleData.push({value: maxValue, position: 100});
       }
    },
 
@@ -76,10 +76,10 @@ const _private = {
       const left =  Math.min(Math.max((startValue - minValue), 0), rangeLength) / rangeLength * 100;
       const right =  Math.min(Math.max((endValue - minValue), 0), rangeLength) / rangeLength * 100;
       const width = right - left;
-      self._pointEndPos = right;
-      self._pointStartPos = left;
-      self._linePos = left;
-      self._lineWidth = width ;
+      self._pointData[1].position = right;
+      self._pointData[0].position = left;
+      self._lineData.position = left;
+      self._lineData.width = width ;
 
    }
 };
@@ -88,19 +88,19 @@ const Range = Control.extend({
 
    _template: template,
    _value: undefined,
-   _pointStartPos: undefined,
-   _pointEndPos: undefined,
-   _lineWidth: undefined,
-   _linePos: undefined,
-   _scaleArr: undefined,
+   _lineData: undefined,
+   _pointData: undefined,
+   _scaleData: undefined,
    _startValue: undefined,
    _endValue: undefined,
    _beforeMount(options) {
-      _private._checkBuildOptions(options);
+      _private._checkOptions(options);
       _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
       this._endValue = options.endValue || options.maxValue;
       this._startValue = options.startValue || options.minValue;
       this._value = undefined;
+      this._pointData = [{name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}];
+      this._lineData = {position: 0, width: 100};
       this._pointStartPos = 0;
       this._pointEndPos = 100;
       this._lineWidth = 100;
@@ -114,7 +114,7 @@ const Range = Control.extend({
             options.startValue !== this._options.startValue ||
             options.endValue !== this._options.endValue) {
          _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
-         _private._checkBuildOptions(options);
+         _private._checkOptions(options);
       }
       this._endValue =  Math.min(options.maxValue, options.endValue) || options.maxValue;
       this._startValue =  Math.max(options.minValue, options.startValue) || options.minValue;
@@ -152,10 +152,10 @@ const Range = Control.extend({
          this._value = _private._calcValue(this._options.minValue, this._options.maxValue, ratio);
          this._value = _private._round(this._value, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {
-            _private._setStartValue(this, this._value);
+            _private._setStartValue(this, Math.min(this._value, this._endValue));
          }
          if (dragObject.entity === this._children.pointEnd) {
-            _private._setEndValue(this, this._value);
+            _private._setEndValue(this, Math.max(this._value, this._startValue));
          }
       }
    },

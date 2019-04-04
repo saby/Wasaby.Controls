@@ -2,8 +2,8 @@
 /**
  * Progress indicators library
  * @library Controls/slider
- * @includes StateIndicator Controls/_slider/Base
- * @includes Legend Controls/_slider/Range
+ * @includes Base Controls/_slider/Base
+ * @includes Range Controls/_slider/Range
  * @author Колесов В.А.
  */
 

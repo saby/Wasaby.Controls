@@ -1,8 +1,8 @@
-
 import Control = require('Core/Control');
 import Env = require('Env/Env');
-import template = require('wml!Controls/_slider/Base/Base');
+import template = require('wml!Controls/_slider/sliderTemplate');
 import DragNDrop = require('Controls/DragNDrop/Controller');
+
 /**
  * Basic slider with single movable point for choosing value.
  *
@@ -11,6 +11,7 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  * @class Controls/_slider/Base
  * @author Колесов В.А.
  */
+
 var _private = {
    _round: function (val, perc) {
       return parseFloat(val.toFixed(perc));
@@ -38,14 +39,14 @@ var _private = {
       }
    },
    _prepareScale: function(self, minValue, maxValue, scaleStep) {
-      self._scaleArr = [];
+      self._scaleData = [];
       if (scaleStep) {
-         const scaleRange =maxValue - minValue;
-         self._scaleArr.push({value: minValue, position: 0});
+         const scaleRange = maxValue - minValue;
+         self._scaleData.push({value: minValue, position: 0});
          for (let i = minValue + scaleStep; i <= maxValue - scaleStep / 2; i += scaleStep) {
-            self._scaleArr.push({value: i, position: (i - minValue) / scaleRange * 100});
+            self._scaleData.push({value: i, position: (i - minValue) / scaleRange * 100});
          }
-         self._scaleArr.push({value: maxValue, position: 100});
+         self._scaleData.push({value: maxValue, position: 100});
       }
    },
    _setValue: function(self, val) {
@@ -54,8 +55,8 @@ var _private = {
    _render: function(self, minValue, maxValue, value) {
       const rangeLength = maxValue - minValue;
       const right =  Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * 100;
-      self._pointPos = right;
-      self._lineWidth = right;
+      self._pointData[0].position = right;
+      self._lineData.width = right;
    }
 };
 
@@ -63,15 +64,15 @@ var _private = {
 var Base = Control.extend({
    _template: template,
    _value: undefined,
-   _pointPos: undefined,
-   _lineWidth: undefined,
-   _scaleArr: undefined,
+   _lineData: undefined,
+   _pointData: undefined,
+   _scaleData: undefined,
    _beforeMount: function(options) {
       _private._checkOptions(options);
       _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
       this._value = options.value || options.maxValue;
-      this._lineWidth = 100;
-      this._pointPos = 100;
+      this._pointData = [{name: 'point', position: 100}];
+      this._lineData = {position: 0, width: 100};
    },
    _beforeUpdate: function(options) {
       if (options.scaleStep !== this._options.scaleStep ||
