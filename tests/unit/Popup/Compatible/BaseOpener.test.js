@@ -349,15 +349,15 @@ define(
             assert.equal(newConfig.dialogOptions.maximized, true);
             assert.equal(newConfig.componentOptions.maximized, true);
             let testconfig = {
-               direction: {
-                  horizontal: 'left',
-                  vertical: 'top'
+               horizontalAlign: {
+                  side: 'left',
+                  offset: 10
                },
                verticalAlign: {
-                  horizontal: 10,
-                  vertical: 15
+                  side: 'top',
+                  offset: 15
                },
-               targetPoint: {
+               corner: {
                   vertical: 'bottom'
                },
                mode: 'floatArea'
