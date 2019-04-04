@@ -1,55 +1,56 @@
 <div class="controlsDemo-Input-DateRange">
    <h1>Controls.Input.Date.Range</h1>
+   <div class="controlsDemo-Input-DatePicker__content">
+      <ws:for data="mask in _masks">
+         <div class="controlsDemo-Input-DateRange__row">
+            <div class="controlsDemo-Input-DateRange__row-item">
+               {{mask}}
+            </div>
+            <div class="controlsDemo-Input-DateRange__row-item">
+               <Controls.Input.Date.Range
+                       mask="{{mask}}"/>
+            </div>
+            <div class="controlsDemo-Input-DateRange__row-item">
+               <Controls.Input.Date.Range
+                       bind:startValue="_startDate"
+                       bind:endValue="_endDate"
+                       mask="{{mask}}"/>
+            </div>
+         </div>
+      </ws:for>
 
-   <ws:for data="mask in _masks">
+      <h3>Baseline with inline blocks</h3>
+      <div>
+         Text:
+         <Controls.Input.Date.Range
+                 bind:startValue="_startDate"
+                 bind:endValue="_endDate"
+                 mask="{{mask}}"/>
+      </div>
+      <h3>Demo with tagStyle</h3>
       <div class="controlsDemo-Input-DateRange__row">
          <div class="controlsDemo-Input-DateRange__row-item">
-            {{mask}}
+            <Controls.Input.Date.Range
+                    bind:startValue="_startDate"
+                    bind:endValue="_endDate"
+                    mask="{{mask}}"
+                    startTagStyle="{{'info'}}"/>
          </div>
          <div class="controlsDemo-Input-DateRange__row-item">
             <Controls.Input.Date.Range
-               mask="{{mask}}"/>
+                    bind:startValue="_startDate"
+                    bind:endValue="_endDate"
+                    mask="{{mask}}"
+                    endTagStyle="{{'primary'}}"/>
          </div>
          <div class="controlsDemo-Input-DateRange__row-item">
             <Controls.Input.Date.Range
-               bind:startValue="_startDate"
-               bind:endValue="_endDate"
-               mask="{{mask}}"/>
+                    bind:startValue="_startDate"
+                    bind:endValue="_endDate"
+                    mask="{{mask}}"
+                    startTagStyle="{{'danger'}}"
+                    endTagStyle="{{'success'}}"/>
          </div>
-      </div>
-   </ws:for>
-
-   <h3>Baseline with inline blocks</h3>
-   <div>
-      Text:
-      <Controls.Input.Date.Range
-         bind:startValue="_startDate"
-         bind:endValue="_endDate"
-         mask="{{mask}}"/>
-   </div>
-   <h3>Demo with tagStyle</h3>
-   <div class="controlsDemo-Input-DateRange__row">
-      <div class="controlsDemo-Input-DateRange__row-item">
-         <Controls.Input.Date.Range
-            bind:startValue="_startDate"
-            bind:endValue="_endDate"
-            mask="{{mask}}"
-            startTagStyle="{{'info'}}"/>
-      </div>
-      <div class="controlsDemo-Input-DateRange__row-item">
-         <Controls.Input.Date.Range
-            bind:startValue="_startDate"
-            bind:endValue="_endDate"
-            mask="{{mask}}"
-            endTagStyle="{{'primary'}}"/>
-      </div>
-      <div class="controlsDemo-Input-DateRange__row-item">
-         <Controls.Input.Date.Range
-            bind:startValue="_startDate"
-            bind:endValue="_endDate"
-            mask="{{mask}}"
-            startTagStyle="{{'danger'}}"
-            endTagStyle="{{'success'}}"/>
       </div>
    </div>
 </div>
