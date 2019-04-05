@@ -59,6 +59,7 @@ var _private = {
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
         }
+        self._viewUpdated = true;
     }
 };
 
@@ -105,6 +106,7 @@ var BreadCrumbsPath = Control.extend({
     _backButtonClass: '',
     _breadCrumbsClass: '',
     _oldWidth: 0,
+    _viewUpdated: false,
 
     _afterMount: function () {
         this._oldWidth = this._container.clientWidth;
@@ -123,6 +125,13 @@ var BreadCrumbsPath = Control.extend({
         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
+        }
+    },
+
+    _afterUpdate: function() {
+        if (this._viewUpdated) {
+            this._viewUpdated = false;
+            this._notify('controlResize', [], {bubbling: true});
         }
     },
 

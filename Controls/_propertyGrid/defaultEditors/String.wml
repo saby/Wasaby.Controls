@@ -1,0 +1,1 @@
+<Controls.input:Text attr:class="controls-PropertyGrid__editor_string_control" scope="{{_options}}" bind:value="value" on:inputCompleted="_inputCompleted()"/>

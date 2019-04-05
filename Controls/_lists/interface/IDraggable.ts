@@ -2,13 +2,13 @@
  * Interface to move elements of the list by using drag'n'drop.
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
  *
- * @interface Controls/List/interface/IDraggable
+ * @interface Controls/_lists/interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/List/interface/IDraggable#itemsDragNDrop
+ * @name Controls/_lists/interface/IDraggable#itemsDragNDrop
  * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
  * @variant none Dragging items is not allowed.
  * @variant allow Dragging items is allowed.
@@ -34,7 +34,7 @@
  */
 
 /**
- * @name Controls/List/interface/IDraggable#draggingTemplate
+ * @name Controls/_lists/interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
  * @default Controls/DragNDrop/DraggingTemplate
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
@@ -76,7 +76,7 @@
  */
 
 /**
- * @event Controls/List/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
+ * @event Controls/_lists/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
  * @returns {Controls/DragNDrop/Entity/Items)
@@ -121,19 +121,19 @@
  */
 
 /**
- * @event Controls/List/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
+ * @event Controls/_lists/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
  * @param {MovePosition} position Position to move.
  * @example
- * The following example shows how to move items using Controls/List/Mover after the drag is complete.
+ * The following example shows how to move items using Controls/_lists/Mover after the drag is complete.
  * <pre>
  *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
  *        <Controls.List on:dragEnd="_dragEnd()"
  *                       itemsDragNDrop="allow">
  *        </Controls.List>
- *        <Controls.List.Mover name="listMover">
+ *        <Controls._lists.Mover name="listMover">
  *     <Controls.Container.Data>
  * </pre>
  *
@@ -159,7 +159,7 @@
  */
 
 /**
- * @event Controls/List/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
+ * @event Controls/_lists/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
@@ -204,7 +204,7 @@
  */
 
 /**
- * @event Controls/List/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
+ * @event Controls/_lists/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.

@@ -482,6 +482,9 @@ function(cMerge,
          if (cfg.minWidth || optFromTmpl.minWidth) {
             newCfg.dialogOptions.minWidth = cfg.minWidth || optFromTmpl.minWidth;
          }
+         if (cfg.width) {
+            newCfg.dialogOptions.width = cfg.width;
+         }
 
          if (cfg.maxWidth || optFromTmpl.maxWidth) {
             newCfg.dialogOptions.maxWidth = cfg.maxWidth || optFromTmpl.maxWidth;

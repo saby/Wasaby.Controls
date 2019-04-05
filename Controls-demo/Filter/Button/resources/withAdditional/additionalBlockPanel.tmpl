@@ -50,16 +50,18 @@
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.Select
-        keyProperty="key"
-        bind:textValue="item.textValue">
-   <ws:items>
-      <ws:Array>
-         <ws:Object key="{{1}}" title="On me"/>
-         <ws:Object key="{{2}}" title="On department"/>
-      </ws:Array>
-   </ws:items>
-</Controls.Filter.Button.Panel.Select>
+<Controls.Container.Adapter.SelectedKey>
+   <Controls.Filter.Button.Panel.Select
+           keyProperty="key"
+           bind:textValue="item.textValue">
+      <ws:items>
+         <ws:Array>
+            <ws:Object key="{{1}}" title="On me"/>
+            <ws:Object key="{{2}}" title="On department"/>
+         </ws:Array>
+      </ws:items>
+   </Controls.Filter.Button.Panel.Select>
+</Controls.Container.Adapter.SelectedKey>
 </ws:template>
 
 <ws:template name="our organisation">

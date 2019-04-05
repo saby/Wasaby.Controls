@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/TreeGrid',
+   'Controls/treeGrids',
    'Controls/breadcrumbs'
 ], function(
    Control,
@@ -132,7 +132,8 @@ define('Controls/Explorer', [
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo/demo-ws4-explorer?v=19.100">Demo examples</a>.
+    * <a href="/materials/demo/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo/demo-ws4-explorer-with-search">Demo example with search</a>.
     *
     * @class Controls/Explorer
     * @extends Core/Control
@@ -180,8 +181,9 @@ define('Controls/Explorer', [
       _getRoot: function() {
          return _private.getRoot(this);
       },
-      _dragHighlighter: function(itemKey) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      _dragHighlighter: function(itemKey, hasArrow) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+            ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
@@ -246,7 +248,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary'
+         backButtonStyle: 'secondary',
+         stickyHeader: true
       };
    };
 

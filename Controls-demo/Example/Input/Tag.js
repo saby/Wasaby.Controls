@@ -3,7 +3,7 @@ define('Controls-demo/Example/Input/Tag',
       'Core/Control',
       'wml!Controls-demo/Example/Input/Tag/Tag',
 
-      'Controls/Input/Text',
+      'Controls/input',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {

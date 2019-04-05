@@ -1,19 +1,19 @@
 define('Controls/Input/Money',
    [
       'Types/entity',
-      'Controls/Input/Base',
+      'Controls/input',
       'Controls/Input/Money/ViewModel',
 
       'wml!Controls/Input/Money/ReadOnly'
    ],
-   function(entity, Base, ViewModel, readOnlyFieldTemplate) {
+   function(entity, input, ViewModel, readOnlyFieldTemplate) {
       'use strict';
 
       /**
        * Input for entering currency.
        *
        * @class Controls/Input/Money
-       * @extends Controls/Input/Base
+       * @extends Controls/input:Base
        *
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IOnlyPositive
@@ -35,7 +35,7 @@ define('Controls/Input/Money',
          }
       };
 
-      var Money = Base.extend({
+      var Money = input.Base.extend({
          _initProperties: function() {
             Money.superclass._initProperties.apply(this, arguments);
 
@@ -58,7 +58,7 @@ define('Controls/Input/Money',
       });
 
       Money.getDefaultOptions = function() {
-         var defaultOptions = Base.getDefaultOptions();
+         var defaultOptions = input.Base.getDefaultOptions();
 
          defaultOptions.onlyPositive = false;
 
@@ -66,7 +66,7 @@ define('Controls/Input/Money',
       };
 
       Money.getOptionTypes = function() {
-         var optionTypes = Base.getOptionTypes();
+         var optionTypes = input.Base.getOptionTypes();
 
          optionTypes.onlyPositive = entity.descriptor(Boolean);
 

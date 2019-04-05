@@ -1,4 +1,4 @@
-import ListViewModel = require('Controls/List/ListViewModel');
+import ListViewModel = require('Controls/_lists/ListViewModel');
 import cMerge = require('Core/core-merge');
 
 var
@@ -25,6 +25,7 @@ var TileViewModel = ListViewModel.extend({
             itemsHeight: this._itemsHeight,
             imageProperty: this._options.imageProperty,
             defaultItemWidth: DEFAULT_ITEM_WIDTH,
+            defaultShadowVisibility: 'visible',
             itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
         };
     },

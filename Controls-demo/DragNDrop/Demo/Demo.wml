@@ -1,13 +1,13 @@
 <div class="demo-DragNDrop">
    <h1>Перемещение записей методом "Drag&Drop"</h1>
    <h2>Перемещение в плоском реестре c плиточным отображением</h2>
-   <Controls.Container.Data source="{{_viewSourceFirst}}" keyProperty="id" attr:class="demo-DragNDrop__list">
+   <Controls.lists:DataContainer source="{{_viewSourceFirst}}" keyProperty="id" attr:class="demo-DragNDrop__list">
       <div>
-         <Controls.List.Mover name="listMoverFirst"/>
+         <Controls.lists:Mover name="listMoverFirst"/>
          <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
-            <Controls.List.Container>
+            <Controls.lists:Container>
                <Controls.List.MultiSelector>
-                  <Controls.List
+                  <Controls.lists:View
                      on:dragStart="_dragStartFirst()"
                      on:dragEnd="_dragEndFirst()"
                      itemsDragNDrop="{{true}}"
@@ -15,7 +15,7 @@
                      itemsReadyCallback="{{_itemsReadyCallbackFirst}}"
                      itemActions="{{_itemActionsFirst}}">
                      <ws:itemTemplate>
-                        <ws:partial template="wml!Controls/List/ItemTemplate" marker="{{false}}" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
+                        <ws:partial template="Controls/lists:ItemTemplate" marker="{{false}}" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
                            <ws:contentTemplate attr:class="demo-DragNDrop__list_itemContent">
                               <div class="demo-DragNDrop__list_itemContent">
                                  <img class="demo-DragNDrop__list_item_icon" src="{{itemTemplate.itemData.item.get('image')}}" />
@@ -35,19 +35,20 @@
                                     additionalText="{{draggingTemplate.entity._options.additionalText}}">
                         </ws:partial>
                      </ws:draggingTemplate>
-                  </Controls.List>
+                  </Controls.lists:View>
                </Controls.List.MultiSelector>
-            </Controls.List.Container>
+            </Controls.lists:Container>
          </Controls.Container.MultiSelector>
       </div>
-   </Controls.Container.Data>
+   </Controls.lists:DataContainer>
    <h2>Перемещение в реестре с иерархией</h2>
    <Controls.Popup.Opener.Confirmation name="popupOpener" />
-   <Controls.Container.Data source="{{_viewSourceSecond}}" keyProperty="id" attr:class="demo-DragNDrop__explorer">
+   <Controls.lists:DataContainer source="{{_viewSourceSecond}}" keyProperty="id" attr:class="demo-DragNDrop__explorer">
       <div>
-         <Controls.List.Mover name="listMoverSecond" parentProperty="parent"/>
-         <Controls.List.Container>
+         <Controls.lists:Mover name="listMoverSecond" parentProperty="parent"/>
+         <Controls.lists:Container>
             <Controls.Explorer
+               bind:root="_root"
                on:dragStart="_dragStartSecond()"
                on:dragEnd="_dragEndSecond()"
                itemsDragNDrop="{{true}}"
@@ -68,14 +69,14 @@
                   </ws:partial>
                </ws:draggingTemplate>
             </Controls.Explorer>
-         </Controls.List.Container>
+         </Controls.lists:Container>
       </div>
-   </Controls.Container.Data>
+   </Controls.lists:DataContainer>
    <!--<h2>Перемещение в папку (реестр в виде плитки)</h2>
-   <Controls.Container.Data source="{{_viewSourceThird}}" keyProperty="id" attr:class="demo-DragNDrop__tile">
+   <Controls.lists:DataContainer source="{{_viewSourceThird}}" keyProperty="id" attr:class="demo-DragNDrop__tile">
       <div>
-         <Controls.List.Mover name="listMoverThird" parentProperty="parent"/>
-         <Controls.List.Container>
+         <Controls.lists:Mover name="listMoverThird" parentProperty="parent"/>
+         <Controls.lists:Container>
             <Controls.Explorer
                on:dragStart="_dragStartThird()"
                on:dragEnd="_dragEndThird()"
@@ -99,7 +100,7 @@
                   </ws:partial>
                </ws:tileItemTemplate>
             </Controls.Explorer>
-         </Controls.List.Container>
+         </Controls.lists:Container>
       </div>
-   </Controls.Container.Data>-->
+   </Controls.lists:DataContainer>-->
 </div>

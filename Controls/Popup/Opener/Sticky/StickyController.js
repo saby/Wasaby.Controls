@@ -123,6 +123,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             if (cfg.popupOptions.nativeEvent) {
                var top = cfg.popupOptions.nativeEvent.clientY;
                var left = cfg.popupOptions.nativeEvent.clientX;
+               var size = 1;
                var positionCfg = {
                   verticalAlign: {
                      side: 'bottom'
@@ -134,12 +135,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                cMerge(cfg.popupOptions, positionCfg);
                sizes.margins = { top: 0, left: 0 };
                return {
-                  width: 1,
-                  height: 1,
+                  width: size,
+                  height: size,
                   top: top,
                   left: left,
-                  bottom: document.body.clientHeight - top,
-                  right: document.body.clientWidth - left,
+                  bottom: top + size,
+                  right: left + size,
                   topScroll: 0,
                   leftScroll: 0
                };
@@ -251,7 +252,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             item.position = {
                top: -10000,
                left: -10000,
-               maxWidth: _private.getWindowWidth(),
+               maxWidth: item.popupOptions.maxWidth || _private.getWindowWidth(),
 
                // Error on ios when position: absolute container is created outside the screen and stretches the page
                // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
@@ -281,7 +282,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   maxHeight: cfg.popupOptions.maxHeight
                },
                sizes: sizes,
-               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                fittingMode: cfg.popupOptions.fittingMode
             };
          },

@@ -47,10 +47,12 @@ define(
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
          });
@@ -70,10 +72,12 @@ define(
                inst._model.fixedPosition = 'top';
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
 
@@ -82,10 +86,12 @@ define(
                inst._model.fixedPosition = 'top';
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;margin-top: -1px;z-index: 2;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
 
@@ -93,10 +99,12 @@ define(
                inst._context.stickyHeader.top = 10;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 10px;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
 
@@ -105,10 +113,12 @@ define(
                inst._options.position = 'bottom';
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 10px;">' +
+                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                   '</div>');
             });
 
@@ -116,11 +126,13 @@ define(
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
 
@@ -131,6 +143,7 @@ define(
                inst._options.fixedZIndex = 1;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -151,6 +164,7 @@ define(
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
             });
          });

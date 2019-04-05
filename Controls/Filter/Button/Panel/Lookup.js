@@ -10,6 +10,7 @@ define('Controls/Filter/Button/Panel/Lookup', [
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
     * @class Controls/Filter/Button/Panel/Lookup
     * @mixes Controls/interface/ISelectedCollection
+    * @mixes Controls/interface/ISelectorDialog
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate

@@ -1,11 +1,11 @@
 define(
    [
       'Core/core-instance',
-      'Controls/Input/Text',
+      'Controls/input',
       'unit/resources/ProxyCall',
       'Vdom/Vdom'
    ],
-   function(instance, Text, ProxyCall, Vdom) {
+   function(instance, inputMod, ProxyCall, Vdom) {
       'use strict';
 
       describe('Controls.Input.Text', function() {
@@ -13,7 +13,7 @@ define(
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Text();
+            ctrl = new inputMod.Text();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
@@ -30,8 +30,8 @@ define(
          });
 
          it('getDefault', function() {
-            Text.getOptionTypes();
-            Text.getDefaultOptions();
+            inputMod.Text.getOptionTypes();
+            inputMod.Text.getDefaultOptions();
          });
          it('The model belongs to the "Controls/_input/Text/ViewModel" class.', function() {
             ctrl._beforeMount({

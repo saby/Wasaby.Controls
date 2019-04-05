@@ -8,10 +8,10 @@ define('Controls/Selector/Button', ['Core/Control', 'wml!Controls/Selector/Butto
     * @class Controls/Selector/Button
     * @mixes Controls/interface/ICaption
     * @mixes Controls/interface/ISelectedCollection
+    * @mixes Controls/interface/ISelectorDialog
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IItemTemplate
     * @extends Core/Control
     * @control
     * @public

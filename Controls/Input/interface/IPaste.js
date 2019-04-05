@@ -18,7 +18,7 @@ define('Controls/Input/interface/IPaste', [], function() {
     * @example
     * In this example, we click on the button to add a smile to the field.
     * <pre>
-    *    <Controls.Input.Text name="message" bind:value="_inputValue"/>
+    *    <Controls.input:Text name="message" bind:value="_inputValue"/>
     *    <Controls.Button on:click="_pasteButtonClick(smile)"/>
     * </pre>
     *

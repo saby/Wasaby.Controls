@@ -12,7 +12,6 @@
 }
 
 .controls-TileView__itemContent {
-   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
    background-color: @background-color_TileView-item;
    box-sizing: border-box;
    overflow: hidden;
@@ -23,7 +22,7 @@
 }
 
 .controls-TileView__item_animated {
-   transition-property: left, right, bottom, top;
+   transition-property: left, right, bottom, top, height;
    transition-duration: 0.05s;
 }
 
@@ -50,8 +49,16 @@
    position: absolute;
 }
 
-.controls-TileView__itemContent:hover, .controls-TileView__item_active, .controls-TileView__item_swiped {
-   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+.controls-ListView__item_shadow_visible {
+   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
+}
+
+.ws-is-no-touch {
+   .controls-ListView__item_shadow_visible, .controls-ListView__item_shadow_onhover {
+      &:hover, &.controls-TileView__item_active, &.controls-TileView__item_swiped {
+         box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+      }
+   }
 }
 
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
@@ -71,15 +78,6 @@
 
 .controls-TileView__item_fixed {
    position: fixed;
-}
-
-.controls-TileView__item_flex {
-   display: flex;
-   flex-direction: column;
-}
-
-.controls-TileView__imageWrapper_fixed {
-   height: 100%;
 }
 
 .controls-TileView__title_invisible {

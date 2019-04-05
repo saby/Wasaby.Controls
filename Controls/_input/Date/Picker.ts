@@ -15,7 +15,7 @@ import 'css!theme?Controls/_input/Date/Picker/Picker';
     * @mixes Controls/_input/interface/IInputDateTime
     * @mixes Controls/_input/interface/IDateMask
     * @mixes Controls/_input/interface/IInputTag
-    * @mixes Controls/Input/interface/IInputBase
+    * @mixes Controls/_input/interface/IInputBase
     * @mixes Controls/_input/interface/IInputPlaceholder
     *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.

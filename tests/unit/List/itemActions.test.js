@@ -2,17 +2,16 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/ItemActions/ItemActionsControl',
+   'Controls/lists',
    'Types/source',
    'Types/entity',
    'Types/collection',
    'Types/display',
-   'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
-], function(ItemActionsControl, source, entity, collection, display, ListViewModel, aUtil, tUtil) {
+], function(lists, source, entity, collection, display, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
-      var data, listViewModel, rs, actions;
+      var data, listViewModel, rs, actions, sandbox;
       beforeEach(function() {
          data = [
             {
@@ -50,7 +49,7 @@ define([
             idProperty: 'id',
             rawData: data
          });
-         listViewModel = new ListViewModel({
+         listViewModel = new lists.ListViewModel({
             items: rs,
             keyProperty: 'id'
          });
@@ -110,6 +109,11 @@ define([
                }
             }
          ];
+         sandbox = sinon.createSandbox();
+      });
+
+      afterEach(function() {
+         sandbox.restore();
       });
 
 
@@ -118,7 +122,7 @@ define([
             listModel: listViewModel,
             itemActions: actions
          };
-         var ctrl = new ItemActionsControl(cfg);
+         var ctrl = new lists.ItemActionsControl(cfg);
          ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
          if (typeof window === 'undefined') {
             //Это нужно переписать, тест должен тестировать логику внутри _beforeUpdate
@@ -144,7 +148,7 @@ define([
                return true;
             }
          };
-         var ctrl = new ItemActionsControl(cfg);
+         var ctrl = new lists.ItemActionsControl(cfg);
          ctrl._options.listModel = {
             unsubscribe: function() {
 
@@ -191,7 +195,7 @@ define([
                idProperty: 'id',
                rawData: data
             }),
-            listViewModel = new ListViewModel({
+            listViewModel = new lists.ListViewModel({
                items: rs,
                keyProperty: 'id'
             }),
@@ -200,7 +204,7 @@ define([
                itemActions: [],
                itemActionsProperty: 'test'
             };
-         var ctrl = new ItemActionsControl(cfg);
+         var ctrl = new lists.ItemActionsControl(cfg);
          ctrl._options.listModel = {
             unsubscribe: function() {
             }
@@ -216,7 +220,7 @@ define([
             itemActions: actions
          };
          var eHandler = function() {};
-         var ctrl = new ItemActionsControl(cfg);
+         var ctrl = new lists.ItemActionsControl(cfg);
          ctrl._onCollectionChangeFn = eHandler;
          listViewModel.subscribe('onListChange', eHandler);
          ctrl._options.listModel = listViewModel;
@@ -224,7 +228,7 @@ define([
          assert.isTrue(listViewModel.hasEventHandlers('onListChange'));
 
          ctrl._beforeUpdate({
-            listModel: new ListViewModel({
+            listModel: new lists.ListViewModel({
                items: rs,
                keyProperty: 'id'
             })
@@ -264,7 +268,7 @@ define([
                listModel: listViewModel,
                itemActions: actionsWithHierarchy
             },
-            ctrl = new ItemActionsControl(cfg);
+            ctrl = new lists.ItemActionsControl(cfg);
          assert.deepEqual(actionsWithHierarchy.slice(-2), ctrl.getChildren(actionsWithHierarchy[1], actionsWithHierarchy));
       });
 
@@ -275,11 +279,12 @@ define([
                   listModel: listViewModel,
                   itemActions: actions
                },
-               ctrl = new ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               ctrl = new lists.ItemActionsControl(cfg),
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
             ctrl._onCollectionChange({}, 'test');
-            assert.equal(listViewModel.getVersion(), oldVersion);
+
+            assert.isFalse(spy.called);
          });
 
          it('items should update once if the type is collectionChanged', function() {
@@ -288,25 +293,13 @@ define([
                   listModel: listViewModel,
                   itemActions: actions
                },
-               ctrl = new ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               ctrl = new lists.ItemActionsControl(cfg),
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange(
-               {},
-               'collectionChanged',
-               collection.IObservable.ACTION_CHANGE,
-               [new display.CollectionItem({
-                  contents: new entity.Record({
-                     rawData: {
-                        id: 1,
-                        title: 'Первый',
-                        type: 1
-                     }
-                  })
-               })]
-            );
+            ctrl._onCollectionChange({}, 'collectionChanged');
 
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
+            assert.isTrue(spy.calledOnce);
+            assert.isTrue(spy.firstCall.args[0]);
          });
 
          it('items should update once if the type is indexesChanged', function() {
@@ -315,24 +308,13 @@ define([
                   listModel: listViewModel,
                   itemActions: actions
                },
-               ctrl = new ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
+               ctrl = new lists.ItemActionsControl(cfg),
+               spy = sandbox.spy(listViewModel, 'nextModelVersion');
             ctrl.saveOptions(cfg);
             ctrl._onCollectionChange({}, 'indexesChanged');
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
-         });
 
-         it('items should update once if items were moved', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  itemActions: actions
-               },
-               ctrl = new ItemActionsControl(cfg),
-               oldVersion = listViewModel.getVersion();
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged', collection.IObservable.ACTION_MOVE);
-            assert.equal(1, listViewModel.getVersion() - oldVersion);
+            assert.isTrue(spy.calledOnce);
+            assert.isFalse(spy.firstCall.args[0]);
          });
       });
 
@@ -342,7 +324,7 @@ define([
             listModel: listViewModel,
             itemActions: actions
          };
-         var instance = new ItemActionsControl(cfg);
+         var instance = new lists.ItemActionsControl(cfg);
          instance.saveOptions(cfg);
          var fakeItemData = {
             item: {},
@@ -381,7 +363,7 @@ define([
       });
 
       it('getDefaultOptions ', function() {
-         var defOpts = ItemActionsControl.getDefaultOptions();
+         var defOpts = lists.ItemActionsControl.getDefaultOptions();
          assert.equal(defOpts.itemActionsPosition, 'inside');
       });
 
@@ -401,7 +383,7 @@ define([
                }],
                itemActionsPosition: 'outside'
             },
-            ctrl = new ItemActionsControl(cfg),
+            ctrl = new lists.ItemActionsControl(cfg),
             oldVersion = listViewModel.getVersion();
          ctrl.saveOptions(cfg);
          ctrl.updateItemActions(listViewModel.getCurrent().item);
@@ -423,7 +405,7 @@ define([
             }],
             itemActionsPosition: 'outside'
          };
-         var ctrl = new ItemActionsControl(cfg);
+         var ctrl = new lists.ItemActionsControl(cfg);
          ctrl._beforeMount(cfg);
          ctrl.saveOptions(cfg);
 

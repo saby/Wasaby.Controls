@@ -1,5 +1,5 @@
-import BaseViewModel = require('Controls/List/BaseViewModel');
-import ListViewModel = require('Controls/List/ListViewModel');
+import {ListViewModel, BaseViewModel} from 'Controls/lists';
+
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
@@ -795,7 +795,15 @@ var
                         key: current.key,
                         getPropValue: current.getPropValue,
                         isEditing: current.isEditing,
-                        isActive: current.isActive
+                        isActive: current.isActive,
+                        getVersion: function() {
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                        },
+                        getKey: function() {
+                            return self._columnsVersion + '_' +
+                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+                        },
+                        _preferVersionAPI: true
                     };
                 currentColumn.columnIndex = current.columnIndex;
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
@@ -898,6 +906,10 @@ var
 
         _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
+        },
+
+        getEditingItemData(): object | null {
+            return this._model.getEditingItemData();
         },
 
         setItemActionVisibilityCallback: function(callback) {

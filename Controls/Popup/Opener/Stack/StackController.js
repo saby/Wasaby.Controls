@@ -5,12 +5,10 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Core/core-clone',
-      'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cClone, Vdom) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred) {
       'use strict';
       var STACK_CLASS = 'controls-Stack';
       var _private = {
@@ -21,11 +19,9 @@ define('Controls/Popup/Opener/Stack/StackController',
 
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
+            item.popupOptions.width = parseInt(item.popupOptions.width || defaultOptions.width, 10);
 
             // Validate the configuration
-            item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
-            item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
-
             if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
@@ -35,7 +31,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
 
             // optimization: don't calculate the size of the container, if the configuration is set
-            if (container && !item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
+            if (container && !item.popupOptions.width) {
                item.containerWidth = _private.getContainerWidth(item, container);
             }
          },
@@ -62,16 +58,21 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            return StackStrategy.getPosition(targetCoords, item);
+            item.position = StackStrategy.getPosition(targetCoords, item);
+            item.popupOptions.stackWidth = item.position.stackWidth;
+            item.popupOptions.stackMinWidth = item.position.stackMinWidth;
+            item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+            _private.updatePopupOptions(item);
+            return item.position;
          },
 
          addShadowClass: function(item) {
             _private.removeShadowClass(item);
-            item.popupOptions.className += ' controls-Stack__shadow';
+            item.popupOptions.stackClassName += ' controls-Stack__shadow';
          },
 
          removeShadowClass: function(item) {
-            item.popupOptions.className = (item.popupOptions.className || '').replace(/controls-Stack__shadow/ig, '').trim();
+            item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
@@ -88,7 +89,13 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          updatePopupOptions: function(item) {
             // for vdom synchronizer. Updated the link to the options when className was changed
-            item.popupOptions = cClone(item.popupOptions);
+            if (!item.popupOptions._version) {
+               item.popupOptions.getVersion = function() {
+                  return this._version;
+               };
+               item.popupOptions._version = 0;
+            }
+            item.popupOptions._version++;
          },
 
          prepareMaximizedState: function(maxPanelWidth, item) {
@@ -174,7 +181,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.width || item.position.maxWidth;
+                  var currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
                   if (currentWidth > maxWidth) {
@@ -212,7 +219,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                   top: -10000,
                   left: -10000,
                   height: _private.getWindowSize().height,
-                  width: position.width || undefined
+                  stackWidth: position.stackWidth || undefined
                };
             } else {
                this._stack.add(item);

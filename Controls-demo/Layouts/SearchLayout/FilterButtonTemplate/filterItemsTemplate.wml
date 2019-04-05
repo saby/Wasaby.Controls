@@ -1,9 +1,9 @@
 <ws:template name="FIO">
-   <Controls.Input.Text bind:value="item.value"/>
+   <Controls.input:Text bind:value="item.value"/>
 </ws:template>
 
 <ws:template name="firstName">
-<Controls.Input.Text bind:value="item.value"/>
+<Controls.input:Text bind:value="item.value"/>
 </ws:template>
 
 <ws:template name="id">

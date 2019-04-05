@@ -4,10 +4,10 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
-   'Controls/List/ItemActions/Helpers',
+   'Controls/lists',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
-], function(Control, template, source, TreeMemory, Data, visibilityCallback) {
+], function(Control, template, source, TreeMemory, Data, lists) {
    'use strict';
 
    var filterButtonData = [{
@@ -102,8 +102,8 @@ define('Controls-demo/OperationsPanel/Demo', [
             result = true;
 
          if (action.id === 'moveUp' || action.id === 'moveDown') {
-            direction = visibilityCallback.MOVE_DIRECTION[action.id === 'moveUp' ? 'UP' : 'DOWN'];
-            result = visibilityCallback.reorderMoveActionsVisibility(direction, item, this._items, this._parentProperty, this._nodeProperty);
+            direction = lists.ItemActionsHelpers.MOVE_DIRECTION[action.id === 'moveUp' ? 'UP' : 'DOWN'];
+            result = lists.ItemActionsHelpers.reorderMoveActionsVisibility(direction, item, this._items, this._parentProperty, this._nodeProperty);
          }
 
          return result;

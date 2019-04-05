@@ -48,13 +48,12 @@ define('Controls/Container/PendingRegistrator', [
     * will be corrected. It will be unexpected closing of popup for user who maybe don't want to close popup anymore
     * in the light of developments.
     *
-    * @class Controls/Container/LoadingIndicator
+    * @class Controls/Container/PendingRegistrator
     * @extends Core/Control
     * @control
     * @author Krasilnikov A.
     * @public
     * @category Container
-    * @demo Controls-demo/Container/LoadingIndicator
     */
 
    /**

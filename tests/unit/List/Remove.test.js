@@ -1,10 +1,10 @@
 define([
-   'Controls/List/Remover',
+   'Controls/lists',
    'Types/source',
    'Types/collection',
    'Core/Deferred',
    'Core/core-clone'
-], function(Remove, sourceLib, collection, Deferred, cClone) {
+], function(lists, sourceLib, collection, Deferred, cClone) {
    describe('Controls.List.Remover', function() {
       var remover;
 
@@ -29,7 +29,7 @@ define([
                data: cClone(data)
             });
 
-         remover = new Remove();
+         remover = new lists.Remover();
          remover._source = source;
          remover._items = rs;
       });

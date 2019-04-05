@@ -16,7 +16,7 @@ define('Controls/Input/interface/IOnlyPositive', [], function() {
     * @example
     * In this example you _inputValue in the control state will store only a positive number.
     * <pre>
-    *    <Controls.Input.Number bind:value="_inputValue" onlyPositive="{{true}}"/>
+    *    <Controls.input:Number bind:value="_inputValue" onlyPositive="{{true}}"/>
     * </pre>
     */
 });

@@ -180,13 +180,11 @@
 }
 
 .ws-is-no-touch {
-   .controls-DropdownList__row.theme_@{themeName} {
-      &:hover {
-         background: @background_DropdownList-row_hover;
+   .controls-DropdownList__row:hover.theme_@{themeName} {
+      background: @background_DropdownList-row_hover;
+      .controls-DropdownList__row-checkbox.theme_@{themeName} {
+          visibility: visible;
       }
-   }
-   .controls-DropdownList__row-checkbox {
-      visibility: visible;
    }
 }
 
@@ -245,23 +243,32 @@
    flex-shrink: 0;
 }
 
-.controls-DropdownList__footer {
+.controls-DropdownList__footer.theme_@{themeName} {
    display: flex;
+   align-items: center;
    min-height: @min-height_DropdownList-footer;
    padding-bottom: @spacing_DropdownList-between-footer-bottomBorder;
 }
 
-.controls-DropdownList__applyButton {
+.controls-DropdownList__hasMoreButton.theme_@{themeName} {
+   padding-left: @spacing_DropdownList-between-moreButton-leftBorder;
+}
+.controls-DropdownList_multiSelect__hasMoreButton.theme_@{themeName} {
+   padding-left: @spacing_DropdownList_multiSelect-between-moreButton-leftBorder;
+}
+
+.controls-DropdownList__applyButton.theme_@{themeName} {
    display: flex;
    padding-right: @spacing_DropdownList-between-applyButton-rightBorder;
+   padding-left: @spacing_DropdownList-between-applyButton-footerContent;
    margin-left: auto;
    align-items: center;
 }
 
-.controls-DropdownList__row-checkbox_default {
+.controls-DropdownList__row-checkbox.theme_@{themeName} {
    visibility: hidden;
 }
 
-.controls-DropdownList__row-checkbox_active {
+.controls-DropdownList__row-checkbox_active.theme_@{themeName} {
    visibility: visible;
 }

@@ -17,6 +17,7 @@
     height: 100%;
     position: absolute;
     left: 0;
+    top: 0;
     background: @background_SelectedCollection;
 }
 
@@ -86,6 +87,10 @@
     .flex-shrink(1);
     display: inline-block;
     max-width: 100%;
+}
+
+.controls-SelectedCollection__item__caption-wrapper-default,
+.controls-SelectedCollection__item__caption-wrapper-oneRow {
     line-height: @line-height_SelectedCollection-item;
 }
 
@@ -93,16 +98,25 @@
     .text-overflow();
 }
 
-.controls-SelectedCollection__item__caption-size-default, .controls-SelectedCollection__item__caption-size-s {
-    font-size: @font-size_SelectedCollection-size_s;
-}
-
+.controls-SelectedCollection__item__caption-size-default,
 .controls-SelectedCollection__item__caption-size-m {
     font-size: @font-size_SelectedCollection-size_m;
 }
 
 .controls-SelectedCollection__item__caption-size-l {
     font-size: @font-size_SelectedCollection-size_l;
+}
+
+.controls-SelectedCollection__item__caption-size-xl {
+    font-size: @font-size_SelectedCollection-size_xl;
+}
+
+.controls-SelectedCollection__item__caption-size-2xl {
+    font-size: @font-size_SelectedCollection-size_2xl;
+}
+
+.controls-SelectedCollection__item__caption-size-3xl {
+    font-size: @font-size_SelectedCollection-size_3xl;
 }
 
 .controls-SelectedCollection__item__caption-style-bold,
@@ -141,10 +155,13 @@
 
 .controls-SelectedCollection__collectionItem_layout_twoColumns {
     width: 50%;
+    align-items: center;
 }
 
 .controls-SelectedCollection__infobox_content {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 //https://online.sbis.ru/opendoc.html?guid=d3234727-b6a0-4f3a-a941-cfb1a3b3e433

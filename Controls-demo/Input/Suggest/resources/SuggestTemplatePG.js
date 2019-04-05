@@ -1,8 +1,7 @@
 define('Controls-demo/Input/Suggest/resources/SuggestTemplatePG', [
    'Core/Control',
    'wml!Controls-demo/Input/Suggest/resources/SuggestTemplatePG',
-   'wml!Controls/List/ItemTemplate',
-   'Controls/List',
+   'Controls/lists',
    'Controls/Container/Suggest/List',
    'wml!Controls-demo/Input/Suggest/resources/CustomTemplatePG'
 ], function(Control, template) {
