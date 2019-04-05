@@ -131,7 +131,7 @@ define(
          it('Sticky with option fittingMode=overflow', () => {
             let left = 1700;
             let right = 1900;
-            let targetC = {...targetCoords, left, right};
+            let targetC = { ...targetCoords, left, right };
 
             var position = StickyStrategy.getPosition({
                fittingMode: 'overflow',
@@ -164,7 +164,7 @@ define(
             assert.equal(position.left, 1520);
          });
 
-         it ('Sticky', () => {
+         it('Sticky', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
@@ -213,7 +213,7 @@ define(
             assert.equal(Object.keys(position).length, 2);
          });
 
-         it ('Sticky with body scroll', () => {
+         it('Sticky with body scroll', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
@@ -241,7 +241,7 @@ define(
          });
 
 
-         it ('Sticky with margins', () => {
+         it('Sticky with margins', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
@@ -273,7 +273,7 @@ define(
             assert.equal(Object.keys(position).length, 2);
          });
 
-         it ('Sticky revert position', () => {
+         it('Sticky revert position', () => {
             let cfg = getPositionConfig();
             cfg.sizes.height = 400;
             let position = StickyStrategy.getPosition(cfg, targetCoords);
@@ -296,7 +296,7 @@ define(
             assert.equal(Object.keys(position).length, 2);
          });
 
-         it ('Sticky fittingMode fixed', () => {
+         it('Sticky fittingMode fixed', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
@@ -323,6 +323,13 @@ define(
             assert.equal(position.bottom, 600);
             assert.equal(position.width, 200);
             assert.equal(Object.keys(position).length, 3);
+         });
+
+         it('Sticky check overflow', () => {
+            let popupCfg = { ...getPositionConfig() };
+            let position = { right: 0 };
+            let overflow = StickyStrategy._private.checkOverflow(popupCfg, targetCoords, position, 'horizontal');
+            assert.equal(overflow, 0);
          });
       });
    }
