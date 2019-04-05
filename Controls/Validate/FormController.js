@@ -40,19 +40,23 @@ define('Controls/Validate/FormController',
                }
             });
 
-            // TODO: willl be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
-            this._validates.reverse();
+            // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
             var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
-               var
-                  key;
+               var key, needValid, resultCounter = 0;
 
                // Walking through object with errors and focusing first not valid field.
-               for (key in results) {
-                  if (results[key]) {
-                     this._validates[key].activate();
-                     break;
+               for (key in this._validates) {
+                  if (!this._validates[key]._options.readOnly) {
+                     if (results[resultCounter]) {
+                        needValid = this._validates[key];
+                     }
+                     resultCounter++;
                   }
                }
+               if (needValid) {
+                  this.activateValidator(needValid);
+               }
+               this._validates.reverse();
                return results;
             }.bind(this)).addErrback(function(e) {
                Env.IoC.resolve('ILogger').error('Form', 'Submit error', e);
@@ -60,6 +64,9 @@ define('Controls/Validate/FormController',
             });
             this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });
             return resultDef;
+         },
+         activateValidator: function(control) {
+            control.activate();
          },
          setValidationResult: function() {
             this._validates.forEach(function(validate) {
