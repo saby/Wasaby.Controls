@@ -1108,7 +1108,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
 
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
-                if (self._listViewModel.getCount() && self._isScrollShown) {
+                // FIXME self._options.task46390860
+                // In the chat, after reload, need to scroll to the last element, because the last message is from below.
+                // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
+                // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
+                // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
+                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
                     const firstItem = self._listViewModel.getFirstItem();
 
                     //the first item may be missing, if, for example, only groups are drawn in the list
