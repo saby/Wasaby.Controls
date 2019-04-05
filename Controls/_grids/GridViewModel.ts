@@ -7,7 +7,10 @@ import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import { GridLayoutUtil, SupportStatusEnum } from './utils/GridLayoutUtil';
+import {
+    isFullGridSupport, isNoGridSupport, isPartialGridSupport, getCellStyles,
+    toCssString, getTemplateColumnsStyle, getDefaultStylesFor, CssTemplatesEnum
+} from './utils/GridLayoutUtil';
 
 var
     _private = {
@@ -309,6 +312,41 @@ var
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
+        },
+
+        getEditingRowStyles: function (self, rowIndex) {
+
+            let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
+
+            if (self.getCount() < 2) {
+                return '';
+            }
+
+            // Если отрисовано больше одной записи, то необходимо руками считать правильную ширину, т.к. редактируемая строка
+            // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
+            let
+                column,
+                columnsWidths: Array<string|number> = [];
+
+                for (let i = 0; i< self._columns.length; i++) {
+                    column = self._columns[i];
+
+                    if (column.width && column.width === 'auto') {
+                        let
+                            referenceCellIndex = rowIndex === 0 ? self._columns.length + i : i,
+                            referenceCell = self._gridContainer.getElementsByClassName('controls-Grid__row-cell')[referenceCellIndex];
+
+                        columnsWidths.push(referenceCell.getBoundingClientRect().width + 'px');
+                    } else {
+                        columnsWidths.push(column.width || '1fr');
+                    }
+                }
+
+            styles += getTemplateColumnsStyle(columnsWidths);
+
+            styles += getCellStyles(rowIndex+1, 0, null, 3);
+
+            return styles;
         }
     },
 
@@ -331,9 +369,11 @@ var
         _ladder: null,
         _columnsVersion: 0,
 
-        _isFullGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.Full,
-        _isPartialGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.Partial,
-        _isNoGridSupport: GridLayoutUtil.supportStatus === SupportStatusEnum.None,
+        _isFullGridSupport: isFullGridSupport,
+        _isPartialGridSupport: isPartialGridSupport,
+        _isNoGridSupport: isNoGridSupport,
+
+        _gridContainer: null,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -371,7 +411,7 @@ var
         _prepareCrossBrowserColumn: function(column) {
             var
                 result = cClone(column);
-            if (GridLayoutUtil.supportStatus === SupportStatusEnum.None) {
+            if (isNoGridSupport) {
                 if (result.width === '1fr') {
                     result.width = 'auto';
                 }
@@ -484,7 +524,7 @@ var
             }
 
             if (this._isPartialGridSupport) {
-                headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
+                headerColumn.gridCellStyles = getCellStyles(0, columnIndex);
             }
 
             if (headerColumn.column.sortingProperty) {
@@ -558,14 +598,14 @@ var
             }
             resultsColumn.cellClasses = cellClasses;
 
-            if (GridLayoutUtil.supportStatus === SupportStatusEnum.Partial) {
+            if (isPartialGridSupport) {
                 let resultsPosition: string = this.getResultsPosition(),
                     rowIndex = 0;
 
                 rowIndex += resultsPosition === 'top' ? 0 : this._model.getStopIndex();
                 rowIndex += this.getHeader() ? 1 : 0;
 
-                resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
+                resultsColumn.gridCellStyles = getCellStyles(rowIndex, columnIndex);
             }
 
             return resultsColumn;
@@ -672,6 +712,10 @@ var
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
             this._prepareHeaderColumns(this._header, hasMultiSelect);
             this._prepareResultsColumns(this._columns, hasMultiSelect);
+        },
+
+        setGridContainerIfNotFullGridSupport: function (gridContainer: HTMLElement) {
+            this._gridContainer = gridContainer;
         },
 
         getItemById: function(id, keyProperty) {
@@ -786,10 +830,13 @@ var
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
-                    if (this._isPartialGridSupport) {
-                        current.gridGroupStyles = GridLayoutUtil.toCssString({
-                            '-ms-grid-row': current.index + 1
-                        });
+                    if (isPartialGridSupport) {
+                        current.gridGroupStyles = toCssString([
+                            {
+                                name: '-ms-grid-row',
+                                value: current.index + 1
+                            }
+                        ]);
                     }
 
                     return current;
@@ -823,6 +870,11 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
+            
+            if (current.isEditing && isPartialGridSupport) {
+                current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
+            }
+
             current.getCurrentColumn = function() {
                 var
                     currentColumn = {
@@ -870,10 +922,10 @@ var
                             'span 1;';
                     }
                 }
-                if (current.isPartialGridSupport) {
+                if (isPartialGridSupport) {
                     let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
                     rowOffset += self.getHeader() ? 1 : 0;
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
+                    currentColumn.gridCellStyles = getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
                 }
                 return currentColumn;
             };
@@ -891,6 +943,28 @@ var
 
         getNext: function() {
             return this._model.getNext();
+        },
+
+        getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
+            let
+                column,
+                columnsWidths: Array<string|number> = [];
+
+            for (let i = 0; i<this._columns.length; i++) {
+                column = this._columns[i];
+
+                // Если отрисовано больше одной записи, то необходимо руками считать ширину, т.к. редактируемая строка
+                // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
+                if (column.width && column.width === 'auto' && this.getCount() > 1) {
+
+                    let referenceRowIndex = rowIndex !== 0 ? 0 : 1;
+                    columnsWidths.push(gridCells[referenceRowIndex].getBoundingClientRect().width);
+                } else {
+                    columnsWidths.push(column.width || '1fr');
+                }
+            }
+
+            return getTemplateColumnsStyle(columnsWidths);
         },
 
         isLast: function() {
@@ -998,11 +1072,16 @@ var
                   columnsLength = this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
                   rowIndex = 0;
 
-              styles += GridLayoutUtil.toCssString({'-ms-grid-column-span': columnsLength});
+              styles += toCssString([
+                  {
+                      name: '-ms-grid-column-span',
+                      value: columnsLength
+                  },
+              ]);
               rowIndex += this.getHeader() ? 1 : 0;
               rowIndex += this.getResultsPosition() === 'top' ? 1 : 0;
 
-              styles += GridLayoutUtil.getCellStyles(rowIndex, 0);
+              styles += getCellStyles(rowIndex, 0);
           }
 
           return styles;

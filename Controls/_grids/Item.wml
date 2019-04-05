@@ -56,6 +56,24 @@
       <ws:partial template="columnContentWrapper"/>
    </Controls.StickyHeader>
 </ws:template>
+<ws:template name="partialGridSupportItem">
+<ws:partial template="colTpl"
+            currentColumn="{{ itemData.getCurrentColumn() }}"
+            attr:key="{{itemData.getCurrentColumn().getKey()}}"
+            on:click="_onItemClick(itemData.dispItem)"
+            on:contextmenu="_onItemContextMenu(itemData)"
+            on:swipe="_onItemSwipe(itemData)"
+            on:mousedown="_onItemMouseDown(itemData)"
+            on:mouseenter="_onItemMouseEnter(itemData)"
+            on:mouseleave="_onItemMouseLeave(itemData)"
+            on:mousemove="_onItemMouseMove(itemData)"
+            on:wheel="_onItemWheel(itemData)"
+            attr:style="{{ itemData.getCurrentColumn().gridCellStyles }}"
+            attr:class="controls-ListView__itemV
+                              {{ highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
+                              controls-Grid__row_{{itemData.style || 'default'}}
+                              {{itemData.isHovered ? 'controls-Grid_row-cell_hovered'}}" />
+</ws:template>
 <ws:if data="{{itemData.isNoGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
@@ -88,24 +106,18 @@
       </Controls.StickyHeader.Group>
    </ws:if>
    <ws:else>
-      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-         <ws:partial template="colTpl"
-                     currentColumn="{{ itemData.getCurrentColumn() }}"
-                     attr:key="{{itemData.getCurrentColumn().getKey()}}"
-                     on:click="_onItemClick(itemData.dispItem)"
-                     on:contextmenu="_onItemContextMenu(itemData)"
-                     on:swipe="_onItemSwipe(itemData)"
-                     on:mousedown="_onItemMouseDown(itemData)"
-                     on:mouseenter="_onItemMouseEnter(itemData)"
-                     on:mouseleave="_onItemMouseLeave(itemData)"
-                     on:mousemove="_onItemMouseMove(itemData)"
-                     on:wheel="_onItemWheel(itemData)"
-                     attr:style="{{ itemData.getCurrentColumn().gridCellStyles }}"
-                     attr:class="controls-ListView__itemV
-                           {{ highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
-                           controls-Grid__row_{{itemData.style || 'default'}}
-                           {{itemData.isHovered ? 'controls-Grid_row-cell_hovered'}}" />
-      </ws:for>
+      <ws:if data="{{itemData.isEditing}}">
+         <div attr:style="{{itemData.editingRowStyles}}">
+            <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
+               <ws:partial template="partialGridSupportItem"></ws:partial>
+            </ws:for>
+         </div>
+      </ws:if>
+      <ws:else>
+         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
+            <ws:partial template="partialGridSupportItem"></ws:partial>
+         </ws:for>
+      </ws:else>
    </ws:else>
 </ws:else>
 <ws:else>

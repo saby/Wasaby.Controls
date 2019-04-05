@@ -16,7 +16,7 @@ import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
 // import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
-import {GridLayoutUtil, SupportStatusEnum} from './utils/GridLayoutUtil';
+import {CssTemplatesEnum, getTemplateColumnsStyle, supportStatus, SupportStatusesEnum} from './utils/GridLayoutUtil';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
 function isEqualWithSkip(obj1, obj2, skipFields) {
@@ -52,8 +52,8 @@ var
                 Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
             }
         },
-        getGridTemplateColumns: function(columns, multiselect) {
-            let columnsWidths = [];
+        getGridTemplateColumns: function(columns, multiselect): string {
+            let columnsWidths: Array<string> = [];
 
             if (multiselect === 'visible' || multiselect === 'onhover') {
                 columnsWidths.push('auto');
@@ -62,7 +62,7 @@ var
                 columnsWidths.push(column.width || '1fr');
             });
 
-            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
+            return getTemplateColumnsStyle(columnsWidths);
         },
         prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
@@ -104,14 +104,22 @@ var
             return result;
         },
         chooseGridTemplate: function (): Function {
-            switch (GridLayoutUtil.supportStatus) {
-                case SupportStatusEnum.Full:
+            switch (supportStatus) {
+                case SupportStatusesEnum.Full:
                     return FullGridSupportLayout;
-                case SupportStatusEnum.Partial:
+                case SupportStatusesEnum.Partial:
                     return PartialGridSupportLayout;
-                case SupportStatusEnum.None:
+                case SupportStatusesEnum.None:
                     return NoGridSupportLayout;
             }
+        },
+        setGridContainerIfNotFullGridSupport: function (self, container: HTMLElement) {
+
+            // Не понятно как назвать. Я ничего не готовлю, нужно запомнить ячейки, чтобы при отрисовки редактирования по месту
+            // выставить ячейкам строки правильные размеры, т.к. редактируемая строка - отдельный грид.
+
+            //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            self._listModel.setGridContainerIfNotFullGridSupport(container[0] || container);
         }
     },
     GridView = ListView.extend({
@@ -140,12 +148,16 @@ var
                 this._listModel.setColumns(newCfg.columns);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
+                } else {
+                    _private.setGridContainerIfNotFullGridSupport(this, this._container);
                 }
             }
             if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
+                } else {
+                    _private.setGridContainerIfNotFullGridSupport(this, this._container);
                 }
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
@@ -173,6 +185,8 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
+            } else {
+                _private.setGridContainerIfNotFullGridSupport(this, this._container);
             }
         }
     });

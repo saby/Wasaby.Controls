@@ -126,7 +126,13 @@
    justify-content: center;
    text-align: center;
 }
-
+.controls-Grid__row_editing {
+   display: contents;
+}
+.controls-Grid_partial-support .controls-Grid__row_editing{
+   display: grid;
+   display: -ms-grid;
+}
 .ws-is-no-touch {
    .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
    .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
