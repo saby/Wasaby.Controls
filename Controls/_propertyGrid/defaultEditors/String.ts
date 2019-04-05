@@ -29,6 +29,7 @@ class StringEditor extends Control implements IEditor {
 
     _inputCompleted(event: Event, value: string): void {
         if (this.initialValue !== value) {
+            this.initialValue = value;
             this._notify('propertyValueChanged', [value], {bubbling: true});
         }
     }
