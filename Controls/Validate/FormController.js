@@ -65,8 +65,8 @@ define('Controls/Validate/FormController',
             this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });
             return resultDef;
          },
-        activateValidator: function (control){
-           control.activate();
+         activateValidator: function(control) {
+            control.activate();
          },
          setValidationResult: function() {
             this._validates.forEach(function(validate) {
