@@ -101,7 +101,7 @@ define([
                      icon: 'icon-DK'
                   }),
                   showed: actions.slice(0, 3).concat({
-                     icon: 'icon-ExpandDown',
+                     icon: 'icon-SwipeMenu',
                      title: i18n.rk('Ещё'),
                      _isMenu: true,
                      showType: 2
