@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_slider/sliderTemplate');
+import calculations from 'Controls/_slider/Utils';
 import DragNDrop = require('Controls/DragNDrop/Controller');
 
 /**
@@ -13,17 +14,6 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  */
 
 const _private = {
-   _round: function(val, prec) {
-      return parseFloat(val.toFixed(prec));
-   },
-   _getRatio: function(pos, left, width) {
-      return (pos - left) / width;
-   },
-   _calcValue: function(minValue, maxValue, ratio) {
-      const rangeLength = maxValue - minValue;
-      const val = Math.max(Math.min(ratio, 1), 0) * rangeLength;
-      return minValue + val;
-   },
    _checkOptions: function(opts) {
       if (opts.minValue === undefined || opts.maxValue === undefined) {
          Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
@@ -116,8 +106,8 @@ const Range = Control.extend({
          _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
          _private._checkOptions(options);
       }
-      this._endValue =  Math.min(options.maxValue, options.endValue) || options.maxValue;
-      this._startValue =  Math.max(options.minValue, options.startValue) || options.minValue;
+      this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
+      this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
       _private._render(this, this._options.minValue, this._options.maxValue, this._startValue, this._endValue);
    },
    /**
@@ -128,9 +118,9 @@ const Range = Control.extend({
          const nativeEvent = event.nativeEvent;
          this._startElemPosition = event.nativeEvent.clientX;
          const box = this._children.area.getBoundingClientRect();
-         const ratio = _private._getRatio(nativeEvent.pageX, box.left + window.pageXOffset, box.width);
-         this._value = _private._calcValue(this._options.minValue, this._options.maxValue, ratio);;
-         this._value = _private._round(this._value, this._options.precision);
+         const ratio = calculations.getRatio(nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);;
+         this._value = calculations.round(this._value, this._options.precision);
          const pointName = _private._getClosestPoint(this._value, this._startValue, this._endValue);
          if (pointName === 'start') {
             _private._setStartValue(this, this._value);
@@ -148,9 +138,9 @@ const Range = Control.extend({
    _onDragMoveHandler(e, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = _private._getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
-         this._value = _private._calcValue(this._options.minValue, this._options.maxValue, ratio);
-         this._value = _private._round(this._value, this._options.precision);
+         const ratio = calculations.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);
+         this._value = calculations.round(this._value, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {
             _private._setStartValue(this, Math.min(this._value, this._endValue));
          }

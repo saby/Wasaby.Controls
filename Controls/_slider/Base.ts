@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_slider/sliderTemplate');
+import calculations from 'Controls/_slider/Utils';
 import DragNDrop = require('Controls/DragNDrop/Controller');
 
 /**
@@ -13,18 +14,7 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  */
 
 var _private = {
-   _round: function (val, perc) {
-      return parseFloat(val.toFixed(perc));
-   },
-   _getRatio: function(pos, left, width) {
-       return (pos - left) / width;
-   },
-   _calcValue: function (minValue, maxValue, ratio) {
-      const rangeLength = maxValue - minValue;
-      const val = Math.max(Math.min(ratio, 1), 0) * rangeLength;
-      return minValue + val;
-   },
-   _checkOptions: function(opts) {
+     _checkOptions: function(opts) {
       if (opts.minValue === undefined || opts.maxValue === undefined) {
          Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
       }
@@ -92,9 +82,9 @@ var Base = Control.extend({
          const nativeEvent = event.nativeEvent;
          this._startElemPosition = event.nativeEvent.clientX;
          const box = this._children.area.getBoundingClientRect();
-         const ratio = _private._getRatio(nativeEvent.pageX, box.left + window.pageXOffset, box.width);
-         this._value = _private._calcValue(this._options.minValue, this._options.maxValue, ratio);
-         this._value = _private._round(this._value, this._options.precision);
+         const ratio = calculations.getRatio(nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);
+         this._value = calculations.round(this._value, this._options.precision);
          _private._setValue(this, this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
@@ -105,9 +95,9 @@ var Base = Control.extend({
    _onDragMoveHandler: function(e, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = _private._getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
-         this._value = _private._calcValue(this._options.minValue, this._options.maxValue, ratio);
-         this._value = _private._round(this._value,this._options.precision);
+         const ratio = calculations.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);
+         this._value = calculations.round(this._value,this._options.precision);
          _private._setValue(this, this._value);
       }
    },

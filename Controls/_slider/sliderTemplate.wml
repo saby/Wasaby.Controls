@@ -22,10 +22,6 @@
                               controls-Slider__line{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
                               controls-Slider__line__empty{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}">
                   </div>
-               </div>
-               <div class="controls-Slider__line__wrapper_theme-{{_options.theme}}
-                           controls-Slider__line__wrapper{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
-                           controls-Slider__line__wrapper{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}">
                   <div class="controls-Slider__line_theme-{{_options.theme}}
                               controls-Slider__line{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
                               controls-Slider__line__full{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}"
