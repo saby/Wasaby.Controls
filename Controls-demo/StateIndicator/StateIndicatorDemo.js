@@ -1,16 +1,16 @@
 define('Controls-demo/StateIndicator/StateIndicatorDemo', [
    'Core/Control',
-   'wml!Controls-demo/StateIndicator/StateIndicatorDemo', 
-   'wml!Controls-demo/StateIndicator/template/template',   
+   'wml!Controls-demo/StateIndicator/StateIndicatorDemo',
+   'wml!Controls-demo/StateIndicator/template/template',
    'css!Controls-demo/StateIndicator/StateIndicatorDemo',
 ], function(Control, template, popupTemplate) {
    'use strict';
 
 
    function parseData(str){
-      var dataArray = JSON.parse('['+str+']');   
+      var dataArray = JSON.parse('['+str+']');
       var data = {value: 0, className: "", title: ""};
-      if (dataArray.length === 3){                
+      if (dataArray.length === 3){
          data.value = typeof dataArray[0] == "number" ? dataArray[0] : 0;
          data.className = typeof dataArray[1] == "string" ? dataArray[1] : "";
          data.title = typeof dataArray[2] == "string" ? dataArray[2] : "";
@@ -39,7 +39,7 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
          _data: [],
          _scale: 10,
 
-         _beforeMount: function() {            
+         _beforeMount: function() {
             this._data = [
                {value: 25, className: '', title: 'Выполнено'},
                {value: 36, className: '', title: 'В работе'},
@@ -62,7 +62,7 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
             this._data = this._data.slice();
             this._data[0] = data;
             this._eventName = 'DataChanged';
-         },        
+         },
          changeData1: function(e, newData){
             var data = parseData(newData);
             this._data = this._data.slice();
@@ -85,26 +85,22 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
          reset: function() {
             this._eventName = 'no event';
          },
-         
-         _mouseLeaveHandler: function(e){           
-            this._notify('closeInfoBox', [2000], {bubbling: true});
-         },
-         _mouseEnterHandler: function(e, _item){ 
+         _mouseEnterHandler: function(e, _item){
             var config = {
                trigger: 'hover',
                name: 'legend',
                target: _item,
                position: 'tc',
-               showDelay: 500,
+               showDelay: 1000,
                template: popupTemplate,
                templateOptions: {data: this._data}
             };
-            this._notify('openInfoBox', [config], {bubbling: true});
+            this._children.IBOpener.open(config);
          }
 
       });
 
-   
+
 
 
    return Index;
