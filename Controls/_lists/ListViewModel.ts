@@ -169,12 +169,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _calcItemVersion: function(item, key) {
-        var version;
-        if (this._editingItemData && this._editingItemData.key === key) {
-            version = 'EDITING_';
-        } else {
-            version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
-        }
+        var version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
 
         if (this._dragEntity && this._dragEntity.getItems().indexOf(key) !== -1) {
             version = 'DRAG_ITEM_' + version;
