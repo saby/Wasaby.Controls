@@ -54,7 +54,7 @@ define('Controls/Validate/FormController',
                   }
                }
                if (needValid) {
-                  needValid.activate();
+                  this.activateValidator(needValid);
                }
                this._validates.reverse();
                return results;
@@ -64,6 +64,9 @@ define('Controls/Validate/FormController',
             });
             this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });
             return resultDef;
+         },
+        activateValidator: function (control){
+           control.activate();
          },
          setValidationResult: function() {
             this._validates.forEach(function(validate) {
