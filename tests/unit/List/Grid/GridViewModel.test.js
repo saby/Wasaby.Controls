@@ -118,6 +118,26 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
+         it('calcItemColumnVersion', function() {
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'hidden'
+               }
+            }, 1, 0), '1_1_0');
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'visible'
+               }
+            }, 1, 0), '1_1_-1');
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'visible'
+               }
+            }, 1, 1), '1_1_0');
+         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
