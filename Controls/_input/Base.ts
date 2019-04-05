@@ -113,6 +113,10 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          isFieldFocused: function(self) {
+            /**
+             * A field in focus when it is the active element on the page.
+             * The active element is only on the client. The field cannot be focused on the server.
+             */
             if (self._isBrowserPlatform) {
                return self._getActiveElement() === self._getField();
             }
