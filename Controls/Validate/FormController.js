@@ -21,9 +21,7 @@ define('Controls/Validate/FormController',
          },
          onValidateCreated: function(e, control) {
             e.blockUpdate = true;
-            if (!control._options.readOnly) {
-               this._validates.push(control);
-            }
+            this._validates.push(control);
          },
          onValidateDestroyed: function(e, control) {
             this._validates = this._validates.filter(function(validate) {
@@ -36,23 +34,26 @@ define('Controls/Validate/FormController',
             // The infobox should be displayed on the first not valid field.
             this._validates.reverse();
             this._validates.forEach(function(validate) {
-               var def = validate.validate();
-               parallelDeferred.push(def);
+               if (!(validate._options && validate._options.readOnly)) {
+                  var def = validate.validate();
+                  parallelDeferred.push(def);
+               }
             });
 
             // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
             var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
-               var key, resultKey;
+               var key, needValid, resultCounter = 0;
 
                // Walking through object with errors and focusing first not valid field.
-               for (key in results) {
-                  if (results[key]) {
-                     resultKey = key;
+               for (key in this._validates) {
+                  if (!this._validates[key]._options.readOnly) {
+                     if (results[resultCounter]) {
+                        needValid = this._validates[key];
+                     }
+                     resultCounter++;
                   }
                }
-               if (resultKey) {
-                  this._validates[resultKey].activate();
-               }
+               needValid.activate();
                this._validates.reverse();
                return results;
             }.bind(this)).addErrback(function(e) {
