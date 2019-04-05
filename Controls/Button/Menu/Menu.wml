@@ -23,7 +23,6 @@
         lazyItemsLoad="{{true}}"
         additionalDependencies="{{['css!theme?Controls/Button/Menu/MenuPopup']}}"
         theme="{{_options.theme}}"
-        revertPositionStyle="{{true}}"
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper theme_{{_options.theme}}">

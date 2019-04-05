@@ -13,6 +13,8 @@ define('Controls/Input/Dropdown',
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
        * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
+       *
+       * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
@@ -23,6 +25,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Dropdown/interface/IFooterTemplate
        * @mixes Controls/Dropdown/interface/IHeaderTemplate
+       * @mixes Controls/interface/ISelectorDialog
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
@@ -30,7 +33,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
-       * @author Золотова Элина
+       * @author Золотова Э.Е.
        * @category Input
        * @demo Controls-demo/Input/Dropdown/DropdownPG
        */
@@ -119,12 +122,12 @@ define('Controls/Input/Dropdown',
             return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
-         _selectedKeysChanged: function(event, selectedKeys) {
+         _selectedKeysChangedHandler: function(event, selectedKeys) {
             return this._notify('selectedKeysChanged', [selectedKeys]);
          },
 
          _setText: function(items) {
-            if (items.length || this._options.emptyText) {
+            if (items.length) {
                this._item = items[0];
                this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || !items[0]);
                if (this._isEmptyItem) {

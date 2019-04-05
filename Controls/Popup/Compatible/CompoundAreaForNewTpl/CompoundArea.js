@@ -192,7 +192,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          _onCloseHandler: function() {
             var self = this;
             this._vDomTemplate.finishPendingOperations().addCallback(function() {
-               self._callCloseHandler();
                self.sendCommand('close', this._result);
                self._result = null;
             });
