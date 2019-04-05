@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_propertyGrid/defaultEditors/String');
+import template = require('wml!Controls/_propertyGrid/defaultEditors/Text');
 
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 
 /**
- * Editor for string type.
- * @class Controls/_propertyGrid/defaultEditors/String
+ * Editor for multiline string type.
+ * @class Controls/_propertyGrid/defaultEditors/Text
  * @extends Core/Control
  * @interface Controls/_propertyGrid/IEditor
  * @control
@@ -15,7 +15,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  */
 
 // @ts-ignore
-class StringEditor extends Control implements IEditor {
+class TextEditor extends Control implements IEditor {
     protected _template: Function = template;
     protected _options: IEditorOptions;
 
@@ -34,4 +34,4 @@ class StringEditor extends Control implements IEditor {
     }
 }
 
-export = StringEditor;
+export = TextEditor;
