@@ -53,7 +53,9 @@ define('Controls/Validate/FormController',
                      resultCounter++;
                   }
                }
-               needValid.activate();
+               if(needValid) {
+                  needValid.activate();
+               }
                this._validates.reverse();
                return results;
             }.bind(this)).addErrback(function(e) {
