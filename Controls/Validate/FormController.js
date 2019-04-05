@@ -53,7 +53,7 @@ define('Controls/Validate/FormController',
                      resultCounter++;
                   }
                }
-               if(needValid) {
+               if (needValid) {
                   needValid.activate();
                }
                this._validates.reverse();
