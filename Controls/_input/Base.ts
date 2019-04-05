@@ -175,8 +175,21 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @param inputType Type of user input.
           */
          handleInput: function(self, splitValue, inputType) {
+            const displayValue: string = self._viewModel.displayValue;
+
             if (self._viewModel.handleInput(splitValue, inputType)) {
-               _private.notifyValueChanged(self);
+               const formattedText = self._options.inputCallback({
+                  value: self._viewModel.value,
+                  position: self._viewModel.selection.start,
+                  displayValue: self._viewModel.displayValue
+               });
+
+               self._viewModel.displayValue = formattedText.displayValue;
+               self._viewModel.selection = formattedText.position;
+
+               if (self._viewModel.displayValue !== displayValue) {
+                  _private.notifyValueChanged(self);
+               }
             }
          },
 

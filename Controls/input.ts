@@ -13,6 +13,11 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
+import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
+
+const InputCallback = {
+    lengthConstraint
+};
 
 export {
     Base,
@@ -27,5 +32,6 @@ export {
     Date,
     BaseViewModel,
     MaskFormatBuilder,
-    MaskInputProcessor
-}
+    MaskInputProcessor,
+    InputCallback
+};
