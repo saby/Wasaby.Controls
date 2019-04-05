@@ -1,4 +1,11 @@
 .ErrorContainer {
-  heigh: 100%;
+  height: 100%;
   width: 100%;
+
+  /*
+   * need to scale by content in win XP / chrome 49
+   */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
