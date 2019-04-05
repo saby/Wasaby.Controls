@@ -1,8 +1,9 @@
 define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
+   'wml!Controls-demo/Input/Dropdown/Dropdown',
    'Types/source',
    'Controls-demo/Input/Dropdown//historySourceDropdown',
-   'wml!Controls-demo/Input/Dropdown/Dropdown',
+   'Controls/Constants',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',
    'wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon',
@@ -11,7 +12,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
-], function(Control, source, historySource, template) {
+], function(Control, template, source, historySource, ControlsConstants) {
 
    'use strict';
 
@@ -32,6 +33,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _emptyItems2: null,
       _longItems: null,
       _multiSelectItems: null,
+      _groupItems: null,
+      _groupTextItems: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -52,6 +55,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysLong: null,
       _selectedKeysMultiSelect: null,
       _selectedKeysMultiSelect2: null,
+      _selectedKeysGroup: null,
+      _selectedKeysGroupText: null,
 
       _beforeMount: function() {
          this._simpleItems = [
@@ -178,6 +183,29 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 6, title: 'Services in tailoring and repair of clothes, textiles' },
             { id: 7, title: 'Computers and components, computing, office equipment' }
          ];
+         this._groupItems = [
+            { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
+            {
+               id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
+            },
+            {
+               id: 3, title: 'Time off', iconStyle: 'purple', icon: 'icon-small icon-SelfVacation', group: '2'
+            },
+            {
+               id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
+            },
+            {
+               id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
+            }
+         ];
+         this._groupTextItems = [
+            { id: 1, title: 'Project', group: 'Select' },
+            { id: 2, title: 'Work plan', group: 'Select' },
+            { id: 3, title: 'Task', group: 'Select' },
+            { id: 4, title: 'Merge request', group: 'Create' },
+            { id: 5, title: 'Meeting', group: 'Create' },
+            { id: 6, title: 'Video meeting', group: 'Create' }
+         ];
          this._historySource = historySource.createMemory();
          this._historySourceMulti = historySource.createMemory();
          this._selectedKeysSimple = [1];
@@ -200,6 +228,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysLong = [2];
          this._selectedKeysMultiSelect = [1];
          this._selectedKeysMultiSelect2 = [6, 7];
+         this._selectedKeysGroup = [1];
+         this._selectedKeysGroupText = [1];
       },
       _createMemory: function(items) {
          return new source.Memory({
@@ -226,6 +256,13 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._children.stack.open({
             opener: this._children.stackButton
          });
+      },
+
+      _groupingKeyCallback: function(item) {
+         if (item.get('group') === 'hidden' || !item.get('group')) {
+            return ControlsConstants.view.hiddenGroup;
+         }
+         return item.get('group');
       }
    });
    return DropdownDemo;
