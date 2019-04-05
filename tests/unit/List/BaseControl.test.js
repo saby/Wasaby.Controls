@@ -1224,6 +1224,47 @@ define([
          }, 100);
       });
 
+      it('__needShowEmptyTemplate', () => {
+         let baseControlOptions = {
+            viewModelConstructor: lists.ListViewModel,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewName: 'Controls/List/ListView',
+            source: source,
+            emptyTemplate: null
+         };
+
+         let baseControl = new BaseControl(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         return new Promise(function(resolve) {
+            baseControl._beforeMount(baseControlOptions).addCallback(function(result) {
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+
+               baseControl._listViewModel.getItems().clear();
+               baseControl._options.emptyTemplate = {};
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate());
+
+               baseControl._loadingState = 'down';
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+
+               baseControl._loadingState = 'all';
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate());
+
+               baseControl._listViewModel._editingItemData = {};
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+               resolve();
+
+               return result;
+            });
+         });
+      });
+
       it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var

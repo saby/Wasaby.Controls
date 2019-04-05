@@ -1245,6 +1245,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         }
     },
 
+    __needShowEmptyTemplate: function(): boolean {
+        return this._options.emptyTemplate &&
+               !this._listViewModel.getCount() && !this._listViewModel.getEditingItemData() &&
+               (!this._loadingState || this._loadingState === 'all');
+    },
+
     _onCheckBoxClick: function(e, key, status) {
         this._children.selectionController.onCheckBoxClick(key, status);
         this._notify('checkboxClick', [key, status]);
