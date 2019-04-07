@@ -11,6 +11,7 @@
    pageName="{{ pageName }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
+   headJson="{{ _options.headJson }}"
    title="{{ _options.title }}"
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"

@@ -14,6 +14,7 @@ define('Controls/Decorator/Markup/resources/template', [
       resolver,
       resolverParams,
       resolverMode,
+      currentValidHtml,
       linkAttributesMap = {
          'action': true,
          'background': true,
@@ -45,7 +46,7 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function validAttributesInsertion(to, from) {
-      var validAttributes = validHtml.validAttributes;
+      var validAttributes = currentValidHtml.validAttributes;
       for (var key in from) {
          if (!from.hasOwnProperty(key)) {
             continue;
@@ -87,7 +88,7 @@ define('Controls/Decorator/Markup/resources/template', [
             events: {},
             key: key
          };
-      if (!validHtml.validNodes[tagName]) {
+      if (!currentValidHtml.validNodes[tagName]) {
          resolverMode ^= wasResolved;
          return [];
       }
@@ -112,6 +113,7 @@ define('Controls/Decorator/Markup/resources/template', [
       resolver = data._options.tagResolver;
       resolverParams = data._options.resolverParams || {};
       resolverMode = 1;
+      currentValidHtml = data._options.validHtml || validHtml;
 
       var elements = [],
          key = (attr && attr.key) || '_',

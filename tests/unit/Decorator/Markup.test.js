@@ -437,6 +437,44 @@ define([
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
+
+         it('validHtml option', function() {
+            var
+               validHtml = {
+                  validNodes: {
+                     any: true,
+                     tag: true,
+                     link: true,
+                     script: true
+                  },
+                  validAttributes: {
+                     name: true,
+                     value: true
+                  }
+               },
+               json = [
+                  ['p', '123'],
+                  ['div', '456'],
+                  ['any', { name: 'name', value: 'value', id: 'id' }],
+                  ['tag', 'inner text'],
+                  ['link'],
+                  ['script', 'alert(123);']
+               ],
+               goodHtml =
+                  '<any name="name" value="value"></any>' +
+                  '<tag>inner text</tag>' +
+                  '<link />' +
+                  '<script>alert(123);</script>',
+               checkHtml = template({
+                  _options: {
+                     value: json,
+                     validHtml: validHtml,
+                     tagResolver: noOuterTagResolver
+                  }
+               }, {});
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
          it('with linkDecorate resolver', function() {
             // Link with length 1500.
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
