@@ -2,7 +2,7 @@ define('Controls-demo/Container/MyScroll',
    [
       'Core/Control',
       'Types/source',
-      'WS.Data/Source/LocalSession',
+      'Types/_source/LocalSession',
       'wml!Controls-demo/Container/MyScroll',
       'Controls/lists',
       'Controls/Toggle/Checkbox',
