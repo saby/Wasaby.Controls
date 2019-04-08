@@ -171,7 +171,7 @@ var _private = {
          }
       };
 
-      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid && !_private.isEmpty(valueModel.year.str)) {
 
          // If there is a Replacer between the numbers, then the year is incorrect
          if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
