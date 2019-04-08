@@ -1,0 +1,17 @@
+{
+    "multi": true,
+    "old": {
+        "exclude": [
+            "fonts/TensorFont.less",
+            "helpers/AreaBlock.less",
+            "helpers/general.less"
+        ]
+    },
+    "new": {
+        "exclude": [
+            "fonts/TensorFont.less",
+            "helpers/AreaBlock.less",
+            "helpers/general.less"
+        ]
+    }
+}
