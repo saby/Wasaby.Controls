@@ -21,7 +21,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="emptyTemplateIf">
-    <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
+    <ws:if data="{{__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _loadingState)}}">
         <div class="controls-BaseControl__emptyTemplate">
             <ws:partial template="{{_options.emptyTemplate}}"/>
         </div>
