@@ -154,10 +154,13 @@ define('Controls-demo/OperationsPanel/Demo', [
       },
 
       _afterItemsMove: function(event, items, target, position) {
-         // To display the records in the correct order
-         if (position === 'on') {
-            this._children.list.reload();
-         }
+         this._children.operationsResultOpener.open({
+            templateOptions: {
+               operationsCount: items.length,
+               operationsSuccess: items.length,
+               title: 'Move items'
+            }
+         });
       },
 
       _beforeItemsRemove: function(event, items) {

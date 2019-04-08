@@ -62,6 +62,20 @@ function getItemActionsSize(
    };
 }
 
+function getPaddingSize(
+   titlePosition: TitlePosition,
+   itemActionsSize: ItemActionsSize
+): 's' | 'm' | 'l' {
+   switch (titlePosition) {
+      case 'none':
+         return 'm';
+      case 'right':
+         return 'l';
+      case 'bottom':
+         return itemActionsSize === 'l' ? 'l' : 's';
+   }
+}
+
 const VerticalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
@@ -80,7 +94,7 @@ const VerticalMeasurer: IMeasurer = {
       if (countOfActions !== actions.length) {
          itemActions = actions.slice(0, countOfActions - 1);
          itemActions.push({
-            icon: 'icon-ExpandDown',
+            icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
             showType: ShowType.MENU
@@ -93,7 +107,7 @@ const VerticalMeasurer: IMeasurer = {
             all: actions,
             showed: itemActions
          },
-         paddingSize: titlePosition === 'none' ? 'm' : 'l'
+         paddingSize: getPaddingSize(titlePosition, itemActionsSize)
       };
    },
    needIcon(
