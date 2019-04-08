@@ -41,7 +41,7 @@ define('Controls/Tile', [
     * @category List
     */
 
-   return lists.View.extend({
+   var Tile = lists.View.extend({
       _viewName: 'Controls/List/TreeTileView/TreeTileView',
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {
@@ -49,4 +49,12 @@ define('Controls/Tile', [
       }
    });
 
+   Tile.getDefaultOptions = function() {
+      return {
+         swipeDirection: 'column',
+         titlePosition: 'none'
+      };
+   };
+
+   return Tile;
 });
