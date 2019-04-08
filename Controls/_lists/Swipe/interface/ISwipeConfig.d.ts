@@ -8,5 +8,5 @@ export interface ISwipeConfig {
       all: IItemAction[],
       showed: IItemAction[]
    };
-   paddingSize: 'm' | 'l';
+   paddingSize: 's' | 'm' | 'l';
 }

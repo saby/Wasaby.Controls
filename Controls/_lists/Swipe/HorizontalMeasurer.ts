@@ -29,7 +29,7 @@ const HorizontalMeasurer: IMeasurer = {
       if (actions.length > MAX_ACTIONS_COUNT) {
          itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
          itemActions.push({
-            icon: 'icon-ExpandDown',
+            icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
             showType: ShowType.TOOLBAR
