@@ -314,6 +314,7 @@ define('Controls/Popup/Manager',
          },
 
          redrawItems: function() {
+            _private.popupItems._nextVersion();
             ManagerController.getContainer().setPopupItems(_private.popupItems);
          },
 

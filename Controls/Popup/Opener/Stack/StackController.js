@@ -62,7 +62,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.stackWidth = item.position.stackWidth;
             item.popupOptions.stackMinWidth = item.position.stackMinWidth;
             item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
-            _private.updatePopupOptions(item);
             return item.position;
          },
 
@@ -77,7 +76,6 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          prepareUpdateClassses: function(item) {
             _private.addStackClasses(item.popupOptions);
-            _private.updatePopupOptions(item);
          },
 
          addStackClasses: function(popupOptions) {
@@ -85,17 +83,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (className.indexOf(STACK_CLASS) < 0) {
                popupOptions.className = className + ' ' + STACK_CLASS;
             }
-         },
-
-         updatePopupOptions: function(item) {
-            // for vdom synchronizer. Updated the link to the options when className was changed
-            if (!item.popupOptions._version) {
-               item.popupOptions.getVersion = function() {
-                  return this._version;
-               };
-               item.popupOptions._version = 0;
-            }
-            item.popupOptions._version++;
          },
 
          prepareMaximizedState: function(maxPanelWidth, item) {
