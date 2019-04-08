@@ -314,7 +314,7 @@ define('Controls/Filter/Controller',
       function getCalculatedFilter(cfg) {
          var def = new Deferred();
          var tmpStorage = {};
-         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource).addCallback(function(items) {
+         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource, cfg.historyItems).addCallback(function(items) {
             var calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
