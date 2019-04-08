@@ -95,23 +95,57 @@
                         {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
 </td>
 </ws:template>
-<ws:if data="{{itemData.isNotFullGridSupport}}">
-<tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+<ws:if data="{{itemData.isNoGridSupport}}">
+   <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+      <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
+         {{itemData.resetColumnIndex();}}
+         <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
+            <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            {{itemData.goToNextColumn();}}
+         </ws:if>
+         <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
+            <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         </ws:for>
+      </ws:else>
+   </tr>
+</ws:if>
+<ws:else data="{{itemData.isPartialGridSupport}}">
+
+   <ws:template name="partialGridSupportItem">
+      <ws:partial template="colTpl"
+                  currentColumn="{{itemData.getCurrentColumn()}}"
+                  attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
+                  controls-Grid__row_{{itemData.style || 'default'}} {{currentColumn.cellClasses}}
+                  {{itemData.isHovered ? ' controls-Grid_row-cell_hovered'}}"
+                  attr:style="{{itemData.getCurrentColumn().gridCellStyles}}"
+                  on:click="_onItemClick(itemData.dispItem)"
+                  on:contextmenu="_onItemContextMenu(itemData)"
+                  on:swipe="_onItemSwipe(itemData)"
+                  on:mousedown="_onItemMouseDown(itemData)"
+                  on:mouseenter="_onItemMouseEnter(itemData)"
+                  on:mouseleave="_onItemMouseLeave(itemData)"
+                  on:mousemove="_onItemMouseMove(itemData)"
+                  on:wheel="_onItemWheel(itemData)"/>
+   </ws:template>
+
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
       {{itemData.resetColumnIndex();}}
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
          {{itemData.goToNextColumn();}}
       </ws:if>
-      <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+      <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-         <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="partialGridSupportItem"/>
       </ws:for>
    </ws:else>
-</tr>
-</ws:if>
+
+</ws:else>
 <ws:else>
 <ws:if data="{{itemData.styleLadderHeading}}">
    <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
@@ -127,14 +161,14 @@
          <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
             {{itemData.resetColumnIndex();}}
             <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
                {{itemData.goToNextColumn();}}
             </ws:if>
-            <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+            <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
          </ws:if>
          <ws:else>
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </ws:else>
       </div>

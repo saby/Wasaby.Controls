@@ -16,7 +16,7 @@ import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
 // import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
-import {CssTemplatesEnum, getTemplateColumnsStyle, supportStatus, SupportStatusesEnum} from './utils/GridLayoutUtil';
+import { getTemplateColumnsStyle, isPartialSupport, supportStatus, SupportStatusesEnum } from './utils/GridLayoutUtil';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
 function isEqualWithSkip(obj1, obj2, skipFields) {
@@ -175,6 +175,13 @@ var
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
             }
+        },
+
+        _onItemMouseEnter: function (event, itemData) {
+            if (isPartialSupport && itemData.item !== this._hoveredItem) {
+                this._listModel.setHoveredItem(itemData.item);
+            }
+            GridView.superclass._onItemMouseEnter.apply(this, arguments);
         },
 
         _calcFooterPaddingClass: function(params) {

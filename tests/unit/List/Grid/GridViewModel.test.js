@@ -942,46 +942,57 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
          it('_prepareCrossBrowserColumn', function() {
             var
-               initialColumns = [
-                  {
-                     title: 'first',
-                     width: ''
-                  },
-                  {
-                     title: 'second',
-                     width: '1fr'
-                  },
-                  {
-                     title: 'third',
-                     width: '100px'
-                  },
-                  {
-                     title: 'last',
-                     width: 'auto'
-                  }
-               ],
-               resultColumns = [
-                  {
-                     title: 'first',
-                     width: ''
-                  },
-                  {
-                     title: 'second',
-                     width: 'auto'
-                  },
-                  {
-                     title: 'third',
-                     width: '100px'
-                  },
-                  {
-                     title: 'last',
-                     width: 'auto'
-                  }
-               ];
-            for (var i = 0; i < initialColumns.length; i++) {
-               assert.deepEqual(resultColumns[i], gridViewModel._prepareCrossBrowserColumn(initialColumns[i], true),
-                  'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
+               noGridSupport = {
+                  initialColumns: [
+                     {
+                        title: 'first',
+                        width: ''
+                     },
+                     {
+                        title: 'second',
+                        width: '1fr'
+                     },
+                     {
+                        title: 'third',
+                        width: '100px'
+                     },
+                     {
+                        title: 'last',
+                        width: 'auto'
+                     }
+                  ],
+                  resultColumns: [
+                     {
+                        title: 'first',
+                        width: ''
+                     },
+                     {
+                        title: 'second',
+                        width: 'auto'
+                     },
+                     {
+                        title: 'third',
+                        width: '100px'
+                     },
+                     {
+                        title: 'last',
+                        width: 'auto'
+                     }
+                  ]
+               },
+                partialOfFullGridSupport={};
+            partialOfFullGridSupport.initialColumns = noGridSupport.initialColumns;
+
+            for (var i = 0; i < noGridSupport.initialColumns.length; i++) {
+               assert.deepEqual(noGridSupport.resultColumns[i], gridViewModel._prepareCrossBrowserColumn(noGridSupport.initialColumns[i], true),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
             }
+
+            for (var i = 0; i < partialOfFullGridSupport.initialColumns.length; i++) {
+               assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
+            }
+
          });
          it('_prepareHeaderColumns', function() {
             assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');

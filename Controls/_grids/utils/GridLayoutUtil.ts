@@ -18,12 +18,12 @@ type CssRule = {
 }
 
 const supportStatus = _getSupportStatus();
-const isFullGridSupport = supportStatus === SupportStatusesEnum.Full;
-const isPartialGridSupport = supportStatus === SupportStatusesEnum.Partial;
-const isNoGridSupport = supportStatus === SupportStatusesEnum.None;
+const isFullSupport = supportStatus === SupportStatusesEnum.Full;
+const isPartialSupport = supportStatus === SupportStatusesEnum.Partial;
+const isNoSupport = supportStatus === SupportStatusesEnum.None;
 
 
-function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number, colSpan: number): string {
+function getCellStyles(rowIndex: number, columnIndex: number, rowSpan?: number, colSpan?: number): string {
     let rules: Array<CssRule> = [
         {
             name: 'grid-column',
@@ -151,9 +151,9 @@ export {
     CssTemplatesEnum,
 
     supportStatus,
-    isFullGridSupport,
-    isPartialGridSupport,
-    isNoGridSupport,
+    isFullSupport,
+    isPartialSupport,
+    isNoSupport,
 
     getCellStyles,
     getTemplateColumnsStyle,

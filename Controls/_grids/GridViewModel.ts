@@ -8,7 +8,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import {
-    isFullGridSupport, isNoGridSupport, isPartialGridSupport, getCellStyles,
+    isFullSupport, isNoSupport, isPartialSupport, getCellStyles,
     toCssString, getTemplateColumnsStyle, getDefaultStylesFor, CssTemplatesEnum
 } from './utils/GridLayoutUtil';
 
@@ -369,9 +369,9 @@ var
         _ladder: null,
         _columnsVersion: 0,
 
-        _isFullGridSupport: isFullGridSupport,
-        _isPartialGridSupport: isPartialGridSupport,
-        _isNoGridSupport: isNoGridSupport,
+        _isFullGridSupport: isFullSupport,
+        _isPartialGridSupport: isPartialSupport,
+        _isNoGridSupport: isNoSupport,
 
         _gridContainer: null,
 
@@ -408,7 +408,7 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column) {
+        _prepareCrossBrowserColumn: function(column, isNoGridSupport) {
             var
                 result = cClone(column);
             if (isNoGridSupport) {
@@ -423,7 +423,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i]));
+                result.push(this._prepareCrossBrowserColumn(columns[i], isNoSupport));
             }
             return result;
         },
@@ -598,7 +598,7 @@ var
             }
             resultsColumn.cellClasses = cellClasses;
 
-            if (isPartialGridSupport) {
+            if (isPartialSupport) {
                 let resultsPosition: string = this.getResultsPosition(),
                     rowIndex = 0;
 
@@ -830,7 +830,7 @@ var
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
-                    if (isPartialGridSupport) {
+                    if (isPartialSupport) {
                         current.gridGroupStyles = toCssString([
                             {
                                 name: '-ms-grid-row',
@@ -871,7 +871,7 @@ var
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
             
-            if (current.isEditing && isPartialGridSupport) {
+            if (current.isEditing && isPartialSupport) {
                 current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
             }
 
@@ -922,7 +922,7 @@ var
                             'span 1;';
                     }
                 }
-                if (isPartialGridSupport) {
+                if (isPartialSupport) {
                     let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
                     rowOffset += self.getHeader() ? 1 : 0;
                     currentColumn.gridCellStyles = getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
