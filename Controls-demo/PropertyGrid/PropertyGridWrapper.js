@@ -17,6 +17,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'wml!Controls-demo/PropertyGrid/Types/function',
       'wml!Controls-demo/PropertyGrid/Types/enum',
       'wml!Controls-demo/PropertyGrid/Types/object',
+      'wml!Controls-demo/PropertyGrid/Types/timeInterval',
 
 
       'json!Controls-demo/PropertyGrid/pgtext',
@@ -26,7 +27,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
    ],
 
    function(Control, Deferred, cClone, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
-      datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
+      datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl, timeIntervalTmpl) {
       'use strict';
 
       var PGWrapper = Control.extend({
@@ -48,7 +49,8 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'function|String': functOrString,
                'function': functionTmpl,
                'enum': enumTmpl,
-               'Object': objTmpl
+               'Object': objTmpl,
+               'TimeInterval': timeIntervalTmpl
             };
 
             opts.componentOpt._version = 0;

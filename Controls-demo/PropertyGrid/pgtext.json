@@ -1181,6 +1181,88 @@
       }
     }
   },
+   "Controls/Input/TimeInterval": {
+    "name": "Controls/Input/TimeInterval",
+    "title": "A component are used to let the user enter a number.",
+    "className": "Controls/Input/TimeInterval",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/TimeInterval",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "HH:mm": "HH:mm",
+              "HHH:mm": "HHH:mm",
+              "HHHH:mm": "HHHH:mm",
+              "HH:mm:ss": "HH:mm:ss",
+              "HHH:mm:ss": "HHH:mm:ss",
+              "HHHH:mm:ss": "HHHH:mm:ss"
+            }
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "size": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
+          },
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
+            }
+          },
+          "fontStyle": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "default": "default",
+              "primary": "primary",
+              "secondary": "secondary"
+            }
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          }
+        }
+      }
+    }
+  },
   "Controls/Tabs/Buttons": {
     "name": "Controls/Tabs/Buttons",
     "title": "Buttons for tab switching.",
