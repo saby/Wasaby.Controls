@@ -432,6 +432,7 @@ define('Controls/Popup/Manager',
             if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
                item.popupOptions = options;
                item.controller.getDefaultConfig(item);
+               _private.popupItems._nextVersion();
             }
          },
 
