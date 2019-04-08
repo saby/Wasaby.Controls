@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
     <ws:bodyContentTemplate>
         <div>
             <Controls.Validate.Input   name="InputValidate3" attr:style="margin: 30px" >

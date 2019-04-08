@@ -1,10 +1,10 @@
 <div class="ControlsDemo-PopupAnimation">
    <Controls.Container.LoadingIndicator name="loadingIndicator" message="Загрузка...">
       <div>
-         <Controls.Popup.Opener.Stack name="stack">
-            <ws:popupOptions template="Controls-demo/Popup/PopupAnimation/PopupAnimation_stack" closeByExternalClick="{{true}}">
-               <ws:templateOptions type="stack"/>
-            </ws:popupOptions>
+         <Controls.Popup.Opener.Stack name="stack"
+                                      template="Controls-demo/Popup/PopupAnimation/PopupAnimation_stack"
+                                      closeOnOutsideClick="{{true}}">
+           <ws:templateOptions type="stack"/>
          </Controls.Popup.Opener.Stack>
          <Controls.buttons:Button name="stackButton" caption="Открыть задачу" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
          <br />

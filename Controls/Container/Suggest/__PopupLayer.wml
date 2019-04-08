@@ -1,1 +1,1 @@
-<Controls.Popup.Opener.Sticky name="suggestPopup" _vdomOnOldPage="{{true}}" popupOptions="{{_popupOptions}}" closeOnTargetScroll="{{true}}"/>
+<Controls.Popup.Opener.Sticky name="suggestPopup" _vdomOnOldPage="{{true}}" scope="{{_popupOptions}}" closeOnTargetScroll="{{true}}"/>

@@ -30,11 +30,11 @@
 </ws:template>
 
 <Controls.Controllers.PrimaryAction on:triggered="_applyFilter()">
-    <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.headingCaption}}"
-                                                    captionStyle="{{_options.headingStyle}}"
+    <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{{_options.headingCaption}}"
+                                                    headingStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
                                                     {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
-       <ws:topArea>
+       <ws:headerContentTemplate>
           <div class="controls-FilterPanel__header">
              <ws:if data="{{_options.topTemplate}}">
                 <div class="controls-FilterPanel__header-topTemplate">
@@ -53,8 +53,8 @@
                               attr:tabindex="-1"
                               attr:class="controls-FilterPanel__filterButton"/>
           </div>
-       </ws:topArea>
-       <ws:contentArea>
+       </ws:headerContentTemplate>
+       <ws:bodyContentTemplate>
           <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
                 <div class="controls-FilterPanel__content-horizontal">
@@ -69,6 +69,6 @@
                 <ws:partial template="history"/>
              </ws:else>
           </Controls.Container.Scroll>
-       </ws:contentArea>
+       </ws:bodyContentTemplate>
     </Controls.Popup.Templates.Dialog.DialogTemplate>
 </Controls.Controllers.PrimaryAction>

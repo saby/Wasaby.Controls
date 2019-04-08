@@ -1,12 +1,12 @@
 <Controls.Popup.Templates.Stack.StackTemplate on:selectedKeysChanged="_selectedKeysChanged()">
-    <ws:topArea>
+    <ws:headerContentTemplate>
         <div attr:class="ControlsDemo-FlatListSelector-header">
             <ws:if data="{{_options.multiSelect && _selectionChanged}}">
                 <Controls.buttons:Button viewMode="button" style="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-FlatListSelector-confirmButton"/>
             </ws:if>
         </div>
-    </ws:topArea>
-    <ws:contentArea>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
         <Controls.Selector.Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
             <Controls.lists:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_options.filter}}">
                 <Controls.Selector.Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
@@ -22,5 +22,5 @@
                 </Controls.Selector.Container>
             </Controls.lists:DataContainer>
         </Controls.Selector.Controller>
-    </ws:contentArea>
+    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>
