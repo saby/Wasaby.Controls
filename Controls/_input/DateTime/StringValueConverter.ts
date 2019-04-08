@@ -171,7 +171,9 @@ var _private = {
          }
       };
 
-      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+      // Autocomplete the year with the mask YYYY, if the year is entered, but not completely
+      // https://online.sbis.ru/opendoc.html?guid=6384f217-208a-4ca6-a175-b2c8d0ee2f0e
+      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid && !_private.isEmpty(valueModel.year.str)) {
 
          // If there is a Replacer between the numbers, then the year is incorrect
          if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
