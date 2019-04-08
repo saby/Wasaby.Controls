@@ -5,14 +5,14 @@
       <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
-      <Controls.Popup.Templates.Stack.StackTemplate closeButtonVisibility="{{!_options.hideCross}}" showMaximizedButton="{{_options.canMaximize}}" closeButtonStyle="{{_options.closeButtonStyle}}" on:maximized="_changeMaximizedMode()">
+      <Controls.Popup.Templates.Stack.StackTemplate closeButtonVisibility="{{!_options.hideCross}}" showMaximizedButton="{{_options.canMaximize}}" closeButtonViewMode="{{_options.closeButtonStyle}}" on:maximized="_changeMaximizedMode()">
          <ws:bodyContentTemplate>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
       </Controls.Popup.Templates.Stack.StackTemplate>
    </ws:else>
    <ws:else>
-      <Controls.Popup.Templates.Dialog.DialogTemplate name="DialogTemplate" hideCross="{{_options.hideCross}}"  closeButtonStyle="{{_options.closeButtonStyle}}" draggable="{{_options.draggable}}">
+      <Controls.Popup.Templates.Dialog.DialogTemplate name="DialogTemplate" closeButtonVisibility="{{!_options.hideCross}}"  closeButtonViewMode="{{_options.closeButtonStyle}}" draggable="{{_options.draggable}}">
          <ws:bodyContentTemplate>
                <div name="compoundBlock" attr:class="controls-CompoundArea__container {{_getDialogClasses()}}"></div>
          </ws:bodyContentTemplate>

@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager" showMaximizedButton="{{true}}" >
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager" maximizeButtonVisibility="{{true}}" >
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть" on:click="_close()" attr:ws-no-focus="true" attr:tabindex="-1"/>
