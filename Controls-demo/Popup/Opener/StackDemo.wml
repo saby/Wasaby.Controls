@@ -3,10 +3,7 @@
                                   template="Controls-demo/Popup/Opener/resources/DialogTpl">
     </Controls.Popup.Opener.Dialog>
     <Controls.Popup.Opener.Stack name="stack"
-                                 template="Controls-demo/Popup/Opener/resources/StackTemplate"
-                                 minimizedWidth = "{{500}}"
-                                 maxWidth = "{{700}}"
-                                 minWidth = "{{350}}">
+                                 template="Controls-demo/Popup/Opener/resources/StackTemplate">
     </Controls.Popup.Opener.Stack>
 <div>
         <Controls.buttons:Button name="button1" caption="Open Stack" on:click="openStack()"/>
