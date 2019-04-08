@@ -65,5 +65,5 @@
          <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="12"  data="{{_datas[12]}}" scale="{{_scales[12]}}" />
       </div>
 	  </div>
-    </div>    
+    </div>
 </div>
