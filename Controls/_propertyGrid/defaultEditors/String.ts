@@ -3,7 +3,7 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/String');
 
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
-import 'Controls/Input';
+import 'Controls/input';
 
 // @ts-ignore
 class StringEditor extends Control implements IEditor {
