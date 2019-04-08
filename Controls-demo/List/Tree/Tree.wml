@@ -12,7 +12,7 @@
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                   <Controls.lists:Container>
                      <Controls.List.MultiSelector>
-                        <Controls.treeGrids:View
+                        <Controls.treeGrid:View
                                 attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                                 parentProperty="Раздел"
                                 groupingKeyCallback="{{_groupingKeyCallback}}"
@@ -26,7 +26,7 @@
                            <ws:nodeFooterTemplate>
                               <Controls.lists:AddButton caption="Новая запись"/>
                            </ws:nodeFooterTemplate>
-                        </Controls.treeGrids:View>
+                        </Controls.treeGrid:View>
                      </Controls.List.MultiSelector>
                   </Controls.lists:Container>
                </Controls.Container.Scroll>
@@ -48,7 +48,7 @@
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                   <Controls.lists:Container>
                      <Controls.List.MultiSelector>
-                        <Controls.treeGrids:View
+                        <Controls.treeGrid:View
                                 attr:class="demo-Grid__control ControlsDemo-Tree__withoutGroups"
                                 parentProperty="Раздел"
                                 nodeProperty="Раздел@"
@@ -63,7 +63,7 @@
                            <ws:nodeFooterTemplate>
                               <Controls.lists:AddButton caption="Новая запись"/>
                            </ws:nodeFooterTemplate>
-                        </Controls.treeGrids:View>
+                        </Controls.treeGrid:View>
                      </Controls.List.MultiSelector>
                   </Controls.lists:Container>
                </Controls.Container.Scroll>

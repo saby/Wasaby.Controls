@@ -1,1 +1,1 @@
-<ws:partial template="Controls/treeGrids:ItemTemplate" withoutLevelPadding="{{true}}" itemData="{{itemData}}"/>
+<ws:partial template="Controls/treeGrid:ItemTemplate" withoutLevelPadding="{{true}}" itemData="{{itemData}}"/>
