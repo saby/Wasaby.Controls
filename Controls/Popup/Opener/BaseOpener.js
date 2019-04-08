@@ -164,6 +164,8 @@ define('Controls/Popup/Opener/BaseOpener',
             var options = [
                'closeByExternalClick',
                'isCompoundTemplate',
+               'eventHandlers',
+               'autoCloseOnHide',
                'autoClose',
                'type',
                'style',
