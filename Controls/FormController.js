@@ -198,13 +198,11 @@ define('Controls/FormController', [
          if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
          }
+         if (newOptions.hasOwnProperty('isNewRecord')) {
+            this._isNewRecord = newOptions.isNewRecord;
+         }
          if (newOptions.record && this._options.record !== newOptions.record) {
             this._setRecord(newOptions.record);
-
-            // todo: https://online.sbis.ru/opendoc.html?guid=2095997b-49b3-4859-9e24-890cdc685a24
-            if (newOptions.isNewRecord !== undefined) {
-               this._isNewRecord = newOptions.isNewRecord;
-            }
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             var self = this;

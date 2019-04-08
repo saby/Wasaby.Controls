@@ -136,6 +136,7 @@ define([
          assert.equal(setRecordCalled, false);
          assert.equal(readCalled, false);
          assert.equal(createCalled, true);
+         assert.equal(FC._isNewRecord, true);
 
          createCalled = false;
          let updateCalled = false;
@@ -162,6 +163,7 @@ define([
          assert.equal(readCalled, true);
          assert.equal(updateCalled, true);
          assert.equal(createCalled, false);
+         assert.equal(FC._isNewRecord, true);
 
          FC._showConfirmPopup = () => {
             confirmPopupCalled = true;
