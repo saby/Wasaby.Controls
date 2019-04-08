@@ -1244,20 +1244,20 @@ define([
 
          return new Promise(function(resolve) {
             baseControl._beforeMount(baseControlOptions).addCallback(function(result) {
-               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState);
 
                baseControl._listViewModel.getItems().clear();
                baseControl._options.emptyTemplate = {};
-               assert.isTrue(!!baseControl.__needShowEmptyTemplate());
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._loadingState = 'down';
-               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._loadingState = 'all';
-               assert.isTrue(!!baseControl.__needShowEmptyTemplate());
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._listViewModel._editingItemData = {};
-               assert.isFalse(!!baseControl.__needShowEmptyTemplate());
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
                resolve();
 
                return result;
