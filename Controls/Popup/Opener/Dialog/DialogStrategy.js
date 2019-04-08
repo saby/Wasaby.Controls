@@ -35,8 +35,8 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
 
          var popupOptions = item.popupOptions;
 
-         width = this._calculateValue(popupOptions, containerSizes.width, windowData.width);
-         height = this._calculateValue(popupOptions, containerSizes.height, windowData.height);
+         width = this._calculateValue(popupOptions, containerSizes.width, popupOptions.width || windowData.width);
+         height = this._calculateValue(popupOptions, containerSizes.height, popupOptions.height || windowData.height);
          left = this._getLeftCoord(windowData.width, width || containerSizes.width);
          top = this._getTopCoord(windowData, height || containerSizes.height);
 
