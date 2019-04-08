@@ -100,7 +100,7 @@
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
             {{itemData.resetColumnIndex()}}
             <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
       </Controls.StickyHeader.Group>

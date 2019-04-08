@@ -107,7 +107,7 @@
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="oldColTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </ws:else>
    </tr>
@@ -141,7 +141,7 @@
    </ws:if>
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-         <ws:partial template="partialGridSupportItem"/>
+         <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumn().getKey()}}"/>
       </ws:for>
    </ws:else>
 
@@ -168,7 +168,7 @@
          </ws:if>
          <ws:else>
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </ws:else>
       </div>

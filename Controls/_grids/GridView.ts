@@ -14,7 +14,7 @@ import DefaultResultsTemplate = require('wml!Controls/_grids/Results');
 import 'wml!Controls/_grids/Results';
 import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
-// import 'css!theme?Controls/_grids/OldGrid';
+import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
 import { getTemplateColumnsStyle, isPartialSupport, supportStatus, SupportStatusesEnum } from './utils/GridLayoutUtil';
 
@@ -113,13 +113,10 @@ var
                     return NoGridSupportLayout;
             }
         },
-        setGridContainerIfNotFullGridSupport: function (self, container: HTMLElement) {
-
-            // Не понятно как назвать. Я ничего не готовлю, нужно запомнить ячейки, чтобы при отрисовки редактирования по месту
-            // выставить ячейкам строки правильные размеры, т.к. редактируемая строка - отдельный грид.
-
+        setCurrentColumnsWidth: function (self, container: HTMLElement) {
             //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            self._listModel.setGridContainerIfNotFullGridSupport(container[0] || container);
+            let cells = (container[0] || container).getElementsByClassName('controls-Grid__row-cell');
+            self._listModel.setCurrentColumnsWidth(cells);
         }
     },
     GridView = ListView.extend({
@@ -149,7 +146,7 @@ var
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                 } else {
-                    _private.setGridContainerIfNotFullGridSupport(this, this._container);
+                    _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
             if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
@@ -157,7 +154,7 @@ var
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                 } else {
-                    _private.setGridContainerIfNotFullGridSupport(this, this._container);
+                    _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
@@ -193,7 +190,7 @@ var
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             } else {
-                _private.setGridContainerIfNotFullGridSupport(this, this._container);
+                _private.setCurrentColumnsWidth(this, this._container);
             }
         }
     });

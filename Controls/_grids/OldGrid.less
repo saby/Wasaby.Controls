@@ -1,10 +1,4 @@
 .ws-is-not-full-grid-support {
-  .controls-Grid__row-cell_selected-master:before {
-    display: none;
-  }
-  .controls-Grid__row-cell_selected__last-master:after {
-    display: none;
-  }
   .controls-Grid_master {
     padding-right: 0;
   }
@@ -32,67 +26,75 @@
                 inset 0 @border-width_List-masterList-item-top 0 0 @border-color_List-masterList-item_selected-top,
                 inset 0 -@border-width_List-masterList-item-bottom 0 0 @border-color_List-masterList-item_selected-bottom;
   }
-  .controls-Grid {
+  .controls-Grid:not(.controls-Grid_partial-support) {
     display: table;
     width: 100%;
-  }
-  .controls-Grid_layout_fixed {
-    table-layout: fixed;
-  }
-  .controls-Grid__colgroup-columnMultiselect {
-    width: @width_Grid-cell-checkbox;
-  }
-  .controls-Grid__row-cell__contentWrapper {
-    display: inline-flex;
-    width: 100%;
-    align-items: center;
-  }
-  .controls-Grid__header {
-    display: table-header-group;
-  }
-  .controls-Grid__header-cell {
-    top: 0;
-    display: table-cell;
-  }
-  .controls-Grid__header-cell_static {
-    position: static;
-  }
-  .controls-Grid__header-cell_valign_top {
-    vertical-align: top;
-  }
-  .controls-Grid__header-cell_valign_middle {
-    vertical-align: middle;
-  }
-  .controls-Grid__header-cell_valign_bottom {
-    vertical-align: bottom;
-  }
-  .controls-Grid__results {
-    display: table-row-group;
-  }
-  .controls-Grid__results-cell {
-    display: table-cell;
-    position: static;
-  }
-  .controls-Grid__row {
-    display: table-row;
-  }
-  .controls-Grid__row-cell {
-    display: table-cell;
-    white-space: nowrap;
-    vertical-align: top;
-  }
-  .controls-Grid__row-cell__content {
-    white-space: normal;
-  }
-  .controls-Grid__row-cell-checkbox {
-    width: @width_Grid-cell-checkbox;
-  }
 
-  .controls-Grid__colgroup {
-    display: table-column-group;
-  }
-  .controls-Grid__colgroup-column {
-    display: table-column;
+    .controls-Grid__row-cell_selected-master:before {
+      display: none;
+    }
+    .controls-Grid__row-cell_selected__last-master:after {
+      display: none;
+    }
+
+    .controls-Grid_layout_fixed {
+      table-layout: fixed;
+    }
+    .controls-Grid__colgroup-columnMultiselect {
+      width: @width_Grid-cell-checkbox;
+    }
+    .controls-Grid__row-cell__contentWrapper {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+    }
+    .controls-Grid__header {
+      display: table-header-group;
+    }
+    .controls-Grid__header-cell {
+      top: 0;
+      display: table-cell;
+    }
+    .controls-Grid__header-cell_static {
+      position: static;
+    }
+    .controls-Grid__header-cell_valign_top {
+      vertical-align: top;
+    }
+    .controls-Grid__header-cell_valign_middle {
+      vertical-align: middle;
+    }
+    .controls-Grid__header-cell_valign_bottom {
+      vertical-align: bottom;
+    }
+    .controls-Grid__results {
+      display: table-row-group;
+    }
+    .controls-Grid__results-cell {
+      display: table-cell;
+      position: static;
+    }
+    .controls-Grid__row {
+      display: table-row;
+    }
+    .controls-Grid__row-cell {
+      display: table-cell;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    .controls-Grid__row-cell__content {
+      white-space: normal;
+    }
+    .controls-Grid__row-cell-checkbox {
+      width: @width_Grid-cell-checkbox;
+    }
+
+    .controls-Grid__colgroup {
+      display: table-column-group;
+    }
+    .controls-Grid__colgroup-column {
+      display: table-column;
+    }
   }
   .controls-Grid__row-cell-background-editing > .controls-Grid__row-cell__contentWrapper > .controls-itemActionsV {
     display: inline-block;

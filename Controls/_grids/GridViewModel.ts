@@ -318,29 +318,15 @@ var
 
             let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
 
-            if (self.getCount() < 2) {
-                return '';
-            }
+            let columnsWidths: Array<string|number> = [];
 
-            // Если отрисовано больше одной записи, то необходимо руками считать правильную ширину, т.к. редактируемая строка
-            // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
-            let
-                column,
-                columnsWidths: Array<string|number> = [];
-
-                for (let i = 0; i< self._columns.length; i++) {
-                    column = self._columns[i];
-
-                    if (column.width && column.width === 'auto') {
-                        let
-                            referenceCellIndex = rowIndex === 0 ? self._columns.length + i : i,
-                            referenceCell = self._gridContainer.getElementsByClassName('controls-Grid__row-cell')[referenceCellIndex];
-
-                        columnsWidths.push(referenceCell.getBoundingClientRect().width + 'px');
-                    } else {
-                        columnsWidths.push(column.width || '1fr');
-                    }
+            self._columns.forEach(column => {
+                if (column.width && column.width === 'auto' && self.getCount() > 1) {
+                    columnsWidths.push(column.realWidth || '1fr')
+                } else {
+                    columnsWidths.push(column.width);
                 }
+            });
 
             styles += getTemplateColumnsStyle(columnsWidths);
 
@@ -368,12 +354,6 @@ var
 
         _ladder: null,
         _columnsVersion: 0,
-
-        _isFullGridSupport: isFullSupport,
-        _isPartialGridSupport: isPartialSupport,
-        _isNoGridSupport: isNoSupport,
-
-        _gridContainer: null,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -523,7 +503,7 @@ var
                );
             }
 
-            if (this._isPartialGridSupport) {
+            if (isPartialSupport) {
                 headerColumn.gridCellStyles = getCellStyles(0, columnIndex);
             }
 
@@ -714,10 +694,6 @@ var
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
-        setGridContainerIfNotFullGridSupport: function (gridContainer: HTMLElement) {
-            this._gridContainer = gridContainer;
-        },
-
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
@@ -778,6 +754,12 @@ var
             this._model.setItemPadding(itemPadding);
         },
 
+        setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
+            for (let i = 0; i< this._columns.length; i++){
+                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
+            }
+        },
+
         getSwipeItem: function() {
             return this._model.getSwipeItem();
         },
@@ -808,9 +790,9 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isFullGridSupport = this._isFullGridSupport;
-            current.isPartialGridSupport = this._isPartialGridSupport;
-            current.isNoGridSupport = this._isNoGridSupport;
+            current.isFullGridSupport = isFullSupport;
+            current.isPartialGridSupport = isPartialSupport;
+            current.isNoGridSupport = isNoSupport;
 
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
@@ -978,13 +960,13 @@ var
         },
 
         isFullGridSupport: function():boolean{
-            return this._isFullGridSupport;
+            return isFullSupport;
         },
         isPartialGridSupport: function():boolean{
-            return this._isPartialGridSupport;
+            return isPartialSupport;
         },
         isNoGridSupport: function():boolean{
-            return this._isNoGridSupport;
+            return isNoSupport;
         },
 
         setLadderProperties: function(ladderProperties) {
@@ -1067,7 +1049,7 @@ var
         getEmptyTemplateStyles() {
           let styles = '';
 
-          if (!this._isNoGridSupport) {
+          if (!isNoSupport) {
               let
                   columnsLength = this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
                   rowIndex = 0;

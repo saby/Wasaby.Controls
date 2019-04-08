@@ -8,6 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
+import {isPartialSupport} from 'Controls/_grids/utils/GridLayoutUtil'
 
 /**
  *
@@ -186,7 +187,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
-        if (this._hoveredItem === item) {
+        if (isPartialSupport && this._hoveredItem === item) {
             version = 'HOVERED_' + version;
         }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
