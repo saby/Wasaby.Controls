@@ -42,7 +42,7 @@
       <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 4 - редактирование на странице (в реестре), режим "по ховеру</div>
-   <Controls.treeGrids:View
+   <Controls.treeGrid:View
       attr:class="ControlsDemo-EipScenarios__list"
       source="{{ _viewSource4 }}"
       header="{{ _gridHeader4 }}"
@@ -55,7 +55,7 @@
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}"/>
       </ws:editingConfig>
-   </Controls.treeGrids:View>
+   </Controls.treeGrid:View>
    <div class="ControlsDemo-EipScenarios__title">Пример 5 - редактирование на странице (в реестре), режим "по ховеру"</div>
    <Controls.grids:View
       attr:class="ControlsDemo-EipScenarios__list"

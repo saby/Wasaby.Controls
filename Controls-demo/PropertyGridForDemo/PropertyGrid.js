@@ -1,12 +1,12 @@
-define('Controls/PropertyGrid', [
+define('Controls-demo/PropertyGridForDemo/PropertyGrid', [
    'Core/Control',
-   'wml!Controls/PropertyGrid/PropertyGrid'
+   'wml!Controls-demo/PropertyGridForDemo/PropertyGrid'
 ], function(Control, template) {
    /**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
     *
-    * @class Controls/PropertyGrid
+    * @class Controls-demo/PropertyGridForDemo/PropertyGrid
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
     * @mixes Controls/interface/ISource

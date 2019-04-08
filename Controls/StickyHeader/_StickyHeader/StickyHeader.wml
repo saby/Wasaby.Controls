@@ -1,9 +1,9 @@
 <!--Styles specified with attr are not merged, so as a temporary solution, we use the option.-->
 <!--https://online.sbis.ru/opendoc.html?guid=e692216c-8a18-4b42-8523-5434d436a502-->
 <div class="controls-StickyHeader controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
-   <ws:if data="{{_isShadowVisible('top')}}">
-      <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>
-   </ws:if>
+   <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
+   <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top
+               {{ !_isShadowVisible('top') ? ' ws-invisible' }}"></div>
    <Controls.Event.Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
    <Controls.Event.Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop" style="{{_getObserverStyle('top')}}"></div>
@@ -13,9 +13,7 @@
                scope="{{_options}}"
                on:controlResize="_resizeHandler()"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
-   <!--We use visibility style insted of if statement to prevent jumps when scrolling on iPad-->
-
-   <ws:if data="{{_isShadowVisible('bottom')}}">
-      <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom"></div>
-   </ws:if>
+   <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
+   <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom
+               {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"></div>
 </div>

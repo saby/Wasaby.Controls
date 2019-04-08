@@ -16,10 +16,10 @@
          </Controls.StickyHeader>
       </div>
    </Controls.Container.Scroll>
-   <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top', 0)" />
-   <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom', 0)" />
-   <Controls.buttons:Button caption="scroll to top 2 element" on:click="_scrollTo('top', 1)" />
-   <Controls.buttons:Button caption="scroll to bottom 2 element" on:click="_scrollTo('bottom', 1)" />
-   <Controls.buttons:Button caption="scroll to top 10 element" on:click="_scrollTo('top', 9)" />
-   <Controls.buttons:Button caption="scroll to bottom 10 element" on:click="_scrollTo('bottom', 8)" />
+   <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top', 0)" class="ControlsDemo__scrollTop" />
+   <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom', 0)" class="ControlsDemo__scrollBottom" />
+   <Controls.buttons:Button caption="scroll to top 2 element" on:click="_scrollTo('top', 1)" class="ControlsDemo__scrollTop2" />
+   <Controls.buttons:Button caption="scroll to bottom 2 element" on:click="_scrollTo('bottom', 1)" class="ControlsDemo__scrollBottom2" />
+   <Controls.buttons:Button caption="scroll to top 10 element" on:click="_scrollTo('top', 9)" class="ControlsDemo__scrollTop10" />
+   <Controls.buttons:Button caption="scroll to bottom 10 element" on:click="_scrollTo('bottom', 8)" class="ControlsDemo__scrollBottom10" />
 </div>

@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="Stack Template">
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Stack Template">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть" on:click="_close()" attr:ws-no-focus="true" attr:tabindex="-1"/>

@@ -16,13 +16,16 @@
         filter="{{_options.filter}}"
         navigation="{{_options.navigation}}"
         multiSelect="{{_options.multiSelect}}"
-        popupClassName="{{_options.popupClassName ||  (_options.showHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin')}} theme_{{_options.theme}}"
+        selectorTemplate="{{_options.selectorTemplate}}"
+        isCompoundTemplate="{{_options.isCompoundTemplate}}"
+        popupClassName="{{_options.popupClassName || (_options.showHeader ? 'controls-DropdownList__margin-head' :
+                              _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
         dropdownClassName="{{_options.dropdownClassName}}"
         caption="{{_options.caption || _text}}"
         dataLoadCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        on:selectedKeysChanged="_selectedKeysChanged()"
+        on:selectedKeysChanged="_selectedKeysChangedHandler()"
         attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid_theme_' + _options.theme}}">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                item="{{_item}}"

@@ -25,9 +25,6 @@ define('Controls-demo/Popup/Opener/StackPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               width: {
-                  readOnly: true
-               },
                template: {
                   items: [
                      {

@@ -1,7 +1,6 @@
 define('Controls/Operations/Button', [
    'Core/Control',
-   'wml!Controls/Operations/Button/Button',
-   'css!theme?Controls/Operations/Button/Button'
+   'wml!Controls/Operations/Button/Button'
 ], function(Control, template) {
    'use strict';
 
@@ -27,11 +26,14 @@ define('Controls/Operations/Button', [
     * @css @font-family_OperationsButton-icon Font family of the icon.
     */
 
-   return Control.extend({
+
+   var Button = Control.extend({
       _template: template,
 
       _onClick: function() {
          this._notify('expandedChanged', [!this._options.expanded]);
       }
    });
+   Button._theme = ['Controls/operations'];
+   return Button;
 });

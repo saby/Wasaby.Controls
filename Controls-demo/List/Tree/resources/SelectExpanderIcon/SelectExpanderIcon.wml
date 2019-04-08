@@ -1,12 +1,12 @@
 <Controls.Container.Scroll attr:class="ControlsDemo-TreeHiddenNodes__tasks">
-   <Controls.treeGrids:View
+   <Controls.treeGrid:View
            name="tasksTreeGrid"
            keyProperty="id"
            nodeProperty="type"
            parentProperty="parent"
            source="{{_tasksSource}}">
       <ws:itemTemplate>
-         <ws:partial template="Controls/treeGrids:ItemTemplate"
+         <ws:partial template="Controls/treeGrid:ItemTemplate"
                      expanderIcon="{{itemTemplate.itemData.item.type === false ? 'none'}}"/>
       </ws:itemTemplate>
       <ws:columns>
@@ -30,5 +30,5 @@
             <ws:Object width="100px" displayProperty="received"/>
          </ws:Array>
       </ws:columns>
-   </Controls.treeGrids:View>
+   </Controls.treeGrid:View>
 </Controls.Container.Scroll>

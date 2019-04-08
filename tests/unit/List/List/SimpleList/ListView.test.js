@@ -257,6 +257,47 @@ define([
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
          });
+         it('itemContextMenu event should fire if contextMenuVisibility: true and the list has no editing items', function() {
+            var
+               model = new lists.ListViewModel({
+                  items: data,
+                  keyProperty: 'id',
+                  markedKey: null
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuVisibility: true
+               },
+               lv = new lists.ListView(cfg),
+               notifyStub = sandbox.stub(lv, '_notify').withArgs('itemContextMenu', [{}, {}, true]);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+            sandbox.stub(model, 'getEditingItemData').returns(null);
+
+            lv._onItemContextMenu({}, {});
+            assert.isTrue(notifyStub.calledOnce);
+         });
+         it('itemContextMenu event shouldn\'t fire during editing', function() {
+            var
+               model = new lists.ListViewModel({
+                  items: data,
+                  keyProperty: 'id',
+                  markedKey: null
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuVisibility: true
+               },
+               lv = new lists.ListView(cfg);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+            sandbox.stub(model, 'getEditingItemData').returns({});
+            sandbox.stub(lv, '_notify').withArgs('itemContextMenu').throws('itemContextMenu event shouldn\'t fire during editing');
+
+            lv._onItemContextMenu({}, {});
+         });
       });
 
       describe('_afterMount', function() {

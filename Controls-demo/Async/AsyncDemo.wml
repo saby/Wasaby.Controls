@@ -1,12 +1,22 @@
 <div>
    <Controls.Container.Async templateName="{{ templateName1 }}" class="ControlsDemo-AsyncDemo__container">
-      <div>
-         <ws:partial template="{{ content.resolvedTemplate }}" isOK="{{isOK}}"></ws:partial>
-      </div>
+      <ws:templateOptions
+         isOK="{{isOK}}">
+      </ws:templateOptions>
+      <ws:content>
+         <div>
+            <ws:partial template="{{ content.resolvedTemplate }}"></ws:partial>
+         </div>
+      </ws:content>
    </Controls.Container.Async>
    <Controls.Container.Async templateName="{{ templateName2 }}" class="ControlsDemo-AsyncDemo__container">
-      <div>
-         <ws:partial template="{{ content.resolvedTemplate }}" isOK="{{isOK}}"></ws:partial>
-      </div>
+      <ws:templateOptions
+         isOK="{{isOK}}">
+      </ws:templateOptions>
+      <ws:content>
+         <div>
+            <ws:partial template="{{ content.resolvedTemplate }}"></ws:partial>
+         </div>
+      </ws:content>
    </Controls.Container.Async>
 </div>

@@ -295,23 +295,38 @@ define('Controls/History/Source', [
          return _private.getSourceByMeta(self, meta).update(item, meta);
       },
 
-      updateRecent: function(self, item, meta) {
-         var id = item.getId();
+      resolveRecent: function(self, data) {
          var recent = self._history && self._history.recent;
-         var records;
-
-         if (!(self._nodeProperty && item.get(self._nodeProperty)) && recent) {
-            var hItem = recent.getRecordById(id);
-            if (hItem) {
-               recent.remove(hItem);
-            }
-            records = new collection.RecordSet({
-               items: [this.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId())]
+         if (recent) {
+            var items = [];
+            chain.factory(data).each(function(item) {
+               if (!(self._nodeProperty && item.get(self._nodeProperty))) {
+                  var hItem = recent.getRecordById(item.getId());
+                  if (hItem) {
+                     recent.remove(hItem);
+                  }
+                  items.push(_private.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId()));
+               }
             });
-            recent.prepend(records);
-            self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+            recent.prepend(items);
          }
-         return _private.getSourceByMeta(self, meta).update(item, meta);
+      },
+
+      updateRecent: function(self, data, meta) {
+         var historyData;
+         if (data instanceof Array) {
+            historyData = { ids: [] };
+            chain.factory(data).each(function(item) {
+               historyData.ids.push(item.getId());
+            });
+            _private.resolveRecent(self, data);
+         } else {
+            historyData = data;
+            _private.resolveRecent(self, [data]);
+         }
+
+         self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+         return _private.getSourceByMeta(self, meta).update(historyData, meta);
       },
 
       getRawHistoryItem: function(self, id, hId) {

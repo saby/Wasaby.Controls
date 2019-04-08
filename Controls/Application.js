@@ -234,6 +234,12 @@ define('Controls/Application',
             } else {
                this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
             }
+            
+            // We have to call forceUpdate, because template doesn't use 
+            // '_scrollingClass' from state, but template uses method
+            // calculateBodyClasses which uses _scrollingClass.
+            // We should trigger manually template's update
+            this._forceUpdate();
          },
 
 

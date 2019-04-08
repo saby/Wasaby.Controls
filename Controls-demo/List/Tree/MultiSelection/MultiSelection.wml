@@ -5,7 +5,7 @@
                 <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                     <Controls.lists:Container>
                         <Controls.List.MultiSelector>
-                            <Controls.treeGrids:View
+                            <Controls.treeGrid:View
                                     name="list"
                                     attr:class="demo-Grid__control"
                                     keyProperty="id"
@@ -13,7 +13,7 @@
                                     nodeProperty="Раздел@"
                                     multiSelectVisibility="visible"
                                     columns="{{gridColumns}}">
-                            </Controls.treeGrids:View>
+                            </Controls.treeGrid:View>
                         </Controls.List.MultiSelector>
                     </Controls.lists:Container>
                 </Controls.Container.Scroll>

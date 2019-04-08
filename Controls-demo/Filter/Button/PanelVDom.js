@@ -97,7 +97,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                   ]
                })},
                {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
-               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
+               {id: 'own', value: 2, resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
                      { key: 1, title: 'On me' },

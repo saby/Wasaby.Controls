@@ -28,6 +28,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _footerItems: null,
       _defaultItems: null,
       _historySource: null,
+      _selectedKeysHistoryMulti: null,
       _emptyItems2: null,
       _longItems: null,
       _multiSelectItems: null,
@@ -46,6 +47,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeys1: null,
       _selectedKeys2: null,
       _selectedKeysHistory: null,
+      _historySourceMulti: null,
       _selectedKeysEmpty2: null,
       _selectedKeysLong: null,
       _selectedKeysMultiSelect: null,
@@ -177,6 +179,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 7, title: 'Computers and components, computing, office equipment' }
          ];
          this._historySource = historySource.createMemory();
+         this._historySourceMulti = historySource.createMemory();
          this._selectedKeysSimple = [1];
          this._selectedKeysSub = [1];
          this._selectedKeysHierarchy = [8];
@@ -192,6 +195,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeys1 = ['1'];
          this._selectedKeys2 = ['1'];
          this._selectedKeysHistory = [1];
+         this._selectedKeysHistoryMulti = [1];
          this._selectedKeysEmpty2 = [2];
          this._selectedKeysLong = [2];
          this._selectedKeysMultiSelect = [1];

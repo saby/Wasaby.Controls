@@ -19,7 +19,7 @@ define('Controls/interface/IEditableList', [
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editingConfig.editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
-    * @property {Boolean} [editingConfig.sequentialEditing=false] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
+    * @property {Boolean} [editingConfig.sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [editingConfig.toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
     * @property {Types/entity:Record} [editingConfig.item=undefined] If present, editing of this item will begin on first render.
     */
@@ -55,11 +55,14 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, options) {
-    *       if (options.item.getId() === 1) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          if (options.item.getId() === 1) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * The following example shows how to read item from BL and open it for editing.
     * WML:
@@ -83,17 +86,20 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, options) {
-    *       return {
-    *          item: new Model({
-    *             rawData: {
-    *                //Obviously, you would use something else instead of Date.now() to generate id, but we'll use it here to keep the example simple
-    *                id: Date.now(),
-    *                title: ''
-    *             }
-    *          })
+    *    define('ModuleName', ['Types/entity'], function(entity) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          return {
+    *             item: new entity.Model({
+    *                rawData: {
+    *                   //Obviously, you would use something else instead of Date.now() to generate id, but we'll use it here to keep the example simple
+    *                   id: Date.now(),
+    *                   title: ''
+    *                }
+    *             })
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see afterBeginEdit
     * @see beforeEndEdit
@@ -147,11 +153,14 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeEndEditHandler: function(e, item, commit, isAdd) {
-    *       if (!item.get('text').length) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeEndEditHandler: function(e, item, commit, isAdd) {
+    *          if (!item.get('text').length) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see beforeBeginEdit
     * @see afterBeginEdit

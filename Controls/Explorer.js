@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/treeGrids',
+   'Controls/treeGrid',
    'Controls/breadcrumbs'
 ], function(
    Control,
@@ -132,7 +132,8 @@ define('Controls/Explorer', [
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo/demo-ws4-explorer?v=19.100">Demo examples</a>.
+    * <a href="/materials/demo/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo/demo-ws4-explorer-with-search">Demo example with search</a>.
     *
     * @class Controls/Explorer
     * @extends Core/Control

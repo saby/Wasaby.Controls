@@ -1,5 +1,7 @@
 <ws:if data="{{itemActionsPosition === 'outside'}}">
-    <ws:partial template="{{itemActionsTemplate}}" itemData="{{itemData}}"/>
+    <ws:partial template="{{itemActionsTemplate}}"
+                itemData="{{itemData}}"
+                highlightOnHover="{{highlightOnHover}}"/>
 </ws:if>
 <ws:else data="{{swipeConfig}}">
     <div class="controls-itemActionsV_swipe_animationContainer">

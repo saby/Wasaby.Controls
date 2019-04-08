@@ -5,9 +5,9 @@
       </div>
 
       <div>
-         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
             <a href="{{content.href}}">RootRouter</a>
-         </Router.Reference>
+         </Router.router:Reference>
       </div>
       <h1>List <small style="color: #CCC; font-size: 16px">PG</small></h1>
       <div>
@@ -68,14 +68,14 @@
          <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>
-         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
             <a href="{{content.href}}">List/ScrollPaging</a>
-         </Router.Reference>
+         </Router.router:Reference>
       </div>
       <div>
-         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
             <a href="{{content.href}}">List/VirtualScroll</a>
-         </Router.Reference>
+         </Router.router:Reference>
       </div>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
@@ -330,9 +330,16 @@
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FIndicator%252FProgressBar%252FProgressBar">
             Bar
-         </a>   
+         </a>
       </div>
-      <div>   
+
+      <h1>PropertyGrid</h1>
+      <a href="/Controls-demo/app/Controls-demo%252FPropertyGridNew%252FPropertyGrid?withoutLayout=true">
+         PropertyGrid
+      </a>
+
+      <h1>StateIndicator</h1>
+      <div>
          <a href="/Controls-demo/app/Controls-demo%252FStateIndicator%252FStateIndicatorDemo">
             StateIndicator
          </a>

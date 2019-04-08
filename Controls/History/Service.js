@@ -80,18 +80,26 @@ define('Controls/History/Service', [
          }
          return self._historyDataSource;
       },
-      
+
       getMethodNameByIdType: function(stringMethod, intMethod, id) {
          return typeof id === 'number' ? intMethod : stringMethod;
       },
 
       updateHistory: function(self, data) {
-         var id = data.getId();
-         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
-            history_id: data.get('HistoryId') || self._historyId,
-            id: id,
-            history_context: null
-         });
+         if (data.ids) {
+            _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
+               history_id: self._historyId,
+               ids: data.ids,
+               history_context: null
+            });
+         } else {
+            var id = data.getId();
+            _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
+               history_id: data.get('HistoryId') || self._historyId,
+               id: id,
+               history_context: null
+            });
+         }
       },
 
       addFromData: function(self, data) {

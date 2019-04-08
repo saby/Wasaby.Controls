@@ -23,6 +23,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
     * @class Controls/DragNDrop/DraggingTemplate
     * @extends Core/Control
+    * @mixes Controls/DragNDrop/DraggingTemplate/Styles
     * @control
     * @public
     * @author Авраменко А.С.

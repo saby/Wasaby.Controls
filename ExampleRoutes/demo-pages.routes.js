@@ -190,6 +190,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: Explorer c поиском
+      '/demo-ws4-explorer-with-search': function(req, res) {
+         requirejs('Controls-demo/Explorer/ExplorerSearchWithApplocation');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Explorer/ExplorerSearchWithApplocation',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Плитка
       '/demo-ws4-tile': function(req, res) {
          requirejs('Controls-demo/Explorer/DemoWithApplication');

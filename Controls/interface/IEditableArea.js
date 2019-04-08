@@ -34,11 +34,14 @@ define('Controls/interface/IEditableArea', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, record) {
-    *       if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, record) {
+    *          if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see beforeEndEdit
     * @see afterEndEdit
@@ -61,12 +64,15 @@ define('Controls/interface/IEditableArea', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeEndEditHandler: function(e, record, commit) {
-    *       //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
-    *       if (commit && record.get("text").length === 0) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeEndEditHandler: function(e, record, commit) {
+    *          //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
+    *          if (commit && record.get("text").length === 0) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * The following example shows how to handle the event asynchronously.
     * WML:

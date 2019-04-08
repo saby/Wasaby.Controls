@@ -275,6 +275,23 @@ define(
             assert.isTrue(position.bottom === 0);
          });
 
+         it('stack width', () => {
+            let item = {
+               popupOptions: {
+                  minWidth: 800,
+                  width: 900,
+                  maxWidth: 1200
+               }
+            };
+            let position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
+            assert.equal(position.stackWidth, 900);
+
+            item.popupOptions.width = 1200;
+            position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
+            assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
+            assert.equal(position.stackWidth, 1200);
+         });
+
          it('stack compatible popup', () => {
             let item = {
                popupOptions: {

@@ -231,7 +231,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          Suggest._private.setFilter(self, filter);
          assert.deepEqual(self._filter, resultFilter);
       });
-   
+
       it('Suggest::_searchEnd', function() {
          var suggest = new Suggest();
          var errorFired = false;
@@ -241,13 +241,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggest.saveOptions(options);
          suggest._searchDelay = 0;
          suggest._children = {};
-   
+
          try {
             suggest._searchEnd();
          } catch (e) {
             errorFired = true;
          }
-         
+
          assert.equal(options.searchDelay, suggest._searchDelay);
          assert.isFalse(errorFired);
       });
@@ -311,9 +311,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.searchParam = 'searchParam';
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;
-         self._options.readOnly = false;
+         self._options.readOnly = true;
          self._options.historyId = 'testFieldHistoryId';
          self._options.keyProperty = 'Identificator';
+
+         suggestComponent._searchDelay = 300;
          suggestComponent.saveOptions(self._options);
          Suggest._private.setFilter(suggestComponent, {});
          suggestComponent._notify = function(event, val) {
@@ -321,10 +323,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                suggestState = val[0];
             }
          };
+
+         suggestComponent._inputActivated();
+         assert.equal(suggestComponent._searchDelay, 300);
+         suggestComponent._options.readOnly = false;
          
          
          return new Promise(function(resolve) {
             suggestComponent._inputActivated();
+            assert.equal(suggestComponent._searchDelay, 0);
    
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
@@ -384,12 +391,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.searchParam = 'searchParam';
          self._options.keyProperty = 'Identificator';
          self._options.minSearchLength = 3;
+         self._options.searchDelay = 300;
          
          suggestComponent.saveOptions(self._options);
          suggestComponent._inputActive = true;
+         suggestComponent._searchDelay = 0;
    
          suggestComponent._changeValueHandler(null, 't');
          assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._searchDelay, 300);
    
          suggestComponent._changeValueHandler(null, 'te');
          assert.equal(suggestComponent._searchValue, '');

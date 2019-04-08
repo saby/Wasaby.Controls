@@ -27,7 +27,11 @@ define('Controls/Selector/Button/_SelectorButton', [
          } else if (!this._options.readOnly) {
             this._open();
          }
-      }
+      },
+
+      _openInfoBox: function(event, config) {
+         config.maxWidth = this._container.offsetWidth;
+      },
    });
 
    SelectorButton.getDefaultOptions = function() {
