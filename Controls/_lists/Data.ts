@@ -4,6 +4,16 @@ import template = require('wml!Controls/Container/Data/Data');
 import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
+import source = require('Types/source');
+
+import {RecordSet} from 'Types/collection'
+import {ICrud} from 'Types/source';
+
+type GetSourceResult = {
+   data: RecordSet,
+   source: ICrud
+}
+
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -60,7 +70,7 @@ import Deferred = require('Core/Deferred');
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
 
-         createPrefetchSource: function(self, data) {
+         createPrefetchSource: function(self, data): Deferred<GetSourceResult> {
             var resultDef = new Deferred();
 
             getPrefetchSource({
@@ -111,7 +121,7 @@ import Deferred = require('Core/Deferred');
           * @param self control instance
           * @param result {prefetchSourceResult}
           */
-         createDataContextBySourceResult: function(self, result) {
+         createDataContextBySourceResult: function(self, result: GetSourceResult) {
             _private.resolvePrefetchSourceResult(self, result);
             self._dataOptionsContext = _private.getDataContext(self);
          },
@@ -129,11 +139,21 @@ import Deferred = require('Core/Deferred');
             var self = this;
             _private.resolveOptions(this, options);
             if (receivedState) {
-               _private.createDataContextBySourceResult(this, receivedState);
+               // need to create prefetchSource with source from options, because event subscriptions is not work on server
+               // and source from receivedState will lose all subscriptions
+               _private.createDataContextBySourceResult(this, {
+                  data: receivedState,
+                  source: new source.PrefetchProxy({
+                     data: {
+                        query: receivedState
+                     },
+                     target: self._source
+                  })
+               });
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
-                  return result;
+                  return result.data;
                });
             } else {
                self._dataOptionsContext = _private.getDataContext(self);
