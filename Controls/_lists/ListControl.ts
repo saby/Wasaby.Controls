@@ -5,7 +5,7 @@ import Deferred = require('Core/Deferred');
 /**
  * Plain list control with custom item template. Can load data from data source.
  *
- * @class Controls/List
+ * @class Controls/_lists/ListControl
  * @extends Controls/_lists/BaseControl
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate

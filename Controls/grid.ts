@@ -1,3 +1,15 @@
+/**
+ * Grid library
+ * @library Controls/grid
+ * @includes View Controls/_grids/Grid
+ * @includes ItemTemplate wml!Controls/_grids/Item
+ * @includes GroupTemplate wml!Controls/_grids/GroupTemplate
+ * @includes LadderWrapper wml!Controls/_grids/LadderWrapper
+ * @includes ColumnTemplate wml!Controls/_grids/Column
+ * @public
+ * @author Kraynov D.
+ */
+
 import View = require('Controls/_grids/Grid');
 import ItemTemplate = require('wml!Controls/_grids/Item');
 import GroupTemplate = require('wml!Controls/_grids/GroupTemplate');
