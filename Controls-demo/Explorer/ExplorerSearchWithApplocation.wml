@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Explorer with search" demoname="Controls-demo/Explorer/Search.wml">
+    <ws:content>
+        <Controls-demo.Explorer.Search/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

@@ -6,7 +6,7 @@
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
-            <Controls.Label name="myLabel1" caption="style(только для тем carry и presto):"/>
+            <Controls.input:Label name="myLabel1" caption="style(только для тем carry и presto):"/>
             <Controls.Input.ComboBox
                     attr:class="ControlsDemo__style"
                     source="{{_iconStyleSource}}"

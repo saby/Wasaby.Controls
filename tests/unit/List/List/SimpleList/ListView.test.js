@@ -9,7 +9,7 @@ define([
    collection
 ) {
    describe('Controls.List.ListView', function() {
-      var data, data2, display;
+      var data, data2, display, sandbox;
       beforeEach(function() {
          data = [
             {
@@ -45,7 +45,11 @@ define([
                type: 2
             }
          ];
+         sandbox = sinon.createSandbox();
+      });
 
+      afterEach(function() {
+         sandbox.restore();
       });
 
       it('Item click', function () {
@@ -104,27 +108,7 @@ define([
          assert.equal(model, lv._listModel, 'Incorrect listModel before update');
       });
 
-      it('_private.resizeNotifyOnListChanged', function () {
-         var listView = new lists.ListView(),
-             eventNotifyed = false;
-
-         listView._notify = function(event) {
-            if (event === 'controlResize') {
-               eventNotifyed = true;
-            }
-         };
-
-         listView._listChanged = false;
-         lists.ListView._private.resizeNotifyOnListChanged(listView);
-
-         assert.isFalse(eventNotifyed);
-
-         listView._listChanged = true;
-         lists.ListView._private.resizeNotifyOnListChanged(listView);
-
-         assert.isTrue(eventNotifyed);
-      });
-      it('ListView updating queue', function () {
+      it('should notify about resize after the list was updated with new items', function() {
          var
             cfg = {
                listModel: new lists.ListViewModel({
@@ -136,18 +120,38 @@ define([
             listView = new lists.ListView(cfg);
          listView.saveOptions(cfg);
          listView._beforeMount(cfg);
-         assert.isFalse(listView._lockForUpdate, 'Incorrect initial "_lockForUpdate" value.');
-         assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value.');
+         var stub = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
+
+         listView._listModel._notify('onListChange');
+         assert.isFalse(stub.called);
          listView._beforeUpdate(cfg);
-         assert.isTrue(listView._lockForUpdate, 'Incorrect value "_lockForUpdate" after call "beforeUpdate".');
-         listView._listModel._notify('onListChange');
-         listView._listModel._notify('onListChange');
-         assert.equal(listView._queue.length, 2, 'Incorrect length "_queue" after two "onListChange".');
-         assert.isTrue(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after two "onListChange".');
+         assert.isFalse(stub.called);
          listView._afterUpdate();
-         assert.isFalse(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after call "afterUpdate".');
-         assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value after call "afterUpdate".');
+         assert.isTrue(stub.calledOnce);
       });
+
+      it('should notify about resize only once even if the list was changed multiple times during an update', function() {
+         var
+            cfg = {
+               listModel: new lists.ListViewModel({
+                  items: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id'
+            },
+            listView = new lists.ListView(cfg);
+         listView.saveOptions(cfg);
+         listView._beforeMount(cfg);
+         var stub = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
+
+         listView._listModel._notify('onListChange');
+         listView._listModel._notify('onListChange');
+         listView._listModel._notify('onListChange');
+         listView._beforeUpdate(cfg);
+         listView._afterUpdate();
+         assert.isTrue(stub.calledOnce);
+      });
+
       it('_onItemMouseEnter', function(done) {
          var
             fakeHTMLElement = {
@@ -253,6 +257,47 @@ define([
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
          });
+         it('itemContextMenu event should fire if contextMenuVisibility: true and the list has no editing items', function() {
+            var
+               model = new lists.ListViewModel({
+                  items: data,
+                  keyProperty: 'id',
+                  markedKey: null
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuVisibility: true
+               },
+               lv = new lists.ListView(cfg),
+               notifyStub = sandbox.stub(lv, '_notify').withArgs('itemContextMenu', [{}, {}, true]);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+            sandbox.stub(model, 'getEditingItemData').returns(null);
+
+            lv._onItemContextMenu({}, {});
+            assert.isTrue(notifyStub.calledOnce);
+         });
+         it('itemContextMenu event shouldn\'t fire during editing', function() {
+            var
+               model = new lists.ListViewModel({
+                  items: data,
+                  keyProperty: 'id',
+                  markedKey: null
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuVisibility: true
+               },
+               lv = new lists.ListView(cfg);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+            sandbox.stub(model, 'getEditingItemData').returns({});
+            sandbox.stub(lv, '_notify').withArgs('itemContextMenu').throws('itemContextMenu event shouldn\'t fire during editing');
+
+            lv._onItemContextMenu({}, {});
+         });
       });
 
       describe('_afterMount', function() {
@@ -273,15 +318,11 @@ define([
             var lv = new lists.ListView(cfg);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
-
-            lv._notify = function(eventName, eventArgs, eventOpts) {
-               assert.equal(eventName, 'markedKeyChanged');
-               assert.equal(eventArgs.length, 1);
-               assert.equal(eventArgs[0], 1);
-               assert.isUndefined(eventOpts);
-            };
+            var stub = sandbox.stub(lv, '_notify').withArgs('markedKeyChanged', [1]);
 
             lv._afterMount();
+
+            assert.isTrue(stub.calledOnce);
          });
 
          it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {

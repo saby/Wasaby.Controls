@@ -34,11 +34,14 @@ define('Controls/interface/IEditableArea', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, record) {
-    *       if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, record) {
+    *          if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see beforeEndEdit
     * @see afterEndEdit
@@ -61,12 +64,15 @@ define('Controls/interface/IEditableArea', [
     * </pre>
     * JS:
     * <pre>
-    *    beforeEndEditHandler: function(e, record, commit) {
-    *       //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
-    *       if (commit && record.get("text").length === 0) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeEndEditHandler: function(e, record, commit) {
+    *          //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
+    *          if (commit && record.get("text").length === 0) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * The following example shows how to handle the event asynchronously.
     * WML:
@@ -163,14 +169,14 @@ define('Controls/interface/IEditableArea', [
     * @name Controls/interface/IEditableArea#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
-    * If you want content to look exactly as {@link Controls/Input/Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
+    * If you want content to look exactly as {@link Controls.input:Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
     * Using Controls.EditableArea.Templates.Editors.Base:
     * <pre>
     *     <Controls.EditableArea editObject="{{_editObject}}">
     *        <Controls.EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
-    *              <Controls.Input.Text />
+    *              <Controls.input:Text />
     *           </ws:editorTemplate>
     *        </Controls.EditableArea.Templates.Editors.Base>
     *     </Controls.EditableArea>
@@ -180,7 +186,7 @@ define('Controls/interface/IEditableArea', [
     *    <ws:template name="editingTemplate">
     *       <div class="myEditingTemplate">
     *          <ws:if data="{{isEditing}}">
-    *             <Controls.Input.Text value="{{editObject.text}}" />
+    *             <Controls.input:Text value="{{editObject.text}}" />
     *          </ws:if>
     *          <ws:else>
     *             <span>{{editObject.text}}</span>

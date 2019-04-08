@@ -1,5 +1,5 @@
 <div attr:class="controls-Input-DateRange">
-   <Controls.Input.DateTime
+   <Controls.input:DateBase
       name="startValueField"
       class="controls-Input-DateRange_startValue"
       bind:value="_rangeModel.startValue"
@@ -15,9 +15,9 @@
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('startTagClick')"
       on:tagHover="_proxyEvent('startTagHover')">
-   </Controls.Input.DateTime>
+   </Controls.input:DateBase>
    <div class="controls-Input-DateRange__dash"></div>
-   <Controls.Input.DateTime
+   <Controls.input:DateBase
       name="endValueField"
       class="controls-Input-DateRange_endValue"
       bind:value="_rangeModel.endValue"
@@ -32,7 +32,7 @@
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">
-   </Controls.Input.DateTime>
+   </Controls.input:DateBase>
    <Controls.buttons:Button
       attr:class="controls-Input-DateRange__button"
       attr:tabindex="-1"
@@ -41,10 +41,6 @@
       icon="icon-Calendar2 icon-primary controls-Input-DateRange__icon-size"
       on:click="_openDialog()"
    />
-   <Controls.Popup.Opener.Sticky name="opener">
-      <ws:popupOptions
-         template="SBIS3.CONTROLS/Date/RangeBigChoose"
-         closeOnOutsideClick="{{true}}"
-      />
+   <Controls.Popup.Opener.Sticky name="opener" template="SBIS3.CONTROLS/Date/RangeBigChoose" closeOnOutsideClick="{{true}}">
    </Controls.Popup.Opener.Sticky>
 </div>

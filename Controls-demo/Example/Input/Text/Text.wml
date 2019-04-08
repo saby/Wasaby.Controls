@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text placeholder="Tooltip" class="ControlsDemo-ExampleInput_simpleTextField"
+                  <Controls.input:Text placeholder="Tooltip" class="ControlsDemo-ExampleInput_simpleTextField"
                                        bind:value="_value1"/>
                </ws:template>
             </ws:Object>
@@ -17,7 +17,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text name="text2"
+                  <Controls.input:Text name="text2"
                                        placeholder="Tooltip"
                                        bind:value="_value2"/>
                </ws:template>
@@ -25,7 +25,7 @@
             </ws:Object>
             <ws:Object spacing="big">
                <ws:template>
-                  <Controls.Input.Text name="text3" class="ControlsDemo-ExampleInput_focusText"
+                  <Controls.input:Text name="text3" class="ControlsDemo-ExampleInput_focusText"
                                        placeholder="Tooltip"
                                        bind:value="_value3"/>
                </ws:template>
@@ -40,7 +40,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Text name="text4"
+                  <Controls.input:Text name="text4"
                                        placeholder="Tooltip"
                                        bind:value="_value4"/>
                </ws:template>
@@ -48,7 +48,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text name="text5"
+                  <Controls.input:Text name="text5"
                                        placeholder="Tooltip"
                                        bind:value="_value5"/>
                </ws:template>
@@ -56,7 +56,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text name="text6"
+                  <Controls.input:Text name="text6"
                                        placeholder="Tooltip"
                                        bind:value="_value6"/>
                </ws:template>
@@ -64,7 +64,7 @@
             </ws:Object>
             <ws:Object spacing="big">
                <ws:template>
-                  <Controls.Input.Text name="text8"
+                  <Controls.input:Text name="text8"
                                        placeholder="Tooltip"
                                        bind:value="_value8"/>
                </ws:template>

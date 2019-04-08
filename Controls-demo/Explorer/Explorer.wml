@@ -17,6 +17,7 @@
                      viewMode="{{_viewMode}}"
                      itemActions="{{_itemActions}}"
                      itemsHeight="{{_itemsHeight}}"
+                     header="{{_gridHeader}}"
                      imageProperty="image"
                      multiSelectVisibility="visible"
                      columns="{{_viewColumns}}">

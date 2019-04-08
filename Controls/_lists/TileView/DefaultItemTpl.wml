@@ -6,11 +6,13 @@
 
 <ws:template name="defaultContentTpl">
    <div attr:class="controls-TileView__itemContent
+               js-controls-SwipeControl__actionsContainer
                {{!!itemData.isActive ? ' controls-TileView__item_active'}}
                {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
                {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
                {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
+               {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
                {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
                {{!!itemData.showActions && itemData.isHovered ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}}">
@@ -35,23 +37,24 @@
       </ws:else>
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
+                  highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight"/>
+      <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+                  template="{{swipeTemplate}}"
+                  itemData="{{itemData}}"
+                  itemActionsTemplate="{{itemActionsTemplate}}"/>
    </div>
 </ws:template>
 
 <ws:template name="imageWrapperTpl">
-   <div class="controls-TileView__imageWrapper js-controls-SwipeControl__actionsContainer">
+   <div class="controls-TileView__imageWrapper">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
 
 <ws:template name="imageTpl">
    <img class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
-   <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
-               template="{{swipeTemplate}}"
-               itemData="{{itemData}}"
-               itemActionsTemplate="{{itemActionsTemplate}}"/>
 </ws:template>
 
 <ws:if data="{{invisible}}">
@@ -60,9 +63,9 @@
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
       <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
-         <ws:partial template="defaultContentTpl" attr:class="controls-TileView__item_flex">
+         <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
-               <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}} {{itemData.isFixed ? 'controls-TileView__imageWrapper_fixed'}}" attr:style="{{!itemData.isFixed ? 'height: ' + itemData.itemsHeight + 'px;'}}">
+               <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}" attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
                   <ws:partial template="imageTpl"/>
                </ws:partial>
             </ws:imageWrapper>

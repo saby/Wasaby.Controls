@@ -3,7 +3,7 @@ define('Controls-demo/Decorators/Highlight/Highlight',
       'Core/Control',
       'wml!Controls-demo/Decorators/Highlight/Highlight',
 
-      'Controls/Input/Area',
+      'Controls/input',
       'Controls/Decorator/Highlight',
       'css!Controls-demo/Decorators/Highlight/Highlight'
    ],

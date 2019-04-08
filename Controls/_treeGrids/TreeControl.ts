@@ -228,16 +228,16 @@ var _private = {
 /**
  * Hierarchical list control with custom item template. Can load data from data source.
  *
- * @class Controls/List/TreeControl
+ * @class Controls/_treeGrids/TreeControl
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/TreeGridView/Styles
- * @extends Controls/List/ListControl
+ * @mixes Controls/_treeGrids/TreeGridView/Styles
+ * @extends Controls/_lists/ListControl
  * @control
  * @public
  * @category List
  */
 
-var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype */{
+var TreeControl = Control.extend(/** @lends Controls/_treeGrids/TreeControl.prototype */{
     _onNodeRemovedFn: null,
     _template: TreeControlTpl,
     _root: null,

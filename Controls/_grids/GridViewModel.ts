@@ -11,8 +11,8 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex) {
-           return itemVersion + '_' + self._columnsVersion + '_' +
-              (self._options.multiSelectVisibility === 'hidden' ? columnIndex : columnIndex - 1);
+            return itemVersion + '_' + self._columnsVersion + '_' +
+               (self._options.multiSelectVisibility === 'hidden' ? columnIndex : columnIndex - 1);
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
@@ -806,6 +806,10 @@ var
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
                         },
+                        getKey: function() {
+                            return self._columnsVersion + '_' +
+                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+                        },
                         _preferVersionAPI: true
                     };
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
@@ -908,6 +912,10 @@ var
 
         _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
+        },
+
+        getEditingItemData(): object | null {
+            return this._model.getEditingItemData();
         },
 
         setItemActionVisibilityCallback: function(callback) {

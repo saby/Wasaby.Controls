@@ -1,1 +1,1 @@
-<Controls.Input.Text value="Мой текст в инпуте" tagStyle="danger" on:click="_clickHandler()"/>
+<Controls.input:Text value="Мой текст в инпуте" tagStyle="danger" on:click="_clickHandler()"/>

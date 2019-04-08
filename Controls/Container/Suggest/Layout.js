@@ -22,9 +22,15 @@ define('Controls/Container/Suggest/Layout',
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
       var ENTER_KEY = Env.constants.key.enter;
-      
-      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
+
+      var PROCESSED_KEYDOWN_KEYS = {
+
+         /* hot keys that should processed on input */
+         INPUT: [Env.constants.key.esc],
+
+         /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+         SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
+      };
       
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
@@ -106,6 +112,9 @@ define('Controls/Container/Suggest/Layout',
          
          inputActivated: function(self) {
             if (self._options.autoDropDown && !self._options.readOnly) {
+               // The delay is needed when searching, when receiving the focus of the input field, open without delay
+               self._searchDelay = 0;
+
                if (self._options.historyId && !self._searchValue) {
                   _private.openWithHistory(self);
                } else if (!self._options.suggestState) {
@@ -361,7 +370,8 @@ define('Controls/Container/Suggest/Layout',
 
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
-            
+            this._searchDelay = this._options.searchDelay;
+
             if (!shouldSearch && historyId) {
                _private.openWithHistory(this).addCallback(function(res) {
                   if (!res.length && self._options.suggestState) {
@@ -486,13 +496,23 @@ define('Controls/Container/Suggest/Layout',
 
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
-            var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            var isInputKey = PROCESSED_KEYDOWN_KEYS.INPUT.indexOf(eventKeyCode) !== -1;
+            var isListKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : PROCESSED_KEYDOWN_KEYS.SUGGESTIONS_LIST.indexOf(eventKeyCode) !== -1;
 
-            if (this._options.suggestState && needProcessKey) {
-               event.preventDefault();
+            if (this._options.suggestState) {
+               if (isListKey || isInputKey) {
+                  event.preventDefault();
+                  event.stopPropagation();
+               }
 
-               if (this._children.inputKeydown) {
-                  this._children.inputKeydown.start(event);
+               if (isListKey) {
+                  if (this._children.inputKeydown) {
+                     this._children.inputKeydown.start(event);
+                  }
+               } else if (isInputKey) {
+                  if (eventKeyCode === Env.constants.key.esc) {
+                     _private.close(this);
+                  }
                }
             }
          }

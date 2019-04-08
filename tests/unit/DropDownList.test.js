@@ -316,7 +316,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             let expectedResult = {
                event: 'itemClick',
                action: 'itemClick',
-               selectedKeys: dropdownList._listModel.getSelectedKeys()
+               data: []
             };
             let result = DropdownList._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
@@ -370,7 +370,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             let expectedResult = {
                event: 'itemClick',
                action: 'applyClick',
-               selectedKeys: dropdownList._listModel.getSelectedKeys()
+               data: []
             };
             dropdownList._applySelection('itemClick');
             assert.deepEqual(result, expectedResult);
@@ -402,6 +402,27 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             dropdownList._beforeMount(config);
             dropdownList._itemClickHandler(event, items.at(1));
             assert.deepEqual(result, expectedResult);
+         });
+
+         it('_openSelectorDialog', function() {
+            let config = getDropDownConfig();
+            config.selectorTemplate = {
+               templateName: 'selectorTemplate',
+               templateOptions: { items: [], caption: 'text' }
+            };
+            let dropdownList = getDropDownListWithConfig(config);
+            dropdownList._beforeMount(config);
+            let expectedTemplateOptions =  { items: [], caption: 'text', selectedItems: new collection.List({ items: [] }) };
+            let resultOptions;
+            dropdownList._children = {
+               selectorDialog: { open: (options) => {
+                  resultOptions = options;
+               } }
+            };
+            dropdownList._openSelectorDialog(config);
+
+            assert.deepEqual(resultOptions.templateOptions, expectedTemplateOptions);
+            assert.equal(resultOptions.template, 'selectorTemplate');
          });
       });
    });

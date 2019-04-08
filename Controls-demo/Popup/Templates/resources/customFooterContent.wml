@@ -1,5 +1,4 @@
-<div  style="text-align: center">
-    <Controls.buttons:Button caption="yes" attr:style="margin-right: 3px"/>
-    <Controls.buttons:Button caption="no" attr:style="margin-right: 3px"/>
-    <Controls.buttons:Button caption="cancel"/>
+<div attr:style="display: flex;align-items: center; justify-content: flex-end;">
+    <Controls._buttons.Button viewMode ='link'
+                              icon="icon-EmptyMessage icon-medium" attr:style="margin-right: 18px"/>
 </div>

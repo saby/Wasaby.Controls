@@ -11,7 +11,7 @@
       placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
       autocomplete="{{options.autoComplete ? 'on' : 'off'}}"
       class="controls-InputBase__nativeField_theme_{{options.theme}}
-            {{value ? '' : 'controls-' + controlName + '__nativeField_theme_' + options.theme + '_caretEmpty'}}
+             controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{value ? 'Filled' : 'Empty'}}
             {{isEdge ? 'controls-InputBase__nativeField_edge'}}
             {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
       on:keyup="_keyUpHandler()"

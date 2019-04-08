@@ -3,11 +3,11 @@
    <div class="controlsDemo-Number_offsetG">
       <div class="controlsDemo-Number_offsetV">
          <div>number</div>
-         <Controls.Input.Number bind:value="_number"/>
+         <Controls.input:Number bind:value="_number"/>
       </div>
       <div class="controlsDemo-Number_offsetV">
          <div>fractionSize</div>
-         <Controls.Input.Number bind:value="_fractionSize" onlyPositive="{{true}}" precision="{{0}}"/>
+         <Controls.input:Number bind:value="_fractionSize" onlyPositive="{{true}}" precision="{{0}}"/>
       </div>
       <div class="controlsDemo-Number_offsetV">
          <div>mode</div>

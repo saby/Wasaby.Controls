@@ -12,7 +12,9 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          var minWidth = parseInt(item.popupOptions.minWidth, 10);
          var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
-         if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
+         if (item.popupOptions.width) {
+            panelWidth = item.popupOptions.width;
+         } else if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
          } else if (!minWidth || !maxWidth) { // If no configuration is specified then get the size of the container
             if (item.containerWidth > maxPanelWidthWithOffset) {
@@ -54,14 +56,24 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       getPosition: function(tCoords, item) {
          var maxPanelWidth = this.getMaxPanelWidth();
          var width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-
-         return {
-            width: width,
-            maxWidth: width ? undefined : maxPanelWidth,
+         var position = {
+            stackWidth: width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
          };
+
+         if (item.popupOptions.minWidth) {
+            // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+         }
+         if (item.popupOptions.maxWidth) {
+            position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+         } else {
+            position.stackMaxWidth = maxPanelWidth;
+         }
+
+         return position;
       },
 
       /**

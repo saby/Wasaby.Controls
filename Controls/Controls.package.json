@@ -133,10 +133,8 @@
 }, {
   "include": [
     "Controls/List/*",
-    "Controls/List",
     "Controls/_lists/*",
     "Controls/_lists",
-    "Controls/Grid",
     "Controls/List/ItemActions/Utils/Actions",
     "Controls/_lists/ItemActions/Utils/Actions"
   ],
@@ -290,13 +288,6 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
-}, {
-  "include": [
-    "Controls/HighCharts",
-    "Controls/HighChartsLight",
-    "Controls/HighCharts/resources/ParseDataUtil"
-  ],
-  "output": "controls-highcharts.package.js"
 }, {
   "include": [
     "Controls/DragNDrop/*"

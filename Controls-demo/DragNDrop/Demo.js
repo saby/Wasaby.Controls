@@ -15,6 +15,7 @@ define('Controls-demo/DragNDrop/Demo', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
+      _root: null,
 
       _beforeMount: function() {
          this._itemsReadyCallbackFirst = this._itemsReadyFirst.bind(this);

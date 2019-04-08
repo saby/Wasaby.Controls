@@ -13,9 +13,11 @@ define('Controls/Popup/Opener/Edit',
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
+       * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
        * @class Controls/Popup/Opener/Edit
        * @control
        * @public
+       * @demo Controls-demo/Popup/Edit/Opener
        * @category Popup
        */
 

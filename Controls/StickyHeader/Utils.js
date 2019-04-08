@@ -1,6 +1,7 @@
 define('Controls/StickyHeader/Utils', [
-   'Env/Env'
-], function(Env) {
+   'Env/Env',
+   'Controls/Utils/getDimensions'
+], function(Env, getDimensions) {
 
    'use strict';
 
@@ -22,6 +23,17 @@ define('Controls/StickyHeader/Utils', [
 
       get _lastId() {
          return lastId - 1;
+      },
+
+      getOffset: function(parentElement, element, position) {
+         var
+            offset = getDimensions(element),
+            parrentOffset = getDimensions(parentElement);
+         if (position === 'top') {
+            return offset.top - parrentOffset.top;
+         } else {
+            return parrentOffset.bottom - offset.bottom;
+         }
       }
    };
 });

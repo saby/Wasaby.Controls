@@ -13,28 +13,28 @@ import {ListControl as viewTemplate} from 'Controls/lists';
     *    <li><a href="/materials/demo-ws4-edit-in-place-row-editor">How to configure editing in your list with row editor template.</a>.</li>
     * </ul>
     *
-    * @class Controls/Grid
-    * @extends Controls/List
+    * @class Controls/_grids/Grid
+    * @extends Controls/list:View
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IList
-    * @mixes Controls/List/interface/IGridControl
+    * @mixes Controls/_lists/interface/IList
+    * @mixes Controls/_lists/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/List/interface/IDraggable
+    * @mixes Controls/_lists/interface/IDraggable
     *
-    * @mixes Controls/List/BaseControlStyles
-    * @mixes Controls/List/ListStyles
+    * @mixes Controls/_lists/BaseControlStyles
+    * @mixes Controls/_lists/ListStyles
     * @mixes Controls/_grids/GridStyles
-    * @mixes Controls/List/ItemActions/ItemActionsStyles
+    * @mixes Controls/_lists/ItemActions/ItemActionsStyles
     * @mixes Controls/_lists/Swipe/SwipeStyles
     *
-    * @mixes Controls/List/Mover/MoveDialog/Styles
-    * @mixes Controls/List/PagingStyles
-    * @mixes Controls/List/DigitButtonsStyles
+    * @mixes Controls/_lists/Mover/MoveDialog/Styles
+    * @mixes Controls/_lists/PagingStyles
+    * @mixes Controls/_lists/DigitButtonsStyles
     * @mixes Controls/_grids/SortButtonStyles
     *
     * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
@@ -48,7 +48,7 @@ import {ListControl as viewTemplate} from 'Controls/lists';
     */
 
    var
-      Grid = List.extend(/** @lends Controls/Grid */{
+      Grid = List.extend(/** @lends Controls/grid:View */{
          _viewName: viewName,
          _viewTemplate: viewTemplate,
          _getModelConstructor: function() {
