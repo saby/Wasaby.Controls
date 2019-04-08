@@ -27,7 +27,13 @@ define('Controls/Decorator/Money',
 
       /**
        * @name Controls/Decorator/Money#number
-       * @cfg {String} Number to convert.
+       * @cfg {Number} Number to convert.
+       * @deprecated Use option {@link value}
+       */
+
+      /**
+       * @name Controls/Decorator/Money#value
+       * @cfg {String} Value in number format to convert.
        */
 
       /**
@@ -67,14 +73,11 @@ define('Controls/Decorator/Money',
       var _private = {
          searchPaths: /(-?[0-9]*?)(\.[0-9]{2})/,
 
-         parseNumber: function(number, delimiters) {
-            if (typeof number === 'number') {
-               Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Тип опции number изменился с Number на String.');
-            }
-            var exec = this.searchPaths.exec(parseFloat(number).toFixed(2));
+         parseNumber: function(value, delimiters) {
+            var exec = this.searchPaths.exec(parseFloat(value).toFixed(2));
 
             if (!exec) {
-               Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option number: ' + number + '.');
+               Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option value: ' + value + '.');
                exec = ['0.00', '0', '.00'];
             }
 
@@ -98,6 +101,18 @@ define('Controls/Decorator/Money',
             }
 
             return options.useGrouping;
+         },
+
+         getValue: function(options, useLogging) {
+            if ('number' in options) {
+               if (useLogging) {
+                  Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция number устарела, используйте value.');
+               }
+
+               return options.number.toString();
+            }
+
+            return options.value;
          }
       };
 
@@ -107,15 +122,20 @@ define('Controls/Decorator/Money',
          _parsedNumber: null,
 
          _beforeMount: function(options) {
-            this._parsedNumber = _private.parseNumber(options.number, _private.isUseGrouping(options, true));
+            this._parsedNumber = _private.parseNumber(
+               _private.getValue(options, true),
+               _private.isUseGrouping(options, true)
+            );
          },
 
          _beforeUpdate: function(newOptions) {
             var newUseGrouping = _private.isUseGrouping(newOptions, false);
             var oldUseGrouping = _private.isUseGrouping(this._options, false);
+            var newValue = _private.getValue(newOptions, false);
+            var oldValue = _private.getValue(this._options, false);
 
-            if (newOptions.number !== this._options.number || newUseGrouping !== oldUseGrouping) {
-               this._parsedNumber = _private.parseNumber(newOptions.number, newUseGrouping);
+            if (newValue !== oldValue || newUseGrouping !== oldUseGrouping) {
+               this._parsedNumber = _private.parseNumber(newValue, newUseGrouping);
             }
          }
       });
@@ -131,7 +151,7 @@ define('Controls/Decorator/Money',
          return {
             style: entity.descriptor(String),
             useGrouping: entity.descriptor(Boolean),
-            number: entity.descriptor(Number, String).required()
+            value: entity.descriptor(String)
          };
       };
 

@@ -35,7 +35,7 @@ define('Controls-demo/Decorators/Money/Money',
             };
             this._componentOptions = {
                title: '',
-               number: '0.00',
+               value: '0.00',
                style: 'default',
                name: 'DecoratorMoney',
                useGrouping: true

@@ -3,7 +3,7 @@
     "properties": {
       "ws-config": {
         "options": {
-          "number": {
+          "value": {
             "type": "String"
           },
           "title": {
