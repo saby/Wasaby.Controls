@@ -1207,6 +1207,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
                this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
             this._loadedItems = null;
+            this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
