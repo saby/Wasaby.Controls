@@ -13,7 +13,7 @@ import 'css!theme?Controls/_dateRange/Input/Input';
  * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
- * @mixes Controls/Input/interface/IInputBase
+ * @mixes Controls/_input/interface/IInputBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
  * @mixes Controls/_input/interface/IDateMask

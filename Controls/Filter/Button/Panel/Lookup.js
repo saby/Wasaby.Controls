@@ -19,8 +19,8 @@ define('Controls/Filter/Button/Panel/Lookup', [
     * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/_input/interface/IInputPlaceholder
+    * @mixes Controls/_input/interface/IInputText
     * @mixes Controls/Selector/Lookup/LookupStyles
     * @control
     * @public
