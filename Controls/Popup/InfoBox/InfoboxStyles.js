@@ -28,6 +28,7 @@ define('Controls/Popup/InfoBox/InfoboxStyles', [],
     * @css @border-color_Infobox_success Border color when option style is set to success.
     * @css @border-color_Infobox_secondary Border color when option style is set to secondary.
     * @css @border-width_Infobox Thickness of border.
+    * @css @border-width_Infobox-marker Thickness of marker.
     *
     * @css @color_Infobox-shadow_default Default color of shadow.
     * @css @box-shadow_Infobox Size of shadow.
