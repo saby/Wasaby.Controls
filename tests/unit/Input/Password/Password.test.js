@@ -49,6 +49,7 @@ define(
                'fontStyle',
                'revealable',
                'autoComplete',
+               'inputCallback',
                'selectOnClick'
             ].sort());
          });

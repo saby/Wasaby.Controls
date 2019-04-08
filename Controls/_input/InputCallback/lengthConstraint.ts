@@ -8,6 +8,12 @@ function getCountTriads(valueLength: number): number {
     return Math.max(0, Math.floor((valueLength - 1) / 3));
 }
 
+/**
+ * Get the function constraint the length of the number.
+ * @param {number} maxLength The maximum length of the integer part of the number including minus.
+ * @param {boolean} useGrouping Determines whether to use grouping separators, such as thousands separators.
+ * @return {ICallback}
+ */
 export default function lengthConstraint(maxLength: number, useGrouping: boolean): ICallback<number> {
     return (data) => {
         let formattedDisplayValue: string = '';
