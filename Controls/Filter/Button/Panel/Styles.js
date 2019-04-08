@@ -1,10 +1,12 @@
 define('Controls/Filter/Button/Panel/Styles', [],
    function() {}
-   
+
    /**
     * @author Золотова Элина
     * @mixin Controls/Filter/Button/Panel/Styles
     * @public
+    *
+    * @css @background-color_FilterPanel Background color of filter panel.
     *
     * @css @width_FilterPanel-size_m The width of the panel on which css class controls-FilterPanel__width-m is set.
     * @css @width_FilterPanel-size_l The width of the panel on which css class controls-FilterPanel__width-l is set.
