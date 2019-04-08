@@ -95,7 +95,7 @@
                         />
                     </ws:content>
                 </Controls.Validate.Controller>
-                 <Controls.Validate.Controller  readOnly = "{{true}}" name="ControllerValidate4"  attr:style="margin: 30px">
+                 <Controls.Validate.Controller  readOnly="{{true}}" name="ControllerValidate4"  attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox_readonly">
                     <ws:validators>
                         <ws:Function value="{{_value7 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
