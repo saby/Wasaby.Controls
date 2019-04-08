@@ -1,9 +1,9 @@
 <ws:if data="{{itemData.item.getId}}">
-   <ws:partial template="Controls/treeGrids:ItemTemplate"
+   <ws:partial template="Controls/treeGrid:ItemTemplate"
                scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <ws:partial template="Controls/treeGrids:ItemTemplate"
+   <ws:partial template="Controls/treeGrid:ItemTemplate"
                scope="{{_options}}"
                colspan="{{true}}"
                on:click="_onSearchItemClick(itemData.dispItem)">

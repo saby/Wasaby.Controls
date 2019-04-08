@@ -1,4 +1,4 @@
-import {ViewModel as TreeGridViewModel} from 'Controls/treeGrids';
+import {ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
 import SearchViewModel = require('Controls/_grids/SearchView/SearchViewModel');
 
 var SearchGridViewModel = TreeGridViewModel.extend({
