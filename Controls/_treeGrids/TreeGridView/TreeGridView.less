@@ -103,9 +103,9 @@
    flex-shrink: 0;
    display: inline-block;
 }
-.controls-TreeGrid__nodeFooterContent::before {
-   content: '\200b';
-   font-size: 16px;
+.controls-TreeGrid__nodeFooterContent {
+   display: inline-flex;
+   align-items: center;
 }
 .controls-TreeGrid__nodeFooterLoadMore {
    font-size: @font-size_TreeGridView-nodeFooterHasMore;
