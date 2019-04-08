@@ -167,7 +167,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
          var isHorizontal = direction === 'horizontal';
-         if (position[isHorizontal ? 'right' : 'bottom']) {
+         if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (targetCoords[popupCfg.corner[direction]] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
          return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
