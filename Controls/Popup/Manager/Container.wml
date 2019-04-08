@@ -19,7 +19,9 @@
                 bottom: {{item.position.bottom === undefined ? 'auto': item.position.bottom + 'px'}};
                 width: {{item.position.width === undefined ? 'auto': item.position.width + 'px'}};
                 max-width: {{item.position.maxWidth !== undefined ? item.position.maxWidth + 'px'}};
+                min-width: {{item.position.minWidth !== undefined ? item.position.minWidth + 'px'}};
                 max-height: {{item.position.maxHeight !== undefined ? item.position.maxHeight + 'px'}};
+                min-height: {{item.position.minHeight !== undefined ? item.position.minHeight + 'px'}};
                 height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
                                        scope="{{item.popupOptions}}"
          />
