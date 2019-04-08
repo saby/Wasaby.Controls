@@ -813,10 +813,13 @@ var
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
                     if (isPartialSupport) {
+                        let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
+
+                        rowOffset += self.getHeader() ? 1 : 0;
                         current.gridGroupStyles = toCssString([
                             {
                                 name: '-ms-grid-row',
-                                value: current.index + 1
+                                value: current.index + rowOffset + 1
                             }
                         ]);
                     }
