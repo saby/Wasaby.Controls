@@ -1,8 +1,8 @@
-<Controls.grids:View
+<Controls.grid:View
         source = "{{_viewSource}}"
         keyProperty="id"
         columns="{{_columns}}">
     <ws:itemTemplate>
-        <ws:partial template="Controls/grids:ItemTemplate" highlightOnHover="{{false}}" />
+        <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}" />
     </ws:itemTemplate>
-</Controls.grids:View>
+</Controls.grid:View>

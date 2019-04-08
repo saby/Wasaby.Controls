@@ -1,6 +1,6 @@
-<Controls.grids:View
+<Controls.grid:View
         source="{{_viewSource}}"
         keyProperty="id"
         columns="{{_columns}}"
         header="{{_header}}">
-</Controls.grids:View>
+</Controls.grid:View>
