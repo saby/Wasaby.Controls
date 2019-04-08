@@ -6,7 +6,6 @@ define('Controls/Controllers/PrimaryAction',
    ],
 
    function(Control, Env, template) {
-
       'use strict';
 
       /**
@@ -18,6 +17,7 @@ define('Controls/Controllers/PrimaryAction',
 
          keyDownHandler: function(e) {
             if (!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.keyCode === Env.constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+               e.stopPropagation(); // Event processed
                this._notify('triggered');
             }
          }
