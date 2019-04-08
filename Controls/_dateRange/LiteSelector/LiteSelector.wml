@@ -7,15 +7,11 @@
       attr:class="controls-DateRangeLinkLite__view"
    />
 
-   <Controls.Popup.Opener.Sticky name="opener">
-      <ws:popupOptions
-         template="Controls/Date/PeriodLiteDialog"
-         closeOnOutsideClick="{{true}}"
-      >
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:verticalAlign side="bottom"/>
-         <ws:horizontalAlign side="center"/>
-         <ws:corner vertical="top" horizontal="center"/>
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Sticky name="opener"
+                                 template="Controls/Date/PeriodLiteDialog"
+                                 closeOnOutsideClick="{{true}}"
+                                 on:result="_onResult()">
+      <ws:direction vertical="bottom" horizontal="center"/>
+      <ws:targetPoint vertical="top" horizontal="center"/>
    </Controls.Popup.Opener.Sticky>
 </div>

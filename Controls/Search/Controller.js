@@ -40,8 +40,12 @@ define('Controls/Search/Controller',
             var switcherStr = getSwitcherStrFromData(result.data);
    
             self._loading = false;
-            self._previousViewMode = self._viewMode;
-            self._viewMode = 'search';
+
+            if (self._viewMode !== 'search') {
+               self._previousViewMode = self._viewMode;
+               self._viewMode = 'search';
+            }
+
             self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
             self._notify('filterChanged', [filter]);
@@ -97,6 +101,8 @@ define('Controls/Search/Controller',
        * Note: Component with {@link Controls/Input/interface/IInputField} interface must be located in {@link Controls/Search/Input/Container}.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
+       * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
        *
        * @class Controls/Search/Controller
        * @extends Core/Control

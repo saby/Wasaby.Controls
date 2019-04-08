@@ -113,7 +113,7 @@ define('Controls-demo/Confirmation/Confirmation',
             });
          },
 
-         _onResultHandler: function(result) {
+         _onResultHandler: function(event, result) {
             this._resultHandler = result;
             this._forceUpdate();
          }

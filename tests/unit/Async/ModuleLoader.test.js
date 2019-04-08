@@ -18,7 +18,7 @@ define([
       }
    }
 
-   describe('Controls/Container/Async/ModuleLoader', function() {
+   describe('Dynamic loading Controls/Container/Async/ModuleLoader', function() {
       var ml;
       var logErrors = [];
       var originalLogger = IoC.resolve('ILogger');

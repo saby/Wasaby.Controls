@@ -12,7 +12,7 @@ import viewTemplate = require('Controls/_lists/ListControl');
 /**
  * Plain list with custom item template. Can load data from data source.
  *
- * @class Controls/List
+ * @class Controls/_lists/List
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -41,7 +41,7 @@ import viewTemplate = require('Controls/_lists/ListControl');
  * @demo Controls-demo/List/List/BasePG
  */
 
-var ListControl = Control.extend(/** @lends Controls/List.prototype */{
+var ListControl = Control.extend(/** @lends Controls/_lists/List.prototype */{
     _template: ListControlTpl,
     _viewName: viewName,
     _viewTemplate: viewTemplate,

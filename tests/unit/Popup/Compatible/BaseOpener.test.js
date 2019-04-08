@@ -309,6 +309,7 @@ define(
             delete config.autoCloseOnHide;
 
             config.minWidth = 100;
+            config.width = 100;
             config.maxWidth = 1000;
             config.maximized = true;
             config.title = 'заголовок';
@@ -320,6 +321,7 @@ define(
             config.fittingMode = 'fixed';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
+            assert.equal(newConfig.dialogOptions.width, 100);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
             assert.equal(newConfig.componentOptions, config.templateOptions);
@@ -349,15 +351,15 @@ define(
             assert.equal(newConfig.dialogOptions.maximized, true);
             assert.equal(newConfig.componentOptions.maximized, true);
             let testconfig = {
-               horizontalAlign: {
-                  side: 'left',
-                  offset: 10
+               direction: {
+                  horizontal: 'left',
+                  vertical: 'top'
                },
-               verticalAlign: {
-                  side: 'top',
-                  offset: 15
+               offset: {
+                  horizontal: 10,
+                  vertical: 15
                },
-               corner: {
+               targetPoint: {
                   vertical: 'bottom'
                },
                mode: 'floatArea'

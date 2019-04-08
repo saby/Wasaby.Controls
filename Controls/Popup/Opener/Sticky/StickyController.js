@@ -252,7 +252,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             item.position = {
                top: -10000,
                left: -10000,
-               maxWidth: _private.getWindowWidth(),
+               maxWidth: item.popupOptions.maxWidth || _private.getWindowWidth(),
 
                // Error on ios when position: absolute container is created outside the screen and stretches the page
                // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
@@ -282,7 +282,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   maxHeight: cfg.popupOptions.maxHeight
                },
                sizes: sizes,
-               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                fittingMode: cfg.popupOptions.fittingMode
             };
          },
