@@ -35,53 +35,26 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
 
          var popupOptions = item.popupOptions;
 
-         if (popupOptions.maximize) {
-            width = windowData.width;
-            height = windowData.height;
-         } else {
-            width = !popupOptions.maximize ? this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, windowData.width) : windowData.width;
-            height = !popupOptions.maximize ? this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, windowData.height) : windowData.height;
-         }
-
-         left = this._getLeftCoord(windowData.width, width);
-         top = this._getTopCoord(windowData, height);
-
-         // don't limit container size when it fit in window
-         if (!popupOptions.minWidth && !popupOptions.maxWidth && width < windowData.width) {
-            width = undefined;
-         }
-
-         if (!popupOptions.minHeight && !popupOptions.maxHeight && height < windowData.height) {
-            height = undefined;
-         }
-
-         var availableMaxWidth = Math.min(popupOptions.maxWidth || windowData.width, windowData.width);
-         var availableMaxHeight = Math.min(popupOptions.maxHeight || windowData.height, windowData.height);
+         width = this._calculateValue(popupOptions, containerSizes.width, popupOptions.width || windowData.width);
+         height = this._calculateValue(popupOptions, containerSizes.height, popupOptions.height || windowData.height);
+         left = this._getLeftCoord(windowData.width, width || containerSizes.width);
+         top = this._getTopCoord(windowData, height || containerSizes.height);
 
          return {
             width: width,
             height: height,
-            maxHeight: Math.max(availableMaxHeight, popupOptions.minHeight || 0),
-            maxWidth: Math.max(availableMaxWidth, popupOptions.minWidth || 0),
+            maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
+            minHeight: popupOptions.minHeight,
+            maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width),
+            minWidth: popupOptions.minWidth,
             left: left,
             top: top
          };
       },
-      _calculateValue: function(minRange, maxRange, containerValue, windowValue) {
-         var hasMinValue = true;
-
-         if (!minRange && !maxRange) {
-            minRange = maxRange = containerValue;
-            hasMinValue = false;
+      _calculateValue: function(popupOptions, containerValue, windowValue) {
+         if (popupOptions.maximize || containerValue > windowValue) {
+            return windowValue;
          }
-
-         if (windowValue - maxRange >= 0) {
-            return maxRange;
-         }
-         if (hasMinValue) {
-            return windowValue > minRange ? windowValue : minRange;
-         }
-         return windowValue;
       },
       _getLeftCoord: function(wWidth, width) {
          return Math.max(Math.round((wWidth - width) / 2), 0);
