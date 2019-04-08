@@ -8,6 +8,10 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/Input/interface/IInputPlaceholder
     *
+    * @mixes Controls/Input/interface/ISelectableInput
+    * @mixes Controls/Input/interface/IInputTooltip
+    * @mixes Controls/Input/interface/IInputStyle
+    *
     * @mixes Controls/_input/Base/Styles
     * @mixes Controls/Input/Render/Styles
     *
@@ -64,33 +68,6 @@ define('Controls/Input/interface/IInputBase', [], function() {
     */
 
    /**
-    * @name Controls/Input/interface/IInputBase#tooltip
-    * @cfg {String} Text of the tooltip shown when the control is hovered over.
-    * @remark
-    * "Title" attribute added to the control's root node and default browser tooltip is shown on hover.
-    * @example
-    * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
-    * <pre>
-    *    <Controls.input:Text tooltip="Enter your name"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Input/interface/IInputBase#selectOnClick
-    * @cfg {Boolean} Determines whether text is selected when input is clicked.
-    * @default false
-    * @remark
-    * This option can be used if you know that user clicking the field to enter a new value is a more frequent scenario
-    * than user wanting to edit the current value. In that case, they will click on the field, text will get selected, a
-    * nd they will be able to start entering new value immediately.
-    * @example
-    * In this example, when the field is clicked, all text in it will be selected.
-    * <pre>
-    *    <Controls.input:Text selectOnClick={{true}}/>
-    * </pre>
-    */
-
-   /**
     * @name Controls/Input/interface/IInputBase#autoComplete
     * @cfg {Boolean} Determines whether to use browser-based auto-complete field.
     * @default false
@@ -106,70 +83,6 @@ define('Controls/Input/interface/IInputBase', [], function() {
     * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
     * <pre>
     *    <Controls.input:Text autoComplete={{true}}/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Input/interface/IInputBase#style
-    * @cfg {String} Display style of the field.
-    * @variant info - information field display style.
-    * @variant invalid - the display style of the field with invalid value.
-    * @variant danger - the display style of the field with danger.
-    * @variant success -  the display style of the field with success.
-    * @variant warning -  the display style of the field with warning.
-    * @variant primary - display style to attract attention.
-    * @default info
-    * @remark
-    * The choice of value depends on the context in which the field is used. Use the 'info' value to enter information that does not require attention. But if you want to draw the user's attention, use 'primary'. If the field is validated, use 'success' otherwise 'danger'. If the field is valid, but you want to show that the entered data can be dangerous, use the 'warning' value.
-    * @example
-    * In this example, we created form for register. Fields for entering name, login and password are mandatory. Fields for entering place of residence are additional and can remain unfilled. After entering the password, the field will change the display style depending on the entered value.
-    * We draw the user's attention to the required fields, for this we use the style option in the 'primary' value. For additional fields used 'info' value. We subscribe to inputCompleted event and change password field's display style. If the value is not valid, set the style option to 'danger', otherwise 'success'. if the password equal login, then set 'warning'.
-    * <pre>
-    *    <div class="form">
-    *       <div class="fio">
-    *          <Controls.input:Text name="firstName" style="primary" bind:value="_firstName"/>
-    *          <Controls.input:Text name="lastName" style="primary" bind:value="_lastName"/>
-    *       </div>
-    *       <div class="residence">
-    *          <Controls.input:Text name="street" style="info" bind:value="_street"/>
-    *          <Controls.input:Text name="houseNumber" style="info" bind:value="_houseNumber"/>
-    *       </div>
-    *       <Controls.input:Text name="login" style="primary" bind:value="_login"/>
-    *       Controls.input:Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
-    *       <Controls.Button name="register" caption="register" on:click="_sendDataClick()"/>
-    *    </div>
-    * </pre>
-    *
-    * <pre>
-    *    Control.extend({
-    *    ...
-    *    _firstName: '',
-    *
-    *    _lastName: '',
-    *
-    *    _street: '',
-    *
-    *    _houseNumber: '',
-    *
-    *    _login: '',
-    *
-    *    _password: '',
-    *
-    *    _passwordStyle: 'primary',
-    *
-    *    _inputCompletedHandler: function() {
-    *        if (this._validatePassword()) {
-    *            this._passwordStyle = this._password === this._login ? 'warning' : 'success';
-    *        } else {
-    *            this._passwordStyle = 'danger'
-    *        }
-    *    },
-    *
-    *    _sendButtonClick() {
-    *        this._sendData();
-    *    }
-    *    ...
-    *    });
     * </pre>
     */
 });

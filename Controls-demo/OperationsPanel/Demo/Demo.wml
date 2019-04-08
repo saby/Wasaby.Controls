@@ -73,7 +73,7 @@
                                     </Controls.lists:Mover>
                                 </ws:actions>
                                 <ws:content>
-                                    <Controls.treeGrids:View
+                                    <Controls.treeGrid:View
                                        name="list"
                                        attr:class="demo-Grid__control"
                                        itemsReadyCallback="{{_itemsReadyCallback}}"
@@ -91,7 +91,6 @@
         </ws:items>
     </Layout.Browser.Tabs>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-    <Controls.Popup.Opener.Dialog name="operationsResultOpener">
-        <ws:popupOptions isModal="{{true}}" template="Controls/Operations/ReportDialog"/>
+    <Controls.Popup.Opener.Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/Operations/ReportDialog">
     </Controls.Popup.Opener.Dialog>
 </div>

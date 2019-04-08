@@ -164,6 +164,8 @@ define('Controls/Popup/Opener/BaseOpener',
             var options = [
                'closeByExternalClick',
                'isCompoundTemplate',
+               'eventHandlers',
+               'autoCloseOnHide',
                'autoClose',
                'type',
                'style',
@@ -388,7 +390,9 @@ define('Controls/Popup/Opener/BaseOpener',
 
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
-               if (compoundArea && !isFormController && compoundArea._options.template === newCfg.template) {
+
+               // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
+               if (compoundArea && compoundArea._moduleName === 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
                   // Redraw template with new options
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);

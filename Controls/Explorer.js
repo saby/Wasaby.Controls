@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/treeGrids',
+   'Controls/treeGrid',
    'Controls/breadcrumbs'
 ], function(
    Control,

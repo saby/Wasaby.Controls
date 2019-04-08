@@ -1,10 +1,10 @@
-<Controls.treeGrids:View
+<Controls.treeGrid:View
         source="{{_viewSource}}"
         keyProperty="id"
         columns="{{_columns}}"
         nodeProperty="type"
         parentProperty="parent">
     <ws:itemTemplate>
-        <ws:partial template="Controls/treeGrids:ItemTemplate" expanderIcon="hiddenNode" expanderSize="xl"/>
+        <ws:partial template="Controls/treeGrid:ItemTemplate" expanderIcon="hiddenNode" expanderSize="xl"/>
     </ws:itemTemplate>
-</Controls.treeGrids:View>
+</Controls.treeGrid:View>
