@@ -2676,7 +2676,7 @@ define([
                   items: [],
                   keyProperty: 'id'
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
                source: source
             },
@@ -2704,7 +2704,7 @@ define([
                   items: [],
                   keyProperty: 'id'
                },
-               viewModelConstructor: ListViewModel,
+               viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
                source: source
             },
