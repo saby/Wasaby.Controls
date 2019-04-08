@@ -82,7 +82,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#textValueChanged Happens when changing the set of the selected collection.
+    * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {String} textValue String formed from selected entries.
     * @example
@@ -104,7 +104,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#itemsChanged Happens when changing the set of the selected collection.
+    * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {RecordSet} items List of selected entries.
     * @example
@@ -123,5 +123,11 @@ define('Controls/interface/ISelectedCollection', [
     *       this.prepareItems(items);
     *    }
     * </pre>
+    */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {RecordSet} item Item selected collection.
     */
 });
