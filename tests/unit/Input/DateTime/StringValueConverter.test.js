@@ -69,6 +69,7 @@ define([
             { mask: 'DD.MM.YY', stringValue: '11.12.__', value: new Date(year, 11, 11) },
             // Automatically fill the current month and year
             { mask: 'DD.MM.YY', stringValue: '11.__.__', value: new Date(year, month, 11) },
+            { mask: 'DD.MM.YYYY', stringValue: '11.__.____', value: new Date(year, month, 11) },
             // Current year is filled
             // Autofill current month
             { mask: 'DD.MM.YY', stringValue: `11.__.${shortYearStr}`, value: new Date(year, month, 11) },
