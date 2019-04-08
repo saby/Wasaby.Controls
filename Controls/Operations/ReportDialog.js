@@ -1,8 +1,7 @@
 define('Controls/Operations/ReportDialog', [
    'Core/Control',
    'Core/helpers/String/format',
-   'wml!Controls/Operations/ReportDialog/ReportDialog',
-   'css!theme?Controls/Operations/ReportDialog/ReportDialog'
+   'wml!Controls/Operations/ReportDialog/ReportDialog'
 ], function(Control, format, template) {
    'use strict';
 
@@ -53,7 +52,7 @@ define('Controls/Operations/ReportDialog', [
     */
 
 
-   return Control.extend({
+   var ReportDialog = Control.extend({
       _template: template,
       _message: null,
       _beforeMount: function(cfg) {
@@ -72,4 +71,6 @@ define('Controls/Operations/ReportDialog', [
          this._notify('close', [], {bubbling: true});
       }
    });
+   ReportDialog._theme = ['Controls/operationsPopup'];
+   return ReportDialog;
 });

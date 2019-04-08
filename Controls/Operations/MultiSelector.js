@@ -1,7 +1,6 @@
 define('Controls/Operations/MultiSelector', [
    'Core/Control',
-   'wml!Controls/Operations/MultiSelector/MultiSelector',
-   'css!theme?Controls/Operations/MultiSelector/MultiSelector'
+   'wml!Controls/Operations/MultiSelector/MultiSelector'
 ], function(
    Control,
    template
@@ -37,5 +36,6 @@ define('Controls/Operations/MultiSelector', [
       }
    });
 
+   MultiSelector._theme = ['Controls/operations'];
    return MultiSelector;
 });

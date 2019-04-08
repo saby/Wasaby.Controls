@@ -413,6 +413,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
+    getEditingItemData(): object | null {
+        return this._editingItemData;
+    },
+
     setItemActions: function(item, actions) {
         if (item.get) {
             const id = item.get(this._options.keyProperty);

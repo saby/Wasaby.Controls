@@ -4,8 +4,7 @@ define('Controls/Operations/Panel', [
    'Controls/toolbars',
    'Types/source',
    'Controls/Operations/Panel/Utils',
-   'Controls/buttons',
-   'css!theme?Controls/Operations/Panel/Panel'
+   'Controls/buttons'
 ], function(
    Control,
    template,
@@ -169,6 +168,7 @@ define('Controls/Operations/Panel', [
          itemTemplate: toolbars.ItemTemplate
       };
    };
+   Panel._theme = ['Controls/operations'];
 
    return Panel;
 });

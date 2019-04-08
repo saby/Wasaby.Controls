@@ -4,6 +4,17 @@ define('Controls/Container/Adapter/SelectedKey',
       'wml!Controls/Container/Adapter/SelectedKey/SelectedKey'
    ],
 
+   /**
+    * Container for controls that implement interface {@link Controls/interface/IMultiSelectable multiSelectable}.
+    * Container receives selectedKey option and transfers selectedKeys option to children.
+    * Listens for children "selectedKeysChanged" event and notify event "selectedKeyChanged".
+    * @class Controls/Container/Adapter/SelectedKey
+    * @extends Controls/Control
+    * @control
+    * @public
+    * @author Золотова Э.Е.
+    */
+
    function(Control, template) {
 
       'use strict';
