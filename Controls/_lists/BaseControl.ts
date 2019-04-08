@@ -19,6 +19,7 @@ import 'wml!Controls/_lists/BaseControl/Footer';
 import 'css!theme?Controls/_lists/BaseControl/BaseControl';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
+import ListViewModel from 'Controls/_lists/ListViewModel';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -64,6 +65,8 @@ type ErrbackConfig = {
     mode?: dataSourceError.Mode;
     error: Error;
 }
+
+type LoadingState = null | 'all' | 'up' | 'down';
 
 /**
  * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
@@ -1248,6 +1251,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
         }
+    },
+
+    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel, loadingState: LoadingState): boolean {
+        return emptyTemplate &&
+               !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
+               (!loadingState || loadingState === 'all');
     },
 
     _onCheckBoxClick: function(e, key, status) {
