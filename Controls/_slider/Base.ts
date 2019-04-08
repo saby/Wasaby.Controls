@@ -1,8 +1,10 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
+import entity = require('Types/entity');
 import template = require('wml!Controls/_slider/sliderTemplate');
-import calculations from 'Controls/_slider/Utils';
+import utils from 'Controls/_slider/Utils';
 import DragNDrop = require('Controls/DragNDrop/Controller');
+import Range from './Range';
 
 /**
  * Basic slider with single movable point for choosing value.
@@ -14,42 +16,28 @@ import DragNDrop = require('Controls/DragNDrop/Controller');
  */
 
 var _private = {
-     _checkOptions: function(opts) {
-      if (opts.minValue === undefined || opts.maxValue === undefined) {
-         Env.IoC.resolve('ILogger').error('Slider', 'You must set minValue and maxValue for slider.');
-      }
-      if (opts.minValue >= opts.maxValue) {
-         Env.IoC.resolve('ILogger').error('Slider', 'minValue must be less than maxValue.');
-      }
+   _checkOptions(opts) {
+      utils.checkOptions(opts);
       if (opts.value < opts.minValue || opts.value > opts.maxValue) {
          Env.IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
       }
-      if (opts.scaleStep < 0) {
-         Env.IoC.resolve('ILogger').error('Slider', 'scaleStep must positive.');
-      }
    },
-   _prepareScale: function(self, minValue, maxValue, scaleStep) {
-      self._scaleData = [];
-      if (scaleStep) {
-         const scaleRange = maxValue - minValue;
-         self._scaleData.push({value: minValue, position: 0});
-         for (let i = minValue + scaleStep; i <= maxValue - scaleStep / 2; i += scaleStep) {
-            self._scaleData.push({value: i, position: (i - minValue) / scaleRange * 100});
-         }
-         self._scaleData.push({value: maxValue, position: 100});
-      }
-   },
-   _setValue: function(self, val) {
+   _setValue(self, val) {
       self._notify('valueChanged', [val], true);
    },
-   _render: function(self, minValue, maxValue, value) {
+   _render(self, minValue, maxValue, value) {
       const rangeLength = maxValue - minValue;
       const right =  Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * 100;
       self._pointData[0].position = right;
       self._lineData.width = right;
+   },
+   _needUpdate(oldOpts, newOpts) {
+      return (oldOpts.scaleStep !== newOpts.scaleStep ||
+         oldOpts.minValue !== newOpts.minValue ||
+         oldOpts.maxValue !== newOpts.maxValue ||
+         oldOpts.value !== newOpts.value);
    }
 };
-
 
 var Base = Control.extend({
    _template: template,
@@ -57,34 +45,28 @@ var Base = Control.extend({
    _lineData: undefined,
    _pointData: undefined,
    _scaleData: undefined,
-   _beforeMount: function(options) {
+   _beforeMount(options) {
       _private._checkOptions(options);
-      _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       this._value = options.value || options.maxValue;
       this._pointData = [{name: 'point', position: 100}];
       this._lineData = {position: 0, width: 100};
    },
-   _beforeUpdate: function(options) {
-      if (options.scaleStep !== this._options.scaleStep ||
-            options.minValue !== this._options.minValue ||
-            options.maxValue !== this._options.maxValue ||
-            options.value !== this._options.value) {
-         _private._prepareScale(this, options.minValue, options.maxValue, options.scaleStep);
+   _beforeUpdate(options) {
+      if (_private._needUpdate(this._options, options)) {
          _private._checkOptions(options);
+         this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       }
       _private._render(this, options.minValue, options.maxValue, options.value);
    },
    /**
     * Handler for the mousedown event.
     */
-   _onMouseDownHandler: function(event) {
+   _onMouseDownHandler(event) {
       if (!this._options.readOnly) {
-         const nativeEvent = event.nativeEvent;
-         this._startElemPosition = event.nativeEvent.clientX;
          const box = this._children.area.getBoundingClientRect();
-         const ratio = calculations.getRatio(nativeEvent.pageX, box.left + window.pageXOffset, box.width);
-         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);
-         this._value = calculations.round(this._value, this._options.precision);
+         const ratio = utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          _private._setValue(this, this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
@@ -92,28 +74,19 @@ var Base = Control.extend({
    /**
     * Handler for the dragmove event.
     */
-   _onDragMoveHandler: function(e, dragObject) {
+   _onDragMoveHandler(e, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = calculations.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
-         this._value = calculations.calcValue(this._options.minValue, this._options.maxValue, ratio);
-         this._value = calculations.round(this._value,this._options.precision);
+         const ratio = utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          _private._setValue(this, this._value);
-      }
-   },
-   /**
-    * Handler for the dragend event.
-    */
-   _onDragEndHandler: function() {
-      if (!this._options.readOnly) {
-         this._startElemPosition = undefined;
       }
    }
 });
 
 Base.getDefaultOptions = function() {
    return {
-      theme: "default",
+      theme: 'default',
       /**
        * @cfg {Boolean} sets the size of slider point
        */
@@ -144,6 +117,22 @@ Base.getDefaultOptions = function() {
       precision: 0
    };
 };
+
+Base.getOptionTypes = function() {
+   return {
+      size: entity.descriptor(String).oneOf([
+         's',
+         'm'
+      ]),
+      borderVisible: entity.descriptor(Boolean),
+      minValue: entity.descriptor(Number).required,
+      maxValue: entity.descriptor(Number).required,
+      scaleStep: entity.descriptor(Number),
+      value: entity.descriptor(Number),
+      precision: entity.descriptor(Number)
+   };
+}
+
 Base._theme = ['Controls/_slider/slider'];
 
 Base._private = _private;
