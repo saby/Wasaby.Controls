@@ -1244,7 +1244,7 @@ define([
 
          return new Promise(function(resolve) {
             baseControl._beforeMount(baseControlOptions).addCallback(function(result) {
-               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState);
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._listViewModel.getItems().clear();
                baseControl._options.emptyTemplate = {};
