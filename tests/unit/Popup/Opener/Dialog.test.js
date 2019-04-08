@@ -55,7 +55,7 @@ define(
             assert.equal(position.top, 0);
             assert.equal(position.left, 50);
             assert.equal(position.width, undefined);
-            assert.equal(position.height, 300);
+            assert.equal(position.height, undefined);
          });
 
          it('dialog positioning overflow popup config', () => {
@@ -68,7 +68,11 @@ define(
                height: 500,
                scrollTop: 0
             };
-            let position = DialogStrategy.getPosition(windowData, sizes, { popupOptions: popupOptions });
+
+            let sizesTest = {...sizes};
+            sizesTest.width = 600;
+
+            let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
             assert.equal(position.width, 500);
          });
@@ -83,9 +87,39 @@ define(
                height: 500,
                scrollTop: 0
             };
-            let position = DialogStrategy.getPosition(windowData, sizes, { popupOptions: popupOptions });
+            let sizesTest = {...sizes};
+            sizesTest.width = 700;
+            let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
-            assert.equal(position.width, 600);
+            assert.equal(position.width, 500);
+         });
+
+         it('dialog popupoptions sizes config', () => {
+            let popupOptions = {
+               maxWidth: 800,
+               maxHeight: 800,
+               minWidth: 400,
+               minHeight: 400
+            };
+            let windowData = {
+               width: 500,
+               height: 500,
+               scrollTop: 0
+            };
+
+            let width = 800;
+            let height = 800;
+
+            let sizesTest = {...sizes, width, height};
+            let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
+            assert.equal(position.left, 0);
+            assert.equal(position.top, 0);
+            assert.equal(position.width, 500);
+            assert.equal(position.height, 500);
+            assert.equal(position.maxWidth, 500);
+            assert.equal(position.minWidth, 400);
+            assert.equal(position.maxHeight, 500);
+            assert.equal(position.minHeight, 400);
          });
 
          it('dialog container sizes after update', () => {
@@ -117,11 +151,15 @@ define(
             let item = {
                popupOptions: {
                   maxWidth: 100,
-                  maxHeight: 100
+                  maxHeight: 100,
+                  minWidth: 10,
+                  minHeight: 10
                }
             };
             DialogController.getDefaultConfig(item);
             assert.equal(item.position.maxWidth, 100);
+            assert.equal(item.position.minWidth, 10);
+            assert.equal(item.position.minHeight, 10);
             assert.equal(item.position.maxHeight, 100);
 
             DialogController._private.getWindowSize = () => windowSize;
