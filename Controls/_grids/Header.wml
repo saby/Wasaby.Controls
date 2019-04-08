@@ -63,8 +63,7 @@
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.StickyHeader.Group>
-      <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
-      <ws:partial template="header" listModel="{{ listModel }}" temp="{{ listModel.getVersion() }}"/>
+      <ws:partial template="header" listModel="{{ listModel }}" />
    </Controls.StickyHeader.Group>
 </ws:if>
 <ws:else>
