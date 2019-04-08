@@ -5,7 +5,7 @@ define('Controls-demo/List/Grid/Group', [
    'wml!Controls-demo/List/Grid/DemoGroupTemplate',
    'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate',
    'Controls/Decorator/Money',
-   'Controls/lists',
+   'Controls/list',
    'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
 ], function (BaseControl, template, source) {
    'use strict';

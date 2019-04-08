@@ -1,5 +1,5 @@
 define('Controls/Tile', [
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeControl'
@@ -11,7 +11,7 @@ define('Controls/Tile', [
     * <a href="/materials/demo/demo-ws4-tile?v=19.200">Demo examples</a>.
     *
     * @class Controls/Tile
-    * @extends Controls/lists:View
+    * @extends Controls/list:View
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable

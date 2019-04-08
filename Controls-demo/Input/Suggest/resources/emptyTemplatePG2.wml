@@ -1,4 +1,4 @@
-<ws:partial template="Controls/lists:EmptyTemplate">
+<ws:partial template="Controls/list:EmptyTemplate">
     <ws:contentTemplate>
         <h2>No data for this search request</h2>
         <h3>Try to search something else</h3>

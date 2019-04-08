@@ -1,31 +1,31 @@
 <div class="removeDemo">
-    <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
+    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
         <ws:content>
             <div>
-                <Controls.lists:Remover name="listRemoveFirst" on:beforeItemsRemove="_beforeItemsRemove()" on:afterItemsRemove="_afterItemsRemove()"/>
-                <Controls.lists:Container>
-                    <Controls.lists:View
+                <Controls.list:Remover name="listRemoveFirst" on:beforeItemsRemove="_beforeItemsRemove()" on:afterItemsRemove="_afterItemsRemove()"/>
+                <Controls.list:Container>
+                    <Controls.list:View
                             class="removeDemo__list test_list_1"
                             name="list"
                             markedKey="{{1}}"
                             itemActions="{{_itemActions}}"/>
-                </Controls.lists:Container>
+                </Controls.list:Container>
             </div>
         </ws:content>
-    </Controls.lists:DataContainer>
-    <Controls.lists:DataContainer source="{{_viewSourceSecond}}" keyProperty="id">
+    </Controls.list:DataContainer>
+    <Controls.list:DataContainer source="{{_viewSourceSecond}}" keyProperty="id">
         <ws:content>
             <div>
-                <Controls.lists:Remover name="listRemoveSecond"/>
-                <Controls.lists:Container>
-                    <Controls.lists:View
+                <Controls.list:Remover name="listRemoveSecond"/>
+                <Controls.list:Container>
+                    <Controls.list:View
                             class="removeDemo__list test_list_3"
                             name="listSecond"
                             itemActions="{{_itemActionsSecond}}">
-                    </Controls.lists:View>
-                </Controls.lists:Container>
+                    </Controls.list:View>
+                </Controls.list:Container>
             </div>
         </ws:content>
-    </Controls.lists:DataContainer>
+    </Controls.list:DataContainer>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

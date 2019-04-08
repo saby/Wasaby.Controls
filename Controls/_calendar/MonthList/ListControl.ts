@@ -1,6 +1,6 @@
 import {factory} from 'Types/chain';
 import {Query} from 'Types/source';
-import {ListControl} from 'Controls/lists';
+import {ListControl} from 'Controls/list';
 import tmpl = require('wml!Controls/_calendar/MonthList/ListControl');
 import baseControlTmpl = require('wml!Controls/List/ListControl/ListControl');
 

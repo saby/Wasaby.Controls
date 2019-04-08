@@ -32,22 +32,22 @@ define('Controls/interface/IMovable', [
     * @name Controls/interface/IMovable#moveDialogTemplate
     * @cfg {Function} The template of the dialog for selecting the target record to move.
     * @example
-    * The following example shows how to using default template(Controls.lists:View.Mover.MoveDialog).
+    * The following example shows how to using default template(Controls.list:View.Mover.MoveDialog).
     * <pre>
-    *    <Controls.lists:View.Mover>
+    *    <Controls.list:View.Mover>
     *       <ws:moveDialogTemplate>
-    *          <Controls.lists:View.Mover.MoveDialog
+    *          <Controls.list:View.Mover.MoveDialog
     *                root="rootId"
     *                searchParam="folderTitle"
     *                parentProperty="parent"
     *                nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.lists:View.Mover.MoveDialog>
+    *          </Controls.list:View.Mover.MoveDialog>
     *       </ws:moveDialogTemplate>
-    *    </Controls.lists:View.Mover>
+    *    </Controls.list:View.Mover>
     * </pre>
     * @see moveItemsWithDialog
-    * @see Controls.lists:View/Mover/MoveDialog
+    * @see Controls.list:View/Mover/MoveDialog
     */
 
    /**
@@ -61,17 +61,17 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to set a descending sort.
     * <pre>
-    *    <Controls.lists:View.Mover sortingOrder="desc">
+    *    <Controls.list:View.Mover sortingOrder="desc">
     *       <ws:moveDialogTemplate>
-    *          <Controls.lists:View.Mover.MoveDialog
+    *          <Controls.list:View.Mover.MoveDialog
     *                root="rootId"
     *                searchParam="folderTitle"
     *                parentProperty="parent"
     *                nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.lists:View.Mover.MoveDialog>
+    *          </Controls.list:View.Mover.MoveDialog>
     *       </ws:moveDialogTemplate>
-    *    </Controls.lists:View.Mover>
+    *    </Controls.list:View.Mover>
     * </pre>
     */
 
@@ -85,7 +85,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to override the default items move logic.
     * <pre>
-    *    <Controls.lists:View.Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
+    *    <Controls.list:View.Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
     * </pre>
     *
     * <pre>
@@ -111,7 +111,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to display the error dialog after a failed move of items.
     * <pre>
-    *    <Controls.lists:View.Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
+    *    <Controls.list:View.Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
     *    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -140,8 +140,8 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move item up using the item actions.
     * <pre>
-    *    <Controls.lists:View itemActions="{{_itemActions}}"/>
-    *    <Controls.lists:View.Mover name="listMover"/>
+    *    <Controls.list:View itemActions="{{_itemActions}}"/>
+    *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -171,8 +171,8 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
-    *    <Controls.lists:View itemActions="{{_itemActions}}"/>
-    *    <Controls.lists:View.Mover name="listMover"/>
+    *    <Controls.list:View itemActions="{{_itemActions}}"/>
+    *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -207,7 +207,7 @@ define('Controls/interface/IMovable', [
     * The following example shows how to move item down using the item actions.
     * <pre>
     *    <Controls.Button caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.lists:View.Mover name="listMover"/>
+    *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -234,7 +234,7 @@ define('Controls/interface/IMovable', [
     * The following example shows how to move the selected items to the root by clicking the button.
     * <pre>
     *    <Controls.Button caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.lists:View.Mover name="listMover"/>
+    *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *
     * <pre>

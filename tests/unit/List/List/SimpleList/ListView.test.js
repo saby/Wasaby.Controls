@@ -2,7 +2,7 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/lists',
+   'Controls/list',
    'Types/collection'
 ], function(
    lists,

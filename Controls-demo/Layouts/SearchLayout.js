@@ -9,7 +9,7 @@ define('Controls-demo/Layouts/SearchLayout', [
    'wml!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'Types/source',
    'Controls-demo/Utils/MemorySourceFilter',
-   'Controls/lists',
+   'Controls/list',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'Controls/input',
    'Controls-demo/Layouts/LayoutFilterComponent',

@@ -1,7 +1,7 @@
-import {View as List} from 'Controls/lists';
+import {View as List} from 'Controls/list';
 import GridViewModel = require('Controls/_grids/GridViewModel');
 import viewName = require('Controls/_grids/GridView');
-import {ListControl as viewTemplate} from 'Controls/lists';
+import {ListControl as viewTemplate} from 'Controls/list';
 
    
 

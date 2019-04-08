@@ -4,7 +4,7 @@ define([
    'Types/entity',
    'Core/Deferred',
    'Types/source',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Constants'
 ], function(

@@ -67,7 +67,7 @@ define('Controls/interface/INavigation', [
     * In this example, 2 items will be displayed in the list.
     * TMPL:
     * <pre>
-    *    <Controls.lists:View
+    *    <Controls.list:View
     *       keyProperty="id"
     *       source="{{_source}}"
     *       navigation="{{_navigation}}"/>

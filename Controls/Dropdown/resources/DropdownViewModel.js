@@ -3,7 +3,7 @@
  */
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
-      'Controls/lists',
+      'Controls/list',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'Types/entity',

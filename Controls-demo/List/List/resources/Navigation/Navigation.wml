@@ -7,7 +7,7 @@
             <div class="control__demo">
                 <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
                     <ws:content>
-                        <Controls.lists:View
+                        <Controls.list:View
                                 source = "{{_viewSource}}"
                                 markedKey="{{3}}"
                                 displayProperty="title"
@@ -19,7 +19,7 @@
                                 <ws:sourceConfig pageSize="{{9}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                                 <ws:viewConfig pagingMode="direct"></ws:viewConfig>
                             </ws:navigation>
-                        </Controls.lists:View>
+                        </Controls.list:View>
                     </ws:content>
                 </Controls.Container.Scroll>
             </div>

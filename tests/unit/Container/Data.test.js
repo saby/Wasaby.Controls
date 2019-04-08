@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/lists',
+      'Controls/list',
       'Types/source',
       'Controls/Container/Data/ContextOptions',
       'Core/Deferred'

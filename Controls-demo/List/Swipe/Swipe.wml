@@ -1,6 +1,6 @@
 <div class="itemActionsDemo">
      <h2>itemActionsPosition="inline"</h2>
-    <Controls.lists:View
+    <Controls.list:View
             source = "{{_viewSource}}"
             markedKey="{{1}}"
             bind:selectedKeys="_selectedKeys"
@@ -12,7 +12,7 @@
             attr:class="itemActionsDemo__list">
 
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>
                         <div style="height:{{itemTemplate.itemData.item.id=== 3 ?  _height + 'px' : '36px'}}"  on:click="_contentClick( itemTemplate.itemData)">
                             <div class="height_item">text texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext texttext</div>
@@ -20,7 +20,7 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
     <div>Высота строки</div>
     <ws:for data="height in _heightS">
         <div

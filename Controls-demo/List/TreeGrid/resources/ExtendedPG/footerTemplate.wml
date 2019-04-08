@@ -1,1 +1,1 @@
-<Controls.lists:AddButton caption="Add item"/>
+<Controls.list:AddButton caption="Add item"/>

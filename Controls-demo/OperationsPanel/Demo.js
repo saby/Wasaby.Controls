@@ -4,7 +4,7 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
-   'Controls/lists',
+   'Controls/list',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
 ], function(Control, template, source, TreeMemory, Data, lists) {

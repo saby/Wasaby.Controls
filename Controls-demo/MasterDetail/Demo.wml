@@ -29,14 +29,14 @@
                <Controls.Input.Search placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}"
                >
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -45,7 +45,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>
@@ -59,19 +59,19 @@
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
-                  <Controls.lists:View
+                  <Controls.list:View
                      style="master"
                      keyProperty="id"
                      source="{{_masterSource}}"
                   >
                      <ws:itemTemplate>
-                        <ws:partial template="Controls/lists:ItemTemplate">
+                        <ws:partial template="Controls/list:ItemTemplate">
                            <ws:contentTemplate>
                               <div>{{itemTemplate.itemData.item.name}}</div>
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:itemTemplate>
-                  </Controls.lists:View>
+                  </Controls.list:View>
                </Controls.Container.MasterList>
             </Controls.Container.Scroll>
          </div>
@@ -82,13 +82,13 @@
                <Controls.Input.Search placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -97,7 +97,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>
@@ -131,13 +131,13 @@
                <Controls.Input.Search placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -146,7 +146,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>

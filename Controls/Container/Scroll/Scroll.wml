@@ -56,7 +56,7 @@
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">
-         <Controls.lists:Paging class="controls-Scroll__paging"
+         <Controls.list:Paging class="controls-Scroll__paging"
                                stateBegin="{{_pagingState.stateUp}}"
                                statePrev="{{_pagingState.stateUp}}"
                                stateEnd="{{_pagingState.stateDown}}"

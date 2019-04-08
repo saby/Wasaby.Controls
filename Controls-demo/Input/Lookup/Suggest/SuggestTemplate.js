@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Lookup/Suggest/SuggestTemplate', [
    'Core/Control',
    'wml!Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
-   'Controls/lists'
+   'Controls/list'
 ], function(Control, template) {
    
    'use strict';

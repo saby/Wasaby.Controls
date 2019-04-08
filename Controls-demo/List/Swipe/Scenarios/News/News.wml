@@ -1,4 +1,4 @@
-<Controls.lists:View attr:class="demo-News"
+<Controls.list:View attr:class="demo-News"
                itemActions="{{_itemActions}}"
                source="{{_source}}"
                swipeDirection="column"
@@ -8,7 +8,7 @@
                keyProperty="id">
    <ws:itemPadding left="null" right="null" bottom="null" top="null" />
    <ws:itemTemplate>
-      <ws:partial template="Controls/lists:ItemTemplate"
+      <ws:partial template="Controls/list:ItemTemplate"
                   itemActionsClass="demo-News__itemActions_position{{itemTemplate.itemData.item.banner ? ' demo-News__itemActions_position_withBanner'}}">
          <ws:contentTemplate>
             <div class="demo-News__item">
@@ -32,4 +32,4 @@
          </ws:contentTemplate>
       </ws:partial>
    </ws:itemTemplate>
-</Controls.lists:View>
+</Controls.list:View>

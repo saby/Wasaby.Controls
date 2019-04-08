@@ -5,7 +5,7 @@ define('Controls/List/List', ['Controls/_lists/List'], function(Control) {
    /**
  * Plain list with custom item template. Can load data from data source.
  *
- * @class Controls/lists:View
+ * @class Controls/list:View
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -32,6 +32,6 @@ define('Controls/List/List', ['Controls/_lists/List'], function(Control) {
  * @category List
  * @demo Controls-demo/List/List/BasePG
  */
-   /** @lends Controls/lists:View.prototype */
+   /** @lends Controls/list:View.prototype */
    return Control;
 });

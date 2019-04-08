@@ -1,5 +1,5 @@
 define([
-   'Controls/lists',
+   'Controls/list',
    'Types/source',
    'Types/collection',
    'Core/Deferred',

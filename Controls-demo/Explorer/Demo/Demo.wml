@@ -19,7 +19,7 @@
          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
-         <ws:partial template="Controls/lists:EmptyTemplate">
+         <ws:partial template="Controls/list:EmptyTemplate">
             <ws:contentTemplate>
                Нет данных
             </ws:contentTemplate>

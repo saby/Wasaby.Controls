@@ -14,14 +14,14 @@
     <div class="controls-demo_event-example__wrapper " >
         <div class="controls-demo_example-wrapper">
             <Controls.Container.Scroll attr:style="height: 320px" >
-                <Controls.lists:Container>
+                <Controls.list:Container>
                     <ws:partial template="{{_options.content}}"
                                 scope="{{_exampleControlOptions}}"
                                 bind:ladderProperties="_options.componentOpt.ladderProperties"
                                 bind:stickyColumn="_options.componentOpt.stickyColumn"
                                 attr:class="js-Controls_{{_demoName}}_mainField
                     {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
-                </Controls.lists:Container>
+                </Controls.list:Container>
             </Controls.Container.Scroll>
         </div>
         <div class="controls-demo_event-wrapper">

@@ -68,7 +68,7 @@
         </div>
         <h3>Button-link for table</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__linkForTable">
-            <Controls.lists:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
+            <Controls.list:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
         </div>
     </div>
     <h2 class="ControlsDemo__Button-icon-text">Button-icon</h2>
