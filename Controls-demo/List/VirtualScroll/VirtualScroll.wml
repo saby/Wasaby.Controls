@@ -19,10 +19,10 @@
         </Controls.Container.Scroll>
     </div>
     <div class="demo-control_block">
-        <h2>Controls/grids:View</h2>
+        <h2>Controls/grid:View</h2>
         <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
             <ws:content>
-                <Controls.grids:View
+                <Controls.grid:View
                         source="{{_viewSource}}"
                         name="gridVirt"
                         virtualScrolling="{{true}}"
@@ -35,7 +35,7 @@
                     <ws:navigation source="page" view="infinity">
                         <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
                     </ws:navigation>
-                </Controls.grids:View>
+                </Controls.grid:View>
             </ws:content>
         </Controls.Container.Scroll>
     </div>

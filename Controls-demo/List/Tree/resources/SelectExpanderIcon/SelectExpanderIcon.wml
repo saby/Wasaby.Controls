@@ -13,7 +13,7 @@
          <ws:Array>
             <ws:Object width="1fr">
                <ws:template>
-                  <ws:partial template="Controls/grids:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_XL">
+                  <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_XL">
                      <ws:contentTemplate>
                         <div>
                            <span class="ControlsDemo-TreeHiddenNodes__tasks-mainColumn__title">{{contentTemplate.itemData.item.title}}</span>
