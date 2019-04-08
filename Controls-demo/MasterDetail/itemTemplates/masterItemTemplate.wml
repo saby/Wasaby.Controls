@@ -1,4 +1,4 @@
-<ws:partial template="Controls/grids:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}">
+<ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}">
    <ws:contentTemplate>
       <div>{{itemData.item.name}}</div>
    </ws:contentTemplate>
