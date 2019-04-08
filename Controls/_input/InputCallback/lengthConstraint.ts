@@ -14,7 +14,7 @@ function getCountTriads(valueLength: number): number {
  * @param {boolean} useGrouping Determines whether to use grouping separators, such as thousands separators.
  * @return {ICallback}
  */
-export default function lengthConstraint(maxLength: number, useGrouping: boolean): ICallback<number> {
+export default function lengthConstraint(maxLength: number, useGrouping: boolean = true): ICallback<number> {
     return (data) => {
         let formattedDisplayValue: string = '';
         let relativePosition: number = data.position;
