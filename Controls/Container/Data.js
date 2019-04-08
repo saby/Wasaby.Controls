@@ -5,10 +5,11 @@ define('Controls/Container/Data',
       'wml!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
       'Controls/Container/Data/ContextOptions',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Types/source'
    ],
 
-   function(Control, cInstance, template, getPrefetchSource, ContextOptions, Deferred) {
+   function(Control, cInstance, template, getPrefetchSource, ContextOptions, Deferred, source) {
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -134,11 +135,21 @@ define('Controls/Container/Data',
             var self = this;
             _private.resolveOptions(this, options);
             if (receivedState) {
-               _private.createDataContextBySourceResult(this, receivedState);
+               // need to create prefetchSource with source from options, because event subscriptions is not work on server
+               // and source from receivedState will lose all subscriptions
+               _private.createDataContextBySourceResult(this, {
+                  data: receivedState,
+                  source: new source.PrefetchProxy({
+                     data: {
+                        query: receivedState
+                     },
+                     target: self._source
+                  })
+               });
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
-                  return result;
+                  return result.data;
                });
             } else {
                self._dataOptionsContext = _private.getDataContext(self);
