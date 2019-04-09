@@ -18,11 +18,19 @@
    </Controls.StickyHeader>
 </ws:template>
 <ws:template name="results">
-   <div class="controls-Grid__results">
-      <ws:if data="{{userTemplate}}">
-         <ws:partial template="{{userTemplate}}" model="{{model}}" />
-      </ws:if>
-      <ws:else>
+   <ws:if data="{{contentTemplate}}">
+      <div class="controls-Grid__results">
+         {{listModel.resetResultsColumns();}}
+         <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
+            <div>&nbsp;</div>
+         </ws:if>
+         <div class="{{listModel.getCurrentResultsColumn().cellClasses}}" style="{{listModel.getStyleForCustomResultsTemplate()}}">
+            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+         </div>
+      </div>
+   </ws:if>
+   <ws:else>
+      <div class="controls-Grid__results">
          <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
          <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
          {{ listModel.resetResultsColumns() }}
@@ -32,8 +40,8 @@
                         multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
                         currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"/>
          </ws:for>
-      </ws:else>
-   </div>
+      </div>
+   </ws:else>
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
    <Controls.StickyHeader.Group>

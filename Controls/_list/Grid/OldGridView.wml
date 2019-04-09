@@ -4,7 +4,7 @@
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
    </ws:if>
    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-      <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+      <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
    </ws:if>
    <tbody name="itemsContainer">
    <ws:partial template="wml!Controls/List/resources/For"
@@ -27,7 +27,7 @@
    </ws:if>
    </tbody>
    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-      <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+      <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
    </ws:if>
    <div attr:class="{{_calcFooterPaddingClass(_options)}}">
       <ws:partial template="{{_options.footerTemplate}}"/>

@@ -7,6 +7,7 @@ define('Controls-demo/List/Grid/BasePG', [
    'json!Controls-demo/List/Grid/resources/BasePG/cfg',
    'wml!Controls-demo/List/Grid/resources/BasePG/emptyTemplate',
    'wml!Controls-demo/List/Grid/resources/BasePG/footerTemplate',
+   'wml!Controls-demo/List/Grid/resources/BasePG/resultsTemplate',
    'wml!Controls-demo/List/Grid/resources/DemoMoney',
    'wml!Controls-demo/List/Grid/resources/DemoRating',
    'wml!Controls-demo/List/Grid/resources/DemoItem',
@@ -97,6 +98,22 @@ define('Controls-demo/List/Grid/BasePG', [
                   {id: 2, title: 'Box Office DESC', items: [{boxOffice: "DESC"}]},
                ]
             },
+            resultsTemplate: {
+               readOnly: false,
+               value: 'none',
+               items: [
+                  {
+                     id: '1',
+                     title: 'none',
+                     template: ''
+                  },
+                  {
+                     id: '2',
+                     title: 'Results template',
+                     template: 'wml!Controls-demo/List/Grid/resources/BasePG/resultsTemplate'
+                  }
+               ]
+            },
             footerTemplate: {
                readOnly: false,
                value: 'none',
@@ -130,6 +147,7 @@ define('Controls-demo/List/Grid/BasePG', [
             keyProperty: 'id',
             footerTemplate: undefined,
             emptyTemplate: undefined,
+            resultsTemplate: undefined,
             resultsPosition: 'top',
             itemPadding: this._dataObject.itemPadding,
             filter: {},
