@@ -212,7 +212,14 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       fixPosition: function(position, targetCoords) {
          if (position.bottom) {
-            position.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
+            position.bottom += TouchKeyboardHelper.getKeyboardHeight();
+
+            // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!) клавиатура при своем показе
+            // уменьшает высоту экрана(как это и должно быть). в этом случае getKeyboardHeight возвращает высоту 0, и
+            // дополнительные смещения учитывать не нужно. В остальных случаях необходимо учесть высоту клавиатуры и topScroll
+            if (window.screen.availHeight / window.innerHeight < 2) {
+               position.bottom += targetCoords.topScroll;
+            }
          }
       },
 
