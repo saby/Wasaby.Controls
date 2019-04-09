@@ -153,7 +153,7 @@ type GetSourceResult = {
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
-                  return result.data;
+                  return result ? result.data : null;
                });
             } else {
                self._dataOptionsContext = _private.getDataContext(self);
