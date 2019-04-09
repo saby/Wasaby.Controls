@@ -1,11 +1,11 @@
-import Base = require('Controls/Popup/Opener/BaseOpener');
+import Base = require('Controls/_popup/Opener/BaseOpener');
       /**
        * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
        * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
-       * @class Controls/Popup/Opener/Dialog
-       * @extends Controls/Popup/Opener/BaseOpener
+       * @class Controls/_popup/Opener/Dialog
+       * @extends Controls/_popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
-       * @mixes Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
+       * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
        * @control
        * @author Красильников А.С.
        * @category Popup
@@ -28,7 +28,7 @@ import Base = require('Controls/Popup/Opener/BaseOpener');
 
          /**
           * Open dialog popup.
-          * @function Controls/Popup/Opener/Dialog#open
+          * @function Controls/_popup/Opener/Dialog#open
           * @returns {Undefined}
           * @param {PopupOptions[]} popupOptions Dialog popup options.
           * @remark
@@ -65,7 +65,7 @@ import Base = require('Controls/Popup/Opener/BaseOpener');
           */
          open: function(config) {
             config = _private.getDialogConfig(config, this);
-            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
+            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Dialog/DialogController');
          }
       });
 

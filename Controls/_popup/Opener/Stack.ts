@@ -1,14 +1,14 @@
-import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
+import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
       /**
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
        *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
-       * @class Controls/Popup/Opener/Stack
-       * @extends Controls/Popup/Opener/BaseOpener
+       * @class Controls/_popup/Opener/Stack
+       * @extends Controls/_popup/Opener/BaseOpener
        * @control
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/Popup/Opener/Stack/StackStyles
+       * @mixes Controls/_popup/Opener/Stack/StackStyles
        * @mixes Controls/interface/IOpener
        * @demo Controls-demo/Popup/Opener/StackPG
        * @public
@@ -29,7 +29,7 @@ import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
 
          /**
           * Open stack popup.
-          * @function Controls/Popup/Opener/Stack#open
+          * @function Controls/_popup/Opener/Stack#open
           * @returns {Undefined}
           * @param {PopupOptions[]} popupOptions Stack popup options.
           * @example
@@ -66,7 +66,7 @@ import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
          open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
-            return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
+            return BaseOpener.prototype.open.call(this, config, 'Controls/_popup/Opener/Stack/StackController');
          },
 
          _setCompatibleConfig: function(config) {
@@ -97,7 +97,7 @@ import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
 
 
 /**
- * @name Controls/Popup/Opener/Stack#close
+ * @name Controls/_popup/Opener/Stack#close
  * @description Close Stack Popup.
  * @returns {Undefined}
  * @example
@@ -132,16 +132,16 @@ import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
  */
 
 /**
- * @name Controls/Popup/Opener/Stack#minWidth
+ * @name Controls/_popup/Opener/Stack#minWidth
  * @cfg {Number} The minimum width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Stack#maxWidth
+ * @name Controls/_popup/Opener/Stack#maxWidth
  * @cfg {Number} The maximum width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Stack#width
+ * @name Controls/_popup/Opener/Stack#width
  * @cfg {Number} Width of popup.
  */

@@ -53,8 +53,8 @@ import Utils = require('Types/util');
 
          // Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
          getManagerController: function() {
-            if (requirejs.defined('Controls/Popup/Manager/ManagerController')) {
-               return requirejs('Controls/Popup/Manager/ManagerController');
+            if (requirejs.defined('Controls/_popup/Manager/ManagerController')) {
+               return requirejs('Controls/_popup/Manager/ManagerController');
             }
          }
       };
@@ -62,7 +62,7 @@ import Utils = require('Types/util');
       /**
        * Base Popup Controller
        * @category Popup
-       * @class Controls/Popup/Opener/BaseController
+       * @class Controls/_popup/Opener/BaseController
        * @author Красильников А.С.
        */
       var BaseController = CoreExtend.extend({
@@ -76,7 +76,7 @@ import Utils = require('Types/util');
 
          /**
           * Adding a new popup
-          * @function Controls/Popup/Opener/BaseController#elementCreated
+          * @function Controls/_popup/Opener/BaseController#elementCreated
           * @param element
           * @param container
           */
@@ -97,7 +97,7 @@ import Utils = require('Types/util');
 
          /**
           * Updating popup
-          * @function Controls/Popup/Opener/BaseController#elementUpdated
+          * @function Controls/_popup/Opener/BaseController#elementUpdated
           * @param element
           * @param container
           */
@@ -144,7 +144,7 @@ import Utils = require('Types/util');
 
          /**
           * Removing popup
-          * @function Controls/Popup/Opener/BaseController#elementDestroyed
+          * @function Controls/_popup/Opener/BaseController#elementDestroyed
           * @param element
           */
          elementDestroyed: function(element) {

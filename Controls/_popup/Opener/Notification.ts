@@ -1,11 +1,11 @@
-import Base = require('Controls/Popup/Opener/BaseOpener');
+import Base = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
        * <a href="/materials/demo-ws4-notification">Demo-example</a>.
-       * @class Controls/Popup/Opener/Notification
+       * @class Controls/_popup/Opener/Notification
        * @control
        * @public
        * @author Красильников А.С.
@@ -14,16 +14,16 @@ import Env = require('Env/Env');
        */
 
       /**
-       * @name Controls/Popup/Opener/Notification#className
+       * @name Controls/_popup/Opener/Notification#className
        * @cfg {String} Class names of popup.
        */
       /**
-       * @name Controls/Popup/Opener/Notification#template
+       * @name Controls/_popup/Opener/Notification#template
        * @cfg {String|Function} Template inside popup.
        */
 
       /**
-       * @name Controls/Popup/Opener/Notification#templateOptions
+       * @name Controls/_popup/Opener/Notification#templateOptions
        * @cfg {String|Function} Template options inside popup.
        */
 
@@ -60,7 +60,7 @@ import Env = require('Env/Env');
 
          /**
           * Open dialog popup.
-          * @function Controls/Popup/Opener/Notification#open
+          * @function Controls/_popup/Opener/Notification#open
           * @param {PopupOptions[]} popupOptions Notification popup options.
           * @returns {Undefined}
           * @example
@@ -94,7 +94,7 @@ import Env = require('Env/Env');
           */
          open: function(popupOptions) {
             if (isNewEnvironment()) {
-               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/Popup/Opener/Notification/NotificationController');
+               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/_popup/Opener/Notification/NotificationController');
             } else {
                _private.compatibleOpen(this, popupOptions);
             }
@@ -138,12 +138,12 @@ import Env = require('Env/Env');
  */
 
 /**
- * @name Controls/Popup/Opener/Notification#close
+ * @name Controls/_popup/Opener/Notification#close
  * @description Close popup.
  * @function
  */
 /**
- * @name Controls/Popup/Opener/Notification#isOpened
+ * @name Controls/_popup/Opener/Notification#isOpened
  * @function
  * @description Popup opened status.
  */

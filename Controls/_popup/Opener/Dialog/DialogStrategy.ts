@@ -6,7 +6,7 @@
 
       /**
        * Returns popup position
-       * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
+       * @function Controls/_popup/Opener/Dialog/Strategy#getPosition
        * @param windowData The parameters of the browser window
        * @param containerSizes Popup container sizes
        * @param item Popup configuration

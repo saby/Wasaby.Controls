@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Popup/Opener/InfoBox/resources/template');
+import template = require('wml!Controls/_popup/Opener/InfoBox/resources/template');
 import Utils = require('View/Executor/Utils');
 import Deferred = require('Core/Deferred');
       

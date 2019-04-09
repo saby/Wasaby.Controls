@@ -2,7 +2,7 @@
  * Created by as.krasilnikov on 05.09.2018.
  */
 import Control = require('Core/Control');
-import template = require('wml!Controls/Popup/Opener/Edit/Edit');
+import template = require('wml!Controls/_popup/Opener/Edit/Edit');
 import CoreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
@@ -10,7 +10,7 @@ import Deferred = require('Core/Deferred');
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
-       * @class Controls/Popup/Opener/Edit
+       * @class Controls/_popup/Opener/Edit
        * @control
        * @public
        * @demo Controls-demo/Popup/Edit/Opener
@@ -93,11 +93,11 @@ import Deferred = require('Core/Deferred');
             var def = new Deferred();
 
             if (options.mode === 'dialog') {
-               this._openerTemplate = 'Controls/Popup/Opener/Dialog';
+               this._openerTemplate = 'Controls/_popup/Opener/Dialog';
             } else if (options.mode === 'sticky') {
-               this._openerTemplate = 'Controls/Popup/Opener/Sticky';
+               this._openerTemplate = 'Controls/_popup/Opener/Sticky';
             } else {
-               this._openerTemplate = 'Controls/Popup/Opener/Stack';
+               this._openerTemplate = 'Controls/_popup/Opener/Stack';
             }
 
             requirejs([this._openerTemplate], def.callback.bind(def));
@@ -106,7 +106,7 @@ import Deferred = require('Core/Deferred');
 
          /**
           * Open edit popup.
-          * @function Controls/Popup/Opener/Edit#open
+          * @function Controls/_popup/Opener/Edit#open
           * @param {Object} meta Data to edit: key, record.
           * @param {Object} popupOptions options for edit popup.
           * <ul>
@@ -150,7 +150,7 @@ import Deferred = require('Core/Deferred');
 
          /**
           * Close popup
-          * @function Controls/Popup/Opener/Edit#close
+          * @function Controls/_popup/Opener/Edit#close
           */
          close: function() {
             this._children.Opener.close();
@@ -158,7 +158,7 @@ import Deferred = require('Core/Deferred');
 
          /**
           * Popup opened status
-          * @function Controls/Popup/Opener/Edit#isOpened
+          * @function Controls/_popup/Opener/Edit#isOpened
           * @returns {Boolean} is popup opened
           */
          isOpened: function() {
@@ -168,7 +168,7 @@ import Deferred = require('Core/Deferred');
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
                /**
-                * @event Controls/Popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
+                * @event Controls/_popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
                 */
                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;
@@ -208,13 +208,13 @@ import Deferred = require('Core/Deferred');
    
 
 /**
- * @name Controls/Popup/Opener/Edit#close
+ * @name Controls/_popup/Opener/Edit#close
  * @function
  * @description Close edit popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Edit#popupOptions
+ * @name Controls/_popup/Opener/Edit#popupOptions
  * @cfg {Object} Sets the popup configuration.
  * @description
  * <ul>
@@ -226,7 +226,7 @@ import Deferred = require('Core/Deferred');
  */
 
 /**
- * @name Controls/Popup/Opener/Edit#mode
+ * @name Controls/_popup/Opener/Edit#mode
  * @cfg {Object} Sets the display mode of the dialog.
  * @variant stack Open edit dialog in the stack panel.
  * @variant dialog Open edit dialog in the dialog popup.
@@ -234,6 +234,6 @@ import Deferred = require('Core/Deferred');
  */
 
 /**
- * @name Controls/Popup/Opener/Edit#items
+ * @name Controls/_popup/Opener/Edit#items
  * @cfg {Object} RecordSet for synchronization with the editing record.
  */

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import Template = require('wml!Controls/Popup/Opener/BaseOpener');
-import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import Template = require('wml!Controls/_popup/Opener/BaseOpener');
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import Vdom = require('Vdom/Vdom');
 import coreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
@@ -26,7 +26,7 @@ import library = require('Core/library');
       /**
        * Base Popup opener
        * @category Popup
-       * @class Controls/Popup/Opener/BaseOpener
+       * @class Controls/_popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
        * @control
        * @private
@@ -259,7 +259,7 @@ import library = require('Core/library');
 
          /**
           * Closes a popup
-          * @function Controls/Popup/Opener/Base#close
+          * @function Controls/_popup/Opener/Base#close
           */
          close: function() {
             var self = this;
@@ -300,7 +300,7 @@ import library = require('Core/library');
 
          /**
           * State of whether the popup is open
-          * @function Controls/Popup/Opener/Base#isOpened
+          * @function Controls/_popup/Opener/Base#isOpened
           * @returns {Boolean} Is popup opened
           */
          isOpened: function() {

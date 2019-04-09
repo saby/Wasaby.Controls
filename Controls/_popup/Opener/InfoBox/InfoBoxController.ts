@@ -1,12 +1,12 @@
 import Deferred = require('Core/Deferred');
-import StickyController = require('Controls/Popup/Opener/Sticky/StickyController');
-import themeConstantsGetter = require('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter');
+import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
+import themeConstantsGetter = require('Controls/_popup/Opener/InfoBox/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
-import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import TargetCoords = require('Controls/Popup/TargetCoords');
-import StickyStrategy = require('Controls/Popup/Opener/Sticky/StickyStrategy');
-import 'css!theme?Controls/Popup/Opener/InfoBox/InfoBox';
-import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
+import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
+import 'css!theme?Controls/_popup/Opener/InfoBox/InfoBox';
+import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
@@ -99,7 +99,7 @@ import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
 
       /**
        * InfoBox Popup Controller
-       * @class Controls/Popup/Opener/InfoBox/InfoBoxController
+       * @class Controls/_popup/Opener/InfoBox/InfoBoxController
        * @control
        * @private
        * @category Popup

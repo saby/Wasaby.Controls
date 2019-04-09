@@ -3,25 +3,25 @@ import entity = require('Types/entity');
 import Env = require('Env/Env');
 import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import MarkupConverter = require('Controls/Decorator/Markup/Converter');
-import contentTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/content');
-import footerTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/footer');
-import messageTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/message');
-import detailsTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/details');
-import template = require('wml!Controls/Popup/Opener/Confirmation/Dialog/Dialog');
-import 'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog';
+import contentTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/content');
+import footerTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/footer');
+import messageTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/message');
+import detailsTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/details');
+import template = require('wml!Controls/_popup/Opener/Confirmation/Dialog/Dialog');
+import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
    
 
    /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-       * @class Controls/Popup/Opener/Confirmation/Dialog
+       * @class Controls/_popup/Opener/Confirmation/Dialog
        * @control
        * @private
        * @author Красильников А.С.
-       * @mixes Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
+       * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#type
+       * @name Controls/_popup/Opener/Confirmation/Dialog#type
        * @cfg {String} Тип диалога
        * @variant ok Диалог с кнопкой "Ок"
        * @variant yesno Диалог с кнопками "Да" и "Нет"
@@ -29,7 +29,7 @@ import 'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog';
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#style
+       * @name Controls/_popup/Opener/Confirmation/Dialog#style
        * @cfg {String} Стилевое оформление диалога
        * @variant default По умоланию
        * @variant success Успех
@@ -37,32 +37,32 @@ import 'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog';
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#message
+       * @name Controls/_popup/Opener/Confirmation/Dialog#message
        * @cfg {String} Устанавливает сообщение
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#details
+       * @name Controls/_popup/Opener/Confirmation/Dialog#details
        * @cfg {String} Устанавливает детали сообщения
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#yesCaption
+       * @name Controls/_popup/Opener/Confirmation/Dialog#yesCaption
        * @cfg {String} Устанавливает текст кнопки yes
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#noCaption
+       * @name Controls/_popup/Opener/Confirmation/Dialog#noCaption
        * @cfg {String} Устанавливает текст кнопки no
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#cancelCaption
+       * @name Controls/_popup/Opener/Confirmation/Dialog#cancelCaption
        * @cfg {String} Устанавливает текст кнопки cancel
        */
 
    /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#okCaption
+       * @name Controls/_popup/Opener/Confirmation/Dialog#okCaption
        * @cfg {String} Устанавливает текст кнопки ok
        */
 
@@ -75,7 +75,7 @@ import 'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog';
        */
 
    /**
-       * @event Controls/Popup/Opener/Confirmation/Dialog#sendResult Происходит при нажатии на кнопку диалога
+       * @event Controls/_popup/Opener/Confirmation/Dialog#sendResult Происходит при нажатии на кнопку диалога
        * @param {Env/Event:Object} eventObject Дескриптор события
        * @param {Result} Результат
        */

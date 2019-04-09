@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
+import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Deferred = require('Core/Deferred');
       
@@ -7,7 +7,7 @@ import Deferred = require('Core/Deferred');
        * Component that opens the confirmation popup.
        * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
        *
-       * @class Controls/Popup/Opener/Confirmation
+       * @class Controls/_popup/Opener/Confirmation
        * @control
        * @public
        * @category Popup
@@ -16,7 +16,7 @@ import Deferred = require('Core/Deferred');
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#type
+       * @name Controls/_popup/Opener/Confirmation#type
        * @cfg {String} Type of dialog. Determines  the result of  the confirmation window closed.
        * @variant ok (undefined)
        * @variant yesno  ( true/false)
@@ -24,7 +24,7 @@ import Deferred = require('Core/Deferred');
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#style
+       * @name Controls/_popup/Opener/Confirmation#style
        * @cfg {String} Confirmation display style
        * @variant default
        * @variant success
@@ -32,37 +32,37 @@ import Deferred = require('Core/Deferred');
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#size
+       * @name Controls/_popup/Opener/Confirmation#size
        * @cfg {String} Confirmation size
        * @variant m
        * @variant l
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#message
+       * @name Controls/_popup/Opener/Confirmation#message
        * @cfg {String} Main text
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#details
+       * @name Controls/_popup/Opener/Confirmation#details
        * @cfg {String} Additional text
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#yesCaption
+       * @name Controls/_popup/Opener/Confirmation#yesCaption
        * @cfg {String} Сonfirmation button text
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#noCaption
+       * @name Controls/_popup/Opener/Confirmation#noCaption
        * @cfg {String} Negation button text
        */
       /**
-       * @name Controls/Popup/Opener/Confirmation#cancelCaption
+       * @name Controls/_popup/Opener/Confirmation#cancelCaption
        * @cfg {String} 	Cancel button text
        */
       /**
-       * @name Controls/Popup/Opener/Confirmation#okCaption
+       * @name Controls/_popup/Opener/Confirmation#okCaption
        * @cfg {String} Accept button text
        */
 
@@ -93,19 +93,19 @@ import Deferred = require('Core/Deferred');
 
 
          /**
-          * @name Controls/Popup/Opener/Confirmation#isOpened
+          * @name Controls/_popup/Opener/Confirmation#isOpened
           * @function
           * @description Popup opened status.
           */
 
          /**
           * Close popup.
-          * @function Controls/Popup/Opener/Confirmation#close
+          * @function Controls/_popup/Opener/Confirmation#close
           */
 
          /**
           * Open confirmation popup.
-          * @function Controls/Popup/Opener/Confirmation#open
+          * @function Controls/_popup/Opener/Confirmation#open
           * @param {popupOptions[]} popupOptions Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
           * @remark
@@ -137,14 +137,14 @@ import Deferred = require('Core/Deferred');
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
             _private.compatibleOptions(this, popupOptions);
-            Confirmation.superclass.open.call(this, popupOptions, 'Controls/Popup/Opener/Dialog/DialogController');
+            Confirmation.superclass.open.call(this, popupOptions, 'Controls/_popup/Opener/Dialog/DialogController');
             return this._resultDef;
          },
 
          _getPopupOptions: function(templateOptions) {
             templateOptions.closeHandler = this._closeHandler;
             return {
-               template: 'Controls/Popup/Opener/Confirmation/Dialog',
+               template: 'Controls/_popup/Opener/Confirmation/Dialog',
                modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Popup/Manager/Manager');
-import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import template = require('wml!Controls/_popup/Manager/Manager');
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import randomId = require('Core/helpers/Number/randomId');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import collection = require('Types/collection');
@@ -342,7 +342,7 @@ import Vdom = require('Vdom/Vdom');
                   finishDef.addCallbacks(function() {
                      pendingsFinishedCallback && pendingsFinishedCallback();
                   }, function(e) {
-                     Env.IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                     Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
                      pendingsFinishedCallback && pendingsFinishedCallback();
                   });
                }
@@ -390,7 +390,7 @@ import Vdom = require('Vdom/Vdom');
 
       /**
        * Popups Manager
-       * @class Controls/Popup/Manager
+       * @class Controls/_popup/Manager
        * @private
        * @singleton
        * @category Popup
@@ -412,7 +412,7 @@ import Vdom = require('Vdom/Vdom');
 
          /**
           * Show
-          * @function Controls/Popup/Manager#show
+          * @function Controls/_popup/Manager#show
           * @param options popup configuration
           * @param controller popup controller
           */
@@ -473,7 +473,7 @@ import Vdom = require('Vdom/Vdom');
          },
 
          _findParentPopup: function(control) {
-            while (control && control._moduleName !== 'Controls/Popup/Manager/Popup') {
+            while (control && control._moduleName !== 'Controls/_popup/Manager/Popup') {
                control = control._logicParent || (control.getParent && control.getParent());
             }
             return control;
@@ -502,7 +502,7 @@ import Vdom = require('Vdom/Vdom');
 
          /**
           * Upgrade options of an existing popup
-          * @function Controls/Popup/Manager#update
+          * @function Controls/_popup/Manager#update
           * @param id popup id
           * @param options new options of popup
           */
@@ -529,7 +529,7 @@ import Vdom = require('Vdom/Vdom');
 
          /**
           * Remove popup
-          * @function Controls/Popup/Manager#remove
+          * @function Controls/_popup/Manager#remove
           * @param id popup id
           */
          remove: function(id) {
@@ -538,7 +538,7 @@ import Vdom = require('Vdom/Vdom');
 
          /**
           * Find popup configuration
-          * @function Controls/Popup/Manager#find
+          * @function Controls/_popup/Manager#find
           * @param id popup id
           */
          find: function(id) {
@@ -547,7 +547,7 @@ import Vdom = require('Vdom/Vdom');
 
          /**
           * Reindex a set of popups, for example, after changing the configuration of one of them
-          * @function Controls/Popup/Manager#reindex
+          * @function Controls/_popup/Manager#reindex
           */
          reindex: function() {
             _private.popupItems._reindex();

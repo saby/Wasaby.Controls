@@ -1,9 +1,9 @@
-import Base = require('Controls/Popup/Opener/BaseOpener');
+import Base = require('Controls/_popup/Opener/BaseOpener');
 import coreMerge = require('Core/core-merge');
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
-       * @class Controls/Popup/Opener/Sticky
-       * @extends Controls/Popup/Opener/BaseOpener
+       * @class Controls/_popup/Opener/Sticky
+       * @extends Controls/_popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
        * @control
        * @author Красильников А.С.
@@ -36,7 +36,7 @@ import coreMerge = require('Core/core-merge');
 
          /**
           * Open sticky popup.
-          * @function Controls/Popup/Opener/Sticky#open
+          * @function Controls/_popup/Opener/Sticky#open
           * @param {PopupOptions[]} popupOptions Sticky popup options.
           * @returns {Undefined}
           * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
@@ -81,7 +81,7 @@ import coreMerge = require('Core/core-merge');
          open: function(config) {
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Sticky/StickyController');
+            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Sticky/StickyController');
          },
 
          _setCompatibleConfig: function(config) {
@@ -97,7 +97,7 @@ import coreMerge = require('Core/core-merge');
 
 
 /**
- * @name Controls/Popup/Opener/Sticky#close
+ * @name Controls/_popup/Opener/Sticky#close
  * @description Close sticky popup.
  * @function
  * @returns {Undefined}
@@ -141,42 +141,42 @@ import coreMerge = require('Core/core-merge');
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#minWidth
+ * @name Controls/_popup/Opener/Sticky#minWidth
  * @cfg {Number} The minimum width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#maxWidth
+ * @name Controls/_popup/Opener/Sticky#maxWidth
  * @cfg {Number} The maximum width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#minHeight
+ * @name Controls/_popup/Opener/Sticky#minHeight
  * @cfg {Number} The minimum height of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#maxHeight
+ * @name Controls/_popup/Opener/Sticky#maxHeight
  * @cfg {Number} The maximum height of popup.
  */
 /**
- * @name Controls/Popup/Opener/Sticky#height
+ * @name Controls/_popup/Opener/Sticky#height
  * @cfg {Number} The height of popup.
  */
 /**
- * @name Controls/Popup/Opener/Sticky#width
+ * @name Controls/_popup/Opener/Sticky#width
  * @cfg {Number} The width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#actionOnScroll
+ * @name Controls/_popup/Opener/Sticky#actionOnScroll
  * @cfg {String} Determines the popup action on scroll.
  * @variant close
  * @variant track
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#targetPoint
+ * @name Controls/_popup/Opener/Sticky#targetPoint
  * @cfg {direction} Point positioning of the target relative to sticky.
  */
 
@@ -200,12 +200,12 @@ import coreMerge = require('Core/core-merge');
 
 
 /**
- * @name Controls/Popup/Opener/Sticky#direction
+ * @name Controls/_popup/Opener/Sticky#direction
  * @cfg {direction} Sets the alignment of the popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#offset
+ * @name Controls/_popup/Opener/Sticky#offset
  * @cfg {offset} Sets the offset of the targetPoint.
  *
  * /
@@ -217,6 +217,6 @@ import coreMerge = require('Core/core-merge');
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#fittingMode
+ * @name Controls/_popup/Opener/Sticky#fittingMode
  * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
  */

@@ -1,5 +1,5 @@
-import BaseController = require('Controls/Popup/Opener/BaseController');
-import DialogStrategy = require('Controls/Popup/Opener/Dialog/DialogStrategy');
+import BaseController = require('Controls/_popup/Opener/BaseController');
+import DialogStrategy = require('Controls/_popup/Opener/Dialog/DialogStrategy');
       var _private = {
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
@@ -28,11 +28,11 @@ import DialogStrategy = require('Controls/Popup/Opener/Dialog/DialogStrategy');
 
       /**
        * Dialog Popup Controller
-       * @class Controls/Popup/Opener/Dialog/DialogController
+       * @class Controls/_popup/Opener/Dialog/DialogController
        * @control
        * @private
        * @category Popup
-       * @extends Controls/Popup/Opener/BaseController
+       * @extends Controls/_popup/Opener/BaseController
        */
       var DialogController = BaseController.extend({
          elementCreated: function(cfg, container) {

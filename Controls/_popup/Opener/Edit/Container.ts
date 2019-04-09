@@ -2,11 +2,11 @@
  * Created by as.krasilnikov on 10.09.2018.
  */
 import Control = require('Core/Control');
-import template = require('wml!Controls/Popup/Opener/Edit/Container');
+import template = require('wml!Controls/_popup/Opener/Edit/Container');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
       /**
        * edit container
-       * @class Controls/Popup/Opener/Edit/Container
+       * @class Controls/_popup/Opener/Edit/Container
        * @control
        * @category Popup
        * @extends Core/Control

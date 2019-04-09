@@ -1,9 +1,9 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Popup/Manager/Popup');
+import template = require('wml!Controls/_popup/Manager/Popup');
 import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import Env = require('Env/Env');
-import 'wml!Controls/Popup/Manager/PopupContent';
+import 'wml!Controls/_popup/Manager/PopupContent';
       
 
       var _private = {
@@ -18,7 +18,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
          /**
           * Control Popup
-          * @class Controls/Popup/Manager/Popup
+          * @class Controls/_popup/Manager/Popup
           * @mixes Controls/interface/IOpenerOwner
           * @mixes Controls/interface/ICanBeDefaultOpener
           * @extends Core/Control
@@ -29,12 +29,12 @@ import 'wml!Controls/Popup/Manager/PopupContent';
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#template
+          * @name Controls/_popup/Manager/Popup#template
           * @cfg {Content} Template
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#templateOptions
+          * @name Controls/_popup/Manager/Popup#templateOptions
           * @cfg {Object} Template options
           */
 
@@ -81,7 +81,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
          /**
           * Close popup
-          * @function Controls/Popup/Manager/Popup#_close
+          * @function Controls/_popup/Manager/Popup#_close
           */
          _close: function() {
             this._notify('popupClose', [this._options.id], { bubbling: true });
@@ -130,7 +130,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
          /**
           * Update popup
-          * @function Controls/Popup/Manager/Popup#_close
+          * @function Controls/_popup/Manager/Popup#_close
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
@@ -145,7 +145,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
          /**
           * Proxy popup result
-          * @function Controls/Popup/Manager/Popup#_sendResult
+          * @function Controls/_popup/Manager/Popup#_sendResult
           */
          _sendResult: function(event) {
             var args = Array.prototype.slice.call(arguments, 1);
@@ -154,7 +154,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
          /**
           * key up handler
-          * @function Controls/Popup/Manager/Popup#_keyUp
+          * @function Controls/_popup/Manager/Popup#_keyUp
           * @param event
           */
          _keyUp: function(event) {
@@ -168,7 +168,7 @@ import 'wml!Controls/Popup/Manager/PopupContent';
 
       Popup.getDefaultOptions = function() {
          return {
-            content: 'wml!Controls/Popup/Manager/PopupContent',
+            content: 'wml!Controls/_popup/Manager/PopupContent',
             autofocus: true
          };
       };

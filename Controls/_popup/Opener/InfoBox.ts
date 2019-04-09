@@ -1,6 +1,6 @@
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
-import Base = require('Controls/Popup/Opener/BaseOpener');
+import Base = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
       
 
@@ -8,7 +8,7 @@ import getZIndex = require('Controls/Utils/getZIndex');
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        * @remark
        * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
-       * @class Controls/Popup/Opener/InfoBox
+       * @class Controls/_popup/Opener/InfoBox
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
        * @mixes Controls/Popup/InfoBox/InfoboxStyles
@@ -95,14 +95,14 @@ import getZIndex = require('Controls/Utils/getZIndex');
          _style: null,
 
          /**
-          * @name Controls/Popup/Opener/Infobox#isOpened
+          * @name Controls/_popup/Opener/Infobox#isOpened
           * @function
           * @description Popup opened status.
           */
 
          /**
           * Open popup.
-          * @function Controls/Popup/Opener/InfoBox#open
+          * @function Controls/_popup/Opener/InfoBox#open
           * @param {Object} Config
           * @returns {undefined}
           * @example
@@ -190,13 +190,13 @@ import getZIndex = require('Controls/Utils/getZIndex');
                },
                className: 'controls-InfoBox__popup controls-PreviewerController ' +
                   'controls-InfoBox_style_' + (cfg.styleType || 'marker') + '_' + (cfg.style || 'default'),
-               template: 'Controls/Popup/Opener/InfoBox/resources/template'
-            }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
+               template: 'Controls/_popup/Opener/InfoBox/resources/template'
+            }, 'Controls/_popup/Opener/InfoBox/InfoBoxController');
          },
 
          /**
           * Close popup.
-          * @function Controls/Popup/Opener/InfoBox#close
+          * @function Controls/_popup/Opener/InfoBox#close
           */
          close: function(delay) {
             delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;

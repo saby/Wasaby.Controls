@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import collection = require('Types/collection');
-import template = require('wml!Controls/Popup/Manager/Container');
-import ManagerController = require('Controls/Popup/Manager/ManagerController');
-import 'css!theme?Controls/Popup/Manager/Container';
+import template = require('wml!Controls/_popup/Manager/Container');
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
+import 'css!theme?Controls/_popup/Manager/Container';
       
 
       // step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
@@ -12,7 +12,7 @@ import 'css!theme?Controls/Popup/Manager/Container';
 
          /**
           * Container for displaying popups
-          * @class Controls/Popup/Manager/Container
+          * @class Controls/_popup/Manager/Container
           * @extends Core/Control
           * @control
           * @private
@@ -33,7 +33,7 @@ import 'css!theme?Controls/Popup/Manager/Container';
 
          /**
           * Set the index of popup, under which the overlay will be drawn
-          * @function Controls/Popup/Manager/Container#setPopupItems
+          * @function Controls/_popup/Manager/Container#setPopupItems
           * @param {Integer} index индекс попапа
           */
          setOverlay: function(index) {
@@ -42,7 +42,7 @@ import 'css!theme?Controls/Popup/Manager/Container';
 
          /**
           * Set a new set of popups
-          * @function Controls/Popup/Manager/Container#setPopupItems
+          * @function Controls/_popup/Manager/Container#setPopupItems
           * @param {List} popupItems new popup set
           */
          setPopupItems: function(popupItems) {

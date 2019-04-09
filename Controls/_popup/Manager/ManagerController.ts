@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-import BaseController = require('Controls/Popup/Opener/BaseController');
+import BaseController = require('Controls/_popup/Opener/BaseController');
       
 
       // Модуль, необходимый для работы окон/панелей в слое совместимости
