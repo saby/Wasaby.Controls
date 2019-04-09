@@ -189,21 +189,32 @@ define([
             cfg = {
                root: 'rootNode',
                viewMode: 'tree'
-            },
-            newCfg = {
-               viewMode: 'search',
-               root: 'rootNode'
-            },
-            instance = new Explorer(cfg);
+            };
+         var newCfg = {
+            viewMode: 'search',
+            root: 'rootNode'
+         };
+         var instance = new Explorer(cfg);
+         var rootChanged = false;
+
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
+         instance._notify = function(eventName) {
+            if (eventName === 'rootChanged') {
+               rootChanged = true;
+            }
+         };
+
          assert.equal(instance._viewMode, 'tree');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.tree);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.tree);
+         assert.isFalse(rootChanged);
+
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
+         assert.isFalse(rootChanged);
       });
 
       it('_onBreadCrumbsClick', function() {
