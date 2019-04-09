@@ -62,9 +62,9 @@
                direction="horizontal"
                readOnly="{{true}}"/>
         </div>
-        <h2>custom itemTemplate</h2>
     </div>
     <div class="demo__block demo__block_center">
+        <h2>custom itemTemplate</h2>
         <Controls.Toggle.Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{false}}" bind:value="value6" caption="tmpl!Controls-demo/Switch/resources/customCaptionTemplate"/>
         <Controls.Toggle.RadioGroup
            on:selectedKeyChanged="changeKey(4)"
