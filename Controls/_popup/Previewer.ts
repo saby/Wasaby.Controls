@@ -1,15 +1,10 @@
-define('Controls/Popup/Previewer',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Previewer/Previewer',
-      'Core/helpers/Function/debounce',
-      'Controls/Popup/Opener/Previewer',
-      'Env/Env',
-
-      'css!Controls/Popup/Previewer/Previewer'
-   ],
-   function(Control, template, debounce, PreviewerOpener, Env) {
-      'use strict';
+import Control from 'Core/Control';
+import template from 'wml!Controls/Popup/Previewer/Previewer';
+import debounce from 'Core/helpers/Function/debounce';
+import PreviewerOpener from 'Controls/Popup/Opener/Previewer';
+import Env from 'Env/Env';
+import 'css!Controls/Popup/Previewer/Previewer';
+      
 
       /**
        * @class Controls/Popup/Previewer
@@ -219,5 +214,6 @@ define('Controls/Popup/Previewer',
          };
       };
 
-      return Previewer;
-   });
+      export = Previewer;
+   
+

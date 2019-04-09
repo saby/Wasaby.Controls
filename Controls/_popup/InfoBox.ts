@@ -1,14 +1,10 @@
-define('Controls/Popup/InfoBox',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/InfoBox/InfoBox',
-      'Controls/Popup/Opener/InfoBox',
-      'Controls/Context/TouchContextField',
-      'Controls/Utils/getZIndex',
-      'Env/Env'
-   ],
-   function(Control, template, InfoBoxOpener, TouchContext, getZIndex, Env) {
-      'use strict';
+import Control from 'Core/Control';
+import template from 'wml!Controls/Popup/InfoBox/InfoBox';
+import InfoBoxOpener from 'Controls/Popup/Opener/InfoBox';
+import TouchContext from 'Controls/Context/TouchContextField';
+import getZIndex from 'Controls/Utils/getZIndex';
+import Env from 'Env/Env';
+      
 
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
@@ -336,7 +332,7 @@ define('Controls/Popup/InfoBox',
       };
       InfoBox._private = _private;
 
-      return InfoBox;
+      export = InfoBox;
 
       /**
        * @typedef {Object} PopupOptions
@@ -351,4 +347,5 @@ define('Controls/Popup/InfoBox',
        * @property {Number} showDelay Delay before opening.
        * @property {Number} showDelay Delay before closing.
        */
-   });
+   
+
