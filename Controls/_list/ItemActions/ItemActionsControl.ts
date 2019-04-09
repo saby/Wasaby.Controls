@@ -154,7 +154,7 @@ var ItemActionsControl = Control.extend({
     },
 
     _onItemActionsClick: function(event, action, itemData) {
-        aUtil.itemActionsClick(this, event, action, itemData);
+        aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
         this._options.listModel.setMarkedKey(itemData.key);
     },
 
