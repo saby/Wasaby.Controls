@@ -221,7 +221,7 @@ define('Controls/Popup/Manager',
          },
 
          goUpByControlTree: function(target) {
-            return Vdom.DOMEnvironment._goUpByControlTree(target);
+            return Vdom._goUpByControlTree(target);
          },
 
          getActiveControl: function() {
