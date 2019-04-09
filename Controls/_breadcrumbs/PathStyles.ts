@@ -1,5 +1,5 @@
 /**
- * @interface Controls/_crumbs/PathStyles
+ * @interface Controls/_breadcrumbs/PathStyles
  * @css @font-size_Path-backButtonArrow Font size of the "View record" icon.
  * @css @font-size_Path-home Font size of the "Home" icon.
  * @css @spacing_Path-between-home-and-backButton Spacing between the "Home" icon and the back button.
