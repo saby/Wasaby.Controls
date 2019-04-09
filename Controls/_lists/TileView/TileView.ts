@@ -95,11 +95,7 @@ var TileView = ListView.extend({
     },
 
     _onResize: function () {
-        if (!this._resizeFromSelf) {
-            this._listModel.setHoveredItem(null);
-        }
-        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-       this._forceUpdate();
+       this._listModel.setHoveredItem(null);
     },
 
     _beforeUpdate: function (newOptions) {
