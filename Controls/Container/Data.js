@@ -5,8 +5,7 @@ define('Controls/Container/Data',
       'wml!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
       'Controls/Container/Data/ContextOptions',
-      'Core/Deferred',
-      'Types/source'
+      'Core/Deferred'
    ],
 
    function(Control, cInstance, template, getPrefetchSource, ContextOptions, Deferred, source) {
