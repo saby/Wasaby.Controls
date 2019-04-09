@@ -11,6 +11,7 @@ import {
     isFullSupport, isNoSupport, isPartialSupport, getCellStyles,
     toCssString, getTemplateColumnsStyle, getDefaultStylesFor, CssTemplatesEnum
 } from './utils/GridLayoutUtil';
+import {calcGroupRowIndex, calcResultsRowIndex, calcRowIndexByKey, ResultsPosition} from "./utils/RowIndexUtil";
 
 var
     _private = {
@@ -333,6 +334,42 @@ var
             styles += getCellStyles(rowIndex+1, 0, null, 3);
 
             return styles;
+        },
+
+        calcRowIndexByKey: function(self, key): number {
+            return calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
+        },
+
+        calcResultsRowIndex: function (self): number {
+            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
+        },
+
+        calcGroupRowIndex: function (self, current): number {
+            let groupItem = self._model.getDisplay().at(current.index);
+            return calcGroupRowIndex(groupItem, self._model.getDisplay(), false, !!self.getHeader(), self.getResultsPosition());
+        },
+        getEmptyTemplateStyles: function (self): string {
+            let
+                styles = '';
+
+            if (isPartialSupport) {
+                let
+                    columnsLength = self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
+                    rowIndex = 0;
+
+                styles += toCssString([
+                    {
+                        name: '-ms-grid-column-span',
+                        value: columnsLength
+                    },
+                ]);
+
+                rowIndex += self.getHeader() ? 1 : 0;
+                rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
+                styles += getCellStyles(rowIndex, 0);
+            }
+
+            return styles;
         }
     },
 
@@ -579,13 +616,8 @@ var
             resultsColumn.cellClasses = cellClasses;
 
             if (isPartialSupport) {
-                let resultsPosition: string = this.getResultsPosition(),
-                    rowIndex = 0;
-
-                rowIndex += resultsPosition === 'top' ? 0 : this._model.getStopIndex();
-                rowIndex += this.getHeader() ? 1 : 0;
-
-                resultsColumn.gridCellStyles = getCellStyles(rowIndex, columnIndex);
+                resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
+                resultsColumn.gridCellStyles = getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
 
             return resultsColumn;
@@ -808,18 +840,24 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
+            if (isPartialSupport && !current.isGroup) {
+                current.rowIndex = _private.calcRowIndexByKey(this, current.key);
+            }
+
             if (this._options.groupingKeyCallback) {
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
                     if (isPartialSupport) {
-                        let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
-
-                        rowOffset += self.getHeader() ? 1 : 0;
+                        current.rowIndex = _private.calcGroupRowIndex(this, current);
                         current.gridGroupStyles = toCssString([
                             {
+                                name: 'grid-row',
+                                value: current.rowIndex + 1
+                            },
+                            {
                                 name: '-ms-grid-row',
-                                value: current.index + rowOffset + 1
+                                value: current.rowIndex + 1
                             }
                         ]);
                     }
@@ -908,9 +946,7 @@ var
                     }
                 }
                 if (isPartialSupport) {
-                    let rowOffset = self.getResultsPosition() === 'top' ? 1 : 0;
-                    rowOffset += self.getHeader() ? 1 : 0;
-                    currentColumn.gridCellStyles = getCellStyles(currentColumn.index + rowOffset, currentColumn.columnIndex);
+                    currentColumn.gridCellStyles = getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
                 return currentColumn;
             };
@@ -952,16 +988,6 @@ var
             return getTemplateColumnsStyle(columnsWidths);
         },
 
-        isLast: function() {
-            return this._model.isLast();
-        },
-
-        setStickyColumn: function(stickyColumn) {
-            this._options.stickyColumn = stickyColumn;
-            this._ladder = _private.prepareLadder(this);
-            this._nextModelVersion();
-        },
-
         isFullGridSupport: function():boolean{
             return isFullSupport;
         },
@@ -971,7 +997,28 @@ var
         isNoGridSupport: function():boolean{
             return isNoSupport;
         },
+        setHoveredItem: function (item) {
+            this._model.setHoveredItem(item);
+        },
 
+        getHoveredItem: function () {
+            return this._model.getHoveredItem();
+        },
+        getDisplay: function () {
+            return this._model.getDisplay();
+        },
+        getEmptyTemplateStyles() {
+            return _private.getEmptyTemplateStyles(this);
+        },
+        isLast: function() {
+            return this._model.isLast();
+        },
+
+        setStickyColumn: function(stickyColumn) {
+            this._options.stickyColumn = stickyColumn;
+            this._ladder = _private.prepareLadder(this);
+            this._nextModelVersion();
+        },
         setLadderProperties: function(ladderProperties) {
             this._options.ladderProperties = ladderProperties;
             this._ladder = _private.prepareLadder(this);
@@ -992,14 +1039,6 @@ var
 
         getItems: function() {
             return this._model.getItems();
-        },
-
-        setHoveredItem: function (item) {
-            this._model.setHoveredItem(item);
-        },
-
-        getHoveredItem: function () {
-            return this._model.getHoveredItem();
         },
 
         setActiveItem: function(itemData) {
@@ -1047,29 +1086,6 @@ var
                 version = 'LAST_ITEM_' + version;
             }
             return version;
-        },
-
-        getEmptyTemplateStyles() {
-          let styles = '';
-
-          if (!isNoSupport) {
-              let
-                  columnsLength = this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
-                  rowIndex = 0;
-
-              styles += toCssString([
-                  {
-                      name: '-ms-grid-column-span',
-                      value: columnsLength
-                  },
-              ]);
-              rowIndex += this.getHeader() ? 1 : 0;
-              rowIndex += this.getResultsPosition() === 'top' ? 1 : 0;
-
-              styles += getCellStyles(rowIndex, 0);
-          }
-
-          return styles;
         },
 
         _prepareDisplayItemForAdd: function(item) {

@@ -5,6 +5,7 @@ import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import {calcRowIndexByKey} from "../../_grids/utils/RowIndexUtil";
 
 var
     _private = {
@@ -207,6 +208,9 @@ var
                 delete self._expandedItems[itemId];
                 _private.collapseChildNodes(self, itemId);
             });
+        },
+        calcNodeFooterIndex: function(self, parentKey) {
+            return 1 + calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
         }
     },
 
@@ -377,7 +381,8 @@ var
                        item: itemParent.getContents(),
                        dispItem: itemParent,
                        multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel()
+                       level: itemParent.getLevel(),
+                       rowIndex: _private.calcNodeFooterIndex(this, current.key)
                     };
                     if (this._options.nodeFooterTemplate) {
                        current.nodeFooter.template = this._options.nodeFooterTemplate;
@@ -505,6 +510,14 @@ var
         setHasMoreStorage: function(hasMoreStorage) {
             this._hasMoreStorage = hasMoreStorage;
             this._nextModelVersion();
+        },
+
+        getHasMoreStorage: function() {
+            return this._hasMoreStorage;
+        },
+
+        getHierarchyRelation: function () {
+            return this._hierarchyRelation;
         },
 
         setRoot: function(root) {
