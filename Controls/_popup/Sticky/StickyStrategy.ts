@@ -1,7 +1,8 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyboardHelper', 'Core/core-merge'], function(TouchKeyboardHelper, cMerge) {
+import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
+import cMerge = require('Core/core-merge');
    var INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
@@ -293,7 +294,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       }
    };
 
-   return {
+   export = {
       getPosition: function(popupCfg, targetCoords) {
          if (popupCfg.corner.vertical === 'center' || popupCfg.corner.horizontal === 'center') {
             var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
@@ -312,4 +313,4 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       },
       _private: _private
    };
-});
+

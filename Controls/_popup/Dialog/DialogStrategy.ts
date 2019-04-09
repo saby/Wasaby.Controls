@@ -1,8 +1,8 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
-   return {
+
+   export = {
 
       /**
        * Returns popup position
@@ -65,4 +65,4 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          return Math.max(coord, windowData.scrollTop);
       }
    };
-});
+

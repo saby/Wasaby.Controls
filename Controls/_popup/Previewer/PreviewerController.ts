@@ -1,13 +1,8 @@
-define('Controls/Popup/Opener/Previewer/PreviewerController',
-   [
-      'Core/Deferred',
-      'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/Opener/Sticky/StickyController',
-
-      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
-   ],
-   function(Deferred, ManagerController, StickyController) {
-      'use strict';
+import Deferred = require('Core/Deferred');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import StickyController = require('Controls/Popup/Opener/Sticky/StickyController');
+import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
+      
 
       var PreviewerController = StickyController.constructor.extend({
          _openedPopupId: null,
@@ -49,5 +44,5 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
          }
       });
 
-      return new PreviewerController();
-   });
+      export = new PreviewerController();
+   

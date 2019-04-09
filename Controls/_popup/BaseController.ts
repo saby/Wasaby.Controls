@@ -1,10 +1,6 @@
-define('Controls/Popup/Opener/BaseController',
-   [
-      'Core/core-extend',
-      'Core/Deferred',
-      'Types/util'
-   ],
-   function(CoreExtend, Deferred, Utils) {
+import CoreExtend = require('Core/core-extend');
+import Deferred = require('Core/Deferred');
+import Utils = require('Types/util');
       var _private = {
 
          getContentSizes: function(container) {
@@ -236,5 +232,5 @@ define('Controls/Popup/Opener/BaseController',
       BaseController.prototype.POPUP_STATE_UPDATED = BaseController.POPUP_STATE_UPDATED = 'updated';
       BaseController.prototype.POPUP_STATE_DESTROYING = BaseController.POPUP_STATE_DESTROYING = 'destroying';
       BaseController.prototype.POPUP_STATE_DESTROYED = BaseController.POPUP_STATE_DESTROYED = 'destroyed';
-      return BaseController;
-   });
+      export = BaseController;
+   

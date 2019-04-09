@@ -1,9 +1,5 @@
-define('Controls/Popup/Opener/Dialog/DialogController',
-   [
-      'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy'
-   ],
-   function(BaseController, DialogStrategy) {
+import BaseController = require('Controls/Popup/Opener/BaseController');
+import DialogStrategy = require('Controls/Popup/Opener/Dialog/DialogStrategy');
       var _private = {
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
@@ -109,5 +105,5 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
          _private: _private
       });
-      return new DialogController();
-   });
+      export = new DialogController();
+   

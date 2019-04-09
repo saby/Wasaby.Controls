@@ -1,17 +1,12 @@
-define('Controls/Popup/Opener/InfoBox/InfoBoxController',
-   [
-      'Core/Deferred',
-      'Controls/Popup/Opener/Sticky/StickyController',
-      'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
-      'Core/core-merge',
-      'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/TargetCoords',
-      'Controls/Popup/Opener/Sticky/StickyStrategy',
-
-      'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
-      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
-   ],
-   function(Deferred, StickyController, themeConstantsGetter, cMerge, ManagerController, TargetCoords, StickyStrategy) {
+import Deferred = require('Core/Deferred');
+import StickyController = require('Controls/Popup/Opener/Sticky/StickyController');
+import themeConstantsGetter = require('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter');
+import cMerge = require('Core/core-merge');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import TargetCoords = require('Controls/Popup/TargetCoords');
+import StickyStrategy = require('Controls/Popup/Opener/Sticky/StickyStrategy');
+import 'css!theme?Controls/Popup/Opener/InfoBox/InfoBox';
+import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
@@ -176,5 +171,5 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          }
       });
       InfoBoxController.prototype._private = _private;
-      return new InfoBoxController();
-   });
+      export = new InfoBoxController();
+   

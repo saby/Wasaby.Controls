@@ -1,14 +1,13 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseController'],
-   function(BaseController) {
-      'use strict';
+import BaseController = require('Controls/Popup/Opener/BaseController');
+      
 
       // Модуль, необходимый для работы окон/панелей в слое совместимости
       // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
       // т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
-      return {
+      export = {
          _manager: null,
          _container: null,
          _indicator: null,
@@ -90,4 +89,4 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
             return false;
          },
       };
-   });
+   

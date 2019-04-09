@@ -1,6 +1,5 @@
-define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
-   function() {
-      return function(className, hashMap) {
+
+      export = function(className, hashMap) {
          if (typeof window === 'undefined') {
             return {};
          }
@@ -20,4 +19,4 @@ define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
          div.parentNode.removeChild(div);
          return obj;
       };
-   });
+   

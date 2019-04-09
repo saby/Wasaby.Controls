@@ -1,20 +1,15 @@
-define('Controls/Popup/Manager',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Manager/Manager',
-      'Controls/Popup/Manager/ManagerController',
-      'Core/helpers/Number/randomId',
-      'Core/helpers/Function/runDelayed',
-      'Types/collection',
-      'Core/Deferred',
-      'Core/ParallelDeferred',
-      'Env/Event',
-      'Env/Env',
-      'Vdom/Vdom'
-   ],
-
-   function(Control, template, ManagerController, randomId, runDelayed, collection, Deferred, ParallelDeferred, EnvEvent, Env, Vdom) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Manager/Manager');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import randomId = require('Core/helpers/Number/randomId');
+import runDelayed = require('Core/helpers/Function/runDelayed');
+import collection = require('Types/collection');
+import Deferred = require('Core/Deferred');
+import ParallelDeferred = require('Core/ParallelDeferred');
+import EnvEvent = require('Env/Event');
+import Env = require('Env/Env');
+import Vdom = require('Vdom/Vdom');
+      
 
       var _private = {
          activeElement: {},
@@ -574,5 +569,5 @@ define('Controls/Popup/Manager',
       });
 
       Manager.prototype._private = _private;
-      return Manager;
-   });
+      export = Manager;
+   

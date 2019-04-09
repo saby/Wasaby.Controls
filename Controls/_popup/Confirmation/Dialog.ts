@@ -1,26 +1,15 @@
-define('Controls/Popup/Opener/Confirmation/Dialog', [
-   'Core/Control',
-   'Types/entity',
-   'Env/Env',
-   'Controls/Popup/Compatible/EscProcessing',
-   'Controls/Decorator/Markup/Converter',
-   'wml!Controls/Popup/Opener/Confirmation/Dialog/content',
-   'wml!Controls/Popup/Opener/Confirmation/Dialog/footer',
-   'wml!Controls/Popup/Opener/Confirmation/Dialog/message',
-   'wml!Controls/Popup/Opener/Confirmation/Dialog/details',
-   'wml!Controls/Popup/Opener/Confirmation/Dialog/Dialog',
-   'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog'
-], function(Control,
-   entity,
-   Env,
-   EscProcessing,
-   MarkupConverter,
-   contentTemplate,
-   footerTemplate,
-   messageTemplate,
-   detailsTemplate,
-   template) {
-   'use strict';
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import Env = require('Env/Env');
+import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
+import MarkupConverter = require('Controls/Decorator/Markup/Converter');
+import contentTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/content');
+import footerTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/footer');
+import messageTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/message');
+import detailsTemplate = require('wml!Controls/Popup/Opener/Confirmation/Dialog/details');
+import template = require('wml!Controls/Popup/Opener/Confirmation/Dialog/Dialog');
+import 'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog';
+   
 
    /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
@@ -181,5 +170,5 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
       };
    };
 
-   return Submit;
-});
+   export = Submit;
+

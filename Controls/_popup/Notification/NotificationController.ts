@@ -1,13 +1,9 @@
-define('Controls/Popup/Opener/Notification/NotificationController',
-   [
-      'Core/Deferred',
-      'Types/collection',
-      'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Notification/NotificationStrategy',
-      'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/Opener/Notification/NotificationContent'
-   ],
-   function(Deferred, collection, BaseController, NotificationStrategy, ManagerController) {
+import Deferred = require('Core/Deferred');
+import collection = require('Types/collection');
+import BaseController = require('Controls/Popup/Opener/BaseController');
+import NotificationStrategy = require('Controls/Popup/Opener/Notification/NotificationStrategy');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import 'Controls/Popup/Opener/Notification/NotificationContent';
       var timeAutoClose = 5000;
 
       var _private = {
@@ -101,5 +97,5 @@ define('Controls/Popup/Opener/Notification/NotificationController',
          }
       });
 
-      return new NotificationController();
-   });
+      export = new NotificationController();
+   

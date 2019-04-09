@@ -1,15 +1,11 @@
-define('Controls/Popup/Opener/Stack/StackController',
-   [
-      'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Stack/StackStrategy',
-      'Types/collection',
-      'Controls/Popup/TargetCoords',
-      'Core/Deferred',
-      'wml!Controls/Popup/Opener/Stack/StackContent',
-      'css!theme?Controls/Popup/Opener/Stack/Stack'
-   ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred) {
-      'use strict';
+import BaseController = require('Controls/Popup/Opener/BaseController');
+import StackStrategy = require('Controls/Popup/Opener/Stack/StackStrategy');
+import collection = require('Types/collection');
+import TargetCoords = require('Controls/Popup/TargetCoords');
+import Deferred = require('Core/Deferred');
+import 'wml!Controls/Popup/Opener/Stack/StackContent';
+import 'css!theme?Controls/Popup/Opener/Stack/Stack';
+      
       var STACK_CLASS = 'controls-Stack';
       var _private = {
 
@@ -231,5 +227,5 @@ define('Controls/Popup/Opener/Stack/StackController',
          _private: _private
       });
 
-      return new StackController();
-   });
+      export = new StackController();
+   

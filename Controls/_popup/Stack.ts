@@ -1,8 +1,4 @@
-define('Controls/Popup/Opener/Stack',
-   [
-      'Controls/Popup/Opener/BaseOpener'
-   ],
-   function(BaseOpener) {
+import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
       /**
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
@@ -80,7 +76,7 @@ define('Controls/Popup/Opener/Stack',
 
       Stack._private = _private;
 
-      return Stack;
+      export = Stack;
 
       /**
        * @typedef {Object} PopupOptions
@@ -97,7 +93,7 @@ define('Controls/Popup/Opener/Stack',
 
        */
 
-   });
+   
 
 
 /**

@@ -1,14 +1,10 @@
-define('Controls/Popup/Manager/Popup',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Manager/Popup',
-      'Controls/Popup/Compatible/EscProcessing',
-      'Core/helpers/Function/runDelayed',
-      'Env/Env',
-      'wml!Controls/Popup/Manager/PopupContent'
-   ],
-   function(Control, template, EscProcessing, runDelayed, Env) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Manager/Popup');
+import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
+import runDelayed = require('Core/helpers/Function/runDelayed');
+import Env = require('Env/Env');
+import 'wml!Controls/Popup/Manager/PopupContent';
+      
 
       var _private = {
          keyUp: function(event) {
@@ -177,5 +173,5 @@ define('Controls/Popup/Manager/Popup',
          };
       };
 
-      return Popup;
-   });
+      export = Popup;
+   

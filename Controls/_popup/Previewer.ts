@@ -1,10 +1,6 @@
-define('Controls/Popup/Opener/Previewer',
-   [
-      'Core/core-clone',
-      'Controls/Popup/Opener/BaseOpener'
-   ],
-   function(cClone, Base) {
-      'use strict';
+import cClone = require('Core/core-clone');
+import Base = require('Controls/Popup/Opener/BaseOpener');
+      
 
       var _private = {
          displayDuration: 1000,
@@ -101,5 +97,5 @@ define('Controls/Popup/Opener/Previewer',
          return baseOptions;
       };
 
-      return Previewer;
-   });
+      export = Previewer;
+   

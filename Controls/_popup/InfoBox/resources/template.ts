@@ -1,14 +1,10 @@
-define('Controls/Popup/Opener/InfoBox/resources/template',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Opener/InfoBox/resources/template',
-      'View/Executor/Utils',
-      'Core/Deferred'
-   ],
-   function(Control, template, Utils, Deferred) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Opener/InfoBox/resources/template');
+import Utils = require('View/Executor/Utils');
+import Deferred = require('Core/Deferred');
+      
 
-      return Control.extend({
+      export = Control.extend({
          _template: template,
 
          _beforeMount: function(options) {
@@ -32,4 +28,4 @@ define('Controls/Popup/Opener/InfoBox/resources/template',
             this._notify('sendResult', [event], { bubbling: true });
          }
       });
-   });
+   

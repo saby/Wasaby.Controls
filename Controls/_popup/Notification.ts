@@ -1,10 +1,6 @@
-define('Controls/Popup/Opener/Notification',
-   [
-      'Controls/Popup/Opener/BaseOpener',
-      'Core/helpers/isNewEnvironment',
-      'Env/Env'
-   ],
-   function(Base, isNewEnvironment, Env) {
+import Base = require('Controls/Popup/Opener/BaseOpener');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import Env = require('Env/Env');
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
@@ -129,8 +125,8 @@ define('Controls/Popup/Opener/Notification',
          };
       };
 
-      return Notification;
-   });
+      export = Notification;
+   
 
 /**
  * @typedef {Object} PopupOptions

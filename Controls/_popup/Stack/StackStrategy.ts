@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
+
    // Minimum popup indentation from the right edge
    var MINIMAL_PANEL_DISTANCE = 20;
 
@@ -45,7 +45,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       }
    };
 
-   return {
+   export = {
 
       /**
        * Returns popup position
@@ -86,4 +86,4 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
 
       isMaximizedPanel: _private.isMaximizedPanel
    };
-});
+

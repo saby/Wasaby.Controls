@@ -1,11 +1,7 @@
-define('Controls/Popup/Opener/Confirmation',
-   [
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Utils/getZIndex',
-      'Core/Deferred'
-   ],
-   function(BaseOpener, getZIndex, Deferred) {
-      'use strict';
+import BaseOpener = require('Controls/Popup/Opener/BaseOpener');
+import getZIndex = require('Controls/Utils/getZIndex');
+import Deferred = require('Core/Deferred');
+      
 
       /**
        * Component that opens the confirmation popup.
@@ -163,7 +159,7 @@ define('Controls/Popup/Opener/Confirmation',
          };
       };
 
-      return Confirmation;
+      export = Confirmation;
 
       /**
        * @typedef {Object} popupOptions
@@ -178,4 +174,4 @@ define('Controls/Popup/Opener/Confirmation',
        * @property {String} okCaption Accept text button.
        */
 
-   });
+   

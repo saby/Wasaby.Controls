@@ -1,12 +1,8 @@
-define('Controls/Popup/Opener/InfoBox',
-   [
-      'Core/core-clone',
-      'Env/Env',
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Utils/getZIndex'
-   ],
-   function(cClone, Env, Base, getZIndex) {
-      'use strict';
+import cClone = require('Core/core-clone');
+import Env = require('Env/Env');
+import Base = require('Controls/Popup/Opener/BaseOpener');
+import getZIndex = require('Controls/Utils/getZIndex');
+      
 
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
@@ -230,5 +226,5 @@ define('Controls/Popup/Opener/InfoBox',
          return options;
       };
 
-      return InfoBox;
-   });
+      export = InfoBox;
+   

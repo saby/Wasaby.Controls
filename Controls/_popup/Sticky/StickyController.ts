@@ -1,16 +1,12 @@
-define('Controls/Popup/Opener/Sticky/StickyController',
-   [
-      'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/Opener/Sticky/StickyStrategy',
-      'Core/core-merge',
-      'Core/core-clone',
-      'Env/Env',
-      'Controls/Popup/TargetCoords',
-      'wml!Controls/Popup/Opener/Sticky/StickyContent',
-      'css!theme?Controls/Popup/Opener/Sticky/Sticky'
-   ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, Env, TargetCoords) {
+import BaseController = require('Controls/Popup/Opener/BaseController');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import StickyStrategy = require('Controls/Popup/Opener/Sticky/StickyStrategy');
+import cMerge = require('Core/core-merge');
+import cClone = require('Core/core-clone');
+import Env = require('Env/Env');
+import TargetCoords = require('Controls/Popup/TargetCoords');
+import 'wml!Controls/Popup/Opener/Sticky/StickyContent';
+import 'css!theme?Controls/Popup/Opener/Sticky/Sticky';
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -288,5 +284,5 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          _private: _private
       });
 
-      return new StickyController();
-   });
+      export = new StickyController();
+   

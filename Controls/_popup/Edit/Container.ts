@@ -1,13 +1,9 @@
 /**
  * Created by as.krasilnikov on 10.09.2018.
  */
-define('Controls/Popup/Opener/Edit/Container',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Opener/Edit/Container',
-      'Controls/Container/Data/ContextOptions'
-   ],
-   function(Control, template, ContextOptions) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Opener/Edit/Container');
+import ContextOptions = require('Controls/Container/Data/ContextOptions');
       /**
        * edit container
        * @class Controls/Popup/Opener/Edit/Container
@@ -36,5 +32,5 @@ define('Controls/Popup/Opener/Edit/Container',
          };
       };
 
-      return Container;
-   });
+      export = Container;
+   

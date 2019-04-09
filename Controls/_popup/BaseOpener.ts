@@ -1,28 +1,13 @@
-define('Controls/Popup/Opener/BaseOpener',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Manager/ManagerController',
-      'Vdom/Vdom',
-      'Core/core-clone',
-      'Core/core-merge',
-      'Env/Env',
-      'Core/Deferred',
-      'Core/helpers/isNewEnvironment',
-      'Core/library'
-   ],
-   function(
-      Control,
-      Template,
-      ManagerController,
-      Vdom,
-      coreClone,
-      CoreMerge,
-      Env,
-      Deferred,
-      isNewEnvironment,
-      library
-   ) {
+import Control = require('Core/Control');
+import Template = require('wml!Controls/Popup/Opener/BaseOpener');
+import ManagerController = require('Controls/Popup/Manager/ManagerController');
+import Vdom = require('Vdom/Vdom');
+import coreClone = require('Core/core-clone');
+import CoreMerge = require('Core/core-merge');
+import Env = require('Env/Env');
+import Deferred = require('Core/Deferred');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import library = require('Core/library');
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
@@ -482,5 +467,5 @@ define('Controls/Popup/Opener/BaseOpener',
 
       Base._private = _private;
 
-      return Base;
-   });
+      export = Base;
+   

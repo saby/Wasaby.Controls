@@ -1,16 +1,12 @@
 /**
  * Created by as.krasilnikov on 05.09.2018.
  */
-define('Controls/Popup/Opener/Edit',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Opener/Edit/Edit',
-      'Core/core-clone',
-      'Core/core-merge',
-      'Core/core-instance',
-      'Core/Deferred'
-   ],
-   function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Opener/Edit/Edit');
+import CoreClone = require('Core/core-clone');
+import CoreMerge = require('Core/core-merge');
+import cInstance = require('Core/core-instance');
+import Deferred = require('Core/Deferred');
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
@@ -208,8 +204,8 @@ define('Controls/Popup/Opener/Edit',
 
       Edit.CANCEL = 'cancel';
 
-      return Edit;
-   });
+      export = Edit;
+   
 
 /**
  * @name Controls/Popup/Opener/Edit#close

@@ -1,9 +1,5 @@
-define('Controls/Popup/Opener/Notification/NotificationContent',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Opener/Notification/NotificationContent'
-   ],
-   function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Popup/Opener/Notification/NotificationContent');
 
       var NotificationContent = Control.extend({
          _template: template,
@@ -16,5 +12,5 @@ define('Controls/Popup/Opener/Notification/NotificationContent',
          }
       });
 
-      return NotificationContent;
-   });
+      export = NotificationContent;
+   
