@@ -139,16 +139,11 @@ type GetSourceResult = {
             var self = this;
             _private.resolveOptions(this, options);
             if (receivedState) {
-               // need to create prefetchSource with source from options, because event subscriptions is not work on server
+               // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new source.PrefetchProxy({
-                     data: {
-                        query: receivedState
-                     },
-                     target: self._source
-                  })
+                  source: new source.PrefetchProxy({target: options.source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
