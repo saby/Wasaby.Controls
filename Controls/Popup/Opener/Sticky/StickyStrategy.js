@@ -176,6 +176,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       invertPosition: function(popupCfg, direction) {
          popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
          popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
+         popupCfg.align[direction].offset *= -1;
          popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
       },
 
