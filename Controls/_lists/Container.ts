@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lists/Container');
 import DataOptions = require('Controls/Container/Data/ContextOptions');
 
 /**
- * Container component for List. Delegated options from context to List.
+ * Container component for List. Pass options from context to list.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/component-kinds/'>here</a>.
  *
