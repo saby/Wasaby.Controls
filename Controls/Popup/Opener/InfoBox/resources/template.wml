@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_popup/Opener/InfoBox/resources/template" scope="{{_options}}" />
