@@ -1,6 +1,6 @@
-define('Controls-demo/Explorer/ExplorerSearchWithApplocation', [
+define('Controls-demo/Explorer/ExplorerSearchWithApplication', [
    'Core/Control',
-   'wml!Controls-demo/Explorer/ExplorerSearchWithApplocation'
+   'wml!Controls-demo/Explorer/ExplorerSearchWithApplication'
 ], function(Control, template) {
    'use strict';
 
