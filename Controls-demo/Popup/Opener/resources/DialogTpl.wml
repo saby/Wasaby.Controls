@@ -7,7 +7,7 @@
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
             <div class="demo-Grid__container">
-                <Controls.Container.Data source="{{_viewSource}}"
+                <Controls.list:DataContainer source="{{_viewSource}}"
                                          keyProperty="id"
                                          attr:class="ControlsDemo-Grid__Container">
                     <Controls.Container.MultiSelector>
@@ -26,14 +26,14 @@
                                             on:itemActionsClick="_onActionClick()"
                                             itemActionVisibilityCallback="{{_showAction}}">
                                         <ws:nodeFooterTemplate>
-                                            <Controls.List.AddButton caption="Новая запись"/>
+                                            <Controls.list:AddButton caption="Новая запись"/>
                                         </ws:nodeFooterTemplate>
                                     </Controls.treeGrid:View>
                                 </Controls.List.MultiSelector>
                             </Controls.list:Container>
                         </Controls.Container.Scroll>
                     </Controls.Container.MultiSelector>
-                </Controls.Container.Data>
+                </Controls.list:DataContainer>
             </div>
         </ws:bodyContentTemplate>
     </Controls.Popup.Templates.Dialog.DialogTemplate>

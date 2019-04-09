@@ -14,7 +14,7 @@ define('Controls/interface/IItemTemplate', [
     * @cfg {Function} Template for item render.
     * <a href="/materials/demo-ws4-list-item-template">Example</a>.
     * @remark
-    * Base itemTemplate for Controls/List: "Controls/lists:ItemTemplate".
+    * Base itemTemplate for Controls.list:View: "Controls/lists:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
@@ -24,7 +24,7 @@ define('Controls/interface/IItemTemplate', [
     * @example
     * Using custom template for item rendering:
     * <pre>
-    *    <Controls.List>
+    *    <Controls.list:View>
     *       <itemTemplate>
     *          <ws:partial template="Controls/lists:ItemTemplate">
     *             <ws:contentTemplate>
@@ -32,7 +32,7 @@ define('Controls/interface/IItemTemplate', [
     *             </ws:contentTemplate>
     *          </ws:partial>
     *       </itemTemplate>
-    *    </Controls.List>
+    *    </Controls.list:View>
     * </pre>
     */
 

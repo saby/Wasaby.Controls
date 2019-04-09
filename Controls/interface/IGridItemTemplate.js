@@ -13,7 +13,7 @@ define('Controls/interface/IGridItemTemplate', [
     * @cfg {Function} Template for item render.
     * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
     * @remark
-    * Base itemTemplate for Controls/Grid: "wml!Controls/List/Grid/Item".
+    * Base itemTemplate for Controls.grid:View: "Controls/grid:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
@@ -22,11 +22,11 @@ define('Controls/interface/IGridItemTemplate', [
     * @example
     * Using custom template for item rendering:
     * <pre>
-    *    <Controls.Grid>
+    *    <Controls.grid:View>
     *       <itemTemplate>
-    *          <ws:partial template="wml!Controls/List/Grid/Item" highlightOnHover="{{false}}"/>
+    *          <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
     *       </itemTemplate>
-    *    </Controls.Grid>
+    *    </Controls.grid:View>
     * </pre>
     */
 

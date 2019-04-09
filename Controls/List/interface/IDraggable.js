@@ -130,12 +130,12 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to move items using Controls.lists:View/Mover after the drag is complete.
     * <pre>
-    *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
     *        <Controls.lists:View on:dragEnd="_dragEnd()"
     *                       itemsDragNDrop="allow">
     *        </Controls.lists:View>
     *        <Controls.lists:View.Mover name="listMover">
-    *     <Controls.Container.Data>
+    *     <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>
@@ -168,16 +168,16 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to allow dragging to a list of entities of a particular type.
     * <pre>
-    *     <Controls.Container.Data source="{{_firstSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer source="{{_firstSource}}" keyProperty="id">
     *        <Controls.lists:View on:dragStart="_dragStart()"
     *                       itemsDragNDrop="allow">
     *        </Controls.lists:View>
-    *     <Controls.Container.Data>
-    *     <Controls.Container.Data source="{{_secondSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer>
+    *     <Controls.list:DataContainer source="{{_secondSource}}" keyProperty="id">
     *        <Controls.lists:View on:dragEnter="_dragEnter()"
     *                       itemsDragNDrop="allow">
     *        </Controls.lists:View>
-    *     <Controls.Container.Data>
+    *     <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>
@@ -215,11 +215,11 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to prevent the change of the order of a pinned item.
     * <pre>
-    *    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+    *    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
     *       <Controls.lists:View on:changeDragTarget="_changeDragTarget()"
     *                      itemsDragNDrop="allow">
     *       </Controls.lists:View>
-    *    <Controls.Container.Data>
+    *    <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>

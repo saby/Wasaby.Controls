@@ -119,7 +119,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to hide the add button after the start of editing\adding.
     * WML:
     * <pre>
-    *    <Controls.List on:afterBeginEdit="afterBeginEditHandler()" />
+    *    <Controls.list:View on:afterBeginEdit="afterBeginEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
     *       <Controls.lists:AddButton />
     *    </ws:if>
@@ -179,7 +179,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to show the add button after the end of editing\adding.
     * WML:
     * <pre>
-    *    <Controls.List on:afterEndEdit="afterEndEditHandler()" />
+    *    <Controls.list:View on:afterEndEdit="afterEndEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
     *       <Controls.lists:AddButton />
     *    </ws:if>
