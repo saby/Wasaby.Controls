@@ -526,6 +526,16 @@ define([
          assert.deepEqual(hasMoreResult, TreeControl._private.prepareHasMoreStorage(sourceControllers),
             'Invalid value returned from "prepareHasMoreStorage(sourceControllers)".');
       });
+      it('TreeControl._private.beforeLoadToDirectionCallback', function() {
+         var filter = {
+            field1: 'value 1'
+         };
+         TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent' });
+         assert.deepEqual(filter, {
+            field1: 'value 1',
+            parent: 'myCurrentRoot'
+         });
+      });
       it('TreeControl._private.loadMore', function() {
          var
             setHasMoreCalled = false,
