@@ -9,9 +9,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'Core/helpers/Function/debounce',
       'Core/helpers/Object/isEqual',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Types/collection',
+      'Core/core-merge',
+      'Types/chain'
    ],
-   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce, isEqual, Clone) {
+   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce, isEqual, Clone, collection, Merge, chain) {
    
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -98,7 +101,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
                action: action,
                event: event
             };
-            result.selectedKeys = self._listModel.getSelectedKeys();
+            var selectedItems = [];
+            chain.factory(self._listModel.getSelectedKeys()).each(function(key) {
+               selectedItems.push(self._options.items.getRecordById(key));
+            });
+            result.data = selectedItems;
             return result;
          },
 
@@ -324,6 +331,37 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();
          },
+
+         _openSelectorDialog: function() {
+
+            // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
+            var selectedItems = [],
+               self = this;
+            chain.factory(this._listModel.getSelectedKeys()).each(function(key) {
+               selectedItems.push(self._options.items.getRecordById(key));
+            });
+
+            var templateConfig = {
+               selectedItems: new collection.List({ items: selectedItems })
+            };
+            Merge(templateConfig, this._options.selectorTemplate.templateOptions);
+            this._children.selectorDialog.open({
+               templateOptions: templateConfig,
+               template: this._options.selectorTemplate.templateName,
+               isCompoundTemplate: this._options.isCompoundTemplate,
+               opener: this
+            });
+         },
+
+         _selectorDialogResult: function(event, items) {
+            var result = {
+               action: 'selectorResult',
+               event: event,
+               data: items
+            };
+            this._notify('sendResult', [result]);
+         },
+
          _beforeUnmount: function() {
             if (this._listModel) {
                this._listModel.destroy();
@@ -342,7 +380,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
       DropdownList.getDefaultOptions = function() {
          return {
             menuStyle: 'defaultHead',
-            typeShadow: 'default'
+            typeShadow: 'default',
+            moreButtonCaption: rk('Еще') + '...'
          };
       };
 

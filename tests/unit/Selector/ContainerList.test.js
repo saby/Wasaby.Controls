@@ -20,6 +20,10 @@ define(['Controls/Selector/List/Container', 'Types/entity'], function(Container,
          selectedKeys = [1];
          itemKey = 2;
          assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [2], [1]]);
+
+         selectedKeys = [2];
+         itemKey = 2;
+         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [], []]);
       });
    
       it('getItemActions', function() {

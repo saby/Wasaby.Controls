@@ -294,6 +294,11 @@ define(
                hSource.update(myItem, meta);
                historyItems = hSource.getItems();
                assert.equal(hSource._history.recent.at(0).getId(), '7');
+
+               hSource.update([myItem], meta);
+               historyItems = hSource.getItems();
+               assert.equal(historyItems.at(3).get('title'), 'Запись 7');
+               assert.equal(hSource._history.recent.at(0).getId(), '7');
             });
             it('updateRecent history not loaded', function() {
                let config2 = clone(config),

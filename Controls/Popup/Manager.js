@@ -125,8 +125,10 @@ define('Controls/Popup/Manager',
          getMaxZIndexPopupIdForActivate: function() {
             var items = _private.popupItems;
             for (var i = items.getCount() - 1; i > -1; i--) {
-               if (items.at(i).popupOptions.autofocus !== false) {
-                  return items.at(i).id;
+               if (items.at(i).popupState !== items.at(i).controller.POPUP_STATE_DESTROYED) {
+                  if (items.at(i).popupOptions.autofocus !== false) {
+                     return items.at(i).id;
+                  }
                }
             }
             return null;
@@ -314,6 +316,7 @@ define('Controls/Popup/Manager',
          },
 
          redrawItems: function() {
+            _private.popupItems._nextVersion();
             ManagerController.getContainer().setPopupItems(_private.popupItems);
          },
 
@@ -431,6 +434,7 @@ define('Controls/Popup/Manager',
             if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
                item.popupOptions = options;
                item.controller.getDefaultConfig(item);
+               _private.popupItems._nextVersion();
             }
          },
 

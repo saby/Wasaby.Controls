@@ -29,60 +29,40 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/interface/ISelectedCollection#selectorTemplate
-    * @cfg {Function} Items selection panel template.
-    * @example
-    * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
-    * WML:
-    * <pre>
-    *    <Controls.Selector.Lookup
-    *       source="{{_source}}"
-    *       searchParam="title"
-    *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}"/>
-    *    </Controls.Selector.Lookup>
-    * </pre>
-    * JS:
-    * <pre>
-    *    _beforeMount: function() {
-    *       this._source = new Memory();
-    *       this._templateOptions = {
-    *          handlers: {
-    *             onSelectComplete: function() {}
-    *          }
-    *       };
-    *    }
-    * </pre>
-    */
-
-   /**
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
-    * @param {Function|String} contentTemplate Template for render item content.
-    * @param {Function|String} crossTemplate Template for render cross.
-    * @param {String} displayProperty Name of the item property which content will be displayed.
-    * @param {Boolean} clickable Specifies whether elements are clickable, adds an underscore when the element is hover.
-    *
-    * @param {Enum} size The text size for the item content, is only valid if the default value is used for the contentTemplate.
-    * @variant m
-    * @variant l
-    * @variant xl
-    * @variant 2xl
-    * @variant 3xl
-    * @default m
-    *
-    * @param {Enum} style The text style for the item content, is only valid if the default value is used for the contentTemplate.
-    * @variant bold
-    * @variant accent
-    * @variant primary
-    * @default Empty string
-    *
     * @remark
     * Base itemTemplate for Controls/Selector/Lookup: "wml!Controls/Selector/Lookup/itemTemplate".
     * Base itemTemplate for Controls/Selector/Button: "wml!Controls/Selector/Button/itemTemplate".
-    * If you reimplement contentTemplate / crossTemplate, you will not be notified of itemClick / crossClick events.
-    * To work properly, you need to mark your content with classes: "js-controls-SelectedCollection__item__caption" / "js-controls-SelectedCollection__item__cross".
+    * Base itemTemplate supports these parameters:
+    * <ul>
+    *    <li>contentTemplate {Function|String} - Template for render item content.</li>
+    *    <li>crossTemplate {Function|String} - Template for render cross.</li>
+    *    <li>displayProperty {String} - Name of the item property which content will be displayed.</li>
+    *    <li>clickable {Boolean} - Specifies whether elements are clickable, adds an underscore when the element is hover, is only valid if the default value is used for the contentTemplate.</li>
+    *    <li>size {Enum} - The text size for the item content, is only valid if the default value is used for the contentTemplate.</li>
+    *    <ul>
+    *       <li>m</li>
+    *       <li>l</li>
+    *       <li>xl</li>
+    *       <li>2xl</li>
+    *       <li>3xl</li>
+    *    </ul>
+    *    <li>style {Enum} - The text style for the item content, is only valid if the default value is used for the contentTemplate.</li>
+    *    <ul>
+    *       <li>default</li>
+    *       <li>bold</li>
+    *       <li>accent</li>
+    *       <li>primary</li>
+    *    </ul>
+    * </ul>
     *
+    * If you reimplement contentTemplate/crossTemplate, you will not be notified of itemClick/crossClick events.
+    * To work properly, you need to mark your content with classes:
+    * <ul>
+    *    <li>js-controls-SelectedCollection__item__caption</li>
+    *    <li>js-controls-SelectedCollection__item__cross</li>
+    * </ul>
     *
     * @example
     * WML:
@@ -102,7 +82,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#textValueChanged Happens when changing the set of the selected collection.
+    * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {String} textValue String formed from selected entries.
     * @example
@@ -124,7 +104,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#itemsChanged Happens when changing the set of the selected collection.
+    * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {RecordSet} items List of selected entries.
     * @example
@@ -143,5 +123,11 @@ define('Controls/interface/ISelectedCollection', [
     *       this.prepareItems(items);
     *    }
     * </pre>
+    */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {RecordSet} item Item selected collection.
     */
 });

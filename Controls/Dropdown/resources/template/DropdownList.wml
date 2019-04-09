@@ -37,13 +37,23 @@
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
       <Controls.Button.Close class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
    </ws:if>
-   <ws:if data="{{_options.footerTemplate || _needShowApplyButton}}">
+   <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
       <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
          <ws:if data="{{_options.footerTemplate}}">
             <ws:partial template="{{_options.footerTemplate}}" on:click="_footerClick()"/>
          </ws:if>
+         <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
+            <div class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton theme_{{_options.theme}}">
+               <Controls.buttons:Button viewMode="link"
+                                        caption="{{_options.moreButtonCaption}}"
+                                        on:click="_openSelectorDialog()"/>
+            </div>
+            <Controls.Selector.Opener name="selectorDialog" on:result="_selectorDialogResult()">
+               <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog" />
+            </Controls.Selector.Opener>
+         </ws:if>
          <ws:if data="{{_needShowApplyButton}}">
-            <div class="controls-DropdownList__applyButton">
+            <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
                <Controls.buttons:Button viewMode="toolButton"
                                         icon="icon-Yes icon-medium"
                                         iconStyle="success"

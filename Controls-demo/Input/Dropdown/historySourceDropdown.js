@@ -67,7 +67,7 @@ define('Controls-demo/Input/Dropdown//historySourceDropdown',
                data: items
             }),
             historySource: new HistoryService({
-               historyIds: ['TEST_HISTORY_ID_DROPDOWN'],
+               historyId: 'TEST_HISTORY_ID_DROPDOWN',
                pinned: true
             })
          });

@@ -1,61 +1,61 @@
 <div class="controlsDemo-Input-DatePicker">
    <h1>Controls.input:Date</h1>
+   <div class="controlsDemo-Input-DatePicker__content">
+      <ws:for data="mask in _masks">
+         <div class="controlsDemo-Input-DatePicker__row">
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               {{mask}}
+            </div>
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               <Controls.input:Date
+                       value="{{null}}"
+                       mask="{{mask}}"/>
+            </div>
+            <div class="controlsDemo-Input-DatePicker__row-item">
+               <Controls.input:Date
+                       bind:value="_date"
+                       mask="{{mask}}"/>
+            </div>
+         </div>
+      </ws:for>
 
-   <ws:for data="mask in _masks">
-      <div class="controlsDemo-Input-DatePicker__row">
-         <div class="controlsDemo-Input-DatePicker__row-item">
-            {{mask}}
-         </div>
-         <div class="controlsDemo-Input-DatePicker__row-item">
-            <Controls.input:Date
-               value="{{null}}"
-               mask="{{mask}}"/>
-         </div>
-         <div class="controlsDemo-Input-DatePicker__row-item">
-            <Controls.input:Date
-               bind:value="_date"
-               mask="{{mask}}"/>
-         </div>
+      <h3>Baseline with inline blocks</h3>
+      <div>
+         Text:
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"/>
       </div>
-   </ws:for>
 
-   <h3>Baseline with inline blocks</h3>
-   <div>
-      Text:
-      <Controls.input:Date
-         value="{{_date}}"
-         mask="{{mask}}"/>
+      <h3>Demo with tagStyle</h3>
+      <div>
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 tagStyle="{{'primary'}}"/>
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 tagStyle="{{'info'}}"/>
+      </div>
+
+      <h3>With custom day renderer</h3>
+      <div>
+         Text:
+         <Controls.input:Date
+                 value="{{_date}}"
+                 mask="{{mask}}"
+                 calendarSource="{{_source}}">
+            <ws:dayTemplate>
+               <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
+                           value="{{dayTemplate.value}}"
+               >
+                  <ws:contentTemplate>
+                     <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
+                  </ws:contentTemplate>
+               </ws:partial>
+            </ws:dayTemplate>
+         </Controls.input:Date>
+      </div>
    </div>
-
-   <h3>Demo with tagStyle</h3>
-   <div>
-      <Controls.input:Date
-         value="{{_date}}"
-         mask="{{mask}}"
-         tagStyle="{{'primary'}}"/>
-      <Controls.input:Date
-         value="{{_date}}"
-         mask="{{mask}}"
-         tagStyle="{{'info'}}"/>
-   </div>
-
-   <h3>With custom day renderer</h3>
-   <div>
-      Text:
-      <Controls.input:Date
-         value="{{_date}}"
-         mask="{{mask}}"
-         calendarSource="{{_source}}">
-         <ws:dayTemplate>
-            <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
-                        value="{{dayTemplate.value}}"
-            >
-               <ws:contentTemplate>
-                  <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
-               </ws:contentTemplate>
-            </ws:partial>
-         </ws:dayTemplate>
-      </Controls.input:Date>
-   </div>
-
 </div>

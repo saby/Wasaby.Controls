@@ -132,7 +132,7 @@ define(['Controls/_lists/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: [
                         {
-                           icon: 'icon-ExpandDown',
+                           icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
                            showType: 0
@@ -189,7 +189,7 @@ define(['Controls/_lists/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: [
                         {
-                           icon: 'icon-ExpandDown',
+                           icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
                            showType: 0
@@ -246,14 +246,14 @@ define(['Controls/_lists/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: [
                         {
-                           icon: 'icon-ExpandDown',
+                           icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
                            showType: 0
                         }
                      ]
                   },
-                  paddingSize: 'l'
+                  paddingSize: 's'
                };
 
                assert.deepEqual(
@@ -262,14 +262,14 @@ define(['Controls/_lists/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                );
             });
 
-            it('average row, all actions should be drawn, itemActionsSize should be m', function() {
+            it('average row, all actions should be drawn, itemActionsSize should be s', function() {
                var result = {
                   itemActionsSize: 'm',
                   itemActions: {
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'l'
+                  paddingSize: 's'
                };
 
                assert.deepEqual(

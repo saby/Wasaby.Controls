@@ -367,8 +367,21 @@ define([
 
          var iv = new lists.ListViewModel(cfg);
          assert.deepEqual(iv._selectedKeys, [1]);
+         var curPrefixItemVersion = iv._prefixItemVersion;
          iv.updateSelection([2, 3]);
          assert.deepEqual(iv._selectedKeys, [2, 3]);
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
+      });
+
+      it('setMultiSelectVisibility', function() {
+         var cfg = {
+            items: data,
+            multiSelectVisibility: 'hidden'
+         };
+         var iv = new lists.ListViewModel(cfg);
+         var curPrefixItemVersion = iv._prefixItemVersion;
+         iv.setMultiSelectVisibility('visible');
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
       });
 
       it('setSwipeItem', function() {

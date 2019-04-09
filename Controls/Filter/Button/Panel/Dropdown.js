@@ -6,6 +6,8 @@ define('Controls/Filter/Button/Panel/Dropdown', [
    /**
     * Input for selection from the list of options with cross.
     *
+    * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
+    *
     * @class Controls/Filter/Button/Panel/Dropdown
     * @extends Control/Input/Dropdown
     * @control

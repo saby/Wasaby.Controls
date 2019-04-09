@@ -19,6 +19,7 @@ define('Controls/Popup/Opener/Stack/StackController',
 
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
+            item.popupOptions.width = parseInt(item.popupOptions.width || defaultOptions.width, 10);
 
             // Validate the configuration
             if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
@@ -96,6 +97,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
             item.popupOptions._version++;
          },
+
 
          prepareMaximizedState: function(maxPanelWidth, item) {
             var canMaximized = maxPanelWidth > item.popupOptions.minWidth;

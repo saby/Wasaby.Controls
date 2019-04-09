@@ -58,8 +58,7 @@ define('Controls/Popup/Previewer',
                templateOptions: {
                   template: self._options.templateName || self._options.template,
                   templateOptions: self._options.templateOptions
-               },
-               closeChildWindows: self._options.closeChildWindows
+               }
             };
 
             if (self._options.corner) {

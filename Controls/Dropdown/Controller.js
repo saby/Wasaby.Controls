@@ -60,13 +60,19 @@ define('Controls/Dropdown/Controller',
          defaultSelectedKeys = [];
 
       var _private = {
+         getSourceController: function(self, options) {
+            if (!self._sourceController) {
+               self._sourceController = new SourceController({
+                  source: options.source,
+                  navigation: options.navigation
+               });
+            }
+            return self._sourceController;
+         },
+
          loadItems: function(self, options) {
             self._filter = historyUtils.getSourceFilter(options.filter, options.source);
-            self._sourceController = new SourceController({
-               source: options.source,
-               navigation: options.navigation
-            });
-            return self._sourceController.load(self._filter).addCallback(function(items) {
+            return _private.getSourceController(self, options).load(self._filter).addCallback(function(items) {
                self._items = items;
                _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                return items;
@@ -90,6 +96,41 @@ define('Controls/Dropdown/Controller',
             }
          },
 
+         getNewItems: function(items, selectedItems, keyProperty) {
+            var newItems = [];
+
+            chain.factory(selectedItems).each(function(item) {
+               if (!items.getRecordById(item.get(keyProperty))) {
+                  newItems.push(item);
+               }
+            });
+            return newItems;
+         },
+
+         onSelectorResult: function(self, selectedItems) {
+            var newItems = _private.getNewItems(self._items, selectedItems, self._options.keyProperty);
+
+            // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+            if (historyUtils.isHistorySource(self._options.source)) {
+               if (newItems.length) {
+                  self._sourceController = null;
+               }
+               _private.updateHistory(self, chain.factory(selectedItems).toArray());
+            } else {
+               self._items.prepend(newItems);
+            }
+         },
+
+         updateHistory: function(self, items) {
+            if (historyUtils.isHistorySource(self._options.source)) {
+               self._options.source.update(items, historyUtils.getMetaHistory());
+
+               if (self._sourceController && self._options.source.getItems) {
+                  self._items = self._options.source.getItems();
+               }
+            }
+         },
+
          onResult: function(result) {
             switch (result.action) {
                case 'pinClicked':
@@ -98,7 +139,8 @@ define('Controls/Dropdown/Controller',
                   this._open();
                   break;
                case 'applyClick':
-                  this._notify('selectedKeysChanged', [result.selectedKeys]);
+                  this._notify('selectedItemsChanged', [result.data]);
+                  _private.updateHistory(this, result.data);
                   this._children.DropdownOpener.close();
                   break;
                case 'itemClick':
@@ -106,23 +148,18 @@ define('Controls/Dropdown/Controller',
 
                   var item = result.data[0];
 
-                  if (historyUtils.isHistorySource(this._options.source)) {
-                     this._options.source.update(item, historyUtils.getMetaHistory());
-                  }
-
-                  // FIXME тут необходимо перевести на кэширующий источник,
-                  // Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
-                  // Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
-                  // https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
-                  if (this._options.source.getItems) {
-                     this._items = this._options.source.getItems();
-                  }
+                  _private.updateHistory(this, item);
 
                   // dropDown must close by default, but user can cancel closing, if returns false from event
                   // res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
                   if (res === true || !(item && item.get(this._options.nodeProperty) || res === false)) {
                      this._children.DropdownOpener.close();
                   }
+                  break;
+               case 'selectorResult':
+                  _private.onSelectorResult(this, result.data);
+                  this._notify('selectedItemsChanged', [result.data]);
+                  this._children.DropdownOpener.close();
                   break;
                case 'footerClick':
                   this._notify('footerClick', [result.event]);
@@ -149,6 +186,7 @@ define('Controls/Dropdown/Controller',
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
+                  _private.getSourceController(this, options).calculateState(this._items);
                   _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else if (options.source) {
                   return _private.loadItems(this, options);
@@ -160,9 +198,10 @@ define('Controls/Dropdown/Controller',
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
-            if ((newOptions.source && newOptions.source !== this._options.source) ||
+            if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
                newOptions.navigation !== this._options.navigation ||
                newOptions.filter !== this._options.filter) {
+               this._sourceController = null;
                if (newOptions.lazyItemsLoad) {
                   /* source changed, items is not actual now */
                   this._items = null;
@@ -193,17 +232,14 @@ define('Controls/Dropdown/Controller',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width
+                     width: self._options.width,
+                     hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down')
                   },
                   target: self._container,
                   corner: self._options.corner,
                   opener: self,
                   autofocus: false,
-                  closeOnOutsideClick: true,
-
-
-                  // TODO: https://online.sbis.ru/opendoc.html?guid=b2116aaf-e4f5-46f9-881d-587384a4ec5d
-                  revertPositionStyle: self._options.revertPositionStyle
+                  closeOnOutsideClick: true
                };
                self._children.DropdownOpener.open(config, self);
             }

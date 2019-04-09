@@ -3,7 +3,7 @@
        {{highlightOnHover !== false && !itemData.isEditing ? 'controls-ListView__item_highlightOnHover_' + itemData.style}}
        controls-ListView__item_{{itemData.style}}
        {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
-       {{!!itemData.isActive ? ' controls-ListView__item_active'}}
+       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-ListView__item_active'}}
        {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
        {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
        js-controls-SwipeControl__actionsContainer"
@@ -34,12 +34,17 @@
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">
-            <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+            <ws:partial template="{{swipeTemplate}}"
+                        itemData="{{itemData}}"
+                        itemActionsTemplate="{{itemActionsTemplate}}"
+                        highlightOnHover="{{highlightOnHover}}"/>
         </ws:if>
         <ws:else >
             <ws:partial template="{{itemActionsTemplate}}"
                         itemActionsClass="{{itemActionsClass}}"
-                        itemData="{{itemData}}"/>
+                        itemData="{{itemData}}"
+                        highlightOnHover="{{highlightOnHover}}"
+            />
         </ws:else>
     </ws:if>
 </ws:template>

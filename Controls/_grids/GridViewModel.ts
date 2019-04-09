@@ -10,6 +10,10 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 
 var
     _private = {
+        calcItemColumnVersion: function(self, itemVersion, columnIndex) {
+            return itemVersion + '_' + self._columnsVersion + '_' +
+               (self._options.multiSelectVisibility === 'hidden' ? columnIndex : columnIndex - 1);
+        },
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
                 (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
@@ -324,6 +328,7 @@ var
         _curColgroupColumnIndex: 0,
 
         _ladder: null,
+        _columnsVersion: 0,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -597,6 +602,7 @@ var
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this._columnsVersion++;
         },
 
         setColumns: function(columns) {
@@ -792,12 +798,20 @@ var
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
                         index: current.index,
+                        columnIndex: current.columnIndex,
                         key: current.key,
                         getPropValue: current.getPropValue,
                         isEditing: current.isEditing,
-                        isActive: current.isActive
+                        isActive: current.isActive,
+                        getVersion: function() {
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                        },
+                        getKey: function() {
+                            return self._columnsVersion + '_' +
+                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+                        },
+                        _preferVersionAPI: true
                     };
-                currentColumn.columnIndex = current.columnIndex;
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
@@ -898,6 +912,10 @@ var
 
         _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
+        },
+
+        getEditingItemData(): object | null {
+            return this._model.getEditingItemData();
         },
 
         setItemActionVisibilityCallback: function(callback) {

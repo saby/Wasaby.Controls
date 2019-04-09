@@ -70,13 +70,13 @@
       }
     }
   },
-  "Controls/Button": {
-    "name": "Controls/Button",
+  "Controls/buttons:Button": {
+    "name": "Controls/buttons:Button",
     "title": "Basic button.",
-    "className": "Controls/Button",
+    "className": "Controls/buttons:Button",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Button",
+    "fullname": "Controls/buttons:Button",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

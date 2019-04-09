@@ -2,7 +2,7 @@
         on:keydown="_keyDown()"
         on:keyup="_keyPressed()" ws-tab-cycling="true"
         ws-delegates-tabfocus="true" style="{{_options.style}}"
-        hideCross="{{true}}" size="{{_getSize()}}">
+        closeButtonVisibility="{{false}}" size="{{_getSize()}}">
    <ws:bodyContentTemplate>
       <ws:partial
               template="{{_contentTemplate}}"

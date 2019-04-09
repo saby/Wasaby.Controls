@@ -239,6 +239,7 @@ define(
                ctrl._getActiveElement = function() {
                   return ctrl._getField();
                };
+               ctrl._isBrowserPlatform = true;
             });
             it('The field does not change, but the model changes.', function() {
                ctrl._beforeMount({
@@ -294,6 +295,7 @@ define(
                   ctrl._getTextWidth = function(value) {
                      return 10 * value.length;
                   };
+                  ctrl._isBrowserPlatform = true;
                   ctrl._getActiveElement = function() {
                      return ctrl._getField();
                   };
@@ -409,6 +411,7 @@ define(
                ctrl._getActiveElement = function() {
                   return ctrl._getField();
                };
+               ctrl._isBrowserPlatform = true;
 
                ctrl._getField().value = '';
                ctrl._getField().selectionStart = 0;

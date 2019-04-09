@@ -3,11 +3,11 @@
       <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <Controls.lists:Container>
-               <Controls.grids:View
+               <Controls.grid:View
                   ladderProperties="{{_ladderProperties}}"
                   multiSelectVisibility="hidden"
                   columns="{{_viewColumns}}">
-               </Controls.grids:View>
+               </Controls.grid:View>
             </Controls.lists:Container>
          </Controls.Container.Scroll>
       </Controls.lists:DataContainer>

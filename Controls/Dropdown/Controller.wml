@@ -23,6 +23,8 @@
                  dropdownClassName="{{_options.dropdownClassName}}"
                  footerTemplate="{{_options.footerTemplate}}"
                  multiSelect="{{_options.multiSelect}}"
+                 selectorTemplate="{{_options.selectorTemplate}}"
+                 isCompoundTemplate="{{_options.isCompoundTemplate}}"
                  headConfig="{{_options.headConfig}}"
                  showHeader="{{_options.showHeader}}"
                  selectedKeys="{{_options.selectedKeys}}"

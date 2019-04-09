@@ -175,7 +175,7 @@
       background: @background-color_Infobox_default;
       box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
       border-color: @border-color_Infobox_default;
-      border-top-color: ~"@{border-color_Infobox_@{_item}}";
+      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
 
       &.controls-Popup-corner-vertical-bottom.controls-Popup-align-vertical-bottom:before {
          border-color: ~"@{border-color_Infobox_@{_item}}";

@@ -21,10 +21,16 @@
    </ws:else>
    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:if data="{{itemData.isSwiped}}">
-         <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+         <ws:partial template="{{swipeTemplate}}"
+                     itemData="{{itemData}}"
+                     itemActionsTemplate="{{itemActionsTemplate}}"
+                     highlightOnHover="{{highlightOnHover}}"/>
       </ws:if>
       <ws:else >
-         <ws:partial template="{{itemActionsTemplate}}" itemActionsClass="{{itemActionsClass}}" itemData="{{itemData}}"/>
+         <ws:partial template="{{itemActionsTemplate}}"
+                     itemActionsClass="{{itemActionsClass}}"
+                     itemData="{{itemData}}"
+                     highlightOnHover="{{highlightOnHover}}"/>
       </ws:else>
    </ws:if>
 </ws:template>
@@ -35,7 +41,7 @@
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 <ws:template name="colTpl">
-   <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+   <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
         attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
       <ws:partial template="columnContentWrapper"/>
    </div>
@@ -43,7 +49,7 @@
 <ws:template name="stickyCell">
    <Controls.StickyHeader position="topbottom"
                           attr:class="{{currentColumn.cellClasses}}
-                                      {{!!itemData.isActive ? ' controls-GridView__item_active'}}
+                                      {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
                           attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
@@ -53,8 +59,9 @@
 <ws:if data="{{itemData.isNotFullGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
+         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
                          {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}"
+             attr:key="{{itemData.getCurrentColumn().getKey()}}"
              attr:style="{{itemData.getCellStyle(itemData, itemData.getCurrentColumn(), colspan, itemData.isNotFullGridSupport)}}">
             <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>
@@ -63,7 +70,7 @@
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.styleLadderHeading}}">
-      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:style="{{itemData.styleLadderHeading}}">
          <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
       </div>
@@ -75,7 +82,7 @@
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
             {{itemData.resetColumnIndex()}}
             <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
       </Controls.StickyHeader.Group>
@@ -83,7 +90,7 @@
    <ws:else>
       <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
          <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-            <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumn().getKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </div>
    </ws:else>
