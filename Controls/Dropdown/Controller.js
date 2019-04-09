@@ -146,7 +146,8 @@ define('Controls/Dropdown/Controller',
             this._onResult = _private.onResult.bind(this);
             this._onClose = _private.closeHandler.bind(this);
             if (!options.lazyItemsLoad) {
-               if (receivedState) {
+               // forceReloadItems удаляем в 300
+               if (receivedState && !options.forceReloadItems) {
                   this._items = receivedState;
                   _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else if (options.source) {
