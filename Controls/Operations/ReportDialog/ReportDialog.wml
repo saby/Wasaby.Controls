@@ -1,5 +1,5 @@
-<Controls.Popup.Templates.Dialog.ConfirmationTemplate size="big" style="{{_options.operationsCount === _options.operationsSuccess ? 'success' : 'error'}}" hideCross="true">
-   <ws:contentArea>
+<Controls.Popup.Templates.Dialog.ConfirmationTemplate size="l" style="{{_options.operationsCount === _options.operationsSuccess ? 'success' : 'error'}}" closeButtonVisibility="{{false}}">
+   <ws:bodyContentTemplate>
       <div class="controls-ReportDialog__title">{{_options.title}}</div>
       <div class="controls-ReportDialog__message">{{_message}}</div>
       <ws:if data="{{_options.errors}}">
@@ -7,11 +7,11 @@
             <div class="controls-ReportDialog__error {{index === 0 ? ' controls-ReportDialog__error_first' : ' controls-ReportDialog__error_withSpacing'}}">{{error}}</div>
          </ws:for>
       </ws:if>
-   </ws:contentArea>
-   <ws:footerArea>
+   </ws:bodyContentTemplate>
+   <ws:footerContentTemplate>
       <div class="controls-ReportDialog__closeButtonContainer">
          <ws:partial if="{{_options.footerContentTemplate}}" template="{{_options.footerContentTemplate}}"/>
          <Controls.input:Label caption="{[Закрыть]}" underline="hovered" on:click="_onCloseClick()"/>
       </div>
-   </ws:footerArea>
+   </ws:footerContentTemplate>
 </Controls.Popup.Templates.Dialog.ConfirmationTemplate>

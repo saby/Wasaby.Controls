@@ -5,8 +5,8 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import template = require('wml!Controls/_crumbs/HeadingPath/HeadingPath');
-import backButtonTemplate = require('wml!Controls/_crumbs/HeadingPath/Back');
+import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
+import backButtonTemplate = require('wml!Controls/_breadcrumbs/HeadingPath/Back');
 import {Model} from 'Types/entity';
 import Common from './HeadingPath/Common';
 import 'Controls/Heading/Back';
@@ -67,32 +67,32 @@ var _private = {
  * Breadcrumbs with back button.
  * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *
- * @class Controls/_crumbs/HeadingPath
+ * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_crumbs/PathStyles
+ * @mixes Controls/_breadcrumbs/PathStyles
  * @mixes Controls/interface/IHighlighter
  * @control
  * @public
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  *
  * @demo Controls-demo/BreadCrumbs/PathPG
  */
 
 /**
- * @name Controls/_crumbs/HeadingPath#backButtonStyle
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
  * @cfg {String} Back heading display style.
  * @default secondary
  * @see Controls/Heading/Back#style
  */
 
 /**
- * @event Controls/_crumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
+ * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  */
 
 /**
- * @name Controls/_crumbs/HeadingPath#showActionButton
+ * @name Controls/_breadcrumbs/HeadingPath#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default
  * true

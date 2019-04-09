@@ -69,6 +69,7 @@ define([
             { mask: 'DD.MM.YY', stringValue: '11.12.__', value: new Date(year, 11, 11) },
             // Automatically fill the current month and year
             { mask: 'DD.MM.YY', stringValue: '11.__.__', value: new Date(year, month, 11) },
+            { mask: 'DD.MM.YYYY', stringValue: '11.__.____', value: new Date(year, month, 11) },
             // Current year is filled
             // Autofill current month
             { mask: 'DD.MM.YY', stringValue: `11.__.${shortYearStr}`, value: new Date(year, month, 11) },
@@ -147,10 +148,6 @@ define([
             currentSeconds = 9,
             currentDate = new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds);
 
-         beforeEach(() => {
-            clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
-         });
-
          afterEach(() => {
             clock && clock.restore();
          });
@@ -161,24 +158,67 @@ define([
             baseHour = baseDate.getHours(),
             baseMinutes = baseDate.getMinutes(),
             baseSeconds = baseDate.getSeconds();
-         [
-            { mask: 'DD.MM.YYYY', value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds) },
-            { mask: 'DD.MM.YY', value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds) },
-            { mask: 'YYYY', value: new Date(currentYear, baseMonth, baseDay, baseHour, baseMinutes, baseSeconds) },
-            { mask: 'HH:mm', value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, baseSeconds) },
-            { mask: 'HH:mm:ss', value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, currentSeconds) },
-            { mask: 'DD.MM HH:mm', value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
-            { mask: 'DD.MM HH:mm:ss', value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) },
-            { mask: 'DD.MM.YY HH:mm', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
-            { mask: 'DD.MM.YY HH:mm:ss', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) },
-            { mask: 'DD.MM.YYYY HH:mm', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
-            { mask: 'DD.MM.YYYY HH:mm:ss', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) }
+         [{
+            mask: 'DD.MM.YYYY',
+            value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YY',
+            value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'YYYY',
+            value: new Date(currentYear, baseMonth, baseDay, baseHour, baseMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'HH:mm',
+            value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'HH:mm:ss',
+            value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, currentSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM HH:mm',
+            value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM HH:mm:ss',
+            value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YY HH:mm',
+            value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YY HH:mm:ss',
+            value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YYYY HH:mm',
+            value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YYYY HH:mm:ss',
+            value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds),
+            currentDate: currentDate
+         }, {
+            mask: 'DD.MM.YY',
+            value: new Date(2019, 3, 5, baseHour, baseMinutes, baseSeconds),
+            currentDate: new Date(2019, 3, 5, baseHour, baseMinutes, baseSeconds),
+            baseDate: new Date(2019, 2, 31, 10, 10, 10)
+         }, {
+            mask: 'DD.MM.YY',
+            value: new Date(2019, 2, 5, baseHour, baseMinutes, baseSeconds),
+            currentDate: new Date(2019, 2, 5, baseHour, baseMinutes, baseSeconds),
+            baseDate: new Date(2020, 1, 29, 10, 10, 10)
+         }
          ].forEach(function(test) {
             it(`should return curent date if it icludes "${test.mask}"`, function() {
+               clock = sinon.useFakeTimers(test.currentDate.getTime(), 'Date');
                let converter = new StringValueConverter();
-               let tested = converter.getCurrentDate(baseDate, test.mask);
+               let tested = converter.getCurrentDate(test.baseDate || baseDate, test.mask);
                assert(dateUtils.isDatesEqual(tested, test.value),`"${tested}" "${test.value}"`);
-               clock.restore();
             });
          });
       });

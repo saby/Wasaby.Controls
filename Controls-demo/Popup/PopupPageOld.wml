@@ -1,35 +1,22 @@
 <div class="popup-page">
-   <Controls.Popup.Opener.Dialog name="dialog">
-      <ws:popupOptions template="Controls-demo/Popup/TestDialog">
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog">
    </Controls.Popup.Opener.Dialog>
-   <Controls.Popup.Opener.Dialog name="modalDialog">
-      <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog">
    </Controls.Popup.Opener.Dialog>
    <Controls.Popup.Opener.Sticky name="sticky"
                                  onResult="{{_onResult}}"
+                                 template="Controls-demo/Popup/TestDialog"
+                                 autoHide="{{true}}"
    >
-      <ws:popupOptions template="Controls-demo/Popup/TestDialog"
-                       autoHide="{{true}}"
-      >
-         <ws:verticalAlign side="bottom"/>
-         <ws:horizontalAlign side="left"/>
-         <ws:corner vertical="bottom" horizontal="left"/>
-      </ws:popupOptions>
+      <ws:direction vertical="bottom" horizontal="left"/>
+      <ws:targetPoint vertical="bottom" horizontal="left"/>
    </Controls.Popup.Opener.Sticky>
-   <Controls.Popup.Opener.Notification name="notification">
-      <ws:popupOptions template="Controls-demo/Popup/TestDialog">
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Notification name="notification" template="Controls-demo/Popup/TestDialog">
    </Controls.Popup.Opener.Notification>
-   <Controls.Popup.Opener.Stack name="stack">
-      <ws:popupOptions template="Controls-demo/Popup/TestStack">
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack">
    </Controls.Popup.Opener.Stack>
 
-   <Controls.Popup.Opener.Stack name="openOldTemplate">
-      <ws:popupOptions template="Controls-demo/Popup/TestFormController/TestFormController">
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Stack name="openOldTemplate" template="Controls-demo/Popup/TestFormController/TestFormController">
    </Controls.Popup.Opener.Stack>
    <div>
       <Controls.buttons:Button name="dialogButton" caption="dialog" on:click="openDialog()" class="ControlsDemo-PopupPageOld__dialogButton"/>

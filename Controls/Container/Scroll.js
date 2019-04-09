@@ -3,7 +3,6 @@ define('Controls/Container/Scroll',
       'Core/Control',
       'Core/Deferred',
       'Env/Env',
-      'Core/core-clone',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
       'Controls/StickyHeader/Context',
@@ -17,7 +16,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
+   function(Control, Deferred, Env, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
       'use strict';
 
       /**

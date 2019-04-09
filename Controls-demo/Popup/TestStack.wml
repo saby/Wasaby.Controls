@@ -1,23 +1,18 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
-   <ws:topArea>
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
+   <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
       </div>
-   </ws:topArea>
-   <ws:contentArea>
+   </ws:headerContentTemplate>
+   <ws:bodyContentTemplate>
       <div style="width: {{ _options.width || '700px'}}">
-         <Controls.Popup.Opener.Stack name="stack">
-            <ws:popupOptions template="Controls-demo/Popup/TestStack">
-               <ws:componentOptions type="stack"/>
-            </ws:popupOptions>
+         <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack">
+            <ws:componentOptions type="stack"/>
          </Controls.Popup.Opener.Stack>
-         <Controls.Popup.Opener.Stack name="formControllerOpener" template="Controls-demo/Popup/Edit/MyFormController">
-            <ws:templateOptions type="stack" width="650"/>
+         <Controls.Popup.Opener.Stack name="formControllerOpener" template="Controls-demo/Popup/Edit/MyFormController" type="stack" width="650">
          </Controls.Popup.Opener.Stack>
-         <Controls.Popup.Opener.Dialog name="modalDialog">
-            <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
-               <ws:templateOptions type="dialog"/>
-            </ws:popupOptions>
+         <Controls.Popup.Opener.Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog">
+            <ws:templateOptions type="dialog"/>
          </Controls.Popup.Opener.Dialog>
          <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
          <br/>
@@ -53,5 +48,5 @@
                           attr:class="ControlsDemo-TestStack__infobox"/>
 
       </div>
-   </ws:contentArea>
+   </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>

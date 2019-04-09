@@ -17,7 +17,7 @@ define([
    'Core/polyfill/PromiseAPIDeferred'
 ], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
-      var data, result, source, rs;
+      var data, result, source, rs, sandbox;
       beforeEach(function() {
          data = [
             {
@@ -70,6 +70,10 @@ define([
             idProperty: 'id',
             rawData: data
          });
+         sandbox = sinon.createSandbox();
+      });
+      afterEach(function() {
+         sandbox.restore();
       });
       it('life cycle', function(done) {
          var dataLoadFired = false;
@@ -1222,6 +1226,47 @@ define([
 
             done();
          }, 100);
+      });
+
+      it('__needShowEmptyTemplate', () => {
+         let baseControlOptions = {
+            viewModelConstructor: lists.ListViewModel,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewName: 'Controls/List/ListView',
+            source: source,
+            emptyTemplate: null
+         };
+
+         let baseControl = new BaseControl(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         return new Promise(function(resolve) {
+            baseControl._beforeMount(baseControlOptions).addCallback(function(result) {
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._listViewModel.getItems().clear();
+               baseControl._options.emptyTemplate = {};
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._loadingState = 'down';
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._loadingState = 'all';
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._listViewModel._editingItemData = {};
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+               resolve();
+
+               return result;
+            });
+         });
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
@@ -2662,6 +2707,62 @@ define([
                });
             });
          });
+      });
+
+      it('should fire "drawItems" event if collection has changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
+
+         instance.getViewModel()._notify('onListChange', 'collectionChanged');
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('should fire "drawItems" event if indexes have changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
+
+         instance.getViewModel()._notify('onListChange', 'indexesChanged');
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
       });
    });
 });

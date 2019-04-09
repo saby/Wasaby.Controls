@@ -1,5 +1,5 @@
 <Controls.Container.Scroll attr:class="ControlsDemo-TreeHiddenNodes__tree">
-   <Controls.treeGrids:View
+   <Controls.treeGrid:View
            keyProperty="id"
            nodeProperty="type"
            parentProperty="parent"
@@ -12,5 +12,5 @@
             <ws:Object width="50px" displayProperty="count"/>
          </ws:Array>
       </ws:columns>
-   </Controls.treeGrids:View>
+   </Controls.treeGrid:View>
 </Controls.Container.Scroll>

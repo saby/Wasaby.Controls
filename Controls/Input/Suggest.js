@@ -23,7 +23,7 @@ define('Controls/Input/Suggest',
        * @mixes Controls/Input/Suggest/SuggestStyles
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @mixes Controls/Input/interface/IPaste
-       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/Input/interface/IInputText
        * @control
        * @public
        * @category Input

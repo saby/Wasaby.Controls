@@ -1,6 +1,6 @@
 <div class="controls-SuggestV__dialog">
-    <Controls.Popup.Templates.Stack.StackTemplate attr:class="controls-SuggestV__dialog-layout" caption="Все записи">
-        <ws:contentArea>
+    <Controls.Popup.Templates.Stack.StackTemplate attr:class="controls-SuggestV__dialog-layout" headingCaption="Все записи">
+        <ws:bodyContentTemplate>
             <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-Suggest__dialog-scrollContainer" name="scroll">
                 <ws:content>
                     <ws:partial template="{{_options.template}}"
@@ -8,6 +8,6 @@
                                 dialogMode="{{true}}"/>
                 </ws:content>
             </Controls.Container.Scroll>
-        </ws:contentArea>
+        </ws:bodyContentTemplate>
     </Controls.Popup.Templates.Stack.StackTemplate>
 </div>

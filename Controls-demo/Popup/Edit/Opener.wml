@@ -9,7 +9,7 @@
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
             <Controls.lists:Container>
-               <Controls.grids:View
+               <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   leftPadding="S"
                   rightPadding="M"
@@ -21,7 +21,7 @@
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                   itemActions="{{_itemActions}}"
                   columns="{{gridColumns}}">
-               </Controls.grids:View>
+               </Controls.grid:View>
             </Controls.lists:Container>
          </Controls.Container.Scroll>
       </div>
@@ -31,10 +31,8 @@
       <Controls.Toggle.Checkbox bind:value="_openRecordByNewKey" caption="Открыть запись на редактирование с другим ключом" class="demo-PopupEditOpener__openRecordByNewKey"/>
 
       <Controls.Popup.Opener.Edit.Container on:beforeItemEndEdit="_beforeSyncRecord()">
-         <Controls.Popup.Opener.Edit name="EditOpener" on:close="_closeHandler()" on:open="_openHandler()" on:result="_resultHandler()">
-            <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
-               <ws:templateOptions source="{{_viewSource}}" />
-            </ws:popupOptions>
+         <Controls.Popup.Opener.Edit name="EditOpener" on:close="_closeHandler()" on:open="_openHandler()" on:result="_resultHandler()" template="Controls-demo/Popup/Edit/MyFormController">
+            <ws:templateOptions source="{{_viewSource}}" />
          </Controls.Popup.Opener.Edit>
       </Controls.Popup.Opener.Edit.Container>
    </div>

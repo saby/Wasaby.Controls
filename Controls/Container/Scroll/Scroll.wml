@@ -6,7 +6,7 @@
                Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
                Таким образом мы избавляемся от лишней вложенности.
                https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ready-solutions/blocks/-->
-               <span name="content"
+               <div name="content"
                     style="{{_displayState.heightFix ? '' : _contentStyles}}"
                     class="controls-Scroll__content ws-BlockGroup
                            {{_isStickyInEdge ? 'controls-Scroll__translateZ'}}
@@ -25,7 +25,7 @@
                               on:excludedKeysChanged="excludedKeysChanged()"
                               on:checkboxClick="_tmplNotify('checkboxClick')"
                               on:itemActionsClick="_tmplNotify('itemActionsClick')"/>
-               </span>
+               </div>
          </Controls.StickyHeader.Controller>
       </Controls.Event.Registrator>
    </Controls.Container.Scroll.Watcher>

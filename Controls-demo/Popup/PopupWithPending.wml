@@ -1,16 +1,16 @@
 <div style="height: 100%; min-width: 500px; max-width: 700px;">
 
-   <Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
-      <ws:topArea>
+   <Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
+      <ws:headerContentTemplate>
          <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
          </div>
-      </ws:topArea>
-      <ws:contentArea>
+      </ws:headerContentTemplate>
+      <ws:bodyContentTemplate>
          <div style="margin-left: 8px; margin-top: 8px;">
             <Controls.Popup.Opener.Confirmation name="popupOpener"/>
             <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText" attr:class="ControlsDemo-PopupPage__withPendingInput"/>
          </div>
-      </ws:contentArea>
+      </ws:bodyContentTemplate>
    </Controls.Popup.Templates.Stack.StackTemplate>
 </div>

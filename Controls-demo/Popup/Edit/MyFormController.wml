@@ -1,12 +1,12 @@
-<Controls.Popup.Templates.Stack.StackTemplate caption="Диалог редактирования" attr:style="width:{{_options.width || 900}}px">
-   <ws:topArea>
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Диалог редактирования" attr:style="width:{{_options.width || 900}}px">
+   <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.buttons:Button icon="icon-medium icon-Erase icon-error" on:click="_delete()" style="linkMain"
                           attr:style="margin-right: 15px;" attr:class="demo-MyFormController__delete"/>
          <Controls.buttons:Button caption="Сохранить" on:click="_update()" attr:class="demo-MyFormController__save"/>
       </div>
-   </ws:topArea>
-   <ws:contentArea>
+   </ws:headerContentTemplate>
+   <ws:bodyContentTemplate>
       <div>
          <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}"
                                         record="{{ _record }}" key="{{ _options.key }}"
@@ -60,5 +60,5 @@
             <ws:templateOptions type="stack" width="600px"/>
          </Controls.Popup.Opener.Stack>
       </div>
-   </ws:contentArea>
+   </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>

@@ -74,6 +74,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          };
 
          controller._searchContext = { updateConsumers: () => {} };
+         controller._viewMode = 'tile';
 
          Search._private.searchCallback(controller, {}, {test: 'testFilterValue'});
 
@@ -81,7 +82,8 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isFalse(!!isBubbling)
-         assert.isTrue(controller._viewMode === 'search');
+         assert.equal(controller._viewMode, 'search');
+         assert.equal(controller._previousViewMode, 'tile');
          assert.equal(controller._searchValue, 'testFilterValue');
 
 
@@ -106,6 +108,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
          assert.equal(controller._misspellValue, 'testStr');
          assert.deepEqual(filter, {test: 'test'});
+         assert.equal(controller._previousViewMode, 'tile');
       });
 
       it('_private.abortCallback', function() {

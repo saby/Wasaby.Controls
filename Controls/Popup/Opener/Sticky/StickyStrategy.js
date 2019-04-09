@@ -167,7 +167,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
          var isHorizontal = direction === 'horizontal';
-         if (position[isHorizontal ? 'right' : 'bottom']) {
+         if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (targetCoords[popupCfg.corner[direction]] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
          return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
@@ -176,6 +176,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       invertPosition: function(popupCfg, direction) {
          popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
          popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
+         popupCfg.align[direction].offset *= -1;
          popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
       },
 
@@ -239,8 +240,20 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       fixPosition: function(position, targetCoords) {
          if (position.bottom) {
-            position.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
+            position.bottom += TouchKeyboardHelper.getKeyboardHeight();
+
+            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
+            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
+            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
+            position.bottom += _private.getTopScroll(targetCoords);
          }
+      },
+
+      getTopScroll: function(targetCoords) {
+         if (window && (window.screen.availHeight / window.innerHeight < 2)) {
+            return targetCoords.topScroll;
+         }
+         return 0;
       },
 
       setMaxSizes: function(popupCfg, position) {

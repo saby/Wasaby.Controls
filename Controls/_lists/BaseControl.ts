@@ -19,6 +19,7 @@ import 'wml!Controls/_lists/BaseControl/Footer';
 import 'css!theme?Controls/_lists/BaseControl/BaseControl';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
+import ListViewModel from 'Controls/_lists/ListViewModel';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -64,6 +65,8 @@ type ErrbackConfig = {
     mode?: dataSourceError.Mode;
     error: Error;
 }
+
+type LoadingState = null | 'all' | 'up' | 'down';
 
 /**
  * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
@@ -628,6 +631,9 @@ var _private = {
                     _private.applyVirtualScroll(self);
                 }
             }
+            if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                self._itemsChanged = true;
+            }
             self._forceUpdate();
         });
 
@@ -1108,7 +1114,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
 
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
-                if (self._listViewModel.getCount() && self._isScrollShown) {
+                // FIXME self._options.task46390860
+                // In the chat, after reload, need to scroll to the last element, because the last message is from below.
+                // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
+                // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
+                // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
+                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
                     const firstItem = self._listViewModel.getFirstItem();
 
                     //the first item may be missing, if, for example, only groups are drawn in the list
@@ -1119,8 +1130,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
             });
         }
 
-        if (this._loadedItems) {
+        if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
+        }
+
+        if (this._loadedItems) {
+            this._shouldRestoreScrollPosition = true;
         }
     },
 
@@ -1187,21 +1202,25 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._shouldNotifyOnDrawItems) {
+        if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
                this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
                this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
-            this._notify('drawItems', [this._loadedItems]);
             this._loadedItems = null;
-            this._shouldNotifyOnDrawItems = false;
+            this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
            _private.checkLoadToDirectionCapability(this);
            this._checkShouldLoadToDirection = false;
+        }
+        if (this._shouldNotifyOnDrawItems) {
+            this._notify('drawItems');
+            this._shouldNotifyOnDrawItems = false;
+            this._itemsChanged = false;
         }
         if (this._delayedSelect && this._children.selectionController) {
             this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
@@ -1243,6 +1262,12 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
         }
+    },
+
+    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel, loadingState: LoadingState): boolean {
+        return emptyTemplate &&
+               !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
+               (!loadingState || loadingState === 'all');
     },
 
     _onCheckBoxClick: function(e, key, status) {

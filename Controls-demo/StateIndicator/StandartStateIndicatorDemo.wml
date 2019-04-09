@@ -1,10 +1,11 @@
 <div class="demo__wrapper">
     <div >
       <h1>StateIndicator</h1>
+	  <div class="ControlsDemo__stateIndicator">
       <h2>With one value</h2>
       <div class="demo__block">
          <div class="demo__label">0% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="0" data="{{_datas[0]}}" scale="{{_scales[0]}}" />      
+         <Controls.progress:StateIndicator attr:class="demo__element ControlsDemo__zeroFilled" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="0" data="{{_datas[0]}}" scale="{{_scales[0]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">3% filled</div>
@@ -41,6 +42,8 @@
          <div class="demo__label">30%, 70% filled</div>
          <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="8"  data="{{_datas[8]}}" scale="{{_scales[8]}}" />
       </div>
+	  </div>
+	  <div class="ControlsDemo__stateIndicator2">
       <h2>With three values</h2>
       <h3>20 sectors</h3>
       <div class="demo__block">
@@ -55,11 +58,12 @@
       <h3>Custom number of sectors and colors</h3>
       <div class="demo__block">
          <div class="demo__label">33%, 33%, 33%, 1% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="11"  data="{{_datas[11]}}" scale="{{_scales[11]}}" />
-      </div>      
+         <Controls.progress:StateIndicator attr:class="demo__element ControlsDemo__tttoFilled" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="11"  data="{{_datas[11]}}" scale="{{_scales[11]}}" />
+      </div>
       <div class="demo__block">
          <div class="demo__label">20%, 30%, 3%, 47% filled</div>
          <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="12"  data="{{_datas[12]}}" scale="{{_scales[12]}}" />
       </div>
-    </div>    
+	  </div>
+    </div>
 </div>

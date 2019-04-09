@@ -4,7 +4,7 @@ define('Controls-demo/List/Tree/HideIconEmptyNodes', [
    'wml!Controls-demo/List/Tree/resources/HideIconEmptyNodes/HideIconEmptyNodes',
    'css!Controls-demo/List/Tree/resources/HideIconEmptyNodes/HideIconEmptyNodes',
    'Controls/Container/Scroll',
-   'Controls/treeGrids'
+   'Controls/treeGrid'
 ], function(Control, TreeData, template) {
    'use strict';
    var
