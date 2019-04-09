@@ -10,7 +10,7 @@ function calcRowIndexByKey(
     key: string|number,
     display,
     hasHeader: boolean = false,
-    resultsPosition: ResultsPosition|string|null = null,
+    resultsPosition: ResultsPosition|null = null,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
@@ -30,34 +30,32 @@ function calcRowIndexByKey(
 
 function calcResultsRowIndex(
     display,
-    resultsPosition: ResultsPosition|string|null = null,
+    resultsPosition: ResultsPosition|null = null,
     hasHeader: boolean = false,
     hasFooterTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
 
-    let offsetForHeader = hasHeader ? 1 : 0;
-
     if (resultsPosition === ResultsPosition.Top) {
-        return offsetForHeader;
+        return hasHeader ? 1 : 0;
     }
 
     let
         lastItem = ItemsUtil.getLastItem(display),
         lastRowIndex = calcRowIndexByKey(lastItem.getId(), display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
 
-    return lastRowIndex + offsetForHeader + (hasFooterTemplate ? 1 : 0);
+    return lastRowIndex + (hasFooterTemplate ? 1 : 0);
 }
 
-function calcGroupRowIndex(groupItem, display, hasRelations, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
+function calcGroupRowIndex(groupItem, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
     let index = display.getIndex(groupItem);
-    return _calcRowIndexByDisplayIndex(index, display, hasRelations, hasHeader, resultsPosition, hasMoreStorage, hierarchyRelation);
+    return _calcRowIndexByDisplayIndex(index, display, hasHeader, resultsPosition, hasMoreStorage, hierarchyRelation);
 }
 
 function calcTopOffset(
     hasHeader: boolean = false,
-    resultsPosition?: ResultsPosition|string|null,
+    resultsPosition?: ResultsPosition|null,
 ): number {
 
     let offset = 0;
@@ -76,9 +74,8 @@ function calcTopOffset(
 function _calcRowIndexByDisplayIndex(
     index: number,
     display,
-    hasRelations: boolean = false,
     hasHeader: boolean = false,
-    resultsPosition: ResultsPosition|string|null = null,
+    resultsPosition: ResultsPosition|null = null,
     hasMoreStorage?,
     hierarchyRelation?
 ): number {

@@ -346,7 +346,7 @@ var
 
         calcGroupRowIndex: function (self, current): number {
             let groupItem = self._model.getDisplay().at(current.index);
-            return calcGroupRowIndex(groupItem, self._model.getDisplay(), false, !!self.getHeader(), self.getResultsPosition());
+            return calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
         getEmptyTemplateStyles: function (self): string {
             let

@@ -7,9 +7,9 @@ enum SupportStatusesEnum {
 }
 
 enum CssTemplatesEnum {
-    GridIE,
-    GridChrome,
-    Grid,
+    GridIE = 'GridIE',
+    GridChrome = 'GridChrome',
+    Grid = 'Grid',
 }
 
 type CssRule = {

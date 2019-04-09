@@ -18,7 +18,6 @@ var _private = {
         return calcGroupRowIndex(
             groupItem,
             self._model.getDisplay(),
-            !!self._options.parentProperty,
             !!self.getHeader(),
             self.getResultsPosition(),
             self._model.getHasMoreStorage(),
@@ -67,11 +66,11 @@ var _private = {
         current.gridGroupStyles = toCssString([
             {
                 name: 'grid-row',
-                value: current.rowIndex + 1
+                value: current.rowIndex+1
             },
             {
                 name: '-ms-grid-row',
-                value: current.rowIndex + 1
+                value: current.rowIndex+1
             }
         ]);
     }
