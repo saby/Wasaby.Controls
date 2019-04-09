@@ -155,7 +155,7 @@ define('Controls/Filter/Fast',
             this._setText();
          },
 
-         onResult: function(result) {
+         onResult: function(event, result) {
             if (result.action === 'itemClick') {
                _private.selectItems.call(this, result.data);
                _private.notifyChanges(this, this._items);

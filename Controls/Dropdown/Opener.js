@@ -87,11 +87,7 @@ define('Controls/Dropdown/Opener',
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, popupOptions) {
-            //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
-            if (self._options.className) {
-               Env.IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
-            }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeOnOutsideClick = true;
          }
