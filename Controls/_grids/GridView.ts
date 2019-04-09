@@ -9,6 +9,7 @@ import GroupTemplate = require('wml!Controls/_grids/GroupTemplate');
 import OldGridView = require('wml!Controls/_grids/OldGridView');
 import NewGridView = require('wml!Controls/_grids/NewGridView');
 import 'wml!Controls/_grids/Header';
+import DefaultResultsTemplate = require('wml!Controls/_grids/Results');
 import 'wml!Controls/_grids/Results';
 import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
@@ -102,6 +103,7 @@ var
     },
     GridView = ListView.extend({
         _gridTemplate: null,
+        _resultsTemplate: null,
         isNotFullGridSupport: Env.detection.isNotFullGridSupport,
         _template: GridViewTemplateChooser,
         _groupTemplate: GroupTemplate,
@@ -114,6 +116,7 @@ var
             this._gridTemplate = Env.detection.isNotFullGridSupport ? OldGridView : NewGridView;
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
+            this._resultsTemplate = cfg.results ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
         },
 
         _beforeUpdate: function(newCfg) {
@@ -143,6 +146,9 @@ var
             }
             if (this._options.showRowSeparator !== newCfg.showRowSeparator) {
                 this._listModel.setShowRowSeparator(newCfg.showRowSeparator);
+            }
+            if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
+                this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
             }
         },
 
