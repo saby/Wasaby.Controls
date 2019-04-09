@@ -1,5 +1,5 @@
 /**
-    * @mixin Controls/Popup/InfoBox/InfoboxStyles
+    * @mixin Controls/_popup/InfoBox/InfoboxStyles
     * @private
     * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
     * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.

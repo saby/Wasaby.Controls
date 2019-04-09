@@ -1,26 +1,26 @@
 import Control from 'Core/Control';
-import template from 'wml!Controls/Popup/Previewer/Previewer';
+import template from 'wml!Controls/_popup/Previewer/Previewer';
 import debounce from 'Core/helpers/Function/debounce';
-import PreviewerOpener from 'Controls/Popup/Opener/Previewer';
+import PreviewerOpener from 'Controls/_popup/Opener/Previewer';
 import Env from 'Env/Env';
-import 'css!Controls/Popup/Previewer/Previewer';
+import 'css!Controls/_popup/Previewer/Previewer';
       
 
       /**
-       * @class Controls/Popup/Previewer
+       * @class Controls/_popup/Previewer
        * @extends Core/Control
        * @public
        * @author Красильников А.С.
        *
-       * @name Controls/Popup/Previewer#content
+       * @name Controls/_popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
        *
-       * @name Controls/Popup/Previewer#template
+       * @name Controls/_popup/Previewer#template
        * @cfg {Content} Mini card contents.
        */
 
       /**
-       * @name Controls/Popup/Previewer#trigger
+       * @name Controls/_popup/Previewer#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
        * @variant demand Closing by click not on the content or template.
@@ -41,7 +41,7 @@ import 'css!Controls/Popup/Previewer/Previewer';
                fittingMode: 'overflow',
                opener: self,
                target: self._container,
-               template: 'Controls/Popup/Previewer/OpenerTemplate',
+               template: 'Controls/_popup/Previewer/OpenerTemplate',
                corner: {
                   vertical: 'bottom',
                   horizontal: 'right'

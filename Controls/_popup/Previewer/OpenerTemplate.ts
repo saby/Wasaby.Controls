@@ -1,6 +1,6 @@
 import Control from 'Core/Control';
 import Deferred from 'Core/Deferred';
-import template from 'wml!Controls/Popup/Previewer/OpenerTemplate';
+import template from 'wml!Controls/_popup/Previewer/OpenerTemplate';
 import Utils from 'View/Executor/Utils';
 import 'Controls/Container/Async';
       

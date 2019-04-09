@@ -1,6 +1,6 @@
 import Control from 'Core/Control';
-import template from 'wml!Controls/Popup/InfoBox/InfoBox';
-import InfoBoxOpener from 'Controls/Popup/Opener/InfoBox';
+import template from 'wml!Controls/_popup/InfoBox/InfoBox';
+import InfoBoxOpener from 'Controls/_popup/Opener/InfoBox';
 import TouchContext from 'Controls/Context/TouchContextField';
 import getZIndex from 'Controls/Utils/getZIndex';
 import Env from 'Env/Env';
@@ -10,8 +10,8 @@ import Env from 'Env/Env';
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
-       * @class Controls/Popup/InfoBox
-       * @mixes Controls/Popup/InfoBox/InfoboxStyles
+       * @class Controls/_popup/InfoBox
+       * @mixes Controls/_popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
@@ -47,7 +47,7 @@ import Env from 'Env/Env';
        */
 
       /**
-       * @name Controls/Popup/InfoBox#targetSide
+       * @name Controls/_popup/InfoBox#targetSide
        * @cfg {String} Side positioning of the target relative to infobox.
        * Popup displayed on the top of the target.
        * @variant top Popup displayed on the top of the target.
@@ -58,7 +58,7 @@ import Env from 'Env/Env';
        */
 
       /**
-       * @name Controls/Popup/InfoBox#alignment
+       * @name Controls/_popup/InfoBox#alignment
        * @cfg {String} Alignment of the infobox relative to target
        * Popup aligned by start of the target.
        * @variant start Popup aligned by start of the target.
@@ -68,34 +68,34 @@ import Env from 'Env/Env';
        */
 
       /**
-       * @name Controls/Popup/InfoBox#hideDelay
+       * @name Controls/_popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
        * @default 300
        */
 
       /**
-       * @name Controls/Popup/InfoBox#showDelay
+       * @name Controls/_popup/InfoBox#showDelay
        * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
        * @default 300
        */
 
       /**
-       * @name Controls/Popup/InfoBox#content
+       * @name Controls/_popup/InfoBox#content
        * @cfg {function|String} The content to which the logic of opening and closing the template is added.
        */
 
       /**
-       * @name Controls/Popup/InfoBox#template
+       * @name Controls/_popup/InfoBox#template
        * @cfg {function|String} Popup template.
        */
 
       /**
-       * @name Controls/Popup/InfoBox#templateOptions
+       * @name Controls/_popup/InfoBox#templateOptions
        * @cfg {Object} Popup template options.
        */
 
       /**
-       * @name Controls/Popup/InfoBox#trigger
+       * @name Controls/_popup/InfoBox#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
@@ -105,13 +105,13 @@ import Env from 'Env/Env';
        */
 
       /**
-       * @name Controls/Popup/InfoBox#floatCloseButton
+       * @name Controls/_popup/InfoBox#floatCloseButton
        * @cfg {Boolean} Whether the content should wrap around the cross closure.
        * @default false
        */
 
       /**
-       * @name Controls/Popup/InfoBox#style
+       * @name Controls/_popup/InfoBox#style
        * @cfg {String} Infobox display style.
        * @variant default
        * @variant danger
@@ -268,7 +268,7 @@ import Env from 'Env/Env';
 
          /**
           * Open InfoBox
-          * @function Controls/Popup/InfoBox#open
+          * @function Controls/_popup/InfoBox#open
           * @param {PopupOptions[]} popupOptions InfoBox popup options.
           */
          open: function() {
@@ -277,7 +277,7 @@ import Env from 'Env/Env';
 
          /**
           * close InfoBox
-          * @function Controls/Popup/InfoBox#close
+          * @function Controls/_popup/InfoBox#close
           */
          close: function() {
             this._close();
