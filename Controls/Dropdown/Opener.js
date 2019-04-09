@@ -50,7 +50,7 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
          checkIcons: function(self, config) {
-            var templateOptions = Merge(config.templateOptions, (self._options.popupOptions && self._options.popupOptions.templateOptions) || {}),
+            var templateOptions = Merge(config.templateOptions, self._options.templateOptions || {}),
                parentProperty = templateOptions && templateOptions.parentProperty,
                items = templateOptions && templateOptions.items,
                headerIcon = templateOptions && (templateOptions.headConfig && templateOptions.headConfig.icon || templateOptions.showHeader && templateOptions.icon),

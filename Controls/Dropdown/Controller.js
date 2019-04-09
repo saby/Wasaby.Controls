@@ -177,7 +177,9 @@ define('Controls/Dropdown/Controller',
 
          setOpenHandler: function(self, options) {
             self._onOpen = function(event, args) {
-               options.open(args);
+               if (typeof (options.open) === 'function') {
+                  options.open(args);
+               }
             };
          }
       };
