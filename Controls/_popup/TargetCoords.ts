@@ -1,10 +1,5 @@
-define('Controls/Popup/TargetCoords',
-   [
-      'Controls/Utils/getDimensions'
-   ],
-
-   function(getDimensions) {
-      return {
+import getDimensions from 'Controls/Utils/getDimensions';
+      export = {
          get: function(target) {
             if (!target) {
                throw new Error('Target parameter is required');
@@ -50,4 +45,5 @@ define('Controls/Popup/TargetCoords',
             };
          }
       };
-   });
+   
+

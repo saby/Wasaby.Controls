@@ -1,7 +1,7 @@
 import BaseController = require('Controls/_popup/Opener/BaseController');
 import StackStrategy = require('Controls/_popup/Opener/Stack/StackStrategy');
 import collection = require('Types/collection');
-import TargetCoords = require('Controls/Popup/TargetCoords');
+import TargetCoords = require('Controls/_popup/TargetCoords');
 import Deferred = require('Core/Deferred');
 import 'wml!Controls/_popup/Opener/Stack/StackContent';
 import 'css!theme?Controls/_popup/Opener/Stack/Stack';

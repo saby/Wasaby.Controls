@@ -3,7 +3,7 @@ import StickyController = require('Controls/_popup/Opener/Sticky/StickyControlle
 import themeConstantsGetter = require('Controls/_popup/Opener/InfoBox/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import TargetCoords = require('Controls/Popup/TargetCoords');
+import TargetCoords = require('Controls/_popup/TargetCoords');
 import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
 import 'css!theme?Controls/_popup/Opener/InfoBox/InfoBox';
 import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';

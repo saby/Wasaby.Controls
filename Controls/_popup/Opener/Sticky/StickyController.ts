@@ -4,7 +4,7 @@ import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
 import cMerge = require('Core/core-merge');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
-import TargetCoords = require('Controls/Popup/TargetCoords');
+import TargetCoords = require('Controls/_popup/TargetCoords');
 import 'wml!Controls/_popup/Opener/Sticky/StickyContent';
 import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
       var DEFAULT_OPTIONS = {
