@@ -65,7 +65,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Get class names for decorating link.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#getClasses
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getClasses
     * @returns {Object}
     */
    function getClasses() {
@@ -74,7 +74,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Get name of decorated link service.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#getService
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getService
     * @returns {String|undefined}
     */
    function getService() {
@@ -83,7 +83,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Get name of decorated link service.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#getHrefMaxLength
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getHrefMaxLength
     * @returns {number}
     */
    function getHrefMaxLength() {
@@ -95,7 +95,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Check if json node with given tag name and the first child node is a decorated link
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#isDecoratedLink
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#isDecoratedLink
     * @param tagName {string}
     * @param firstChildNode {JsonML}
     * @returns {boolean}
@@ -116,7 +116,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Undecorate decorated link. Calls after "isDecoratedLink" function, link node here is the first child there.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#getUndecoratedLink
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getUndecoratedLink
     * @param linkNode {jsonML}
     * @returns {jsonML}
     */
@@ -131,7 +131,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Check if json node is a link, that should be decorated.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#needDecorate
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#needDecorate
     * @param jsonNode {jsonML}
     * @param parentNode {jsonML}
     * @returns {boolean}
@@ -171,7 +171,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Get json node of decorated link. Calls after "needDecorate" function.
-    * @function Controls/Decorator/Markup/resources/linkDecorateUtils#getDecoratedLink
+    * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getDecoratedLink
     * @param linkNode {JsonML}
     * @returns {JsonML}
     */
@@ -207,7 +207,7 @@ import objectMerge = require('Core/core-merge');
     *
     * Module with utils to work with decorated link.
     *
-    * @class Controls/Decorator/Markup/resources/linkDecorateUtils
+    * @class Controls/_decorator/Markup/resources/linkDecorateUtils
     * @public
     * @author Кондаков Р.Н.
     */

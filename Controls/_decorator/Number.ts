@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
 import entity = require('Types/entity');
-import template = require('wml!Controls/Decorator/Number/Number');
+import template = require('wml!Controls/_decorator/Number/Number');
       
 
       /**
        * Divide the number into triads.
        *
-       * @class Controls/Decorator/Number
+       * @class Controls/_decorator/Number
        * @extends Core/Control
        * @control
        * @public
@@ -17,17 +17,17 @@ import template = require('wml!Controls/Decorator/Number/Number');
        */
 
       /**
-       * @name Controls/Decorator/Number#number
+       * @name Controls/_decorator/Number#number
        * @cfg {Number} Number to divide into triads.
        */
 
       /**
-       * @name Controls/Decorator/Number#fractionSize
+       * @name Controls/_decorator/Number#fractionSize
        * @cfg {Number} Number of decimal places. Range from 0 to 20.
        */
 
       /**
-       * @name Controls/Decorator/Number#roundMode
+       * @name Controls/_decorator/Number#roundMode
        * @cfg {String} The mode of formatting the fractional part of the number.
        * @variant round The number is rounded if necessary, and the fractional part is padded with zeros if necessary
        * so that it has the specified length.
@@ -37,7 +37,7 @@ import template = require('wml!Controls/Decorator/Number/Number');
        */
 
       /**
-       * @name Controls/Decorator/Number#useGrouping
+       * @name Controls/_decorator/Number#useGrouping
        * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
        * @default true
        * @remark

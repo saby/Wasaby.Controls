@@ -1,15 +1,15 @@
 /**
  * Created by rn.kondakov on 23.10.2018.
  */
-import utils = require('Controls/Decorator/Markup/resources/linkDecorateUtils');
+import utils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
    
 
    /**
     *
     * Module with a function to replace common link on decorated link, if it needs.
-    * Tag resolver for {@link Controls/Decorator/Markup}.
+    * Tag resolver for {@link Controls/_decorator/Markup}.
     *
-    * @class Controls/Decorator/Markup/resolvers/linkDecorate
+    * @class Controls/_decorator/Markup/resolvers/linkDecorate
     * @public
     * @author Кондаков Р.Н.
     */

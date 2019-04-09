@@ -3,8 +3,8 @@
  */
 import Control = require('Core/Control');
 import entity = require('Types/entity');
-import template = require('wml!Controls/Decorator/PhoneNumber/PhoneNumber');
-import phoneCodeModule = require('Controls/Decorator/PhoneNumber/Dictionary');
+import template = require('wml!Controls/_decorator/PhoneNumber/PhoneNumber');
+import phoneCodeModule = require('Controls/_decorator/PhoneNumber/Dictionary');
 
       
 
@@ -14,7 +14,7 @@ import phoneCodeModule = require('Controls/Decorator/PhoneNumber/Dictionary');
        * for another Russian numbers +7(****) **-**-** or +7(*****) *-**-** depends on city code
        * for foreign numbers +foreigncode restdigits
        *
-       * @class Controls/Decorator/PhoneNumber
+       * @class Controls/_decorator/PhoneNumber
        * @extends Core/Control
        * @control
        * @public
@@ -23,7 +23,7 @@ import phoneCodeModule = require('Controls/Decorator/PhoneNumber/Dictionary');
        */
 
       /**
-       * @name Controls/Decorator/PhoneNumber#number
+       * @name Controls/_decorator/PhoneNumber#number
        * @cfg {String} Number for beautifying
        */
 

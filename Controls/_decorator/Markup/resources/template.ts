@@ -150,7 +150,7 @@ import validHtml = require('Core/validHtml');
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         thelpers.templateError('Controls/Decorator/Markup', e, data);
+         thelpers.templateError('Controls/_decorator/Markup', e, data);
       } finally {
          markupGenerator.escape = oldEscape;
       }

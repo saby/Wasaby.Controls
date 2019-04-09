@@ -2,14 +2,14 @@ import Env = require('Env/Env');
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
-import template = require('wml!Controls/Decorator/Money/Money');
-import 'css!theme?Controls/Decorator/Money/Money';
+import template = require('wml!Controls/_decorator/Money/Money');
+import 'css!theme?Controls/_decorator/Money/Money';
       
 
       /**
        * Converts a number to money.
        *
-       * @class Controls/Decorator/Money
+       * @class Controls/_decorator/Money
        * @extends Core/Control
        * @control
        * @public
@@ -19,12 +19,12 @@ import 'css!theme?Controls/Decorator/Money/Money';
        */
 
       /**
-       * @name Controls/Decorator/Money#number
+       * @name Controls/_decorator/Money#number
        * @cfg {Number} Number to convert.
        */
 
       /**
-       * @name Controls/Decorator/Money#delimiters
+       * @name Controls/_decorator/Money#delimiters
        * @cfg {Boolean} Determines whether the number should be split into triads.
        * @default false
        * @remark
@@ -34,7 +34,7 @@ import 'css!theme?Controls/Decorator/Money/Money';
        */
 
       /**
-       * @name Controls/Decorator/Money#useGrouping
+       * @name Controls/_decorator/Money#useGrouping
        * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
        * @default true
        * @remark
@@ -43,7 +43,7 @@ import 'css!theme?Controls/Decorator/Money/Money';
        */
 
       /**
-       * @name Controls/Decorator/Money#style
+       * @name Controls/_decorator/Money#style
        * @cfg {String} The type with which you want to display money.
        * @variant accentResults
        * @variant noAccentResults
@@ -62,7 +62,7 @@ import 'css!theme?Controls/Decorator/Money/Money';
             var exec = this.searchPaths.exec(number.toFixed(2));
 
             if (!exec) {
-               Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option number: ' + number + '.');
+               Env.IoC.resolve('ILogger').error('Controls/_decorator/Money', 'That is not a valid option number: ' + number + '.');
                exec = ['0.00', '0', '.00'];
             }
 
@@ -79,7 +79,7 @@ import 'css!theme?Controls/Decorator/Money/Money';
          isUseGrouping: function(options, useLogging) {
             if ('delimiters' in options) {
                if (useLogging) {
-                  Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
+                  Env.IoC.resolve('ILogger').warn('Controls/_decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
                }
 
                return options.delimiters;

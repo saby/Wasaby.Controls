@@ -1,7 +1,7 @@
 /**
  * Created by rn.kondakov on 30.10.2018.
  */
-import 'css!theme?Controls/Decorator/Markup/resolvers/highlight';
+import 'css!theme?Controls/_decorator/Markup/resolvers/highlight';
    
 
    // Find all indexes if search value in string.
@@ -19,10 +19,10 @@ import 'css!theme?Controls/Decorator/Markup/resolvers/highlight';
    /**
     *
     * Module with a function to highlight searched string.
-    * Takes textToHighlight from resolverParams {@link Controls/Decorator/Markup#resolverParams}.
-    * Tag resolver for {@link Controls/Decorator/Markup}.
+    * Takes textToHighlight from resolverParams {@link Controls/_decorator/Markup#resolverParams}.
+    * Tag resolver for {@link Controls/_decorator/Markup}.
     *
-    * @class Controls/Decorator/Markup/resolvers/highlight
+    * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Кондаков Р.Н.
     */

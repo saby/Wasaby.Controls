@@ -2,13 +2,13 @@
  * Created by rn.kondakov on 18.10.2018.
  */
 import Control = require('Core/Control');
-import template = require('Controls/Decorator/Markup/resources/template');
+import template = require('Controls/_decorator/Markup/resources/template');
    
 
    /**
     * Builds a control by data in Json array.
     *
-    * @class Controls/Decorator/Markup
+    * @class Controls/_decorator/Markup
     * @extends Core/Control
     * @category Decorator
     * @author Кондаков Р.Н.
@@ -16,12 +16,12 @@ import template = require('Controls/Decorator/Markup/resources/template');
     */
 
    /**
-    * @name Controls/Decorator/Markup#value
+    * @name Controls/_decorator/Markup#value
     * @cfg {Array} Json array, based on JsonML.
     */
 
    /**
-    * @name Controls/Decorator/Markup#tagResolver
+    * @name Controls/_decorator/Markup#tagResolver
     * @cfg {Function} Tool to change Json before build, if it need. Applies to every node.
     * @remark
     * Function Arguments:
@@ -35,12 +35,12 @@ import template = require('Controls/Decorator/Markup/resources/template');
     * Note: Function should not change origin value.
     *
     * @example
-    * {@link Controls/Decorator/Markup/resolvers/highlight}
-    * {@link Controls/Decorator/Markup/resolvers/linkDecorate}
+    * {@link Controls/_decorator/Markup/resolvers/highlight}
+    * {@link Controls/_decorator/Markup/resolvers/linkDecorate}
     */
 
    /**
-    * @name Controls/Decorator/Markup#resolverParams
+    * @name Controls/_decorator/Markup#resolverParams
     * @cfg {Object} Outer data for tagResolver.
     */
 

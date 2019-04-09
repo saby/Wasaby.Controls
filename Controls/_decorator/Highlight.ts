@@ -2,14 +2,14 @@ import Env = require('Env/Env');
 import Control = require('Core/Control');
 import RegExpUtil = require('Controls/Utils/RegExp');
 import entity = require('Types/entity');
-import template = require('wml!Controls/Decorator/Highlight/Highlight');
-import 'css!theme?Controls/Decorator/Highlight/Highlight';
+import template = require('wml!Controls/_decorator/Highlight/Highlight');
+import 'css!theme?Controls/_decorator/Highlight/Highlight';
       
 
       /**
        * Highlighting the searched phrase.
        *
-       * @class Controls/Decorator/Highlight
+       * @class Controls/_decorator/Highlight
        * @extends Core/Control
        * @control
        * @public
@@ -18,22 +18,22 @@ import 'css!theme?Controls/Decorator/Highlight/Highlight';
        */
 
       /**
-       * @name Controls/Decorator/Highlight#text
+       * @name Controls/_decorator/Highlight#text
        * @cfg {String} The text in which to search.
        */
 
       /**
-       * @name Controls/Decorator/Highlight#highlight
+       * @name Controls/_decorator/Highlight#highlight
        * @cfg {String} Text to search.
        */
 
       /**
-       * @name Controls/Decorator/Highlight#class
+       * @name Controls/_decorator/Highlight#class
        * @cfg {String} Class for highlight.
        */
 
       /**
-       * @name Controls/Decorator/Highlight#searchMode
+       * @name Controls/_decorator/Highlight#searchMode
        * @cfg {String}
        * @variant word The search is carried out by words. A word is a set of characters, length not less than 2. Words are separated by whitespace and punctuation.
        * @variant substring The search is carried out by substrings.
@@ -175,7 +175,7 @@ import 'css!theme?Controls/Decorator/Highlight/Highlight';
             }
 
             if (highlightedWords.length === 0) {
-               Env.IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
+               Env.IoC.resolve('ILogger').warn('Controls/_decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
 
                return [{
                   type: 'text',

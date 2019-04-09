@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import entity = require('Types/entity');
-import template = require('wml!Controls/Decorator/WrapURLs/WrapURLs');
+import template = require('wml!Controls/_decorator/WrapURLs/WrapURLs');
 
       
 
       /**
        * Wrap references in text.
        *
-       * @class Controls/Decorator/WrapURLs
+       * @class Controls/_decorator/WrapURLs
        * @extends Core/Control
        * @control
        * @public
@@ -18,12 +18,12 @@ import template = require('wml!Controls/Decorator/WrapURLs/WrapURLs');
        */
 
       /**
-       * @name Controls/Decorator/WrapURLs#text
+       * @name Controls/_decorator/WrapURLs#text
        * @cfg {String} Text to convert.
        */
 
       /**
-       * @name Controls/Decorator/WrapURLs#newTab
+       * @name Controls/_decorator/WrapURLs#newTab
        * @cfg {Boolean} Open link in new tab.
        */
 

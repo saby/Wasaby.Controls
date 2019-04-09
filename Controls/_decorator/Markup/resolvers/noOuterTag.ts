@@ -7,9 +7,9 @@
    /**
     *
     * Module with a function to get html without outer tag.
-    * Tag resolver for jsonToHtml in {@link Controls/Decorator/Markup/Converter}.
+    * Tag resolver for jsonToHtml in {@link Controls/_decorator/Markup/Converter}.
     *
-    * @class Controls/Decorator/Markup/resolvers/noOuterTag
+    * @class Controls/_decorator/Markup/resolvers/noOuterTag
     * @public
     * @author Кондаков Р.Н.
     */

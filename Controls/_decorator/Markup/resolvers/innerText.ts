@@ -7,9 +7,9 @@
    /**
     *
     * Module with a function to get inner text from json.
-    * Tag resolver for jsonToHtml in {@link Controls/Decorator/Markup/Converter}.
+    * Tag resolver for jsonToHtml in {@link Controls/_decorator/Markup/Converter}.
     *
-    * @class Controls/Decorator/Markup/resolvers/innerText
+    * @class Controls/_decorator/Markup/resolvers/innerText
     * @public
     * @author Кондаков Р.Н.
     */

@@ -1,8 +1,8 @@
 /**
  * Created by rn.kondakov on 18.10.2018.
  */
-import template = require('Controls/Decorator/Markup/resources/template');
-import linkDecorateUtils = require('Controls/Decorator/Markup/resources/linkDecorateUtils');
+import template = require('Controls/_decorator/Markup/resources/template');
+import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
    
 
@@ -103,7 +103,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Convert html string to valid JsonML.
-    * @function Controls/Decorator/Markup/Converter#htmlToJson
+    * @function Controls/_decorator/Markup/Converter#htmlToJson
     * @param html {String}
     * @returns {Array}
     */
@@ -138,10 +138,10 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Convert Json to html string.
-    * @function Controls/Decorator/Markup/Converter#jsonToHtml
+    * @function Controls/_decorator/Markup/Converter#jsonToHtml
     * @param json {Array} Json based on JsonML.
-    * @param tagResolver {Function} exactly like in {@link Controls/Decorator/Markup#tagResolver}.
-    * @param resolverParams {Object} exactly like in {@link Controls/Decorator/Markup#resolverParams}.
+    * @param tagResolver {Function} exactly like in {@link Controls/_decorator/Markup#tagResolver}.
+    * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver, resolverParams) {
@@ -159,7 +159,7 @@ import objectMerge = require('Core/core-merge');
 
    /**
     * Convert Json array to its copy  by value in all nodes.
-    * @function Controls/Decorator/Markup/Converter#deepCopyJson
+    * @function Controls/_decorator/Markup/Converter#deepCopyJson
     * @param json
     * @return {Array}
     */
@@ -168,7 +168,7 @@ import objectMerge = require('Core/core-merge');
    };
 
    /**
-    * @class Controls/Decorator/Markup/Converter
+    * @class Controls/_decorator/Markup/Converter
     * @author Кондаков Р.Н.
     * @public
     */
