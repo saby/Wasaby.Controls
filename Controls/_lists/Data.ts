@@ -9,7 +9,7 @@ import Deferred = require('Core/Deferred');
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
-       * @class Controls/Container/Data
+       * @class Controls/_lists/Data
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control
@@ -19,12 +19,12 @@ import Deferred = require('Core/Deferred');
        */
 
       /**
-       * @name Controls/Container/Data#source
+       * @name Controls/_lists/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
 
       /**
-       * @name Controls/Container/Data#keyProperty
+       * @name Controls/_lists/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
 
@@ -121,7 +121,7 @@ import Deferred = require('Core/Deferred');
          }
       };
 
-      var Data = Control.extend(/** @lends Controls/Container/Data.prototype */{
+      var Data = Control.extend(/** @lends Controls/_lists/Data.prototype */{
 
          _template: template,
 

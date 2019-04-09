@@ -1,17 +1,28 @@
 <div class="controls-ToolbarVdom" style="padding: 50px;">
-   <div style="padding: 5px;">Пример тулбара: 
+   <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons):
       <Controls.Toolbar
          name="myToolbar"
-         attr:id="Toolbar_1"
          parentProperty="parent"
          nodeProperty="@parent"
          keyProperty="id"
-         source="{{_getMemorySource(_defaultItems)}}"
+         source="{{_getMemorySource(_defaultItemsWithoutToolbutton)}}"
          popupClassName="controls-Toolbar_test_popupClassName"
          on:itemClick="_itemClick()"
       />
    </div>
-   <div style="padding: 5px;">Пример плоского тулбара: 
+   <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons, toolButtons):
+      <Controls.Toolbar
+              name="myToolbar"
+              attr:id="Toolbar_1"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              keyProperty="id"
+              source="{{_getMemorySource(_defaultItems)}}"
+              popupClassName="controls-Toolbar_test_popupClassName"
+              on:itemClick="_itemClick()"
+      />
+   </div>
+   <div style="padding: 5px;">Пример тулбара из toolButtons:
       <Controls.Toolbar
          name="myFlatToolbar"
          attr:id="Toolbar_2"

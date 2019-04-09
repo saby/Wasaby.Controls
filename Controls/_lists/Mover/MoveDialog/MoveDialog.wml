@@ -29,7 +29,7 @@
                         nodeProperty="{{_options.nodeProperty}}"
                         displayProperty="{{_options.displayProperty}}"
                         hasChildrenProperty="{{_options.hasChildrenProperty}}"
-                        root="{{_options.root}}"
+                        bind:root="_root"
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
                         columns="{{_options.columns}}"/>

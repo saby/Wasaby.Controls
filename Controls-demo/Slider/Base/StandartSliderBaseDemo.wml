@@ -1,0 +1,110 @@
+<div class="demo__wrapper">
+   <div >
+      <h1>Slider Base</h1>
+      <h2>Horizontal</h2>
+      <div class="demo__block">
+         <div class="demo__label">
+            size
+         </div>
+         <div class="demo__element">
+            <h3>s</h3>
+         </div>
+         <div class="demo__element">
+            <h3>m</h3>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            simple
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="s"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               bind:value="_myValue1"
+            />
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="m"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               bind:value="_myValue2"
+            />
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            bordered
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="s"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               borderVisible="{{true}}"
+               bind:value="_myValue3"
+            />
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="m"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               borderVisible="{{true}}"
+               bind:value="_myValue4"
+            />
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            with scale
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="s"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               scaleStep="{{20}}"
+               bind:value="_myValue5"
+            />
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="m"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               scaleStep="{{20}}"
+               bind:value="_myValue6"
+            />
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            readOnly
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="s"
+               readOnly="{{true}}"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               borderVisible="{{true}}"
+               bind:value="_myValue7"
+            />
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base
+               size="m"
+               readOnly="{{true}}"
+               minValue="{{0}}"
+               maxValue="{{100}}"
+               scaleStep="{{20}}"
+               bind:value="_myValue8"
+            />
+         </div>
+      </div>
+
+   </div>
+</div>

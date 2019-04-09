@@ -10,7 +10,7 @@
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
-                  <Controls.grids:View
+                  <Controls.grid:View
                      source="{{_masterSource}}"
                      keyProperty="id"
                      parentProperty="Раздел"
@@ -18,7 +18,7 @@
                      nodeProperty="Раздел@"
                      columns="{{gridColumns}}"
                   >
-                  </Controls.grids:View>
+                  </Controls.grid:View>
                </Controls.Container.MasterList>
             </Controls.Container.Scroll>
          </div>
@@ -112,7 +112,7 @@
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
-                  <Controls.treeGrids:View
+                  <Controls.treeGrid:View
                      source="{{_masterSource}}"
                      keyProperty="id"
                      parentProperty="Раздел"
@@ -120,7 +120,7 @@
                      nodeProperty="Раздел@"
                      columns="{{gridColumns}}"
                   >
-                  </Controls.treeGrids:View>
+                  </Controls.treeGrid:View>
                </Controls.Container.MasterList>
             </Controls.Container.Scroll>
          </div>

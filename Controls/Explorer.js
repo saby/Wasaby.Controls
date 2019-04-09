@@ -16,7 +16,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
-   'Controls/treeGrids',
+   'Controls/treeGrid',
    'Controls/breadcrumbs'
 ], function(
    Control,
@@ -89,8 +89,11 @@ define('Controls/Explorer', [
             }
          },
          setViewMode: function(self, viewMode) {
-            if (viewMode === 'search') {
-               _private.setRoot(self, _private.getDataRoot(self));
+            var currentRoot = _private.getRoot(self);
+            var dataRoot = _private.getDataRoot(self);
+
+            if (viewMode === 'search' && dataRoot !== currentRoot) {
+               _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];

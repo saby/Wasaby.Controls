@@ -9,7 +9,7 @@
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
             <Controls.lists:Container>
-               <Controls.grids:View
+               <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   leftPadding="S"
                   rightPadding="M"
@@ -21,7 +21,7 @@
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                   itemActions="{{_itemActions}}"
                   columns="{{gridColumns}}">
-               </Controls.grids:View>
+               </Controls.grid:View>
             </Controls.lists:Container>
          </Controls.Container.Scroll>
       </div>

@@ -11,7 +11,7 @@
                         <Controls.Container.Scroll attr:class="grid-scroll-container" attr:test_name="default">
                             <Controls.lists:Container>
                                 <Controls.List.MultiSelector>
-                                    <Controls.grids:View
+                                    <Controls.grid:View
                                             displayProperty="title"
                                             markedKey="{{448390}}"
                                             rowSeparatorVisibility="{{true}}"
@@ -23,7 +23,7 @@
                                             itemActionsPosition="outside"
                                             columns="{{gridColumns}}"
                                             bind:sorting="_sorting">
-                                    </Controls.grids:View>
+                                    </Controls.grid:View>
                                 </Controls.List.MultiSelector>
                             </Controls.lists:Container>
                         </Controls.Container.Scroll>

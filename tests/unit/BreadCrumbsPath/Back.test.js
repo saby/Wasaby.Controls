@@ -1,9 +1,9 @@
 define([
-   'Controls/_crumbs/HeadingPath/Back'
+   'Controls/_breadcrumbs/HeadingPath/Back'
 ], function(
    PathBack
 ) {
-   describe('Controls/_crumbs/HeadingPath/Back', function() {
+   describe('Controls/_breadcrumbs/HeadingPath/Back', function() {
       it('_onBackButtonClick', function() {
          var
             instance = new PathBack.default(),
