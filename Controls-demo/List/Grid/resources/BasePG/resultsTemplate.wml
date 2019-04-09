@@ -1,0 +1,5 @@
+<ws:partial template="wml!Controls/_list/Grid/Results" scope="{{_options}}">
+   <ws:contentTemplate>
+      <div><b>All items count:</b> 6</div>
+   </ws:contentTemplate>
+</ws:partial>

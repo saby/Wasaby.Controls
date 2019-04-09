@@ -504,11 +504,13 @@ var
             return this._options.resultsPosition;
         },
 
-        getResultsTemplate: function() {
-            if (this._options.results) {
-                return this._options.results.template;
-            }
-            return this._options.resultsTemplate;
+        getStyleForCustomResultsTemplate: function() {
+            return _private.getColspan(
+               this._options.multiSelectVisibility,
+               0,
+               Env.detection.isNotFullGridSupport,
+               this._columns.length
+            );
         },
 
         _prepareResultsColumns: function(columns, multiSelectVisibility) {
