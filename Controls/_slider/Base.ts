@@ -34,6 +34,7 @@ var Base = Control.extend({
    /**
     * Basic slider with single movable point for choosing value.
     *
+    * <a href="/materials/demo/demo-ws4-sliderbase">Demo-example</a>.
     * @public
     * @extends Core/Control
     * @class Controls/_slider/Base
