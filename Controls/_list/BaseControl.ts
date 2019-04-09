@@ -704,7 +704,7 @@ var _private = {
 
         if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem(), self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 closeMenu();

@@ -1013,6 +1013,10 @@ var
             return this._model.getChildren.apply(this._model, arguments);
         },
 
+        getStartIndex(): number {
+            return this._model.getStartIndex();
+        },
+
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
