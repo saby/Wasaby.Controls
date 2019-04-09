@@ -54,6 +54,18 @@ define(
             });
          });
 
+         it('_beforeMount with receivedState', function() {
+            var data = getDataWithConfig({source: source, keyProperty: 'id'});
+            var newSource = new sourceLib.Memory({
+               idProperty: 'id',
+               data: sourceData
+            });
+            data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
+
+            assert.deepEqual(data._items, sourceData);
+            assert.isTrue(!!data._prefetchSource);
+         });
+
          it('update equal source', function(done) {
             var
                items,
