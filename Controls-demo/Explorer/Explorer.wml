@@ -19,6 +19,7 @@
                      itemsHeight="{{_itemsHeight}}"
                      header="{{_gridHeader}}"
                      imageProperty="image"
+                     tileScalingMode="outside"
                      multiSelectVisibility="visible"
                      columns="{{_viewColumns}}">
                      <ws:tileItemTemplate>

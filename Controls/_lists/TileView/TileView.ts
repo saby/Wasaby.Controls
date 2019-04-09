@@ -3,6 +3,7 @@ import template = require('wml!Controls/_lists/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_lists/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import ItemSizeUtils = require('Controls/_lists/TileView/resources/ItemSizeUtils');
+import { IoC } from 'Env/Env';
 import 'css!theme?Controls/_lists/TileView/TileView';
 
 var _private = {
@@ -80,6 +81,12 @@ var
     ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
+var HOVER_MODE = {
+    NONE: 'none',
+    OUTSIDE: 'outside',
+    INSIDE: 'inside'
+};
+
 
 var TileView = ListView.extend({
     _template: template,
@@ -87,6 +94,17 @@ var TileView = ListView.extend({
     _hoveredItem: undefined,
     _mouseMoveTimeout: undefined,
     _resizeFromSelf: false,
+
+    _beforeMount: function(options) {
+        if (options.hasOwnProperty('hoverMode')) {
+            IoC.resolve('ILogger').warn(this._moduleName, 'Используется устаревшая опция hoverMode, используйте tileScalingMode');
+            this._tileScalingMode = !!options.hoverMode ? HOVER_MODE.OUTSIDE : HOVER_MODE.NONE;
+        } else {
+            this._tileScalingMode = options.tileScalingMode;
+        }
+
+        TileView.superclass._beforeMount.apply(this, arguments);
+    },
 
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
@@ -187,7 +205,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, !!self._options.hoverMode ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, this._tileScalingMode !== HOVER_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
@@ -195,7 +213,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return !!this._options.hoverMode ? ZOOM_COEFFICIENT : 1;
+        return this._tileScalingMode !== HOVER_MODE.NONE ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {
@@ -232,7 +250,7 @@ TileView.getDefaultOptions = function () {
     return {
         itemsHeight: 150,
         tileMode: 'static',
-        hoverMode: 'outside'
+        tileScalingMode: 'none'
     };
 };
 
