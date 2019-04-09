@@ -9,7 +9,7 @@ import GroupTemplate = require('wml!Controls/_grids/GroupTemplate');
 import OldGridView = require('wml!Controls/_grids/OldGridView');
 import NewGridView = require('wml!Controls/_grids/NewGridView');
 import 'wml!Controls/_grids/Header';
-import DefaultResultsTemplate = require('wml!Controls/_grids/Grid/Results');
+import DefaultResultsTemplate = require('wml!Controls/_grids/Results');
 import 'wml!Controls/_grids/Results';
 import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
