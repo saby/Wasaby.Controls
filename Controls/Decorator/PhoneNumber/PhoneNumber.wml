@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/PhoneNumber/PhoneNumber" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_decorator/PhoneNumber/PhoneNumber" scope="{{_options}}" />
