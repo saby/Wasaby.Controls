@@ -81,7 +81,7 @@ var
     ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
-var HOVER_MODE = {
+var TILE_SCALING_MODE = {
     NONE: 'none',
     OUTSIDE: 'outside',
     INSIDE: 'inside'
@@ -98,7 +98,7 @@ var TileView = ListView.extend({
     _beforeMount: function(options) {
         if (options.hasOwnProperty('hoverMode')) {
             IoC.resolve('ILogger').warn(this._moduleName, 'Используется устаревшая опция hoverMode, используйте tileScalingMode');
-            this._tileScalingMode = !!options.hoverMode ? HOVER_MODE.OUTSIDE : HOVER_MODE.NONE;
+            this._tileScalingMode = !!options.hoverMode ? TILE_SCALING_MODE.OUTSIDE : TILE_SCALING_MODE.NONE;
         } else {
             this._tileScalingMode = options.tileScalingMode;
         }
@@ -205,7 +205,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, this._tileScalingMode !== HOVER_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, this._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
@@ -213,7 +213,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return this._tileScalingMode !== HOVER_MODE.NONE ? ZOOM_COEFFICIENT : 1;
+        return this._tileScalingMode !== TILE_SCALING_MODE.NONE ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {
