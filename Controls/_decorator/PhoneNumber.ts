@@ -1,16 +1,12 @@
 /**
  * Created by ee.volkova1 on 14.06.2018.
  */
-define('Controls/Decorator/PhoneNumber',
-   [
-      'Core/Control',
-      'Types/entity',
-      'wml!Controls/Decorator/PhoneNumber/PhoneNumber',
-      'Controls/Decorator/PhoneNumber/Dictionary'
-   ],
-   function(Control, entity, template, phoneCodeModule) {
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import template = require('wml!Controls/Decorator/PhoneNumber/PhoneNumber');
+import phoneCodeModule = require('Controls/Decorator/PhoneNumber/Dictionary');
 
-      'use strict';
+      
 
       /**
        * Beautify Phone number from string which consists of digits and another symbols(spaces, brackets, hyphens) to formatted string
@@ -162,6 +158,5 @@ define('Controls/Decorator/PhoneNumber',
 
       PhoneDecorator._private = _private;
 
-      return PhoneDecorator;
-   }
-);
+      export = PhoneDecorator;
+   

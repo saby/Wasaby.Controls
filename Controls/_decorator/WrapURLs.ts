@@ -1,12 +1,8 @@
-define('Controls/Decorator/WrapURLs',
-   [
-      'Core/Control',
-      'Types/entity',
-      'wml!Controls/Decorator/WrapURLs/WrapURLs'
-   ],
-   function(Control, entity, template) {
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import template = require('wml!Controls/Decorator/WrapURLs/WrapURLs');
 
-      'use strict';
+      
 
       /**
        * Wrap references in text.
@@ -105,6 +101,5 @@ define('Controls/Decorator/WrapURLs',
 
       WrapURLs._private = _private;
 
-      return WrapURLs;
-   }
-);
+      export = WrapURLs;
+   

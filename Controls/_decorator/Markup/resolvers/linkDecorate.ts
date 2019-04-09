@@ -1,10 +1,8 @@
 /**
  * Created by rn.kondakov on 23.10.2018.
  */
-define('Controls/Decorator/Markup/resolvers/linkDecorate', [
-   'Controls/Decorator/Markup/resources/linkDecorateUtils'
-], function(utils) {
-   'use strict';
+import utils = require('Controls/Decorator/Markup/resources/linkDecorateUtils');
+   
 
    /**
     *
@@ -15,7 +13,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     * @public
     * @author Кондаков Р.Н.
     */
-   return function linkDecorate(value, parent) {
+   export = function linkDecorate(value, parent) {
       var result;
       if (utils.needDecorate(value, parent)) {
          result = utils.getDecoratedLink(value);
@@ -24,4 +22,4 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
       return result;
    };
-});
+

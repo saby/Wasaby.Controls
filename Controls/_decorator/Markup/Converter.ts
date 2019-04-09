@@ -1,14 +1,10 @@
 /**
  * Created by rn.kondakov on 18.10.2018.
  */
-define('Controls/Decorator/Markup/Converter', [
-   'Controls/Decorator/Markup/resources/template',
-   'Controls/Decorator/Markup/resources/linkDecorateUtils',
-   'Core/core-merge'
-], function(template,
-   linkDecorateUtils,
-   objectMerge) {
-   'use strict';
+import template = require('Controls/Decorator/Markup/resources/template');
+import linkDecorateUtils = require('Controls/Decorator/Markup/resources/linkDecorateUtils');
+import objectMerge = require('Core/core-merge');
+   
 
    // Convert node to jsonML array.
    function nodeToJson(node) {
@@ -182,5 +178,5 @@ define('Controls/Decorator/Markup/Converter', [
       deepCopyJson: deepCopyJson
    };
 
-   return MarkupConverter;
-});
+   export = MarkupConverter;
+

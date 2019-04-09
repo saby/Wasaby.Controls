@@ -1,12 +1,9 @@
 /**
  * Created by rn.kondakov on 18.10.2018.
  */
-define('Controls/Decorator/Markup/resources/template', [
-   'View/Executor/TClosure',
-   'Core/validHtml'
-], function(thelpers,
-   validHtml) {
-   'use strict';
+import thelpers = require('View/Executor/TClosure');
+import validHtml = require('Core/validHtml');
+   
 
    var markupGenerator,
       defCollection,
@@ -168,5 +165,5 @@ define('Controls/Decorator/Markup/resources/template', [
    // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
    template.stable = true;
 
-   return template;
-});
+   export = template;
+

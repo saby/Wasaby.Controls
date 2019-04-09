@@ -1,15 +1,10 @@
-define('Controls/Decorator/Highlight',
-   [
-      'Env/Env',
-      'Core/Control',
-      'Controls/Utils/RegExp',
-      'Types/entity',
-      'wml!Controls/Decorator/Highlight/Highlight',
-
-      'css!theme?Controls/Decorator/Highlight/Highlight'
-   ],
-   function(Env, Control, RegExpUtil, entity, template) {
-      'use strict';
+import Env = require('Env/Env');
+import Control = require('Core/Control');
+import RegExpUtil = require('Controls/Utils/RegExp');
+import entity = require('Types/entity');
+import template = require('wml!Controls/Decorator/Highlight/Highlight');
+import 'css!theme?Controls/Decorator/Highlight/Highlight';
+      
 
       /**
        * Highlighting the searched phrase.
@@ -246,5 +241,5 @@ define('Controls/Decorator/Highlight',
          };
       };
 
-      return Highlight;
-   });
+      export = Highlight;
+   

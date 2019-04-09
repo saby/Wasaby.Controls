@@ -1,10 +1,8 @@
 /**
  * Created by rn.kondakov on 30.10.2018.
  */
-define('Controls/Decorator/Markup/resolvers/highlight', [
-   'css!theme?Controls/Decorator/Markup/resolvers/highlight'
-], function() {
-   'use strict';
+import 'css!theme?Controls/Decorator/Markup/resolvers/highlight';
+   
 
    // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {
@@ -28,7 +26,7 @@ define('Controls/Decorator/Markup/resolvers/highlight', [
     * @public
     * @author Кондаков Р.Н.
     */
-   return function highlight(value, parent, resolverParams) {
+   export = function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
          return value;
@@ -63,4 +61,4 @@ define('Controls/Decorator/Markup/resolvers/highlight', [
 
       return newValue;
    };
-});
+

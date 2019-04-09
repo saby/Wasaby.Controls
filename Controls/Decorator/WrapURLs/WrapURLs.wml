@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/WrapURLs/WrapURLs" scope="{{_options}}" />

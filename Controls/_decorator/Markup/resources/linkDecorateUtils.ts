@@ -1,14 +1,10 @@
 /**
  * Created by rn.kondakov on 15.02.2019.
  */
-define('Controls/Decorator/Markup/resources/linkDecorateUtils', [
-   'Core/base64',
-   'Env/Env',
-   'Core/core-merge'
-], function(base64,
-   Env,
-   objectMerge) {
-   'use strict';
+import base64 = require('Core/base64');
+import Env = require('Env/Env');
+import objectMerge = require('Core/core-merge');
+   
 
    var hrefMaxLength = 1499,
       onlySpacesRegExp = /^[ \u00a0]+$/,
@@ -225,5 +221,5 @@ define('Controls/Decorator/Markup/resources/linkDecorateUtils', [
       getDecoratedLink: getDecoratedLink
    };
 
-   return linkDecorateUtils;
-});
+   export = linkDecorateUtils;
+

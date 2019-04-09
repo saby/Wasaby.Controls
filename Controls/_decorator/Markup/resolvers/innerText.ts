@@ -1,8 +1,8 @@
 /**
  * Created by rn.kondakov on 06.12.2018.
  */
-define('Controls/Decorator/Markup/resolvers/innerText', function() {
-   'use strict';
+
+   
 
    /**
     *
@@ -13,7 +13,7 @@ define('Controls/Decorator/Markup/resolvers/innerText', function() {
     * @public
     * @author Кондаков Р.Н.
     */
-   return function innerText(value, parent) {
+   export = function innerText(value, parent) {
       if (typeof value === 'string') {
          return parent ? value : [[], value];
       }
@@ -32,4 +32,4 @@ define('Controls/Decorator/Markup/resolvers/innerText', function() {
       }
       return '';
    };
-});
+

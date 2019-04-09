@@ -1,15 +1,10 @@
-define('Controls/Decorator/Money',
-   [
-      'Env/Env',
-      'Core/Control',
-      'Types/entity',
-      'Controls/Utils/splitIntoTriads',
-      'wml!Controls/Decorator/Money/Money',
-
-      'css!theme?Controls/Decorator/Money/Money'
-   ],
-   function(Env, Control, entity, splitIntoTriads, template) {
-      'use strict';
+import Env = require('Env/Env');
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
+import template = require('wml!Controls/Decorator/Money/Money');
+import 'css!theme?Controls/Decorator/Money/Money';
+      
 
       /**
        * Converts a number to money.
@@ -128,5 +123,5 @@ define('Controls/Decorator/Money',
 
       Money._private = _private;
 
-      return Money;
-   });
+      export = Money;
+   

@@ -1,8 +1,8 @@
 /**
  * Created by rn.kondakov on 06.12.2018.
  */
-define('Controls/Decorator/Markup/resolvers/noOuterTag', function() {
-   'use strict';
+
+   
 
    /**
     *
@@ -13,10 +13,10 @@ define('Controls/Decorator/Markup/resolvers/noOuterTag', function() {
     * @public
     * @author Кондаков Р.Н.
     */
-   return function noOuterTag(value, parent) {
+   export = function noOuterTag(value, parent) {
       if (!parent && value[0] === 'div') {
          value[0] = [];
       }
       return value;
    };
-});
+

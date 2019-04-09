@@ -1,11 +1,7 @@
-define('Controls/Decorator/Number',
-   [
-      'Core/Control',
-      'Types/entity',
-      'wml!Controls/Decorator/Number/Number'
-   ],
-   function(Control, entity, template) {
-      'use strict';
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import template = require('wml!Controls/Decorator/Number/Number');
+      
 
       /**
        * Divide the number into triads.
@@ -155,5 +151,5 @@ define('Controls/Decorator/Number',
 
       NumberDecorator._private = _private;
 
-      return NumberDecorator;
-   });
+      export = NumberDecorator;
+   

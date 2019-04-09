@@ -1,12 +1,9 @@
 /**
  * Created by rn.kondakov on 18.10.2018.
  */
-define('Controls/Decorator/Markup', [
-   'Core/Control',
-   'Controls/Decorator/Markup/resources/template'
-], function(Control,
-   template) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('Controls/Decorator/Markup/resources/template');
+   
 
    /**
     * Builds a control by data in Json array.
@@ -51,5 +48,5 @@ define('Controls/Decorator/Markup', [
       _template: template
    });
 
-   return MarkupDecorator;
-});
+   export = MarkupDecorator;
+
