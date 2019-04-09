@@ -50,6 +50,10 @@
             "type": "function",
             "title": "emptyTemplate"
           },
+          "resultsTemplate": {
+            "type": "function",
+            "title": "resultsTemplate"
+          },
           "footerTemplate": {
             "type": "function",
             "title": "footerTemplate"
