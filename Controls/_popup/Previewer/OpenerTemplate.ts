@@ -1,13 +1,9 @@
-define('Controls/Popup/Previewer/OpenerTemplate',
-   [
-      'Core/Control',
-      'Core/Deferred',
-      'wml!Controls/Popup/Previewer/OpenerTemplate',
-      'View/Executor/Utils',
-      'Controls/Container/Async'
-   ],
-   function(Control, Deferred, template, Utils) {
-      'use strict';
+import Control from 'Core/Control';
+import Deferred from 'Core/Deferred';
+import template from 'wml!Controls/Popup/Previewer/OpenerTemplate';
+import Utils from 'View/Executor/Utils';
+import 'Controls/Container/Async';
+      
 
       var OpenerTemplate = Control.extend({
          _template: template,
@@ -29,5 +25,6 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          }
       });
 
-      return OpenerTemplate;
-   });
+      export default OpenerTemplate;
+   
+

@@ -1,7 +1,4 @@
-define('Controls/Popup/InfoBox/InfoboxStyles', [],
-   function() {}
-
-   /**
+/**
     * @mixin Controls/Popup/InfoBox/InfoboxStyles
     * @private
     * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
@@ -33,4 +30,3 @@ define('Controls/Popup/InfoBox/InfoboxStyles', [],
     * @css @color_Infobox-shadow_default Default color of shadow.
     * @css @box-shadow_Infobox Size of shadow.
     */
-);
