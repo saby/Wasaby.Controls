@@ -151,6 +151,26 @@
          </Controls.Input.Dropdown>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
+         <h3>With grouping</h3>
+         <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysGroup"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  groupingKeyCallback="{{_groupingKeyCallback}}"
+                                  groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
+                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  source="{{_createMemory(_groupItems)}}">
+         </Controls.Input.Dropdown>
+         <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysGroupText"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  groupingKeyCallback="{{_groupingKeyCallback}}"
+                                  source="{{_createMemory(_groupTextItems)}}">
+            <ws:groupTemplate>
+               <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
+            </ws:groupTemplate>
+         </Controls.Input.Dropdown>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>ReadOnly</h3>
          <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysReadOnly"
                                   keyProperty="id"

@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="SliderBase" demoname="Controls-demo/Slider/StandartSliderBaseDemo.wml">
+    <ws:content>
+        <Controls-demo.Slider.StandartSliderBaseDemo/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>
