@@ -3,7 +3,7 @@
         <ws:partial template="wml!Controls/_grids/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-        <ws:partial template="wml!Controls/_grids/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
         <ws:partial template="Controls/lists:_forTemplate"
@@ -22,7 +22,7 @@
         <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-        <ws:partial template="wml!Controls/_grids/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <div attr:class="{{_calcFooterPaddingClass(_options)}}"
          attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() === 'visible' ? 1 : 0)) + ';'}}">

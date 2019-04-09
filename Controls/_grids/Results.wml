@@ -19,13 +19,13 @@
 </ws:template>
 <ws:template name="results">
 <ws:if data="{{contentTemplate}}">
-        {{listModel.resetResultsColumns();}}
-        <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
-            <div>&nbsp;</div>
-        </ws:if>
-        <div class="{{listModel.getCurrentResultsColumn().cellClasses}}" style="{{listModel.getStyleForCustomResultsTemplate()}}">
-            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
-        </div>
+    {{listModel.resetResultsColumns();}}
+    <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
+        <div>&nbsp;</div>
+    </ws:if>
+    <div class="{{listModel.getCurrentResultsColumn().cellClasses}}" style="{{listModel.getStyleForCustomResultsTemplate()}}">
+        <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+    </div>
 </ws:if>
 <ws:else>
    <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
@@ -44,22 +44,22 @@
 <ws:template name="templateChooser">
    <ws:if data="{{listModel.isNoGridSupport()}}">
       <ws:partial template="results"></ws:partial>
-   </ws:if>
-   <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <ws:partial template="results"></ws:partial>
-   </ws:else>
-   <ws:else>
-      <div class="controls-Grid__results">
-         <ws:partial template="results"></ws:partial>
-      </div>
-   </ws:else>
+</ws:if>
+<ws:else data="{{listModel.isPartialGridSupport()}}">
+   <ws:partial template="results"></ws:partial>
+</ws:else>
+<ws:else>
+   <div class="controls-Grid__results">
+       <ws:partial template="results"></ws:partial>
+   </div>
+</ws:else>
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
-   <Controls.StickyHeader.Group>
-      <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
-      <ws:partial template="templateChooser" temp="{{ listModel.getVersion() }}"/>
-   </Controls.StickyHeader.Group>
+<Controls.StickyHeader.Group>
+   <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
+   <ws:partial template="templateChooser" temp="{{ listModel.getVersion() }}"/>
+</Controls.StickyHeader.Group>
 </ws:if>
 <ws:else>
 <ws:partial template="templateChooser"/>
