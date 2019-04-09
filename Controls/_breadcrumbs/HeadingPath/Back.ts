@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_crumbs/HeadingPath/Back');
+import template = require('wml!Controls/_breadcrumbs/HeadingPath/Back');
 
 class Back extends Control {
    private _template = template;

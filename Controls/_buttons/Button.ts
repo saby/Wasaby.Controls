@@ -11,7 +11,7 @@ import { IoC } from 'Env/Env';
  *
  * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
  *
- * @class Controls/Button
+ * @class Controls/_buttons/Button
  * @extends Core/Control
  * @mixes Controls/Button/interface/IHref
  * @mixes Controls/interface/ICaption
