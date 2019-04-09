@@ -1,16 +1,16 @@
 import Control = require('Core/Control');
 import {RecordSet} from 'Types/collection';
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import template = require('wml!Controls/_crumbs/View/View');
-import itemTemplate = require('wml!Controls/_crumbs/View/resources/itemTemplate');
-import itemsTemplate = require('wml!Controls/_crumbs/View/resources/itemsTemplate');
-import menuItemTemplate = require('wml!Controls/_crumbs/resources/menuItemTemplate');
-import 'wml!Controls/_crumbs/resources/menuContentTemplate';
+import template = require('wml!Controls/_breadcrumbs/View/View');
+import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
+import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
+import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
+import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 
 /**
  * BreadCrumbs/View.
  *
- * @class Controls/_crumbs/View
+ * @class Controls/_breadcrumbs/View
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @control

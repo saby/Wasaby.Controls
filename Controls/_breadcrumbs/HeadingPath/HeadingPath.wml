@@ -1,7 +1,7 @@
 <div class="controls-BreadCrumbsPath{{_options.header ? ' controls-BreadCrumbsPath__twoRows' : ''}}">
     <div class="controls-BreadCrumbsPath__wrapper">
         <ws:if data="{{ _backButtonCaption && !_options.header }}">
-            <Controls._crumbs.HeadingPath.Back backButtonCaption="{{_backButtonCaption}}"
+            <Controls._breadcrumbs.HeadingPath.Back backButtonCaption="{{_backButtonCaption}}"
                                                backButtonClass="{{_backButtonClass}}"
                                                counterCaption="{{ _getCounterCaption(_options.items) }}"
                                                showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
@@ -19,7 +19,7 @@
             </div>
         </ws:if>
         <ws:if data="{{_visibleItems}}">
-            <Controls._crumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+            <Controls._breadcrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                        items="{{_breadCrumbsItems}}"
                                        visibleItems="{{_visibleItems}}"
                                        keyProperty="{{_options.keyProperty}}"
