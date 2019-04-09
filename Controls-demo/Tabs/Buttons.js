@@ -26,6 +26,7 @@ define('Controls-demo/Tabs/Buttons', [
       SelectedKey5: '2',
       SelectedKey6: '1',
       SelectedKey7: '3',
+      SelectedKey8: '2',
       _source1: null,
       _source2: null,
       _source3: null,

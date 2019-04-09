@@ -10,7 +10,7 @@
     <div class="separator">Style="primary" Without right align tabs</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
-                bind:selectedKey='SelectedKey1'
+                bind:selectedKey="SelectedKey8"
                 keyProperty="id"
                 source="{{_source8}}"
         />
