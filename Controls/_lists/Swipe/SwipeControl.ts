@@ -127,7 +127,7 @@ export default class SwipeControl extends Control {
       action: IItemAction,
       itemData: IItemData
    ): void {
-      aUtil.itemActionsClick(this, event, action, itemData, true);
+      aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel, true);
    }
 
    private _listClick(): void {
