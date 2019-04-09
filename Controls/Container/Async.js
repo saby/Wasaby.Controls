@@ -2,6 +2,7 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Application/Env',
+      'Env/Env',
       'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
@@ -11,6 +12,7 @@ define('Controls/Container/Async',
 
    function(Base,
       AppEnv,
+      Env,
       constants,
       template,
       ModuleLoader,
@@ -78,7 +80,9 @@ define('Controls/Container/Async',
                return;
             }
             if (opts.templateName === this._options.templateName) {
-               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, opts.templateOptions, opts.templateName);
+               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate,
+                  opts.templateOptions,
+                  opts.templateName);
             } else if (this._isLoaded(opts.templateName)) {
                this._loadContentSync(opts.templateName, opts.templateOptions);
             }
@@ -140,9 +144,20 @@ define('Controls/Container/Async',
             return promise;
          },
 
+         _getHeadData: function() {
+            try {
+               var headData = AppEnv.getStore('HeadData');
+               return headData;
+            } catch (e) {
+               return null;
+            }
+         },
+
          _pushDepToHeadData: function(dep) {
-            var headData = AppEnv.getStore('HeadData');
-            if (headData && headData.pushDepComponent) {
+            var headData = this._getHeadData();
+            if (headData === null) {
+               Env.IoC.resolve('ILogger').warn('HeadData store wasn\'t initialized. Link to ' + dep + ' won\'t be added to server-side generated markup.');
+            } else {
                headData.pushDepComponent(dep, true);
             }
          },
