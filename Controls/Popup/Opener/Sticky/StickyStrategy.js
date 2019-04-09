@@ -217,10 +217,15 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!) клавиатура при своем показе
             // уменьшает высоту экрана(как это и должно быть). в этом случае getKeyboardHeight возвращает высоту 0, и
             // дополнительные смещения учитывать не нужно. В остальных случаях необходимо учесть высоту клавиатуры и topScroll
-            if (window.screen.availHeight / window.innerHeight < 2) {
-               position.bottom += targetCoords.topScroll;
-            }
+            position.bottom += _private.getTopScroll(targetCoords);
          }
+      },
+
+      getTopScroll: function(targetCoords) {
+         if (window && (window.screen.availHeight / window.innerHeight < 2)) {
+            return targetCoords.topScroll;
+         }
+         return 0;
       },
 
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
