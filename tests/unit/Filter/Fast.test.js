@@ -255,7 +255,7 @@ define(
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult({ data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
+                  fastData._onResult(null, { data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -265,10 +265,10 @@ define(
 
          it('onResult applyClick', function() {
             let fastData2 = getFastFilterWithItems(configItems);
-            fastData2._onResult({ selectedKeys: ['Россия', 'Великобритания'], action: 'applyClick' });
+            fastData2._onResult(null, { selectedKeys: ['Россия', 'Великобритания'], action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult({ selectedKeys: [], action: 'applyClick' });
+            fastData2._onResult(null, { selectedKeys: [], action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 

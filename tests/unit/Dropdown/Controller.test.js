@@ -219,7 +219,7 @@ define(
             dropdownController._notify = (e) => {
                assert.equal(e, 'footerClick');
             };
-            dropdownController._onResult({action: 'footerClick'});
+            dropdownController._onResult(null, {action: 'footerClick'});
          });
 
          it('check item click', () => {
@@ -246,24 +246,24 @@ define(
             };
 
             // returned false from handler and no hierarchy
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(4)]});
             assert.isFalse(closed);
 
             // returned undefined from handler and there is hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isFalse(closed);
 
             // returned undefined from handler and no hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(4)]});
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
             closeByNodeClick = true;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
          });
 
@@ -575,7 +575,7 @@ define(
                   filter: {}
                });
 
-               dropdownController._onResult({data: items, action: 'applyClick'});
+               dropdownController._onResult(null, {data: items, action: 'applyClick'});
                assert.deepEqual(selectedItems, items);
                assert.isTrue(updated);
             });
