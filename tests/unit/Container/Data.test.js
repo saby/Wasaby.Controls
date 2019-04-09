@@ -60,9 +60,9 @@ define(
                idProperty: 'id',
                data: sourceData
             });
-            data._beforeMount({source: newSource, idProperty: 'id'}, sourceData);
+            data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
-            assert.notDeepStrictEqual(data._items, sourceData);
+            assert.deepEqual(data._items, sourceData);
             assert.isTrue(!!data._prefetchSource);
          });
 
