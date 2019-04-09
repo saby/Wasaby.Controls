@@ -73,6 +73,35 @@ define('Controls/Input/Dropdown',
        * </pre>
        */
 
+      /**
+       * @name Controls/Input/Dropdown#multiSelect
+       * @cfg {Boolean} Determines whether multiple selection is set.
+       * @example
+       * Multiple selection is set.
+       * WML:
+       * <pre>
+       * <Controls.Input.Dropdown
+       *       bind:selectedKeys="_selectedKeys"
+       *       keyProperty="id"
+       *       displayProperty="title"
+       *       source="{{_source)}}"
+       *       multiSelect={{true}}>
+       * </Controls.Input.Dropdown>
+       * </pre>
+       * JS:
+       * <pre>
+       * this._source = new Memory({
+       *    idProperty: 'id',
+       *    data: [
+       *       {id: 1, title: 'Yaroslavl'},
+       *       {id: 2, title: 'Moscow'},
+       *       {id: 3, title: 'St-Petersburg'}
+       *    ]
+       * });
+       * this._selectedKeys = [1, 3];
+       * </pre>
+       */
+
 
       'use strict';
 
