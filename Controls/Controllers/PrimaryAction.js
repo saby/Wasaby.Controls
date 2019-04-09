@@ -17,7 +17,9 @@ define('Controls/Controllers/PrimaryAction',
 
          keyDownHandler: function(e) {
             if (!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.keyCode === Env.constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
-               e.stopPropagation(); // Event processed
+               // If "primary action" processed event, then event must be stopped.
+               // Otherwise, parental controls (including other primary action) can react to pressing ctrl+enter and call one more handler
+               e.stopPropagation();
                this._notify('triggered');
             }
          }
