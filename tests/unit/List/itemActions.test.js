@@ -481,7 +481,7 @@ define([
                   assert.equal(eventName, 'menuActionsClick');
                }
             };
-         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);
+         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, {}, false);
          assert.equal(callBackCount, 2);
       });
       it('itemActionsClick', function() {
@@ -500,7 +500,7 @@ define([
             action = {},
             itemData = {
                item: 'test',
-               index: 0
+               index: 1
             },
             instance = {
                _notify: function(eventName, args) {
@@ -523,7 +523,12 @@ define([
                   }
                }
             };
-         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);
+         var fakeListModel = {
+            getStartIndex: function() {
+               return 1;
+            }
+         };
+         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, fakeListModel, false);
          assert.equal(callBackCount, 2);
       });
    });
