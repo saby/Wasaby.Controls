@@ -212,8 +212,20 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       fixPosition: function(position, targetCoords) {
          if (position.bottom) {
-            position.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
+            position.bottom += TouchKeyboardHelper.getKeyboardHeight();
+
+            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
+            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
+            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
+            position.bottom += _private.getTopScroll(targetCoords);
          }
+      },
+
+      getTopScroll: function(targetCoords) {
+         if (window && (window.screen.availHeight / window.innerHeight < 2)) {
+            return targetCoords.topScroll;
+         }
+         return 0;
       },
 
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
