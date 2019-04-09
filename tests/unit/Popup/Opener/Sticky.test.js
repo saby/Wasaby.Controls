@@ -333,6 +333,18 @@ define(
             let overflow = StickyStrategy._private.checkOverflow(popupCfg, targetCoords, position, 'horizontal');
             assert.equal(overflow, 0);
          });
+
+         it('Sticky invert position', () => {
+            let popupCfg = { ...getPositionConfig() };
+            let direction = 'vertical';
+            popupCfg.align.vertical.offset = 10;
+            popupCfg.sizes.margins.top = 15;
+            StickyStrategy._private.invertPosition(popupCfg, direction);
+            assert.equal(popupCfg.corner.vertical, 'bottom');
+            assert.equal(popupCfg.align.vertical.side, 'bottom');
+            assert.equal(popupCfg.align.vertical.offset, -10);
+            assert.equal(popupCfg.sizes.margins.top, -15);
+         });
       });
    }
 );
