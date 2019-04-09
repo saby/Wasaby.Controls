@@ -81,7 +81,7 @@ var
     ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
-var HOVER_MODE = {
+var TILE_SCALING_MODE = {
     NONE: 'none',
     OUTSIDE: 'outside',
     INSIDE: 'inside'
@@ -194,7 +194,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, this._options.tileScalingMode !== HOVER_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, this._options.tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
@@ -202,7 +202,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return this._options.tileScalingMode !== HOVER_MODE.NONE ? ZOOM_COEFFICIENT : 1;
+        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {
