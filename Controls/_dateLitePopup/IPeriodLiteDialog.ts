@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils = require('Controls/Calendar/Utils');
 
    /**
-    * mixin Controls/Date/interface/IPeriodLiteDialog
+    * mixin Controls/_dateLitePopup/IDateLitePopup
     * @public
     */
    var EMPTY_CAPTIONS = {
@@ -17,86 +17,86 @@ import dateControlsUtils = require('Controls/Calendar/Utils');
          return {
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#year
+             * @name Controls/_dateLitePopup/IDateLitePopup#year
              * @cfg {Date} Displayed period
              */
             year: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#chooseMonths
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseMonths
              * @cfg {Boolean} Sets the option to choose a month
              */
             chooseMonths: true,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#chooseQuarters
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseQuarters
              * @cfg {Boolean} Sets the option to choose a quarter
              */
             chooseQuarters: true,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#chooseHalfyears
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseHalfyears
              * @cfg {Boolean} Sets the option to choose a half-year
              */
             chooseHalfyears: true,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#chooseYears
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseYears
              * @cfg {Boolean} Sets the option to choose a year
              */
             chooseYears: true,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#emptyCaption
+             * @name Controls/_dateLitePopup/IDateLitePopup#emptyCaption
              * @cfg {String} Text that is used if the period is not selected
              */
             emptyCaption: undefined,
 
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#checkedStart
+             * @name Controls/_dateLitePopup/IDateLitePopup#checkedStart
              * @cfg {Date} The date (month) of the beginning of the checked period
              * @noshow
              */
             checkedStart: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#checkedEnd
+             * @name Controls/_dateLitePopup/IDateLitePopup#checkedEnd
              * @cfg {Date} The date(month) of the end of the checked period
              * @noshow
              */
             checkedEnd: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#checkedIconCssClass
+             * @name Controls/_dateLitePopup/IDateLitePopup#checkedIconCssClass
              * @cfg {String} The CSS class that will be set on the selected icons. The default is a green tick.
              * @noshow
              */
             checkedIconCssClass: 'icon-Yes icon-done',
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#uncheckedIconCssClass
+             * @name Controls/_dateLitePopup/IDateLitePopup#uncheckedIconCssClass
              * @cfg {String} A CSS class that will be set on unselected icons. The default is a gray tick.
              * @noshow
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#checkedIconTitle
+             * @name Controls/_dateLitePopup/IDateLitePopup#checkedIconTitle
              * @cfg {String} A hint that will be displayed on the selected icons. By default, there is no tooltip.
              * @noshow
              */
             checkedIconTitle: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#uncheckedIconTitle
+             * @name Controls/_dateLitePopup/IDateLitePopup#uncheckedIconTitle
              * @cfg {String} A hint that will be displayed on the unselected icons. By default, there is no tooltip.
              * @noshow
              */
             uncheckedIconTitle: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#iconsHandler
+             * @name Controls/_dateLitePopup/IDateLitePopup#iconsHandler
              * @cfg {Function} Sets the function to be called when the component is repainted.
              * @remark
              * Function Arguments:
@@ -120,7 +120,7 @@ import dateControlsUtils = require('Controls/Calendar/Utils');
             // iconsHandler: undefined,
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#itemTemplate
+             * @name Controls/_dateLitePopup/IDateLitePopup#itemTemplate
              * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Core/helpers/Date/format}.
@@ -143,7 +143,7 @@ import dateControlsUtils = require('Controls/Calendar/Utils');
              */
 
             /**
-             * @name Controls/Date/interface/IPeriodLiteDialog#captionFormatter
+             * @name Controls/_dateLitePopup/IDateLitePopup#captionFormatter
              * @cfg {Function} Caption formatting function.
              */
             captionFormatter: dateControlsUtils.formatDateRangeCaption
