@@ -1,5 +1,5 @@
 /**
- * @interface Controls/_crumbs/BreadCrumbsStyles
+ * @interface Controls/_breadcrumbs/BreadCrumbsStyles
  * @css @height_BreadCrumbs-items Height of the breadcrumbs.
  * @css @font-size_BreadCrumbs-arrow Font size of the arrow icon.
  * @css @font-size_BreadCrumbs-title Font size of the breadcrumb's text.
