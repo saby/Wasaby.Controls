@@ -6,7 +6,7 @@ define('Controls-demo/List/Tree/Tree', [
    'Controls/Constants',
    'css!Controls-demo/List/Tree/Tree',
    'Controls/Container/Scroll',
-   'Controls/treeGrids',
+   'Controls/treeGrid',
    'wml!Controls-demo/List/Tree/DemoContentTemplate'
 ], function(BaseControl, GridData, template, MemorySource, ControlsConstants) {
    'use strict';

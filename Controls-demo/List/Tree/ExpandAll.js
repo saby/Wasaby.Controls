@@ -3,7 +3,7 @@ define('Controls-demo/List/Tree/ExpandAll', [
    'wml!Controls-demo/List/Tree/resources/ExpandAll/ExpandAll',
    'Types/source',
    'Controls-demo/List/Tree/resources/Data',
-   'Controls/treeGrids',
+   'Controls/treeGrid',
    'css!Controls-demo/List/Tree/resources/ExpandAll/ExpandAll'
 ], function (Control, template, source, TreeData) {
    'use strict';

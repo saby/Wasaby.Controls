@@ -29,7 +29,7 @@
 
    <Controls.Popup.Opener.Sticky
            name="filterStickyOpener"
-           popupOptions="{{_popupOptions}}"
+           scope="{{_popupOptions}}"
            autofocus="{{true}}"
    >
    </Controls.Popup.Opener.Sticky>

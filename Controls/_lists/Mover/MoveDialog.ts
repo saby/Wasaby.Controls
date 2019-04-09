@@ -33,12 +33,13 @@ import 'css!theme?Controls/_lists/Mover/MoveDialog/MoveDialog';
       _template: template,
       _itemActions: undefined,
 
-      _beforeMount: function() {
+      _beforeMount: function(options) {
          this._itemActions = [{
             id: 1,
             title: rk('Выбрать'),
             showType: 2
          }];
+         this._root = options.root;
          this._onItemClick = this._onItemClick.bind(this);
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
          this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);

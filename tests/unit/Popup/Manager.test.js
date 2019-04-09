@@ -73,6 +73,9 @@ define(
          it('getMaxZIndexPopupIdForActivate', function() {
             let Manager = getManager();
             let id1 = Manager.show({}, new BaseController());
+            let id0 = Manager.show({}, new BaseController());
+            element = Manager.find(id0);
+            element.popupState = 'destroyed';
             let id2 = Manager.show({ autofocus: false }, new BaseController());
             let id3 = Manager.show({}, new BaseController());
 

@@ -4,7 +4,7 @@ define('Controls-demo/List/Tree/SelectExpanderIcon', [
    'wml!Controls-demo/List/Tree/resources/SelectExpanderIcon/SelectExpanderIcon',
    'css!Controls-demo/List/Tree/resources/SelectExpanderIcon/SelectExpanderIcon',
    'Controls/Container/Scroll',
-   'Controls/treeGrids'
+   'Controls/treeGrid'
 ], function(Control, TreeData, template) {
    'use strict';
    var

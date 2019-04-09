@@ -29,6 +29,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
+       * @mises Controls/Dropdown/interface/IGroupped
        * @mixes Controls/interface/IInputDropdown
        * @mixes Controls/interface/ITextValue
        * @control
@@ -69,6 +70,35 @@ define('Controls/Input/Dropdown',
        *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
        *    ]
        * });
+       * </pre>
+       */
+
+      /**
+       * @name Controls/Input/Dropdown#multiSelect
+       * @cfg {Boolean} Determines whether multiple selection is set.
+       * @example
+       * Multiple selection is set.
+       * WML:
+       * <pre>
+       * <Controls.Input.Dropdown
+       *       bind:selectedKeys="_selectedKeys"
+       *       keyProperty="id"
+       *       displayProperty="title"
+       *       source="{{_source)}}"
+       *       multiSelect={{true}}>
+       * </Controls.Input.Dropdown>
+       * </pre>
+       * JS:
+       * <pre>
+       * this._source = new Memory({
+       *    idProperty: 'id',
+       *    data: [
+       *       {id: 1, title: 'Yaroslavl'},
+       *       {id: 2, title: 'Moscow'},
+       *       {id: 3, title: 'St-Petersburg'}
+       *    ]
+       * });
+       * this._selectedKeys = [1, 3];
        * </pre>
        */
 

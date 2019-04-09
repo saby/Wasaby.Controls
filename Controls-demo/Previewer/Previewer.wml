@@ -19,11 +19,11 @@
          </ws:content>
          <ws:template>
             <Controls.Popup.Templates.Dialog.DialogTemplate>
-               <ws:contentArea>
+               <ws:bodyContentTemplate>
                   <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
                      <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
                   </div>
-               </ws:contentArea>
+               </ws:bodyContentTemplate>
             </Controls.Popup.Templates.Dialog.DialogTemplate>
          </ws:template>
       </Controls.Popup.Previewer>

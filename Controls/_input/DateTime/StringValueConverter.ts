@@ -171,7 +171,9 @@ var _private = {
          }
       };
 
-      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+      // Autocomplete the year with the mask YYYY, if the year is entered, but not completely
+      // https://online.sbis.ru/opendoc.html?guid=6384f217-208a-4ca6-a175-b2c8d0ee2f0e
+      if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid && !_private.isEmpty(valueModel.year.str)) {
 
          // If there is a Replacer between the numbers, then the year is incorrect
          if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
@@ -390,29 +392,36 @@ var ModuleClass = cExtend.extend({
       return new Date('Invalid');
    },
    getCurrentDate: function(baseValue, mask) {
-      var date = dateUtils.isValidDate(baseValue) ? new Date(baseValue) : new Date(1900, 0, 1);
-      var now = new Date();
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1)
+      let
+          year = baseValue.getFullYear(),
+          month = baseValue.getMonth(),
+          date = baseValue.getDate(),
+          hours = baseValue.getHours(),
+          minutes = baseValue.getMinutes(),
+          seconds = baseValue.getSeconds(),
+          now = new Date();
       if (mask.indexOf('YYYY') > -1) {
-         date.setFullYear(now.getFullYear());
+         year = now.getFullYear();
       } else if (mask.indexOf('YY') > -1) {
-         date.setFullYear(now.getFullYear());
+         year = now.getFullYear();
       }
       if (mask.indexOf('MM') > -1) {
-         date.setMonth(now.getMonth());
+         month = now.getMonth();
       }
-      if (mask.indexOf('DD') > -1) {
-         date.setDate(now.getDate());
+      if (mask.indexOf('DD') > -1 || date > dateUtils.getEndOfMonth(now).getDate()) {
+         date = now.getDate();
       }
       if (mask.indexOf('HH') > -1) {
-         date.setHours(now.getHours());
+         hours = now.getHours();
       }
       if (mask.indexOf('mm') > -1) {
-         date.setMinutes(now.getMinutes());
+         minutes = now.getMinutes();
       }
       if (mask.indexOf('ss') > -1) {
-         date.setSeconds(now.getSeconds());
+         seconds = now.getSeconds();
       }
-      return date;
+      return new Date(year, month, date, hours, minutes, seconds);
    }
 });
 

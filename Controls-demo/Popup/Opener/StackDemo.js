@@ -11,7 +11,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
          _template: template,
          openStack: function () {
             this._children.stack.open({
-               opener: this._children.button1
+               opener: this._children.button1,
+               closeOnOutsideClick: true
             });
          },
          openModalStack: function () {
@@ -22,7 +23,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
          },
          openDialog: function () {
             this._children.dialog.open({
-               opener: this._children.button3
+               opener: this._children.button3,
+               closeOnOutsideClick: true
             });
          },
          openModalDialog: function () {
@@ -34,12 +36,12 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openMaximizedStack: function () {
             this._children.stack.open({
                opener: this._children.button2,
-               minimizedWidth: 600,
-               maximized: true,
+               minimizedWidth: 500,
+               minWidth: 800,
+               maxWidth: 1000,
                templateOptions: {
                   maximized: true,
                   maximizedButtonVisibility: true
-
                }
             });
          }

@@ -125,6 +125,70 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   parent: '11'
                }
             ];
+            this._defaultItemsWithoutToolbutton = [
+               {
+                  id: '1',
+                  icon: 'icon-Print icon-medium',
+                  title: 'Распечатать',
+                  '@parent': false,
+                  parent: null
+               },
+               {
+                  id: '2',
+                  buttonViewMode: 'icon',
+                  icon: 'icon-Link icon-medium',
+                  title: 'Скопировать в буфер',
+                  '@parent': false,
+                  parent: null
+               },
+               {
+                  id: '3',
+                  showType: 0,
+                  title: 'Прикрепить к',
+                  '@parent': false,
+                  parent: null
+               },
+               {
+                  id: '4',
+                  showType: 0,
+                  title: 'Проекту',
+                  '@parent': false,
+                  parent: '3'
+               },
+               {
+                  id: '5',
+                  showType: 0,
+                  title: 'Этапу',
+                  '@parent': false,
+                  parent: '3'
+               },
+               {
+                  id: '6',
+                  icon: 'icon-medium icon-EmptyMessage',
+                  buttonStyle: 'secondary',
+                  showHeader: true,
+                  buttonViewMode: 'link',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Обсудить',
+                  '@parent': true,
+                  parent: null
+               },
+               {
+                  id: '7',
+                  showType: 0,
+                  title: 'Видеозвонок',
+                  '@parent': false,
+                  parent: '6'
+               },
+               {
+                  id: '8',
+                  showType: 0,
+                  title: 'Сообщение',
+                  '@parent': false,
+                  parent: '6'
+               }
+            ];
             this._flatItems = [
                {
                   id: '1',
