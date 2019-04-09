@@ -44,24 +44,35 @@ define('Controls/Filter/Button/Panel/Lookup', [
 
    'use strict';
 
+   var _private = {
+      getLookup: function(self) {
+         if (typeof self._options.lookupTemplateName === 'string') {
+            return self._children.lookup;
+         } else {
+            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplateName" only supports string type');
+         }
+      }
+   };
+
    var Lookup = Control.extend({
       _template: template,
       _notifyHandler: tmplNotify,
       _passed: false,
 
       _afterUpdate: function(oldOptions) {
+         var lookup = _private.getLookup(this);
+
          // if the first items were selected, call resize for Lookup
          if (!oldOptions.selectedKeys.length && this._options.selectedKeys.length) {
             this._children.controlResize.start();
+            lookup && lookup.activate();
          }
       },
 
       showSelector: function() {
-         if (typeof this._options.lookupTemplateName === 'string') {
-            this._children.lookup.showSelector();
-         } else {
-            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplateName" only supports string type');
-         }
+         var lookup = _private.getLookup(this);
+
+         lookup && lookup.showSelector();
       },
 
       _selectedKeysChanged: function(event, keys) {
@@ -70,6 +81,7 @@ define('Controls/Filter/Button/Panel/Lookup', [
       }
    });
 
+   Lookup._private = _private;
    Lookup.getDefaultOptions = function() {
       return {
          lookupTemplateName: 'Controls/Selector/Lookup'
