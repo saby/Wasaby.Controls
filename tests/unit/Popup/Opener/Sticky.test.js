@@ -291,6 +291,8 @@ define(
             cfg.align.horizontal.side = 'left';
             targetCoords.topScroll = 10;
 
+            StickyStrategy._private.getTopScroll = () => targetCoords.topScroll;
+
             position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
             assert.equal(position.left, 400);
