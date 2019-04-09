@@ -316,6 +316,7 @@ define('Controls/Popup/Manager',
          },
 
          redrawItems: function() {
+            _private.popupItems._nextVersion();
             ManagerController.getContainer().setPopupItems(_private.popupItems);
          },
 
@@ -433,6 +434,7 @@ define('Controls/Popup/Manager',
             if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
                item.popupOptions = options;
                item.controller.getDefaultConfig(item);
+               _private.popupItems._nextVersion();
             }
          },
 
