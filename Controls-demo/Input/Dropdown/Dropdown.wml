@@ -182,9 +182,7 @@
       <h3>Can't open up</h3>
    </div>
 
-   <Controls.Popup.Opener.Stack name="stack">
-      <ws:popupOptions template="wml!Controls-demo/Input/Dropdown/StackTemplateDdl" closeByExternalClick="{{true}}">
-         <ws:templateOptions type="stack"/>
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Stack name="stack" template="wml!Controls-demo/Input/Dropdown/StackTemplateDdl" closeOnOutsideClick="{{true}}">
+      <ws:templateOptions type="stack"/>
    </Controls.Popup.Opener.Stack>
 </div>

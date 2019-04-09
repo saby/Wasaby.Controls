@@ -51,14 +51,12 @@
          </div>
       </Controls.Container.Scroll>
       <Controls.Popup.Opener.Dialog name="usersDialog">
-         <ws:popupOptions>
-            <ws:templateOptions usersSource="{{_usersSource}}"/>
-            <ws:template>
-               <ws:partial template="wml!Controls-demo/Container/resources/UsersList" on:itemClick="_selectUser()"
-                           attr:class="ControlsDemo-Scroll__usersList" showShadow="{{_showShadow}}"
-                           showScrollbar="{{_showScrollbar}}"/>
-            </ws:template>
-         </ws:popupOptions>
+         <ws:templateOptions usersSource="{{_usersSource}}"/>
+         <ws:template>
+            <ws:partial template="wml!Controls-demo/Container/resources/UsersList" on:itemClick="_selectUser()"
+                        attr:class="ControlsDemo-Scroll__usersList" showShadow="{{_showShadow}}"
+                        showScrollbar="{{_showScrollbar}}"/>
+         </ws:template>
       </Controls.Popup.Opener.Dialog>
    </div>
 </div>

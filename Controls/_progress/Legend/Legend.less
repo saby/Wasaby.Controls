@@ -1,32 +1,27 @@
 .controls-legend-line_theme-@{themeName} {
-   display: block;
+   display: flex;
    padding: 2px;
+   justify-content: space-between;
 }
 .controls-legend-value_theme-@{themeName} {
    display: inline-block;
    margin: 2px;
    margin-left: 20px;
-   float: right;
 }
 .controls-legend-title_theme-@{themeName} {
    display: inline-block;
-   margin: 2px; 
+   margin: 2px;
+   white-space: nowrap;
 }
 
 .controls-legend-color_theme-@{themeName} {
    display: inline-block;
    border-radius: 2px;
-   float: left;
    width: 16px;
    margin: 2px 8px 2px 2px;
    height: 16px;
 }
-.controls-legend-color_theme-@{themeName}:hover {
-   background: #fdecd9;
-   display: inline-block;
-   border-radius: 2px;
-   float: left;
-   width: 16px;
-   margin: 2px 8px 2px 2px;
-   height: 16px;
+.controls-legend-line_titleWrapper {
+   display: flex;
+   align-items: center;
 }

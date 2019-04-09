@@ -5,7 +5,7 @@ define('Controls/Toolbar', [
 
    /**
     * Graphical control element on which buttons, menu and other input or output elements are placed.
-    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
+    * <a href="/materials/demo-ws4-toolbar">Demo-example</a>.
     *
     * @class Controls/Toolbar
     * @extends Core/Control

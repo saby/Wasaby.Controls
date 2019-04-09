@@ -38,7 +38,9 @@
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:itemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+         <ws:partial
+                     shadowVisibility="onhover"
+                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>
@@ -54,7 +56,9 @@
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:itemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+         <ws:partial
+                     shadowVisibility="hidden"
+                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>

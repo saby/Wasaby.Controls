@@ -1,5 +1,5 @@
 <div class="demo-EditableGrid">
-   <Controls.grids:View
+   <Controls.grid:View
       source="{{_source}}"
       keyProperty="id"
       markerVisibility="hidden"
@@ -12,5 +12,5 @@
       <ws:itemTemplate>
          <ws:partial template="wml!Controls-demo/List/Grid/resources/EditableGrid/Item" documentSignMemory="{{_documentSignMemory}}"/>
       </ws:itemTemplate>
-   </Controls.grids:View>
+   </Controls.grid:View>
 </div>

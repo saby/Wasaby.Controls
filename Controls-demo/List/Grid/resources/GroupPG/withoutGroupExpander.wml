@@ -1,4 +1,4 @@
-<ws:partial template="Controls/grids:GroupTemplate" itemData="{{itemData}}" expander="{{false}}">
+<ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expander="{{false}}">
     <ws:contentTemplate>
         <span>{{itemData.item}}</span>
     </ws:contentTemplate>

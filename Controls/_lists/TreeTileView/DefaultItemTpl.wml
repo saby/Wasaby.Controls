@@ -1,5 +1,6 @@
 <ws:template name="folderTpl">
    <div class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+            {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
             {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
             {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
             {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
@@ -43,6 +44,7 @@
          itemData="{{itemData}}"
          invisible="{{invisible}}"
          marker="{{marker}}"
+         shadowVisibility="{{shadowVisibility}}"
          markerVisibility="{{markerVisibility}}"
          contentTemplate="{{contentTemplate}}"
          itemActionsTemplate="{{itemActionsTemplate}}"

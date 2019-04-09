@@ -61,6 +61,7 @@ define(['Controls/List/TileView/TileViewModel', 'Types/collection'], function(Ti
             itemsHeight: 200,
             imageProperty: 'image',
             defaultItemWidth: 250,
+            defaultShadowVisibility: 'visible',
             itemCompressionCoefficient: 0.7
          });
       });

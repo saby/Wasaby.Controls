@@ -1,3 +1,21 @@
+/**
+ * List library
+ * @library Controls/list
+ * @includes AddButton Controls/_lists/AddButton
+ * @includes Container Controls/_lists/Container
+ * @includes EmptyTemplate wml!Controls/_lists/emptyTemplate
+ * @includes GroupTemplate wml!Controls/_lists/GroupTemplate
+ * @includes ItemTemplate wml!Controls/_lists/ItemTemplate
+ * @includes View Controls/_lists/List
+ * @includes Mover Controls/_lists/Mover
+ * @includes Remover Controls/_lists/Remover
+ * @includes Paging Controls/_lists/Paging
+ * @includes VirtualScroll Controls/_lists/VirtualScroll
+ * @includes DataContainer Controls/_lists/Data
+ * @public
+ * @author Kraynov D.
+ */
+
 import AddButton = require('Controls/_lists/AddButton');
 import Container = require('Controls/_lists/Container');
 import EmptyTemplate = require('wml!Controls/_lists/emptyTemplate');

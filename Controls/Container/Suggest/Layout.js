@@ -112,6 +112,9 @@ define('Controls/Container/Suggest/Layout',
          
          inputActivated: function(self) {
             if (self._options.autoDropDown && !self._options.readOnly) {
+               // The delay is needed when searching, when receiving the focus of the input field, open without delay
+               self._searchDelay = 0;
+
                if (self._options.historyId && !self._searchValue) {
                   _private.openWithHistory(self);
                } else if (!self._options.suggestState) {
@@ -367,7 +370,8 @@ define('Controls/Container/Suggest/Layout',
 
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
-            
+            this._searchDelay = this._options.searchDelay;
+
             if (!shouldSearch && historyId) {
                _private.openWithHistory(this).addCallback(function(res) {
                   if (!res.length && self._options.suggestState) {

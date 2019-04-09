@@ -3,7 +3,7 @@ define([
 ], function(
    Async
 ) {
-   describe('Controls.Container.Async', function() {
+   describe('Dynamic loading Controls.Container.Async', function() {
       var async;
 
 
@@ -107,7 +107,9 @@ define([
          });
       });
       it('Update content', function() {
-         async._updateOptionsForComponent('myTemplate', {opt: '123'}, 'myTemplate');
+         var options = {opt: '123'};
+         Object.freeze(options);
+         async._updateOptionsForComponent('myTemplate', options, 'myTemplate');
          assert.equal(async.optionsForComponent.opt, '123');
          assert.equal(async.currentTemplateName, 'myTemplate');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');

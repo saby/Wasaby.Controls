@@ -40,8 +40,12 @@ define('Controls/Search/Controller',
             var switcherStr = getSwitcherStrFromData(result.data);
    
             self._loading = false;
-            self._previousViewMode = self._viewMode;
-            self._viewMode = 'search';
+
+            if (self._viewMode !== 'search') {
+               self._previousViewMode = self._viewMode;
+               self._viewMode = 'search';
+            }
+
             self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
             self._notify('filterChanged', [filter]);

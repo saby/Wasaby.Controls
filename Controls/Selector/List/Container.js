@@ -32,7 +32,7 @@ define('Controls/Selector/List/Container',
                
                selectedKeys.push(itemKey);
                added.push(itemKey);
-            } else {
+            } else if (multiSelect) {
                selectedKeys.splice(itemIndex, 1);
                removed.push(itemKey);
             }
