@@ -163,9 +163,6 @@ var ListView = BaseControl.extend(
         },
 
         _onItemSwipe: function(event, itemData) {
-            if (event.nativeEvent.direction === 'left' || event.nativeEvent.direction === 'right') {
-                event.currentTarget.focus();
-            }
             this._notify('itemSwipe', [itemData, event]);
         },
 
