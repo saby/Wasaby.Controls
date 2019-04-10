@@ -69,7 +69,7 @@ var ItemsUtil = {
         while (itemIdx >= 0) {
             item = display.at(itemIdx).getContents();
             if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
-                return display.at(itemIdx).getContents();
+                return item;
             }
             itemIdx--;
         }

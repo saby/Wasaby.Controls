@@ -17,14 +17,14 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
             width: '1fr'
          }
       ],
-      preparedColumnsWithMultiselect = 'auto 1fr auto 100px 1fr ',
-      preparedColumnsWithoutMiltiselect = '1fr auto 100px 1fr ';
+      preparedColumnsWithMultiselect = 'grid-template-columns: auto 1fr auto 100px 1fr;',
+      preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;';
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
-         assert.equal(preparedColumnsWithMultiselect, GridView._private.prepareGridTemplateColumns(gridColumns, 'visible'),
+         assert.equal(preparedColumnsWithMultiselect, GridView._private.getGridTemplateColumns(gridColumns, 'visible'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, true)".');
-         assert.equal(preparedColumnsWithoutMiltiselect, GridView._private.prepareGridTemplateColumns(gridColumns, 'hidden'),
+         assert.equal(preparedColumnsWithoutMiltiselect, GridView._private.getGridTemplateColumns(gridColumns, 'hidden'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, false)".');
       });
       it('Footer', function() {
