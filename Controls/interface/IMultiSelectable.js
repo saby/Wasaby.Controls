@@ -18,7 +18,7 @@ define('Controls/interface/IMultiSelectable', [
     * The following example creates List and sets the selectedKeys to [1, 2, 3]. Subsequent changes made to selectedKeys will be synchronized through binding mechanism.
     * TMPL:
     * <pre>
-    *    <Controls.lists:View bind:selectedKeys="_selectedKeys" />
+    *    <Controls.list:View bind:selectedKeys="_selectedKeys" />
     * </pre>
     * JS:
     * <pre>
@@ -42,7 +42,7 @@ define('Controls/interface/IMultiSelectable', [
     * The following example creates List, sets the selectedKeys to [1, 2, 3] and shows how to change message shown to the user based on selection.
     * TMPL:
     * <pre>
-    *    <Controls.lists:View on:selectedKeysChanged="onSelectedKeysChanged()" selectedKeys="{{ _selectedKeys }}" />
+    *    <Controls.list:View on:selectedKeysChanged="onSelectedKeysChanged()" selectedKeys="{{ _selectedKeys }}" />
     *    <h1>{{ _message }}</h1>
     * </pre>
     * JS:

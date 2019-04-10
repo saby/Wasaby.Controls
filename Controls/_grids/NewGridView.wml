@@ -6,7 +6,7 @@
       <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
    </ws:if>
    <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
-      <ws:partial template="Controls/lists:_forTemplate"
+      <ws:partial template="Controls/list:_forTemplate"
                   listModel="{{_listModel}}"
                   itemTemplate="{{_itemTemplate}}"
                   multiSelectTpl="{{_options.multiSelectTpl}}"

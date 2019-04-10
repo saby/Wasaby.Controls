@@ -2,14 +2,14 @@
                                on:dragStart="_dragStart()"
                                on:dragMove="_dragMove()"
                                on:dragEnd="_dragEnd()">
-    <Controls.lists:View
+    <Controls.list:View
             class="notes"
             name="notesList"
             itemsDragNDrop="{{false}}"
             source="{{_viewSource}}"
             idProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate"
+            <ws:partial template="Controls/list:ItemTemplate"
                         on:mousedown="_onMouseDownNote(itemTemplate.itemData)"
                         on:touchstart="_onMouseDownNote(itemTemplate.itemData)"
                         attr:class="{{'notes-item ' + (itemTemplate.itemData.item.get('id') === _draggingItemId ? 'notes-draggingItem')}}"
@@ -27,5 +27,5 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
 </Controls.DragNDrop.Controller>

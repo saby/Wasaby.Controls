@@ -1,4 +1,4 @@
-import {ListViewModel, BaseViewModel} from 'Controls/lists';
+import {ListViewModel, BaseViewModel} from 'Controls/list';
 
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
