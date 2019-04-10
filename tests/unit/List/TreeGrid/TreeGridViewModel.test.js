@@ -330,7 +330,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
             return 1;
          };
 
-         TreeGridViewModel._private.prepareGroupGridStyles(self, current);
+         TreeGridViewModel._private.prepareGroupGridStyles(model, current);
 
          assert.equal(current.gridGroupStyles, 'grid-row: 2; -ms-grid-row: 2;');
 
