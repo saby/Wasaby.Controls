@@ -13,6 +13,7 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"
+        forceReloadItems="{{_options.forceReloadItems}}"
         filter="{{_options.filter}}"
         navigation="{{_options.navigation}}"
         popupClassName="{{_options.popupClassName ||  (_options.showHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin')}}"
