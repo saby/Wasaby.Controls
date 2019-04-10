@@ -363,10 +363,15 @@ define([
 
          var dataLoadFired = false;
 
+         var beforeLoadToDirectionCalled = false;
+
          var cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
             },
             source: source,
             viewConfig: {
@@ -398,6 +403,7 @@ define([
             setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
                done();
             }, 100);
          }, 100);

@@ -160,6 +160,10 @@ var _private = {
         }
     },
 
+    beforeLoadToDirectionCallback: function(self, filter, cfg) {
+        filter[cfg.parentProperty] = self._root;
+    },
+
     reloadItem: function(self, key) {
         var viewModel = self._children.baseControl.getViewModel();
         var filter = cClone(self._options.filter);
@@ -246,6 +250,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrids/TreeControl.prot
     _nodesSourceControllers: null,
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
+    _beforeLoadToDirectionCallback: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -257,6 +262,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrids/TreeControl.prot
         }
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
+        this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {

@@ -1,0 +1,33 @@
+{
+  "Controls/Decorator/Money": {
+    "properties": {
+      "ws-config": {
+        "options": {
+          "value": {
+            "type": "String"
+          },
+          "title": {
+            "type": "String"
+          },
+          "style": {
+            "type": "enum",
+            "enum": {
+              "default": "default",
+              "group": "group",
+              "error": "error",
+              "accentResults": "accentResults",
+              "noAccentResults": "noAccentResults",
+              "basicRegistry": "basicRegistry",
+              "noBasicRegistry": "noBasicRegistry",
+              "accentRegistry": "accentRegistry",
+              "noAccentRegistry": "noAccentRegistry"
+            }
+          },
+          "useGrouping": {
+            "type": "Boolean"
+          }
+        }
+      }
+    }
+  }
+}

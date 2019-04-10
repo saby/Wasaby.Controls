@@ -14,7 +14,7 @@ define('Controls/List/interface/IGridControl', ['Controls/_grids/interface/IGrid
  * Set ladderProperties and render item template through the ladderWrapper:
  * <pre>
  *    <div class="demoGrid">
- *       <Controls.Grid
+ *       <Controls.grid:View
  *          ...
  *          ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
@@ -34,7 +34,7 @@ define('Controls/List/interface/IGridControl', ['Controls/_grids/interface/IGrid
  *                </ws:Object>
  *             </ws:Array>
  *          </ws:columns>
- *       </Controls.Grid>
+ *       </Controls.grid:View>
  *    </div>
  * </pre>
  */

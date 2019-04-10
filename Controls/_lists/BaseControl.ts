@@ -296,7 +296,11 @@ var _private = {
         /**/
 
         if (self._sourceController) {
-            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
+            var filter = cClone(self._options.filter);
+            if (self._options.beforeLoadToDirectionCallback) {
+                self._options.beforeLoadToDirectionCallback(filter, self._options);
+            }
+            return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 self._loadedItems = addedItems;
                 if (userCallback && userCallback instanceof Function) {
                     userCallback(addedItems, direction);
