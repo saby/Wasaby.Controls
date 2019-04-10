@@ -12,6 +12,10 @@ function isLastColumn(
 }
 
 var _private = {
+
+    // region only for browsers with partial grid support
+
+    // Using util for calculating real group-rows' index on display considering footers, headers, results
     calcGroupRowIndex: function (self, current): number {
         let groupItem = self._model.getDisplay().at(current.index);
 
@@ -25,6 +29,22 @@ var _private = {
         );
     },
 
+    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
+    prepareGroupGridStyles: function (self, current) {
+        current.rowIndex = _private.calcGroupRowIndex(self, current);
+        current.gridGroupStyles = toCssString([
+            {
+                name: 'grid-row',
+                value: current.rowIndex+1
+            },
+            {
+                name: '-ms-grid-row',
+                value: current.rowIndex+1
+            }
+        ]);
+    },
+
+    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     getFooterStyles: function (self, rowIndex, columnsCount) {
         let offsetForMultiselect = self._options.multiSelectVisibility === 'hidden' ? 0 : 1;
 
@@ -51,6 +71,8 @@ var _private = {
             },
         ]);
     },
+
+    // Using util for calculating real rows' index on display considering footers, headers, results
     calcRowIndex: function (self, current) {
         return calcRowIndexByKey(
             current.key,
@@ -60,20 +82,9 @@ var _private = {
             self._model._hierarchyRelation,
             self._model.getHasMoreStorage()
         );
-    },
-    prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = _private.calcGroupRowIndex(self, current);
-        current.gridGroupStyles = toCssString([
-            {
-                name: 'grid-row',
-                value: current.rowIndex+1
-            },
-            {
-                name: '-ms-grid-row',
-                value: current.rowIndex+1
-            }
-        ]);
     }
+    // endregion
+
 };
 
 var
@@ -125,6 +136,8 @@ var
 
             current.isLastColumn = isLastColumn;
 
+            // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
+            // with grid-row and grid-column
             if (isPartialSupport) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
@@ -176,6 +189,7 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
             };
 
+            // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
             if (current.nodeFooter) {
                 current.nodeFooter.columns = current.columns;
                 current.nodeFooter.isPartialSupport = isPartialSupport;

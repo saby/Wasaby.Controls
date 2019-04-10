@@ -113,6 +113,10 @@ var
                     return NoGridSupportLayout;
             }
         },
+
+        // For partial grid support.
+        // Need to remember true width of columns for right alignment editing row.
+        // Editing row is subgrid and need to set width of its columns in px.
         setCurrentColumnsWidth: function (self, container: HTMLElement) {
             //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             let cells = (container[0] || container).getElementsByClassName('controls-Grid__row-cell');
@@ -175,6 +179,7 @@ var
         },
 
         _onItemMouseEnter: function (event, itemData) {
+            // In partial grid supporting browsers hovered item calculates in code
             if (isPartialSupport && itemData.item !== this._hoveredItem) {
                 this._listModel.setHoveredItem(itemData.item);
             }

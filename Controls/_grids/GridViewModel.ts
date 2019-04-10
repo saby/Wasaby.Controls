@@ -315,10 +315,13 @@ var
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         },
 
+        // For partial grid support only. Calculates valid grid styles for edit at place in old browsers
         getEditingRowStyles: function (self, rowIndex) {
 
+            // display: grid with prefixes
             let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
 
+            // value 'auto' will break alignment in subgrid(editing row).
             let columnsWidths: Array<string|number> = [];
 
             self._columns.forEach(column => {
@@ -329,8 +332,10 @@ var
                 }
             });
 
+            // grid column template with prefixes
             styles += getTemplateColumnsStyle(columnsWidths);
 
+            // grid-row and grid-column with prefixes
             styles += getCellStyles(rowIndex+1, 0, null, 3);
 
             return styles;
@@ -540,6 +545,7 @@ var
                );
             }
 
+            // For browsers with partial grid support need to set its grid-row and grid-column
             if (isPartialSupport) {
                 headerColumn.gridCellStyles = getCellStyles(0, columnIndex);
             }
@@ -615,6 +621,7 @@ var
             }
             resultsColumn.cellClasses = cellClasses;
 
+            // For browsers with partial grid support need to set its grid-row and grid-column
             if (isPartialSupport) {
                 resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
                 resultsColumn.gridCellStyles = getCellStyles(resultsColumn.rowIndex, columnIndex);
@@ -786,12 +793,6 @@ var
             this._model.setItemPadding(itemPadding);
         },
 
-        setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
-            for (let i = 0; i< this._columns.length; i++){
-                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
-            }
-        },
-
         getSwipeItem: function() {
             return this._model.getSwipeItem();
         },
@@ -848,6 +849,7 @@ var
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
+                    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
                     if (isPartialSupport) {
                         current.rowIndex = _private.calcGroupRowIndex(this, current);
                         current.gridGroupStyles = toCssString([
@@ -946,6 +948,8 @@ var
                             'span 1;';
                     }
                 }
+
+                // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
                 if (isPartialSupport) {
                     currentColumn.gridCellStyles = getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
@@ -967,50 +971,6 @@ var
             return this._model.getNext();
         },
 
-        getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
-            let
-                column,
-                columnsWidths: Array<string|number> = [];
-
-            for (let i = 0; i<this._columns.length; i++) {
-                column = this._columns[i];
-
-                // Если отрисовано больше одной записи, то необходимо руками считать ширину, т.к. редактируемая строка
-                // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
-                if (column.width && column.width === 'auto' && this.getCount() > 1) {
-
-                    let referenceRowIndex = rowIndex !== 0 ? 0 : 1;
-                    columnsWidths.push(gridCells[referenceRowIndex].getBoundingClientRect().width);
-                } else {
-                    columnsWidths.push(column.width || '1fr');
-                }
-            }
-
-            return getTemplateColumnsStyle(columnsWidths);
-        },
-
-        isFullGridSupport: function():boolean{
-            return isFullSupport;
-        },
-        isPartialGridSupport: function():boolean{
-            return isPartialSupport;
-        },
-        isNoGridSupport: function():boolean{
-            return isNoSupport;
-        },
-        setHoveredItem: function (item) {
-            this._model.setHoveredItem(item);
-        },
-
-        getHoveredItem: function () {
-            return this._model.getHoveredItem();
-        },
-        getDisplay: function () {
-            return this._model.getDisplay();
-        },
-        getEmptyTemplateStyles() {
-            return _private.getEmptyTemplateStyles(this);
-        },
         isLast: function() {
             return this._model.isLast();
         },
@@ -1175,6 +1135,42 @@ var
             return this._model.getStartIndex();
         },
 
+        setHoveredItem: function (item) {
+            this._model.setHoveredItem(item);
+        },
+
+        getHoveredItem: function () {
+            return this._model.getHoveredItem();
+        },
+
+        getDisplay: function () {
+            return this._model.getDisplay();
+        },
+
+        isFullGridSupport: function():boolean{
+            return isFullSupport;
+        },
+
+        isPartialGridSupport: function():boolean{
+            return isPartialSupport;
+        },
+
+        isNoGridSupport: function():boolean{
+            return isNoSupport;
+        },
+
+        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
+            for (let i = 0; i< this._columns.length; i++){
+                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
+            }
+        },
+
+        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        getEmptyTemplateStyles() {
+            return _private.getEmptyTemplateStyles(this);
+        },
+
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -1183,6 +1179,7 @@ var
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         }
+
     });
 
 GridViewModel._private = _private;
