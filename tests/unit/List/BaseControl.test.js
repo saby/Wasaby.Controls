@@ -176,7 +176,7 @@ define([
                view: 'infinity'
             },
             virtualScrolling: true,
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: lists.ListViewModel,
             source: source
          };
          var itemsContainer = {
