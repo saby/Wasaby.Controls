@@ -11,7 +11,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
       var DialogTemplate = Control.extend({
 
          /**
-          * Base template of stack panel. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#template-standart See more}.
+          * Base template of stack panel. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart See more}.
           * @class Controls/Popup/Templates/Stack/StackTemplate
           * @extends Core/Control
           * @control
