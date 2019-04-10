@@ -15,7 +15,6 @@
         emptyText="{{_options.emptyText}}"
         groupingKeyCallback="{{_options.groupingKeyCallback}}"
         groupTemplate="{{_options.groupTemplate}}"
-        forceReloadItems="{{_options.forceReloadItems}}"
         filter="{{_options.filter}}"
         navigation="{{_options.navigation}}"
         multiSelect="{{_options.multiSelect}}"
