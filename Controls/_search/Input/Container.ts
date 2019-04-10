@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Search/Input/Container');
+import template = require('wml!Controls/_search/Input/Container');
 
 /**
  * Special container for component with {@link Controls/Input/interface/IInputField}.

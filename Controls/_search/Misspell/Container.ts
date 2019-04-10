@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Search/Misspell/Container');
+import template = require('wml!Controls/_search/Misspell/Container');
 
 
 export = Control.extend({

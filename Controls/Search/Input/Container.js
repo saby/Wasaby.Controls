@@ -1,6 +1,6 @@
 define('Controls/Search/Input/Container',
-   ['Controls/_search/Input/Container'],
+   ['Controls/search'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.InputContainer;
    });

@@ -1,6 +1,6 @@
 define('Controls/Search/Controller',
-   ['Controls/_search/Controller'],
-   function(Control) {
+   ['Controls/search'],
+   function (Control) {
       'use strict';
-      return Control;
+      return Control.Controller;
    });

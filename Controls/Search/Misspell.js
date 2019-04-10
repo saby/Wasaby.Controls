@@ -1,6 +1,6 @@
 define('Controls/Search/Misspell',
-   ['Controls/_search/Misspell'],
+   ['Controls/search'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Misspell;
    });
