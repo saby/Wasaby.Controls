@@ -898,6 +898,11 @@ var
                 current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
             }
 
+            current.getCurrentColumnKey = function() {
+                return self._columnsVersion + '_' +
+                    (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+            };
+
             current.getCurrentColumn = function() {
                 var
                     currentColumn = {
@@ -914,10 +919,6 @@ var
                         isActive: current.isActive,
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
-                        },
-                        getKey: function() {
-                            return self._columnsVersion + '_' +
-                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
                         },
                         _preferVersionAPI: true
                     };
