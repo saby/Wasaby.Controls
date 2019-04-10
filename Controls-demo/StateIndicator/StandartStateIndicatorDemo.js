@@ -67,17 +67,15 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
                   {value: 47, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}],
             ];
          },
-         _mouseLeaveHandler: function(){
-             this._notify('closeInfoBox', [1500], {bubbling: true});
-         },
          _mouseEnterHandler: function(e, _item){
-         	var config = {
-              target: _item,
-              position: 'tl',
-              template: popupTemplate,
-              templateOptions: {data: this._datas[_item.parentElement.parentElement.getAttribute("index")]}
-         	};
-         	this._notify('openInfoBox', [config], {bubbling: true});
+            var config = {
+         	     target: _item,
+               position: 'tl',
+               showDelay: 1000,
+               template: popupTemplate,
+               templateOptions: {data: this._datas[_item.parentElement.parentElement.getAttribute("index")]}
+          	};
+         	this._children.IBOpener.open(config);
          }
       });
    return Index;
