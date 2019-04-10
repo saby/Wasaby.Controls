@@ -111,6 +111,10 @@ class VirtualScroll {
         this.updateItemsSizes();
     }
 
+    get ItemsContainer(): ItemsContainer {
+        return this._itemsContainer;
+    }
+
     /**
      * @constructor
      * @this  {VirtualScroll}

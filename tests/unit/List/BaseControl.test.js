@@ -159,6 +159,44 @@ define([
          }, 1);
       });
 
+      it('should set itemsContainer in VS if null', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: ListViewModel,
+            source: source
+         };
+         var itemsContainer = {
+            qwe: 123
+         },
+             ctrl = new BaseControl(cfg);
+
+         assert.isUndefined(ctrl._virtualScroll);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(!!ctrl._virtualScroll);
+
+         ctrl._virtualScroll.updateItemsSizes = function(){};
+         ctrl._children.listView = {
+            getItemsContainer: function() {
+               return itemsContainer;
+            }
+         };
+
+         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
+         ctrl._viewResize();
+         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
+      });
+
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
          var cfg = {
             viewName: 'Controls/List/ListView',
