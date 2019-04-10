@@ -405,8 +405,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_lists/EditInPlace.prototyp
                     previousWidth = currentWidth;
                 }
 
-                // EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
-                // Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
+                /**
+                 * When editing starts, EditingRow calls this.activate() to focus first focusable element.
+                 * But if a user has clicked on an editable field, we can do better - we can set caret exactly
+                 * where the user has clicked. But before moving the caret we should manually focus the right field.
+                 */
                 target.focus();
 
                 lastLetterWidth = currentWidth - previousWidth;
