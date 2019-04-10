@@ -79,7 +79,7 @@ define(
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
-            assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Stack/StackContent');
+            assert.equal(itemConfig.popupOptions.content, 'wml!Controls/_popup/Opener/Stack/StackContent');
          });
 
          it('stack maximized popup position', () => {
