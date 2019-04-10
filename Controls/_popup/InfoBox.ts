@@ -1,9 +1,9 @@
-import Control from 'Core/Control';
-import template from 'wml!Controls/_popup/InfoBox/InfoBox';
-import InfoBoxOpener from 'Controls/_popup/Opener/InfoBox';
-import TouchContext from 'Controls/Context/TouchContextField';
-import getZIndex from 'Controls/Utils/getZIndex';
-import Env from 'Env/Env';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popup/InfoBox/InfoBox');
+import InfoBoxOpener = require('Controls/_popup/Opener/InfoBox');
+import TouchContext = require('Controls/Context/TouchContextField');
+import getZIndex = require('Controls/Utils/getZIndex');
+import Env = require('Env/Env');
       
 
       /**

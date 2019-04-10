@@ -1,4 +1,4 @@
-import getDimensions from 'Controls/Utils/getDimensions';
+import getDimensions = require('Controls/Utils/getDimensions');
       export = {
          get: function(target) {
             if (!target) {

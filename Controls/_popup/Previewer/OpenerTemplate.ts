@@ -1,7 +1,7 @@
-import Control from 'Core/Control';
-import Deferred from 'Core/Deferred';
-import template from 'wml!Controls/_popup/Previewer/OpenerTemplate';
-import Utils from 'View/Executor/Utils';
+import Control = require('Core/Control');
+import Deferred = require('Core/Deferred');
+import template = require('wml!Controls/_popup/Previewer/OpenerTemplate');
+import Utils = require('View/Executor/Utils');
 import 'Controls/Container/Async';
       
 
