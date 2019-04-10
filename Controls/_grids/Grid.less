@@ -1,4 +1,5 @@
 .controls-Grid {
+   display: -ms-grid;
    display: grid;
    width: 100%;
 }
@@ -125,13 +126,23 @@
    justify-content: center;
    text-align: center;
 }
-
+.controls-Grid__row_editing {
+   display: contents;
+}
+.controls-Grid_partial-support .controls-Grid__row_editing{
+   display: grid;
+   display: -ms-grid;
+}
 .ws-is-no-touch {
-   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
+   .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
       background-color: @background-color_Grid-row_hover;
    }
-   .controls-Grid__row:hover .controls-itemActionsV {
-      display: inline-block;
+   .controls-Grid__row:hover,
+   .controls-Grid_row-cell_hovered {
+      .controls-itemActionsV {
+         display: inline-block;
+      }
    }
 }
 
@@ -324,7 +335,8 @@
    display: none;
 }
 
-.ws-is-no-touch .controls-Grid__row:hover .controls-GridView__checkbox-onhover {
+.ws-is-no-touch .controls-Grid__row:hover .controls-GridView__checkbox-onhover,
+.ws-is-no-touch .controls-Grid_row-cell_hovered .controls-GridView__checkbox-onhover {
    display: inline-block;
 }
 
@@ -387,7 +399,8 @@
 }
 
 .ws-is-no-touch {
-   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover,
+   .controls-Grid__row_master.controls-Grid_row-cell_hovered {
       background-color: @background-color_List-masterList-item_hover;
    }
 }
