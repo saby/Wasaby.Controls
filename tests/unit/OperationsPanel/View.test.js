@@ -1,7 +1,7 @@
 define([
-   'Controls/Operations/Panel',
+   'Controls/operations',
    'Types/source',
-   'Controls/Operations/Panel/Utils'
+   'Controls/_operations/Panel/Utils'
 ], function(
    View,
    sourceLib,
@@ -58,7 +58,7 @@ define([
          };
 
       beforeEach(function() {
-         instance = new View();
+         instance = new View.Panel();
          instance._container = {
             offsetParent: 100
          };

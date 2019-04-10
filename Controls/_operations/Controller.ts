@@ -7,7 +7,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
     * Container for content that can work with multiselection.
     * Puts selection in child context.
     *
-    * @class Controls/Container/MultiSelector
+    * @class Controls/_operations/Controller
     * @extends Core/Control
     * @mixes Controls/interface/IPromisedSelectable
     * @control
@@ -15,7 +15,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
     * @public
     */
 
-   var MultiSelector = Control.extend(/** @lends Controls/Container/MultiSelector.prototype */{
+   var MultiSelector = Control.extend(/** @lends Controls/_operations/Controller.prototype */{
       _template: template,
       _selectedKeysCount: 0,
 
