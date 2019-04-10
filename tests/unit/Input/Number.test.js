@@ -58,6 +58,7 @@ define(
                'autoComplete',
                'onlyPositive',
                'selectOnClick',
+               'inputCallback',
                'showEmptyDecimals'
             ].sort());
          });
