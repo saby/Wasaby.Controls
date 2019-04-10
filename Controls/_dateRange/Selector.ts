@@ -63,6 +63,7 @@ var Component = BaseControl.extend({
                 headerType: 'link',
                 closeButtonEnabled: true,
                 quantum: this._options.ranges,
+                minQuantum: this._options.minRange,
                 rangeselect: true,
                 handlers: {
                     onChoose: this._onResultWS3.bind(this)
