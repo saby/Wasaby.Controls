@@ -1,19 +1,10 @@
-define('Controls/Operations/Panel', [
-   'Core/Control',
-   'wml!Controls/Operations/Panel/Panel',
-   'Controls/toolbars',
-   'Types/source',
-   'Controls/Operations/Panel/Utils',
-   'Controls/buttons'
-], function(
-   Control,
-   template,
-   toolbars,
-   sourceLib,
-   WidthUtils,
-   buttons
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_operations/Panel/Panel');
+import toolbars = require('Controls/toolbars');
+import sourceLib = require('Types/source');
+import WidthUtils = require('Controls/_operations/Panel/Utils');
+import buttons = require('Controls/buttons');
+
 
    var _private = {
       recalculateToolbarItems: function(self, items, toolbarWidth) {
@@ -64,7 +55,7 @@ define('Controls/Operations/Panel', [
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
     * <a href="/materials/demo-ws4-operations-panel">Demo</a>.
     *
-    * @class Controls/Operations/Panel
+    * @class Controls/_operations/Panel
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
@@ -81,22 +72,22 @@ define('Controls/Operations/Panel', [
     */
 
    /**
-    * @name Controls/Operations/Panel#rightTemplate
+    * @name Controls/_operations/Panel#rightTemplate
     * @cfg {Function} Template displayed on the right side of the panel.
     * @example
     * <pre>
-    *    <Controls.Operations.Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+    *    <Controls._operations.Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
     * </pre>
     */
 
    /**
-    * @event Controls/Operations/Panel#itemClick Occurs when an item was clicked.
+    * @event Controls/_operations/Panel#itemClick Occurs when an item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Clicked item.
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.Operations.Panel on:itemClick="onPanelItemClick()" />
+    *    <Controls._operations.Panel on:itemClick="onPanelItemClick()" />
     * </pre>
     * JS:
     * <pre>
@@ -170,5 +161,5 @@ define('Controls/Operations/Panel', [
    };
    Panel._theme = ['Controls/operations'];
 
-   return Panel;
-});
+   export = Panel;
+

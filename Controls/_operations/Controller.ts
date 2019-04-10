@@ -1,13 +1,7 @@
-define('Controls/Container/MultiSelector', [
-   'Core/Control',
-   'wml!Controls/Container/MultiSelector/MultiSelector',
-   'Controls/Utils/tmplNotify'
-], function(
-   Control,
-   template,
-   tmplNotify
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_operations/Controller/Controller');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+
 
    /**
     * Container for content that can work with multiselection.
@@ -39,5 +33,5 @@ define('Controls/Container/MultiSelector', [
       _notifyHandler: tmplNotify
    });
 
-   return MultiSelector;
-});
+   export = MultiSelector;
+

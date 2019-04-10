@@ -1,13 +1,7 @@
-define('Controls/Operations/__MultiSelector', [
-   'Core/Control',
-   'wml!Controls/Operations/__MultiSelector',
-   'Types/source'
-], function(
-   Control,
-   template,
-   source
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_operations/__MultiSelector');
+import source = require('Types/source');
+
    var _defaultItems = [{
       id: 'selectAll',
       title: rk('Всё')
@@ -68,5 +62,5 @@ define('Controls/Operations/__MultiSelector', [
       }
    });
 
-   return MultiSelector;
-});
+   export = MultiSelector;
+

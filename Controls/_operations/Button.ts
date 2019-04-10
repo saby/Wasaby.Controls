@@ -1,13 +1,11 @@
-define('Controls/Operations/Button', [
-   'Core/Control',
-   'wml!Controls/Operations/Button/Button'
-], function(Control, template) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_operations/Button/Button');
+
 
    /**
-    * Control for changing the extensibility of the "Controls/Operations/Panel".
+    * Control for changing the extensibility of the "Controls/_operations/Panel".
     *
-    * @class Controls/Operations/Button
+    * @class Controls/_operations/Button
     * @extends Core/Control
     * @mixes Controls/interface/IExpandable
     * @control
@@ -35,5 +33,5 @@ define('Controls/Operations/Button', [
       }
    });
    Button._theme = ['Controls/operations'];
-   return Button;
-});
+   export = Button;
+

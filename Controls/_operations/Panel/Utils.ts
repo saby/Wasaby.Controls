@@ -1,13 +1,7 @@
-define('Controls/Operations/Panel/Utils', [
-   'Controls/toolbars',
-   'Controls/Utils/Toolbar',
-   'Controls/Utils/getWidth'
-], function(
-   toolbars,
-   tUtil,
-   getWidthUtil
-) {
-   'use strict';
+import toolbars = require('Controls/toolbars');
+import tUtil = require('Controls/Utils/Toolbar');
+import getWidthUtil = require('Controls/Utils/getWidth');
+   
 
    var MENU_WIDTH = 0;
 
@@ -48,7 +42,7 @@ define('Controls/Operations/Panel/Utils', [
       }
    };
 
-   return {
+   export = {
 
       fillItemsType: function(keyProperty, parentProperty, items, availableWidth) {
          var
@@ -86,4 +80,4 @@ define('Controls/Operations/Panel/Utils', [
          return items;
       }
    };
-});
+

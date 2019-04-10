@@ -1,11 +1,6 @@
-define('Controls/Operations/MultiSelector', [
-   'Core/Control',
-   'wml!Controls/Operations/MultiSelector/MultiSelector'
-], function(
-   Control,
-   template
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_operations/MultiSelector/MultiSelector');
+
 
    var MultiSelector = Control.extend({
       _template: template,
@@ -37,5 +32,5 @@ define('Controls/Operations/MultiSelector', [
    });
 
    MultiSelector._theme = ['Controls/operations'];
-   return MultiSelector;
-});
+   export = MultiSelector;
+
