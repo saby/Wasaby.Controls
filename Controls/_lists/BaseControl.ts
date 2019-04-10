@@ -176,7 +176,7 @@ var _private = {
         }
         resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
-                cfg.afterReloadCallback();
+                cfg.afterReloadCallback(cfg);
             }
             return result;
         });

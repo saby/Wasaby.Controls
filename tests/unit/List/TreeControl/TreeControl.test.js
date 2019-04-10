@@ -190,7 +190,7 @@ define([
             }, 10);
          });
       });
-   
+
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
             columns: [],
@@ -212,7 +212,7 @@ define([
                }
             }
          };
-   
+
          TreeControl._private.toggleExpanded(treeControl, {
             getContents: function() {
                return {
@@ -226,10 +226,18 @@ define([
             }
          });
          TreeControl._private.createSourceController = originalCreateSourceController;
-         
+
          assert.deepEqual([{sortField: 'DESC'}], expandSorting);
       });
 
+
+      it('_private.isDeepReload', function() {
+         assert.isFalse(!!TreeControl._private.isDeepReload({}, false));
+         assert.isTrue(!!TreeControl._private.isDeepReload({}, true));
+
+         assert.isTrue(!!TreeControl._private.isDeepReload({ deepReload: true }, false));
+         assert.isFalse(!!TreeControl._private.isDeepReload({ deepReload: false}, false));
+      });
 
       it('TreeControl.reload', function(done) {
          var treeControl = correctCreateTreeControl({
