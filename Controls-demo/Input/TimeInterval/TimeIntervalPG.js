@@ -14,7 +14,7 @@ define('Controls-demo/Input/TimeInterval/TimeIntervalPG',
       var TimeIntervalPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/TimeInterval',
+         _content: 'Controls/input:TimeInterval',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

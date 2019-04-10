@@ -1181,7 +1181,7 @@
       }
     }
   },
-   "Controls/Input/TimeInterval": {
+   "Controls/input:TimeInterval": {
     "name": "Controls/Input/TimeInterval",
     "title": "A component are used to let the user enter a number.",
     "className": "Controls/Input/TimeInterval",

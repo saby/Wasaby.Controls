@@ -11,22 +11,22 @@ define('Controls/Input/TimeInterval',
       'use strict';
 
       /**
-    * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
-    * <a href="/materials/demo-ws4-input-timeinterval">Demo examples.</a>.
-    *
-    * @class Controls/Input/TimeInterval
-    * @extends Core/Control
-    * @mixes Controls/Input/interface/ITimeInterval
-    * @mixes Controls/Input/interface/IInputBase
-    * @mixes Controls/Input/interface/IInputField
-    * @mixes Controls/Input/interface/IInputTag
-    *
-    * @control
-    * @public
-    * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG
-    * @author Водолазских А.А.
-    * @category Input
-    */
+       * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
+       * <a href="/materials/demo-ws4-input-timeinterval">Demo examples.</a>.
+       *
+       * @class Controls/Input/TimeInterval
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/ITimeInterval
+       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/Input/interface/IInputField
+       * @mixes Controls/Input/interface/IInputTag
+       *
+       * @control
+       * @public
+       * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG
+       * @author Водолазских А.А.
+       * @category Input
+       */
 
       var _private = {
          validateOptions: function(options) {

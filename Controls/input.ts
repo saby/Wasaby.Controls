@@ -30,6 +30,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
+import TimeInterval from 'Controls/_input/TimeInterval';
 
 export {
     Base,
@@ -42,6 +43,7 @@ export {
     Password,
     DateBase,
     Date,
+    TimeInterval,
     BaseViewModel,
     MaskFormatBuilder,
     MaskInputProcessor
