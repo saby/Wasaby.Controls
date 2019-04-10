@@ -167,11 +167,11 @@
         <div class="type_block" test_name="button_add">
 			<div class="demo_element">
 				<span class="span_label">AddButton, включена</span>
-				<Controls.lists:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="AddButton"/>
+				<Controls.list:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="AddButton"/>
 			</div>
 			<div class="demo_element">
 				<span class="span_label">AddButton, выключена</span>
-				<Controls.lists:AddButton attr:test_name="add_button_2" readOnly="{{true}}" caption="AddButton"/>
+				<Controls.list:AddButton attr:test_name="add_button_2" readOnly="{{true}}" caption="AddButton"/>
 			</div>
         </div>
         <div class="header">Кнопка иконка в обводке</div>

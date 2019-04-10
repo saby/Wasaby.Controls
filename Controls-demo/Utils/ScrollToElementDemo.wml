@@ -4,13 +4,13 @@
          <Controls.StickyHeader>
             <div>Top header</div>
          </Controls.StickyHeader>
-         <Controls.lists:View
+         <Controls.list:View
             class="test_list_1"
             name="list"
             source="{{_viewSource}}"
             allowEmptySelection="{{false}}"
             keyProperty="id">
-         </Controls.lists:View>
+         </Controls.list:View>
          <Controls.StickyHeader position="bottom">
             <div>Bottom header</div>
          </Controls.StickyHeader>

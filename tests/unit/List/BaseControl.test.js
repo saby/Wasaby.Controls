@@ -6,7 +6,7 @@ define([
    'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',

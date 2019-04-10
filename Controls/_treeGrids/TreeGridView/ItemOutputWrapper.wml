@@ -14,7 +14,7 @@
       itemActionsPosition="{{itemActionsPosition}}"/>
 </ws:template>
 <ws:template name="itemRenderNodeFooterWrapper">
-   <ws:partial template="itemOutputLocalTemplate" currentItemTemplate="{{'Controls/lists:ItemOutputWrapper'}}"/>
+   <ws:partial template="itemOutputLocalTemplate" currentItemTemplate="{{'Controls/list:ItemOutputWrapper'}}"/>
    <ws:if data="{{!!itemData.nodeFooter}}">
       <ws:partial template="wml!Controls/_treeGrids/TreeGridView/NodeFooter" itemData="{{itemData.nodeFooter}}"/>
    </ws:if>

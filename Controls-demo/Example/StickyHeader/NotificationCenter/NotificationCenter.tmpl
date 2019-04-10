@@ -3,14 +3,14 @@
       <Controls.StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
          <Controls.Heading caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
       </Controls.StickyHeader>
-      <Controls.lists:View source="{{dataSource}}"
+      <Controls.list:View source="{{dataSource}}"
                      idProperty="{{dataSource.getIdProperty()}}">
          <ws:itemTemplate>
             <ws:partial
                template="{{'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/' + dataSource.getIdProperty()}}"
                attr:class="example-NotificationCenter__item"/>
          </ws:itemTemplate>
-      </Controls.lists:View>
+      </Controls.list:View>
    </div>
 </ws:template>
 

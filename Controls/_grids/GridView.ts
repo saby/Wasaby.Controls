@@ -1,5 +1,5 @@
 import cDeferred = require('Core/Deferred');
-import {ListView} from 'Controls/lists';
+import {ListView} from 'Controls/list';
 import GridViewTemplateChooser = require('wml!Controls/_grids/GridViewTemplateChooser');
 import DefaultItemTpl = require('wml!Controls/_grids/Item');
 import ColumnTpl = require('wml!Controls/_grids/Column');

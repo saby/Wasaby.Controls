@@ -1,10 +1,10 @@
-<Controls.lists:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
+<Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
    <div>
-      <Controls.lists:Mover name="listMover"/>
+      <Controls.list:Mover name="listMover"/>
       <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
-         <Controls.lists:Container>
+         <Controls.list:Container>
             <Controls.List.MultiSelector>
-               <Controls.lists:View
+               <Controls.list:View
                        on:dragStart="_dragStart()"
                        on:dragEnd="_dragEnd()"
                        class="demo-DragNDrop__list"
@@ -13,7 +13,7 @@
                        itemsReadyCallback="{{_itemsReadyCallback}}"
                        itemActions="{{_itemActions}}">
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate" attr:class="demo-DragNDrop__item">
+                     <ws:partial template="Controls/list:ItemTemplate" attr:class="demo-DragNDrop__item">
                         <ws:contentTemplate>
                            <div class="demo-DragNDrop__itemContent">
                               <img class="demo-DragNDrop__icon" src="{{itemTemplate.itemData.item.get('image')}}" />
@@ -32,9 +32,9 @@
                         additionalText="{{draggingTemplate.entity._options.additionalText}}">
                      </ws:partial>
                   </ws:draggingTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.List.MultiSelector>
-         </Controls.lists:Container>
+         </Controls.list:Container>
       </Controls.Container.MultiSelector>
    </div>
-</Controls.lists:DataContainer>
+</Controls.list:DataContainer>
