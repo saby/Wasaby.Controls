@@ -109,7 +109,7 @@ define([
 
       it('getter ItemsContainer', function() {
          var
-             vsInstance = new VirtualScroll({}),
+             vsInstance = new list.VirtualScroll({}),
              container = {
                 children: [
                    { offsetHeight: 20 },
