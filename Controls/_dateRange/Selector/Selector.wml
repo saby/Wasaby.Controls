@@ -1,16 +1,14 @@
-<div class="controls-DateRangeLink">
-   <div class="controls-DateRangeLink__wrapper">
+<div class="controls-DateRangeSelector">
       <Controls.Input.Date.LinkView
          scope="{{_options}}"
          bind:startValue="_rangeModel.startValue"
          bind:endValue="_rangeModel.endValue"
          on:linkClick="_openDialog()"
-         attr:class="controls-DateRangeLink__view"
+         attr:class="controls-DateRangeSelector__view {{_isMinWidth ? 'controls-DateRangeSelector__view_minWidth'}}"
       />
 
       <Controls.Popup.Opener.Sticky name="opener"
                                     template="SBIS3.CONTROLS/Date/RangeBigChoose"
                                     closeOnOutsideClick="{{true}}">
       </Controls.Popup.Opener.Sticky>
-   </div>
 </div>
