@@ -20,7 +20,7 @@
                bind:value="_value"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               style="linkMain"
+               style="secondary" viewMode="link"
 			   attr:test_name="months_range"
             />
          </div>

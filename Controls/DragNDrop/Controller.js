@@ -79,7 +79,7 @@ define('Controls/DragNDrop/Controller',
       /**
        * Container allows you to handle drag'n'drop events on the page.
        * The control must be inside Controls/DragNDrop/Container.
-       * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+       * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
        * @class Controls/DragNDrop/Controller
        * @extends Core/Control
        * @control

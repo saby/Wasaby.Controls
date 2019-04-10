@@ -6,7 +6,7 @@ define([
    'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
@@ -2754,7 +2754,6 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
-
          var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
 
          instance.getViewModel()._notify('onListChange', 'indexesChanged');

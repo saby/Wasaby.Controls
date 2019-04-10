@@ -11,7 +11,7 @@ define('Controls/DragNDrop/Container',
        * It tracks controller events and notifies other controllers about them.
        * The container is responsible for displaying and positioning the template specified in the draggingTemplate option at the controller.
        * Drag and drop the entity only works inside Controls/DragNDrop/Container.
-       * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+       * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
        * @class Controls/DragNDrop/Container
        * @extends Core/Control
        * @control

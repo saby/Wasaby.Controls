@@ -1,4 +1,4 @@
-<ws:partial template="Controls/lists:EmptyTemplate">
+<ws:partial template="Controls/list:EmptyTemplate">
     <ws:contentTemplate>
         <span>No data</span>
     </ws:contentTemplate>

@@ -1,7 +1,7 @@
 <Controls.Container.Scroll shadowVisibility="{{showShadow}}" scrollbarVisibility="{{showScrollbar}}">
-   <Controls.lists:View source="{{messagesSource}}" keyProperty="id" name="{{nameList}}">
+   <Controls.list:View source="{{messagesSource}}" keyProperty="id" name="{{nameList}}">
       <ws:itemTemplate>
-         <ws:partial template="Controls/lists:ItemTemplate">
+         <ws:partial template="Controls/list:ItemTemplate">
             <ws:contentTemplate>
                <div>
                   <ws:partial user="{{users.getRecordById(itemTemplate.itemData.item.get('user'))}}"
@@ -19,5 +19,5 @@
             </ws:contentTemplate>
          </ws:partial>
       </ws:itemTemplate>
-   </Controls.lists:View>
+   </Controls.list:View>
 </Controls.Container.Scroll>

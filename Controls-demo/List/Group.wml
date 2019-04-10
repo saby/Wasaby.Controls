@@ -1,13 +1,13 @@
 <div>
    <div style="background-color: #55AA55; padding: 12px 0;">with default group template</div>
-   <Controls.lists:View
+   <Controls.list:View
       source = "{{_viewSource}}"
       displayProperty="title"
 	   attr:class="ControlsDemo-ListGroupDemo__groupsDefault"
       keyProperty="id"
       groupingKeyCallback="{{_groupingKeyCallback}}"/>
    <div style="background-color: #55AA55; padding: 12px 0;">with custom group template</div>
-   <Controls.lists:View
+   <Controls.list:View
       source = "{{_viewSource}}"
       displayProperty="title"
 	   attr:class="ControlsDemo-ListGroupDemo__groupsCustomTemplate"
@@ -17,5 +17,5 @@
       <ws:groupTemplate>
          <ws:partial template="wml!Controls-demo/List/DemoGroupTemplate"></ws:partial>
       </ws:groupTemplate>
-   </Controls.lists:View>
+   </Controls.list:View>
 </div>

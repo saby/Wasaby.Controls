@@ -40,7 +40,7 @@ define('Controls/Input/interface/ISuggest', [
     *    <Controls.Container.Suggest.List attr:class="myClass">
     *       <Controls.list:View keyProperty="id">
     *          <ws:itemTemplate>
-    *             <ws:partial template="Controls/lists:ItemTemplate" displayProperty="city"/>
+    *             <ws:partial template="Controls/list:ItemTemplate" displayProperty="city"/>
     *          </ws:itemTemplate>
     *       </Controls.list:View>
     *    </Controls.Container.Suggest.List>

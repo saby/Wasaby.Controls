@@ -2,7 +2,7 @@ define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
    'Core/Control',
    'wml!Controls-demo/Suggest/resources/SuggestTabTemplate',
    'Types/source',
-   'Controls/lists'
+   'Controls/list'
 ], function(Control, template, sourceLib) {
    
    'use strict';

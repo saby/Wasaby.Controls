@@ -4,6 +4,16 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/String');
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 
+/**
+ * Editor for string type.
+ * @class Controls/_propertyGrid/defaultEditors/String
+ * @extends Core/Control
+ * @interface Controls/_propertyGrid/IEditor
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
 // @ts-ignore
 class StringEditor extends Control implements IEditor {
     protected _template: Function = template;
@@ -19,6 +29,7 @@ class StringEditor extends Control implements IEditor {
 
     _inputCompleted(event: Event, value: string): void {
         if (this.initialValue !== value) {
+            this.initialValue = value;
             this._notify('propertyValueChanged', [value], {bubbling: true});
         }
     }

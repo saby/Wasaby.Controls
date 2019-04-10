@@ -1,4 +1,4 @@
-<Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
+<Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
    <div>
       <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
 
@@ -8,7 +8,7 @@
          События окна <Controls.input:Text bind:value="_eventText" class="demo-PopupEditOpener__eventText"/>
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
-            <Controls.lists:Container>
+            <Controls.list:Container>
                <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   leftPadding="S"
@@ -22,7 +22,7 @@
                   itemActions="{{_itemActions}}"
                   columns="{{gridColumns}}">
                </Controls.grid:View>
-            </Controls.lists:Container>
+            </Controls.list:Container>
          </Controls.Container.Scroll>
       </div>
 
@@ -36,4 +36,4 @@
          </Controls.Popup.Opener.Edit>
       </Controls.Popup.Opener.Edit.Container>
    </div>
-</Controls.lists:DataContainer>
+</Controls.list:DataContainer>

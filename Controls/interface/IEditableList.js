@@ -51,7 +51,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to prevent editing of an element if it matches condition:
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
@@ -67,7 +67,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to read item from BL and open it for editing.
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
@@ -82,7 +82,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing with an item created on the client.
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
@@ -121,7 +121,7 @@ define('Controls/interface/IEditableList', [
     * <pre>
     *    <Controls.list:View on:afterBeginEdit="afterBeginEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
-    *       <Controls.lists:AddButton />
+    *       <Controls.list:AddButton />
     *    </ws:if>
     * </pre>
     * JS:
@@ -149,7 +149,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to prevent the end of editing of an element if it matches condition:
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeEndEdit="beforeEndEditHandler()" />
+    *    <Controls.list:View on:beforeEndEdit="beforeEndEditHandler()" />
     * </pre>
     * JS:
     * <pre>
@@ -181,7 +181,7 @@ define('Controls/interface/IEditableList', [
     * <pre>
     *    <Controls.list:View on:afterEndEdit="afterEndEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
-    *       <Controls.lists:AddButton />
+    *       <Controls.list:AddButton />
     *    </ws:if>
     * </pre>
     * JS:
@@ -202,11 +202,11 @@ define('Controls/interface/IEditableList', [
     * @example
     * WML:
     * <pre>
-    *    <Controls.lists:View>
+    *    <Controls.list:View>
     *       <ws:editingConfig>
     *          <ws:Object editOnClick="{{true}}" showToolbar="{{true}}" />
     *       </ws:editingConfig>
-    *    </Controls.lists:View>
+    *    </Controls.list:View>
     * </pre>
     */
 
@@ -221,7 +221,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing of an item.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -247,7 +247,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing of an item.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -270,7 +270,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to end editing and commit changes.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -293,7 +293,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to end editing and discard changes.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>

@@ -1,4 +1,4 @@
-import {ListViewModel, BaseViewModel} from 'Controls/lists';
+import {ListViewModel, BaseViewModel} from 'Controls/list';
 
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
@@ -504,11 +504,13 @@ var
             return this._options.resultsPosition;
         },
 
-        getResultsTemplate: function() {
-            if (this._options.results) {
-                return this._options.results.template;
-            }
-            return this._options.resultsTemplate;
+        getStyleForCustomResultsTemplate: function() {
+            return _private.getColspan(
+               this._options.multiSelectVisibility,
+               0,
+               Env.detection.isNotFullGridSupport,
+               this._columns.length
+            );
         },
 
         _prepareResultsColumns: function(columns, multiSelectVisibility) {
@@ -1013,6 +1015,10 @@ var
 
         getChildren: function() {
             return this._model.getChildren.apply(this._model, arguments);
+        },
+
+        getStartIndex(): number {
+            return this._model.getStartIndex();
         },
 
         destroy: function() {
