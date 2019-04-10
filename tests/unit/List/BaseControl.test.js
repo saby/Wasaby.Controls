@@ -2754,7 +2754,6 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
-
          var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
 
          instance.getViewModel()._notify('onListChange', 'indexesChanged');
