@@ -8,7 +8,7 @@
    />
 
    <Controls.Popup.Opener.Sticky name="opener"
-                                 template="Controls/Date/PeriodLiteDialog"
+                                 template="Controls/dateLitePopup"
                                  closeOnOutsideClick="{{true}}"
                                  on:result="_onResult()">
       <ws:direction vertical="bottom" horizontal="center"/>
