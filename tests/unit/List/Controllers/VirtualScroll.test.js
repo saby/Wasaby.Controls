@@ -107,6 +107,27 @@ define([
          assert.deepEqual(container, vsInstance._itemsContainer);
       });
 
+      it('getter ItemsContainer', function() {
+         var
+             vsInstance = new list.VirtualScroll({}),
+             container = {
+                children: [
+                   { offsetHeight: 20 },
+                   { offsetHeight: 45 },
+                   { offsetHeight: 10 },
+                   { offsetHeight: 44 },
+                   { offsetHeight: 78 },
+                   { offsetHeight: 45 },
+                   { offsetHeight: 92 }
+                ]
+             };
+         vsInstance.updateItemsSizes = function() {};
+         vsInstance.ItemsContainer = container;
+
+
+         assert.deepEqual(container, vsInstance.ItemsContainer);
+      });
+
       it('seter ItemsCount', function() {
          var
             vsInstance = new list.VirtualScroll({});
