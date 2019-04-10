@@ -13,7 +13,7 @@
               </span>
            </ws:if>
            <ws:else>
-              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" on:click="_onClick()"/>
+              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" viewMode="{{_options.viewMode}}" on:click="_onClick()"/>
            </ws:else>
         </span>
         <ws:if data="{{ _options.clearButtonVisibility && _options.startValue }}">
