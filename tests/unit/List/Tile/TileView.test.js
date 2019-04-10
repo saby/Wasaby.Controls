@@ -220,10 +220,6 @@ define(['Controls/List/TileView/TileView',
          cfg.tileScalingMode = 'none';
          tileView.saveOptions(cfg);
 
-         // Из-за перехода на новое название опции нужно было переложить её на состояние.
-         // В 19.400 этого кода уже не будет. т.к. от состояния откажемся.
-         tileView._tileScalingMode = 'none';
-
          tileView._setHoveredItem({
             key: 'itemKey1'
          }, {
@@ -379,18 +375,10 @@ define(['Controls/List/TileView/TileView',
       it('_getZoomCoefficient', function() {
          cfg.tileScalingMode = 'outside';
          tileView.saveOptions(cfg);
-
-         // Из-за перехода на новое название опции нужно было переложить её на состояние.
-         // В 19.400 этого кода уже не будет. т.к. от состояния откажемся.
-         tileView._tileScalingMode = 'outside';
          assert.equal(tileView._getZoomCoefficient(), 1.5);
 
          cfg.tileScalingMode = 'none';
          tileView.saveOptions(cfg);
-
-         // Из-за перехода на новое название опции нужно было переложить её на состояние.
-         // В 19.400 этого кода уже не будет. т.к. от состояния откажемся.
-         tileView._tileScalingMode = 'none';
          assert.equal(tileView._getZoomCoefficient(), 1);
       });
 
