@@ -1,5 +1,5 @@
 define('Controls/Operations/Panel',
-   ['Controls/_operation/Panel'],
+   ['Controls/_operations/Panel'],
    function(Control) {
       'use strict';
       return Control;
