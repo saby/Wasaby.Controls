@@ -238,8 +238,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
          
          _openSubDropdown: function(event, item) {
             var config;
-            
-            if (this._subDropdownOpened) {
+
+            // _openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
+            // just check _children to make sure, that the control isnt destroyed
+            if (this._subDropdownOpened && this._children.subDropdownOpener) {
                config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             }
