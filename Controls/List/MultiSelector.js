@@ -1,4 +1,4 @@
-define('Controls/List/MultiSelector', ['Controls/_operations/MultiSelector'], function(Control) {
+define('Controls/List/MultiSelector', ['Controls/_operations/Container'], function(Control) {
 /**
  * Container for list components.
  *
