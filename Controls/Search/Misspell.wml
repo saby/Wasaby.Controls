@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/Search/Misspell" scope="{{_options}}" />
