@@ -214,4 +214,6 @@ var
         }
     });
 
+TreeGridViewModel._private = _private;
+
 export = TreeGridViewModel;

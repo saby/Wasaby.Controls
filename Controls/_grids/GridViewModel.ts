@@ -325,7 +325,7 @@ var
             let columnsWidths: Array<string|number> = [];
 
             self._columns.forEach(column => {
-                if (column.width && column.width === 'auto' && self.getCount() > 1) {
+                if (self.getCount() > 1 && ((column.width && column.width === 'auto') || !column.width)) {
                     columnsWidths.push(column.realWidth || '1fr')
                 } else {
                     columnsWidths.push(column.width);
@@ -1157,6 +1157,28 @@ var
 
         isNoGridSupport: function():boolean{
             return isNoSupport;
+        },
+
+        getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
+            let
+                column,
+                columnsWidths: Array<string|number> = [];
+
+            for (let i = 0; i<this._columns.length; i++) {
+                column = this._columns[i];
+
+                // Если отрисовано больше одной записи, то необходимо руками считать ширину, т.к. редактируемая строка
+                // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
+                if (column.width && column.width === 'auto' && this.getCount() > 1) {
+
+                    let referenceRowIndex = rowIndex !== 0 ? 0 : 1;
+                    columnsWidths.push(gridCells[referenceRowIndex].getBoundingClientRect().width);
+                } else {
+                    columnsWidths.push(column.width || '1fr');
+                }
+            }
+
+            return getTemplateColumnsStyle(columnsWidths);
         },
 
         // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column

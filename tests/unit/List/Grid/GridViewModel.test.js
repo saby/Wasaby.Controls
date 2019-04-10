@@ -992,8 +992,30 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
                    'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
             }
+         });
+
+         it('getEditingRowStyles', function () {
+            var
+                gridViewModel = new GridViewModel(cfg);
+
+            gridViewModel._columns = [
+               {
+                  width: '1fr'
+               },
+               {
+                  width: null,
+                  realWidth: '127px'
+               },
+               {
+                  width: 'auto'
+               }
+            ];
+
+            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+                'display: -ms-grid; grid-template-columns: 1fr 127px 1fr;grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 3;');
 
          });
+
          it('_prepareHeaderColumns', function() {
             assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
             gridViewModel._prepareHeaderColumns([], false);
