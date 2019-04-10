@@ -20,7 +20,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
 
    /**
     * Standard dragging template for the list.
-    * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+    * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/DragNDrop/DraggingTemplate
     * @extends Core/Control
     * @mixes Controls/DragNDrop/DraggingTemplate/Styles

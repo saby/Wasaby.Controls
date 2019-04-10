@@ -1,6 +1,6 @@
 /**
  * Interface to move elements of the list by using drag'n'drop.
- * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+ * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  *
  * @interface Controls/_lists/interface/IDraggable
  * @public

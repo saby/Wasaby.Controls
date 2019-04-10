@@ -56,7 +56,7 @@ define('Controls/interface/IFilterButton', [
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
     * </pre>
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
@@ -85,7 +85,7 @@ define('Controls/interface/IFilterButton', [
     * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
     * @remark
     * As a template, it is recommended to use the control {@link Controls/Filter/Button/Panel }
-    * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>here</a>.
+    * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
     * Important: for lazy loading template in the option give the path to the control
     * @example
     * Example setting options for two filters.
@@ -113,7 +113,7 @@ define('Controls/interface/IFilterButton', [
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
     * </pre>
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     * @see Controls/Filter/Button/Panel
     */
 
