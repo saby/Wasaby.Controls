@@ -100,6 +100,9 @@ export default class ParsedNumber implements IParsedNumber {
         this._calcParts(filteredData);
     }
 
+    /**
+     * Calculate the integer and fractional part of the value.
+     */
     private _calcParts({value, splitterPosition}: IFilteredData): void {
         this._integer = value.slice(this.negative, splitterPosition).join('');
         this._fractional = value.slice(splitterPosition + 1).join('');
@@ -125,7 +128,7 @@ export default class ParsedNumber implements IParsedNumber {
             relative: positionRelativeIntegerPart
         }, needlessChars);
 
-        const position: number = this._moveValueToFractional({
+        const position: number = this._moveIntegerToFractional({
             value: limitedValue.movedValue,
             carriagePosition: limitedValue.position
         }, limitedValue.value);
@@ -180,6 +183,9 @@ export default class ParsedNumber implements IParsedNumber {
         return needlessChars > -1 ? needlessChars : null;
     }
 
+    /**
+     * Get position with respect to the integer or fractional part.
+     */
     private _getPositionRelativePart(part: Parts, positionAbsolute: number): number {
         /**
          * The relative position is the difference between the absolute position and the beginning of the part.
@@ -198,7 +204,10 @@ export default class ParsedNumber implements IParsedNumber {
         return Math.max(0, Math.min(positionRelative, this[part].length));
     }
 
-    private _moveValueToFractional(text: IText, integer): number {
+    /**
+     * Move the integer part to the beginning of the fractional part.
+     */
+    private _moveIntegerToFractional(text: IText, integer): number {
         if (!text.value) {
             return text.carriagePosition;
         }
@@ -285,6 +294,9 @@ export default class ParsedNumber implements IParsedNumber {
         return filteredData;
     }
 
+    /**
+     * Remove needless characters from the value.
+     */
     private static _limitValue(value: string, position: IPosition, needlessChars: number): IDataAfterLimiting {
         if (!needlessChars) {
             return {value, position: position.absolute, movedValue: ''};
@@ -309,6 +321,9 @@ export default class ParsedNumber implements IParsedNumber {
         };
     }
 
+    /**
+     * Remove all zeros at the beginning. If the value consists only of zeros, then leave one.
+     */
     private static _handleInsignificantZero({precision}: INumberLength, data: IText, negative: number): IText {
         const {value, carriagePosition}: IText = data;
         const firstSignificantDigitPosition: number = ParsedNumber._calcFirstSignificantDigit(value);
@@ -329,12 +344,18 @@ export default class ParsedNumber implements IParsedNumber {
         };
     }
 
+    /**
+     * Calculate the position of the first non-zero character.
+     */
     private static _calcFirstSignificantDigit(value: string): number {
         const position = value.search(ParsedNumber._significantDigit);
 
         return position === -1 ? value.length : position;
     }
 
+    /**
+     * Convert an empty value to zero if its maximum length is not zero.
+     */
     private static _handleVoid({precision}: INumberLength, value: string): string {
         /**
          * According to the standard, the empty fractional part should be replaced by "0".
