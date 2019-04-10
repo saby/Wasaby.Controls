@@ -25,6 +25,6 @@ import 'Controls/Container/Async';
          }
       });
 
-      export default OpenerTemplate;
+      export = OpenerTemplate;
    
 
