@@ -1244,6 +1244,16 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     _viewResize: function() {
         if (this._virtualScroll) {
+
+            /*
+            * To update items sizes, virtualScroll needs their HTML container. It sets on baseControls' afterMount.
+            * The "controlResize" event can fires before baseControls' afterMount, because first performs afterMounts of all
+            * children. It leads to errors, because container has not been settled yet.
+            * */
+            if (!this._virtualScroll.ItemsContainer) {
+                this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer()
+            }
+
             this._virtualScroll.updateItemsSizes();
         }
     },
