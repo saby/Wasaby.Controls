@@ -17,5 +17,8 @@
       <ws:if data="{{_options.emptyTemplate}}">
          <ws:partial template="{{_options.emptyTemplate}}"/>
       </ws:if>
+      <div class="controls-TileView__footer">
+         <ws:partial template="{{_options.footerTemplate}}"/>
+      </div>
    </ws:if>
 </div>
