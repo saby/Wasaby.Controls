@@ -106,7 +106,7 @@ var _private = {
         }
         resDeferred.addCallback(function(items) {
             if (cfg.afterReloadCallback) {
-                cfg.afterReloadCallback();
+                cfg.afterReloadCallback(cfg);
             }
             return items;
         });
