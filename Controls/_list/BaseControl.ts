@@ -578,6 +578,9 @@ var _private = {
                     _private.applyVirtualScroll(self);
                 }
             }
+            if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                self._itemsChanged = true;
+            }
             self._forceUpdate();
         });
 
@@ -1008,8 +1011,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             });
         }
 
-        if (this._loadedItems) {
+        if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
+        }
+
+        if (this._loadedItems) {
+            this._shouldRestoreScrollPosition = true;
         }
     },
 
@@ -1072,21 +1079,25 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     _afterUpdate: function(oldOptions) {
         /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
-        if (this._shouldNotifyOnDrawItems) {
+        if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
                 this._virtualScroll.updateItemsSizes();
                 this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
                 this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
-            this._notify('drawItems', [this._loadedItems]);
             this._loadedItems = null;
-            this._shouldNotifyOnDrawItems = false;
+            this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
             _private.checkLoadToDirectionCapability(this);
             this._checkShouldLoadToDirection = false;
+        }
+        if (this._shouldNotifyOnDrawItems) {
+            this._notify('drawItems');
+            this._shouldNotifyOnDrawItems = false;
+            this._itemsChanged = false;
         }
         if (this._delayedSelect && this._children.selectionController) {
             this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
