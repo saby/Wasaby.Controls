@@ -5,7 +5,7 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <ws:partial template="Controls/lists:_forTemplate"
+    <ws:partial template="Controls/list:_forTemplate"
                 listModel="{{_listModel}}"
                 itemTemplate="{{_itemTemplate}}"
                 multiSelectTpl="{{_options.multiSelectTpl}}"
