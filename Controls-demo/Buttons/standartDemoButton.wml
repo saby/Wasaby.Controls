@@ -200,13 +200,13 @@
             <div>
                 <div class="demo-Button__Label">For the image edit.</div>
                 <div class="ControlsDemo__imageEditor">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState22" size="l" icons="{{['icon-24 icon-Handwrite2']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState23" size="l" icons="{{['icon-24 icon-Preferment']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState24" size="l" icons="{{['icon-24 icon-MagicWand']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState25" size="l" icons="{{['icon-24 icon-Line']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState26" size="l" icons="{{['icon-24 icon-Rectangle']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState27" size="l" icons="{{['icon-24 icon-Degradation']}}" style="secondary" viewMode="link"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState28" size="l" icons="{{['icon-24 icon-Scissors']}}" style="secondary" viewMode="link"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState22" size="l" icons="{{['icon-24 icon-Handwrite2']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState23" size="l" icons="{{['icon-24 icon-Preferment']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState24" size="l" icons="{{['icon-24 icon-MagicWand']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState25" size="l" icons="{{['icon-24 icon-Line']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState26" size="l" icons="{{['icon-24 icon-Rectangle']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState27" size="l" icons="{{['icon-24 icon-Degradation']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState28" size="l" icons="{{['icon-24 icon-Scissors']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
         </div>
