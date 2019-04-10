@@ -1,20 +1,31 @@
-<div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.key}}">
+<ws:template name="footer">
     <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-      <div class=""></div>
-   </ws:if>
+        <div class=""></div>
+    </ws:if>
     <div class="controls-TreeGrid__nodeFooterContent"
-         style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2 / ' : 'grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
-      <ws:for data="i in itemData.level">
-         <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
-      </ws:for>
-      <div class="controls-TreeGrid__row-expanderPadding"></div>
-      <ws:if data="{{itemData.hasMoreStorage}}">
-         <Controls.buttons:Button size="s" attr:class="controls-TreeGrid__nodeFooterLoadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)" readOnly="{{false}}"/>
-      </ws:if>
-      <ws:else>
-         <ws:if data="{{itemData.template}}">
-            <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{itemData.template}}" itemData="{{itemData}}"/>
-         </ws:if>
-      </ws:else>
-   </div>
-</div>
+         style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2; -ms-grid-column: 2; grid-column: 2 / ' : 'grid-column: 1; -ms-grid-column: 1; grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
+        <ws:for data="i in itemData.level">
+            <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
+        </ws:for>
+        <div class="controls-TreeGrid__row-expanderPadding"></div>
+        <ws:if data="{{itemData.hasMoreStorage}}">
+            <Controls.buttons:Button size="s" attr:class="controls-TreeGrid__nodeFooterLoadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)" readOnly="{{false}}"/>
+        </ws:if>
+        <ws:else>
+            <ws:if data="{{itemData.template}}">
+                <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{itemData.template}}" itemData="{{itemData}}"/>
+            </ws:if>
+        </ws:else>
+    </div>
+</ws:template>
+
+<ws:if data="{{!itemData.isPartialSupport}}">
+    <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.key}}">
+        <ws:partial template="footer"></ws:partial>
+    </div>
+</ws:if>
+<ws:else>
+    <ws:partial template="footer"
+                attr:style="{{ itemData.gridStyles ? itemData.gridStyles }}"
+    ></ws:partial>
+</ws:else>
