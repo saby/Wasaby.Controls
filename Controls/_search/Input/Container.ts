@@ -6,7 +6,7 @@ import template = require('wml!Controls/_search/Input/Container');
  * Listens for child's "valueChanged" event and notify bubbling event "search".
  * NOTE: must be located inside {@link Controls/Search/Controller}.
  *
- * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+ * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
