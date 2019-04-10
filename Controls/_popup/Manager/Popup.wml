@@ -1,0 +1,24 @@
+<div class="controls-Popup" on:animationend="_animated()">
+   <Controls.Event.Registrator name="resizeDetect" register="controlResize">
+      <ws:partial
+         attr:class="controls-Popup__template"
+         template="{{_options.content}}"
+         scope="{{_options}}"
+         on:sendResult="_sendResult()"
+         on:close="_close()"
+         on:popupDragStart="_popupDragStart()"
+         on:popupDragEnd="_popupDragEnd()"
+         on:popupMouseEnter="_popupMouseEnter()"
+         on:popupMouseLeave="_popupMouseLeave()"
+         on:maximized="_maximized()"
+         on:keyup="_keyUp()"
+         on:keydown="_keyDown()"
+         on:transitionend="_animated()"
+         on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
+         on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
+         on:controlResize="_controlResize()">
+      </ws:partial>
+   </Controls.Event.Registrator>
+   <Controls.Event.Listener event="controlResize" on:controlResize="_update()"/>
+   <Controls.Event.Listener event="scroll" on:scroll="_update()"/>
+</div>

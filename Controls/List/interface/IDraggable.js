@@ -1,7 +1,7 @@
 define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDraggable'], function(Control) {
    /**
     * Interface to move elements of the list by using drag'n'drop.
-    * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+    * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     *
     * @interface Controls/List/interface/IDraggable
     * @public
@@ -130,12 +130,12 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to move items using Controls.list:View/Mover after the drag is complete.
     * <pre>
-    *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
     *        <Controls.list:View on:dragEnd="_dragEnd()"
     *                       itemsDragNDrop="allow">
     *        </Controls.list:View>
     *        <Controls.list:View.Mover name="listMover">
-    *     <Controls.Container.Data>
+    *     <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>
@@ -168,16 +168,16 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to allow dragging to a list of entities of a particular type.
     * <pre>
-    *     <Controls.Container.Data source="{{_firstSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer source="{{_firstSource}}" keyProperty="id">
     *        <Controls.list:View on:dragStart="_dragStart()"
     *                       itemsDragNDrop="allow">
     *        </Controls.list:View>
-    *     <Controls.Container.Data>
-    *     <Controls.Container.Data source="{{_secondSource}}" keyProperty="id">
+    *     <Controls.list:DataContainer>
+    *     <Controls.list:DataContainer source="{{_secondSource}}" keyProperty="id">
     *        <Controls.list:View on:dragEnter="_dragEnter()"
     *                       itemsDragNDrop="allow">
     *        </Controls.list:View>
-    *     <Controls.Container.Data>
+    *     <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>
@@ -215,11 +215,11 @@ define('Controls/List/interface/IDraggable', ['Controls/_lists/interface/IDragga
     * @example
     * The following example shows how to prevent the change of the order of a pinned item.
     * <pre>
-    *    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+    *    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
     *       <Controls.list:View on:changeDragTarget="_changeDragTarget()"
     *                      itemsDragNDrop="allow">
     *       </Controls.list:View>
-    *    <Controls.Container.Data>
+    *    <Controls.list:DataContainer>
     * </pre>
     *
     * <pre>

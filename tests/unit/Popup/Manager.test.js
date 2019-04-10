@@ -414,7 +414,7 @@ define(
             }, new BaseController());
 
             let fakePopupControl1 = {
-                  _moduleName: 'Controls/Popup/Manager/Popup',
+                  _moduleName: 'Controls/_popup/Manager/Popup',
                   _options: {
                      id: id1
                   }
@@ -452,7 +452,7 @@ define(
             }, new BaseController());
 
             let fakePopupControl1 = {
-               _moduleName: 'Controls/Popup/Manager/Popup',
+               _moduleName: 'Controls/_popup/Manager/Popup',
                _options: {
                   id: id1
                }
