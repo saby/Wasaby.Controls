@@ -20,7 +20,7 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} groupTemplate Group template.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * Base groupTemplate for Controls/List: "Controls/list:GroupTemplate".
+    * Base groupTemplate for Controls.list:View: "Controls/list:GroupTemplate".
     * Group template supports these parameters:
     * <ul>
     *    <li>separatorVisibility {Boolean} - The presence of a horizontal line - separator.</li>
@@ -29,13 +29,13 @@ define('Controls/interface/IGrouped', [
     *    <li>rightTemplate {Function} - Template of group right part. May be using for rendering totals.</li>
     * </ul>
     * @example
-    * Using custom parameters for group rendering in Controls/List without expander and with left text alignment:
+    * Using custom parameters for group rendering in Controls.list:View without expander and with left text alignment:
     * <pre>
-    *    <Controls.List
+    *    <Controls.list:View
     *       <groupTemplate>
     *          <ws:partial template="Controls/list:GroupTemplate" expanderVisibility="{{ false }}" textAlign="left" />
     *       </groupTemplate>
-    *    </Controls.List>
+    *    </Controls.list:View>
     * </pre>
     */
 

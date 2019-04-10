@@ -2,8 +2,8 @@
  * Created by Rodionov E.A. on 29.11.2018.
  */
 define([
-   'Controls/List/Controllers/VirtualScroll'
-], function(VirtualScroll) {
+   'Controls/list'
+], function(list) {
    describe('Controls.Controllers.VirtualScroll', function() {
 
       function generateData(count) {
@@ -18,7 +18,7 @@ define([
       }
 
       it('constructor', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualSegmentSize: 30,
             virtualPageSize: 80,
             itemsRenderMode: 'AllAtOnce'
@@ -30,7 +30,7 @@ define([
       });
 
       it('default options in constructor', function() {
-         var vsInstance = new VirtualScroll({});
+         var vsInstance = new list.VirtualScroll({});
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
          assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
@@ -38,7 +38,7 @@ define([
       });
 
       it('resetItemsIndexes', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualSegmentSize: 30,
             virtualPageSize: 80,
             itemsRenderMode: 'AllAtOnce'
@@ -55,7 +55,7 @@ define([
 
       it('getter ItemsIndexes', function() {
          var
-            vsInstance = new VirtualScroll({});
+            vsInstance = new list.VirtualScroll({});
 
          vsInstance._startIndex = 23;
          vsInstance._stopIndex = 57;
@@ -64,7 +64,7 @@ define([
 
       it('insert heights', function() {
          var
-            vsInstance = new VirtualScroll({});
+            vsInstance = new list.VirtualScroll({});
 
          vsInstance._itemsHeights = [1, 1, 1, 1, 1, 1];
          assert.equal(6,vsInstance._itemsHeights.length);
@@ -77,7 +77,7 @@ define([
 
       it('cut heights', function() {
          var
-            vsInstance = new VirtualScroll({});
+            vsInstance = new list.VirtualScroll({});
 
          vsInstance._itemsHeights = [1, 1, 1, 0, 0, 0, 1, 1, 1];
          assert.equal(9,vsInstance._itemsHeights.length);
@@ -90,7 +90,7 @@ define([
 
       it('setter ItemsContainer', function() {
          var
-            vsInstance = new VirtualScroll({}),
+            vsInstance = new list.VirtualScroll({}),
             container = {
                children: [
                   { offsetHeight: 20 },
@@ -109,7 +109,7 @@ define([
 
       it('seter ItemsCount', function() {
          var
-            vsInstance = new VirtualScroll({});
+            vsInstance = new list.VirtualScroll({});
 
          vsInstance.ItemsCount = 4000;
          assert.equal(4000, vsInstance._itemsCount);
@@ -117,7 +117,7 @@ define([
 
       it('updateItemsSizes always', function() {
          var
-            vsInstance = new VirtualScroll({
+            vsInstance = new list.VirtualScroll({
                updateItemsHeightsMode: 'always'
             }),
             _items = {
@@ -146,7 +146,7 @@ define([
 
       it('updateItemsSizes', function() {
          var
-            vsInstance = new VirtualScroll({}),
+            vsInstance = new list.VirtualScroll({}),
             items = {
                children: [
                   { offsetHeight: 20 },
@@ -167,7 +167,7 @@ define([
       });
 
       it('always itemsCount <= virtualPageSize (down scroll)', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             startIndex: 0,
             virtualPageSize: 30,
          });
@@ -181,7 +181,7 @@ define([
       });
 
       it('always itemsCount <= virtualPageSize (up scroll)', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             startIndex: 500,
             virtualPageSize: 50,
          });
@@ -194,7 +194,7 @@ define([
       });
 
       it('updateItemsIndexes direction="down"', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
@@ -212,7 +212,7 @@ define([
       });
 
       it('updateItemsIndexes direction="up"', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
@@ -231,7 +231,7 @@ define([
       });
 
       it('updateItemsIndexes: start index not less then 0', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
@@ -250,7 +250,7 @@ define([
       });
 
       it('updateItemsIndexes: stop index not bigger then itemsCount', function() {
-         var vsInstance = new VirtualScroll({
+         var vsInstance = new list.VirtualScroll({
             virtualPageSize: 100,
             virtualSegmentSize: 40
          });
@@ -271,7 +271,7 @@ define([
 
       it('getter Placeholders', function() {
          var
-            vsInstance = new VirtualScroll({});
+            vsInstance = new list.VirtualScroll({});
 
          vsInstance._itemsHeights = [20, 45, 10, 44, 78, 45, 92];
          vsInstance._startItemIndex = 2;
@@ -294,7 +294,7 @@ define([
 
       it('update Placeholders', function() {
          var
-            vsInstance = new VirtualScroll({}),
+            vsInstance = new list.VirtualScroll({}),
             placeholders;
 
          vsInstance._itemsHeights = [20, 45, 10, 44, 78, 45, 92];
@@ -318,7 +318,7 @@ define([
 
       it('getter ItemsHeights', function() {
          var
-            vsInstance = new VirtualScroll({}),
+            vsInstance = new list.VirtualScroll({}),
             itemsHeights = [20, 45, 10, 44, 78, 45, 92];
          vsInstance._itemsHeights = itemsHeights;
          assert.deepEqual(itemsHeights, vsInstance.ItemsHeights);
@@ -326,7 +326,7 @@ define([
 
       it('isScrollInPlaceholder', function() {
          var
-            vsInstance = new VirtualScroll({
+            vsInstance = new list.VirtualScroll({
                virtualPageSize: 5,
                virtualSegmentSize: 3
             });
@@ -347,7 +347,7 @@ define([
 
       it('updateItemsIndexesOnScrolling', function() {
          var
-            vsInstance = new VirtualScroll({
+            vsInstance = new list.VirtualScroll({
                virtualPageSize: 6,
                virtualSegmentSize: 3
             });

@@ -5,7 +5,7 @@ define('Controls/List/TreeControl', ['Controls/_treeGrids/TreeControl'], functio
     * @class Controls/List/TreeControl
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/List/TreeGridView/Styles
-    * @extends Controls/List/ListControl
+    * @extends Controls/list:ListControl
     * @control
     * @public
     * @category List
