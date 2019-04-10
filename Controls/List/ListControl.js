@@ -18,6 +18,6 @@ define('Controls/List/ListControl', ['Controls/_lists/ListControl'], function(Co
  * @author Авраменко А.С.
  * @category List
  */
-   /** @lends Controls/List/ListControl.prototype */
+   /** @lends Controls/list:ListControl.prototype */
    return Control;
 });
