@@ -222,7 +222,9 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       },
 
       getTopScroll: function(targetCoords) {
-         if (window && (window.screen.availHeight / window.innerHeight < 2)) {
+         // in portrait landscape sometimes(!) screen.availHeight < innerHeight =>
+         // screen.availHeight / innerHeight < 2 incorrect. We expectation what availHeight > innerHeight always.
+         if (window && (window.screen.availHeight / window.innerHeight < 2) && (window.screen.availHeight > window.innerHeight)) {
             return targetCoords.topScroll;
          }
          return 0;
