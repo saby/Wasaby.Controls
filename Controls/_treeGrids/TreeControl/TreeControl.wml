@@ -2,6 +2,7 @@
                            scope="{{_options}}"
                            name="baseControl"
                            beforeReloadCallback="{{_beforeReloadCallback}}"
+                           beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
                            afterReloadCallback="{{_afterReloadCallback}}">
    <ws:expanderTemplate>
       <!-- ws-no-focus="true" delete after https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629 -->
