@@ -5,7 +5,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
    'Types/source',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
-   'Controls/lists'
+   'Controls/list'
 ], function(Control, template, lookupData, source, MemorySourceFilter) {
 
    'use strict';

@@ -55,6 +55,7 @@ define([
          };
       });
       afterEach(function() {
+         IoC.bind('ILogger', originalLogger);
          ml.clearCache();
       });
       it('Load sync no cache', function() {
@@ -154,9 +155,9 @@ define([
                resolve(lib);
             });
          };
-         var res = ml.loadAsync('Controls/lists:MyList');
+         var res = ml.loadAsync('Controls/list:MyList');
          res.then(function(loaded) {
-            var res2 = ml.loadAsync('Controls/lists:MyList2');
+            var res2 = ml.loadAsync('Controls/list:MyList2');
             checkError(logErrors, 'Module Controls/List is already loaded.');
             res2.then(function(loaded2) {
                assert.equal(loaded, lib.MyList);

@@ -1,6 +1,6 @@
 <div>
    <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
-      <Controls.lists:View source="{{_viewSource}}" displayProperty="title" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}"/>
+      <Controls.list:View source="{{_viewSource}}" displayProperty="title" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}"/>
    </Controls.Container.Scroll>
    <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
       <Controls.grid:View source="{{_gridViewSource}}" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}">
