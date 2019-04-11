@@ -1,21 +1,21 @@
-define('Controls/Toggle/interface/ICheckable', [], function() {
 
-   /**
-    * Interface for 2-position switch.
-    *
-    * @interface Controls/Toggle/interface/ICheckable
-    * @public
-    * @author Михайловский Д.С.
-    */
 
-   /**
-    * @name Controls/Toggle/interface/ICheckable#value
-    * @cfg {Boolean} Current state.
-    */
+/**
+ * Interface for 2-position switch.
+ *
+ * @interface Controls/_toggle/interface/ICheckable
+ * @public
+ * @author Михайловский Д.С.
+ */
 
-   /**
-    * @event Controls/Toggle/interface/ICheckable#valueChanged Occurs when value changes.
-    * @param {Boolean} value New value.
-    */
+/**
+ * @name Controls/_toggle/interface/ICheckable#value
+ * @cfg {Boolean} Current state.
+ */
 
-});
+/**
+ * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
+ * @param {Boolean} value New value.
+ */
+
+

@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchText" scope="{{_options}}" />

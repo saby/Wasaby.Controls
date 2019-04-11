@@ -1,16 +1,14 @@
-define('Controls/Toggle/RadioGroup', [
-   'Core/Control',
-   'Controls/Controllers/SourceController',
-   'wml!Controls/Toggle/RadioGroup/RadioGroup',
-   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
-], function(Control, SourceController, template, defaultItemTemplate) {
+import Control = require('Core/Control');
+import SourceController = require('Controls/Controllers/SourceController');
+import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
+import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
    /**
     * Controls are designed to give users a choice among two or more settings.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
-    * @class Controls/Toggle/RadioGroup
+    * @class Controls/_toggle/RadioGroup
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
@@ -20,19 +18,19 @@ define('Controls/Toggle/RadioGroup', [
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *
-    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
-    * @mixes Controls/Toggle/RadioGroup/RadioGroupStyles
+    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/_toggle/RadioGroup/RadioGroupStyles
     */
 
    /**
-    * @name Controls/Toggle/RadioGroup#itemTemplate
+    * @name Controls/_toggle/RadioGroup#itemTemplate
     * @cfg {Function} Template for item render.
-    * @default Base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate"
+    * @default Base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate"
     * @remark
-    * To determine the template, you should call the base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate".
+    * To determine the template, you should call the base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate".
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
-    * By default, the base template wml!Controls/Toggle/RadioGroup/resources/ItemTemplate will display only the 'title' field.
+    * By default, the base template wml!Controls/_toggle/RadioGroup/resources/ItemTemplate will display only the 'title' field.
     * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
@@ -49,7 +47,7 @@ define('Controls/Toggle/RadioGroup', [
     *    <Controls.Toggle.RadioGroup ... >
     *       <ws:itemTemplate>
     *          <ws:partial
-    *             template="wml!Controls/Toggle/RadioGroup/resources/ItemTemplate" >
+    *             template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate" >
     *             <ws:contentTemplate>
     *                <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}_custom controls-RadioItem__caption_custom">
     *                </span>
@@ -62,11 +60,11 @@ define('Controls/Toggle/RadioGroup', [
     */
 
    /**
-    * @name Controls/Toggle/RadioGroup#itemTemplateProperty
+    * @name Controls/_toggle/RadioGroup#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render.
     * @default If not set, itemTemplate is used instead.
     * @remark
-    * To determine the template, you should call the base template "wml!Controls/Toggle/RadioGroup/resources/ItemTemplate".
+    * To determine the template, you should call the base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate".
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
     * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field.
@@ -89,7 +87,7 @@ define('Controls/Toggle/RadioGroup', [
     * myTemplate
     * <pre>
     *    <ws:partial
-    *       template="wml!Controls/Toggle/RadioGroup/resources/ItemTemplate" >
+    *       template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate" >
     *       <ws:contentTemplate>
     *          <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}} controls-RadioItem__caption">
     *             {{item['caption']}}
@@ -111,7 +109,7 @@ define('Controls/Toggle/RadioGroup', [
     */
 
    /**
-    * @name Controls/Toggle/RadioGroup#direction
+    * @name Controls/_toggle/RadioGroup#direction
     * @cfg {string} Arrangement of elements in the container.
     * @variant horizontal Elements are located one after another.
     * @variant vertical Elements are located one under another.
@@ -176,5 +174,5 @@ define('Controls/Toggle/RadioGroup', [
 
    Radio._private = _private;
 
-   return Radio;
-});
+   export = Radio;
+

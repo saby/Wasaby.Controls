@@ -1,5 +1,5 @@
-define('Controls/Toggle/Button/Classes', ['Env/Env'], function(Env) {
-   'use strict';
+import Env = require('Env/Env');
+   
    var classesOfButton = {
       iconButtonBordered: {
          style: 'secondary',
@@ -39,5 +39,5 @@ define('Controls/Toggle/Button/Classes', ['Env/Env'], function(Env) {
       }
    };
 
-   return Classes;
-});
+   export = Classes;
+

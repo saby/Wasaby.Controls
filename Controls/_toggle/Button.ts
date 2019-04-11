@@ -1,30 +1,28 @@
-define('Controls/Toggle/Button', [
-   'Core/Control',
-   'Controls/Toggle/Button/Classes',
-   'wml!Controls/Button/Button',
-   'Controls/buttons'
-], function(Control, Classes, template, buttons) {
+import Control = require('Core/Control');
+import Classes = require('Controls/_toggle/Button/Classes');
+import template = require('wml!Controls/Button/Button');
+import buttons = require('Controls/buttons');
    /**
     * Button that switches between two states: on-state and off-state.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
-    * @class Controls/Toggle/Button
-    * @mixes Controls/Toggle/interface/ICheckable
+    * @class Controls/_toggle/Button
+    * @mixes Controls/_toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
     * @mixes Controls/Button/interface/IIconStyle
-    * @mixes Controls/Toggle/Button/Styles
+    * @mixes Controls/_toggle/Button/Styles
     * @control
     * @public
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
+    * @demo Controls-demo/Buttons/_toggle/ToggleButtonPG
     */
 
    /**
-    * @name Controls/Toggle/Button#icons
+    * @name Controls/_toggle/Button#icons
     * @cfg {Array} Pair of icons.
     * First icon displayed when toggle switch is off.
     * Second icon displayed when toggle switch is on.
@@ -40,7 +38,7 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#captions
+    * @name Controls/_toggle/Button#captions
     * @cfg {Array} Pair of captions.
     * First caption displayed when toggle switch is off.
     * Second caption displayed when toggle switch is on.
@@ -56,7 +54,7 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#viewMode
+    * @name Controls/_toggle/Button#viewMode
     * @cfg {Enum} Toggle button view mode.
     * @variant link Decorated hyperlink.
     * @variant pushButton Decorated hyperlink transform to toolbar button.
@@ -122,5 +120,5 @@ define('Controls/Toggle/Button', [
    };
 
    ToggleButton._private = _private;
-   return ToggleButton;
-});
+   export = ToggleButton;
+

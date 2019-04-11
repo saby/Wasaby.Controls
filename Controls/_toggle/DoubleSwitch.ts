@@ -1,19 +1,17 @@
-define('Controls/Toggle/DoubleSwitch', [
-   'Core/Control',
-   'wml!Controls/Toggle/DoubleSwitch/DoubleSwitch',
-   'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
-   'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
-   'Types/entity'
-], function(Control, template, toggleTemplate, textTemplate, entity) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_toggle/DoubleSwitch/DoubleSwitch');
+import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchToggle');
+import textTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchText');
+import entity = require('Types/entity');
 
    /**
     * Switch with two captions and with support two orientation.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
-    * @class Controls/Toggle/DoubleSwitch
+    * @class Controls/_toggle/DoubleSwitch
     * @extends Core/Control
-    * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/_toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
@@ -22,20 +20,20 @@ define('Controls/Toggle/DoubleSwitch', [
     *
     * @demo Controls-demo/Switch/DoubleSwitchDemo
     *
-    * @mixes Controls/Toggle/resources/Switch/SwitchStyles
-    * @mixes Controls/Toggle/resources/DoubleSwitch/DoubleSwitchStyles
-    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/_toggle/resources/Switch/SwitchStyles
+    * @mixes Controls/_toggle/resources/DoubleSwitch/DoubleSwitchStyles
+    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
     *
     * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
     */
 
    /**
-    * @name Controls/Toggle/DoubleSwitch#captions
+    * @name Controls/_toggle/DoubleSwitch#captions
     * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
     */
 
    /**
-    * @name Controls/Toggle/DoubleSwitch#orientation
+    * @name Controls/_toggle/DoubleSwitch#orientation
     * @cfg {String} Double switch orientation in space.
     * @variant horizontal Horizontal orientation. It is default value.
     * @variant vertical Vertical orientation.
@@ -112,5 +110,5 @@ define('Controls/Toggle/DoubleSwitch', [
 
    Switch._private = _private;
 
-   return Switch;
-});
+   export = Switch;
+

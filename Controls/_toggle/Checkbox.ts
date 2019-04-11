@@ -1,15 +1,13 @@
-define('Controls/Toggle/Checkbox', [
-   'Core/Control',
-   'wml!Controls/Toggle/Checkbox/Checkbox',
-   'Types/entity'
-], function(Control, template, entity) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_toggle/Checkbox/Checkbox');
+import entity = require('Types/entity');
 
    /**
     * Represents a control that a user can select and clear.
     *
     * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
     *
-    * @class Controls/Toggle/Checkbox
+    * @class Controls/_toggle/Checkbox
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/interface/ITooltip
@@ -20,11 +18,11 @@ define('Controls/Toggle/Checkbox', [
     * @category Toggle
     * @demo Controls-demo/Checkbox/CheckBoxDemoPG
     *
-    * @mixes Controls/Toggle/Checkbox/CheckboxStyles
+    * @mixes Controls/_toggle/Checkbox/CheckboxStyles
     */
 
    /**
-    * @name Controls/Toggle/Checkbox#triState
+    * @name Controls/_toggle/Checkbox#triState
     * @cfg {Boolean} Determines whether the Checkbox will allow three check status rather than two.
     * @default False
     * @remark
@@ -49,7 +47,7 @@ define('Controls/Toggle/Checkbox', [
     */
 
    /**
-    * @name Controls/Toggle/Checkbox#value
+    * @name Controls/_toggle/Checkbox#value
     * @cfg {Boolean|null} Current value, it's determines current state.
     * @default False
     * @remark
@@ -90,7 +88,7 @@ define('Controls/Toggle/Checkbox', [
     */
 
    /**
-    * @event Controls/Toggle/Checkbox#valueChanged Occurs when state changes.
+    * @event Controls/_toggle/Checkbox#valueChanged Occurs when state changes.
     * @param {Boolean|null} New value.
     * @remark This event should be used to react to changes user makes in the checkbox. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Value may be null only when checkbox tristate option is true.
     * @example
@@ -149,5 +147,5 @@ define('Controls/Toggle/Checkbox', [
 
    Checkbox._ptivate = _private;
 
-   return Checkbox;
-});
+   export = Checkbox;
+

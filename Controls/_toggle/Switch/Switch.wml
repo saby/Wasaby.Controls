@@ -4,7 +4,7 @@
                {{!_options.readOnly ? 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
          title="{{tooltip}}">
-      <ws:partial template="wml!Controls/Toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{_options.readOnly}}" selected="{{_options.value ? true : false}}"/>
+      <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{_options.readOnly}}" selected="{{_options.value ? true : false}}"/>
       <span class="controls-Switch__line{{_options.readOnly ? ' controls-Switch__line_disabled' : ' controls-Switch__line_enabled'}}
                   controls-Switch__line{{(_options.captionPosition === 'right' && _options.value) || (_options.captionPosition === 'left' && _options.value) ?
                   '_right' : '_left'}}_toggle"></span>

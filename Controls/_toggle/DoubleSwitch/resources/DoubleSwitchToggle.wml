@@ -7,5 +7,5 @@
                {{_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__line_vertical_checked' : 'controls-DoubleSwitch__line_horizontal_checked' :
                _orientation === 'vertical' ? 'controls-DoubleSwitch__line_vertical_notChecked' : 'controls-DoubleSwitch__line_horizontal_notChecked' }}
                {{_enabled ? 'controls-DoubleSwitch__line_enabled' : 'controls-DoubleSwitch__line_disabled'}}"></span>
-   <ws:partial template="wml!Controls/Toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{!_enabled}}" selected="{{true}}"/>
+   <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{!_enabled}}" selected="{{true}}"/>
 </span>

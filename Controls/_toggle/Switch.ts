@@ -1,17 +1,15 @@
-define('Controls/Toggle/Switch', [
-   'Core/Control',
-   'wml!Controls/Toggle/Switch/Switch',
-   'Types/entity'
-], function(Control, template, entity) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_toggle/Switch/Switch');
+import entity = require('Types/entity');
 
    /**
     * Switch button with single caption. Frequently used for 'on-off' settings.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
-    * @class Controls/Toggle/Switch
+    * @class Controls/_toggle/Switch
     * @extends Core/Control
-    * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/_toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
@@ -19,17 +17,17 @@ define('Controls/Toggle/Switch', [
     * @category Toggle
     * @demo Controls-demo/Switch/SwitchDemo
     *
-    * @mixes Controls/Toggle/Switch/SwitchStyles
-    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/_toggle/Switch/SwitchStyles
+    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
     */
 
    /**
-    * @name Controls/Toggle/Switch#caption
+    * @name Controls/_toggle/Switch#caption
     * @cfg {String} Caption text.
     */
 
    /**
-    * @name Controls/Toggle/Switch#captionPosition
+    * @name Controls/_toggle/Switch#captionPosition
     * @cfg {String} Determines on which side of the button caption is located.
     * @variant left Caption before toggle.
     * @variant right Toggle before caption. It is default value.
@@ -65,5 +63,5 @@ define('Controls/Toggle/Switch', [
 
    Switch._theme = [ 'Controls/toggle' ];
 
-   return Switch;
-});
+   export = Switch;
+
