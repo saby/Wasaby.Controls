@@ -274,7 +274,7 @@ define(['Controls/List/TileView/TileView',
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
-         assert.isTrue(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
+         assert.isFalse(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
       });
 
       it('_afterMount', function() {

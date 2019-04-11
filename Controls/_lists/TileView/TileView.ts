@@ -95,11 +95,7 @@ var TileView = ListView.extend({
     },
 
     _onResize: function () {
-        if (!this._resizeFromSelf) {
-            this._listModel.setHoveredItem(null);
-        }
-        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-       this._forceUpdate();
+       this._listModel.setHoveredItem(null);
     },
 
     _beforeUpdate: function (newOptions) {
@@ -123,19 +119,7 @@ var TileView = ListView.extend({
                 position: hoveredItem.endPosition
             });
         }
-
-        //Делаем блокировку для события resize в 19.211.
-        //Возникла ситуация, когда контрол говорит вверх о том, что случился resize, и мы попадаем в обработчик
-        //resize этого же контрола. В рамках плитки такого поведения быть не должно, т.к. плитки увеличиваются
-        //за счет изменения состояния модели, что вызывает update, update вызывает resize, resize вызывает
-        //отмену увеличения плитки. Получается что плитку невозможно увеличиить.
-        //Нужно решить, какое поведение должно быть в данной ситуации. Возможные варианты:
-        //1) Списочные контролы не должны стреть controlResize если размеры не поменялись;
-        //2) Не должен вызываться обработчик resize у контрола, который об этом resize нотифицировал;
-        //Выписана ошибка: https://online.sbis.ru/opendoc.html?guid=d42b8a07-99a3-4e9a-b24f-d11d212df4bf
-        this._resizeFromSelf = true;
-        this._notify('controlResize', [], { bubbling: true });
-        this._resizeFromSelf = false;
+        TileView.superclass._afterUpdate.apply(this, arguments);
     },
 
     //TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9
