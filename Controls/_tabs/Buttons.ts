@@ -1,20 +1,13 @@
 /**
  * Created by kraynovdo on 25.01.2018.
  */
-define('Controls/Tabs/Buttons', [
-   'Core/Control',
-   'Controls/Controllers/SourceController',
-   'wml!Controls/Tabs/Buttons/Buttons',
-   'wml!Controls/Tabs/Buttons/ItemTemplate',
-   'Env/Env',
-   'css!theme?Controls/Tabs/Buttons/Buttons'
-], function(Control,
-   SourceController,
-   TabButtonsTpl,
-   ItemTemplate,
-   Env
-) {
-   'use strict';
+import Control = require('Core/Control');
+import SourceController = require('Controls/Controllers/SourceController');
+import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
+import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_tabs/Buttons/Buttons';
+
 
    var _private = {
       initItems: function(source, instance) {
@@ -315,5 +308,5 @@ define('Controls/Tabs/Buttons', [
 
    //необходимо для тестов
    TabsButtons._private = _private;
-   return TabsButtons;
-});
+   export = TabsButtons;
+

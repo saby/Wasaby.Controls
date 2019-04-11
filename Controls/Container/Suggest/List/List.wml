@@ -1,7 +1,7 @@
 <div class="controls-Suggest_list">
     <ws:if data="{{_options.tabsOptions}}">
         <Controls.Container.Async templateName="Controls/tabs:Buttons">
-            <ws:partial template="{{'Controls/Tabs:Buttons'}}"
+            <ws:partial template="{{'Controls/tabs:Buttons'}}"
                         attr:class="controls-Suggest__tabs"
                         on:selectedKeyChanged="_tabsSelectedKeyChanged()"
                         style="secondary"
