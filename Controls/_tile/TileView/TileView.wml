@@ -1,7 +1,7 @@
 <div class="controls-ListView controls-TileView" name="tileContainer" on:keyDown="_onTileViewKeyDown()">
    <ws:if data="{{_listModel}}">
       <ws:partial
-         template="wml!Controls/lists:_forTemplate"
+         template="Controls/list:_forTemplate"
          listModel="{{_listModel}}"
          itemActionsTemplate="{{_options.itemActionsTemplate}}"
          swipeTemplate="{{_options.swipeTemplate}}"

@@ -1,4 +1,4 @@
-import {ListView} from 'Controls/list/ListView';
+import {ListView} from 'Controls/list';
 import template = require('wml!Controls/_tile/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_tile/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
