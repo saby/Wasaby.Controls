@@ -47,8 +47,8 @@ import 'Controls/_treeGrids/TreeControl';
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
-      _viewName: 'Controls/List/TreeGridView/TreeGridView',
-      _viewTemplate: 'Controls/List/TreeControl',
+      _viewName: 'Controls/_treeGrids/TreeGridView/TreeGridView',
+      _viewTemplate: 'Controls/_treeGrids/TreeControl',
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },
