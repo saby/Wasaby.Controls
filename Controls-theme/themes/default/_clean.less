@@ -44,6 +44,7 @@
 @thickness_border_default:    1px;
 @thickness_border_accent:     2px;
 @thickness_border_big:        3px;
+@thickness-group-separator:   @thickness_border_default;
 
 @height_control_default:    @height_m;
 @height_control_l:          @height_xl;
@@ -86,6 +87,8 @@
 @font-family_icon_size-m:         'cbuc-icons24';
 @font-family_icon_size-l:         'cbuc-icons';
 @font-family_text_default:        'TensorFont', sans-serif;
+
+@width-marker_m:             3px;
 
 //period dialog
 @color_border_PeriodDialog:       #EAEAEA;
@@ -162,6 +165,7 @@
 @background_Button_button_primary_hovered_val:                    #FDECD9;
 @background_Button_secondary_active_val:                          #E1ECF6;
 @background_Button_button_primary_active_val:                     #FDD2C0;
+@background_Button:                                               transparent;
 
 // Image
 @border-radius_Image_m_val:                                       8px;
@@ -198,6 +202,10 @@
 @spacing_ListView-item-between-content-borderLeft_xs_val:         0;
 @spacing_ListView-between-content-checkbox_val:                   0;
 @spacing_ListView-empty-between-content-borderTop_xs_val:         0;
+//List-Dropdownlist
+@spacing-group-between-text-separator:                            @spacing_default_l;
+@color-group-separator:                                           @color_separator;
+
 @box-shadow_List-masterList-item_selected_val:                    4px 0 8px rgba(0, 0, 0, .15);
 @border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
 @background-color_ListView-item_active_val:                       #F0F5FB;
@@ -237,6 +245,12 @@
 @font-size_PeriodDialog-monthRange-month-date_val:                8px;
 @height_PeriodDialog-monthRange-month-date_val:                   13px;
 @dimentions_PeriodDialog-monthRange-monthWrapper:                 100px;
+
+//MonthView
+@width_MonthView:                                                  281px;
+@height_MonthSlider:                   300px;
+@height_MonthSlider-header:            28px;
+@height_MonthSlider-weekdays:          39px;
 
 // DateRangeRelationButton
 @color_DateRangeRelationButton-byCapacity_hovered_val:            #999;
