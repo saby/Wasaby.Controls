@@ -1,6 +1,6 @@
-define('Controls/Selector/Button/SelectorButtonStyles', function() {
+
    /**
-    * @mixin Controls/Selector/Button/SelectorButtonStyles
+    * @mixin Controls/_lookup/Button/SelectorButtonStyles
     * @public
     * @author Капустин И.А.
     *
@@ -16,4 +16,4 @@ define('Controls/Selector/Button/SelectorButtonStyles', function() {
     * @css @color_Selectorbutton-single-item_hovered The color when the hover of the selected item in single mode.
     * @css @color_Selectorbutton-single-item_active The color when the activeted of the selected item in single mode.
     */
-});
+

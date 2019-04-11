@@ -1,7 +1,6 @@
-define('Controls/Selector/Lookup/LookupStyles', function() {}
 
    /**
-    * @mixin Controls/Selector/Lookup/LookupStyles
+    * @mixin Controls/_lookup/Lookup/LookupStyles
     * @public
     * @author Капустин И.А.
     *
@@ -22,4 +21,3 @@ define('Controls/Selector/Lookup/LookupStyles', function() {}
     * @css @spacing_Lookup-between-input-beforeFieldWrapper Spacing between input field and selected collection.
     * @css @spacing_Lookup-between-input-afterFieldWrapper Spacing between input field and icons.
     */
-);

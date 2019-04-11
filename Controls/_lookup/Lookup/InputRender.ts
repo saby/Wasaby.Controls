@@ -1,8 +1,6 @@
-define('Controls/Selector/Lookup/InputRender', [
-   'Controls/input',
-   'wml!Controls/Selector/Lookup/InputRender/InputRender'
-], function(input, template) {
-   'use strict';
+import input = require('Controls/input');
+import template = require('wml!Controls/_lookup/Lookup/InputRender/InputRender');
+
 
    var InputRenderLookup = input.Text.extend({
       _template: template,
@@ -36,5 +34,5 @@ define('Controls/Selector/Lookup/InputRender', [
       }
    });
 
-   return InputRenderLookup;
-});
+   export = InputRenderLookup;
+

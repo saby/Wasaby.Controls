@@ -1,7 +1,6 @@
-define('Controls/Selector/Lookup/Link/LookupLinkStyles', function() {}
 
    /**
-    * @mixin Controls/Selector/Lookup/Link/LookupLinkStyles
+    * @mixin Controls/_lookup/Lookup/Link/LookupLinkStyles
     * @public
     * @author Капустин И.А.
     *
@@ -11,4 +10,3 @@ define('Controls/Selector/Lookup/Link/LookupLinkStyles', function() {}
     * @css @color_LookupLink_hovered The color of the link when the hover.
     * @css @color_LookupLink_active The color of the link when the click.
     */
-);

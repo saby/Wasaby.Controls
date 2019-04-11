@@ -1,24 +1,22 @@
 /**
  * Created by ia.kapustin on 27.09.2018.
  */
-define('Controls/Selector/Lookup/Link', [
-   'Core/Control',
-   'wml!Controls/Selector/Lookup/Link/LookUp_Link',
-   'css!theme?Controls/Selector/Lookup/Link/LookUp_Link'
-], function(Control, template) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
+import 'css!theme?Controls/_lookup/Lookup/Link/LookUp_Link';
+
 
    /**
     * Link for use in Selector/Lookup
     *
     * @mixes Controls/interface/ICaption
-    * @mixes Controls/Selector/Lookup/Link/LookupLinkStyles
+    * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
     * @control
     * @public
     * @author Капустин И.А.
     */
 
-   return Control.extend({
+   export = Control.extend({
       _template: template,
 
       _keyUpHandler: function(e) {
@@ -33,4 +31,4 @@ define('Controls/Selector/Lookup/Link', [
          }
       }
    });
-});
+

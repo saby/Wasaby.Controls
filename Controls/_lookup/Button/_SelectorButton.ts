@@ -1,10 +1,8 @@
-define('Controls/Selector/Button/_SelectorButton', [
-   'Core/Control',
-   'wml!Controls/Selector/Button/_SelectorButton',
-   'wml!Controls/Selector/Button/itemTemplate',
-   'css!theme?Controls/Selector/Button/SelectorButton'
-], function(Control, template, itemTemplate) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_lookup/Button/_SelectorButton');
+import itemTemplate = require('wml!Controls/_lookup/Button/itemTemplate');
+import 'css!theme?Controls/_lookup/Button/SelectorButton';
+
 
    var SelectorButton = Control.extend({
       _template: template,
@@ -42,5 +40,5 @@ define('Controls/Selector/Button/_SelectorButton', [
       };
    };
 
-   return SelectorButton;
-});
+   export = SelectorButton;
+

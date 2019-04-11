@@ -1,22 +1,20 @@
-define('Controls/Selector/Lookup/_Lookup', [
-   'Core/Control',
-   'wml!Controls/Selector/Lookup/_Lookup',
-   'Types/chain',
-   'Core/core-merge',
-   'Controls/Utils/getWidth',
-   'Controls/Utils/DOMUtil',
-   'Controls/Selector/SelectedCollection',
-   'wml!Controls/Selector/SelectedCollection/SelectedCollection',
-   'wml!Controls/Selector/Lookup/resources/clearRecordsTemplate',
-   'wml!Controls/Selector/Lookup/resources/showSelectorTemplate',
-   'Controls/Utils/tmplNotify',
-   'Core/helpers/Object/isEqual',
-   'Controls/Selector/SelectedCollection/Utils',
-   'Env/Env',
-   'wml!Controls/Input/resources/input',
-   'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, Env) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_lookup/Lookup/_Lookup');
+import chain = require('Types/chain');
+import merge = require('Core/core-merge');
+import getWidthUtil = require('Controls/Utils/getWidth');
+import DOMUtil = require('Controls/Utils/DOMUtil');
+import Collection = require('Controls/_lookup/SelectedCollection');
+import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
+import clearRecordsTemplate = require('wml!Controls/_lookup/Lookup/resources/clearRecordsTemplate');
+import showSelectorTemplate = require('wml!Controls/_lookup/Lookup/resources/showSelectorTemplate');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import isEqual = require('Core/helpers/Object/isEqual');
+import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
+import Env = require('Env/Env');
+import 'wml!Controls/Input/resources/input';
+import 'css!theme?Controls/_lookup/Lookup/Lookup';
+
 
    var
       MAX_VISIBLE_ITEMS = 20,
@@ -400,13 +398,13 @@ define('Controls/Selector/Lookup/_Lookup', [
       _isInputVisible: function() {
          return !this._options.readOnly && (this._isEmpty() || this._options.multiSelect);
       },
-      
+
       _openInfoBox: function(event, config) {
          config.maxWidth = this._container.offsetWidth;
          this._suggestState = false;
          this._infoboxOpened = true;
       },
-   
+
       _closeInfoBox: function() {
          this._infoboxOpened = false;
       },
@@ -453,5 +451,5 @@ define('Controls/Selector/Lookup/_Lookup', [
    };
 
    Lookup._private = _private;
-   return Lookup;
-});
+   export = Lookup;
+

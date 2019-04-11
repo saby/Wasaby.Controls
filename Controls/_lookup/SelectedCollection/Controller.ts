@@ -1,17 +1,15 @@
-define('Controls/Selector/SelectedCollection/Controller', [
-   'Core/Control',
-   'wml!Controls/Selector/SelectedCollection/Controller',
-   'Core/core-clone',
-   'Core/Deferred',
-   'Controls/Controllers/SourceController',
-   'Core/helpers/Object/isEqual',
-   'Types/collection',
-   'Core/core-merge',
-   'Controls/Utils/tmplNotify',
-   'Controls/Utils/ToSourceModel',
-   'Controls/History/LoadService'
-], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel, LoadService) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_lookup/SelectedCollection/Controller');
+import clone = require('Core/core-clone');
+import Deferred = require('Core/Deferred');
+import SourceController = require('Controls/Controllers/SourceController');
+import isEqual = require('Core/helpers/Object/isEqual');
+import collection = require('Types/collection');
+import merge = require('Core/core-merge');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import ToSourceModel = require('Controls/Utils/ToSourceModel');
+import LoadService = require('Controls/History/LoadService');
+
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -286,5 +284,5 @@ define('Controls/Selector/SelectedCollection/Controller', [
       };
    };
 
-   return CollectionController;
-});
+   export = CollectionController;
+

@@ -1,8 +1,7 @@
-define('Controls/Selector/SelectedCollection/SelectedCollectionStyles', [],
-   function() {}
+
 
    /**
-    * @mixin Controls/Selector/SelectedCollection/SelectedCollectionStyles
+    * @mixin Controls/_lookup/SelectedCollection/SelectedCollectionStyles
     * @public
     * @author Капустин И.А.
     *
@@ -26,4 +25,3 @@ define('Controls/Selector/SelectedCollection/SelectedCollectionStyles', [],
     * @css @spacing_SelectedCollection-between-counter-items Spacing between counter and items.
     *
     */
-);
