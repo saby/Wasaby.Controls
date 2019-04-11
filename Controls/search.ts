@@ -13,10 +13,12 @@ import InputContainer = require('Controls/_search/Input/Container');
 import Misspell = require('Controls/_search/Misspell');
 import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
+import Input = require('Controls/_search/Input/Search');
 
 export {
    InputContainer,
    Misspell,
    MisspellContainer,
-   Controller
+   Controller,
+   Input
 }
