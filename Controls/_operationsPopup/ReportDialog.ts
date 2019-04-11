@@ -1,9 +1,7 @@
-define('Controls/Operations/ReportDialog', [
-   'Core/Control',
-   'Core/helpers/String/format',
-   'wml!Controls/Operations/ReportDialog/ReportDialog'
-], function(Control, format, template) {
-   'use strict';
+import Control = require('Core/Control');
+import format = require('Core/helpers/String/format');
+import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDialog');
+
 
    /**
     * The template of the dialog with the results of mass operations.
@@ -72,5 +70,5 @@ define('Controls/Operations/ReportDialog', [
       }
    });
    ReportDialog._theme = ['Controls/operationsPopup'];
-   return ReportDialog;
-});
+   export = ReportDialog;
+
