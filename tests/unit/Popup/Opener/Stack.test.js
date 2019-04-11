@@ -33,6 +33,7 @@ define(
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
+            assert.isTrue(position.position === 'fixed');
          });
 
          it('stack shadow', () => {

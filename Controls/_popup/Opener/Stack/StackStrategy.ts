@@ -60,7 +60,8 @@
             stackWidth: width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
-            bottom: 0
+            bottom: 0,
+            position: 'fixed'
          };
 
          if (item.popupOptions.minWidth) {
