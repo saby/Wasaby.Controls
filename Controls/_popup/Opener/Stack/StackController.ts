@@ -48,7 +48,7 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
 
             return {
                top: Math.max(targetCoords.top, 0),
-               right: Math.max(window.innerWidth - targetCoords.right, 0)
+               right: Math.max(document.documentElement.clientWidth - targetCoords.right, 0) // calc without scroll
             };
          },
 
