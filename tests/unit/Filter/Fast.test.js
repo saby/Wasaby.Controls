@@ -289,7 +289,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
-            fastData2._onResult({ data: selectedItems, action: 'selectorResult' });
+            fastData2._onResult(null, { data: selectedItems, action: 'selectorResult' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
