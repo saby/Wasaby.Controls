@@ -1,4 +1,5 @@
 import Control = require('Core/Control');
+// @ts-ignore
 import format = require('Core/helpers/String/format');
 import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDialog');
 
