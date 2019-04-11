@@ -1,6 +1,6 @@
 define('Controls/Selector/SelectedCollection/Popup',
-   ['Controls/_lookupPopup/SelectedCollection/Popup'],
+   ['Controls/lookupPopup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Collection;
    });

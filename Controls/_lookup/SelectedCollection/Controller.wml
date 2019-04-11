@@ -9,10 +9,10 @@
                on:inputCompleted="_notifyHandler('inputCompleted')"/>
 
    <ws:if data="{{_options.selectorTemplate}}">
-      <Controls.Selector.Opener name="selectorOpener">
+      <Controls._lookup.Opener name="selectorOpener">
          <ws:popupOptions template="{{_options.selectorTemplate.templateName}}">
             <ws:eventHandlers onResult="{{_selectCallback}}"/>
          </ws:popupOptions>
-      </Controls.Selector.Opener>
+      </Controls._lookup.Opener>
    </ws:if>
 </div>

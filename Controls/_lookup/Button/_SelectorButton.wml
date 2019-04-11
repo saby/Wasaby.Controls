@@ -1,6 +1,6 @@
 <div class="controls-Selectorbutton{{_options.items.getCount() === 0 ? ' controls-Selectorbutton_empty'}}">
    <ws:if data="{{_options.items.getCount()}}">
-      <Controls.Selector.SelectedCollection
+      <Controls._lookup.SelectedCollection
               items="{{_options.items}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
@@ -14,7 +14,7 @@
             <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect && !_options.readOnly}}"
                         attr:class="{{!_options.readOnly ? 'controls-Selectorbutton_selectedItem_' + (_options.multiSelect ? 'multi' : 'single')}}"/>
          </ws:itemTemplate>
-      </Controls.Selector.SelectedCollection>
+      </Controls._lookup.SelectedCollection>
       <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
          <span on:click="_open()" attr:class="controls-Selectorbutton_button-more">{[+еще]}</span>
       </ws:if>

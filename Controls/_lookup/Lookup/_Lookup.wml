@@ -22,7 +22,7 @@
       layerName="Controls/Container/Suggest/__PopupLayer"
       value="{{_inputValue}}"
       attr:class="controls-Lookup__suggest">
-   <Controls.Selector.Lookup.InputRender
+   <Controls._lookup.Lookup.InputRender
          name="inputRender"
          inputWidth="{{ _inputWidth }}"
          isInputVisible="{{_isInputVisible()}}"
@@ -43,7 +43,7 @@
 
       <ws:beforeFieldWrapper>
          <ws:if data="{{!_isEmpty() && (_maxVisibleItems || _options.readOnly)}}">
-            <Controls.Selector.SelectedCollection
+            <Controls._lookup.SelectedCollection
                   name="collection"
                   itemTemplate="{{_options.itemTemplate}}"
                   displayProperty="{{_options.displayProperty}}"
@@ -72,6 +72,6 @@
             </div>
          </ws:if>
       </ws:afterFieldWrapper>
-   </Controls.Selector.Lookup.InputRender>
+   </Controls._lookup.Lookup.InputRender>
    <Controls.Event.Listener event="controlResize" on:controlResize="_resize()"/>
 </Controls.Container.Suggest.Layout>
