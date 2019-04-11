@@ -1,8 +1,10 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
+import {format} from 'Controls/_input/Number/format';
 import {IText, paste} from 'Controls/_input/Base/Util';
-import ParsedNumber from "Controls/_input/Number/ParsedNumber";
+import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
+import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant';
 
 /**
  * @class Controls/_input/Number/ViewModel
@@ -64,20 +66,20 @@ const _private = {
 
         value = _private.joinGroups(value);
 
-        if (value && splitValue.delete.includes(ParsedNumber.splitter)) {
-            value = paste(value, ParsedNumber.splitter, carriagePosition);
+        if (value && splitValue.delete.includes(decimalSplitter)) {
+            value = paste(value, decimalSplitter, carriagePosition);
         }
 
         return {value, carriagePosition};
     },
 
-    pasteInIntegerPart: function ({value, carriagePosition}: IText, parsedNumber: ParsedNumber, splitterPosition: number) {
+    pasteInIntegerPart: function ({value, carriagePosition}: IText, parsedNumber: IParsedNumber, splitterPosition: number) {
         value = paste(value, parsedNumber.integer, carriagePosition);
 
         if (parsedNumber.fractional) {
             if (splitterPosition === -1) {
                 splitterPosition = value.length;
-                value += ParsedNumber.splitter;
+                value += decimalSplitter;
             } else {
                 splitterPosition += parsedNumber.integer.length;
             }
@@ -91,7 +93,7 @@ const _private = {
         return {value, carriagePosition};
     },
 
-    pasteInFractionalPart: function ({value, carriagePosition}: IText, parsedNumber: ParsedNumber) {
+    pasteInFractionalPart: function ({value, carriagePosition}: IText, parsedNumber: IParsedNumber) {
         const pastedValue: string = parsedNumber.integer + parsedNumber.fractional;
 
         value = paste(value, pastedValue, carriagePosition);
@@ -135,7 +137,7 @@ var ViewModel = BaseViewModel.extend({
     },
 
     handleInput: function (splitValue, inputType) {
-        const parsedNumber: ParsedNumber = new ParsedNumber();
+        let parsedNumber: IParsedNumber;
 
         _private.handleRemovalSplitterTriad(splitValue, inputType);
 
@@ -148,8 +150,8 @@ var ViewModel = BaseViewModel.extend({
         /**
          * To enter the fractional part, you can go directly by pressing a dot or a comma.
          */
-        if (ParsedNumber.splitters.includes(splitValue.insert) && splitValue.delete === '') {
-            const splitterPosition: number = text.value.indexOf(ParsedNumber.splitter);
+        if (decimalSplitters.includes(splitValue.insert) && splitValue.delete === '') {
+            const splitterPosition: number = text.value.indexOf(decimalSplitter);
 
             if (splitterPosition !== -1) {
                 text.carriagePosition = splitterPosition + 1;
@@ -159,7 +161,7 @@ var ViewModel = BaseViewModel.extend({
         }
 
         if (inputType === 'insert') {
-            parsedNumber.parse(splitValue.insert);
+            parsedNumber = parse(splitValue.insert);
 
             /**
              * If entered a negative number, then change the current one to the opposite.
@@ -169,7 +171,7 @@ var ViewModel = BaseViewModel.extend({
                 text.value = paste(text.value, '-', 0);
             }
 
-            const splitterPosition: number = text.value.indexOf(ParsedNumber.splitter);
+            const splitterPosition: number = text.value.indexOf(decimalSplitter);
 
             if (splitterPosition === -1) {
                 text = _private.pasteInIntegerPart(text, parsedNumber, splitterPosition);
@@ -184,9 +186,9 @@ var ViewModel = BaseViewModel.extend({
             return _private.superHandleInput(this, text, inputType);
         }
 
-        parsedNumber.parse(text.value);
+        parsedNumber = parse(text.value);
 
-        return _private.superHandleInput(this, parsedNumber.format(this._options, text.carriagePosition), inputType);
+        return _private.superHandleInput(this, format(parsedNumber, this._options, text.carriagePosition), inputType);
     },
 
     trimTrailingZeros: function (leaveOneZero) {

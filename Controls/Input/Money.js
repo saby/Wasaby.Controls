@@ -2,7 +2,7 @@ define('Controls/Input/Money',
    [
       'Types/entity',
       'Controls/input',
-      'Controls/Input/Money/ViewModel',
+      'Controls/Input/Number/ViewModel',
 
       'wml!Controls/Input/Money/ReadOnly'
    ],
@@ -46,7 +46,9 @@ define('Controls/Input/Money',
 
          _getViewModelOptions: function(options) {
             return {
+               useGrouping: true,
                showEmptyDecimals: true,
+               useAdditionToMaxPrecision: true,
                precision: _private.PRECISION,
                onlyPositive: options.onlyPositive
             };
