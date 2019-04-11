@@ -1,24 +1,13 @@
-define('Controls/Tabs', [
-   'Core/Control'
+/**
+ * tabs library
+ * @library Controls/tabs
+ * @includes Buttons Controls/_tabs/Buttons
+ * @public
+ * @author Kraynov D.
+ */
 
-], function(Control
-) {
-   'use strict';
+import Buttons = require('Controls/_tabs/Buttons');
 
-   var _private = {};
-
-   /**
-    * Временная заглушка, чтоб заработал раздел Tabs
-    * @class Controls/Tabs
-    * @extends Core/Control
-    * @control
-    * @public
-    * @category List
-    * @author Михайловский Д.С.
-    */
-
-   var Tabs = Control.extend({
-
-   });
-   return Tabs;
-});
+export {
+   Buttons
+}

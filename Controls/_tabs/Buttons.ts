@@ -88,7 +88,7 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     *
     * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
     *
-    * @class Controls/Tabs/Buttons
+    * @class Controls/_tabs/Buttons
     * @extends Core/Control
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/ISource
@@ -96,11 +96,11 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     * @public
     * @category List
     * @author Михайловский Д.С.
-    * @demo Controls-demo/Tabs/ButtonsDemoPG
+    * @demo Controls-demo/_tabs/ButtonsDemoPG
     */
 
    /**
-    * @name Controls/Tabs/Buttons#tabSpaceTemplate
+    * @name Controls/_tabs/Buttons#tabSpaceTemplate
     * @cfg {Content} Contents of the area near the tabs.
     * @default undefined
     * @remark
@@ -126,7 +126,7 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     */
 
    /**
-    * @name Controls/Tabs/Buttons#style
+    * @name Controls/_tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
     * @variant primary
     * @variant secondary
@@ -161,7 +161,7 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     */
 
    /**
-    * @name Controls/Tabs/Buttons#source
+    * @name Controls/_tabs/Buttons#source
     * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @default undefined
     * @remark
@@ -199,13 +199,13 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     */
 
    /**
-    * @name Controls/Tabs/Buttons#itemTemplate
+    * @name Controls/_tabs/Buttons#itemTemplate
     * @cfg {Function} Template for item render.
-    * @default Base template 'wml!Controls/Tabs/Buttons/ItemTemplate'
+    * @default Base template 'wml!Controls/_tabs/Buttons/ItemTemplate'
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
+    * To determine the template, you should call the base template 'wml!Controls/_tabs/Buttons/ItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template 'wml!Controls/_tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
@@ -218,7 +218,7 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     *                   style="additional"
     *                   source="{{_source3}}">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
+    *          <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
     *                      item="{{itemTemplate.item}}"
     *                      displayProperty="caption"/>
     *       </ws:itemTemplate>
@@ -227,13 +227,13 @@ import 'css!theme?Controls/_tabs/Buttons/Buttons';
     */
 
    /**
-    * @name Controls/Tabs/Buttons#itemTemplateProperty
+    * @name Controls/_tabs/Buttons#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render.
     * @default If not set, itemTemplate is used instead.
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
+    * To determine the template, you should call the base template 'wml!Controls/_tabs/Buttons/ItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template 'wml!Controls/_tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
