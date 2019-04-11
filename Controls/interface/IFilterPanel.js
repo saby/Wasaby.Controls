@@ -124,7 +124,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see itemTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
@@ -192,7 +192,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
@@ -264,7 +264,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplate
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
@@ -312,13 +312,13 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see itemTemplate
-    * @see <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
     * @name Controls/interface/IFilterPanel#historyId
     * @cfg {String} Unique id for save history.
-    * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>instruction</a>.
+    * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>instruction</a>.
     */
 
 });

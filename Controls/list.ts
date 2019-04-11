@@ -10,7 +10,7 @@
  * @includes Mover Controls/_lists/Mover
  * @includes Remover Controls/_lists/Remover
  * @includes Paging Controls/_lists/Paging
- * @includes VirtualScroll Controls/_lists/VirtualScroll
+ * @includes VirtualScroll Controls/_lists/Controllers/VirtualScroll
  * @includes DataContainer Controls/_lists/Data
  * @public
  * @author Kraynov D.
@@ -25,7 +25,7 @@ import View = require('Controls/_lists/List');
 import Mover = require('Controls/_lists/Mover');
 import Remover = require('Controls/_lists/Remover');
 import Paging = require('Controls/_lists/Paging');
-import VirtualScroll = require('Controls/_lists/VirtualScroll');
+import VirtualScroll = require('Controls/_lists/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_lists/Data');
 import _forTemplate = require('wml!Controls/_lists/resources/For');
 

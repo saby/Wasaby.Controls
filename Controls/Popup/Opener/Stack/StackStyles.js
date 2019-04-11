@@ -1,15 +1,6 @@
-define('Controls/Popup/Opener/Stack/StackStyles', [],
-   function() {}
-
-/**
- * @mixin Controls/Popup/Opener/Stack/StackStyles
- * @private
- *
- *@css @size_Stack-border-left   Thickness of left border
- *@css @color_Stack-border-left  Color of left border
- *@css @padding_Stack-shadow     Padding for shadow
- *@css @size_Stack-shadow        Size of shadow
- *@css @color_Stack-shadow       Color of shadow
- *
- */
-);
+define('Controls/Popup/Opener/Stack/StackStyles',
+   ['Controls/_popup/Opener/Stack/StackStyles'],
+   function(Control) {
+      'use strict';
+      return Control;
+   });

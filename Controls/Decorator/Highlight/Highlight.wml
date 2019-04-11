@@ -1,8 +1,1 @@
-<span>
-   <ws:for data="path in _parsedText">
-      <ws:if data="{{path.type === 'highlight'}}">
-         <span class="{{_options.class}}">{{path.value}}</span>
-      </ws:if>
-      <ws:else>{{path.value}}</ws:else>
-   </ws:for>
-</span>
+<ws:partial template="wml!Controls/_decorator/Highlight/Highlight" scope="{{_options}}" />
