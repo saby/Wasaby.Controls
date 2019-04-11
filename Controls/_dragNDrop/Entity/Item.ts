@@ -1,4 +1,4 @@
-import Entity = require('Controls/_dragNDrop/Entity');
+import Entity = require('Controls/_dragnDrop/Entity');
       
 
       var Item = Entity.extend({

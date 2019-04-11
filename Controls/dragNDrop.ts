@@ -1,25 +1,25 @@
 /**
- * DragNDrop library
- * @library Controls/_dragNDrop
- * @includes Container Controls/_dragNDrop/Container
- * @includes Controller Controls/_dragNDrop/Controller
- * @includes DraggingTemplate Controls/_dragNDrop/DraggingTemplate
- * @includes Entity Controls/_dragNDrop/Entity
- * @includes Items Controls/_dragNDrop/Entity/Items
+ * dragnDrop library
+ * @library Controls/_dragnDrop
+ * @includes Container Controls/_dragnDrop/Controller
+ * @includes Controller Controls/_dragnDrop/Container
+ * @includes DraggingTemplate Controls/_dragnDrop/DraggingTemplate
+ * @includes Entity Controls/_dragnDrop/Entity
+ * @includes ItemsEntity Controls/_dragnDrop/Entity/Items
  * @public
  * @author Авраменко А. С.
  */
 
-import Container = require('Controls/_dragNDrop/Container');
-import Controller = require('Controls/_dragNDrop/Controller');
-import DraggingTemplate = require('Controls/_dragNDrop/DraggingTemplate');
-import Entity = require('Controls/_dragNDrop/Entity');
-import Items = require('Controls/_dragNDrop/Entity/Items');
+import Container = require('Controls/_dragnDrop/Controller');
+import Controller = require('Controls/_dragnDrop/Container');
+import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
+import Entity = require('Controls/_dragnDrop/Entity');
+import ItemsEntity = require('Controls/_dragnDrop/Entity/Items');
 
 export {
     Container,
     Controller,
     DraggingTemplate,
     Entity,
-    Items
+    ItemsEntity
 }

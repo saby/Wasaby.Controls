@@ -1,8 +1,8 @@
-<Controls._dragNDrop.Container on:_updateDraggingTemplate="_updateDraggingTemplate()" on:_documentDragEnd="_documentDragEnd()">
+<Controls._dragnDrop.Container on:_updateDraggingTemplate="_updateDraggingTemplate()" on:_documentDragEnd="_documentDragEnd()">
    <ws:partial
       template="{{_options.content}}"
       scope="{{_options}}"
       on:register="_onRegisterHandler()"
       on:unregister="_onRegisterHandler()"
    />
-</Controls._dragNDrop.Container>
+</Controls._dragnDrop.Container>

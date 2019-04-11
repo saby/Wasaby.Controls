@@ -1,5 +1,5 @@
 define('Controls/DragNDrop/DraggingTemplate',
-   ['Controls/_dragNDrop/DraggingTemplate'],
+   ['Controls/_dragnDrop/DraggingTemplate'],
    function(Control) {
       'use strict';
       return Control;

@@ -1,5 +1,5 @@
-define('Controls/_dragNDrop/Container/Compound',
-   ['Controls/_dragNDrop/Container/Compound'],
+define('Controls/DragNDrop/Container/Compound',
+   ['Controls/_dragnDrop/Container/Compound'],
    function(Control) {
       'use strict';
       return Control;
