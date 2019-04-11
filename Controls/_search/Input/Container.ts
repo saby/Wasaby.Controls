@@ -4,13 +4,13 @@ import template = require('wml!Controls/_search/Input/Container');
 /**
  * Special container for component with {@link Controls/Input/interface/IInputField}.
  * Listens for child's "valueChanged" event and notify bubbling event "search".
- * NOTE: must be located inside {@link Controls/Search/Controller}.
+ * NOTE: must be located inside {@link Controls/_search/Controller}.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
- * @class Controls/Search/Input/Container
+ * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
  * @control
@@ -19,7 +19,7 @@ import template = require('wml!Controls/_search/Input/Container');
 
 
 
-var SearchContainer = Control.extend(/** @lends Controls/Search/Input/Container.prototype */{
+var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container.prototype */{
 
    _template: template,
    _value: '',

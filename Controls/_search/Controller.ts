@@ -92,13 +92,13 @@ var _private = {
  * 2) set number of characters
  * 3) set search parameter
  * 4) change the keyboard layout for an unsuccessful search
- * Note: Component with {@link Controls/Input/interface/IInputField} interface must be located in {@link Controls/Search/Input/Container}.
+ * Note: Component with {@link Controls/Input/interface/IInputField} interface must be located in {@link Controls/_search/Input/Container}.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
- * @class Controls/Search/Controller
+ * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/Input/interface/ISearch
  * @mixes Controls/interface/ISource
@@ -109,7 +109,7 @@ var _private = {
  * @public
  */
 
-var Container = Control.extend(/** @lends Controls/Search/Container.prototype */{
+var Container = Control.extend(/** @lends Controls/_search/Container.prototype */{
 
    _template: template,
    _dataOptions: null,
