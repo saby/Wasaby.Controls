@@ -165,21 +165,40 @@ import 'css!Controls/_popup/Previewer/Previewer';
          },
 
          _contentMouseenterHandler: function(event) {
-            if (!this._isPopupOpened()) {
-               this._debouncedAction('_open', [event]);
+            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
+               this._cancel(event, 'closing');
             }
-            this._cancel(event, 'closing');
          },
 
          _contentMouseleaveHandler: function(event) {
-            this._debouncedAction('_close', [event]);
+            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
+               clearTimeout(this._waitTimer);
+               if (this._isPopupOpened()) {
+                  this._debouncedAction('_close', [event]);
+               }
+            }
+         },
+
+         _contentMousemoveHandler: function(event) {
+            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
+               var self = this;
+
+               // wait, until user stop mouse on target.
+               // Don't open popup, if mouse moves through the target
+               clearTimeout(this._waitTimer);
+               this._waitTimer = setTimeout(function() {
+                  if (!self._isPopupOpened()) {
+                     self._debouncedAction('_open', [event]);
+                  }
+               }, 300);
+            }
          },
 
          _previewerClickHandler: function(event) {
-            /**
-             * Cancel the ascent of the click. Thus cancel the parent reaction.
-             */
-            event.stopPropagation();
+            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
+               // Cancel the ascent of the click. Thus cancel the parent reaction.
+               event.stopPropagation();
+            }
          },
 
          _resultHandler: function(event) {
