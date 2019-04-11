@@ -2,9 +2,11 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
    [
       "Core/Control",
       "wml!Controls-demo/PropertyGridNew/PropertyGrid",
+
+      'Types/collection',
       "css!Controls-demo/PropertyGridNew/PropertyGrid"
    ],
-   function(Control, template) {
+   function(Control, template, collection) {
       "use strict";
 
       var PropertyGrid = Control.extend({
@@ -13,13 +15,27 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
          _beforeMount: function() {
 
             this._editingObject = {
+               description: 'This is http://mysite.com',
                tileView: true,
                showBackgroundImage: true,
                siteUrl: "http://mysite.com",
                videoSource: "http://youtube.com/video",
+               backgroundType: new collection.Enum({
+                  dictionary: ['Фоновое изображение', 'Заливка цветом'],
+                  index: 0
+               })
             };
 
             this._source = [
+               {
+                  name: 'description',
+                  caption: 'Описание',
+                  editorOptions: {
+                     minLines: 3
+                  },
+                  group: 'text',
+                  type: 'text'
+               },
                {
                   name: "tileView",
                   caption: "Список плиткой",
@@ -29,7 +45,6 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
                   name: "showBackgroundImage",
                   caption: "Показывать изображение",
                   group: "boolean"
-
                },
                {
                   caption: "URL",
@@ -40,6 +55,11 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
                   caption: "Источник видео",
                   name: "videoSource",
                   group: "string"
+               },
+               {
+                  caption: 'Тип фона',
+                  name: 'backgroundType',
+                  group: 'enum'
                },
             ];
 

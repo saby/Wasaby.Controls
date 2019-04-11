@@ -176,7 +176,7 @@ var _private = {
         }
         resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
-                cfg.afterReloadCallback();
+                cfg.afterReloadCallback(cfg);
             }
             return result;
         });
@@ -296,7 +296,11 @@ var _private = {
         /**/
 
         if (self._sourceController) {
-            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
+            var filter = cClone(self._options.filter);
+            if (self._options.beforeLoadToDirectionCallback) {
+                self._options.beforeLoadToDirectionCallback(filter, self._options);
+            }
+            return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 self._loadedItems = addedItems;
                 if (userCallback && userCallback instanceof Function) {
                     userCallback(addedItems, direction);
@@ -760,7 +764,7 @@ var _private = {
 
         if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem(), self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 closeMenu();
@@ -1373,6 +1377,16 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
 
     _viewResize: function() {
         if (this._virtualScroll) {
+
+            /*
+            * To update items sizes, virtualScroll needs their HTML container. It sets on baseControls' afterMount.
+            * The "controlResize" event can fires before baseControls' afterMount, because first performs afterMounts of all
+            * children. It leads to errors, because container has not been settled yet.
+            * */
+            if (!this._virtualScroll.ItemsContainer) {
+                this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer()
+            }
+
             this._virtualScroll.updateItemsSizes();
         }
     },

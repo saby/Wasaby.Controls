@@ -5,7 +5,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
         deleteDir()
         checkout([$class: 'GitSCM',
             branches: [[name: "rc-${version}"]],
-			doGenerateSubmoduleConfigurations: false,
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "jenkins_pipeline"
@@ -18,6 +18,8 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
         helper = load "./jenkins_pipeline/platforma/branch/helper"
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileControls"
         run_unit = load "./jenkins_pipeline/platforma/branch/run_unit"
-        start.start(version, workspace, helper)
+        timeout(time: 60, unit: 'MINUTES') {
+            start.start(version, workspace, helper)
+        }
     }
 }

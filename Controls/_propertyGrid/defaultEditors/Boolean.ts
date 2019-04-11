@@ -5,6 +5,16 @@ import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 import 'Controls/Toggle/Checkbox';
 
+/**
+ * Editor for boolean type.
+ * @class Controls/_propertyGrid/defaultEditors/Boolean
+ * @extends Core/Control
+ * @interface Controls/_propertyGrid/IEditor
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
 // @ts-ignore
 class BooleanEditor extends Control implements IEditor {
     protected _template: Function = template;

@@ -16,7 +16,7 @@ define('Controls/interface/IFilter', [
     * In this example, the list will be displayed 2 items.
     * TMPL:
     * <pre>
-    *    <Controls.lists:View
+    *    <Controls.list:View
     *       keyProperty="id"
     *       filter={{_filter}}
     *       source="{{_source}}" />

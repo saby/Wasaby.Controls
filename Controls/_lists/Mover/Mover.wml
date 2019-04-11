@@ -1,3 +1,5 @@
-<Controls.Popup.Opener.Dialog name="dialogOpener" on:result="_onDialogResult()"
-                              modal="{{true}}" template="{{_options.moveDialogTemplate}}">
+<Controls.Popup.Opener.Dialog name="dialogOpener"
+                              on:result="_onDialogResult()"
+                              closeOnOutsideClick="{{true}}"
+                              template="{{_options.moveDialogTemplate}}">
 </Controls.Popup.Opener.Dialog>

@@ -1,0 +1,5 @@
+<Controls.Container.Adapter.Enum enum="{{_enum}}">
+   <Controls.Input.ComboBox attr:class="controls-PropertyGrid__editor_enum_control"
+                            displayProperty="title"
+                            on:selectedKeyChanged="_selectedKeyChanged()"/>
+</Controls.Container.Adapter.Enum>

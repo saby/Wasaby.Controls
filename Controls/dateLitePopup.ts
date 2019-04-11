@@ -14,11 +14,11 @@ import monthCaptionTemplate = require('wml!Controls/_dateLitePopup/MonthCaption'
 import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
 
 /**
- * A link button that displays the period. Supports the change of periods to adjacent.
+ * Control for date or period selection.
  *
  * @class Controls/dateLitePopup
  * @extends Core/Control
- * @mixes Controls/_dateLitePopup/IPDateLitePopup
+ * @mixes Controls/_dateLitePopup/IDateLitePopup
  * @control
  * @public
  * @author Миронов А.Ю.

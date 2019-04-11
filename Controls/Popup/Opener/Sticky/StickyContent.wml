@@ -1,1 +1,1 @@
-<ws:partial template="{{template}}" scope="{{templateOptions}}" stickyPosition="{{stickyPosition}}" />
+<ws:partial template="wml!Controls/_popup/Opener/Sticky/StickyContent" scope="{{_options}}" />

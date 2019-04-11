@@ -33,16 +33,16 @@ define(
       describe('Controls/Popup/Opener/Edit', () => {
          it('mode', () => {
             editOpener._beforeMount({});
-            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Stack');
+            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Stack');
 
             editOpener._beforeMount({ mode: 'dialog' });
-            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Dialog');
+            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Dialog');
 
             editOpener._beforeMount({ mode: 'sticky' });
-            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Sticky');
+            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Sticky');
 
             editOpener._beforeMount({ mode: 'stack' });
-            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Stack');
+            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Stack');
          });
 
          it('get config', () => {

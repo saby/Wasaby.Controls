@@ -3,65 +3,61 @@
         <div class="header">Кнопка с залипанием</div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="s"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="secondary" viewMode="toolButton"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="default"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="secondary" viewMode="toolButton"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="secondary" viewMode="toolButton"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
         </div>
         <div class="header">Кнопки-ссылки</div>
         <div class="type_block" test_name="button_link">
             <div class="demo_element">
-                <span class="span_label">linkMain, size="s"</span>
+                <span class="span_label">link, secondary, size="s"</span>
 					<Controls.buttons:Button readOnly="{{false}}" attr:test_name="main_link" caption="Основная ссылка" viewMode="link" style="secondary" size="s" />
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain2, size="m"</span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="inactive_link_1" caption="Неакцентная ссылка 1" style="linkMain2" size="m"/>
+                <span class="span_label">input:Label, underline="hovered"</span>
+                <Controls.input:Label readOnly="{{false}}" attr:test_name="inactive_link_1" caption="Неакцентная ссылка 1" underline="hovered"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain3, size="l" </span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="inactive_link_2" caption="Неакцентная ссылка 2" style="linkMain3" size="l"/>
+                <span class="span_label">input:Label, underline="fixed"</span>
+                <Controls.input:Label readOnly="{{false}}" attr:test_name="inactive_link_2" caption="Неакцентная ссылка 2" underline="fixed"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain3,  size="xl"</span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="inactive_link_2_2" caption="Неакцентная ссылка 2" style="linkMain3" size="xl"/>
+                <span class="span_label">link, info, size="s"</span>
+                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="inactive_link_3" caption="Неакцентная ссылка 3" style="info" viewMode="link" size="s"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkAdditional, size="s"</span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="inactive_link_3" caption="Неакцентная ссылка 3" style="linkAdditional" size="s"/>
-            </div>
-            <div class="demo_element">
-                <span class="span_label">linkAdditional2, size="m"</span>
+                <span class="span_label">link, default, size="m"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_1" caption="Акцентная ссылка 1" style="default" viewMode="link" size="m"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkAdditional3, size="l"</span>
+                <span class="span_label">link, danger, size="l"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_2" caption="Акцентная ссылка 2" style="danger" viewMode="link" size="l" />
             </div>
             <div class="demo_element">
-                <span class="span_label">linkAdditional4, size="xl"</span>
+                <span class="span_label">link, success, size="xl"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_3" caption="Акцентная ссылка 3" style="success" viewMode="link" size="xl"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkAdditional5, size="m"</span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_4" caption="Акцентная ссылка 4" style="linkAdditional5" size="m" />
+                <span class="span_label">link, magic, size="m"</span>
+                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_4" caption="Акцентная ссылка 4" style="magic" viewMode="link" size="m" />
             </div>
             <div class="demo_element">
-                <span class="span_label">linkAdditional5, readOnly="true" </span>
-                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="accent_link_5" caption="Акцентная ссылка 5" style="linkAdditional5" size="m"/>
+                <span class="span_label">link, magic,, readOnly="true" </span>
+                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="accent_link_5" caption="Акцентная ссылка 5" style="magic" viewMode="link" size="m"/>
             </div>
         </div>
         <div class="header">Кнопки контурные</div>
@@ -83,20 +79,20 @@
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="circuit_button_4" iconStyle="default" style="secondary" viewMode="button" icon="icon-16 icon-Add" caption="Малая  недоступная"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, size="m", iconStyle="default"</span>
+                <span class="span_label">button, primary, size="m", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="circuit_button_5" iconStyle="primary" style="primary" viewMode="button" icon="icon-24 icon-Send"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, size="l", iconStyle="default"</span>
+                <span class="span_label">button, primary, size="l", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="circuit_button_6" iconStyle="primary" style="primary" viewMode="button" icon="icon-24 icon-Send" size="l" />
             </div>
             <div class="demo_element">
                 <span class="span_label">size="m", readOnly="true", iconStyle="default"</span>
-                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="circuit_button_7" iconStyle="default" style="primary" viewMode="button" icon="icon-24 icon-Send" style="buttonPrimary" />
+                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="circuit_button_7" iconStyle="default" style="primary" viewMode="button" icon="icon-24 icon-Send" />
             </div>
             <div class="demo_element">
                 <span class="span_label">size="l", readOnly="true", iconStyle="default"</span>
-                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="circuit_button_8" iconStyle="default" style="primary" viewMode="button" icon="icon-24 icon-Send" style="buttonPrimary" size="l" />
+                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="circuit_button_8" iconStyle="default" style="primary" viewMode="button" icon="icon-24 icon-Send" size="l" />
             </div>
         </div>
     </div>
@@ -104,38 +100,38 @@
         <div class="header">Кнопки-значки</div>
         <div class="type_block" test_name="button_icon">
             <div class="demo_element">
-                <span class="span_label">linkMain, iconStyle="default"</span>
+                <span class="span_label">link, secondary, iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="icon_button_1" iconStyle="secondary" icon="icon-24 icon-Save" style="secondary" viewMode="link" size="m" />
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain, readOnly="true", iconStyle="default"</span>
+                <span class="span_label">link, secondary, readOnly="true", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="icon_button_2" iconStyle="default" icon="icon-24 icon-Save" style="secondary" viewMode="link"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain, iconStyle="default"</span>
+                <span class="span_label">link, secondary, iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="icon_button_3" iconStyle="secondary" icon="icon-24 icon-Save" caption="Кнопка-ссылка со значком и текстом" style="secondary" viewMode="link"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">linkMain, readOnly="true",iconStyle="default"</span>
+                <span class="span_label">link, secondary, readOnly="true",iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="icon_button_4" iconStyle="default" icon="icon-24 icon-Send" caption="Кнопка-ссылка со значком и текстом" style="secondary" viewMode="link"/>
             </div>
         </div>
         <div class="header">Различные сочетания опций</div>
         <div class="type_block" test_name="button_option">
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, readOnly="true", size="l", iconStyle="default"</span>
+                <span class="span_label">button, primary, readOnly="true", size="l", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="option_button_1" iconStyle="primary" icon="icon-24 icon-Send" style="primary" viewMode="button" size="l"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, readOnly="true", size="m", iconStyle="default"</span>
+                <span class="span_label">button, primary, readOnly="true", size="m", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="option_button_2" iconStyle="primary" icon="icon-24 icon-Send" style="primary" viewMode="button"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, size="l", iconStyle="default"</span>
+                <span class="span_label">button, primary, size="l", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="option_button_3" iconStyle="primary" caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="primary" viewMode="button" size="l"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonPrimary, size="m", iconStyle="default"</span>
+                <span class="span_label">button, primary, size="m", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}"  attr:test_name="option_button_4" iconStyle="primary" caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="primary" viewMode="button"/>
             </div>
             <div class="demo_element">
@@ -155,41 +151,41 @@
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="option_button_8" iconStyle="secondary" icon="icon-24 icon-Send" style="secondary" viewMode="button" caption="Кнопка со значком и текстом" size="l"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonAdd, size="l", iconStyle="default"</span>
+                <span class="span_label">button, primary, size="l", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="option_button_9" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="primary" viewMode="button" iconStyle="default" size="l"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">buttonAdd, size="l", readOnly="true", iconStyle="default"</span>
-                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="option_button_10" iconStyle="default" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="buttonAdd" size="l"/>
+                <span class="span_label">button, primary, size="l", readOnly="true", iconStyle="default"</span>
+                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="option_button_10" iconStyle="default" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="primary" viewMode="button" size="l"/>
             </div>
         </div>
         <div class="header">Кнопка добавления в таблицу</div>
         <div class="type_block" test_name="button_add">
 			<div class="demo_element">
 				<span class="span_label">AddButton, включена</span>
-				<Controls.lists:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="AddButton"/>
+				<Controls.list:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="AddButton"/>
 			</div>
 			<div class="demo_element">
 				<span class="span_label">AddButton, выключена</span>
-				<Controls.lists:AddButton attr:test_name="add_button_2" readOnly="{{true}}" caption="AddButton"/>
+				<Controls.list:AddButton attr:test_name="add_button_2" readOnly="{{true}}" caption="AddButton"/>
 			</div>
         </div>
         <div class="header">Кнопка иконка в обводке</div>
         <div class="type_block" test_name="button_icon_border">
             <div class="demo_element">
-                <span class="span_label">iconButtonBordered, readOnly="false", iconStyle="error", size="m"</span>
+                <span class="span_label">toolButton, secondary, readOnly="false", iconStyle="error", size="m"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="danger" icon="icon-16 icon-Author" style="danger" size="s" viewMode="toolButton" transparent="{{true}}"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">iconButtonBordered, readOnly="false", size="l", iconStyle="done"</span>
+                <span class="span_label">toolButton, secondary, readOnly="false", size="l", iconStyle="done"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="icon_border_2" iconStyle="success" icon="icon-16 icon-Author" style="success" viewMode="toolButton" transparent="{{true}}" size="m"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">iconButtonBordered, readOnly="false", size="l", iconStyle="default"</span>
+                <span class="span_label">toolButton, secondary, readOnly="false", size="l", iconStyle="default"</span>
                 <Controls.buttons:Button readOnly="{{false}}" attr:test_name="icon_border_3" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
             </div>
             <div class="demo_element">
-                <span class="span_label">iconButtonBordered, readOnly="true", iconStyle="default", size="m"</span>
+                <span class="span_label">toolButton, secondary, readOnly="true", iconStyle="default", size="m"</span>
                 <Controls.buttons:Button readOnly="{{true}}" attr:test_name="icon_border_4" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" size="s" viewMode="toolButton" transparent="{{true}}"/>
             </div>
         </div>
