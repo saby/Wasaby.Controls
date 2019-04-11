@@ -1,6 +1,1 @@
-<ws:partial template="{{ itemTemplate }}"
-            type="{{ type }}"
-            selected="{{selectedKey === currentItemKey}}"
-            scope="{{templateOptions}}">
-   <ws:templateOptions type="{{ type }}" selected="{{selectedKey === currentItemKey}}"/>
-</ws:partial>
+<ws:partial template="wml!Controls/_SwitchableArea/resource/itemTemplate" scope="{{_options}}" />
