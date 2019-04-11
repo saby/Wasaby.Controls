@@ -55,7 +55,6 @@
       "report-dir": "./application/artifacts/coverage"
    },
    "dependencies": {
-      "find-in-files": "^0.5.0"
    },
    "devDependencies": {
       "tslint": "^5.13.1",

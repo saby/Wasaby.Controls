@@ -1,0 +1,13 @@
+{
+  "multi": true,
+  "old": {
+    "exclude": [
+      "**/*.less"
+    ]
+  },
+  "new": {
+    "exclude": [
+      "**/*.less"
+    ]
+  }
+}

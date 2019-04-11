@@ -2,5 +2,11 @@
     "multi": true,
     "old": {
         "variables": "Controls-theme"
+    },
+    "compatibility": {
+        "**/*.less": [
+            "ws4-retail",
+            "ws4-default"
+        ]
     }
 }
