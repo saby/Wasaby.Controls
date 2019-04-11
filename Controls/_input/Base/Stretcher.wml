@@ -1,4 +1,4 @@
 <div class="controls-InputBase__stretcher">
    <ws:partial attr:class="controls-InputBase__stretcher-content" template="{{content}}" attr:value="{{value}}"/>
-   <div class="controls-InputBase__stretcher-block">{{value}}</div>
+   <div class="controls-InputBase__stretcher-block">{{value || emptySymbol}}</div>
 </div>

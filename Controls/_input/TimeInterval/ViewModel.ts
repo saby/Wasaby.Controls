@@ -7,11 +7,9 @@ import InputProcessor = require('Controls/Input/Mask/InputProcessor');
 import {TimeInterval} from 'Types/entity';
 
 interface IFormatMaskChars {
-    D: string;
     H: string;
     M: string;
     S: string;
-    U: string;
 }
 
 interface IFound {
@@ -31,7 +29,7 @@ export interface IOptions {
 
 export class ViewModel extends BaseViewModel {
     autoComplete(): boolean {
-        if (this.value !== null && this.value.toString() !== 'P0DT0H0M0S') {
+        if (this.value !== null && this.value.toString() !== ViewModel._zeroFormat) {
             this.displayValue = this._convertToDisplayValue(this.value);
 
             return true;
@@ -158,14 +156,14 @@ export class ViewModel extends BaseViewModel {
     }
 
     private static _formatMaskChars: IFormatMaskChars = {
-        D: '[0-9]',
         H: '[0-9]',
         M: '[0-9]',
-        S: '[0-9]',
-        U: '[0-9]'
+        S: '[0-9]'
     };
 
     private static _replacer: string = ' ';
+
+    private static _zeroFormat: string = 'P0DT0H0M0S';
 
     private static _maxValueOfMinutesAndSeconds: number = 59;
 

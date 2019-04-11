@@ -1,9 +1,9 @@
-<div class="controls-InputBase__field controls-{{controlName}}__field_theme_{{options.theme}}_margin"
-     xmlns:ws="http://www.w3.org/1999/html">
+<div class="controls-InputBase__field controls-{{controlName}}__field_theme_{{options.theme}}_margin">
    <ws:if data="{{isFieldFocused()}}">
       <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>
    <ws:partial template="wml!Controls/_input/Base/Stretcher"
+               emptySymbol="{{emptySymbol}}"
                value="{{calculateValueForTemplate()}}">
       <input
          readOnly="{{readOnly || ''}}"

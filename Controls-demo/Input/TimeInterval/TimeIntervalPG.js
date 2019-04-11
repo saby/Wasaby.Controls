@@ -60,7 +60,7 @@ define('Controls-demo/Input/TimeInterval/TimeIntervalPG',
             this._componentOptions = {
                name: 'TimeInterval',
                value: null,
-               mask: 'HH:mm',
+               mask: 'HH:MM',
                placeholder: 'Input TimeInterval',
                readOnly: false,
                tooltip: 'myTooltip',
