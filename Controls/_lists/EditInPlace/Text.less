@@ -1,5 +1,7 @@
 .ws-is-no-touch {
-   .controls-ListView__itemV:hover {
+   .controls-ListView__itemV:hover,
+   /* In browsers with partial grid layout support, the hovered element is calculated on JS using this class */
+   .controls-Grid_row-cell_hovered {
       .controls-EditingTemplateText_enabled {
          background-color: @background-color_InputRender;
          cursor: text;

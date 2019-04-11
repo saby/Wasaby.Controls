@@ -1,9 +1,9 @@
-
 <div>
+   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
    <div class="event-example__wrapper">
       <div class="exampleBlock">
          <h3>Example</h3>
-            <Controls.progress:StateIndicator on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" data="{{_data}}" scale="{{_scale}}"/>
+            <Controls.progress:StateIndicator on:itemEnter="_mouseEnterHandler()" data="{{_data}}" scale="{{_scale}}"/>
       </div>
       <div class="eventBlock">
          <div class="reset-header__wrapper">

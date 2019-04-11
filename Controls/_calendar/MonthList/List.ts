@@ -1,4 +1,4 @@
-import {View as List} from 'Controls/lists';
+import {View as List} from 'Controls/list';
 import 'wml!Controls/List/List';
 
 import 'Core/Deferred';

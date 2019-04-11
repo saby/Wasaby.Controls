@@ -1,1 +1,1 @@
-<ws:partial template="{{template}}" scope="{{templateOptions}}" />
+<ws:partial template="wml!Controls/_popup/Manager/PopupContent" scope="{{_options}}" />

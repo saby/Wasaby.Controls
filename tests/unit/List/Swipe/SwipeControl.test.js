@@ -10,7 +10,15 @@ define([
    VerticalMeasurer
 ) {
    describe('Controls.List.Swipe.SwipeControl', function() {
-      var instance;
+      var instance, sandbox;
+
+      beforeEach(function() {
+         sandbox = sinon.createSandbox();
+      });
+
+      afterEach(function() {
+         sandbox.restore();
+      });
 
       function mockListModel(swipeItem) {
          return {
@@ -81,19 +89,13 @@ define([
       });
 
       it('_onItemActionsClick', function() {
-         var
-            oldItemActionsClick = actionsUtil.itemActionsClick,
-            eventObj = {},
-            dataObj = {};
-         actionsUtil.itemActionsClick = function(self, event, action, itemData, showAll) {
-            assert.equal(self, instance);
-            assert.equal(event, eventObj);
-            assert.equal(action, 1);
-            assert.equal(itemData, dataObj);
-            assert.isTrue(showAll);
-         };
-         instance._onItemActionsClick(eventObj, 1, dataObj);
-         actionsUtil.itemActionsClick = oldItemActionsClick;
+         var stub = sandbox.stub(actionsUtil, 'itemActionsClick');
+         instance.saveOptions({
+            listModel: {}
+         });
+
+         instance._onItemActionsClick({}, 1, {});
+         assert.isTrue(stub.calledOnceWithExactly(instance, {}, 1, {}, {}, true));
       });
 
       describe('_listDeactivated', function() {

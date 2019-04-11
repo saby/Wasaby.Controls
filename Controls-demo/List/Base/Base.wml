@@ -1,48 +1,48 @@
 <div class="123">
     <h2>Default</h2>
-    <Controls.lists:View
+    <Controls.list:View
 			attr:test_name="default"
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             keyProperty="id">
-    </Controls.lists:View>
+    </Controls.list:View>
 
     <h2>Display property</h2>
-    <Controls.lists:View
+    <Controls.list:View
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate"
+            <ws:partial template="Controls/list:ItemTemplate"
                         displayProperty="description"
             ></ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
 
     <h2>Without marker</h2>
-    <Controls.lists:View
+    <Controls.list:View
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate"
+            <ws:partial template="Controls/list:ItemTemplate"
                         marker="{{false}}"
             ></ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
 
     <h2>Custom render</h2>
-    <Controls.lists:View
+    <Controls.list:View
 			attr:test_name="custom"
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>
                     <div>
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>
@@ -51,5 +51,5 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
 </div>

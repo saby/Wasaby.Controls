@@ -3,9 +3,10 @@ define(
       'Controls/Filter/Fast',
       'Types/source',
       'Core/core-clone',
+      'Types/collection',
       'Controls/History/Source'
    ],
-   function(FastData, sourceLib, Clone, HistorySource) {
+   function(FastData, sourceLib, Clone, collection, HistorySource) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -113,7 +114,10 @@ define(
          var getFastFilterWithItems = function(config) {
             var fastFilter = new FastData(config);
             fastFilter._beforeMount(config);
-            fastFilter._configs[0]._items = items[0];
+            fastFilter._configs[0]._items = new collection.RecordSet({
+               rawData: Clone(items[0]),
+               idProperty: 'title'
+            });
             fastFilter.lastOpenIndex = 0;
             fastFilter._children.DropdownOpener = {
                close: setTrue.bind(this, assert),
@@ -265,11 +269,30 @@ define(
 
          it('onResult applyClick', function() {
             let fastData2 = getFastFilterWithItems(configItems);
-            fastData2._onResult(null, { selectedKeys: ['Россия', 'Великобритания'], action: 'applyClick' });
+            let selectedItems = [
+               { key: 1, title: 'Россия' },
+               { key: 3, title: 'Великобритания' }
+            ];
+            fastData2._onResult(null, { data: selectedItems, action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult(null, { selectedKeys: [], action: 'applyClick' });
+            fastData2._onResult(null, { data: [], action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+         });
+
+         it('onResult selectorResult', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            let selectedItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [
+                  { key: 1, title: 'Россия' },
+                  { key: 5, title: 'Франция' }
+               ]
+            });
+            fastData2._onResult({ data: selectedItems, action: 'selectorResult' });
+            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
+            assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
+            assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
          });
 
          it('selectItems', function() {
@@ -389,17 +412,32 @@ define(
                headerTemplate: 'headerTemplateText',
                footerTemplate: 'footerTemplateText',
                emptyText: 'empty text',
-               multiSelect: false
+               multiSelect: false,
+               selectorTemplate: 'selectorTemplate'
             };
             var result = FastData._private.getItemPopupConfig(properties);
             assert.deepEqual(properties, result);
          });
 
-         it('_private.prepareItems', function() {
+         it('_private::prepareItems', function() {
             var self = {};
-            var items = [{properties: {source: new HistorySource({})}}];
+            var items = [{ properties: { source: new HistorySource({}) } }];
             FastData._private.prepareItems(self, items);
             assert.isTrue(self._items.at(0).properties.source instanceof HistorySource);
+         });
+
+         it('_private::getNewItems', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            let selectedItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [
+                  { key: 1, title: 'Россия' },
+                  { key: 2, title: 'США' },
+                  { key: 5, title: 'Франция' }
+               ]
+            });
+            let result = FastData._private.getNewItems(fastData2, selectedItems);
+            assert.deepEqual(result[0], selectedItems.at(2));
          });
 
          it('_needShowCross', function() {

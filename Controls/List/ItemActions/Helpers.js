@@ -1,7 +1,7 @@
 define('Controls/List/ItemActions/Helpers', ['Controls/_lists/ItemActions/Helpers'], function(Control) {
 /**
  * List of helpers for displaying item actions.
- * @class Controls/List/ItemActions/Helpers
+ * @class Controls/list:ItemActionsHelpers
  * @public
  * @author Сухоручкин А.С.
  * @category List

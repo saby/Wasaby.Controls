@@ -53,6 +53,16 @@ define('Controls/Filter/Fast',
             }
          },
 
+         getSourceController: function(self, source, navigation) {
+            if (!self._sourceController) {
+               self._sourceController = new SourceController({
+                  source: source,
+                  navigation: navigation
+               });
+            }
+            return self._sourceController;
+         },
+
          getItemPopupConfig: function(properties) {
             var itemConfig = {};
             itemConfig.keyProperty = properties.keyProperty;
@@ -63,18 +73,13 @@ define('Controls/Filter/Fast',
             itemConfig.footerTemplate = properties.footerTemplate;
             itemConfig.multiSelect = properties.multiSelect;
             itemConfig.emptyText = properties.emptyText;
+            itemConfig.selectorTemplate = properties.selectorTemplate;
             return itemConfig;
          },
 
          loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
-            var sourceController = new SourceController({
-               source: source,
-               navigation: navigation,
-               idProperty: keyProperty
-            });
-
             // As the data source can be history source, then you need to merge the filter
-            return sourceController.load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
+            return _private.getSourceController(instance, source, navigation).load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
                instance._items = items;
                if (dataLoadCallback) {
                   dataLoadCallback(items);
@@ -91,6 +96,7 @@ define('Controls/Filter/Fast',
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } if (properties.source) {
+               self._configs[index]._sourceController = null;
                return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter, properties.navigation, properties.dataLoadCallback);
             }
          },
@@ -144,7 +150,7 @@ define('Controls/Filter/Fast',
             var self = this,
                selectedKeys = [];
 
-            // Get the key of the selected item
+            // Get keys of selected items
             chain.factory(items).each(function(item) {
                var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
                selectedKeys.push(key);
@@ -155,18 +161,26 @@ define('Controls/Filter/Fast',
             this._setText();
          },
 
-         onResult: function(event, result) {
-            if (result.action === 'itemClick') {
-               _private.selectItems.call(this, result.data);
-               _private.notifyChanges(this, this._items);
-               this._children.DropdownOpener.close();
+         getNewItems: function(event, self, selectedItems) {
+            var newItems = [],
+               curItems = self._configs[self.lastOpenIndex]._items,
+               keyProperty = self._configs[self.lastOpenIndex].keyProperty;
+
+            chain.factory(selectedItems).each(function(item) {
+               if (!curItems.getRecordById(item.get(keyProperty))) {
+                  newItems.push(item);
+               }
+            });
+            return newItems;
+         },
+
+         onResult: function(result) {
+            if (result.action === 'selectorResult') {
+               this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this, result.data));
             }
-            if (result.action === 'applyClick') {
-               _private.setValue(this, result.selectedKeys);
-               this._setText();
-               _private.notifyChanges(this, this._items);
-               this._children.DropdownOpener.close();
-            }
+            _private.selectItems.call(this, result.data);
+            _private.notifyChanges(this, this._items);
+            this._children.DropdownOpener.close();
          },
 
          setTextValue: function(item, textValue) {
@@ -177,7 +191,7 @@ define('Controls/Filter/Fast',
 
          isNeedReload: function(oldItems, newItems) {
             var isChanged = false;
-            
+
             if (newItems.length !== oldItems.length) {
                isChanged = true;
             } else {
@@ -191,6 +205,15 @@ define('Controls/Filter/Fast',
             }
 
             return isChanged;
+         },
+
+         // TODO: DropdownList can not work with source.
+         // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
+         calculateStateSourceControllers: function(configs, items) {
+            chain.factory(configs).each(function(config, index) {
+               _private.getSourceController(config, getPropValue(items.at(index), 'properties').source,
+                  getPropValue(items.at(index), 'properties').navigation).calculateState(config._items);
+            });
          }
       };
 
@@ -200,7 +223,7 @@ define('Controls/Filter/Fast',
          _items: null,
 
          _beforeMount: function(options, context, receivedState) {
-            this._configs = {};
+            this._configs = [];
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
@@ -209,6 +232,7 @@ define('Controls/Filter/Fast',
             if (receivedState) {
                this._configs = receivedState.configs;
                this._items = receivedState.items;
+               _private.calculateStateSourceControllers(this._configs, this._items);
             } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
@@ -231,6 +255,7 @@ define('Controls/Filter/Fast',
                   this._setText();
                }
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
+               this._sourceController = null;
                resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
                });
@@ -242,12 +267,17 @@ define('Controls/Filter/Fast',
             if (this._options.readOnly) {
                return;
             }
+            var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
                items: this._configs[index]._items,
-               selectedKeys: getPropValue(this._items.at(index), 'value')
+               selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
+               hasMoreButton: _private.getSourceController(this._configs[index],
+                  getPropValue(this._items.at(index), 'properties').source,
+                  getPropValue(this._items.at(index), 'properties').navigation).hasMoreData('down')
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
+               className: this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup',
 
                // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
@@ -284,16 +314,10 @@ define('Controls/Filter/Fast',
                }
                _private.setTextValue(self._items.at(index), config.title);
             });
+            this._forceUpdate();
          },
 
          _needShowCross: function(item) {
-            // Для совместимости dropdown на панели фильтров и быстрого фильтра.
-            // Dropdown возвращает массив ключей, а быстрый фильтр только один ключ, добавляем на это проверку
-            // TODO: Удалить после решения https://online.sbis.ru/opendoc.html?guid=883581df-f415-48d7-b407-97b7b02db8b9
-            if (!(getPropValue(item, 'value') instanceof Array) && getPropValue(item, 'resetValue') instanceof Array) {
-               return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined &&
-                  !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')[0]);
-            }
             return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'));
          },
 

@@ -206,6 +206,14 @@ var ListView = BaseControl.extend(
 
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
+        },
+
+        setHoveredItem: function (item) {
+            this._listModel.setHoveredItem(item);
+        },
+
+        getHoveredItem: function () {
+            return this._listModel.getHoveredItem();
         }
     });
 

@@ -8,7 +8,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
       'wml!Controls-demo/List/Grid/resources/ItemTemplatePG/noHighlightOnHover',
       'wml!Controls-demo/List/Grid/resources/DemoMoney',
       'wml!Controls-demo/List/Grid/resources/DemoRating',
-      'wml!Controls-demo/List/Grid/resources/DemoItem',
+      'wml!Controls-demo/List/Grid/resources/DemoItem'
    ],
 
    function(Control, source, data, template, config) {
@@ -31,7 +31,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                      {
                         id: '1',
                         title: 'default',
-                        value: 'wml!Controls/List/Grid/Item'
+                        value: 'Controls/grids:ItemTemplate'
                      },
                      {
                         id: '2',

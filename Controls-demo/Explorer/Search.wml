@@ -1,6 +1,6 @@
 <div>
    <div>Demo Controls/Explorer</div>
-   <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
+   <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
       <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"
                                         bind:excludedKeys="_excludedKeys">
          <Controls.Search.Controller searchParam="title" minSearchLength="{{3}}">
@@ -8,7 +8,7 @@
                <Controls.Search.Input.Container>
                   <Controls.Input.Search/>
                </Controls.Search.Input.Container>
-               <Controls.lists:Container>
+               <Controls.list:Container>
                   <Controls.List.MultiSelector>
                      <Controls.Explorer
                         attr:class="demo-Explorer"
@@ -20,9 +20,9 @@
                         columns="{{_viewColumns}}">
                      </Controls.Explorer>
                   </Controls.List.MultiSelector>
-               </Controls.lists:Container>
+               </Controls.list:Container>
             </div>
          </Controls.Search.Controller>
       </Controls.Container.MultiSelector>
-   </Controls.lists:DataContainer>
+   </Controls.list:DataContainer>
 </div>

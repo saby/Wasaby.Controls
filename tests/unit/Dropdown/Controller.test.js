@@ -251,7 +251,7 @@ define(
 
             // returned undefined from handler and there is hierarchy
             closed = false;
-            closeByNodeClick = undefined;
+            closeByNodeClick = false;
             dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isFalse(closed);
 
@@ -262,7 +262,8 @@ define(
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
-            closeByNodeClick = true;
+            closed = false;
+            closeByNodeClick = undefined;
             dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
          });

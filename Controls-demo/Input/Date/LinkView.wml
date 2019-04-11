@@ -23,7 +23,7 @@
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
-               style="linkMain"
+               style="secondary" viewMode="link"
                clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView

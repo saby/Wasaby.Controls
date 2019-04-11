@@ -151,8 +151,7 @@ define('Controls/Dropdown/Controller',
                   _private.updateHistory(this, item);
 
                   // dropDown must close by default, but user can cancel closing, if returns false from event
-                  // res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
-                  if (res === true || !(item && item.get(this._options.nodeProperty) || res === false)) {
+                  if (res !== false) {
                      this._children.DropdownOpener.close();
                   }
                   break;

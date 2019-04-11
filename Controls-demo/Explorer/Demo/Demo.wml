@@ -10,6 +10,7 @@
       viewMode="tile"
       keyProperty="id"
       source="{{_viewSource}}"
+      tileScalingMode="outside"
       multiSelectVisibility="visible"
       itemActions="{{_itemActions}}"
       bind:selectedKeys="_selectedKeys"
@@ -19,7 +20,7 @@
          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
-         <ws:partial template="Controls/lists:EmptyTemplate">
+         <ws:partial template="Controls/list:EmptyTemplate">
             <ws:contentTemplate>
                Нет данных
             </ws:contentTemplate>
@@ -33,7 +34,6 @@
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"
-      hoverMode=""
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
@@ -52,6 +52,7 @@
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"
+      tileScalingMode="outside"
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
