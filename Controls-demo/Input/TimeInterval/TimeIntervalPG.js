@@ -67,7 +67,7 @@ define('Controls-demo/Input/TimeInterval/TimeIntervalPG',
                validationErrors: '',
                selectOnClick: false,
                fontStyle: 'default',
-               tagStyle: null
+               tagStyle: 'primary'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -1,7 +1,7 @@
 <div>
-    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
-     <Controls.Input.TimeInterval value="{{_options.value}}"
-                                  mask="HH:mm"
-                                  readOnly="{{_options.readOnly}}"
-                                  on:valueChanged="_valueChangedHandler()"/>
+   <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+   <Controls.input:TimeInterval value="{{_options.value}}"
+                                mask="HH:mm"
+                                readOnly="{{_options.readOnly}}"
+                                on:valueChanged="_valueChangedHandler()"/>
 </div>

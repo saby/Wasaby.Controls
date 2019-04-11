@@ -14,7 +14,8 @@ import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
-      
+
+import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
 

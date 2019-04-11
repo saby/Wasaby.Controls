@@ -1,1 +1,4 @@
-<div name="readOnlyField" class="controls-InputBase__field_readOnly controls-InputBase__field_theme_{{options.theme}}_margin">{{value}}</div>
+<ws:partial template="wml!Controls/_input/Base/Stretcher"
+            value="{{value}}">
+   <div name="readOnlyField" class="controls-InputBase__field_readOnly controls-InputBase__field_theme_{{options.theme}}_margin">{{value}}</div>
+</ws:partial>
