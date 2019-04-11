@@ -14,7 +14,7 @@
                                            viewMode="link"
                                            caption="{[В корень]}"
                                            on:click="_onItemActionsClick('move', _options.root)"
-                                           icon="icon-small icon-primary icon-Home3"/>
+                                           icon="icon-small icon-primary icon-Undo2"/>
                </ws:if>
                <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
                   <Controls._lists.Container>
