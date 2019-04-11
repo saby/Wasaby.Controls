@@ -11,30 +11,30 @@ import 'css!theme?Controls/_decorator/Money/Money';
 /**
  * Converts a number to money.
  *
- * @class Controls/Decorator/Money
+ * @class Controls/_decorator/Money
  * @extends Core/Control
  *
- * @mixes Controls/Decorator/Money/Styles
+ * @mixes Controls/_decorator/Money/Styles
  *
  * @public
- * @demo Controls-demo/Decorators/Money/Money
+ * @demo Controls-demo/_decorators/Money/Money
  *
  * @author Журавлев М.С.
  */
 
 /**
- * @name Controls/Decorator/Money#number
+ * @name Controls/_decorator/Money#number
  * @cfg {Number} Number to convert.
  * @deprecated Use option {@link value}
  */
 
 /**
- * @name Controls/Decorator/Money#value
+ * @name Controls/_decorator/Money#value
  * @cfg {String} Value in number format to convert.
  */
 
 /**
- * @name Controls/Decorator/Money#delimiters
+ * @name Controls/_decorator/Money#delimiters
  * @cfg {Boolean} Determines whether the number should be split into triads.
  * @default false
  * @remark
@@ -44,7 +44,7 @@ import 'css!theme?Controls/_decorator/Money/Money';
  */
 
 /**
- * @name Controls/Decorator/Money#useGrouping
+ * @name Controls/_decorator/Money#useGrouping
  * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
  * @default true
  * @remark
@@ -53,7 +53,7 @@ import 'css!theme?Controls/_decorator/Money/Money';
  */
 
 /**
- * @name Controls/Decorator/Money#style
+ * @name Controls/_decorator/Money#style
  * @cfg {String} The type with which you want to display money.
  * @variant accentResults
  * @variant noAccentResults
@@ -74,7 +74,7 @@ var _private = {
       var exec = this.searchPaths.exec(parseFloat(value).toFixed(2));
 
       if (!exec) {
-         Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option value: ' + value + '.');
+         Env.IoC.resolve('ILogger').error('Controls/_decorator/Money', 'That is not a valid option value: ' + value + '.');
          exec = ['0.00', '0', '.00'];
       }
 
@@ -91,7 +91,7 @@ var _private = {
    isUseGrouping: function (options, useLogging) {
       if ('delimiters' in options) {
          if (useLogging) {
-            Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
+            Env.IoC.resolve('ILogger').warn('Controls/_decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
          }
 
          return options.delimiters;
@@ -103,7 +103,7 @@ var _private = {
    getValue: function (options, useLogging) {
       if ('number' in options) {
          if (useLogging) {
-            Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция number устарела, используйте value.');
+            Env.IoC.resolve('ILogger').warn('Controls/_decorator/Money', 'Опция number устарела, используйте value.');
          }
 
          return options.number.toString();
