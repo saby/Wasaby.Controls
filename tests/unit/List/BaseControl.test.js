@@ -162,6 +162,44 @@ define([
          }, 1);
       });
 
+      it('should set itemsContainer in VS if null', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: lists.ListViewModel,
+            source: source
+         };
+         var itemsContainer = {
+            qwe: 123
+         },
+             ctrl = new BaseControl(cfg);
+
+         assert.isUndefined(ctrl._virtualScroll);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(!!ctrl._virtualScroll);
+
+         ctrl._virtualScroll.updateItemsSizes = function(){};
+         ctrl._children.listView = {
+            getItemsContainer: function() {
+               return itemsContainer;
+            }
+         };
+
+         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
+         ctrl._viewResize();
+         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
+      });
+
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -325,10 +363,15 @@ define([
 
          var dataLoadFired = false;
 
+         var beforeLoadToDirectionCalled = false;
+
          var cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
             },
             source: source,
             viewConfig: {
@@ -360,6 +403,7 @@ define([
             setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
                done();
             }, 100);
          }, 100);
@@ -2754,7 +2798,6 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
-
          var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
 
          instance.getViewModel()._notify('onListChange', 'indexesChanged');

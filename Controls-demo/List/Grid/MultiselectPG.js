@@ -12,7 +12,7 @@ define('Controls-demo/List/Grid/MultiselectPG',
         'css!Controls-demo/Wrapper/Wrapper'
     ],
 
-    function(Control, Memory, data, template, config) {
+    function(Control, source, data, template, config) {
         'use strict';
         var Component = Control.extend({
             _template: template,
