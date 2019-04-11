@@ -28,7 +28,7 @@ import 'Controls/treeGrid';
  * @mixes Controls/List/ListStyles
  * @mixes Controls/List/Tile/Styles
  * @mixes Controls/List/ItemActions/ItemActionsStyles
- * @mixes Controls/_lists/Swipe/SwipeStyles
+ * @mixes Controls/_tile/Swipe/SwipeStyles
  *
  * @mixes Controls/List/Mover/MoveDialog/Styles
  * @mixes Controls/List/PagingStyles
