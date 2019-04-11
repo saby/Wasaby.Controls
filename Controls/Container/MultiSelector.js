@@ -1,5 +1,5 @@
 define('Controls/Container/MultiSelector',
-   ['Controls/_operations/Container'],
+   ['Controls/_operations/Controller'],
    function(Control) {
       'use strict';
       return Control;
