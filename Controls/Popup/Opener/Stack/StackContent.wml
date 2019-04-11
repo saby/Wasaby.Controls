@@ -1,3 +1,1 @@
-<div class="controls-Stack__content-wrapper {{stackClassName}}" style="width: {{stackWidth}}px;min-width: {{stackMinWidth}}px;max-width: {{stackMaxWidth}}px;">
-   <ws:partial template="{{template}}" scope="{{templateOptions}}" attr:class="controls-Stack__content"/>
-</div>
+<ws:partial template="wml!Controls/_popup/Opener/Stack/StackContent" scope="{{_options}}" />

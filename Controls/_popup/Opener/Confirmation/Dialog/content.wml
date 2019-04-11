@@ -1,0 +1,13 @@
+<div>
+   <!--TODO https://online.sbis.ru/opendoc.html?guid=0cf7eb6c-1c4f-4539-aa90-d87cefc47aa3-->
+   <div>
+      <ws:if data="{{message}}">
+         <ws:partial template="{{messageTemplate}}" hasDetails="{{details}}" content="{{message}}" hasMarkup="{{hasMarkup}}"/>
+      </ws:if>
+   </div>
+   <div>
+      <ws:if data="{{details}}">
+         <ws:partial template="{{detailsTemplate}}" content="{{details}}" />
+      </ws:if>
+   </div>
+</div>

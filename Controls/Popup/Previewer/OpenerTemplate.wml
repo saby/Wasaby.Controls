@@ -1,10 +1,1 @@
-<div>
-   <ws:partial
-      template="{{_options.template}}"
-      scope="{{_options.templateOptions}}"
-      on:mousedown="_sendResult()"
-      on:mouseenter="_sendResult()"
-      on:mouseleave="_sendResult()"
-      on:menuOpened="_sendResult()"
-      on:menuClosed="_sendResult()"/>
-</div>
+<ws:partial template="wml!Controls/_popup/Previewer/OpenerTemplate" scope="{{_options}}" />

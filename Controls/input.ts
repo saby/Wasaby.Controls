@@ -31,6 +31,11 @@ import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
 import TimeInterval from 'Controls/_input/TimeInterval';
+import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
+
+const InputCallback = {
+    lengthConstraint
+};
 
 export {
     Base,
@@ -46,5 +51,6 @@ export {
     TimeInterval,
     BaseViewModel,
     MaskFormatBuilder,
-    MaskInputProcessor
-}
+    MaskInputProcessor,
+    InputCallback
+};

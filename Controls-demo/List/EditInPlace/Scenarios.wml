@@ -1,6 +1,6 @@
 <div class="ControlsDemo-EipScenarios">
    <div class="ControlsDemo-EipScenarios__title">Пример 1 - редактирование в карточке, режим "по ховеру"</div>
-   <Controls.grids:View
+   <Controls.grid:View
       name="firstExample"
       attr:class="ControlsDemo-EipScenarios__list"
       source="{{ _viewSource }}"
@@ -19,13 +19,13 @@
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
       <ws:itemsGroup method="{{_groupingKeyCallback}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
-   </Controls.grids:View>
+   </Controls.grid:View>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.lists:AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
+      <Controls.list:AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
       <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 2 - редактирование в карточке, режим "по ховеру"</div>
-   <Controls.grids:View
+   <Controls.grid:View
       attr:class="ControlsDemo-EipScenarios__list"
       source="{{ _viewSource2 }}"
       header="{{ _gridHeader2 }}"
@@ -37,7 +37,7 @@
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
-   </Controls.grids:View>
+   </Controls.grid:View>
    <div class="ControlsDemo-EipScenarios__tableFooter">
       <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
@@ -57,7 +57,7 @@
       </ws:editingConfig>
    </Controls.treeGrid:View>
    <div class="ControlsDemo-EipScenarios__title">Пример 5 - редактирование на странице (в реестре), режим "по ховеру"</div>
-   <Controls.grids:View
+   <Controls.grid:View
       attr:class="ControlsDemo-EipScenarios__list"
       source="{{ _viewSource5 }}"
       columns="{{ _gridColumns5 }}"
@@ -68,5 +68,5 @@
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
-   </Controls.grids:View>
+   </Controls.grid:View>
 </div>

@@ -314,7 +314,7 @@ define('Controls/Filter/Controller',
       function getCalculatedFilter(cfg) {
          var def = new Deferred();
          var tmpStorage = {};
-         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource).addCallback(function(items) {
+         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource, cfg.historyItems).addCallback(function(items) {
             var calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
@@ -343,10 +343,10 @@ define('Controls/Filter/Controller',
       }
 
       /**
-       * The filter controller allows you to filter data in a {@link Controls/lists:View} using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to filter data in a {@link Controls/list:View} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
-       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Controller
        * @extends Core/Control
@@ -401,13 +401,13 @@ define('Controls/Filter/Controller',
        *    <Controls.Filter.Controller
        *       historyId="myHistoryId"
        *       fastFilterSource="{{_fastFilterSource}}">
-       *       <Controls.lists:DataContainer>
+       *       <Controls.list:DataContainer>
        *          ...
        *          <Controls.Filter.Fast.Container>
        *             <Controls.Filter.Fast />
        *          </Controls.Filter.Fast.Container>
        *          ...
-       *       </Controls.lists:DataContainer>
+       *       </Controls.list:DataContainer>
        *    </Controls.Filter.Controller>
        * </pre>
        * JS:

@@ -26,6 +26,7 @@ define('Controls-demo/Tabs/Buttons', [
       SelectedKey5: '2',
       SelectedKey6: '1',
       SelectedKey7: '3',
+      SelectedKey8: '2',
       _source1: null,
       _source2: null,
       _source3: null,
@@ -33,6 +34,7 @@ define('Controls-demo/Tabs/Buttons', [
       _source5: null,
       _source6: null,
       _source7: null,
+      _source8: null,
       _spaceTemplate: spaceTemplate,
       _beforeMount: function() {
          this._source1 = new source.Memory({
@@ -227,6 +229,26 @@ define('Controls-demo/Tabs/Buttons', [
                   title: '',
                   carambola: photoContent,
                   type: 'photo'
+               }
+            ]
+         });
+         this._source8 = new source.Memory({
+            idProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'Document',
+                  align: 'left'
+               },
+               {
+                  id: '2',
+                  title: 'Files',
+                  align: 'left'
+               },
+               {
+                  id: '3',
+                  title: 'Orders',
+                  align: 'left'
                }
             ]
          });

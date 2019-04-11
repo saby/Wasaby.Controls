@@ -1,4 +1,4 @@
-import {ListViewModel, BaseViewModel} from 'Controls/lists';
+import {ListViewModel, BaseViewModel} from 'Controls/list';
 
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
@@ -7,6 +7,11 @@ import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
+import {
+    isFullSupport, isNoSupport, isPartialSupport, getCellStyles,
+    toCssString, getTemplateColumnsStyle, getDefaultStylesFor, CssTemplatesEnum
+} from './utils/GridLayoutUtil';
+import {calcGroupRowIndex, calcResultsRowIndex, calcRowIndexByKey, ResultsPosition} from "./utils/RowIndexUtil";
 
 var
     _private = {
@@ -308,6 +313,68 @@ var
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
+        },
+
+        // For partial grid support only. Calculates valid grid styles for edit at place in old browsers
+        getEditingRowStyles: function (self, rowIndex) {
+
+            // display: grid with prefixes
+            let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
+
+            // value 'auto' will break alignment in subgrid(editing row).
+            let columnsWidths: Array<string|number> = [];
+
+            self._columns.forEach(column => {
+                if (self.getCount() > 1 && ((column.width && column.width === 'auto') || !column.width)) {
+                    columnsWidths.push(column.realWidth || '1fr')
+                } else {
+                    columnsWidths.push(column.width);
+                }
+            });
+
+            // grid column template with prefixes
+            styles += getTemplateColumnsStyle(columnsWidths);
+
+            // grid-row and grid-column with prefixes
+            styles += getCellStyles(rowIndex+1, 0, null, 3);
+
+            return styles;
+        },
+
+        calcRowIndexByKey: function(self, key): number {
+            return calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
+        },
+
+        calcResultsRowIndex: function (self): number {
+            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
+        },
+
+        calcGroupRowIndex: function (self, current): number {
+            let groupItem = self._model.getDisplay().at(current.index);
+            return calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
+        },
+        getEmptyTemplateStyles: function (self): string {
+            let
+                styles = '';
+
+            if (isPartialSupport) {
+                let
+                    columnsLength = self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
+                    rowIndex = 0;
+
+                styles += toCssString([
+                    {
+                        name: '-ms-grid-column-span',
+                        value: columnsLength
+                    },
+                ]);
+
+                rowIndex += self.getHeader() ? 1 : 0;
+                rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
+                styles += getCellStyles(rowIndex, 0);
+            }
+
+            return styles;
         }
     },
 
@@ -363,10 +430,10 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
+        _prepareCrossBrowserColumn: function(column, isNoGridSupport) {
             var
                 result = cClone(column);
-            if (isNotFullGridSupport) {
+            if (isNoGridSupport) {
                 if (result.width === '1fr') {
                     result.width = 'auto';
                 }
@@ -378,7 +445,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
+                result.push(this._prepareCrossBrowserColumn(columns[i], isNoSupport));
             }
             return result;
         },
@@ -478,6 +545,11 @@ var
                );
             }
 
+            // For browsers with partial grid support need to set its grid-row and grid-column
+            if (isPartialSupport) {
+                headerColumn.gridCellStyles = getCellStyles(0, columnIndex);
+            }
+
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -497,18 +569,20 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function() {
+        getResultsPosition: function(): string {
             if (this._options.results) {
                 return this._options.results.position;
             }
             return this._options.resultsPosition;
         },
 
-        getResultsTemplate: function() {
-            if (this._options.results) {
-                return this._options.results.template;
-            }
-            return this._options.resultsTemplate;
+        getStyleForCustomResultsTemplate: function() {
+            return _private.getColspan(
+               this._options.multiSelectVisibility,
+               0,
+               Env.detection.isNotFullGridSupport,
+               this._columns.length
+            );
         },
 
         _prepareResultsColumns: function(columns, multiSelectVisibility) {
@@ -527,7 +601,11 @@ var
         getCurrentResultsColumn: function() {
             var
                 columnIndex = this._curResultsColumnIndex,
-                cellClasses = 'controls-Grid__results-cell';
+                cellClasses = 'controls-Grid__results-cell',
+                resultsColumn = {
+                    column: this._resultsColumns[columnIndex],
+                    index: columnIndex
+                };
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
@@ -541,12 +619,15 @@ var
                     itemPadding: this._model.getItemPadding()
                 });
             }
+            resultsColumn.cellClasses = cellClasses;
 
-            return {
-                column: this._resultsColumns[columnIndex],
-                cellClasses: cellClasses,
-                index: columnIndex
-            };
+            // For browsers with partial grid support need to set its grid-row and grid-column
+            if (isPartialSupport) {
+                resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
+                resultsColumn.gridCellStyles = getCellStyles(resultsColumn.rowIndex, columnIndex);
+            }
+
+            return resultsColumn;
         },
 
         goToNextResultsColumn: function() {
@@ -742,7 +823,10 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isNotFullGridSupport = Env.detection.isNotFullGridSupport;
+            current.isFullGridSupport = isFullSupport;
+            current.isPartialGridSupport = isPartialSupport;
+            current.isNoGridSupport = isNoSupport;
+
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -750,14 +834,36 @@ var
                 current.columns = this._columns;
             }
 
+            current.isHovered = current.item === self._model.getHoveredItem();
+
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
+            if (isPartialSupport && !current.isGroup) {
+                current.rowIndex = _private.calcRowIndexByKey(this, current.key);
+            }
+
             if (this._options.groupingKeyCallback) {
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
+
+                    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
+                    if (isPartialSupport) {
+                        current.rowIndex = _private.calcGroupRowIndex(this, current);
+                        current.gridGroupStyles = toCssString([
+                            {
+                                name: 'grid-row',
+                                value: current.rowIndex + 1
+                            },
+                            {
+                                name: '-ms-grid-row',
+                                value: current.rowIndex + 1
+                            }
+                        ]);
+                    }
+
                     return current;
                 }
             }
@@ -789,6 +895,16 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
+            
+            if (current.isEditing && isPartialSupport) {
+                current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
+            }
+
+            current.getCurrentColumnKey = function() {
+                return self._columnsVersion + '_' +
+                    (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
+            };
+
             current.getCurrentColumn = function() {
                 var
                     currentColumn = {
@@ -805,10 +921,6 @@ var
                         isActive: current.isActive,
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
-                        },
-                        getKey: function() {
-                            return self._columnsVersion + '_' +
-                               (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
                         },
                         _preferVersionAPI: true
                     };
@@ -835,6 +947,11 @@ var
                             'span 1 / ' +
                             'span 1;';
                     }
+                }
+
+                // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
+                if (isPartialSupport) {
+                    currentColumn.gridCellStyles = getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
                 return currentColumn;
             };
@@ -863,7 +980,6 @@ var
             this._ladder = _private.prepareLadder(this);
             this._nextModelVersion();
         },
-
         setLadderProperties: function(ladderProperties) {
             this._options.ladderProperties = ladderProperties;
             this._ladder = _private.prepareLadder(this);
@@ -1015,6 +1131,68 @@ var
             return this._model.getChildren.apply(this._model, arguments);
         },
 
+        getStartIndex(): number {
+            return this._model.getStartIndex();
+        },
+
+        setHoveredItem: function (item) {
+            this._model.setHoveredItem(item);
+        },
+
+        getHoveredItem: function () {
+            return this._model.getHoveredItem();
+        },
+
+        getDisplay: function () {
+            return this._model.getDisplay();
+        },
+
+        isFullGridSupport: function():boolean{
+            return isFullSupport;
+        },
+
+        isPartialGridSupport: function():boolean{
+            return isPartialSupport;
+        },
+
+        isNoGridSupport: function():boolean{
+            return isNoSupport;
+        },
+
+        getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
+            let
+                column,
+                columnsWidths: Array<string|number> = [];
+
+            for (let i = 0; i<this._columns.length; i++) {
+                column = this._columns[i];
+
+                // Если отрисовано больше одной записи, то необходимо руками считать ширину, т.к. редактируемая строка
+                // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
+                if (column.width && column.width === 'auto' && this.getCount() > 1) {
+
+                    let referenceRowIndex = rowIndex !== 0 ? 0 : 1;
+                    columnsWidths.push(gridCells[referenceRowIndex].getBoundingClientRect().width);
+                } else {
+                    columnsWidths.push(column.width || '1fr');
+                }
+            }
+
+            return getTemplateColumnsStyle(columnsWidths);
+        },
+
+        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
+            for (let i = 0; i< this._columns.length; i++){
+                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
+            }
+        },
+
+        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        getEmptyTemplateStyles() {
+            return _private.getEmptyTemplateStyles(this);
+        },
+
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -1023,6 +1201,7 @@ var
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         }
+
     });
 
 GridViewModel._private = _private;

@@ -1,75 +1,71 @@
 
 <div>
     <span class="baseline_span first_span">baseline</span>
-    <Controls.buttons:Button href="https://online.sbis.ru/" readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" style="buttonAdd"/>
+    <Controls.buttons:Button href="https://online.sbis.ru/" readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" iconStyle="default"/>
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button href="https://online.sbis.ru/" readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" style="buttonPrimary"/>
+    <Controls.buttons:Button href="https://online.sbis.ru/" readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" style="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{true}}" icon="icon-16 icon-Add" caption="caption" style="buttonPrimary"/>
+    <Controls.buttons:Button readOnly="{{true}}" icon="icon-16 icon-Add" caption="caption" style="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" size="l" style="buttonPrimary"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Add" caption="caption" size="l" style="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Add" caption="caption" size="l" style="buttonDefault"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Add" caption="caption" size="l" style="secondary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{true}}" icon="icon-24 icon-Add" caption="caption" size="l" style="buttonDefault"/>
+    <Controls.buttons:Button readOnly="{{true}}" icon="icon-24 icon-Add" caption="caption" size="l" style="secondary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.lists:AddButton readOnly="{{false}}" caption="AddButton"/>
+    <Controls.list:AddButton readOnly="{{false}}" caption="AddButton"/>
     <span class="baseline_span">baseline</span>
-    <Controls.lists:AddButton readOnly="{{true}}" caption="AddButton"/>
+    <Controls.list:AddButton readOnly="{{true}}" caption="AddButton"/>
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Send"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Send" style="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{true}}" icon="icon-24 icon-Send" style="buttonPrimary"/>
+    <Controls.buttons:Button readOnly="{{true}}" icon="icon-24 icon-Send" style="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain" size="s"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="secondary" viewMode="link" size="s"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain" size="m"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="secondary" viewMode="link" size="m"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain" size="l"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="secondary" viewMode="link" size="l"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain" size="xl"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="secondary" viewMode="link" size="xl"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain2" size="m"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="info" viewMode="link" size="s"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkMain3" size="xl"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="default" viewMode="link" size="l"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkAdditional" size="s"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="danger" viewMode="link" size="m"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkAdditional2" size="l"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="success" viewMode="link" size="xl"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkAdditional3" size="m"/>
+    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="magic" viewMode="link" size="l"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkAdditional4" size="xl"/>
+    <Controls.buttons:Button readOnly="{{true}}" caption="Link" style="secondary" viewMode="link" size="xl"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="linkAdditional5" size="l"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Send" caption="Link" style="secondary" viewMode="link" size="m"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{true}}" caption="Link" style="linkMain" size="xl"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Erase" style="secondary" viewMode="link"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Send" caption="Link" style="linkMain" size="m"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Save" style="secondary" viewMode="link"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Erase" style="linkMain"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Save" style="linkMain"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" size="l"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="iconButtonBordered"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="iconButtonBordered" size="l"/>
-    <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Author" style="iconButtonBordered"/>
-    <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{true}}" icon="icon-16 icon-Author" style="iconButtonBordered" size="l"/>
+    <Controls.buttons:Button readOnly="{{true}}" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" size="l"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="secondary" viewMode="link"/>
 </div>`

@@ -7,10 +7,10 @@ define('Controls-demo/List/Grid/Ladder', [
    'css!Controls-demo/List/Grid/resources/Ladder/Ladder',
 
    'Controls/Container/Scroll',
-   'Controls/grids',
+   'Controls/grid',
    'Controls/Render/Money/Money',
 
-   'Controls/lists',
+   'Controls/list',
    'Controls/Container/MultiSelector',
 
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksPhoto',

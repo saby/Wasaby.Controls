@@ -4,6 +4,7 @@
       <div class="controlsDemo-RageLink__content">
          <div class="controlsDemo-RageLink__componentWrap">
             <Controls.Input.Date.RangeLink
+               minRange="month"
 			   attr:test_name="default_range"/>
          </div>
          <div class="controlsDemo-RageLink__componentWrap controlsDemo-RangeLink_capture">

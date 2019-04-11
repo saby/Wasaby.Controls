@@ -184,8 +184,23 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @param inputType Type of user input.
           */
          handleInput: function(self, splitValue, inputType) {
+            const displayValue: string = self._viewModel.displayValue;
+
             if (self._viewModel.handleInput(splitValue, inputType)) {
-               _private.notifyValueChanged(self);
+               if (self._options.inputCallback) {
+                  const formattedText = self._options.inputCallback({
+                     value: self._viewModel.value,
+                     position: self._viewModel.selection.start,
+                     displayValue: self._viewModel.displayValue
+                  });
+
+                  self._viewModel.displayValue = formattedText.displayValue;
+                  self._viewModel.selection = formattedText.position;
+               }
+
+               if (self._viewModel.displayValue !== displayValue) {
+                  _private.notifyValueChanged(self);
+               }
             }
          },
 
@@ -984,6 +999,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             tooltip: entity.descriptor(String),
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
+            inputCallback: entity.descriptor(Function),
             size: entity.descriptor(String).oneOf([
                's',
                'm',

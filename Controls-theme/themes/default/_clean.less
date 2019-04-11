@@ -1,6 +1,7 @@
 //colors
-@color_shadow_default:              rgba(0,0,0,.25);
-@color_shadow_secondary:            rgba(0,0,0,.4);
+@color_shadow_default:              rgba(0,0,0,0.25);
+@color_shadow_popup:                rgba(0,0,0,0.35);
+@color_shadow_secondary:            rgba(0,0,0,0.4);
 @color_shadow_danger:               rgba(239, 70, 58, 0.4);
 
 @color_warning:                       #FEC63F;
@@ -16,6 +17,7 @@
 @color_unselected:                    #999;
 @color_additional:                    #8991A9;
 @color_readOnly:                      #CCC;
+@color_separator:                     #EAEAEA;
 
 @color_text_default:                  #000;
 @color_text_readonly:                 @color_readOnly;
@@ -55,6 +57,7 @@
 
 @line-height_default:       18px;
 @size_shadow_default:       0 0 12px 0;
+@size_shadow_secondary:     0 0 6px 0;
 
 @border-radius_size_m:        4px;
 
@@ -141,6 +144,22 @@
 @width_control_m:             32px;
 
 // unic vars
+// DecoratorMoney
+@color_DecoratorMoney-integer_style_noAccentResults_val:          #999999;
+@color_DecoratorMoney-integer_style_noBasicRegistry_val:          #999999;
+@color_DecoratorMoney-integer_style_noAccentRegistry_val:         #999999;
+
+@font-weight_DecoratorMoney-integer_style_default_val:            normal;
+@font-weight_DecoratorMoney-integer_style_accentResults_val:      bold;
+@font-weight_DecoratorMoney-integer_style_noAccentResults_val:    bold;
+@font-weight_DecoratorMoney-integer_style_group_val:              normal;
+@font-weight_DecoratorMoney-integer_style_basicRegistry_val:      normal;
+@font-weight_DecoratorMoney-integer_style_noBasicRegistry_val:    normal;
+@font-weight_DecoratorMoney-integer_style_accentRegistry_val:     bold;
+@font-weight_DecoratorMoney-integer_style_noAccentRegistry_val:   bold;
+@font-weight_DecoratorMoney-integer_style_error_val:              bold;
+@font-weight_DecoratorMoney-fractional_val:                       normal;
+
 // Button
 @border-radius-ToolButton_val:                                    2px;
 @min-width_Button_common_val:                                     48px;
@@ -200,7 +219,6 @@
 @background-color_ListView-item_active_val:                       #F0F5FB;
 @background-color_ListView-item_hover_val:                        #F0F5FB;
 @border-color_List-masterList_val:                                #EAEAEA;
-@color-group-separator_val:                                       #EAEAEA;
 @border-width_List-masterList-item-right_val:                     0;
 @border-width_List-masterList-item-left_val:                      0;
 @border-color_List-masterList-item_selected-right_val:            transparent;
@@ -260,12 +278,14 @@
 // SelectedCollection
 @width_SelectedCollection-counter-shadow_val:                     20px;
 
+// Selector
+@min-width_DateRangeSelector_val:                                 150px;
+
 // Lookup
 @spacing_Lookup-between-inputRender-rightBorder_val:              0;
 
 // StackTemplate
-@size_Stack-shadow_val:                                           14px -8px 8px 12px;
-@animate-duration_Stack_val:                                      0.2s;
+@size_Stack-shadow_val:                                           12px -8px 6px 12px;
 @min-height_StackTemplate-head_val:                               38px;
 @spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
 @spacing_StackTemplate-between-close-button-border-top_val:       5px;
@@ -334,8 +354,6 @@
 @spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
 @spacing_Grid-row-between-content-borderRight_xs_val:                     0;
 @box-shadow_Grid-masterList-item_selected_val:                            4px 0 8px @color_shadow_light;
-@border-color_Grid-firstRow-separator_val:                                #EAEAEA;
-@border-color_Grid-lastRow-separator_val:                                 #EAEAEA;
 @background-color_Grid-row_hover_val:                                     #F0F5FB;
 @border-color_Grid-row-separator_val:                                     #F5F5F5;
 
@@ -425,7 +443,6 @@
 @min-width_SubmitPopup-button-small_val:                                  80px;
 @min-width_SubmitPopup-button_val:                                        86px;
 @font-weight_SubmitPopup-message_val:                                     normal;
-@border-color_SubmitPopup-footer-top_val:                                 #EAEAEA;
 
 // ConfirmationTemplate
 @width_ConfirmationTemplate-m_val:                                        350px;
@@ -436,6 +453,7 @@
 @width_FilterPanel-size_l_val:                                            600px;
 @width_FilterPanel-size_xl_val:                                           800px;
 @background-color_FilterPanel-history_vertical_val:                       #F4F4F4;
+@background-color_FilterPanel_val:                                        #FDFDFD;
 
 // DropdownList
 @height_DropdownList-row-separator_val:                                   0;
@@ -518,6 +536,15 @@
 @text-decoration_Misspell-caption_active_val:   underline;
 @font-weight_Misspell-text_val:                 bold;
 @font-weight_Misspell-caption_val:              bold;
+
+
+//Slider
+@Slider-big_point-size_val:                     20px;
+@Slider-point-size_val:                         12px;
+@Slider-border-heigth_val:                      24px;
+@Slider-border-side-padding_val:                14px;
+@Slider-scale_segment-width_val:                1px;
+@Slider-scale_segment-height_val:               4px;
 
 //PropertyGrid
 @width-PropertyGrid_editor-caption_val:         50%;

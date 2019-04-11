@@ -1,8 +1,15 @@
-import ItemTemplate = require('wml!Controls/_crumbs/View/resources/itemTemplate');
+/**
+ * Breadcrumbs library
+ * @library Controls/breadcrumbs
+ * @includes Path Controls/_breadcrumbs/Path
+ * @includes HeadingPath Controls/_breadcrumbs/HeadingPath
+ * @author Авраменко А. С.
+ */
+import ItemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 
-export {default as Path} from './_crumbs/Path';
-export {default as View} from './_crumbs/View';
-export {default as HeadingPath} from './_crumbs/HeadingPath';
-export {default as HeadingPathBack} from './_crumbs/HeadingPath/Back';
-export {default as HeadingPathCommon} from './_crumbs/HeadingPath/Common';
+export {default as Path} from './_breadcrumbs/Path';
+export {default as View} from './_breadcrumbs/View';
+export {default as HeadingPath} from './_breadcrumbs/HeadingPath';
+export {default as HeadingPathBack} from './_breadcrumbs/HeadingPath/Back';
+export {default as HeadingPathCommon} from './_breadcrumbs/HeadingPath/Common';
 export {ItemTemplate};

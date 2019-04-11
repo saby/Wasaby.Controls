@@ -1,5 +1,5 @@
-<Controls.grids:View
+<Controls.grid:View
         source="{{_viewSource}}"
         keyProperty="id"
         columns="{{_columns}}">
-</Controls.grids:View>
+</Controls.grid:View>

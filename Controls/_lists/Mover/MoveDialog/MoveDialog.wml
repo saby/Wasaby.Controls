@@ -1,6 +1,6 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{[Выбор раздела]}" attr:class="controls-MoveDialog">
    <ws:bodyContentTemplate>
-      <Controls.lists:DataContainer source="{{_options.source}}"
+      <Controls.list:DataContainer source="{{_options.source}}"
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
@@ -29,7 +29,7 @@
                         nodeProperty="{{_options.nodeProperty}}"
                         displayProperty="{{_options.displayProperty}}"
                         hasChildrenProperty="{{_options.hasChildrenProperty}}"
-                        root="{{_options.root}}"
+                        bind:root="_root"
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
                         columns="{{_options.columns}}"/>
@@ -37,6 +37,6 @@
                </Controls.Container.Scroll>
             </div>
          </Controls.Search.Controller>
-      </Controls.lists:DataContainer>
+      </Controls.list:DataContainer>
    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Dialog.DialogTemplate>

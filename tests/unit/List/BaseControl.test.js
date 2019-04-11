@@ -6,7 +6,7 @@ define([
    'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
@@ -17,7 +17,7 @@ define([
    'Core/polyfill/PromiseAPIDeferred'
 ], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
-      var data, result, source, rs;
+      var data, result, source, rs, sandbox;
       beforeEach(function() {
          data = [
             {
@@ -70,6 +70,10 @@ define([
             idProperty: 'id',
             rawData: data
          });
+         sandbox = sinon.createSandbox();
+      });
+      afterEach(function() {
+         sandbox.restore();
       });
       it('life cycle', function(done) {
          var dataLoadFired = false;
@@ -156,6 +160,44 @@ define([
                done();
             }, 100);
          }, 1);
+      });
+
+      it('should set itemsContainer in VS if null', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: lists.ListViewModel,
+            source: source
+         };
+         var itemsContainer = {
+            qwe: 123
+         },
+             ctrl = new BaseControl(cfg);
+
+         assert.isUndefined(ctrl._virtualScroll);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(!!ctrl._virtualScroll);
+
+         ctrl._virtualScroll.updateItemsSizes = function(){};
+         ctrl._children.listView = {
+            getItemsContainer: function() {
+               return itemsContainer;
+            }
+         };
+
+         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
+         ctrl._viewResize();
+         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
@@ -321,10 +363,15 @@ define([
 
          var dataLoadFired = false;
 
+         var beforeLoadToDirectionCalled = false;
+
          var cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
             },
             source: source,
             viewConfig: {
@@ -356,6 +403,7 @@ define([
             setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
                done();
             }, 100);
          }, 100);
@@ -1222,6 +1270,47 @@ define([
 
             done();
          }, 100);
+      });
+
+      it('__needShowEmptyTemplate', () => {
+         let baseControlOptions = {
+            viewModelConstructor: lists.ListViewModel,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewName: 'Controls/List/ListView',
+            source: source,
+            emptyTemplate: null
+         };
+
+         let baseControl = new BaseControl(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         return new Promise(function(resolve) {
+            baseControl._beforeMount(baseControlOptions).addCallback(function(result) {
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._listViewModel.getItems().clear();
+               baseControl._options.emptyTemplate = {};
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._loadingState = 'down';
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._loadingState = 'all';
+               assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._listViewModel._editingItemData = {};
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+               resolve();
+
+               return result;
+            });
+         });
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
@@ -2662,6 +2751,61 @@ define([
                });
             });
          });
+      });
+
+      it('should fire "drawItems" event if collection has changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
+
+         instance.getViewModel()._notify('onListChange', 'collectionChanged');
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('should fire "drawItems" event if indexes have changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+         var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
+
+         instance.getViewModel()._notify('onListChange', 'indexesChanged');
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
       });
    });
 });

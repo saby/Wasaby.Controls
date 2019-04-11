@@ -7,7 +7,7 @@
 define('Controls-demo/Suggest/resources/SuggestTemplate', [
    'Core/Control',
    'wml!Controls-demo/Suggest/resources/SuggestTemplate',
-   'Controls/lists'
+   'Controls/list'
 ], function(Control, template) {
    
    'use strict';

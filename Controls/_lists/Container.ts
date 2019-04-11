@@ -3,10 +3,14 @@ import template = require('wml!Controls/_lists/Container');
 import DataOptions = require('Controls/Container/Data/ContextOptions');
 
 /**
- * Container component for List. Options from context -> List.
- * @param Control
- * @param template
- * @param DataOptions
+ * Container component for List. Pass options from context to list.
+ *
+ * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/component-kinds/'>here</a>.
+ *
+ * @class Controls/_lists/Container
+ * @extends Core/Control
+ * @author Герасимов А.М.
+ * @public
  */
 
 var List = Control.extend({

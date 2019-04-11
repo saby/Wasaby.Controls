@@ -5,7 +5,7 @@ define('Controls-demo/List/Grid/GroupPG',
         'Controls-demo/List/Grid/resources/DataDemoPG',
         'tmpl!Controls-demo/PropertyGrid/DemoPG',
         'json!Controls-demo/List/Grid/resources/GroupPG/cfg',
-        'Controls/grids',
+        'Controls/grid',
         'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate',
         'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander',
         'wml!Controls-demo/List/Grid/resources/DemoMoney',
@@ -32,7 +32,7 @@ define('Controls-demo/List/Grid/GroupPG',
                     groupTemplate: {
                         value: 'default',
                         items: [
-                            {id: 1, title: 'default', template: 'wml!Controls/List/Grid/GroupTemplate'},
+                            {id: 1, title: 'default', template: 'Controls/grids:GroupTemplate'},
                             {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'},
                             {id: 3, title: 'without expander', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander'},
                         ]
@@ -51,7 +51,7 @@ define('Controls-demo/List/Grid/GroupPG',
                     displayProperty: 'title',
                     groupingKeyCallback: this._groupByGenre,
                     dataLoadCallback: this._dataLoadCallback,
-                    groupTemplate: 'wml!Controls/List/Grid/GroupTemplate'
+                    groupTemplate: 'Controls/grids:GroupTemplate'
                 };
                 this._metaData = config[this._content].properties['ws-config'].options;
             },

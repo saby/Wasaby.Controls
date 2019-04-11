@@ -13,6 +13,8 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"
+        groupingKeyCallback="{{_options.groupingKeyCallback}}"
+        groupTemplate="{{_options.groupTemplate}}"
         filter="{{_options.filter}}"
         navigation="{{_options.navigation}}"
         multiSelect="{{_options.multiSelect}}"

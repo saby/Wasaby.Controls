@@ -1,4 +1,3 @@
-/// <amd-module name="Controls/progress" />
 /**
  * Progress indicators library
  * @library Controls/progress

@@ -4,7 +4,7 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
-   'Controls/lists',
+   'Controls/list',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
 ], function(Control, template, source, TreeMemory, Data, lists) {
@@ -154,10 +154,13 @@ define('Controls-demo/OperationsPanel/Demo', [
       },
 
       _afterItemsMove: function(event, items, target, position) {
-         // To display the records in the correct order
-         if (position === 'on') {
-            this._children.list.reload();
-         }
+         this._children.operationsResultOpener.open({
+            templateOptions: {
+               operationsCount: items.length,
+               operationsSuccess: items.length,
+               title: 'Move items'
+            }
+         });
       },
 
       _beforeItemsRemove: function(event, items) {

@@ -1,14 +1,14 @@
 <div class="demo-Grid">
    <Controls.buttons:Button caption="Toggle columns" on:click="_onToggleColumnsClicked()"/>
    <div class="demo-Grid__container">
-      <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
+      <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
                  bind:selectedKeys="_firstSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
-               <Controls.lists:Container>
+               <Controls.list:Container>
                   <Controls.List.MultiSelector>
-                     <Controls.grids:View
+                     <Controls.grid:View
                              attr:class="demo-Grid__control test_grid_1"
                              displayProperty="title"
                              markedKey="448390"
@@ -24,15 +24,15 @@
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}"
                              bind:sorting="_sorting">
-                     </Controls.grids:View>
+                     </Controls.grid:View>
                   </Controls.List.MultiSelector>
-               </Controls.lists:Container>
+               </Controls.list:Container>
             </Controls.Container.Scroll>
          </Controls.Container.MultiSelector>
-      </Controls.lists:DataContainer>
+      </Controls.list:DataContainer>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
-            <Controls.grids:View
+            <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_2"
                     leftPadding="S"
                     rightPadding="M"
@@ -49,19 +49,19 @@
                     on:itemActionsClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
-            </Controls.grids:View>
+            </Controls.grid:View>
          </ws:content>
       </Controls.Container.Scroll>
    </div>
    <div class="demo-Grid__container">
-      <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
+      <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
                  bind:selectedKeys="_secondSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
-               <Controls.lists:Container>
+               <Controls.list:Container>
                   <Controls.List.MultiSelector>
-                     <Controls.grids:View
+                     <Controls.grid:View
                              attr:class="demo-Grid__control test_grid_3"
                              leftPadding="M"
                              rightPadding="L"
@@ -75,15 +75,15 @@
                              itemActionVisibilityCallback="{{_showAction}}"
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}">
-                     </Controls.grids:View>
+                     </Controls.grid:View>
                   </Controls.List.MultiSelector>
-               </Controls.lists:Container>
+               </Controls.list:Container>
             </Controls.Container.Scroll>
          </Controls.Container.MultiSelector>
-      </Controls.lists:DataContainer>
+      </Controls.list:DataContainer>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>
-            <Controls.grids:View
+            <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_4"
                     leftPadding="L"
                     rightPadding="XL"
@@ -98,7 +98,7 @@
                     on:itemActionsClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
-            </Controls.grids:View>
+            </Controls.grid:View>
          </ws:content>
       </Controls.Container.Scroll>
    </div>
@@ -109,7 +109,7 @@
    <div class="demo-Grid__container test_container_3">
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
          <ws:content>
-            <Controls.grids:View
+            <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_5"
                     keyProperty="id"
                     source = "{{_viewSource}}"
@@ -136,7 +136,7 @@
                      </ws:Object>
                   </ws:Array>
                </ws:header>
-            </Controls.grids:View>
+            </Controls.grid:View>
          </ws:content>
       </Controls.Container.Scroll>
    </div>
