@@ -20,10 +20,10 @@ define('Controls/Input/Search',
        *
        * @class Controls/Input/Search
        * @mixes Controls/Input/interface/IInputField
-       * @mixes Controls/Input/interface/IInputText
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IPaste
-       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/_input/interface/IInputText
+       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/_input/interface/IPaste
+       * @mixes Controls/_input/interface/IInputPlaceholder
        * @mixes Controls/interface/ITooltip
        *
        * @mixes Controls/Input/Search/Styles

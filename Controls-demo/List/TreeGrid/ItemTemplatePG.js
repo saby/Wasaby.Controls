@@ -19,7 +19,7 @@ define('Controls-demo/List/TreeGrid/ItemTemplatePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/treeGrid:View',
+         _content: 'Controls/_treeGrids/TreeGrid',
          _dataObject: null,
          _componentOptions: null,
 

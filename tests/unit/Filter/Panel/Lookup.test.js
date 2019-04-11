@@ -3,28 +3,39 @@ define(['Controls/Filter/Button/Panel/Lookup'
    describe('Controls/Filter/Button/Panel/Lookup', function() {
       it('_afterUpdate', function() {
          var
+            isActivate = false,
             callResize = false,
             panelLookup = new PanelLookup();
 
          panelLookup._options.selectedKeys = [];
+         panelLookup._options.lookupTemplateName = 'string';
          panelLookup._children.controlResize = {
             start: function(){
                callResize = true;
             }
          };
+         panelLookup._children.lookup = {
+            activate: function() {
+               isActivate = true;
+            }
+         };
 
          panelLookup._afterUpdate({selectedKeys: []});
          assert.isFalse(callResize);
+         assert.isFalse(isActivate);
 
          panelLookup._afterUpdate({selectedKeys: [2]});
          assert.isFalse(callResize);
+         assert.isFalse(isActivate);
 
          panelLookup._options.selectedKeys = [1];
          panelLookup._afterUpdate({selectedKeys: [2]});
          assert.isFalse(callResize);
+         assert.isFalse(isActivate);
 
          panelLookup._afterUpdate({selectedKeys: []});
          assert.isTrue(callResize);
+         assert.isTrue(isActivate);
       });
 
       it('showSelector', function() {

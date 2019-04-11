@@ -1,9 +1,9 @@
 <div class="demo-Grid">
     <div class="demo-Grid__container">
-        <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
+        <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
             <Controls.Container.MultiSelector>
                 <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                    <Controls.lists:Container>
+                    <Controls.list:Container>
                         <Controls.List.MultiSelector>
                             <Controls.treeGrid:View
                                     name="list"
@@ -15,9 +15,9 @@
                                     columns="{{gridColumns}}">
                             </Controls.treeGrid:View>
                         </Controls.List.MultiSelector>
-                    </Controls.lists:Container>
+                    </Controls.list:Container>
                 </Controls.Container.Scroll>
             </Controls.Container.MultiSelector>
-        </Controls.lists:DataContainer>
+        </Controls.list:DataContainer>
     </div>
 </div>

@@ -1,0 +1,3 @@
+<div>
+   <ws:partial template="{{_openerTemplate}}"  name="Opener" scope="{{_options}}" on:close="_closeHandler()" on:open="_openHandler()" />
+</div>

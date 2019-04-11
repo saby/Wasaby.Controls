@@ -12,7 +12,7 @@ define('Controls/Filter/Button/Container',
        * Receives props from context and pass to {@link Controls/Filter/Button}.
        * NOTE: Must be located inside Controls/Filter/Controller.
        *
-       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Button/Container
        * @extends Core/Control

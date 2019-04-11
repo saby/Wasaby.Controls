@@ -1,6 +1,6 @@
-<ws:partial template="Controls/lists:ItemTemplate" scope="{{_options}}">
+<ws:partial template="Controls/list:ItemTemplate" scope="{{_options}}">
     <ws:contentTemplate>
-        <ws:partial template="Controls/lists:EditingTemplate"
+        <ws:partial template="Controls/list:EditingTemplate"
                     value="{{ contentTemplate.itemData.item.title }}" enabled="{{true}}">
             <ws:editorTemplate>
                 <Controls.input:Text bind:value="itemData.item.title"

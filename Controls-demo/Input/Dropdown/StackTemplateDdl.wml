@@ -1,7 +1,7 @@
 <Controls.Popup.Templates.Stack.StackTemplate headingCaption="Add template" attr:style="width: 500px;">
    <ws:headerContentTemplate>
       <div class="ControlsDemo-InputDropdown__stackTopArea">
-         <Controls.buttons:Button caption="Save" style="linkMain" attr:class="ControlsDemo-InputDropdown__Button"/>
+         <Controls.buttons:Button caption="Save" style="secondary" viewMode="link" attr:class="ControlsDemo-InputDropdown__Button"/>
          <Controls.buttons:Button caption="Add" on:click="_close()" attr:class="ControlsDemo-InputDropdown__Button"/>
       </div>
    </ws:headerContentTemplate>

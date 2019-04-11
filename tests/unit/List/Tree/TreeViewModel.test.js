@@ -428,6 +428,7 @@ define([
                item: treeViewModel._items.at(0),
                key: treeViewModel._items.at(0).getId(),
                level: 1,
+               rowIndex: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[1].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
@@ -437,6 +438,7 @@ define([
                item: treeViewModel._items.at(1),
                key: treeViewModel._items.at(1).getId(),
                level: 2,
+               rowIndex: 6,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
          });

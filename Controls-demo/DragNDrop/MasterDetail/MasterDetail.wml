@@ -6,10 +6,10 @@
                                    attr:class="demo-DragNDrop__MasterDetail_master_search_input"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_master">
-            <Controls.lists:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
+            <Controls.list:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
                <div>
-                  <Controls.lists:Mover name="masterMover" parentProperty="Раздел"/>
-                  <Controls.lists:Container>
+                  <Controls.list:Mover name="masterMover" parentProperty="Раздел"/>
+                  <Controls.list:Container>
                      <Controls.Container.MasterList>
                         <Controls.treeGrid:View
                            itemsReadyCallback="{{_itemsReadyCallbackMaster}}"
@@ -33,9 +33,9 @@
                            </ws:draggingTemplate>
                         </Controls.treeGrid:View>
                      </Controls.Container.MasterList>
-                  </Controls.lists:Container>
+                  </Controls.list:Container>
                </div>
-            </Controls.lists:DataContainer>
+            </Controls.list:DataContainer>
          </Controls.Container.Scroll>
       </div>
    </ws:master>
@@ -45,11 +45,11 @@
             <Controls.Input.Search placeholder="Введите"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_detail">
-            <Controls.lists:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
+            <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
                <div>
-                  <Controls.lists:Mover name="detailMover"/>
-                  <Controls.lists:Container>
-                     <Controls.lists:View
+                  <Controls.list:Mover name="detailMover"/>
+                  <Controls.list:Container>
+                     <Controls.list:View
                         name="detailList"
                         itemsReadyCallback="{{_itemsReadyCallbackDetail}}"
                         itemsDragNDrop="{{true}}"
@@ -58,7 +58,7 @@
                         <ws:filter parent="{{detail.selectedMasterValue || '0'}}">
                         </ws:filter>
                         <ws:itemTemplate>
-                           <ws:partial template="Controls/lists:ItemTemplate">
+                           <ws:partial template="Controls/list:ItemTemplate">
                               <ws:contentTemplate>
                                  <ws:partial
                                          item="{{itemTemplate.itemData.item}}"
@@ -74,10 +74,10 @@
                                        additionalText="{{draggingTemplate.entity._options.additionalText}}">
                            </ws:partial>
                         </ws:draggingTemplate>
-                     </Controls.lists:View>
-                  </Controls.lists:Container>
+                     </Controls.list:View>
+                  </Controls.list:Container>
                </div>
-            </Controls.lists:DataContainer>
+            </Controls.list:DataContainer>
          </Controls.Container.Scroll>
       </div>
    </ws:detail>

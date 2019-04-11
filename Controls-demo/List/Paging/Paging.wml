@@ -1,7 +1,7 @@
 <div>
    <Controls.List.Paging.DigitButtons count="{{15}}" selectedKey="{{7}}"></Controls.List.Paging.DigitButtons>
 
-   <Controls.lists:Paging showDigits="{{false}}" pagesCount="{{15}}" selectedKey="{{1}}"></Controls.lists:Paging>
+   <Controls.list:Paging showDigits="{{false}}" pagesCount="{{15}}" selectedKey="{{1}}"></Controls.list:Paging>
 
-   <Controls.lists:Paging showDigits="{{true}}" pagesCount="{{15}}" bind:selectedPage="_selectedKey"></Controls.lists:Paging>
+   <Controls.list:Paging showDigits="{{true}}" pagesCount="{{15}}" bind:selectedPage="_selectedKey"></Controls.list:Paging>
 </div>

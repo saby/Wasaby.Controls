@@ -15,7 +15,7 @@ define('Controls/Filter/Fast/Container',
        * Receives props from context and pass to {@link Controls/Filter/Fast}.
        * NOTE: Must be located inside Controls/Filter/Controller.
        *
-       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Fast/Container
        * @extends Core/Control

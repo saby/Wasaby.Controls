@@ -21,7 +21,7 @@
       <ws:itemsGroup method="{{_groupingKeyCallback}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
    </Controls.grid:View>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.lists:AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
+      <Controls.list:AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
       <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 2 - редактирование в карточке, режим "по ховеру"</div>

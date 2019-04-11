@@ -4,7 +4,7 @@ define('Controls/DragNDrop/Entity/Items', ['Controls/DragNDrop/Entity'], functio
    /**
     * The base class for the inheritors of the drag'n'drop entity in the list.
     * You can customize an entity in any way by passing any data to the options.
-    * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
+    * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/DragNDrop/Entity/Items
     * @public
     * @author Авраменко А.С.

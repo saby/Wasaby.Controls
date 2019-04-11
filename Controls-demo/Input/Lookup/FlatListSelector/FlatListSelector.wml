@@ -8,19 +8,19 @@
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
         <Controls.Selector.Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
-            <Controls.lists:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_options.filter}}">
+            <Controls.list:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_options.filter}}">
                 <Controls.Selector.Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
                     <Controls.Container.MultiSelector>
-                        <Controls.lists:Container>
+                        <Controls.list:Container>
                             <Controls.List.MultiSelector>
                                 <Controls.Selector.List.Container multiSelect="{{_options.multiSelect ? 'visible'}}">
-                                    <Controls.lists:View displayProperty="title" idProperty="{{_keyProperty}}" multiSelectVisibility="{{_options.multiSelect ? 'visible'}}"/>
+                                    <Controls.list:View displayProperty="title" idProperty="{{_keyProperty}}" multiSelectVisibility="{{_options.multiSelect ? 'visible'}}"/>
                                 </Controls.Selector.List.Container>
                             </Controls.List.MultiSelector>
-                        </Controls.lists:Container>
+                        </Controls.list:Container>
                     </Controls.Container.MultiSelector>
                 </Controls.Selector.Container>
-            </Controls.lists:DataContainer>
+            </Controls.list:DataContainer>
         </Controls.Selector.Controller>
     </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>

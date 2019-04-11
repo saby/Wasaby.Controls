@@ -1,4 +1,4 @@
-define('Controls/Dropdown/interface/IGroupped',
+define('Controls/Dropdown/interface/IGrouped',
    function() {
 
       /**

@@ -1,3 +1,4 @@
+import Env = require('Env/Env');
 export default {
     getRatio(pos, left, width) {
         return (pos - left) / width;
@@ -17,7 +18,7 @@ export default {
     },
     getScaleData: function(minValue, maxValue, scaleStep) {
         var scaleData = [];
-        if (scaleStep) {
+        if (scaleStep > 0) {
             const scaleRange = maxValue - minValue;
             scaleData.push({value: minValue, position: 0});
             for (let i = minValue + scaleStep; i <= maxValue - scaleStep / 2; i += scaleStep) {
