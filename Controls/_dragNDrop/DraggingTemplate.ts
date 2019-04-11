@@ -1,8 +1,6 @@
-define('Controls/DragNDrop/DraggingTemplate', [
-   'Core/Control',
-   'wml!Controls/DragNDrop/DraggingTemplate/DraggingTemplate',
-   'css!theme?Controls/DragNDrop/DraggingTemplate/DraggingTemplate'
-], function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dragNDrop/DraggingTemplate/DraggingTemplate');
+import 'css!theme?Controls/_dragNDrop/DraggingTemplate/DraggingTemplate';
 
    var MAX_ITEMS_COUNT = 999;
 
@@ -21,9 +19,9 @@ define('Controls/DragNDrop/DraggingTemplate', [
    /**
     * Standard dragging template for the list.
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
-    * @class Controls/DragNDrop/DraggingTemplate
+    * @class Controls/_dragNDrop/DraggingTemplate
     * @extends Core/Control
-    * @mixes Controls/DragNDrop/DraggingTemplate/Styles
+    * @mixes Controls/_dragNDrop/DraggingTemplate/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -31,7 +29,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     */
 
    /**
-    * @name Controls/DragNDrop/DraggingTemplate#mainText
+    * @name Controls/_dragNDrop/DraggingTemplate#mainText
     * @cfg {String} Main information about the entity being moved.
     * @default Запись реестра
     * @example
@@ -42,7 +40,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
     *       <ws:draggingTemplate>
-    *          <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+    *          <ws:partial template="Controls/_dragNDrop/DraggingTemplate"
     *                      mainText="{{draggingTemplate.entity._options.mainText}}"
     *                      image="{{draggingTemplate.entity._options.image}}"
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -72,7 +70,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     */
 
    /**
-    * @name Controls/DragNDrop/DraggingTemplate#additionalText
+    * @name Controls/_dragNDrop/DraggingTemplate#additionalText
     * @cfg {String} Additional information about the entity being moved.
     * @example
     * The following example shows how to use a standard dragging template.
@@ -82,7 +80,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
     *       <ws:draggingTemplate>
-    *          <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+    *          <ws:partial template="Controls/_dragNDrop/DraggingTemplate"
     *                      mainText="{{draggingTemplate.entity._options.mainText}}"
     *                      image="{{draggingTemplate.entity._options.image}}"
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -112,7 +110,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     */
 
    /**
-    * @name Controls/DragNDrop/DraggingTemplate#image
+    * @name Controls/_dragNDrop/DraggingTemplate#image
     * @cfg {String} A image of the entity being moved.
     * @remark The option must contain a link to the image. If this option is specified, the logo option is not applied.
     * @example
@@ -123,7 +121,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
     *       <ws:draggingTemplate>
-    *          <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+    *          <ws:partial template="Controls/_dragNDrop/DraggingTemplate"
     *                      mainText="{{draggingTemplate.entity._options.mainText}}"
     *                      image="/resources/imageForDragTemplate.jpg"
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -152,7 +150,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     */
 
    /**
-    * @name Controls/DragNDrop/DraggingTemplate#logo
+    * @name Controls/_dragNDrop/DraggingTemplate#logo
     * @cfg {String} A logo of the entity being moved.
     * @default icon-DocumentUnknownType
     * @remark The full list of possible values can be found <a href="/docs/js/icons/">here</a>. This option is used if the image option is not specified.
@@ -164,7 +162,7 @@ define('Controls/DragNDrop/DraggingTemplate', [
     *                   on:dragStart="_onDragStart()"
     *                   itemsDragNDrop="{{true}}">
     *       <ws:draggingTemplate>
-    *          <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+    *          <ws:partial template="Controls/_dragNDrop/DraggingTemplate"
     *                      mainText="{{draggingTemplate.entity._options.mainText}}"
     *                      logo="icon-Album"
     *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -192,11 +190,11 @@ define('Controls/DragNDrop/DraggingTemplate', [
     * </pre>
     */
 
-   return Control.extend({
+   export = Control.extend({
       _template: template,
 
       _beforeMount: function(options) {
          this._itemsCount = _private.getCounterText(options.entity.getItems().length);
       }
    });
-});
+

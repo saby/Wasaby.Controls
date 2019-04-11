@@ -1,11 +1,6 @@
-define('Controls/DragNDrop/Controller',
-   [
-      'Core/Control',
-      'Env/Env',
-      'wml!Controls/DragNDrop/Controller/Controller'
-   ],
-
-   function(Control, Env, template) {
+import Control = require('Core/Control');
+import Env = require('Env/Env');
+import template = require('wml!Controls/_dragNDrop/Controller/Controller');
       var
          SHIFT_LIMIT = 4,
          IE_MOUSEMOVE_FIX_DELAY = 50;
@@ -78,9 +73,9 @@ define('Controls/DragNDrop/Controller',
 
       /**
        * Container allows you to handle drag'n'drop events on the page.
-       * The control must be inside Controls/DragNDrop/Container.
+       * The control must be inside Controls/_dragNDrop/Container.
        * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
-       * @class Controls/DragNDrop/Controller
+       * @class Controls/_dragNDrop/Controller
        * @extends Core/Control
        * @control
        * @public
@@ -96,13 +91,13 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @name Controls/DragNDrop/Controller#draggingTemplate
+       * @name Controls/_dragNDrop/Controller#draggingTemplate
        * @cfg {Function} Template of the entity to be moved.
        * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
        * @example
        * The following example shows how to set your dragging template.
        * <pre>
-       *    <Controls.DragNDrop.Controller>
+       *    <Controls._dragNDrop.Controller>
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -113,7 +108,7 @@ define('Controls/DragNDrop/Controller',
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls.DragNDrop.Controller>
+       *    </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -127,13 +122,13 @@ define('Controls/DragNDrop/Controller',
 
       /**
        * Method to initialize the start of drag'n'drop.
-       * @function Controls/DragNDrop/Controller#startDragNDrop
-       * @param {Controls/DragNDrop/Entity} entity Moved entity.
+       * @function Controls/_dragNDrop/Controller#startDragNDrop
+       * @param {Controls/_dragNDrop/Entity} entity Moved entity.
        * @param {Env/Event:Object} event The event that occurred to the handler the mouseDown(touchStart).
        * @example
        * The following example shows how to start dragNDrop.
        * <pre>
-       *    <Controls.DragNDrop.Controller name="dragNDropController">
+       *    <Controls._dragNDrop.Controller name="dragNDropController">
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -144,7 +139,7 @@ define('Controls/DragNDrop/Controller',
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls.DragNDrop.Controller>
+       *    </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -162,14 +157,14 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#documentDragStart Occurs after the user starts dragging an element in the page.
+       * @event Controls/_dragNDrop/Controller#documentDragStart Occurs after the user starts dragging an element in the page.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires at all controllers on the page, including the controller in which the move began.
        * @example
        * The following example shows how to change the visual state of a control when you start a dragNDrop in another control.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController">
+       *     <Controls._dragNDrop.Controller name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -180,10 +175,10 @@ define('Controls/DragNDrop/Controller',
        *             </ws:for>
        *          </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
-       *     <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()">
+       *     </Controls._dragNDrop.Controller>
+       *     <Controls._dragNDrop.Controller on:documentDragStart="_documentDragStart()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -208,14 +203,14 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#documentDragEnd Occurs after the user has finished dragging an element in the page.
+       * @event Controls/_dragNDrop/Controller#documentDragEnd Occurs after the user has finished dragging an element in the page.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires on all controllers on the page, including the controller where the move ended.
        * @example
        * The following example shows how to change the visual state of a control when you end a dragNDrop in another control.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController">
+       *     <Controls._dragNDrop.Controller name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -226,10 +221,10 @@ define('Controls/DragNDrop/Controller',
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
-       *     <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
+       *     </Controls._dragNDrop.Controller>
+       *     <Controls._dragNDrop.Controller on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -257,14 +252,14 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#dragStart Occurs after the user starts dragging an element in the current controller.
+       * @event Controls/_dragNDrop/Controller#dragStart Occurs after the user starts dragging an element in the current controller.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move has started.
        * @example
        * The following example shows how to hide a movable item.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController" on:dragStart="_onDragStart()">
+       *     <Controls._dragNDrop.Controller name="dragNDropController" on:dragStart="_onDragStart()">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -277,7 +272,7 @@ define('Controls/DragNDrop/Controller',
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -302,14 +297,14 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#dragEnd Occurs after the user has finished dragging an item in the current controller.
+       * @event Controls/_dragNDrop/Controller#dragEnd Occurs after the user has finished dragging an item in the current controller.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move ended.
        * @example
        * The following example shows how to update an item at the source after the move is complete.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController" on:dragEnd="_onDragEnd()">
+       *     <Controls._dragNDrop.Controller name="dragNDropController" on:dragEnd="_onDragEnd()">
        *        <ws:draggingTemplate>
        *            <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -320,7 +315,7 @@ define('Controls/DragNDrop/Controller',
        *                </ws:for>
        *            </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -346,13 +341,13 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#dragEnter Occurs after an item is moved inside the controller.
+       * @event Controls/_dragNDrop/Controller#dragEnter Occurs after an item is moved inside the controller.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController">
+       *     <Controls._dragNDrop.Controller name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -363,10 +358,10 @@ define('Controls/DragNDrop/Controller',
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
-       *     <Controls.DragNDrop.Controller on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls._dragNDrop.Controller>
+       *     <Controls._dragNDrop.Controller on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -393,13 +388,13 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#dragLeave Occurs after an item is moved outside the controller.
+       * @event Controls/_dragNDrop/Controller#dragLeave Occurs after an item is moved outside the controller.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController">
+       *     <Controls._dragNDrop.Controller name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -410,10 +405,10 @@ define('Controls/DragNDrop/Controller',
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
-       *     <Controls.DragNDrop.Controller on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls._dragNDrop.Controller>
+       *     <Controls._dragNDrop.Controller on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -440,14 +435,14 @@ define('Controls/DragNDrop/Controller',
        */
 
       /**
-       * @event Controls/DragNDrop/Controller#dragMove Occurs when you move an item on a page.
+       * @event Controls/_dragNDrop/Controller#dragMove Occurs when you move an item on a page.
        * @param {Env/Event:Object} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move has started. The event fires every time a mousemove(touchmove) event occurs on the page.
        * @example
        * The following example shows how to change the position of an item on a page during a move.
        * <pre>
-       *     <Controls.DragNDrop.Controller name="dragNDropController" on:dragMove="_dragMove()">
+       *     <Controls._dragNDrop.Controller name="dragNDropController" on:dragMove="_dragMove()">
        *        <ws:content>
        *           <div>
        *              <ws:for data="item in _items">
@@ -455,7 +450,7 @@ define('Controls/DragNDrop/Controller',
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls.DragNDrop.Controller>
+       *     </Controls._dragNDrop.Controller>
        * </pre>
        *
        * <pre>
@@ -636,5 +631,5 @@ define('Controls/DragNDrop/Controller',
          };
       };
 
-      return DragNDropController;
-   });
+      export = DragNDropController;
+   

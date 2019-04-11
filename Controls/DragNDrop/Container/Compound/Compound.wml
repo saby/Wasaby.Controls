@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_dragNDrop/Container/Compound/Compound" scope="{{_options}}" />

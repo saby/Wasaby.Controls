@@ -1,6 +1,5 @@
-define('Controls/DragNDrop/Entity/Item', ['Controls/DragNDrop/Entity'],
-   function(Entity) {
-      'use strict';
+import Entity = require('Controls/_dragNDrop/Entity');
+      
 
       var Item = Entity.extend({
          getItem: function() {
@@ -8,5 +7,5 @@ define('Controls/DragNDrop/Entity/Item', ['Controls/DragNDrop/Entity'],
          }
       });
 
-      return Item;
-   });
+      export = Item;
+   

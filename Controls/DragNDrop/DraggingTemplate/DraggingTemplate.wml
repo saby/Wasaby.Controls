@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_dragNDrop/DraggingTemplate/DraggingTemplate" scope="{{_options}}" />

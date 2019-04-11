@@ -1,8 +1,4 @@
-define('Controls/DragNDrop/DraggingTemplate/Styles', [],
-   function() {
-   }
-
-   /**
+/**
     * @author Авраменко А.С.
     * @mixin Controls/DragNDrop/DraggingTemplate/Styles
     * @public
@@ -38,4 +34,3 @@ define('Controls/DragNDrop/DraggingTemplate/Styles', [],
     * @css @font-size_DraggingTemplate-counter Font size of the counter of the dragging template.
     *
     */
-);

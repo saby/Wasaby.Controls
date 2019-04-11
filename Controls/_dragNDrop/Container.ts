@@ -1,18 +1,13 @@
-define('Controls/DragNDrop/Container',
-   [
-      'Core/Control',
-      'wml!Controls/DragNDrop/Container/Container',
-      'Controls/DragNDrop/DraggingTemplate'
-   ],
-
-   function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dragNDrop/Container/Container');
+import 'Controls/_dragNDrop/DraggingTemplate';
       /**
-       * The drag'n'drop container provides a relationship between different Controls/DragNDrop/Controller.
+       * The drag'n'drop container provides a relationship between different Controls/_dragNDrop/Controller.
        * It tracks controller events and notifies other controllers about them.
        * The container is responsible for displaying and positioning the template specified in the draggingTemplate option at the controller.
-       * Drag and drop the entity only works inside Controls/DragNDrop/Container.
+       * Drag and drop the entity only works inside Controls/_dragNDrop/Container.
        * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
-       * @class Controls/DragNDrop/Container
+       * @class Controls/_dragNDrop/Container
        * @extends Core/Control
        * @control
        * @public
@@ -20,7 +15,7 @@ define('Controls/DragNDrop/Container',
        * @category DragNDrop
        */
 
-      return Control.extend({
+      export = Control.extend({
          _template: template,
          _draggingTemplateOptions: undefined,
          _draggingTemplate: undefined,
@@ -40,4 +35,4 @@ define('Controls/DragNDrop/Container',
             this._draggingTemplate = draggingTemplate;
          }
       });
-   });
+   

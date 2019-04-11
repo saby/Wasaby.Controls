@@ -1,15 +1,10 @@
-define('Controls/DragNDrop/Container/Compound',
-   [
-      'Core/Control',
-      'wml!Controls/DragNDrop/Container/Compound/Compound',
-      'wml!Controls/DragNDrop/DraggingTemplateWrapper',
-      'Vdom/Vdom'
-   ],
-
-   function(Control, template, draggingTemplateWrapper, Vdom) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dragNDrop/Container/Compound/Compound');
+import draggingTemplateWrapper = require('wml!Controls/_dragNDrop/DraggingTemplateWrapper');
+import Vdom = require('Vdom/Vdom');
       var ZINDEX_FOR_OLD_PAGE = 10000;
 
-      return Control.extend({
+      export = Control.extend({
          _template: template,
          _draggingTemplate: null,
 
@@ -56,4 +51,4 @@ define('Controls/DragNDrop/Container/Compound',
             }
          }
       });
-   });
+   

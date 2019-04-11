@@ -1,7 +1,7 @@
-define('Controls/DragNDrop/Entity/List/Items', ['Controls/DragNDrop/Entity/Items'], function(Entity) {
-   'use strict';
+import Entity = require('Controls/_dragNDrop/Entity/Items');
+   
 
-   return Entity.extend({
+   export = Entity.extend({
       getMainText: function() {
          return null;
       },
@@ -18,4 +18,4 @@ define('Controls/DragNDrop/Entity/List/Items', ['Controls/DragNDrop/Entity/Items
          return null;
       }
    });
-});
+
