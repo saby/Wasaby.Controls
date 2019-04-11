@@ -10,18 +10,11 @@
          var panelWidth;
          var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
          var minWidth = parseInt(item.popupOptions.minWidth, 10);
-         var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
          if (item.popupOptions.width) {
             panelWidth = item.popupOptions.width;
          } else if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
-         } else if (!minWidth || !maxWidth) { // If no configuration is specified then get the size of the container
-            if (item.containerWidth > maxPanelWidthWithOffset) {
-               panelWidth = maxPanelWidthWithOffset; // returns the width of the content no larger than the allowed width
-            }
-         } else if (maxWidth <= maxPanelWidthWithOffset) {
-            panelWidth = maxWidth;
          } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;
@@ -30,10 +23,7 @@
                tCoords.right = 0;
             }
             panelWidth = minWidth;
-         } else {
-            panelWidth = maxPanelWidthWithOffset; // return allowed width
          }
-
          return panelWidth;
       },
       isMaximizedPanel: function(item) {
