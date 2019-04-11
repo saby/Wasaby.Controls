@@ -1,4 +1,5 @@
 <ws:if data="{{_options.misspellValue}}">
+    {{debug()}}
     <div class="ws-fragment">
         <Controls._search.Misspell attr:class="{{_options.misspellClass}}">
             <ws:caption>
@@ -9,5 +10,6 @@
     </div>
 </ws:if>
 <ws:else>
+    {{debug()}}
     <ws:partial template="{{_options.content}}" scope="{{_options}}"/>
 </ws:else>
