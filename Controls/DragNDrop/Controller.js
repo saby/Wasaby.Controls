@@ -1,4 +1,4 @@
-define('Controls/_dragNDrop/Controller',
+define('Controls/DragNDrop/Controller',
    ['Controls/_dragNDrop/Controller'],
    function(Control) {
       'use strict';
