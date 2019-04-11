@@ -1,12 +1,6 @@
-define('Controls/SwitchableArea/ItemTpl', [
-   'Core/Control',
-   'wml!Controls/SwitchableArea/ItemTpl'
-],
-function(
-   Control,
-   template
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_SwitchableArea/ItemTpl');
+
    var SwitchableAreaItem = Control.extend({
       _template: template,
 
@@ -23,5 +17,5 @@ function(
       }
    });
 
-   return SwitchableAreaItem;
-});
+   export = SwitchableAreaItem;
+

@@ -1,14 +1,7 @@
-define('Controls/SwitchableArea/ViewModel', [
-   'Core/core-simpleExtend',
-   'Types/chain',
-   'Core/core-clone'
-],
-function(
-   SimpleExtend,
-   chain,
-   cClone
-) {
-   'use strict';
+import SimpleExtend = require('Core/core-simpleExtend');
+import chain = require('Types/chain');
+import cClone = require('Core/core-clone');
+   
 
    var _private = {
       updateLoadStatus: function(selectedKey, self) {
@@ -67,5 +60,5 @@ function(
       }
    });
 
-   return ViewModel;
-});
+   export = ViewModel;
+
