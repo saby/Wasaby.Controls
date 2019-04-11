@@ -132,65 +132,6 @@
   "output": "controls-label.package.js"
 }, {
   "include": [
-    "Controls/List/*",
-    "Controls/_lists/*",
-    "Controls/_lists",
-    "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_lists/ItemActions/Utils/Actions"
-  ],
-  "exclude": [
-    "Controls/List/interface/*",
-    "Controls/List/ItemActions/resources/*",
-    "Controls/List/ItemActions/ItemActionsControl",
-    "Controls/List/Swipe/*",
-    "Controls/List/Mover",
-    "Controls/List/Mover/*",
-    "Controls/List/Remover",
-    "Controls/List/Paging/*",
-    "Controls/List/Paging",
-    "css!Controls/List/AddButton/AddButton",
-    "Controls/_lists/interface/*",
-    "Controls/_lists/ItemActions/resources/*",
-    "Controls/_lists/ItemActions/ItemActionsControl",
-    "Controls/_lists/Swipe/*",
-    "Controls/_lists/Mover",
-    "Controls/_lists/Mover/*",
-    "Controls/_lists/Remover",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging",
-    "css!Controls/_lists/AddButton/AddButton"
-  ],
-  "output": "controls-list.package.js"
-}, {
-  "include": [
-    "Controls/List/Paging/*",
-    "Controls/List/Paging",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging"
-  ],
-  "output": "controls-paging.package.js"
-}, {
-  "include": [
-    "Controls/List/ItemActions/*",
-    "Controls/List/Swipe/*",
-    "Controls/_lists/ItemActions/*",
-    "Controls/_lists/Swipe/*"
-  ],
-  "exclude": [
-    "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_lists/ItemActions/Utils/Actions"
-  ],
-  "output": "controls-itemactions.package.js"
-}, {
-  "include": [
-    "Controls/List/Mover/*",
-    "Controls/List/Mover",
-    "Controls/_lists/Mover/*",
-    "Controls/_lists/Mover"
-  ],
-  "output": "controls-mover.package.js"
-}, {
-  "include": [
     "Controls/Popup/*"
   ],
   "exclude": [
