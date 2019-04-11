@@ -347,4 +347,8 @@
     <div attr:class="demo-Button_margin-10 ControlsDemo__textLink">
         Today the site with the <a attr:class="ws-link" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
     </div>
+    <div attr:class="ControlsDemo__baseLine">
+        <h2>Проверка базовой линии</h2>
+        <Controls-demo.Buttons.ButtonsVdom/>
+    </div>
 </div>

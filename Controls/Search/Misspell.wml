@@ -1,8 +1,1 @@
-<div class="controls-Misspell">
-    <span class="controls-Misspell__text">{[Возможно, вы имели в виду]}&nbsp;</span>
-    <div class="controls-Misspell__caption">
-        <div class="controls-Misspell__caption-content">
-            <ws:partial template="{{_options.caption}}"/>
-        </div>
-    </div>
-</div>
+<ws:partial template="wml!Controls/_search/Misspell" scope="{{_options}}" />
