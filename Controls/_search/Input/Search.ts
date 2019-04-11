@@ -12,15 +12,13 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
  *
- * @class Controls/Input/Search
+ * @class Controls/_search/Input/Search
  * @mixes Controls/Input/interface/IInputField
  * @mixes Controls/_input/interface/IInputText
  * @mixes Controls/_input/interface/IInputBase
  * @mixes Controls/_input/interface/IPaste
  * @mixes Controls/_input/interface/IInputPlaceholder
  * @mixes Controls/interface/ITooltip
- *
- * @mixes Controls/_search/Input/Search/Styles
  *
  * @ignoreOptions style
  *

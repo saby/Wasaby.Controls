@@ -5,6 +5,7 @@
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
+ * @includes Controls/_search/Input/Search
  * @public
  * @author Kraynov D.
  */
