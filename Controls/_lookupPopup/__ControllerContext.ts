@@ -1,13 +1,11 @@
-define('Controls/Selector/__ControllerContext', [
-   'Core/DataContext'
-], function(DataContext) {
-   'use strict';
+import DataContext = require('Core/DataContext');
    
-   return DataContext.extend({
+   
+   export = DataContext.extend({
       selectedItems: null,
       
       constructor: function(selectedItems) {
          this.selectedItems = selectedItems;
       }
    });
-});
+

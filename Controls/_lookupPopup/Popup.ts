@@ -1,13 +1,8 @@
-define('Controls/Selector/SelectedCollection/Popup',
-   [
-      'Core/Control',
-      'wml!Controls/Selector/SelectedCollection/Popup',
-      'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
-      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
-   ],
+import Control = require('Core/Control');
+import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
+import 'css!theme?Controls/Popup/Opener/InfoBox/InfoBox';
+import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
 
-   function(Control, template) {
-      'use strict';
 
       var itemHiddenTemplate = Control.extend({
          _template: template,
@@ -28,5 +23,5 @@ define('Controls/Selector/SelectedCollection/Popup',
          }
       });
 
-      return itemHiddenTemplate;
-   });
+      export = itemHiddenTemplate;
+

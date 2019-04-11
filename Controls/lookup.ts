@@ -1,5 +1,5 @@
 /**
- * List library
+ * Lookup library
  * @library Controls/lookup
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup

@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_lookupPopup/Popup" scope="{{_options}}" />
