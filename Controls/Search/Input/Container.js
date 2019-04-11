@@ -13,7 +13,7 @@ define('Controls/Search/Input/Container',
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
        *
-       * <a href="/materials/demo/demo-ws4-explorer-with-search?v=19.300">Here</a>. you a demo with search in Controls/Explorer.
+       * <a href="/materials/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
        *
        * @class Controls/Search/Input/Container
        * @extends Core/Control
