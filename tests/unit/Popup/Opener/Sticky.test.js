@@ -581,6 +581,30 @@ define(
             assert.equal(position.width, 200);
             assert.equal(Object.keys(position).length, 3);
          });
+
+         it ('Sticky fix position', () => {
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+            let baseFixPosition = StickyStrategy._private.fixPosition;
+            let baseCheckOverflow = StickyStrategy._private.checkOverflow;
+            let i = 0;
+            StickyStrategy._private.checkOverflow = () => {
+               return i++ === 0 ? 100 : -100;
+            };
+
+            StickyStrategy._private.fixPosition = (position) => {
+               if (position.bottom) { // метод вызвался, проставилась координата bottom
+                  position.bottom = -10;
+               }
+            };
+
+            let position = StickyStrategy._private.calculatePosition(cfg, targetCoords, 'vertical');
+            assert.equal(position.bottom, -10);
+
+            StickyStrategy._private.getPosition = baseCheckOverflow;
+            StickyStrategy._private.fixPosition = baseFixPosition;
+         });
       });
    }
 );
