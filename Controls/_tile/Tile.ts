@@ -1,4 +1,4 @@
-import View from 'Controls/list';
+import {View} from 'Controls/list';
 import TreeTileViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import 'Controls/_tile/TreeTileView/TreeTileView';
 import 'Controls/treeGrid';
