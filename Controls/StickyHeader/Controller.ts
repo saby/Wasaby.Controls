@@ -102,6 +102,11 @@ class Component extends Control {
     }
 
     private _addToHeadersStack(id: number, position: string) {
+        if (position === 'topbottom') {
+            this._addToHeadersStack(id, 'top');
+            this._addToHeadersStack(id, 'bottom');
+            return;
+        }
         //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         let container = (this._container && this._container.get) ? this._container.get(0) : this._container;
         let index = this._headersStack[position].findIndex((headerId) => {
