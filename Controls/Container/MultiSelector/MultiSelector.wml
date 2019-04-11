@@ -1,11 +1,1 @@
-<Controls.Event.Registrator name="registrator" register="selectedTypeChanged">
-   <ws:partial
-      template="{{_options.content}}"
-      scope="{{_options}}"
-      on:listSelectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-      on:listExcludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-      on:listSelectedKeysCountChanged="_selectedKeysCountChanged()"
-      selectedKeysCount="{{ _selectedKeysCount }}"
-      on:selectedTypeChanged="_selectedTypeChangedHandler()"
-   />
-</Controls.Event.Registrator>
+<ws:partial template="wml!Controls/_operations/Controller/Controller" scope="{{_options}}" />
