@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_lists/MultiSelector/MultiSelector" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_operations/Container/Container" scope="{{_options}}" />
