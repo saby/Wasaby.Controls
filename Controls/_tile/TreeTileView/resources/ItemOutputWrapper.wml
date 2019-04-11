@@ -1,5 +1,5 @@
 <ws:if data="{{listModel.getCurrent().hasSeparator}}">
-   <ws:partial template="wml!Controls/_lists/TileView/resources/InvisibleFor" itemTemplate="{{itemTemplate}}" listModel="{{listModel}}"/>
+   <ws:partial template="wml!Controls/_tile/TileView/resources/InvisibleFor" itemTemplate="{{itemTemplate}}" listModel="{{listModel}}"/>
    <div class="controls-TreeTileView__separator"></div>
 </ws:if>
 <ws:partial

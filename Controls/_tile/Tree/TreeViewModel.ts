@@ -1,4 +1,4 @@
-import ListViewModel = require('Controls/_lists/ListViewModel');
+import {ListViewModel} from 'Controls/list';
 import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_lists/resources/utils/TreeItemsUtil');
 import cClone = require('Core/core-clone');

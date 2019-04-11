@@ -1,10 +1,10 @@
-import ListView = require('Controls/_lists/ListView');
-import template = require('wml!Controls/_lists/TileView/TileView');
-import defaultItemTpl = require('wml!Controls/_lists/TileView/DefaultItemTpl');
+import {ListView} from 'Controls/list/ListView';
+import template = require('wml!Controls/_tile/TileView/TileView');
+import defaultItemTpl = require('wml!Controls/_tile/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
-import ItemSizeUtils = require('Controls/_lists/TileView/resources/ItemSizeUtils');
+import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
 import { IoC } from 'Env/Env';
-import 'css!theme?Controls/_lists/TileView/TileView';
+import 'css!theme?Controls/_tile/TileView/TileView';
 
 var _private = {
     getFixedPosition: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
