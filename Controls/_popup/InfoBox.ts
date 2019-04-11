@@ -139,6 +139,12 @@ import Env = require('Env/Env');
                },
                templateOptions: self._options.templateOptions
             };
+         },
+         resetTimeOut: function(self) {
+            clearTimeout(self._openId);
+            clearTimeout(self._closeId);
+            self._openId = null;
+            self._closeId = null;
          }
       };
 
@@ -171,7 +177,7 @@ import Env = require('Env/Env');
             if (this._opened) {
                this._close();
             }
-            clearTimeout(this._openId);
+            _private.resetTimeOut(this);
          },
 
          _open: function() {
@@ -188,11 +194,7 @@ import Env = require('Env/Env');
                this._children.infoBoxOpener.open(config);
             }
 
-            clearTimeout(this._openId);
-            clearTimeout(this._closeId);
-
-            this._openId = null;
-            this._closeId = null;
+            _private.resetTimeOut(this);
             this._opened = true;
             this._forceUpdate();
          },
@@ -205,12 +207,7 @@ import Env = require('Env/Env');
                this._notify('closeInfoBox');
                this._children.infoBoxOpener.close();
             }
-
-            clearTimeout(this._openId);
-            clearTimeout(this._closeId);
-
-            this._openId = null;
-            this._closeId = null;
+            _private.resetTimeOut(this);
             this._opened = false;
          },
 
