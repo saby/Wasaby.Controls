@@ -1,18 +1,15 @@
-define('Controls/Button/BigSeparator', [
-   'Core/Control',
-   'wml!Controls/Button/BigSeparator/BigSeparator',
-   'Types/entity',
+import Control = require('Core/Control');
+import template = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
+import entity = require('Types/entity');
+import 'css!theme?Controls/_toggle/BigSeparator/BigSeparator';
 
-   'css!theme?Controls/Button/BigSeparator/BigSeparator'
-], function(Control, template, entity) {
-   'use strict';
 
    /**
     * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Button/BigSeparator
+    * @class Controls/_toggle/BigSeparator
     * @extends Core/Control
     * @control
     * @public
@@ -21,11 +18,11 @@ define('Controls/Button/BigSeparator', [
     *
     * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
     *
-    * @mixes Controls/Button/BigSeparator/BigSeparatorStyles
+    * @mixes Controls/_toggle/BigSeparator/BigSeparatorStyles
     */
 
    /**
-    * @name Controls/Button/Separator#value
+    * @name Controls/_toggle/Separator#value
     * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
@@ -69,5 +66,5 @@ define('Controls/Button/BigSeparator', [
 
    BigSeparator._private = _private;
 
-   return BigSeparator;
-});
+   export = BigSeparator;
+

@@ -1,10 +1,8 @@
-define('Controls/Button/Separator', [
-   'Core/Control',
-   'wml!Controls/Button/Separator/Separator',
-   'Types/entity',
-   'css!theme?Controls/Button/Separator/Separator'
-], function(Control, template, entity) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_toggle/Separator/Separator');
+import entity = require('Types/entity');
+import 'css!theme?Controls/_toggle/Separator/Separator';
+
 
    /**
     * Button separator with support different display styles and can be bold thickness. Can be used independently or as part of complex headers(you can see it in Demo-example)
@@ -12,7 +10,7 @@ define('Controls/Button/Separator', [
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Button/Separator
+    * @class Controls/_toggle/Separator
     * @extends Core/Control
     * @control
     * @public
@@ -21,11 +19,11 @@ define('Controls/Button/Separator', [
     *
     * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
     *
-    * @mixes Controls/Button/Separator/SeparatorStyles
+    * @mixes Controls/_toggle/Separator/SeparatorStyles
     */
 
    /**
-    * @name Controls/Button/Separator#style
+    * @name Controls/_toggle/Separator#style
     * @cfg {String} Separator display style.
     * @variant secondary
     * @variant additional
@@ -33,12 +31,12 @@ define('Controls/Button/Separator', [
     */
 
    /**
-    * @name Controls/Button/Separator#value
+    * @name Controls/_toggle/Separator#value
     * @cfg {Boolean} Determines the current state.
     */
 
    /**
-    * @name Controls/Button/Separator#bold
+    * @name Controls/_toggle/Separator#bold
     * @cfg {Boolean} Determines the double separator thickness.
     */
 
@@ -90,5 +88,5 @@ define('Controls/Button/Separator', [
 
    ButtonSeparator._private = _private;
 
-   return ButtonSeparator;
-});
+   export = ButtonSeparator;
+
