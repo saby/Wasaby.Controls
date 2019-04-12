@@ -82,7 +82,6 @@ var Collection = Control.extend({
    _counterWidth: 0,
    _contentTemplate: ContentTemplate,
    _crossTemplate: CrossTemplate,
-   _counterTemplate: CounterTemplate,
 
    _beforeMount: function (options) {
       this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;

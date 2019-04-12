@@ -1,6 +1,6 @@
 <div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}">
    <span class="controls-SelectedCollection__item__caption-wrapper controls-SelectedCollection__item__caption-wrapper-{{itemsLayout}}">
-      <ws:partial template="{{contentTemplate}}"
+      <ws:partial template="{{_contentTemplate}}"
                   item="{{item}}"
                   size="{{itemsLayout === 'twoColumns' || !size ? 'default' : size}}"
                   style="{{itemsLayout === 'twoColumns' || !style ? 'default' : style}}"
@@ -9,7 +9,7 @@
             />
    </span>
    <ws:if data="{{!readOnly}}">
-      <ws:partial template="{{crossTemplate}}" itemsLayout="{{itemsLayout}}"/>
+      <ws:partial template="{{_crossTemplate}}" itemsLayout="{{itemsLayout}}"/>
    </ws:if>
    <ws:if data="{{readOnly && !isLastItem && itemsLayout !== 'twoColumns'}}">,</ws:if>
 </div>
