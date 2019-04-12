@@ -5,7 +5,7 @@
 
          <div>
             <h3>Any period</h3>
-            <Controls.Date.PeriodDialog
+            <Controls.datePopup
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
             />
@@ -13,7 +13,7 @@
 
          <div>
             <h3>Single Day</h3>
-            <Controls.Date.PeriodDialog
+            <Controls.datePopup
                startValue="{{_startValue}}"
                endValue="{{_startValue}}"
                selectionType="single"
@@ -22,7 +22,7 @@
 
          <div>
             <h3>Day, 1 month, 1 year</h3>
-            <Controls.Date.PeriodDialog
+            <Controls.datePopup
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                selectionType="quantum"
@@ -32,7 +32,7 @@
 
          <div>
             <h3>Day, 3 days, week, 1 month</h3>
-            <Controls.Date.PeriodDialog
+            <Controls.datePopup
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                selectionType="quantum"

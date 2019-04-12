@@ -12,7 +12,7 @@
       </div>
    </div>
 
-   <Controls.Date.MonthList
+   <Controls.calendar:MonthList
       attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
       calendarSource="{{_options.calendarSource}}"
       dayTemplate="{{_options.dayTemplate}}"
@@ -27,6 +27,6 @@
             _monthViewModel="{{_monthViewModel}}"
          />
       </ws:itemTemplate>
-   </Controls.Date.MonthList>
+   </Controls.calendar:MonthList>
 
 </div>
