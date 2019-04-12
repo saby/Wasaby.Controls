@@ -228,7 +228,7 @@ import cMerge = require('Core/core-merge');
                _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                return revertPosition;
             }
-            _private.fixPosition(position, targetCoords);
+            _private.fixPosition(revertPosition, targetCoords);
             return revertPosition;
          }
          _private.fixPosition(position, targetCoords);
