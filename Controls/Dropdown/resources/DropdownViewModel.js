@@ -94,6 +94,9 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                var index = this._options.selectedKeys.indexOf(key);
                this._options.selectedKeys.splice(index, 1);
             } else {
+               if (this._options.selectedKeys[0] === null) {
+                  this._options.selectedKeys = [];
+               }
                this._options.selectedKeys.push(key);
             }
             this._nextVersion();
