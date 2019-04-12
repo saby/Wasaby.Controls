@@ -10,11 +10,10 @@
          var panelWidth;
          var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
          var minWidth = parseInt(item.popupOptions.minWidth, 10);
+         var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
          if (item.popupOptions.width) {
             panelWidth = item.popupOptions.width;
-         } else if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
-            panelWidth = item.popupOptions.minimizedWidth;
          } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;
@@ -23,6 +22,12 @@
                tCoords.right = 0;
             }
             panelWidth = minWidth;
+         } else if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            if (!_private.isMaximizedState(item)) {
+               panelWidth = item.popupOptions.minimizedWidth;
+            } else {
+               panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
+            }
          }
          return panelWidth;
       },
