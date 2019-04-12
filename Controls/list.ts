@@ -29,6 +29,7 @@ import VirtualScroll = require('Controls/_lists/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_lists/Data');
 import _forTemplate = require('wml!Controls/_lists/resources/For');
 
+import * as GridLayoutUtil from 'Controls/_lists/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_lists/EditInPlace/EditingTemplate');
 import ItemActionsHelpers = require('Controls/_lists/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_lists/BaseViewModel');
@@ -57,6 +58,7 @@ export {
     DataContainer,
     _forTemplate,
 
+    GridLayoutUtil,
     EditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
