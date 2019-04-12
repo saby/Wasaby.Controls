@@ -603,6 +603,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._field = {
                template: fieldTemplate,
                scope: {
+                  _useStretcher: false,
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)

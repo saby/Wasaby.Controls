@@ -32,6 +32,11 @@ class TimeInterval extends Base {
         return ViewModel;
     }
 
+    protected _initProperties() {
+        super._initProperties();
+        this._field.scope._useStretcher = true;
+    }
+
     protected _changeHandler() {
         if (this._viewModel.autoComplete()) {
             this._notifyValueChanged();
