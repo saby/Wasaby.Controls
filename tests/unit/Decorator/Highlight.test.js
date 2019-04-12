@@ -3,10 +3,10 @@ define(
       'Env/Env',
       'unit/resources/ProxyCall',
       'unit/resources/TemplateUtil',
-      'Controls/Decorator/Highlight',
+      'Controls/decorator',
       'wml!unit/Decorator/Highlight/Template1'
    ],
-   function(Env, ProxyCall, TemplateUtil, Highlight, template1) {
+   function(Env, ProxyCall, TemplateUtil, decorator, template1) {
       'use strict';
 
       describe('Controls.Decorator.Highlight', function() {
@@ -14,12 +14,12 @@ define(
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Highlight();
+            ctrl = new decorator.Highlight();
          });
 
          it('getDefault', function() {
-            Highlight.getOptionTypes();
-            Highlight.getDefaultOptions();
+            decorator.Highlight.getOptionTypes();
+            decorator.Highlight.getDefaultOptions();
          });
 
          it('Template', function() {

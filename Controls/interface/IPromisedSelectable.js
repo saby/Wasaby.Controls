@@ -30,7 +30,7 @@ define('Controls/interface/IPromisedSelectable', [
     * The following example creates List and selects everything except two items. Subsequent changes made to selectedKeys and excludedKeys will be synchronized through binding mechanism.
     * TMPL:
     * <pre>
-    *    <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
+    *    <Controls.operations:Controller bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
     * </pre>
     * JS:
     * <pre>
@@ -55,7 +55,7 @@ define('Controls/interface/IPromisedSelectable', [
     * The following example creates List and selects everything except two items. Subsequent changes made to selectedKeys and excludedKeys will be synchronized through binding mechanism.
     * TMPL:
     * <pre>
-    *    <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
+    *    <Controls.operations:Controller bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
     * </pre>
     * JS:
     * <pre>
@@ -82,9 +82,9 @@ define('Controls/interface/IPromisedSelectable', [
     * The following example creates List with empty selection. Subsequent changes made to selectedKeys and excludedKeys will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKeys change.
     * TMPL:
     * <pre>
-    *    <Controls.Container.MultiSelector on:selectedKeysChanged="onSelectedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
-    *       <Controls.Operations.Panel source="{{ _panelSource }} />
-    *    </Controls.Container.MultiSelector>
+    *    <Controls.operations:Controller on:selectedKeysChanged="onSelectedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *       <Controls.operations:Panel source="{{ _panelSource }} />
+    *    </Controls.operations:Controller>
     * </pre>
     * JS:
     * <pre>
@@ -112,9 +112,9 @@ define('Controls/interface/IPromisedSelectable', [
     * The following example creates List with empty selection. Subsequent changes made to selectedKeys and excludedKeys will be synchronized through binding mechanism. Source of the operations panel will be updated every time excludedKeys change.
     * TMPL:
     * <pre>
-    *    <Controls.Container.MultiSelector on:excludedKeysChanged="onExcludedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
-    *       <Controls.Operations.Panel source="{{ _panelSource }} />
-    *    </Controls.Container.MultiSelector>
+    *    <Controls.operations:Controller on:excludedKeysChanged="onExcludedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *       <Controls.operations:Panel source="{{ _panelSource }} />
+    *    </Controls.operations:Controller>
     * </pre>
     * JS:
     * <pre>
