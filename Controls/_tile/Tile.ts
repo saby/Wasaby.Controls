@@ -1,7 +1,7 @@
 import {View} from 'Controls/list';
 import TreeTileViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
-import 'Controls/_tile/TreeTileView/TreeTileView';
-import 'Controls/treeGrid';
+import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
+import {TreeControl} from 'Controls/treeGrid';
 
 'use strict';
 
@@ -41,8 +41,8 @@ import 'Controls/treeGrid';
  */
 
 var Tile = View.extend({
-   _viewName: 'Controls/_tile/TreeTileView/TreeTileView',
-   _viewTemplate: 'Controls/treeGrid:TreeControl',
+   _viewName: TreeTileView,
+   _viewTemplate: TreeControl,
    _getModelConstructor: function() {
       return TreeTileViewModel;
    }
