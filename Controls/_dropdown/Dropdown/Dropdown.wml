@@ -1,4 +1,4 @@
-<Controls.Dropdown.Controller
+<Controls._dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
         displayProperty="{{_options.displayProperty}}"
@@ -36,4 +36,4 @@
                tooltip="{{_tooltip}}"
                hasMoreText="{{_hasMoreText}}"
                class="{{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
-</Controls.Dropdown.Controller>
+</Controls._dropdown.Controller>

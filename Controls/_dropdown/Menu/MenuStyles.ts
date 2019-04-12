@@ -1,8 +1,6 @@
-define('Controls/Button/Menu/MenuStyles', [],
-   function() {}
 
-   /**
-    * @mixin Controls/Button/Menu/MenuStyles
+/**
+    * @mixin Controls/_dropdown/Menu/MenuStyles
     * @public
     *
     * @css @shift-top_MenuButton-button-popup Offset on the top for pop-up at the menu with button viewMode.
@@ -28,4 +26,3 @@ define('Controls/Button/Menu/MenuStyles', [],
     * with link viewMode and medium icon size.
     * @css @spacing_MenuButton-between-leftBorder-content Spacing between left border and content in dropdown list.
     */
-);

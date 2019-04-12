@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/ComboBox/ComboBox" scope="{{_options}}" />

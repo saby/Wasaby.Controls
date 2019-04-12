@@ -1,28 +1,28 @@
 /**
  * dropdown library
  * @library Controls/dropdown
- * @includes Button Controls/Button/Menu
- * @includes Input Controls/Input/DropDown
- * @includes _Controller Controls/DropDown/Controller
- * @includes Opener Controls/DropDown/Opener
- * @includes Combobox Controls/Input/Combobox
- * @includes ItemTemplate Controls/Dropdown/resources/template/itemTemplate
+ * @includes Button Controls/_dropdown/Menu
+ * @includes Input Controls/_dropdown/Dropdown
+ * @includes _Controller Controls/_dropdown/Controller
+ * @includes Opener Controls/_dropdown/Opener
+ * @includes Combobox Controls/_dropdown/Combobox
+ * @includes ItemTemplate Controls/_dropdown/itemTemplate
  * @public
  * @author Kraynov D.
  */
 
-import Highlight = require('Controls/_decorator/Highlight');
-import Markup = require('Controls/_decorator/Markup');
-import Money = require('Controls/_decorator/Money');
-import Number = require('Controls/_decorator/Number');
-import PhoneNumber = require('Controls/_decorator/PhoneNumber');
-import WrapURLs = require('Controls/_decorator/WrapURLs');
+import Button = require('Controls/_dropdown/Menu');
+import Input = require('Controls/_dropdown/Dropdown');
+import _Controller = require('Controls/_dropdown/Controller');
+import Opener = require('Controls/_dropdown/Opener');
+import Combobox = require('Controls/_dropdown/Combobox');
+import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 
 export {
-    Highlight,
-    Markup,
-    Money,
-    Number,
-    PhoneNumber,
-    WrapURLs
+    Button,
+    Input,
+    _Controller,
+    Opener,
+    Combobox,
+    ItemTemplate
 }

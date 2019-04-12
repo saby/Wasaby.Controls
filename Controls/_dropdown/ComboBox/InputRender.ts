@@ -1,7 +1,5 @@
-define('Controls/Input/ComboBox/InputRender', [
-   'Controls/input'
-], function(input) {
-   'use strict';
+import input = require('Controls/input');
+   
 
    var SuggestInputRender = input.Base.extend({
       _initProperties: function(options) {
@@ -12,5 +10,5 @@ define('Controls/Input/ComboBox/InputRender', [
       }
    });
 
-   return SuggestInputRender;
-});
+   export = SuggestInputRender;
+

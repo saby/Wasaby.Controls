@@ -2,7 +2,7 @@
    <ws:partial template="{{_options.content}}"
                on:mousedown="_mousedown()"/>
 
-   <Controls.Dropdown.Opener name="DropdownOpener">
+   <Controls._dropdown.Opener name="DropdownOpener">
       <ws:popupOptions className="{{_options.popupClassName}}">
          <ws:eventHandlers onResult="{{_onResult}}"
                            onClose="{{_onClose}}"
@@ -35,5 +35,5 @@
                  typeShadow="{{_options.typeShadow}}"
                  theme="{{_options.theme}}"/>
       </ws:popupOptions>
-   </Controls.Dropdown.Opener>
+   </Controls._dropdown.Opener>
 </div>

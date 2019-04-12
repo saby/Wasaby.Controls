@@ -1,28 +1,24 @@
-define('Controls/Button/Menu',
-   [
-      'Core/Control',
-      'wml!Controls/Button/Menu/Menu',
-      'Controls/Button/Menu/MenuUtils'
-   ],
-   function(Control, template, MenuUtils) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dropdown/Menu/Menu');
+import MenuUtils = require('Controls/_dropdown/Menu/MenuUtils');
 
       /**
        * Button by clicking on which a drop-down list opens.
        *
        * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
        *
-       * @class Controls/Button/Menu
+       * @class Controls/_dropdown/Menu
        * @extends Core/Control
        * @mixes Controls/interface/ICaption
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/List/interface/IHierarchy
-       * @mixes Controls/Dropdown/interface/IFooterTemplate
-       * @mixes Controls/Dropdown/interface/IHeaderTemplate
+       * @mixes Controls/_dropdown/interface/IFooterTemplate
+       * @mixes Controls/_dropdown/interface/IHeaderTemplate
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
-       * @mises Controls/Dropdown/interface/IGroupped
+       * @mises Controls/_dropdown/interface/IGroupped
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IButton
        * @mixes Controls/Button/interface/IIcon
@@ -34,10 +30,10 @@ define('Controls/Button/Menu',
        * @demo Controls-demo/Buttons/Menu/MenuPG
        */
 
-      'use strict';
+      
 
       /**
-       * @event Controls/Button/Menu#menuItemActivate Occurs when an item is selected from the list.
+       * @event Controls/_dropdown/Menu#menuItemActivate Occurs when an item is selected from the list.
        * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
        * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
        */
@@ -75,8 +71,7 @@ define('Controls/Button/Menu',
          };
       };
 
-      Menu._theme = ['Controls/Button/Menu/Menu'];
+      Menu._theme = ['Controls/_dropdown/Menu/Menu'];
 
-      return Menu;
-   }
-);
+      export = Menu;
+   

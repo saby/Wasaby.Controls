@@ -1,14 +1,10 @@
-define('Controls/Input/Dropdown',
-   [
-      'Core/Control',
-      'wml!Controls/Input/Dropdown/Dropdown',
-      'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'Types/util',
-      'Types/chain',
-      'Controls/Dropdown/Util',
-      'Core/helpers/Object/isEqual'
-   ],
-   function(Control, template, defaultContentTemplate, Utils, chain, dropdownUtils, isEqual) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dropdown/Dropdown/Dropdown');
+import defaultContentTemplate = require('wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate');
+import Utils = require('Types/util');
+import chain = require('Types/chain');
+import dropdownUtils = require('Controls/_dropdown/Util');
+import isEqual = require('Core/helpers/Object/isEqual');
       /**
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
@@ -23,43 +19,43 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/INavigation
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
-       * @mixes Controls/Dropdown/interface/IFooterTemplate
-       * @mixes Controls/Dropdown/interface/IHeaderTemplate
+       * @mixes Controls/_dropdown/interface/IFooterTemplate
+       * @mixes Controls/_dropdown/interface/IHeaderTemplate
        * @mixes Controls/interface/ISelectorDialog
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
-       * @mises Controls/Dropdown/interface/IGroupped
+       * @mises Controls/_dropdown/interface/IGroupped
        * @mixes Controls/interface/IInputDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
        * @author Золотова Э.Е.
        * @category Input
-       * @demo Controls-demo/Input/Dropdown/DropdownPG
+       * @demo Controls-demo/Input/_dropdown/DropdownPG
        */
 
       /**
-       * @name Controls/Input/Dropdown#contentTemplate
+       * @name Controls/_dropdown/Dropdown#contentTemplate
        * @cfg {Function} Template that will be render calling element.
        * @remark
-       * To determine the template, you should call the base template "wml!Controls/Input/Dropdown/resources/defaultContentTemplate".
+       * To determine the template, you should call the base template "wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate".
        * The template should be placed in the component using the <ws:partial> tag with the template attribute.
        * You can redefine content using the contentTemplate option.
-       * By default, the base template wml!Controls/Input/Dropdown/resources/defaultContentTemplate will display only text.
-       * To display the icon and text, use the "wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon" template.
+       * By default, the base template wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate will display only text.
+       * To display the icon and text, use the "wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplateWithIcon" template.
        * @example
        * Display text and icon
        *
        * WML:
        * <pre>
-       * <Controls.Input.Dropdown
+       * <Controls.dropdown:Dropdown
        *       bind:selectedKeys="_selectedKeys"
        *       keyProperty="id"
        *       displayProperty="title"
        *       source="{{_source)}}"
-       *       contentTemplate="wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon">
-       * </Controls.Input.Dropdown>
+       *       contentTemplate="wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplateWithIcon">
+       * </Controls.dropdown:Dropdown>
        * </pre>
        * JS:
        * <pre>
@@ -74,19 +70,19 @@ define('Controls/Input/Dropdown',
        */
 
       /**
-       * @name Controls/Input/Dropdown#multiSelect
+       * @name Controls/_dropdown/Dropdown#multiSelect
        * @cfg {Boolean} Determines whether multiple selection is set.
        * @example
        * Multiple selection is set.
        * WML:
        * <pre>
-       * <Controls.Input.Dropdown
+       * <Controls.dropdown:Dropdown
        *       bind:selectedKeys="_selectedKeys"
        *       keyProperty="id"
        *       displayProperty="title"
        *       source="{{_source)}}"
        *       multiSelect={{true}}>
-       * </Controls.Input.Dropdown>
+       * </Controls.dropdown:Dropdown>
        * </pre>
        * JS:
        * <pre>
@@ -103,7 +99,7 @@ define('Controls/Input/Dropdown',
        */
 
 
-      'use strict';
+      
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -177,7 +173,7 @@ define('Controls/Input/Dropdown',
          }
       });
 
-      Dropdown._theme = ['Controls/Input/Dropdown/Dropdown'];
+      Dropdown._theme = ['Controls/_dropdown/Dropdown/Dropdown'];
 
-      return Dropdown;
-   });
+      export = Dropdown;
+   

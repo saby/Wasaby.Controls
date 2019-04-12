@@ -1,15 +1,15 @@
-define('Controls/Dropdown/interface/IHeaderTemplate', [], function() {
+
 
    /**
     * Interface for dropdown lists that support the template for the header.
     *
-    * @interface Controls/Dropdown/interface/IHeaderTemplate
+    * @interface Controls/_dropdown/interface/IHeaderTemplate
     * @public
     * @author Золотова Э.Е.
     */
 
    /**
-    * @name Controls/Dropdown/interface/IHeaderTemplate#headerTemplate
+    * @name Controls/_dropdown/interface/IHeaderTemplate#headerTemplate
     * @cfg {Function | String} Template that will be rendered above the list.
     * @default "wml!Controls/Dropdown/resources/template/defaultHeadTemplate"
     * @remark
@@ -45,4 +45,4 @@ define('Controls/Dropdown/interface/IHeaderTemplate', [], function() {
     *    });
     * </pre>
     */
-});
+

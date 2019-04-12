@@ -1,8 +1,6 @@
-define('Controls/Dropdown/Util',
-   [],
-   function() {
 
-      'use strict';
+
+      
 
       function prepareEmpty(emptyText) {
          if (emptyText) {
@@ -10,6 +8,5 @@ define('Controls/Dropdown/Util',
          }
       }
 
-      return {prepareEmpty: prepareEmpty};
-   }
-);
+      export = {prepareEmpty: prepareEmpty};
+   

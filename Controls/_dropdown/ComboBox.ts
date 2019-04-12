@@ -1,13 +1,8 @@
-define('Controls/Input/ComboBox',
-   [
-      'Core/Control',
-      'wml!Controls/Input/ComboBox/ComboBox',
-      'Types/util',
-      'Controls/Dropdown/Util',
-      'Controls/Utils/tmplNotify'
-   ],
-
-   function(Control, template, Utils, dropdownUtils, tmplNotify) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Input/ComboBox/ComboBox');
+import Utils = require('Types/util');
+import dropdownUtils = require('Controls/_dropdown/Util');
+import tmplNotify = require('Controls/Utils/tmplNotify');
       /**
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
@@ -31,7 +26,7 @@ define('Controls/Input/ComboBox',
        * @demo Controls-demo/Input/ComboBox/ComboBoxPG
        */
 
-      'use strict';
+      
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -100,5 +95,5 @@ define('Controls/Input/ComboBox',
 
       ComboBox._theme = ['Controls/Input/ComboBox/ComboBox'];
 
-      return ComboBox;
-   });
+      export = ComboBox;
+   

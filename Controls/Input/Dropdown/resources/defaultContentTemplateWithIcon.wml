@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/Dropdown/resources/defaultContentTemplateWithIcon" scope="{{_options}}" />

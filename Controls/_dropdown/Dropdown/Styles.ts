@@ -1,9 +1,7 @@
-define('Controls/Input/Dropdown/Styles', [],
-   function() {}
-   
-   /**
+
+/**
     * @author Герасимов А.М.
-    * @mixin Controls/Input/Dropdown/Styles
+    * @mixin Controls/_dropdown/Dropdown/Styles
     * @public
     *
     * @css @height_Dropdown Dropdown height.
@@ -21,4 +19,3 @@ define('Controls/Input/Dropdown/Styles', [],
     * @css @border-color_Dropdown-style_invalid Color of the dropdown border when style option is set to invalid.
     * @css @border-width_Dropdown-style_invalid Width of the dropdown border when style option is set to invalid.
     */
-);

@@ -1,20 +1,15 @@
-define('Controls/Dropdown/Controller',
-   [
-      'Core/Control',
-      'wml!Controls/Dropdown/Controller',
-      'Controls/Controllers/SourceController',
-      'Types/chain',
-      'Controls/History/dropdownHistoryUtils',
-      'Controls/Dropdown/Util'
-   ],
-
-   function(Control, template, SourceController, chain, historyUtils, dropdownUtils) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_dropdown/Controller');
+import SourceController = require('Controls/Controllers/SourceController');
+import chain = require('Types/chain');
+import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import dropdownUtils = require('Controls/_dropdown/Util');
+      
 
       /**
        * Container for dropdown lists
        *
-       * @class Controls/Dropdown/Controller
+       * @class Controls/_dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
@@ -34,23 +29,23 @@ define('Controls/Dropdown/Controller',
        */
 
       /**
-       * @event Controls/Dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
+       * @event Controls/_dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
        */
 
       /**
-       * @name Controls/Dropdown/Controller#typeShadow
+       * @name Controls/_dropdown/Controller#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow.
        * @variant suggestionsContainer Shadow on the right, left, bottom.
        */
 
       /**
-       * @name Controls/Dropdown/Controller#marker
+       * @name Controls/_dropdown/Controller#marker
        * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
        */
 
       /**
-       * @name Controls/Dropdown/Controller#showClose
+       * @name Controls/_dropdown/Controller#showClose
        * @cfg {Boolean} Determines whether the cross is displayed.
        */
 
@@ -285,5 +280,5 @@ define('Controls/Dropdown/Controller',
       };
 
       Dropdown._private = _private;
-      return Dropdown;
-   });
+      export = Dropdown;
+   

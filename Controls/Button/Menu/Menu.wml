@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/Menu/Menu" scope="{{_options}}" />

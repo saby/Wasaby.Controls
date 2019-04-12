@@ -1,20 +1,20 @@
-define('Controls/Dropdown/interface/IFooterTemplate', [], function() {
+
 
    /**
     * Interface for dropdown lists that support the template for the footer.
     *
-    * @interface Controls/Dropdown/interface/IFooterTemplate
+    * @interface Controls/_dropdown/interface/IFooterTemplate
     * @public
     * @author Золотова Э.Е.
     */
 
    /**
-    * @name Controls/Dropdown/interface/IFooterTemplate#footerTemplate
+    * @name Controls/_dropdown/interface/IFooterTemplate#footerTemplate
     * @cfg {Function | String} Template that will be rendered below the list.
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.Button.Menu
+    *    <Controls.dropdown:Menu
     *          keyProperty="id"
     *          icon="icon-Save icon-small"
     *          on:footerClick="footerClickHandler()"
@@ -24,7 +24,7 @@ define('Controls/Dropdown/interface/IFooterTemplate', [], function() {
     *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
     *          </div>
     *       </ws:footerTemplate>
-    *    </Controls.Button.Menu>
+    *    </Controls.dropdown.Menu>
     * </pre>
     * JS:
     * <pre>
@@ -35,4 +35,4 @@ define('Controls/Dropdown/interface/IFooterTemplate', [], function() {
     *    }
     * </pre>
     */
-});
+

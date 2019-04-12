@@ -1,6 +1,4 @@
-define('Controls/Button/Menu/MenuUtils', [
-   'Controls/buttons'
-], function(buttonLib) {
+import buttonLib = require('Controls/buttons');
 
    function cssStyleGeneration(options) {
       var sizes = ['small', 'medium', 'large'],
@@ -29,7 +27,7 @@ define('Controls/Button/Menu/MenuUtils', [
       return offsetClassName;
    }
 
-   return {
+   export = {
       cssStyleGeneration: cssStyleGeneration
    };
-});
+

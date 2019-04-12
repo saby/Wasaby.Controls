@@ -1,15 +1,11 @@
-define('Controls/Dropdown/Opener',
-   [
-      'Controls/Popup/Opener/Sticky',
-      'Core/core-merge',
-      'Controls/Utils/getZIndex',
-      'Env/Env'
-   ],
-   function(Sticky, Merge, getZIndex, Env) {
+import Sticky = require('Controls/Popup/Opener/Sticky');
+import Merge = require('Core/core-merge');
+import getZIndex = require('Controls/Utils/getZIndex');
+import Env = require('Env/Env');
       /**
        * Opener for dropdown menu.
        *
-       * @class Controls/Dropdown/Opener
+       * @class Controls/_dropdown/Opener
        * @mixes Controls/interface/IDropdownList
        * @extends Controls/Popup/Opener/Sticky
        * @control
@@ -121,6 +117,5 @@ define('Controls/Dropdown/Opener',
             });
       };
 
-      return DropdownOpener;
-   }
-);
+      export = DropdownOpener;
+   

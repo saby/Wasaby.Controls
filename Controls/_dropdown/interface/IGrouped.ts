@@ -1,21 +1,20 @@
-define('Controls/Dropdown/interface/IGrouped',
-   function() {
+
 
       /**
        * Interface for controls with  implementing item grouping.
        *
-       * @interface Controls/Dropdown/interface/IGroupped
+       * @interface Controls/_dropdown/interface/IGroupped
        * @public
        * @author Золотова Э.Е.
        */
 
       /**
-       * @name Controls/Dropdown/interface/IGroupped#groupingKeyCallback
+       * @name Controls/_dropdown/interface/IGroupped#groupingKeyCallback
        * @cfg {Function} Function that returns group identifier.
        * @example
        * TMPL:
        * <pre>
-       *    <Controls.Button.Menu
+       *    <Controls.dropdown:Menu
        *          keyProperty="id"
        *          icon="icon-small icon-AddButtonNew"
        *          source="{{_source}}"
@@ -44,7 +43,7 @@ define('Controls/Dropdown/interface/IGrouped',
        */
 
       /**
-       * @name Controls/Dropdown/interface/IGroupped#groupTemplate
+       * @name Controls/_dropdown/interface/IGroupped#groupTemplate
        * @cfg {Function | String} Group template.
        * @remark
        * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/defaultGroupTemplate".
@@ -56,7 +55,7 @@ define('Controls/Dropdown/interface/IGrouped',
        * @example
        * TMPL:
        * <pre>
-       *    <Controls.Button.Menu
+       *    <Controls.dropdown:Menu
        *          keyProperty="id"
        *          icon="icon-small icon-AddButtonNew"
        *          groupingKeyCallback="{{_groupingKeyCallback}}"
@@ -64,7 +63,7 @@ define('Controls/Dropdown/interface/IGrouped',
        *       <ws:groupTemplate>
        *          <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}" />
        *       </ws:groupTemplate>
-       *    </Controls.Button.Menu>
+       *    </Controls.dropdown:Menu>
        * </pre>
        * JS:
        * <pre>
@@ -87,4 +86,4 @@ define('Controls/Dropdown/interface/IGrouped',
        *    });
        * </pre>
        */
-   });
+   
