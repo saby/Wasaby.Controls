@@ -1,7 +1,1 @@
-<Controls.Button.Menu name="myMenuButton2"
-                      keyProperty="id"
-                      viewMode="link"
-                      style="secondary"
-                      caption="{{_menuCaption}}"
-                      on:onMenuItemActivate="_onMenuItemActivate()"
-                      source="{{_menuSource}}"/>
+<ws:partial template="wml!Controls/_operations/__MultiSelector" scope="{{_options}}" />

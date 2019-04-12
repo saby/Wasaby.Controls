@@ -67,6 +67,6 @@
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"
-                             popupOptions="{{_popupOptions}}">
+                             scope="{{_popupOptions}}">
    </Controls.Dropdown.Opener>
 </div>
