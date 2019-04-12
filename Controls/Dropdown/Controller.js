@@ -131,7 +131,7 @@ define('Controls/Dropdown/Controller',
             }
          },
 
-         onResult: function(result) {
+         onResult: function(event, result) {
             switch (result.action) {
                case 'pinClicked':
                   this._notify('pinClicked', [result.data]);
@@ -167,11 +167,19 @@ define('Controls/Dropdown/Controller',
          },
 
          // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
-         closeHandler: function() {
+         closeHandler: function(event) {
             if (this._options.close) {
                this._options.close();
             }
             this._notify('_close', []);
+         },
+
+         setOpenHandler: function(self, options) {
+            self._onOpen = function(event, args) {
+               if (typeof (options.open) === 'function') {
+                  options.open(args);
+               }
+            };
          }
       };
 
@@ -182,6 +190,7 @@ define('Controls/Dropdown/Controller',
          _beforeMount: function(options, context, receivedState) {
             this._onResult = _private.onResult.bind(this);
             this._onClose = _private.closeHandler.bind(this);
+            _private.setOpenHandler(this, options);
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
@@ -194,6 +203,9 @@ define('Controls/Dropdown/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
+            if (newOptions.open !== this._options.open) {
+               _private.setOpenHandler(this, newOptions);
+            }
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
@@ -255,7 +267,7 @@ define('Controls/Dropdown/Controller',
                   itemsLoadCallback(items);
                   return items;
                });
-            } else {
+            } else if (this._items) {
                itemsLoadCallback(this._items);
             }
          },

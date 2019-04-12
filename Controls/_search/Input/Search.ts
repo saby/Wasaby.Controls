@@ -31,6 +31,11 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  */
 
 /**
+ * @name Controls/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
+
+/**
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
  * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
  */
@@ -141,6 +146,7 @@ Search.getDefaultOptions = function getDefaultOptions() {
    defaultOptions.value = '';
    defaultOptions.trim = false;
    defaultOptions.placeholder = rk('Найти') + '...';
+   defaultOptions.searchButtonVisible = true;
 
    return defaultOptions;
 };

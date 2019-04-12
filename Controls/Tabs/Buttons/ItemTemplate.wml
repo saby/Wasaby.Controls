@@ -1,1 +1,1 @@
-<div class="controls-Tabs__item_overflow">{{item.get(displayProperty || 'title')}}</div>
+<ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate" scope="{{_options}}" />

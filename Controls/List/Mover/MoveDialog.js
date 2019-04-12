@@ -1,7 +1,7 @@
 define('Controls/List/Mover/MoveDialog', ['Controls/_lists/Mover/MoveDialog'], function(Control) {
 /**
     * A standard dialog template for selecting a target item for moving items.
-    * <a href="/materials/demo/demo-ws4-operations-panel">Demo examples.</a>.
+    * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
     * @class Controls/List/Mover/MoveDialog
     * @extends Core/Control
     * @mixes Controls/List/interface/IHierarchy
