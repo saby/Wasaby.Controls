@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_popupTemplate/Notification/Simple/Simple" scope="{{_options}}" />
