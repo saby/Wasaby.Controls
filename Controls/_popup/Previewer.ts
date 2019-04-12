@@ -30,7 +30,7 @@ import 'css!Controls/_popup/Previewer/Previewer';
        */
       var _private = {
          getType: function(eventType) {
-            if (eventType === 'mouseenter' || eventType === 'mouseleave') {
+            if (eventType === 'mousemove' || eventType === 'mouseleave') {
                return 'hover';
             }
             return 'click';
