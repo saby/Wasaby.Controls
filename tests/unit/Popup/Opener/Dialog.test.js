@@ -120,6 +120,15 @@ define(
             assert.equal(position.minWidth, 400);
             assert.equal(position.maxHeight, 500);
             assert.equal(position.minHeight, 400);
+
+            popupOptions.width = 550;
+            position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
+            assert.equal(position.width, 550);
+            assert.equal(position.height, 500);
+            popupOptions.height = 300;
+            position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
+            assert.equal(position.width, 550);
+            assert.equal(position.height, 300);
          });
 
          it('dialog container sizes after update', () => {
