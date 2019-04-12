@@ -5,7 +5,7 @@
  * @includes Input Controls/_dropdown/Dropdown
  * @includes _Controller Controls/_dropdown/Controller
  * @includes Opener Controls/_dropdown/Opener
- * @includes Combobox Controls/_dropdown/Combobox
+ * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/_dropdown/itemTemplate
  * @public
  * @author Kraynov D.
@@ -15,7 +15,7 @@ import Button = require('Controls/_dropdown/Menu');
 import Input = require('Controls/_dropdown/Dropdown');
 import _Controller = require('Controls/_dropdown/Controller');
 import Opener = require('Controls/_dropdown/Opener');
-import Combobox = require('Controls/_dropdown/Combobox');
+import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 
 export {
