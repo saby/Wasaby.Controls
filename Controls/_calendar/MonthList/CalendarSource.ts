@@ -77,7 +77,7 @@ var CalendarSource = Memory.extend({
             );
             items = this._prepareQueryResult({
                 items: adapter.getData(),
-                meta: {total: yearEqual ? {before: true, after: true} : false}
+                meta: {total: yearEqual ? {before: true, after: true} : true}
             });
 
             return items;

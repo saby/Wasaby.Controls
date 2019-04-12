@@ -90,6 +90,17 @@ define([
          });
       });
 
+      describe('_homeButtonClick', function() {
+         it('should update _displayedDate.', function() {
+            const
+               oldDate = new Date(2017, 0, 1),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: oldDate, endValue: oldDate });
+            assert(dateUtils.isDatesEqual(component._displayedDate, oldDate));
+            component._homeButtonClick();
+            assert(dateUtils.isMonthsEqual(component._displayedDate, new Date()));
+         });
+      });
+
       describe('_headerLinkClick', function() {
          it('should toggle header type.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {});

@@ -1,6 +1,7 @@
 <Controls.calendar:MonthList
    attr:class="controls-PeriodDialog-MonthsRange"
    on:itemClick="_onItemClick()"
+   on:scroll="_onScroll()"
 >
    <ws:itemTemplate>
       <Controls._datePopup.MonthsRangeItem
@@ -11,7 +12,7 @@
          bind:endValue="_rangeModel.endValue"
 
          selectionProcessing="{{_options.selectionProcessing}}"
-         on:selectionProcessingChanged="_proxyEvent()"
+         on:selectionProcessingChanged="_proxyEvent('selectionProcessingChanged')"
          selectionBaseValue="{{_options.selectionBaseValue}}"
          selectionHoveredValue="{{_options.selectionHoveredValue}}"
 
@@ -19,13 +20,13 @@
          hoveredEndValue="{{_options.hoveredEndValue}}"
 
          selectionViewType="{{_options.selectionViewType}}"
-         on:selectionViewTypeChanged="_proxyEvent()"
+         on:selectionViewTypeChanged="_proxyEvent('selectionViewTypeChanged')"
 
-         on:monthClick="_proxyEvent()"
-         on:fixedPeriodClick="_proxyEvent()"
-         on:itemClick="_proxyEvent()"
-         on:itemMouseEnter="_proxyEvent()"
-         on:itemMouseLeave="_proxyEvent()"
+         on:monthClick="_proxyEvent('monthClick')"
+         on:fixedPeriodClick="_proxyEvent('fixedPeriodClick')"
+         on:itemClick="_proxyEvent('itemClick')"
+         on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
+         on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
       />
    </ws:itemTemplate>
 </Controls.calendar:MonthList>

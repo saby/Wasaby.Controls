@@ -1,8 +1,5 @@
 import {View as List} from 'Controls/list';
-import 'wml!Controls/List/List';
-import 'Core/Deferred';
-import 'Controls/Utils/tmplNotify';
-import ListControl from 'Controls/_calendar/MonthList/ListControl';
+import viewTemplate from 'Controls/_calendar/MonthList/ListControl';
 
 /**
  * Plain list with custom item template. Can load data from data source.
@@ -13,8 +10,8 @@ import ListControl from 'Controls/_calendar/MonthList/ListControl';
  * @author Миронов А.Ю.
  */
 
-const ModuleControl = List.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{
-    _viewTemplate: ListControl
+var ModuleControl = List.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{
+    _viewTemplate: viewTemplate
 });
 
 export default ModuleControl;

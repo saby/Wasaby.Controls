@@ -1,17 +1,24 @@
 <div class="controls-PeriodDialog-DateRangeItem">
    <div class="controls-PeriodDialog-DateRangeItem__months">
-      <ws:for data="month in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">
-         <div class="controls-PeriodDialog-DateRangeItem__months-btn">
+      <ws:for data="month in 12">
+         <div class="controls-PeriodDialog-DateRangeItem__months-btn"
+              on:click="_scrollToMonth(item.id, month)"
+              >
             {{_formatDate(_getMonth(item.id, month), 'MMMM') }}
          </div>
       </ws:for>
       <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+           on:click="_scrollToMonth(item.id + 1, 0)"
             >
-         {{ item.id }}
+         {{ item.id + 1 }}
       </div>
    </div>
    <div class="controls-PeriodDialog-DateRangeItem__monthList">
-      <div for="month in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">
+      <div
+         for="month in 12"
+         class="controls-PeriodDialog-DateRangeItem__monthList_monthWrapper"
+         attr:data-date="{{ item.id + '.' + (month + 1)}}"
+         >
          <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
                      _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
                on:click="_monthCaptionClick(month)">

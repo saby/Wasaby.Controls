@@ -15,6 +15,8 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
  *
  */
 
+const BUTTONS_COUNT = 6;
+
 var Component = BaseControl.extend({
     _template: componentTmpl,
 
@@ -37,8 +39,13 @@ var Component = BaseControl.extend({
     },
 
     _beforeUpdate: function (options) {
-        if (options.year !== this._options.year) {
-            this._year = options._year;
+        if (!dateUtils.isYearsEqual(options.year, this._options.year)) {
+            this._year = options.year.getFullYear();
+            if (this._year > this._lastYear) {
+                this._lastYear = this._year;
+            } else if (this._year <= this._lastYear - BUTTONS_COUNT) {
+                this._lastYear = this._year + BUTTONS_COUNT - 1;
+            }
         }
         this._rangeModel.update(options);
         this._updateModel();
@@ -50,10 +57,12 @@ var Component = BaseControl.extend({
 
     _onPrevClick: function () {
         this._lastYear--;
+        this._updateModel();
     },
 
     _onNextClick: function () {
         this._lastYear++;
+        this._updateModel();
     },
 
     _onItemClick: function (e, date) {
@@ -70,17 +79,17 @@ var Component = BaseControl.extend({
 
     _updateModel: function () {
         var items = [],
-            buttonsCount = 6,
             currentYear = (new Date()).getFullYear(),
             item, year;
 
-        for (var i = 0; i < buttonsCount; i++) {
-            year = this._lastYear - buttonsCount + 1 + i;
+        for (var i = 0; i < BUTTONS_COUNT; i++) {
+            year = this._lastYear - BUTTONS_COUNT + 1 + i;
             item = {
                 caption: year,
                 isDisplayed: year === this._year,
                 isCurrent: year === currentYear,
-                date: new Date(year, 0)
+                date: new Date(year, 0),
+                year: year
             };
 
             items.push(item);
@@ -89,9 +98,12 @@ var Component = BaseControl.extend({
     },
 
     _prepareItemClass: function (itemValue) {
-        var css = [];
+        let
+            css = [],
+            itemDate = new Date(itemValue, 0);
+
         css.push(rangeSelectionUtils.prepareSelectionClass(
-            itemValue,
+            itemDate,
             this._rangeModel.startValue,
             this._rangeModel.endValue,
             this._options.selectionProcessing,
@@ -100,13 +112,15 @@ var Component = BaseControl.extend({
         ));
 
         css.push(rangeSelectionUtils.prepareHoveredClass(
-            itemValue,
+            itemDate,
             this._options.hoveredStartValue,
             this._options.hoveredEndValue
         ));
 
-        if (dateUtils.isDatesEqual(itemValue, this._year)) {
+        if (itemValue === this._year) {
             css.push('controls-PeriodDialog-Years__item-displayed');
+        } else if (itemValue === (new Date()).getFullYear()) {
+            css.push('controls-PeriodDialog-Years__item-current');
         } else {
             css.push('controls-PeriodDialog-Years__rangeBtn-regular');
         }
