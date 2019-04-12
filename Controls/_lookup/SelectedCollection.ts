@@ -8,6 +8,8 @@ import utils = require('Types/util');
 import 'css!theme?Controls/_lookup/SelectedCollection/SelectedCollection';
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
+import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
+import 'Controls/lookupPopup';
 
 
 /**
@@ -80,6 +82,9 @@ var Collection = Control.extend({
    _items: null,
    _notifyHandler: tmplNotify,
    _counterWidth: 0,
+   _contentTemplate: ContentTemplate,
+   _crossTemplate: CrossTemplate,
+   _counterTemplate: CounterTemplate,
 
    _beforeMount: function (options) {
       this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;

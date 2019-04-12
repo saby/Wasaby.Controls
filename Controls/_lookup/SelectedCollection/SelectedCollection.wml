@@ -5,12 +5,12 @@
               attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
               style="default controls-SelectedCollection__popup"
               trigger="click"
-              templateName="Controls/_lookup/SelectedCollection/Popup"
+              templateName="Controls/lookupPopup:Collection"
               templateOptions="{{_templateOptions}}"
               targetSide="bottom"
               on:openInfoBox="_openInfoBox()"
               on:closeInfoBox="_notifyHandler('closeInfoBox')">
-          <ws:partial template="wml!Controls/_lookup/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
+          <ws:partial template="{{_counterTemplate}}" itemsCount="{{_items.length}}" attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </Controls.Popup.InfoBox>
    </ws:if>
    <ws:for data="index, item in _visibleItems">
@@ -24,8 +24,8 @@
               isLastItem="{{_visibleItems.length === index + 1}}"
               readOnly="{{_options.readOnly}}"
               itemsLayout="{{_options.itemsLayout}}"
-              contentTemplate="wml!Controls/_lookup/SelectedCollection/_ContentTemplate"
-              crossTemplate="wml!Controls/_lookup/SelectedCollection/_CrossTemplate"
+              contentTemplate="{{_contentTemplate}}"
+              crossTemplate="{{_crossTemplate}}"
               on:click="_itemClick(item)">
       </ws:partial>
    </ws:for>

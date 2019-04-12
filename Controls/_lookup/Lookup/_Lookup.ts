@@ -266,7 +266,8 @@ import 'css!theme?Controls/_lookup/Lookup/Lookup';
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
       _maxVisibleItems: null,
-
+      _clearRecordsTemplate: clearRecordsTemplate,
+      _showSelectorTemplate: showSelectorTemplate,
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
       _needSetFocusInInput: false,
