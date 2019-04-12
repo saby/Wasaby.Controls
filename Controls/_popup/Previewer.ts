@@ -28,6 +28,8 @@ import 'css!Controls/_popup/Previewer/Previewer';
        * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
        * @default hoverAndClick
        */
+      var CALM_DELAY = 300; // During what time should not move the mouse to start opening the popup.
+
       var _private = {
          getType: function(eventType) {
             if (eventType === 'mousemove' || eventType === 'mouseleave') {
@@ -190,7 +192,7 @@ import 'css!Controls/_popup/Previewer/Previewer';
                   if (!self._isPopupOpened()) {
                      self._debouncedAction('_open', [event]);
                   }
-               }, 300);
+               }, CALM_DELAY);
             }
          },
 
