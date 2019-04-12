@@ -2,6 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
+import IDateRangeSelectable = require('Controls/Date/interface/IDateRangeSelectable');
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import MonthsRange from './_datePopup/MonthsRange';
@@ -17,11 +18,13 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
  *
  * @class Controls/Date/PeriodDialog
  * @extends Core/Control
- * @mixes Controls/Date/interface/IPeriodDialog
+ * @mixes Controls/Date/interface/IDateRangeSelectable
+ * @mixes Controls/_input/interface/IDateMask
+ * @mixes Controls/_datePopup/interface/IDatePopup
  * @control
  * @public
  * @author Миронов А.Ю.
- * @demo Controls-demo/Date/PeriodLiteDialog
+ * @demo Controls-demo/datePopup/datePopup
  *
  * @css @background-color_PeriodDialog Background color of dialog.
  * @css @width_PeriodDialog Dialog width.
@@ -336,7 +339,7 @@ Component.getOptionTypes = function () {
             HEADER_TYPES.link,
             HEADER_TYPES.input
         ]),
-    }, IRangeSelectable.getOptionTypes());
+    }, IDateRangeSelectable.getOptionTypes());
 };
 
 export = Component;

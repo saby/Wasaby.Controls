@@ -1,6 +1,6 @@
-define('Controls-demo/Date/PeriodDialog', [
+define('Controls-demo/datePopup/datePopup', [
    'Core/Control',
-   'wml!Controls-demo/Date/PeriodDialog',
+   'wml!Controls-demo/datePopup/datePopup',
    'css!themes/online/online'
 ], function(
    BaseControl,

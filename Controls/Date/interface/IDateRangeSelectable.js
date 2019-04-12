@@ -16,19 +16,28 @@ define('Controls/Date/interface/IDateRangeSelectable', [
          var options =  IRangeSelectable.getDefaultOptions();
 
          /**
-          * @name Controls/Date/interface/IDateRangeSelectable#quantum
+          * @name Controls/Date/interface/IDateRangeSelectable#ranges
           * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить вроизвольный период, можно только выделить заданные периоды.
           */
-         options.quantum = [];
+         options.ranges = [];
 
          /**
           * @name Controls/Date/interface/IDateRangeSelectable#selectionType
-          * @cfg {String} Определяет режим выделения диапазано
+          * @cfg {String} Определяет режим выделения диапазона
           * @variant 'range' режим выделения произвольного диапазона
           * @variant 'single' режим выделения одного элемента
           * @variant 'disable' режим выбора отключен
           * @variant 'quantum' режим выделения квантами, кванты задаются через опцию quantum
           */
+
+         /**
+          * @name Controls/Date/interface/IDateRangeSelectable#minRange
+          * @cfg {String} Specifies the range selection mode
+          * @variant 'day' selection mode period multiple days
+          * @variant 'month' selection mode period multiple months
+          */
+         options.minRange = 'day';
+
          return options;
       },
 
