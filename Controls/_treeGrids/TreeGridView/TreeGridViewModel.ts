@@ -1,7 +1,6 @@
 import {GridViewModel} from 'Controls/grid';
-import {GridLayoutUtil} from 'Controls/list';
+import {GridLayoutUtil, RowIndexUtil} from 'Controls/list';
 import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
-import {calcTopOffset, calcGroupRowIndex, calcRowIndexByKey} from "../../_grids/utils/RowIndexUtil";
 
 function isLastColumn(
    itemData: object,
@@ -19,7 +18,7 @@ var _private = {
     calcGroupRowIndex: function (self, current): number {
         let groupItem = self._model.getDisplay().at(current.index);
 
-        return calcGroupRowIndex(
+        return RowIndexUtil.calcGroupRowIndex(
             groupItem,
             self._model.getDisplay(),
             !!self.getHeader(),
@@ -74,7 +73,7 @@ var _private = {
 
     // Using util for calculating real rows' index on display considering footers, headers, results
     calcRowIndex: function (self, current) {
-        return calcRowIndexByKey(
+        return RowIndexUtil.calcRowIndexByKey(
             current.key,
             self.getDisplay(),
             !!self.getHeader(),
@@ -195,7 +194,7 @@ var
                 current.nodeFooter.isPartialSupport = GridLayoutUtil.isPartialSupport;
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
                 if (GridLayoutUtil.isPartialSupport) {
-                    current.nodeFooter.rowIndex += calcTopOffset(!!this.getHeader(), this.getResultsPosition());
+                    current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());
                     current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
                 }
             }

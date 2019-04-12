@@ -1,4 +1,4 @@
-import ItemsUtil = require("Controls/_lists/resources/utils/ItemsUtil");
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
 
 
 enum ResultsPosition {

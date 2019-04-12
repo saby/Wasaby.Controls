@@ -1,4 +1,4 @@
-import {ListViewModel, BaseViewModel, GridLayoutUtil} from 'Controls/list';
+import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
 
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
@@ -6,8 +6,6 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import {calcGroupRowIndex, calcResultsRowIndex, calcRowIndexByKey, ResultsPosition} from "./utils/RowIndexUtil";
 
 var
     _private = {
@@ -338,16 +336,16 @@ var
         },
 
         calcRowIndexByKey: function(self, key): number {
-            return calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
+            return RowIndexUtil.calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
         },
 
         calcResultsRowIndex: function (self): number {
-            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
         },
 
         calcGroupRowIndex: function (self, current): number {
             let groupItem = self._model.getDisplay().at(current.index);
-            return calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
+            return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
         getEmptyTemplateStyles: function (self): string {
             let

@@ -4,7 +4,7 @@
 </ws:if>
 <ws:partial
    __noDirtyChecking="{{true}}"
-   template="wml!Controls/_lists/resources/ItemOutput"
+   template="Controls/list:ItemOutput"
    listModel="{{listModel}}"
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"
