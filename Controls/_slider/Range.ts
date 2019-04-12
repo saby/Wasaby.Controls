@@ -58,7 +58,7 @@ const Range = Control.extend({
    /**
     * Slider with two movable points for choosing range.
     *
-    * <a href="/materials/demo/demo-ws4-sliderrange">Demo-example</a>.
+    * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
     * @public
     * @extends Core/Control
     * @class Controls/_slider/Range
