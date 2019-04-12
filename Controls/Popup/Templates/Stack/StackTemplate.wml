@@ -38,7 +38,7 @@
     </ws:else>
 
     <div class="controls-StackTemplate__content-area">
-        <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}"></ws:partial>
+        <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options}}"></ws:partial>
     </div>
     <div if="{{_options.bottomArea || _options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea">
     <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}"></ws:partial>
