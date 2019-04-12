@@ -2088,6 +2088,10 @@
             "default": false,
             "title": "Determines whether text is selected when input is clicked."
           },
+          "searchButtonVisible": {
+            "type": "Boolean",
+            "default": true
+          },
           "readOnly": {
             "type": "Boolean",
             "title": "Determines whether control will react to user actions."
