@@ -13,7 +13,7 @@ var _private = {
    reTimeMaskChars: /[Hms]+/,
    reDateTimeMaskChars: /[YMDHms]+/,
    reNumbers: /\d/,
-   maskRegExp: /^(?:(\d{2})(?:\.(\d{2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/,
+   maskRegExp: /^(?:(\d{1,2})(?:\.(\d{1,2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/,
 
    isFilled: function(self, value) {
       return value && value.indexOf(self._replacer) === -1;
