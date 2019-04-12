@@ -34,7 +34,7 @@ def find():
                 with open(file_path, encoding='utf-8') as f:
                     data = f.read()
                     for suite in _suites.keys():
-                        if not _suites[suite] and suite in data:
+                        if not _suites[suite] and 'class %s(' % suite in data:
                             _suites[suite] = os.path.relpath(file_path, start)
     return _suites
 
@@ -43,4 +43,4 @@ if __name__ == '__main__':
     parser.add_argument('-cf', '--changed_files', type=str, required=True, help='Строка со списком измененых файлов')
     parser.add_argument('-sd', '--search_dir', type=str, required=True, help='Путь до папки с тестами в которой ищем изменения')
     args = parser.parse_args()
-    print(' '.join(find().values()))
+    print(' '.join(find().values()), end='')

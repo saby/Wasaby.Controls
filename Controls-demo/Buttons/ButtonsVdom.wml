@@ -68,4 +68,4 @@
     <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
     <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="secondary" viewMode="link"/>
-</div>`
+</div>

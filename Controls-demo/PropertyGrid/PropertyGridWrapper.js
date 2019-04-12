@@ -56,7 +56,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             this._exampleControlOptions = opts.componentOpt;
 
             var def = new Deferred();
-            opts.description = cMerge(opts.description, opts.dataObject);
+            this.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
                var testName = opts.content.split('/');
                testName.splice(0, 1);

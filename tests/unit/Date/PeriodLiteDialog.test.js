@@ -234,5 +234,41 @@ define([
             });
          });
       });
+
+      describe('_onWheel', function() {
+         const currentYear = (new Date).getFullYear(),
+            event = {
+               preventDefault: function() {}
+            },
+            yearOnlyOptions = {
+               chooseQuarters: false,
+               chooseHalfyears: false,
+               chooseMonths: false
+            };
+
+         [{
+            wheelDelta: 1,
+            options: {},
+            year: currentYear - 1
+         }, {
+            wheelDelta: -1,
+            options: {},
+            year: currentYear + 1
+         }, {
+            wheelDelta: 1,
+            options: yearOnlyOptions,
+            year: currentYear + 1
+         }, {
+            wheelDelta: -1,
+            options: yearOnlyOptions,
+            year: currentYear - 1
+         }].forEach(function(test) {
+            it(`should set year to ${test.year} if options and wheelDelta is equals ${test.options} and ${test.wheelDelta}`, function() {
+               const component = calendarTestUtils.createComponent(PeriodLiteDialog, test.options);
+               component._onWheel(coreMerge({ nativeEvent: { wheelDelta: test.wheelDelta } }, event));
+               assert.equal(component._year, test.year);
+            });
+         });
+      });
    });
 });

@@ -3,6 +3,7 @@ import template = require('wml!Controls/_lists/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_lists/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import ItemSizeUtils = require('Controls/_lists/TileView/resources/ItemSizeUtils');
+import { IoC } from 'Env/Env';
 import 'css!theme?Controls/_lists/TileView/TileView';
 
 var _private = {
@@ -80,6 +81,12 @@ var
     ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
+var TILE_SCALING_MODE = {
+    NONE: 'none',
+    OUTSIDE: 'outside',
+    INSIDE: 'inside'
+};
+
 
 var TileView = ListView.extend({
     _template: template,
@@ -88,6 +95,17 @@ var TileView = ListView.extend({
     _mouseMoveTimeout: undefined,
     _resizeFromSelf: false,
 
+    _beforeMount: function(options) {
+        if (options.hasOwnProperty('hoverMode')) {
+            IoC.resolve('ILogger').warn(this._moduleName, 'Используется устаревшая опция hoverMode, используйте tileScalingMode');
+            this._tileScalingMode = !!options.hoverMode ? TILE_SCALING_MODE.OUTSIDE : TILE_SCALING_MODE.NONE;
+        } else {
+            this._tileScalingMode = options.tileScalingMode;
+        }
+
+        TileView.superclass._beforeMount.apply(this, arguments);
+    },
+
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         this._notify('register', ['scroll', this, this._onScroll], {bubbling: true});
@@ -95,11 +113,7 @@ var TileView = ListView.extend({
     },
 
     _onResize: function () {
-        if (!this._resizeFromSelf) {
-            this._listModel.setHoveredItem(null);
-        }
-        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-       this._forceUpdate();
+       this._listModel.setHoveredItem(null);
     },
 
     _beforeUpdate: function (newOptions) {
@@ -123,19 +137,7 @@ var TileView = ListView.extend({
                 position: hoveredItem.endPosition
             });
         }
-
-        //Делаем блокировку для события resize в 19.211.
-        //Возникла ситуация, когда контрол говорит вверх о том, что случился resize, и мы попадаем в обработчик
-        //resize этого же контрола. В рамках плитки такого поведения быть не должно, т.к. плитки увеличиваются
-        //за счет изменения состояния модели, что вызывает update, update вызывает resize, resize вызывает
-        //отмену увеличения плитки. Получается что плитку невозможно увеличиить.
-        //Нужно решить, какое поведение должно быть в данной ситуации. Возможные варианты:
-        //1) Списочные контролы не должны стреть controlResize если размеры не поменялись;
-        //2) Не должен вызываться обработчик resize у контрола, который об этом resize нотифицировал;
-        //Выписана ошибка: https://online.sbis.ru/opendoc.html?guid=d42b8a07-99a3-4e9a-b24f-d11d212df4bf
-        this._resizeFromSelf = true;
-        this._notify('controlResize', [], { bubbling: true });
-        this._resizeFromSelf = false;
+        TileView.superclass._afterUpdate.apply(this, arguments);
     },
 
     //TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9
@@ -187,7 +189,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, !!self._options.hoverMode ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, this._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
@@ -195,7 +197,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return !!this._options.hoverMode ? ZOOM_COEFFICIENT : 1;
+        return this._tileScalingMode !== TILE_SCALING_MODE.NONE ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {
@@ -232,7 +234,7 @@ TileView.getDefaultOptions = function () {
     return {
         itemsHeight: 150,
         tileMode: 'static',
-        hoverMode: 'outside'
+        tileScalingMode: 'none'
     };
 };
 

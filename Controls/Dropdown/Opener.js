@@ -50,7 +50,7 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
          checkIcons: function(self, config) {
-            var templateOptions = Merge(config.templateOptions, (self._options.popupOptions && self._options.popupOptions.templateOptions) || {}),
+            var templateOptions = Merge(config.templateOptions, self._options.templateOptions || {}),
                parentProperty = templateOptions && templateOptions.parentProperty,
                items = templateOptions && templateOptions.items,
                headerIcon = templateOptions && (templateOptions.headConfig && templateOptions.headConfig.icon || templateOptions.showHeader && templateOptions.icon),
@@ -87,11 +87,7 @@ define('Controls/Dropdown/Opener',
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, popupOptions) {
-            //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
-            if (self._options.className) {
-               Env.IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
-            }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeOnOutsideClick = true;
          }

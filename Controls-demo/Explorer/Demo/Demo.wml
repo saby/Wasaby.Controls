@@ -10,6 +10,7 @@
       viewMode="tile"
       keyProperty="id"
       source="{{_viewSource}}"
+      tileScalingMode="outside"
       multiSelectVisibility="visible"
       itemActions="{{_itemActions}}"
       bind:selectedKeys="_selectedKeys"
@@ -33,7 +34,6 @@
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"
-      hoverMode=""
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
@@ -52,6 +52,7 @@
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"
+      tileScalingMode="outside"
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">

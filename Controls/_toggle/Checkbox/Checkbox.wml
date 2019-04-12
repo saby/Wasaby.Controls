@@ -1,0 +1,20 @@
+<div class="controls-Checkbox">
+    <div on:click="_clickHandler()" class="controls-Checkbox__wrapper {{_options.readOnly ? 'controls-Checkbox__disabled' : 'controls-Checkbox__enabled'}}
+                                           {{_options.value ? ' controls-Checked__checked'}}
+                                           {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
+         title="{{_options.tooltip}}">
+        <div class="{{_options.value === null && _options.triState ? 'controls-Checkbox__icon-tristate controls-Checkbox__icon-tristate-color__' + (_options.readOnly ? 'disabled':'enabled')}}
+                     controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}} controls-Checkbox__icon">
+            <svg attr:xmlns="http://www.w3.org/2000/svg"
+                 attr:viewBox="0 0 18 18"
+                 attr:class="controls-Checkbox__icon-checked
+                        {{_options.value ? 'controls-Checkbox__icon-checked-color_'+ (_options.readOnly ? 'disabled':'enabled') : 'controls-Checkbox__icon-checked-color_transparent'}}">
+                <path attr:xmlns="http://www.w3.org/2000/svg" attr:d="M13,17.69l3.94,3.38,10.13-9L17.5,25Z" attr:transform="translate(-13 -12.06)"/>
+            </svg>
+        </div>
+        <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
+                    readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
+                    icon="{{_options.icon}}"
+                    caption="{{_options.caption}}"/>
+    </div>
+</div>

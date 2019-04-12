@@ -1,8 +1,1 @@
-<Controls.DragNDrop.Container on:_updateDraggingTemplate="_updateDraggingTemplate()" on:_documentDragEnd="_documentDragEnd()">
-   <ws:partial
-      template="{{_options.content}}"
-      scope="{{_options}}"
-      on:register="_onRegisterHandler()"
-      on:unregister="_onRegisterHandler()"
-   />
-</Controls.DragNDrop.Container>
+<ws:partial template="wml!Controls/_dragnDrop/Container/Compound/Compound" scope="{{_options}}" />
