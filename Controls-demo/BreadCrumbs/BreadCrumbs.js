@@ -25,31 +25,31 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             },
             {
                id: 2,
-               title: 'Ноутбук 2',
+               title: 'Notebooks 2',
                secondTitle: 'тест2',
                parent: 1
             },
             {
                id: 3,
-               title: 'Смартфон 3',
+               title: 'Smartphones 3',
                secondTitle: 'тест3',
                parent: 2
             },
             {
                id: 4,
-               title: 'Запись 1',
+               title: 'Record1',
                secondTitle: 'тест4',
                parent: 3
             },
             {
                id: 5,
-               title: 'Запись 2',
+               title: 'Record2',
                secondTitle: 'тест5',
                parent: 4
             },
             {
                id: 6,
-               title: 'Запись 3 eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6',
                parent: 5
             }
@@ -75,7 +75,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             secondTitle: 'тест1'
          }, {
             id: 6,
-            title: 'Запись 3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+            title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
             secondTitle: 'тест6'
          }].map(function(item) {
             return new entity.Model({
@@ -86,7 +86,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          this.items3 = [{ id: 5, title: 'Recor' },
             {
                id: 6,
-               title: 'Запись 3 eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6'
             }].map(function(item) {
             return new entity.Model({
@@ -110,31 +110,31 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             },
             {
                id: 2,
-               title: 'Ноутбук 2',
+               title: 'Notebooks 2',
                secondTitle: 'тест2',
                parent: 1
             },
             {
                id: 3,
-               title: 'Смартфон 3',
+               title: 'Smartphones 3',
                secondTitle: 'тест3',
                parent: 2
             },
             {
                id: 4,
-               title: 'Запись 1',
+               title: 'Record1',
                secondTitle: 'тест4',
                parent: 3
             },
             {
                id: 5,
-               title: 'Запись 2',
+               title: 'Record2',
                secondTitle: 'тест5',
                parent: 4
             },
             {
                id: 6,
-               title: 'Запись 3 eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6',
                parent: 5
             }
