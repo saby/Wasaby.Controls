@@ -3,7 +3,7 @@ import Env = require('Env/Env');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_slider/sliderTemplate');
 import utils from 'Controls/_slider/Utils';
-import DragNDrop = require('Controls/DragNDrop/Controller');
+import {Container as DragNDrop} from 'Controls/dragnDrop';
 import Range from './Range';
 
 var _private = {

@@ -1,5 +1,5 @@
 <div class="controls-Explorer">
-   <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
+   <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
       <Controls.Explorer._PathController
                                  scope="{{_options}}"
                                  items="{{_breadCrumbsItems}}"
@@ -38,5 +38,5 @@
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
       </Controls.Explorer._PathController>
-   </Controls.DragNDrop.Controller>
+   </Controls.dragnDrop:Container>
 </div>

@@ -7,7 +7,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
    'wml!Controls-demo/Decorators/Markup/Markup',
 
    'css!Controls-demo/Decorators/Markup/Markup',
-   'Controls/Decorator/Markup'
+   'Controls/decorator'
 
 ], function(Control,
    linkDecorateResolver,

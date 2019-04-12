@@ -1,16 +1,16 @@
 define(
    [
-      'Controls/Decorator/WrapURLs',
+      'Controls/decorator',
       'unit/resources/TemplateUtil'
    ],
-   function(WrapURLs, TemplateUtil) {
+   function(decorator, TemplateUtil) {
       'use strict';
 
       describe('Controls.Decorator.WrapURLs', function() {
          var result;
 
          describe('Template', function() {
-            var template = TemplateUtil.clearTemplate(new WrapURLs({})._template);
+            var template = TemplateUtil.clearTemplate(new decorator.WrapURLs({})._template);
 
             it('Text', function() {
                var parsedText = [{
@@ -26,7 +26,7 @@ define(
          });
 
          describe('parseText', function() {
-            var parseText = WrapURLs._private.parseText.bind(WrapURLs._private);
+            var parseText = decorator.WrapURLs._private.parseText.bind(decorator.WrapURLs._private);
 
             it('Simple URL', function() {
                result = parseText('http://regexpal.com/');

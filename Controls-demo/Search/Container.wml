@@ -1,11 +1,11 @@
 <div class="controls-demo__search-container">
     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
         <ws:content>
-            <Controls.Search.Controller searchParam="department">
+            <Controls.search:Controller searchParam="department">
                 <div>
-                    <Controls.Search.Input.Container>
-                        <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
-                    </Controls.Search.Input.Container>
+                    <Controls.search:InputContainer>
+                        <Controls.search:Input bind:value="_searchValue" attr:class="controls-demo__search"/>
+                    </Controls.search:InputContainer>
 
                     <Controls.list:Container>
                         <Controls.list:View emptyTemplate="Не найдено">
@@ -23,7 +23,7 @@
                         </Controls.list:View>
                     </Controls.list:Container>
                 </div>
-            </Controls.Search.Controller>
+            </Controls.search:Controller>
         </ws:content>
     </Controls.list:DataContainer>
 </div>

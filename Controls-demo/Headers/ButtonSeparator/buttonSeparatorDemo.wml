@@ -3,7 +3,7 @@
         <div class="exampleBlock">
             <h2>Button-separator</h2>
             <div class="wrapper">
-                <Controls.Button.Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" on:valueChanged="valueChangedHandler()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
+                <Controls.toggle:Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" on:valueChanged="valueChangedHandler()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
             </div>
         </div>
         <div class="optionsBlock">
@@ -20,9 +20,9 @@
                     on:selectedKeyChanged="separatorChangeStyle()"
             />
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:class="ControlsDemo-ButtonSeparator__bold"/>
+            <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:class="ControlsDemo-ButtonSeparator__bold"/>
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_iconValue" caption="value" attr:class="ControlsDemo__value"/>
+            <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_iconValue" caption="value" attr:class="ControlsDemo__value"/>
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>

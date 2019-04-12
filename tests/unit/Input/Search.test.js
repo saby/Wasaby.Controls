@@ -1,9 +1,9 @@
 define(
    [
       'Core/Control',
-      'Controls/Input/Search'
+      'Controls/search'
    ],
-   function(Control, Search) {
+   function(Control, searchMod) {
       'use strict';
 
       describe('Controls/Input/Search', function() {
@@ -12,7 +12,7 @@ define(
 
          describe('search', function() {
             it('Click on search', function() {
-               let search = new Search();
+               let search = new searchMod.Input();
                let searched = false;
                let activated = false;
 
@@ -34,7 +34,7 @@ define(
             });
 
             it('_resetClick', function() {
-               let search = new Search();
+               let search = new searchMod.Input();
                let resetClicked = false;
                let activated = false;
 
@@ -64,7 +64,7 @@ define(
             });
 
             it('Enter click', function() {
-               let search = new Search();
+               let search = new searchMod.Input();
                let activated = false;
                search._notify = (e, args) => {
                   assert.equal(e, 'searchClick');
@@ -81,7 +81,7 @@ define(
             });
 
             it('Focus out', function() {
-               let search = new Search();
+               let search = new searchMod.Input();
 
                const beforeMount = search._beforeMount;
 
@@ -112,11 +112,11 @@ define(
 
             it('isVisibleResetButton', function() {
                let self = { _options: { readOnly: false, value: '' } };
-               assert.isFalse(Search._private.isVisibleResetButton.call(self));
+               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(self));
                self._options.value = 'test text';
-               assert.isTrue(Search._private.isVisibleResetButton.call(self));
+               assert.isTrue(searchMod.Input._private.isVisibleResetButton.call(self));
                self._options.readOnly = true;
-               assert.isFalse(Search._private.isVisibleResetButton.call(self));
+               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(self));
             });
          });
       });
