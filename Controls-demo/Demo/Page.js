@@ -98,7 +98,7 @@ define('Controls-demo/Demo/Page',
                      rel: 'stylesheet',
                      type: 'text/css',
                      id: 'controlsThemeStyle',
-                     href: this._theme + 'css'
+                     href: this._theme + '.css'
                   }
                ]
             ];
