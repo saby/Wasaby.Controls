@@ -15,7 +15,7 @@ import Selector = require("Controls/_lookup/Button");
 import Input = require("Controls/_lookup/Lookup");
 import Collection = require("Controls/_lookup/SelectedCollection");
 import _CollectionController = require("Controls/_lookup/SelectedCollection/Controller");
-import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/itemTemplate");
+import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/ItemTemplate");
 import Opener = require("Controls/_lookup/Opener");
 
 export {
