@@ -1,3 +1,1 @@
-<span on:click="clickHandler()" class="controls-BigSeparator">
-    <i class="controls-BigSeparator__icon {{_icon}} icon-size"></i>
-</span>
+<ws:partial template="wml!Controls/_toggle/BigSeparator/BigSeparator" scope="{{_options}}" />

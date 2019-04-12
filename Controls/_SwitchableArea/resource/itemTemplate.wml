@@ -1,0 +1,6 @@
+<ws:partial template="{{ itemTemplate }}"
+            type="{{ type }}"
+            selected="{{selectedKey === currentItemKey}}"
+            scope="{{templateOptions}}">
+   <ws:templateOptions type="{{ type }}" selected="{{selectedKey === currentItemKey}}"/>
+</ws:partial>
