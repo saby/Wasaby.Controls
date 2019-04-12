@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/ComboBox/ComboBox" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_dropdown/ComboBox/ComboBox" scope="{{_options}}" />
