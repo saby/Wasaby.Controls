@@ -104,8 +104,14 @@ var Component = Control.extend([], {
 
     // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
 
-    _keyUpHandler: function () {
-        this._focusChanger();
+    _keyUpHandler: function (event) {
+        // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
+        // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
+        // Release tab. Switches the focus in the field at the end of the period.
+        const key = parseInt(event.nativeEvent.key, 10);
+        if (!isNaN(key)) {
+            this._focusChanger();
+        }
     },
 
     _focusChanger: function() {
