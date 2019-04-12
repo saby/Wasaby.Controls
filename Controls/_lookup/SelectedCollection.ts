@@ -6,8 +6,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import utils = require('Types/util');
 import 'css!theme?Controls/_lookup/SelectedCollection/SelectedCollection';
-import 'wml!Controls/_lookup/SelectedCollection/_ContentTemplate';
-import 'wml!Controls/_lookup/SelectedCollection/_CrossTemplate';
+import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
+import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 
 
 /**

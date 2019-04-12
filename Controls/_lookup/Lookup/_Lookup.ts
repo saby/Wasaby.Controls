@@ -12,7 +12,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import isEqual = require('Core/helpers/Object/isEqual');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import Env = require('Env/Env');
-import 'wml!Controls/Input/resources/input';
+import inputWml = require('wml!Controls/Input/resources/input');
 import 'css!theme?Controls/_lookup/Lookup/Lookup';
 
 
