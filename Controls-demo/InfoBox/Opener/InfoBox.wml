@@ -7,7 +7,7 @@
       </div>
       <div class="controls-InfoBoxDemo-targets">
          <ws:for data="item in block.items">
-            <div class="controls-InfoBoxDemo-target {{_minTargetMode ? 'controls-InfoBoxDemo-target-mini' : 'controls-InfoBoxDemo-target-standard'}}" on:mouseenter="_open(item.cfg)">
+            <div class="controls-InfoBoxDemo-target controls-InfoBoxDemo-target-standard" on:mouseenter="_open(item.cfg)">
                {{item.text}}
             </div>
          </ws:for>
@@ -56,12 +56,5 @@
             </div>
         </ws:for>
   </div>
-
-
-   <div class="controls-InfoBoxDemo-min-targets-mode">Режим маленьких таргетов:
-      <span class="controls-InfoBoxDemo-min-targets-mode-button" on:click="_toggleMinTargetMode()">
-         {{_minTargetMode ? 'ВЫКЛ' : 'ВКЛ'}}
-      </span>
-   </div>
 
 </div>
