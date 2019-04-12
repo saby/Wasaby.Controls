@@ -359,17 +359,19 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _choose: function(event, item) {
+         /* move focus to input after select, because focus will be lost after closing popup,
+          * only in multi-select mode, in single-select mode input is not displayed after selecting a item.
+          * !!! activate must called before changing the collection of selected items,
+          * because user can change focus in itemsChanged event. */
+         if (this._options.multiSelect) {
+            this.activate();
+         }
+
          this._notify('addItem', [item]);
 
          if (this._simpleViewModel.getValue() !== '') {
             this._inputValue = '';
             _private.notifyValue(this, '');
-         }
-
-         /* move focus to input after select, because focus will be lost after closing popup,
-          * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
-         if (this._options.multiSelect) {
-            this.activate();
          }
       },
 
