@@ -68,7 +68,7 @@ var BreadCrumbsView = Control.extend({
        this._forceUpdate();
     },
 
-    _onResult: function (args) {
+    _onResult: function (event, args) {
         var actionName = args && args.action;
 
         if (actionName === 'itemClick') {
