@@ -1,9 +1,7 @@
-define('Controls/Button/Close', [
-   'Core/Control',
-   'wml!Controls/Button/Close',
-   'Env/Env',
-   'css!theme?Controls/Button/Close'
-], function(Control, template, Env) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popupTemplate/Button/Close');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_popupTemplate/Button/Close';
    /**
     * Specialized type of button for closing windows.
     *
@@ -116,5 +114,5 @@ define('Controls/Button/Close', [
       };
    };
 
-   return CloseButton;
-});
+   export = CloseButton;
+
