@@ -17,6 +17,7 @@ import 'Controls/Decorator/WrapURLs';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
+       * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
@@ -39,13 +40,6 @@ import 'Controls/Decorator/WrapURLs';
        * A value between 1 and 10 is supported.
        */
 
-      /**
-       * @name Controls/_input/Area#newLineKey
-       * @cfg {String} The behavior of creating a new line.
-       * @variant enter When user presses Enter.
-       * @variant ctrlEnter When user presses Ctrl + Enter.
-       * @default enter
-       */
       var _private = {
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');
