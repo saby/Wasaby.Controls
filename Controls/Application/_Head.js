@@ -97,6 +97,7 @@ define('Controls/Application/_Head',
 
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
+                  
                   // TODO: uncomment it before tests runs.
                   // this.headJson = undefined;
                   // this.headValidHtml = undefined;
