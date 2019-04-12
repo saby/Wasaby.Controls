@@ -1,12 +1,8 @@
-define('Controls/Popup/Templates/Dialog/DialogTemplate',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Templates/Dialog/DialogTemplate',
-      'Env/Env',
-      'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
-   ],
-   function(Control, template, Env) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
+
 
       var DialogTemplate = Control.extend({
 
@@ -123,5 +119,5 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          };
       };
 
-      return DialogTemplate;
-   });
+      export = DialogTemplate;
+

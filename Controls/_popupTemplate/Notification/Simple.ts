@@ -1,9 +1,5 @@
-define('Controls/Popup/Templates/Notification/Simple',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Templates/Notification/Simple'
-   ],
-   function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simple');
       /**
        * Template (WML) of simple notification.
        *
@@ -44,8 +40,8 @@ define('Controls/Popup/Templates/Notification/Simple',
          };
       };
 
-      return Notification;
-   });
+      export = Notification;
+
 
 /**
  * @name Controls/Popup/Templates/Notification/Simple#autoClose

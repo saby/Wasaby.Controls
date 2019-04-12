@@ -1,12 +1,8 @@
-define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-      'Env/Env',
-      'css!theme?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
-   ],
-   function(Control, template, Env) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popupTemplate/Confirmation/Confirmation');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
+
 
       var _private = {
          prepareStatusStyle: function(color) {
@@ -106,5 +102,5 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
             this._notify('close', [], { bubbling: true });
          }
       });
-      return DialogTemplate;
-   });
+      export = DialogTemplate;
+

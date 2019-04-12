@@ -1,12 +1,8 @@
-define('Controls/Popup/Templates/Stack/StackTemplate',
-   [
-      'Core/Control',
-      'wml!Controls/Popup/Templates/Stack/StackTemplate',
-      'Env/Env',
-      'css!theme?Controls/Popup/Templates/Stack/StackTemplate'
-   ],
-   function(Control, template, Env) {
-      'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_popupTemplate/Stack/Stack');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_popupTemplate/Stack/Stack';
+
 
       var DialogTemplate = Control.extend({
 
@@ -135,8 +131,8 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
          };
       };
 
-      return DialogTemplate;
-   });
+      export = DialogTemplate;
+
 
 /**
  * @name Controls/Popup/Templates/Stack/StackTemplate#close

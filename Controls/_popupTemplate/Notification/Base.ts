@@ -1,11 +1,7 @@
-define('Controls/Popup/Templates/Notification/Base',
-   [
-      'Core/Control',
-      'Env/Env',
-      'wml!Controls/Popup/Templates/Notification/Base',
-      'css!theme?Controls/Popup/Templates/Notification/Base'
-   ],
-   function(Control, Env, template) {
+import Control = require('Core/Control');
+import Env = require('Env/Env');
+import template = require('wml!Controls/_popupTemplate/Notification/Base/Base');
+import 'css!theme?Controls/_popupTemplate/Notification/Base/Base';
       var _private = {
          prepareDisplayStyle: function(color) {
             var resColor = color;
@@ -71,8 +67,8 @@ define('Controls/Popup/Templates/Notification/Base',
          };
       };
 
-      return Notification;
-   });
+      export = Notification;
+
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#autoClose
