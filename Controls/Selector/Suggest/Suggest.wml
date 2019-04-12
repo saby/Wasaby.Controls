@@ -32,7 +32,7 @@
            placeholder="{{_options.placeholder}}"
            class="controls-ComboBox-InputRender">
       <ws:afterFieldWrapper>
-         <Controls.Button.Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
+         <Controls.toggle:Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
       </ws:afterFieldWrapper>
    </Controls.Input.Suggest.InputRender>
 </Controls.Container.Suggest.Layout>

@@ -4,11 +4,11 @@
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
-         <Controls.Search.Controller searchParam="{{_options.searchParam}}">
+         <Controls.search:Controller searchParam="{{_options.searchParam}}">
             <div class="controls-MoveDialog__content">
-               <Controls.Search.Input.Container attr:class="controls-MoveDialog__search">
+               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
                   <Controls.Input.Search/>
-               </Controls.Search.Input.Container>
+               </Controls.search:InputContainer>
                <ws:if data="{{_options.showRoot}}">
                   <Controls.buttons:Button attr:class="controls-MoveDialog__root"
                                            viewMode="link"
@@ -36,7 +36,7 @@
                   </Controls._lists.Container>
                </Controls.Container.Scroll>
             </div>
-         </Controls.Search.Controller>
+         </Controls.search:Controller>
       </Controls._lists.Data>
    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Dialog.DialogTemplate>

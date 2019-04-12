@@ -1,5 +1,5 @@
 <div class="controls-operationsPanelV__multiSelector">
-    <Controls.Toggle.Checkbox
+    <Controls.toggle:Checkbox
             readOnly="{{false}}"
             value="{{_multiSelectStatus}}"
             triState="{{true}}"

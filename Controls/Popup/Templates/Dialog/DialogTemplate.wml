@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Controller name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
+<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls-DialogTemplate" ws-tab-cycling="true">
         <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate }}">
             <div class="controls-DialogTemplate__top-area {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
@@ -35,4 +35,4 @@
                        <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer"></ws:partial>
                </ws:if>
     </div>
-</Controls.DragNDrop.Controller>
+</Controls.dragnDrop:Container>

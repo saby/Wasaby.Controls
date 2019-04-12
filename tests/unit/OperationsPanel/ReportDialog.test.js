@@ -1,8 +1,8 @@
-define(['Controls/Operations/ReportDialog'], function(ReportDialog) {
+define(['Controls/operationsPopup'], function(operationsPopup) {
    'use strict';
 
    describe('Controls.Operations.ReportDialog', function() {
-      var reportDialog = new ReportDialog();
+      var reportDialog = new operationsPopup.ReportDialog();
 
       it('success', function() {
          reportDialog._beforeMount({

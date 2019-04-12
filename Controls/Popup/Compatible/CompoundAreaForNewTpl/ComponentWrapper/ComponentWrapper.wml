@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Container attr:class="controls-CompoundArea__dragContainer">
+<Controls.dragnDrop:Controller attr:class="controls-CompoundArea__dragContainer">
    <Controls.Container.PendingRegistrator name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
       <ws:partial
          template="{{_options.template}}"
@@ -11,4 +11,4 @@
          on:maximized="_onMaximizedHandler()"
       ></ws:partial>
    </Controls.Container.PendingRegistrator>
-</Controls.DragNDrop.Container>
+</Controls.dragnDrop:Controller>
