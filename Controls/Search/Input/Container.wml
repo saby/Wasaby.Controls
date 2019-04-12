@@ -1,5 +1,1 @@
-<ws:partial template="{{_options.content}}"
-            value="{{_value}}"
-            on:valueChanged="_valueChanged()"
-            on:searchClick="_searchClick()"
-            on:keyDown="_keyDown()"/>
+<ws:partial template="wml!Controls/_search/Input/Container" scope="{{_options}}" />
