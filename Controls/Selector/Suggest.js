@@ -15,8 +15,9 @@ define('Controls/Selector/Suggest',
 
       /**
        * Combobox input that suggests options as you are typing.
+       * <a href="/materials/demo-ws4-selector-suggest">Demo-example</a>.
        *
-       * @class Controls/Input/ComboBox/Suggest
+       * @class Controls/Selector/Suggest
        * @extends Controls/input:Text
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/ISource
@@ -26,7 +27,6 @@ define('Controls/Selector/Suggest',
        * @demo Controls-demo/Input/Search/Suggest/SuggestPG
        * @control
        * @public
-       * @category Input
        */
 
       var _private = {
