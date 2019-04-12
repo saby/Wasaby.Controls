@@ -267,7 +267,7 @@ define('Controls/Dropdown/Controller',
                   itemsLoadCallback(items);
                   return items;
                });
-            } else {
+            } else if (this._items) {
                itemsLoadCallback(this._items);
             }
          },

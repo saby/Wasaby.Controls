@@ -1,4 +1,4 @@
-<Controls.Date.MonthList
+<Controls.calendar:MonthList
    attr:class="controls-PeriodDialog-MonthsRange"
    on:itemClick="_onItemClick()"
 >
@@ -28,4 +28,4 @@
          on:itemMouseLeave="_proxyEvent()"
       />
    </ws:itemTemplate>
-</Controls.Date.MonthList>
+</Controls.calendar:MonthList>

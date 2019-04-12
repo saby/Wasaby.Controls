@@ -14,7 +14,7 @@ define('Controls/Date/PeriodDialog', [
     * @control
     * @public
     * @author Миронов А.Ю.
-    * @demo Controls-demo/Date/PeriodDialog
+    * @demo Controls-demo/datePopup/datePopup
     *
     * @css @background-color_PeriodDialog Background color of dialog.
     * @css @width_PeriodDialog Dialog width.
