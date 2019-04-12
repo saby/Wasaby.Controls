@@ -319,7 +319,7 @@ var
         getEditingRowStyles: function (self, rowIndex) {
 
             // display: grid with prefixes
-            let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
+            let styles = getDefaultStylesFor(CssTemplatesEnum.Grid) + ' ';
 
             // value 'auto' will break alignment in subgrid(editing row).
             let columnsWidths: Array<string|number> = [];
@@ -333,10 +333,12 @@ var
             });
 
             // grid column template with prefixes
-            styles += getTemplateColumnsStyle(columnsWidths);
+            styles += getTemplateColumnsStyle(columnsWidths) + ' ';
+
+            let colspan = self._columns.length + (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0);
 
             // grid-row and grid-column with prefixes
-            styles += getCellStyles(rowIndex+1, 0, null, 3);
+            styles += getCellStyles(rowIndex+1, 0, null, colspan);
 
             return styles;
         },

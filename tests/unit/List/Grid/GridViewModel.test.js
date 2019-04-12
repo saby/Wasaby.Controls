@@ -998,6 +998,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             var
                 gridViewModel = new GridViewModel(cfg);
 
+            gridViewModel._options.multiSelectVisibility = 'hidden';
+
             gridViewModel._columns = [
                {
                   width: '1fr'
@@ -1012,7 +1014,12 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             ];
 
             assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: -ms-grid; grid-template-columns: 1fr 127px 1fr;grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 3;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 3;');
+
+            gridViewModel._options.multiSelectVisibility = 'onhover';
+
+            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 4;');
 
          });
 
