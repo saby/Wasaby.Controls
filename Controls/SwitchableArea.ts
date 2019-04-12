@@ -1,16 +1,8 @@
-define('Controls/SwitchableArea', [
-   'Core/Control',
-   'Controls/SwitchableArea/ViewModel',
-   'wml!Controls/SwitchableArea/SwitchableArea',
-   'Controls/SwitchableArea/ItemTpl'
-],
-function(
-   Control,
-   ViewModel,
-   template,
-   defaultItemTemplate
-) {
-   'use strict';
+import Control = require('Core/Control');
+import ViewModel = require('Controls/_SwitchableArea/ViewModel');
+import template = require('wml!Controls/_SwitchableArea/SwitchableArea');
+import defaultItemTemplate = require('Controls/_SwitchableArea/ItemTpl');
+
 
    /**
     * SwitchableArea
@@ -70,5 +62,5 @@ function(
       };
    };
 
-   return SwitchableArea;
-});
+   export = SwitchableArea;
+
