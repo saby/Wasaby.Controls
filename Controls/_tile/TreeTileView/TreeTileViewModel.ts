@@ -1,5 +1,5 @@
 import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
-import TreeViewModel = require('Controls/_tile/Tree/TreeViewModel');
+import {TreeViewModel} from 'Controls/treeGrid';
 import cMerge = require('Core/core-merge');
 
 var DEFAULT_FOLDER_WIDTH = 250;

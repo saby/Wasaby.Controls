@@ -1,5 +1,5 @@
-import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
-import GridViewModel = require('Controls/List/Grid/GridViewModel');
+import {GridViewModel} from 'Controls/grid';
+import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
 import {calcTopOffset, calcGroupRowIndex, calcRowIndexByKey} from "../../_grids/utils/RowIndexUtil";
 import {getCellStyles, isPartialSupport, toCssString} from "../../_grids/utils/GridLayoutUtil";
 
