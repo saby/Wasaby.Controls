@@ -4,11 +4,11 @@
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.column.needSearchHighlight}}">
-         <Controls.Decorator.Highlight highlight="{{itemData.searchValue}}">
+         <Controls.decorator:Highlight highlight="{{itemData.searchValue}}">
             <ws:text>
                <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
             </ws:text>
-         </Controls.Decorator.Highlight>
+         </Controls.decorator:Highlight>
       </ws:if>
       <ws:else>
          {{itemData.item[itemData.column.displayProperty]}}

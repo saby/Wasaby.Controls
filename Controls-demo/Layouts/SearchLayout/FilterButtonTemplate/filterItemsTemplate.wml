@@ -16,7 +16,7 @@
 </ws:template>
 
 <ws:template name="checked">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="checked"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="checked"/>
 </ws:template>
 
 <ws:template name="Test1">
@@ -28,15 +28,15 @@
 </ws:template>
 
 <ws:template name="Test2">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="Test3">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="Test4">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="Test5">
@@ -44,15 +44,15 @@
 </ws:template>
 
 <ws:template name="Test6">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="Test7">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="Test8">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

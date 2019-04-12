@@ -1,9 +1,9 @@
-define(['Controls/Toggle/Checkbox'], function (Checkbox) {
+define(['Controls/toggle'], function (toggle) {
    var CB, changeValue, eventValue;
    describe('Controls/Toggle/Checkbox', function () {
       describe('click to checkbox', function () {
          beforeEach(function () {
-            CB = new Checkbox({});
+            CB = new toggle.Checkbox({});
             //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
             //(дефолтный метод для vdom компонент который стреляет событием).
             //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили

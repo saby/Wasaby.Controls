@@ -1,7 +1,7 @@
 define('Controls-demo/Layouts/LayoutFilterComponent', [
    'Core/Control',
    'wml!Controls-demo/Layouts/LayoutFilterComponent/LayoutFilterComponent',
-   'Controls/Toggle/Switch'
+   'Controls/toggle'
 
 ], function (BaseControl, template) {
    'use strict';

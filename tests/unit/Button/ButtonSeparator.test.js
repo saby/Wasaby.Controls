@@ -1,4 +1,4 @@
-define(['Controls/Button/Separator'], function(Separator) {
+define(['Controls/toggle'], function(toggle) {
    'use strict';
    var separator;
    describe('Controls/Button/Separator', function() {
@@ -8,7 +8,7 @@ define(['Controls/Button/Separator'], function(Separator) {
       }
 
       it('counter open state', function() {
-         separator = new Separator();
+         separator = new toggle.Separator();
          var opt = {
             value: true
          };
@@ -19,7 +19,7 @@ define(['Controls/Button/Separator'], function(Separator) {
       });
 
       it('counter close state', function() {
-         separator = new Separator();
+         separator = new toggle.Separator();
          var opt = {
             value: false
          };
@@ -30,7 +30,7 @@ define(['Controls/Button/Separator'], function(Separator) {
       });
 
       it('update counter open state to close state', function() {
-         separator = new Separator();
+         separator = new toggle.Separator();
          var opt = {
             value: true
          };
@@ -44,7 +44,7 @@ define(['Controls/Button/Separator'], function(Separator) {
       });
 
       it('update counter close state to open state', function() {
-         separator = new Separator();
+         separator = new toggle.Separator();
          var opt = {
             value: false
          };

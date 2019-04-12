@@ -1,7 +1,7 @@
 define([
-   'Controls/DragNDrop/DraggingTemplate',
+   'Controls/dragnDrop',
    'Controls/DragNDrop/Entity/List/Items'
-], function(DraggingTemplate, Entity) {
+], function(dragnDrop, Entity) {
    'use strict';
 
    function crateEntity(itemsCount) {
@@ -12,7 +12,7 @@ define([
       });
    }
 
-   var avatar = new DraggingTemplate({entity: crateEntity(1)});
+   var avatar = new dragnDrop.DraggingTemplate({entity: crateEntity(1)});
 
    describe('Controls.DragNDrop.DraggingTemplate', function() {
       it('itemsCount = 1', function() {
