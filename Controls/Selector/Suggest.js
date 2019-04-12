@@ -37,10 +37,14 @@ define('Controls/Selector/Suggest',
                source: options.source
             });
             return self._sourceController.load(filter).addCallback(function(items) {
-               var value = util.object.getPropertyValue(items.at(0), options.displayProperty);
-               _private.updateValue(self, value);
-               return items;
+               _private.setValue(self, items.at(0), options.displayProperty);
+               return items.at(0);
             });
+         },
+
+         setValue: function(self, item, displayProperty) {
+            var value = util.object.getPropertyValue(item, displayProperty);
+            _private.updateValue(self, value);
          },
 
          updateValue: function(self, value) {
@@ -62,25 +66,25 @@ define('Controls/Selector/Suggest',
          }
       };
 
-
       var Suggest = Control.extend({
 
          _template: template,
          _suggestState: false,
          _searchValue: '',
 
-         _beforeMount: function(options) {
+         _beforeMount: function(options, context, receivedState) {
             this._suggestTemplate = _private.prepareSuggestTemplate(options.displayProperty, options.suggestTemplate);
             if (options.historyId) {
                this._historySource = _private.createHistorySource(options.historyId, options.source);
             }
-            if (options.selectedKey) {
-               return _private.loadSelectedItem(this, options).addCallback(function(items) {
-                  return items;
-               });
+            if (receivedState) {
+               _private.setValue(this, receivedState, options.displayProperty);
+            } else if (options.selectedKey) {
+               return _private.loadSelectedItem(this, options);
+            } else {
+               _private.updateValue(this, '');
+               this._searchValue = '';
             }
-            _private.updateValue(this, '');
-            this._searchValue = '';
          },
 
          _changeValueHandler: function(event, value) {
@@ -157,6 +161,8 @@ define('Controls/Selector/Suggest',
             }
          };
       };
+
+      Suggest._private = _private;
 
       return Suggest;
    });
