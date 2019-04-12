@@ -9,8 +9,6 @@ import 'css!theme?Controls/_lookup/SelectedCollection/SelectedCollection';
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
-import 'Controls/lookupPopup';
-
 
 /**
  * Control, that display collection of items.
