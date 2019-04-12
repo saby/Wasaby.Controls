@@ -7,7 +7,7 @@
  */
 
 /**
- * @name Controls.input:Text#maxLength
+ * @name Controls/_input/interface/IInputText#maxLength
  * @cfg {Number} Maximum number of characters that can be entered in the field.
  * @remark
  * If user tries to enter text longer than the value of maxLength, control will prevent input.
@@ -19,7 +19,7 @@
  */
 
 /**
- * @name Controls.input:Text#trim
+ * @name Controls/_input/interface/IInputText#trim
  * @cfg {Boolean} Determines whether the field value should be trimmed when input is completed.
  * @default false
  * @remark
@@ -48,7 +48,7 @@
  */
 
 /**
- * @name  Controls.input:Text#constraint
+ * @name Controls/_input/interface/IInputText#constraint
  * @cfg {String} Regular expression for input filtration.
  * @remark
  * This regular expression is applied to every character that user enters. If entered character doesn't match regular expression, it is not added to the field. When user pastes a value with multiple characters to the field, we check the value characters by characters, and only add the characters that pass regular expression. For example, if you try to paste "1ab2cd" to the field with constraint "[0-9]", only "12" will be inserted in the field.
