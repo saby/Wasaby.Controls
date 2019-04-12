@@ -7,7 +7,7 @@ import {TreeControl} from 'Controls/treeGrid';
 
 /**
  * List in which items are displayed as tiles. Can load data from data source.
- * <a href="/materials/demo/demo-ws4-tile?v=19.200">Demo examples</a>.
+ * <a href="/materials/demo-ws4-tile">Demo examples</a>.
  *
  * @class Controls/Tile
  * @extends Controls/list:View
