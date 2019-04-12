@@ -63,7 +63,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
 
             this._nameOpener = opts.nameOpener;
             var def = new Deferred();
-            opts.description = cMerge(opts.description, opts.dataObject);
+            this.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
                require([opts.content], function() {
                   def.callback();
