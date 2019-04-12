@@ -327,22 +327,22 @@ define(
             let dropdownController = getDropdownController(config),
                opened = false;
             dropdownController._beforeMount(config);
-            dropdownController._items = itemsRecords;
+            dropdownController._items = Clone(itemsRecords);
             dropdownController._children.DropdownOpener = {
                open: () => { opened = true;}
             };
             dropdownController._open();
             assert.isTrue(opened);
-         });
 
-         it('_open dropdown without items', () => {
-            let dropdownController = getDropdownController(config),
-               opened = false;
-            dropdownController._items = Clone(itemsRecords);
+            // items is empty recordSet
+            opened = false;
             dropdownController._items.clear();
-            dropdownController._children.DropdownOpener = {
-               open: () => { opened = true;}
-            };
+            dropdownController._open();
+            assert.isFalse(opened);
+
+            // items = null
+            opened = false;
+            dropdownController._items = null;
             dropdownController._open();
             assert.isFalse(opened);
          });
