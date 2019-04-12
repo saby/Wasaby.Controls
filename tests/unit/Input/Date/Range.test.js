@@ -84,5 +84,35 @@ define([
          });
       });
 
+      describe('_keyUpHandler', function() {
+         [{
+            key: '0',
+            checkHandle: true
+         }, {
+            key: '9',
+            checkHandle: true
+         }, {
+            key: 'x',
+            checkHandle: false
+         }].forEach(function(test) {
+            it('should generate events and close opener', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(DateRange, options);
+
+               sandbox.stub(component, '_focusChanger');
+
+               component._keyUpHandler({ nativeEvent: { key: test.key } });
+
+               if (test.checkHandle) {
+                  sinon.assert.called(component._focusChanger);
+               } else {
+                  sinon.assert.notCalled(component._focusChanger);
+               }
+               sandbox.restore();
+            });
+         });
+      });
+
    });
 });

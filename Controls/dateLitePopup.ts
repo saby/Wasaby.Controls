@@ -187,7 +187,12 @@ var Component = BaseControl.extend({
     },
 
     _onWheel: function (event) {
-        if (event.nativeEvent.wheelDelta > 0) {
+        let wheelDelta = event.nativeEvent.wheelDelta;
+        // In the year selection mode, years are located in another direction.
+        if (this._options.chooseQuarters || this._options.chooseHalfyears || this._options.chooseMonths) {
+            wheelDelta = -wheelDelta;
+        }
+        if (wheelDelta > 0) {
             this._onNextYearBtnClick();
         } else {
             this._onPrevYearBtnClick();

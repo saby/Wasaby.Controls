@@ -2,38 +2,37 @@
    <ws:partial template="{{_options.content}}"
                on:mousedown="_mousedown()"/>
 
-   <Controls.Dropdown.Opener name="DropdownOpener">
-      <ws:popupOptions className="{{_options.popupClassName}}">
-         <ws:eventHandlers onResult="{{_onResult}}"
-                           onClose="{{_onClose}}"
-                           onOpen="{{_options.open}}"/>
-         <ws:templateOptions
-                 keyProperty="{{_options.keyProperty}}"
-                 displayProperty="{{_options.displayProperty}}"
-                 parentProperty="{{_options.parentProperty}}"
-                 additionalProperty="{{_options.additionalProperty}}"
-                 nodeProperty="{{_options.nodeProperty}}"
-                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                 itemTemplate="{{_options.itemTemplate}}"
-                 headTemplate="{{_options.headTemplate}}"
-                 headerTemplate="{{_options.headerTemplate}}"
-                 groupTemplate="{{_options.groupTemplate}}"
-                 groupingKeyCallback="{{_options.groupingKeyCallback}}"
-                 groupMethod="{{_options.groupMethod}}"
-                 dropdownClassName="{{_options.dropdownClassName}}"
-                 footerTemplate="{{_options.footerTemplate}}"
-                 multiSelect="{{_options.multiSelect}}"
-                 selectorTemplate="{{_options.selectorTemplate}}"
-                 isCompoundTemplate="{{_options.isCompoundTemplate}}"
-                 headConfig="{{_options.headConfig}}"
-                 showHeader="{{_options.showHeader}}"
-                 selectedKeys="{{_options.selectedKeys}}"
-                 marker="{{_options.marker}}"
-                 emptyText="{{_getEmptyText()}}"
-                 icon="{{_options.icon}}"
-                 caption="{{_options.caption}}"
-                 typeShadow="{{_options.typeShadow}}"
-                 theme="{{_options.theme}}"/>
-      </ws:popupOptions>
+   <Controls.Dropdown.Opener name="DropdownOpener"
+                             on:open="_onOpen()"
+                             on:close="_onClose()"
+                             on:result="_onResult()"
+                             className="{{_options.popupClassName}}">
+      <ws:templateOptions
+              keyProperty="{{_options.keyProperty}}"
+              displayProperty="{{_options.displayProperty}}"
+              parentProperty="{{_options.parentProperty}}"
+              additionalProperty="{{_options.additionalProperty}}"
+              nodeProperty="{{_options.nodeProperty}}"
+              itemTemplateProperty="{{_options.itemTemplateProperty}}"
+              itemTemplate="{{_options.itemTemplate}}"
+              headTemplate="{{_options.headTemplate}}"
+              headerTemplate="{{_options.headerTemplate}}"
+              groupTemplate="{{_options.groupTemplate}}"
+              groupingKeyCallback="{{_options.groupingKeyCallback}}"
+              groupMethod="{{_options.groupMethod}}"
+              dropdownClassName="{{_options.dropdownClassName}}"
+              footerTemplate="{{_options.footerTemplate}}"
+              multiSelect="{{_options.multiSelect}}"
+              selectorTemplate="{{_options.selectorTemplate}}"
+              isCompoundTemplate="{{_options.isCompoundTemplate}}"
+              headConfig="{{_options.headConfig}}"
+              showHeader="{{_options.showHeader}}"
+              selectedKeys="{{_options.selectedKeys}}"
+              marker="{{_options.marker}}"
+              emptyText="{{_getEmptyText()}}"
+              icon="{{_options.icon}}"
+              caption="{{_options.caption}}"
+              typeShadow="{{_options.typeShadow}}"
+              theme="{{_options.theme}}"/>
    </Controls.Dropdown.Opener>
 </div>

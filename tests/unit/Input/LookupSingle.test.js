@@ -225,20 +225,34 @@ define([
       });
 
       it('_choose', function() {
-         var
-            isActivate = false,
-            lookup = new Lookup();
+         var isActivate = false;
+         var itemAdded = false;
+         var lookup = new Lookup();
+
+         function resetTestVars() {
+            isActivate = false;
+            itemAdded = false;
+         }
+
+         lookup._notify = function() {
+            itemAdded = true;
+         };
 
          lookup.activate = function() {
             isActivate = true;
+            assert.isFalse(itemAdded);
          };
 
          lookup._beforeMount({multiLine: true});
+
          lookup._choose();
+         assert.isTrue(itemAdded);
          assert.isFalse(isActivate);
+         resetTestVars();
 
          lookup._options.multiSelect = true;
          lookup._choose();
+         assert.isTrue(itemAdded);
          assert.isTrue(isActivate);
       });
 

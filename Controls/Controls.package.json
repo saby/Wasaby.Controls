@@ -265,8 +265,7 @@
   "output": "controls-render.package.js"
 }, {
   "include": [
-    "Controls/Tabs/*",
-    "Controls/Tabs"
+    "Controls/Tabs/*"
   ],
   "output": "controls-tabs.package.js"
 }, {

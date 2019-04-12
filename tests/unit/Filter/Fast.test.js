@@ -259,7 +259,7 @@ define(
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult({ data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
+                  fastData._onResult(null, { data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -273,10 +273,10 @@ define(
                { key: 1, title: 'Россия' },
                { key: 3, title: 'Великобритания' }
             ];
-            fastData2._onResult({ data: selectedItems, action: 'applyClick' });
+            fastData2._onResult(null, { data: selectedItems, action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult({ data: [], action: 'applyClick' });
+            fastData2._onResult(null, { data: [], action: 'applyClick' });
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
@@ -289,7 +289,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
-            fastData2._onResult({ data: selectedItems, action: 'selectorResult' });
+            fastData2._onResult(null, { data: selectedItems, action: 'selectorResult' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
