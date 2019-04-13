@@ -4,8 +4,8 @@ import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
 import dataOptions = require('Controls/Container/Data/ContextOptions');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
-import {TreeItemsUtil} from 'Controls/list';
-import template = require('wml!Controls/_MoveDialog/Mover');
+import TreeItemsUtil = require('Controls/_lists/resources/utils/TreeItemsUtil');
+import template = require('wml!Controls/_lists/Mover/Mover');
 
 var BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
