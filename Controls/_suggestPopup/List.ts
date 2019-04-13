@@ -1,17 +1,12 @@
 /**
  * Created by am.gerasimov on 18.04.2018.
  */
-define('Controls/Container/Suggest/List',
-   [
-      'Core/Control',
-      'wml!Controls/Container/Suggest/List/List',
-      'Core/core-clone',
-      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
-      'Controls/Utils/tmplNotify'
-   ],
-   
-   function(Control, template, clone, _SuggestOptionsField, tmplNotify) {
-      
+import Control = require('Core/Control');
+import template = require('wml!Controls/_suggestPopup/List/List');
+import clone = require('Core/core-clone');
+import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+
       /**
        * Container for list inside Suggest.
        *
@@ -21,25 +16,25 @@ define('Controls/Container/Suggest/List',
        * @control
        * @public
        */
-      
-      'use strict';
+
+
 
       var DIALOG_PAGE_SIZE = 25;
-      
+
       var _private = {
          checkContext: function(self, context) {
             if (context && context.suggestOptionsField) {
                self._suggestListOptions = context.suggestOptionsField.options;
-      
+
                if (self._suggestListOptions.dialogMode) {
                   var navigation = clone(self._suggestListOptions.navigation);
-                  
+
                   /* to turn on infinityScroll */
                   navigation.view = 'infinity';
                   if (!navigation.viewConfig) {
                      navigation.viewConfig = {};
                   }
-                  
+
                   /* to show paging */
                   navigation.viewConfig.pagingMode = true;
                   navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
@@ -49,12 +44,12 @@ define('Controls/Container/Suggest/List',
                }
             }
          },
-   
+
          isTabChanged: function(options, tabKey) {
             var currentTabSelectedKey = options.tabsSelectedKey;
             return currentTabSelectedKey !== tabKey;
          },
-   
+
          getTabKeyFromContext: function(context) {
             var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
             return tabKey !== undefined ? tabKey : null;
@@ -65,27 +60,27 @@ define('Controls/Container/Suggest/List',
             container.dispatchEvent(customEvent);
          }
       };
-      
+
       var List = Control.extend({
-         
+
          _template: template,
          _notifyHandler: tmplNotify,
-         
+
          _beforeMount: function(options, context) {
             _private.checkContext(this, context);
          },
-         
+
          _beforeUpdate: function(newOptions, context) {
             var tabKey = _private.getTabKeyFromContext(context);
-            
+
             /* Need notify after getting tab from query */
             if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
                this._notify('tabsSelectedKeyChanged', [tabKey]);
             }
-            
+
             _private.checkContext(this, context);
          },
-   
+
          _tabsSelectedKeyChanged: function(event, key) {
             /* It is necessary to separate the processing of the tab change by suggest layout and
                a user of a control.
@@ -93,7 +88,7 @@ define('Controls/Container/Suggest/List',
                Event should fired only once and after list was loading,
                because in this event user can change template of a List control. */
             this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
-            
+
             //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
             if (this._options.task1176635657) {
                this._notify('tabsSelectedKeyChanged', [key]);
@@ -110,15 +105,15 @@ define('Controls/Container/Suggest/List',
             _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
          }
       });
-   
+
       List.contextTypes = function() {
          return {
             suggestOptionsField: _SuggestOptionsField
          };
       };
-   
+
       List._private = _private;
-      
-      return List;
-   });
+
+      export = List;
+
 

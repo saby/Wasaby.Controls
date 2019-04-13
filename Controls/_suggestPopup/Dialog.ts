@@ -1,16 +1,11 @@
-define('Controls/Container/Suggest/Layout/Dialog',
-   [
-      'Core/Control',
-      'wml!Controls/Container/Suggest/Layout/Dialog',
-      'Controls/Container/Search/SearchContextField',
-      'Controls/Container/Filter/FilterContextField',
-      'Controls/Container/Scroll/Context',
-      'css!theme?Controls/Container/Suggest/Layout/Dialog',
-      'Controls/Container/Scroll',
-      'Controls/Popup/Templates/Dialog/DialogTemplate'
-   ],
-
-   function(Control, template, SearchContextField, FilterContextField, ScrollData) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_suggestPopup/Dialog');
+import SearchContextField = require('Controls/Container/Search/SearchContextField');
+import FilterContextField = require('Controls/Container/Filter/FilterContextField');
+import ScrollData = require('Controls/Container/Scroll/Context');
+import 'css!theme?Controls/_suggestPopup/Dialog';
+import 'Controls/Container/Scroll';
+import 'Controls/popupTemplate';
 
       /**
        * Dialog for list in Suggest component.
@@ -21,7 +16,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
        * @public
        */
 
-      'use strict';
+
 
       var List = Control.extend({
 
@@ -56,6 +51,6 @@ define('Controls/Container/Suggest/Layout/Dialog',
 
       });
 
-      return List;
-   });
+      export = List;
+
 

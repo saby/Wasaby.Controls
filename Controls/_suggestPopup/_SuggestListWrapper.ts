@@ -1,15 +1,10 @@
-define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
-   [
-      'Core/Control',
-      'wml!Controls/Container/Suggest/Layout/_SuggestListWrapper',
-      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
-      'Controls/Container/Async'
-   ],
-   
-   function(Control, template, _SuggestOptionsField) {
-      
-      'use strict';
-   
+import Control = require('Core/Control');
+import template = require('wml!Controls/_suggestPopup/_ListWrapper');
+import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
+import 'Controls/Container/Async';
+
+
+
       /**
        * Proxy container for suggest options.
        *
@@ -17,21 +12,21 @@ define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
        * @extends Core/Control
        * @control
        */
-   
-      return Control.extend({
-         
+
+      export = Control.extend({
+
          _template: template,
-         
+
          _getChildContext: function() {
             return {
                suggestOptionsField: new _SuggestOptionsField(this._options)
             };
          },
-   
+
          _tabsSelectedKeyChanged: function(event, key) {
             this._notify('tabsSelectedKeyChanged', [key]);
          }
       });
-      
-   });
+
+
 
