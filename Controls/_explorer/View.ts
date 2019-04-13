@@ -10,7 +10,6 @@ import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'css!theme?Controls/_explorer/View/View';
 import 'Types/entity';
-import 'Controls/treeGrid';
 import 'Controls/breadcrumbs';
 
 
