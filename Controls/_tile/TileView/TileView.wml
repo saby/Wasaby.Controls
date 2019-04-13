@@ -1,7 +1,7 @@
 <div class="controls-ListView controls-TileView" name="tileContainer" on:keyDown="_onTileViewKeyDown()">
    <ws:if data="{{_listModel}}">
       <ws:partial
-         template="wml!Controls/_lists/resources/For"
+         template="Controls/list:_forTemplate"
          listModel="{{_listModel}}"
          itemActionsTemplate="{{_options.itemActionsTemplate}}"
          swipeTemplate="{{_options.swipeTemplate}}"
@@ -12,7 +12,7 @@
          itemOutputWrapper="{{_itemOutputWrapper}}"
          itemTemplate="{{_itemTemplate}}"/>
       <ws:if data="{{_options.tileMode === 'static'}}">
-         <ws:partial template="wml!Controls/_lists/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
+         <ws:partial template="wml!Controls/_tile/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
       </ws:if>
       <ws:if data="{{_options.emptyTemplate}}">
          <ws:partial template="{{_options.emptyTemplate}}"/>

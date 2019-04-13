@@ -1,11 +1,8 @@
-import ListViewModel = require('Controls/_lists/ListViewModel');
-import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
-import TreeItemsUtil = require('Controls/_lists/resources/utils/TreeItemsUtil');
+import {ListViewModel, ItemsUtil, TreeItemsUtil, RowIndexUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import {calcRowIndexByKey} from "../../_grids/utils/RowIndexUtil";
 
 var
     _private = {
@@ -212,7 +209,7 @@ var
         // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column.
         // Using util for calculating real rows' index on display considering footers, headers, results
         calcNodeFooterIndex: function(self, parentKey) {
-            return 1 + calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
+            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
         }
     },
 

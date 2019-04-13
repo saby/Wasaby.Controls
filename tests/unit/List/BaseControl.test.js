@@ -57,14 +57,14 @@ define([
             data: data,
             filter: function (item, filter) {
                var result = true;
-      
+
                if (filter['id'] && filter['id'] instanceof Array) {
                   result = filter['id'].indexOf(item.get('id')) !== -1;
                }
-      
+
                return result;
             }
-   
+
          });
          rs = new collection.RecordSet({
             idProperty: 'id',
@@ -145,7 +145,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrids/Tree/TreeViewModel'));
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -2735,13 +2735,13 @@ define([
          };
          var baseCtrl = new BaseControl(cfg);
          baseCtrl.saveOptions(cfg);
-      
+
          return new Promise(function(resolve) {
             baseCtrl._beforeMount(cfg).addCallback(function() {
                baseCtrl.reloadItem(1).addCallback(function(item) {
                   assert.equal(item.get('id'), 1);
                   assert.equal(item.get('title'), 'Первый');
-               
+
                   baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
                      assert.isTrue(!!items.getCount);
                      assert.equal(items.getCount(), 1);

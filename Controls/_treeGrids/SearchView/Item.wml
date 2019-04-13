@@ -1,9 +1,9 @@
 <ws:if data="{{itemData.item.getId}}">
-   <ws:partial template="Controls/treeGrid:ItemTemplate"
+   <ws:partial template="wml!Controls/_treeGrids/TreeGridView/Item"
                scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <ws:partial template="Controls/treeGrid:ItemTemplate"
+   <ws:partial template="wml!Controls/_treeGrids/TreeGridView/Item"
                scope="{{_options}}"
                colspan="{{true}}"
                on:click="_onSearchItemClick(itemData.dispItem)">
@@ -12,7 +12,7 @@
             <ws:itemTemplate>
                <ws:partial template="Controls/breadcrumbs:ItemTemplate">
                   <ws:contentTemplate>
-                     <ws:partial template="wml!Controls/_grids/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
+                     <ws:partial template="wml!Controls/_treeGrids/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
                   </ws:contentTemplate>
                </ws:partial>
             </ws:itemTemplate>
