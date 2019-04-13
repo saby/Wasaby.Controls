@@ -17,7 +17,7 @@
                                            icon="icon-small icon-primary icon-Home3"/>
                </ws:if>
                <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
-                  <Controls._lists.Container>
+                  <Controls.list:Container>
                      <Controls.Explorer
                         name="explorer"
                         itemActions="{{_itemActions}}"
@@ -33,7 +33,7 @@
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
                         columns="{{_options.columns}}"/>
-                  </Controls._lists.Container>
+                  </Controls.list:Container>
                </Controls.Container.Scroll>
             </div>
          </Controls.search:Controller>
