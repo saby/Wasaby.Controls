@@ -23,7 +23,7 @@
 
     <ws:template name="suggestWrapperTpl">
         <ws:if data="{{_misspellingCaption}}">
-            <ws:partial template="{{'Controls/Search/Misspell'}}" attr:class="controls-Suggest__Misspell" attr:style="width:{{content.suggestWidth}}px">
+            <ws:partial template="{{'Controls/search:Misspell'}}" attr:class="controls-Suggest__Misspell" attr:style="width:{{content.suggestWidth}}px">
                 <ws:caption>
                     <span on:click="_missSpellClick()" title="{{_misspellingCaption}}">{{_misspellingCaption}}</span>
                 </ws:caption>

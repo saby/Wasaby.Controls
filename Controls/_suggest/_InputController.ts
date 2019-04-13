@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
 import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
-import entity = require('Types/entity');
+import {descriptor} from 'Types/entity';
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
-import getSwitcherStrFromData = require('Controls/Search/Misspell/getSwitcherStrFromData');
+import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
@@ -28,7 +28,7 @@ var PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
+var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
 
 var _private = {
    hasMore: function(searchResult) {
@@ -125,7 +125,7 @@ var _private = {
          self._loading = false;
       }
       if (!error || !error.canceled) {
-         requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+         requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
             self._emptyTemplate = result;
             self._forceUpdate();
          });
@@ -519,7 +519,7 @@ var SuggestLayout = Control.extend({
 // <editor-fold desc="OptionsDesc">
 SuggestLayout.getOptionTypes = function() {
    return {
-      searchParam: entity.descriptor(String).required()
+      searchParam: descriptor(String).required()
    };
 };
 SuggestLayout.getDefaultOptions = function() {
