@@ -9,7 +9,7 @@ import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
 import LoadService = require('Controls/History/LoadService');
-import 'css!theme?Controls/_suggest/_InputController/_InputController';
+import 'css!theme?Controls/_suggest/_InputController/InputController';
 
 
 var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
