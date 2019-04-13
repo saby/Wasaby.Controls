@@ -1,4 +1,5 @@
 import Control = require('Core/Control');
+import {FooterTemplate} from 'Controls/suggestPopup';
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
 import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import {descriptor} from 'Types/entity';
@@ -28,7 +29,7 @@ var PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
+var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/Container/Scroll', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
 
 var _private = {
    hasMore: function(searchResult) {
@@ -253,7 +254,7 @@ var _private = {
 /**
  * Container for Input's that using suggest.
  *
- * @class Controls/Container/Suggest/Layout
+ * @class Controls/_suggest/_InputController
  * @extends Core/Control
  * @mixes Controls/Input/interface/ISearch
  * @mixes Controls/interface/ISource
@@ -479,7 +480,7 @@ var SuggestLayout = Control.extend({
       this._stackWithSearchResultsOpened = true;
 
       //loading showAll templates
-      requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
+      requirejs(['Controls/suggestPopup'], function() {
          self._children.stackOpener.open();
       });
       _private.close(this);
@@ -526,7 +527,7 @@ SuggestLayout.getDefaultOptions = function() {
    return {
       emptyTemplate: emptyTemplate,
       footerTemplate: {
-         templateName: 'wml!Controls/Container/Suggest/Layout/footer'
+         templateName: FooterTemplate
       },
       suggestStyle: 'default',
       suggestState: false,

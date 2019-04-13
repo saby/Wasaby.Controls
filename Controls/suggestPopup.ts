@@ -10,7 +10,13 @@
 import ListContainer = require('Controls/_suggestPopup/List');
 import FooterTemplate = require('wml!Controls/_suggestPopup/footer');
 
+import _ListWrapper = require('Controls/_suggestPopup/_ListWrapper');
+import Dialog = require('Controls/_suggestPopup/Dialog');
+
 export {
    ListContainer,
-   FooterTemplate
+   FooterTemplate,
+
+   _ListWrapper,
+   Dialog
 };
