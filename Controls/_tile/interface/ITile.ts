@@ -1,13 +1,13 @@
 /**
  * Interface for lists in which items are displayed as tiles.
  *
- * @interface Controls/_lists/interface/ITile
+ * @interface Controls/_tile/interface/ITile
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/_lists/interface/ITile#tileHeight
+ * @name Controls/_tile/interface/ITile#tileHeight
  * @cfg {Number} The height of the tile items.
  * @default 150
  * @remark This option is required to calculate element sizes when rendering on the server.
@@ -15,7 +15,7 @@
  * @example
  * The following example shows how to set the height of items to 200 pixels.
  * <pre>
- *    <Controls.Tile tileHeight="{{200}}"
+ *    <Controls._tile.Tile tileHeight="{{200}}"
  *                   source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   parentProperty="Раздел"
@@ -24,7 +24,7 @@
  */
 
 /**
- * @name Controls/_lists/interface/ITile#tileScalingMode
+ * @name Controls/_tile/interface/ITile#tileScalingMode
  * @cfg {String} Scale mode for items when you hover over them.
  * @variant none On hover the size of the items is not changed.
  * @variant outside On hover the size of the items increases. The increased item is located within the browser window.
@@ -35,7 +35,7 @@
  * @example
  * The following example shows how to set the hover mode to 'outside'.
  * <pre>
- *    <Controls.Tile itemsHeight="{{200}}"
+ *    <Controls._tile.Tile itemsHeight="{{200}}"
  *                   scaleTileMode="outside"
  *                   source="{{_viewSource}}"
  *                   keyProperty="id"
@@ -45,7 +45,7 @@
  */
 
 /**
- * @name Controls/_lists/interface/ITile#imageProperty
+ * @name Controls/_tile/interface/ITile#imageProperty
  * @cfg {String} Name of the item property that contains the link to the image.
  * @default image
  * @remark The increased item is positioned in the center relative to the initial position.
@@ -53,14 +53,14 @@
  * @example
  * The following example shows how to set the field with the image 'img'.
  * <pre>
- *    <Controls.Tile source="{{_viewSource}}"
+ *    <Controls._tile.Tile source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   parentProperty="Раздел"
  *                   nodeProperty="Раздел@">
  *       <ws:itemTemplate>
- *          <ws:partial template="wml!Controls/_lists/TreeTileView/DefaultItemTpl"
+ *          <ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl"
  *                      imageProperty="img" >
  *       </ws:itemTemplate>
- *    </Controls.Tile>
+ *    </Controls._tile.Tile>
  * </pre>
  */

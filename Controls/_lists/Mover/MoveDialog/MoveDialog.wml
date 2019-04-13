@@ -1,6 +1,6 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{[Выбор раздела]}" attr:class="controls-MoveDialog">
    <ws:bodyContentTemplate>
-      <Controls.list:DataContainer source="{{_options.source}}"
+      <Controls._lists.Data source="{{_options.source}}"
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
@@ -37,6 +37,6 @@
                </Controls.Container.Scroll>
             </div>
          </Controls.search:Controller>
-      </Controls.list:DataContainer>
+      </Controls._lists.Data>
    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
