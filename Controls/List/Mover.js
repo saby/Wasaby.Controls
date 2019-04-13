@@ -1,4 +1,4 @@
-define('Controls/List/Mover', ['Controls/_lists/Mover'], function(Control) {
+define('Controls/List/Mover', ['Controls/_MoverDialog/Mover'], function(Control) {
    /**
     * Сontrol to move the list items in recordSet and dataSource.
     * Сontrol must be in one Controls.list:DataContainer with a list.
