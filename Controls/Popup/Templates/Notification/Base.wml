@@ -1,10 +1,1 @@
-<div class="controls-Notification controls-Notification__{{_style}} controls-Popup__isolatedFocusingContext">
-   <div class="controls-Notification__content {{_options.iconClose || _options.closeButtonVisibility ? 'controls-Notification__content-spacing'}}">
-      <ws:if data="{{_options.contentTemplate || _options.bodyContentTemplate}}">
-         <ws:partial template="{{_options.contentTemplate||_options.bodyContentTemplate}}"></ws:partial>
-      </ws:if>
-   </div>
-   <ws:if data="{{_options.iconClose || _options.closeButtonVisibility}}">
-       <Controls.Button.Close class="controls-Notification__closeButton" viewMode="link" on:click="_closeClick()"/>
-   </ws:if>
-</div>
+<ws:partial template="wml!Controls/_popupTemplate/Notification/Base/Base" scope="{{_options}}" />
