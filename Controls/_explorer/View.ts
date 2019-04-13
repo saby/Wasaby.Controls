@@ -1,19 +1,14 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import SearchGridViewModel = require('Controls/List/SearchView/SearchGridViewModel');
-import TreeGridViewModel = require('Controls/List/TreeGridView/TreeGridViewModel');
-import TreeTileViewModel = require('Controls/List/TreeTileView/TreeTileViewModel');
+import {SearchGridViewModel, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
+import {TreeViewModel as TreeTileViewModel} from 'Controls/tile';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import chain = require('Types/chain');
+import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import Env = require('Env/Env');
+import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'css!theme?Controls/_explorer/View/View';
-import 'Controls/List/TreeTileView/TreeTileView';
-import 'Controls/List/TreeGridView/TreeGridView';
-import 'Controls/List/SearchView';
-import 'Controls/List/TreeControl';
 import 'Types/entity';
 import 'Controls/treeGrid';
 import 'Controls/breadcrumbs';
@@ -21,7 +16,7 @@ import 'Controls/breadcrumbs';
 
    var
       HOT_KEYS = {
-         backByPath: Env.constants.key.backspace
+         backByPath: constants.key.backspace
       };
 
    var
@@ -58,7 +53,7 @@ import 'Controls/breadcrumbs';
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
             if (metaData.path && metaData.path.getCount() > 0) {
-               self._breadCrumbsItems = chain.factory(metaData.path).toArray();
+               self._breadCrumbsItems = factory(metaData.path).toArray();
             } else {
                self._breadCrumbsItems = null;
             }
