@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
-import crumbs = require('Controls/breadcrumbs');
-import list = require('Controls/list');
+import {HeadingPathBack, HeadingPathCommon} from 'Controls/breadcrumbs';
+import {ItemsUtil} from 'Controls/list';
 
 
    var _private = {
@@ -11,11 +11,11 @@ import list = require('Controls/list');
          if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
-               template: crumbs.HeadingPathBack,
+               template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: options.backButtonStyle,
-                  backButtonCaption: list.ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
+                  backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
                width: options.header[0].width,
@@ -45,11 +45,11 @@ import list = require('Controls/list');
       _notifyHandler: tmplNotify,
 
       _onBackButtonClick: function(e) {
-         crumbs.HeadingPathCommon.onBackButtonClick.call(this, e);
+         HeadingPathCommon.onBackButtonClick.call(this, e);
       },
 
       _onArrowClick: function(e) {
-         crumbs.HeadingPathCommon.onArrowClick.call(this, e);
+         HeadingPathCommon.onArrowClick.call(this, e);
       }
    });
 

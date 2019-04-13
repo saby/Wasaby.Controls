@@ -1,6 +1,6 @@
 <div class="controls-Explorer">
    <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
-      <Controls.Explorer._PathController
+      <Controls._explorer.PathController
                                  scope="{{_options}}"
                                  items="{{_breadCrumbsItems}}"
                                  rootVisible="{{_dragOnBreadCrumbs}}"
@@ -8,7 +8,7 @@
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"
                                  on:itemClick="_onBreadCrumbsClick()">
-         <Controls.List.TreeControl root="{{_getRoot()}}"
+         <Controls.treeGrid:TreeControl root="{{_getRoot()}}"
                                     scope="{{_options}}"
                                     header="{{content.header}}"
                                     name="treeControl"
@@ -37,6 +37,6 @@
                                     on:sortingChanged="_notifyHandler('sortingChanged')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
-      </Controls.Explorer._PathController>
+      </Controls._explorer.PathController>
    </Controls.dragnDrop:Container>
 </div>
