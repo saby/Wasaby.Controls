@@ -1,9 +1,9 @@
 import {View as Grid} from 'Controls/grid';
-import TreeGridViewModel = require('Controls/List/TreeGridView/TreeGridViewModel');
+import TreeGridViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');
 import entity = require('Types/entity');
-import 'Controls/List/TreeGridView/TreeGridView';
-import 'Controls/_treeGrids/TreeControl';
-   
+import TreeGridView = require('Controls/_treeGrids/TreeGridView/TreeGridView');
+import TreeControl = require('Controls/_treeGrids/TreeControl');
+
 
    /**
     * Hierarchical list with custom item template. Can load data from data source.
@@ -47,8 +47,8 @@ import 'Controls/_treeGrids/TreeControl';
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
-      _viewName: 'Controls/List/TreeGridView/TreeGridView',
-      _viewTemplate: 'Controls/_treeGrids/TreeControl',
+      _viewName: TreeGridView,
+      _viewTemplate: TreeControl,
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },

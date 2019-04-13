@@ -1,8 +1,8 @@
-import TileView = require('Controls/_lists/TileView/TileView');
+import TileView = require('Controls/_tile/TileView/TileView');
 import Env = require('Env/Env');
-import defaultItemTpl = require('wml!Controls/_lists/TreeTileView/DefaultItemTpl');
-import itemOutputWrapper = require('wml!Controls/_lists/TreeTileView/resources/ItemOutputWrapper');
-import 'css!theme?Controls/_lists/TreeTileView/TreeTileView';
+import defaultItemTpl = require('wml!Controls/_tile/TreeTileView/DefaultItemTpl');
+import itemOutputWrapper = require('wml!Controls/_tile/TreeTileView/resources/ItemOutputWrapper');
+import 'css!theme?Controls/_tile/TreeTileView/TreeTileView';
 
 var TreeTileView = TileView.extend({
     _defaultItemTemplate: defaultItemTpl,

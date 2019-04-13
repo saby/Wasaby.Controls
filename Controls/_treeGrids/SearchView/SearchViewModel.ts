@@ -1,4 +1,4 @@
-import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
+import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
 import SearchItemsUtil = require('Controls/List/resources/utils/SearchItemsUtil');
 
 var

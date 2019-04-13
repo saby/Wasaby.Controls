@@ -1,5 +1,5 @@
 /**
- * @mixin Controls/_lists/Tile/Styles
+ * @mixin Controls/_tile/Tile/Styles
  * @public
  *
  * @css @spacing_TileView-between-items Spacing between items.
