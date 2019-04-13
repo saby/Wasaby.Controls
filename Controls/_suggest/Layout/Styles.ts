@@ -1,8 +1,4 @@
-define('Controls/Container/Suggest/Layout/Styles',
-   [
-   
-   ],
-   function() {
+
       /**
        * @mixin Controls/Container/Suggest/Layout/Styles
        * @public
@@ -31,5 +27,4 @@ define('Controls/Container/Suggest/Layout/Styles',
        * @css @spacing_Suggest-misspell-between-leftBorder-content Spacing between left border and misspell.
        * @css @spacing_Suggest-misspell-between-rightBorder-content Spacing between right border and misspell.
        */
-   }
-);
+   

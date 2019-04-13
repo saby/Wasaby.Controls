@@ -1,4 +1,4 @@
-<Controls.Container.Suggest.Layout
+<Controls._suggest._InputController
         on:choose="_choose()"
         on:deactivated="_deactivated()"
         searchStartCallback="{{_searchStart}}"
@@ -20,7 +20,7 @@
         sorting="{{_options.sorting}}"
         value="{{_options.value}}"
         bind:suggestState="_suggestState">
-    <Controls.Input.Suggest.InputRender
+    <Controls._suggest.Input.Render
             size="{{ _options.size }}"
             tooltip="{{_options.tooltip}}"
             trim="{{_options.trim}}"
@@ -46,5 +46,5 @@
                 </div>
             </ws:if>
         </ws:afterFieldWrapper>
-    </Controls.Input.Suggest.InputRender>
-</Controls.Container.Suggest.Layout>
+    </Controls._suggest.Input.Render>
+</Controls._suggest._InputController>
