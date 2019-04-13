@@ -8,7 +8,7 @@ import 'Controls/Container/Async';
       /**
        * Proxy container for suggest options.
        *
-       * @class Controls/Container/Suggest/Layout/_SuggestListWrapper
+       * @class Controls/_suggestPopup/_ListWrapper
        * @extends Core/Control
        * @control
        */

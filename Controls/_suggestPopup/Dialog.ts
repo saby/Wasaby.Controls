@@ -9,7 +9,7 @@ import 'Controls/popupTemplate';
 
       /**
        * Dialog for list in Suggest component.
-       * @class Controls/Container/Suggest/List
+       * @class Controls/_suggestPopup/List
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control

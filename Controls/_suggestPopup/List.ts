@@ -10,7 +10,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
       /**
        * Container for list inside Suggest.
        *
-       * @class Controls/Container/Suggest/List
+       * @class Controls/_suggestPopup/List
        * @extends Core/Control
        * @author Герасимов Александр
        * @control
