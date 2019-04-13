@@ -1,37 +1,23 @@
-define('Controls/Explorer', [
-   'Core/Control',
-   'wml!Controls/Explorer/Explorer',
-   'Controls/List/SearchView/SearchGridViewModel',
-   'Controls/List/TreeGridView/TreeGridViewModel',
-   'Controls/List/TreeTileView/TreeTileViewModel',
-   'Controls/Utils/tmplNotify',
-   'Controls/Utils/applyHighlighter',
-   'Types/chain',
-   'Core/core-instance',
-   'Env/Env',
-   'Controls/Utils/keysHandler',
-   'css!theme?Controls/Explorer/Explorer',
-   'Controls/List/TreeTileView/TreeTileView',
-   'Controls/List/TreeGridView/TreeGridView',
-   'Controls/List/SearchView',
-   'Controls/List/TreeControl',
-   'Types/entity',
-   'Controls/treeGrid',
-   'Controls/breadcrumbs'
-], function(
-   Control,
-   template,
-   SearchGridViewModel,
-   TreeGridViewModel,
-   TreeTileViewModel,
-   tmplNotify,
-   applyHighlighter,
-   chain,
-   cInstance,
-   Env,
-   keysHandler
-) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_explorer/View/View');
+import SearchGridViewModel = require('Controls/List/SearchView/SearchGridViewModel');
+import TreeGridViewModel = require('Controls/List/TreeGridView/TreeGridViewModel');
+import TreeTileViewModel = require('Controls/List/TreeTileView/TreeTileViewModel');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import applyHighlighter = require('Controls/Utils/applyHighlighter');
+import chain = require('Types/chain');
+import cInstance = require('Core/core-instance');
+import Env = require('Env/Env');
+import keysHandler = require('Controls/Utils/keysHandler');
+import 'css!theme?Controls/_explorer/View/View';
+import 'Controls/List/TreeTileView/TreeTileView';
+import 'Controls/List/TreeGridView/TreeGridView';
+import 'Controls/List/SearchView';
+import 'Controls/List/TreeControl';
+import 'Types/entity';
+import 'Controls/treeGrid';
+import 'Controls/breadcrumbs';
+
 
    var
       HOT_KEYS = {
@@ -256,5 +242,5 @@ define('Controls/Explorer', [
       };
    };
 
-   return Explorer;
-});
+   export = Explorer;
+

@@ -1,17 +1,9 @@
-define('Controls/Explorer/_PathController', [
-   'Core/Control',
-   'Controls/Utils/tmplNotify',
-   'wml!Controls/Explorer/_PathController/_PathController',
-   'Controls/breadcrumbs',
-   'Controls/list'
-], function(
-   Control,
-   tmplNotify,
-   template,
-   crumbs,
-   list
-) {
-   'use strict';
+import Control = require('Core/Control');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import template = require('wml!Controls/_explorer/PathController/PathController');
+import crumbs = require('Controls/breadcrumbs');
+import list = require('Controls/list');
+
 
    var _private = {
       getHeader: function(self, options) {
@@ -61,5 +53,5 @@ define('Controls/Explorer/_PathController', [
       }
    });
 
-   return PathController;
-});
+   export = PathController;
+
