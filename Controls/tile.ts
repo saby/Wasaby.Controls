@@ -11,10 +11,12 @@ import View = require('Controls/_tile/Tile');
 import ItemTemplate = require('wml!Controls/_tile/TreeTileView/DefaultItemTpl');
 
 import TreeViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
+import TreeView = require('Controls/_tile/TreeTileView/TreeTileView');
 
 export {
    View,
    ItemTemplate,
 
-   TreeViewModel
+   TreeViewModel,
+   TreeView
 }

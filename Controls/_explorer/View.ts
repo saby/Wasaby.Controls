@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import {SearchGridViewModel, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
-import {TreeViewModel as TreeTileViewModel} from 'Controls/tile';
+import {SearchGridViewModel, ViewModel as TreeGridViewModel, TreeGridView, SearchView} from 'Controls/treeGrid';
+import {TreeViewModel as TreeTileViewModel, TreeView as TreeTileView} from 'Controls/tile';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
@@ -27,9 +27,9 @@ import 'Controls/breadcrumbs';
       },
       DEFAULT_VIEW_MODE = 'table',
       VIEW_NAMES = {
-         search: 'Controls/List/SearchView',
-         tile: 'Controls/List/TreeTileView/TreeTileView',
-         table: 'Controls/List/TreeGridView/TreeGridView'
+         search: SearchView,
+         tile: TreeTileView,
+         table: TreeGridView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
