@@ -1,8 +1,6 @@
-define('Controls/Container/MasterDetail', [
-   'Core/Control',
-   'wml!Controls/Container/MasterDetail/MasterDetail',
-   'css!theme?Controls/Container/MasterDetail/MasterDetail'
-], function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_masterDetail/Base/Base');
+import 'css!theme?Controls/_masterDetail/Base/Base';
 
    /**
     * Control that allows to implement the Master-Detail interface
@@ -25,7 +23,7 @@ define('Controls/Container/MasterDetail', [
     * @cfg {Function} Detail content template
     */
 
-   return Control.extend({
+   export = Control.extend({
       _template: template,
       _selected: null,
       _selectedMasterValueChangedHandler: function(event, value) {
@@ -33,4 +31,4 @@ define('Controls/Container/MasterDetail', [
          event.stopPropagation();
       }
    });
-});
+
