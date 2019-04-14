@@ -1,5 +1,4 @@
 import Control = require('Core/Control');
-import {FooterTemplate} from 'Controls/suggestPopup';
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
 import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import {descriptor} from 'Types/entity';
@@ -527,7 +526,7 @@ SuggestLayout.getDefaultOptions = function() {
    return {
       emptyTemplate: emptyTemplate,
       footerTemplate: {
-         templateName: FooterTemplate
+         templateName: 'Controls/suggestPopup:FooterTemplate'
       },
       suggestStyle: 'default',
       suggestState: false,
