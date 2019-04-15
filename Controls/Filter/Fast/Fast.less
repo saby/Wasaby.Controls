@@ -1,6 +1,7 @@
 //Reset button
 .controls-FastFilter__iconReset {
    .icon-size(@font-size_FastFilter-reset);
+   display: flex;
    color: @color_FastFilter-reset;
    cursor: pointer;
    flex-shrink: 0;
@@ -99,4 +100,9 @@
 .controls-FastFilter-popup {
    margin-top: @shift-top_FastFilter-popup;
    margin-left: @font-size_FastFilter-arrow - (@spacing_DropdownList-item-between-leftBorder-content + @border-width_DropdownList);;
+}
+
+.controls-FastFilter_multiSelect-popup {
+   margin-top: @shift-top_FastFilter-popup;
+   margin-left: @font-size_FastFilter-arrow - (@width_CheckBox__clickArea + @border-width_DropdownList);;
 }

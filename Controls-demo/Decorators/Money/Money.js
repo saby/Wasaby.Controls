@@ -1,32 +1,48 @@
 define('Controls-demo/Decorators/Money/Money',
    [
       'Core/Control',
-      'wml!Controls-demo/Decorators/Money/Money',
-
-      'Controls/Decorator/Money',
-      'css!Controls-demo/Decorators/Money/Money'
+      'json!Controls-demo/Decorators/Money/Money',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG'
    ],
-   function(Control, template) {
 
+   function(Control, config, template) {
       'use strict';
 
-      return Control.extend({
+      var _private = {
+         CONTENT: 'Controls/Decorator/Money'
+      };
+
+      var Money = Control.extend({
          _template: template,
 
-         _exampleNames: null,
+         _metaData: null,
+
+         _dataObject: null,
+
+         _componentOptions: null,
+
+         _content: _private.CONTENT,
 
          _beforeMount: function() {
-            this._exampleNames = [
-               'accentResults',
-               'noAccentResults',
-               'group',
-               'basicRegistry',
-               'noBasicRegistry',
-               'accentRegistry',
-               'noAccentRegistry',
-               'error'
-            ];
+            this._dataObject = {
+               style: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               }
+            };
+            this._componentOptions = {
+               title: '',
+               value: '0.00',
+               style: 'default',
+               name: 'DecoratorMoney',
+               useGrouping: true
+            };
+            this._metaData = config[_private.CONTENT].properties['ws-config'].options;
          }
       });
-   }
-);
+
+      return Money;
+   });

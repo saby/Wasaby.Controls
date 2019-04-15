@@ -1,5 +1,5 @@
 define([
-   'Controls/lists',
+   'Controls/list',
    'Core/Deferred',
    'Core/core-instance'
 ], function(

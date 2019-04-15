@@ -8,6 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
+import {isPartialSupport} from 'Controls/_lists/utils/GridLayoutUtil'
 
 /**
  *
@@ -65,6 +66,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _actions: null,
     _selectedKeys: null,
     _markedKey: null,
+    _hoveredItem: null,
 
     constructor: function(cfg) {
         var self = this;
@@ -185,9 +187,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
+        if (isPartialSupport && this._hoveredItem === item) {
+            version = 'HOVERED_' + version;
+        }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
             version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
         }
+
         return version;
     },
 
@@ -364,6 +370,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setRightSwipedItem: function(itemData) {
         this._rightSwipedItem = itemData;
         this._nextModelVersion();
+    },
+
+    setHoveredItem: function(item){
+        this._hoveredItem = item;
+        this._nextModelVersion(true);
+    },
+
+    getHoveredItem: function () {
+        return this._hoveredItem;
     },
 
     updateIndexes: function(startIndex, stopIndex) {

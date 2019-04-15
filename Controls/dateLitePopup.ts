@@ -14,11 +14,11 @@ import monthCaptionTemplate = require('wml!Controls/_dateLitePopup/MonthCaption'
 import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
 
 /**
- * A link button that displays the period. Supports the change of periods to adjacent.
+ * Control for date or period selection.
  *
  * @class Controls/dateLitePopup
  * @extends Core/Control
- * @mixes Controls/_dateLitePopup/IPDateLitePopup
+ * @mixes Controls/_dateLitePopup/IDateLitePopup
  * @control
  * @public
  * @author Миронов А.Ю.
@@ -187,7 +187,12 @@ var Component = BaseControl.extend({
     },
 
     _onWheel: function (event) {
-        if (event.nativeEvent.wheelDelta > 0) {
+        let wheelDelta = event.nativeEvent.wheelDelta;
+        // In the year selection mode, years are located in another direction.
+        if (this._options.chooseQuarters || this._options.chooseHalfyears || this._options.chooseMonths) {
+            wheelDelta = -wheelDelta;
+        }
+        if (wheelDelta > 0) {
             this._onNextYearBtnClick();
         } else {
             this._onPrevYearBtnClick();

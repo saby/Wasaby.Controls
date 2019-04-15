@@ -30,7 +30,7 @@
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               class="controls-ComboBox-InputRender theme_{{_options.theme}}">
          <ws:afterFieldWrapper>
-            <Controls.Button.Separator attr:class="controls-ComboBox-button-separator" if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
+            <Controls.toggle:Separator attr:class="controls-ComboBox-button-separator" if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
          </ws:afterFieldWrapper>
 
       </Controls.Input.ComboBox.InputRender>

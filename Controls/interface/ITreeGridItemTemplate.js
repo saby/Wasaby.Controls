@@ -13,7 +13,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @cfg {Function} Template for item render.
     * <a href="/materials/demo-ws4-tree-grid-item-template">Example</a>.
     * @remark
-    * Base itemTemplate for Controls/TreeGrid: "wml!Controls/List/TreeGridView/Item".
+    * Base itemTemplate for Controls.treeGrid:View: "Controls/treeGrid:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
@@ -24,11 +24,11 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @example
     * Using custom template for item rendering:
     * <pre>
-    *    <Controls.TreeGrid>
+    *    <Controls.treeGrid:View>
     *       <itemTemplate>
-    *          <ws:partial template="wml!Controls/List/TreeGridView/Item" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
+    *          <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
     *       </itemTemplate>
-    *    </Controls.TreeGrid>
+    *    </Controls.treeGrid:View>
     * </pre>
     */
 

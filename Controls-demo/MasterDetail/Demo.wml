@@ -5,7 +5,7 @@
 
          <div>
             <div class="controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
@@ -26,17 +26,17 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}"
                >
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -45,7 +45,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>
@@ -54,24 +54,24 @@
       <ws:master>
          <div>
             <div class="controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
-                  <Controls.lists:View
+                  <Controls.list:View
                      style="master"
                      keyProperty="id"
                      source="{{_masterSource}}"
                   >
                      <ws:itemTemplate>
-                        <ws:partial template="Controls/lists:ItemTemplate">
+                        <ws:partial template="Controls/list:ItemTemplate">
                            <ws:contentTemplate>
                               <div>{{itemTemplate.itemData.item.name}}</div>
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:itemTemplate>
-                  </Controls.lists:View>
+                  </Controls.list:View>
                </Controls.Container.MasterList>
             </Controls.Container.Scroll>
          </div>
@@ -79,16 +79,16 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -97,7 +97,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>
@@ -107,7 +107,7 @@
 
          <div>
             <div class="ws-flexbox controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
@@ -128,16 +128,16 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
-               <Controls.lists:View
+               <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
                   <ws:filter myOpt="{{detail.selectedMasterValue}}">
                   </ws:filter>
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
                                    item="{{itemTemplate.itemData.item}}"
@@ -146,7 +146,7 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
+               </Controls.list:View>
             </Controls.Container.Scroll>
          </div>
       </ws:detail>

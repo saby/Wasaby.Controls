@@ -1,5 +1,1 @@
-<div class="controls-ConfirmationDialog__details">
-   <div class="controls-ConfirmationDialog__message-centered">
-      <ws:partial template="{{content}}"/>
-   </div>
-</div>
+<ws:partial template="wml!Controls/_popup/Opener/Confirmation/Dialog/details" scope="{{_options}}" />

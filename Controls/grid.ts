@@ -7,6 +7,7 @@
  * @includes GroupTemplate wml!Controls/_grids/GroupTemplate
  * @includes LadderWrapper wml!Controls/_grids/LadderWrapper
  * @includes ColumnTemplate wml!Controls/_grids/Column
+ * @includes RowEditor wml!Controls/_grids/RowEditor
  * @public
  * @author Kraynov D.
  */
@@ -21,6 +22,9 @@ import ColumnTemplate = require('wml!Controls/_grids/Column');
 import HeaderContent = require('wml!Controls/_grids/HeaderContent');
 import SortButton = require('Controls/_grids/SortButton');
 import GridView = require('Controls/_grids/GridView');
+import GridViewModel = require('Controls/_grids/GridViewModel');
+
+import RowEditor = require('wml!Controls/_grids/RowEditor');
 
 export {
     View,
@@ -32,5 +36,8 @@ export {
 
     HeaderContent,
     SortButton,
-    GridView
+    GridView,
+    GridViewModel,
+
+    RowEditor
 }

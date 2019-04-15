@@ -1,6 +1,6 @@
 <div class="itemActionsDemo">
      <h2>itemActionsPosition="inline"</h2>
-    <Controls.lists:View
+    <Controls.list:View
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
@@ -11,7 +11,7 @@
             class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
                         <div>{{itemTemplate.itemData.item.title}}</div>
@@ -20,10 +20,10 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
     <div on:click="changeSource()" style="margin:10px"> Сменить источник для первого списка</div>
     <h2>itemActionsPosition="outside"</h2>
-    <Controls.lists:View
+    <Controls.list:View
             source = "{{_viewSource2}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
@@ -35,7 +35,7 @@
             class="test_list_2 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>
                     <div>
                         <div>{{itemTemplate.itemData.item.title}}</div>
@@ -44,7 +44,7 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
     <div class="itemActionsDemo__marginleft10">последний нажатый экшн</div>
     <div class="action__last_clicked itemActionsDemo__marginleft10">{{__lastClicked}}</div>
 </div>

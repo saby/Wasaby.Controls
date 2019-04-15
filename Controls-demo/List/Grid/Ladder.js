@@ -10,8 +10,8 @@ define('Controls-demo/List/Grid/Ladder', [
    'Controls/grid',
    'Controls/Render/Money/Money',
 
-   'Controls/lists',
-   'Controls/Container/MultiSelector',
+   'Controls/list',
+   'Controls/operations',
 
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksPhoto',
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksDescr',

@@ -43,7 +43,7 @@
          </div>
       </ws:topArea>
       <ws:contentArea>
-         <Controls.Tabs.Buttons
+         <Controls.tabs:Buttons
             attr:class="ControlsDemo-EditableArea__tabs"
             bind:selectedKey="_selectedTab"
             keyProperty="id"
@@ -67,7 +67,7 @@
          </div>
       </ws:topArea>
       <ws:contentArea>
-         <Controls.Tabs.Buttons
+         <Controls.tabs:Buttons
             attr:class="ControlsDemo-EditableArea__tabs"
             bind:selectedKey="_selectedTab"
             keyProperty="id"

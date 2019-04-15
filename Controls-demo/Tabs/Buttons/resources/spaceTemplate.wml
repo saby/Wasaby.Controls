@@ -2,8 +2,8 @@
 <div class="custom_space_template">
     <span class="custom_space_text">there may be your custom content</span>
     <div class="content_tab_margin">
-        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Save" style="linkMain"/>
-        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Author" style="linkMain"/>
-        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Erase" style="linkMain"/>
+        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Save" style="secondary" viewMode="link"/>
+        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Author" style="secondary" viewMode="link"/>
+        <Controls.buttons:Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Erase" style="secondary" viewMode="link"/>
     </div>
 </div>

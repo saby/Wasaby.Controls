@@ -2,14 +2,14 @@
    <ws:master>
       <div>
          <div class="ws-flexbox demo-DragNDrop__MasterDetail_search">
-            <Controls.Input.Search placeholder="Введите"
+            <Controls.search:Input placeholder="Введите"
                                    attr:class="demo-DragNDrop__MasterDetail_master_search_input"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_master">
-            <Controls.lists:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
+            <Controls.list:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
                <div>
-                  <Controls.lists:Mover name="masterMover" parentProperty="Раздел"/>
-                  <Controls.lists:Container>
+                  <Controls.list:Mover name="masterMover" parentProperty="Раздел"/>
+                  <Controls.list:Container>
                      <Controls.Container.MasterList>
                         <Controls.treeGrid:View
                            itemsReadyCallback="{{_itemsReadyCallbackMaster}}"
@@ -25,7 +25,7 @@
                            columns="{{gridColumns}}"
                         >
                            <ws:draggingTemplate>
-                              <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                              <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                           mainText="{{draggingTemplate.entity._options.mainText}}"
                                           image="{{draggingTemplate.entity._options.image}}"
                                           additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -33,23 +33,23 @@
                            </ws:draggingTemplate>
                         </Controls.treeGrid:View>
                      </Controls.Container.MasterList>
-                  </Controls.lists:Container>
+                  </Controls.list:Container>
                </div>
-            </Controls.lists:DataContainer>
+            </Controls.list:DataContainer>
          </Controls.Container.Scroll>
       </div>
    </ws:master>
    <ws:detail>
       <div class="ws-flexbox ws-flex-column ws-flex-grow-1">
          <div class="ws-flexbox ws-flex-shrink-0 demo-DragNDrop__MasterDetail_search">
-            <Controls.Input.Search placeholder="Введите"/>
+            <Controls.search:Input placeholder="Введите"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_detail">
-            <Controls.lists:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
+            <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
                <div>
-                  <Controls.lists:Mover name="detailMover"/>
-                  <Controls.lists:Container>
-                     <Controls.lists:View
+                  <Controls.list:Mover name="detailMover"/>
+                  <Controls.list:Container>
+                     <Controls.list:View
                         name="detailList"
                         itemsReadyCallback="{{_itemsReadyCallbackDetail}}"
                         itemsDragNDrop="{{true}}"
@@ -58,7 +58,7 @@
                         <ws:filter parent="{{detail.selectedMasterValue || '0'}}">
                         </ws:filter>
                         <ws:itemTemplate>
-                           <ws:partial template="Controls/lists:ItemTemplate">
+                           <ws:partial template="Controls/list:ItemTemplate">
                               <ws:contentTemplate>
                                  <ws:partial
                                          item="{{itemTemplate.itemData.item}}"
@@ -68,16 +68,16 @@
                            </ws:partial>
                         </ws:itemTemplate>
                         <ws:draggingTemplate>
-                           <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                           <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                        mainText="{{draggingTemplate.entity._options.mainText}}"
                                        image="{{draggingTemplate.entity._options.image}}"
                                        additionalText="{{draggingTemplate.entity._options.additionalText}}">
                            </ws:partial>
                         </ws:draggingTemplate>
-                     </Controls.lists:View>
-                  </Controls.lists:Container>
+                     </Controls.list:View>
+                  </Controls.list:Container>
                </div>
-            </Controls.lists:DataContainer>
+            </Controls.list:DataContainer>
          </Controls.Container.Scroll>
       </div>
    </ws:detail>

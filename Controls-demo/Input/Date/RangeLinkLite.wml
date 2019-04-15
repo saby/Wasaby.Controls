@@ -3,7 +3,7 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__content">
          <div class="PageBlock__componentWrap">
-            <Controls.Input.Date.RangeLinkLite 
+            <Controls.Input.Date.RangeLinkLite
 			   attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
@@ -21,7 +21,7 @@
                bind:endValue="_endValueBind"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               style="linkMain"
+               style="secondary" viewMode="link"
 			   attr:test_name="months_range"
             />
          </div>

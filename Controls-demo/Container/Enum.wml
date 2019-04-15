@@ -3,8 +3,8 @@
     <h2>Radio</h2>
     <Controls.Container.Adapter.Enum enum="{{_enumInst}}">
 
-            <Controls.Toggle.RadioGroup>
-            </Controls.Toggle.RadioGroup>
+            <Controls.toggle:RadioGroup>
+            </Controls.toggle:RadioGroup>
     </Controls.Container.Adapter.Enum>
     <h2>Dropdown</h2>
     <Controls.Container.Adapter.Enum enum="{{_enumInst}}">

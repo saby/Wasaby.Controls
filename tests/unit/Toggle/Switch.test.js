@@ -1,9 +1,9 @@
-define(['Controls/Toggle/Switch'], function (Switch) {
+define(['Controls/toggle'], function (toggle) {
    'use strict';
    var SW, changeValue;
    describe('Controls.Toggle.Switch', function () {
       beforeEach(function(){
-         SW = new Switch({
+         SW = new toggle.Switch({
             captions: ['capt1']
          });
          //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify

@@ -3,14 +3,14 @@ define([
    'Core/Deferred',
    'Types/collection',
    'Types/chain',
-   'Controls/DragNDrop/Entity/Items',
+   'Controls/dragnDrop',
    'Types/entity'
 ], function(
    Explorer,
    Deferred,
    collection,
    chain,
-   DragEntity,
+   dragnDrop,
    entityLib
 ) {
    describe('Controls.Explorer', function() {
@@ -541,7 +541,7 @@ define([
             //drag in the root
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [1]
                })
             });
@@ -549,7 +549,7 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
@@ -558,7 +558,7 @@ define([
             explorer._dragOnBreadCrumbs = false;
             explorer._options.itemsDragNDrop = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
@@ -570,7 +570,7 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [1]
                })
             });
@@ -578,7 +578,7 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
@@ -587,7 +587,7 @@ define([
          it('_documentDragEnd', function() {
             var
                dragEnrArgs,
-               dragEntity = new DragEntity();
+               dragEntity = new dragnDrop.ItemsEntity();
 
             explorer._notify = function(e, args) {
                if (e === 'dragEnd') {

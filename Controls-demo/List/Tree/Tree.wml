@@ -5,13 +5,13 @@
    </div>
    <div class="demo-Grid" style="border-bottom: 12px solid #55AA55;">
       <div class="demo-Grid__container">
-         <Controls.lists:DataContainer source="{{_viewSource}}"
+         <Controls.list:DataContainer source="{{_viewSource}}"
                                   keyProperty="id"
                                   attr:class="ControlsDemo-Grid__Container">
-            <Controls.Container.MultiSelector>
+            <Controls.operations:Controller>
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                  <Controls.lists:Container>
-                     <Controls.List.MultiSelector>
+                  <Controls.list:Container>
+                     <Controls.operations:Container>
                         <Controls.treeGrid:View
                                 attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                                 parentProperty="Раздел"
@@ -24,19 +24,19 @@
                                 on:itemActionsClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}">
                            <ws:nodeFooterTemplate>
-                              <Controls.lists:AddButton caption="Новая запись"/>
+                              <Controls.list:AddButton caption="Новая запись"/>
                            </ws:nodeFooterTemplate>
                         </Controls.treeGrid:View>
-                     </Controls.List.MultiSelector>
-                  </Controls.lists:Container>
+                     </Controls.operations:Container>
+                  </Controls.list:Container>
                </Controls.Container.Scroll>
-            </Controls.Container.MultiSelector>
-         </Controls.lists:DataContainer>
+            </Controls.operations:Controller>
+         </Controls.list:DataContainer>
       </div>
    </div>
    <div class="demo-Grid" style="border-top: 12px solid #55AA55;">
       <div class="demo-Grid__container">
-         <Controls.lists:DataContainer source="{{_viewSource}}"
+         <Controls.list:DataContainer source="{{_viewSource}}"
                                   keyProperty="id"
 								  attr:class="ControlsDemo-Tree__Container">
             <ws:navigation source="page" view="infinity">
@@ -44,10 +44,10 @@
                <ws:viewConfig pagingMode="direct"></ws:viewConfig>
             </ws:navigation>
             <ws:content>
-               <Controls.Container.MultiSelector>
+               <Controls.operations:Controller>
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                  <Controls.lists:Container>
-                     <Controls.List.MultiSelector>
+                  <Controls.list:Container>
+                     <Controls.operations:Container>
                         <Controls.treeGrid:View
                                 attr:class="demo-Grid__control ControlsDemo-Tree__withoutGroups"
                                 parentProperty="Раздел"
@@ -61,15 +61,15 @@
                                 itemActionVisibilityCallback="{{_showAction}}">
 
                            <ws:nodeFooterTemplate>
-                              <Controls.lists:AddButton caption="Новая запись"/>
+                              <Controls.list:AddButton caption="Новая запись"/>
                            </ws:nodeFooterTemplate>
                         </Controls.treeGrid:View>
-                     </Controls.List.MultiSelector>
-                  </Controls.lists:Container>
+                     </Controls.operations:Container>
+                  </Controls.list:Container>
                </Controls.Container.Scroll>
-            </Controls.Container.MultiSelector>
+            </Controls.operations:Controller>
             </ws:content>
-         </Controls.lists:DataContainer>
+         </Controls.list:DataContainer>
       </div>
    </div>
 </div>

@@ -1,5 +1,5 @@
 <ws:template name="firstList">
-    <Controls.lists:View
+    <Controls.list:View
             class="test_list_1"
             name="list"
             readOnly="{{_readOnly}}"
@@ -14,9 +14,9 @@
                        autoAdd="{{_autoAdd}}"/>
         </ws:editingConfig>
         <ws:itemTemplate>
-            <ws:partial template="Controls/lists:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>
-                    <ws:partial template="Controls/lists:EditingTemplate"
+                    <ws:partial template="Controls/list:EditingTemplate"
                                 attr:class="controls-EditingTemplateDemo"
                                 value="{{ itemTemplate.itemData.item.title }}"
                                 enabled="{{true}}">
@@ -35,7 +35,7 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.lists:View>
+    </Controls.list:View>
 </ws:template>
 <div class="editInPlaceDemo">
     <div>
@@ -49,22 +49,22 @@
         <ws:else>
             <ws:partial template="firstList" />
         </ws:else>
-        <Controls.lists:AddButton class="test_add_record_1" caption="Add record" on:click="beginAdd()"/>
+        <Controls.list:AddButton class="test_add_record_1" caption="Add record" on:click="beginAdd()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
-                <Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick" class="demo__editOnClick"/>
-                <Controls.Toggle.Checkbox bind:value="_sequentialEditing" caption="sequentialEditing" class="demo__singleEdit"/>
-                <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd" class="demo__autoAdd"/>
-                <Controls.Toggle.Checkbox bind:value="_toolbarVisibility" caption="toolbarVisibility" class="demo__showToolbar"/>
-                <Controls.Toggle.Checkbox bind:value="_handleItemClick" caption="_handleItemClick" class="demo__handleItemClick"/>
-                <Controls.Toggle.Checkbox bind:value="_readOnly" caption="readOnly" class="demo__readOnly"/>
+                <Controls.toggle:Checkbox bind:value="_editOnClick" caption="editOnClick" class="demo__editOnClick"/>
+                <Controls.toggle:Checkbox bind:value="_sequentialEditing" caption="sequentialEditing" class="demo__singleEdit"/>
+                <Controls.toggle:Checkbox bind:value="_autoAdd" caption="autoAdd" class="demo__autoAdd"/>
+                <Controls.toggle:Checkbox bind:value="_toolbarVisibility" caption="toolbarVisibility" class="demo__showToolbar"/>
+                <Controls.toggle:Checkbox bind:value="_handleItemClick" caption="_handleItemClick" class="demo__handleItemClick"/>
+                <Controls.toggle:Checkbox bind:value="_readOnly" caption="readOnly" class="demo__readOnly"/>
             </div>
         </div>
     </div>
     <div>
         <h3>Adding doesn't work in this list</h3>
-        <Controls.lists:View
+        <Controls.list:View
                 class="test_list_2"
                 name="list2"
                 source="{{_viewSource2}}"
@@ -75,9 +75,9 @@
                 <ws:Object editOnClick="{{true}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="Controls/lists:ItemTemplate">
+                <ws:partial template="Controls/list:ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="Controls/lists:EditingTemplate"
+                        <ws:partial template="Controls/list:EditingTemplate"
                                     attr:class="controls-EditingTemplateDemo"
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
@@ -89,12 +89,12 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls.lists:View>
-        <Controls.lists:AddButton class="test_add_record_2" caption="Add record" on:click="list2.beginAdd()"/>
+        </Controls.list:View>
+        <Controls.list:AddButton class="test_add_record_2" caption="Add record" on:click="list2.beginAdd()"/>
     </div>
     <div>
         <h3>Editing starts before mounting to DOM</h3>
-        <Controls.lists:View
+        <Controls.list:View
                 class="test_list_4"
                 name="list4"
                 source="{{_viewSource4}}"
@@ -104,9 +104,9 @@
                 <ws:Object editOnClick="{{true}}" item="{{_editingItem}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="Controls/lists:ItemTemplate">
+                <ws:partial template="Controls/list:ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="Controls/lists:EditingTemplate"
+                        <ws:partial template="Controls/list:EditingTemplate"
                                     attr:class="controls-EditingTemplateDemo"
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
@@ -118,11 +118,11 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls.lists:View>
+        </Controls.list:View>
     </div>
     <div>
         <h3>Adding starts before mounting to DOM</h3>
-        <Controls.lists:View
+        <Controls.list:View
                 class="test_list_5"
                 name="list5"
                 source="{{_viewSource5}}"
@@ -132,9 +132,9 @@
                 <ws:Object editOnClick="{{true}}" item="{{_addItem}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="Controls/lists:ItemTemplate">
+                <ws:partial template="Controls/list:ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="Controls/lists:EditingTemplate"
+                        <ws:partial template="Controls/list:EditingTemplate"
                                     attr:class="controls-EditingTemplateDemo"
                                     value="{{ itemTemplate.itemData.item.title }}"
                                     enabled="{{true}}">
@@ -146,6 +146,6 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls.lists:View>
+        </Controls.list:View>
     </div>
 </div>

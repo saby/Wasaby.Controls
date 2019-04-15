@@ -13,7 +13,7 @@
       </ws:navigation>
 
       <ws:itemTemplate>
-         <ws:partial template="Controls/lists:ItemTemplate"
+         <ws:partial template="Controls/list:ItemTemplate"
                      itemData="{{itemTemplate.itemData}}"
          >
             <ws:contentTemplate>

@@ -1,16 +1,16 @@
 <div class="controls-demo__search-container">
-    <Controls.lists:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
+    <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
         <ws:content>
-            <Controls.Search.Controller searchParam="department">
+            <Controls.search:Controller searchParam="department">
                 <div>
-                    <Controls.Search.Input.Container>
-                        <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
-                    </Controls.Search.Input.Container>
+                    <Controls.search:InputContainer>
+                        <Controls.search:Input bind:value="_searchValue" attr:class="controls-demo__search"/>
+                    </Controls.search:InputContainer>
 
-                    <Controls.lists:Container>
-                        <Controls.lists:View emptyTemplate="Не найдено">
+                    <Controls.list:Container>
+                        <Controls.list:View emptyTemplate="Не найдено">
                             <ws:itemTemplate>
-                                <ws:partial template="Controls/lists:ItemTemplate">
+                                <ws:partial template="Controls/list:ItemTemplate">
                                     <ws:contentTemplate>
                                         <div style="padding: 4px; display: flex; justify-content: space-between">
                                             <div style="width: 300px">{{itemTemplate.itemData.item.get('department')}}</div>
@@ -20,10 +20,10 @@
                                     </ws:contentTemplate>
                                 </ws:partial>
                             </ws:itemTemplate>
-                        </Controls.lists:View>
-                    </Controls.lists:Container>
+                        </Controls.list:View>
+                    </Controls.list:Container>
                 </div>
-            </Controls.Search.Controller>
+            </Controls.search:Controller>
         </ws:content>
-    </Controls.lists:DataContainer>
+    </Controls.list:DataContainer>
 </div>

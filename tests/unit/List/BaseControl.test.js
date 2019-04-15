@@ -6,7 +6,7 @@ define([
    'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
@@ -57,14 +57,14 @@ define([
             data: data,
             filter: function (item, filter) {
                var result = true;
-      
+
                if (filter['id'] && filter['id'] instanceof Array) {
                   result = filter['id'].indexOf(item.get('id')) !== -1;
                }
-      
+
                return result;
             }
-   
+
          });
          rs = new collection.RecordSet({
             idProperty: 'id',
@@ -145,7 +145,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrids/Tree/TreeViewModel'));
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -160,6 +160,44 @@ define([
                done();
             }, 100);
          }, 1);
+      });
+
+      it('should set itemsContainer in VS if null', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: lists.ListViewModel,
+            source: source
+         };
+         var itemsContainer = {
+            qwe: 123
+         },
+             ctrl = new BaseControl(cfg);
+
+         assert.isUndefined(ctrl._virtualScroll);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(!!ctrl._virtualScroll);
+
+         ctrl._virtualScroll.updateItemsSizes = function(){};
+         ctrl._children.listView = {
+            getItemsContainer: function() {
+               return itemsContainer;
+            }
+         };
+
+         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
+         ctrl._viewResize();
+         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
@@ -325,10 +363,15 @@ define([
 
          var dataLoadFired = false;
 
+         var beforeLoadToDirectionCalled = false;
+
          var cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
             },
             source: source,
             viewConfig: {
@@ -360,6 +403,7 @@ define([
             setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
                done();
             }, 100);
          }, 100);
@@ -2691,13 +2735,13 @@ define([
          };
          var baseCtrl = new BaseControl(cfg);
          baseCtrl.saveOptions(cfg);
-      
+
          return new Promise(function(resolve) {
             baseCtrl._beforeMount(cfg).addCallback(function() {
                baseCtrl.reloadItem(1).addCallback(function(item) {
                   assert.equal(item.get('id'), 1);
                   assert.equal(item.get('title'), 'Первый');
-               
+
                   baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
                      assert.isTrue(!!items.getCount);
                      assert.equal(items.getCount(), 1);
@@ -2754,7 +2798,6 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
-
          var fakeNotify = sandbox.spy(instance, '_notify').withArgs('drawItems');
 
          instance.getViewModel()._notify('onListChange', 'indexesChanged');

@@ -28,13 +28,13 @@
                                             bind:selectedKeys="_selectedKeys"
                                             bind:excludedKeys="_excludedKeys">
                                 <ws:search>
-                                    <Controls.Input.Search bind:value="value"/>
+                                    <Controls.search:Input bind:value="value"/>
                                 </ws:search>
                                 <ws:filterButton>
                                     <Controls.Filter.Button templateName="tmpl!Engine-demo/Browser/resources/filterButtonEngineTemplate"/>
                                 </ws:filterButton>
                                 <ws:operationsPanel>
-                                    <Controls.Operations.Panel
+                                    <Controls.operations:Panel
                                        parentProperty="parent"
                                        nodeProperty="@parent"
                                        keyProperty="id"
@@ -49,15 +49,15 @@
                                                style="secondary"
                                             />
                                         </ws:rightTemplate>
-                                    </Controls.Operations.Panel>
+                                    </Controls.operations:Panel>
                                 </ws:operationsPanel>
                                 <ws:actions>
-                                    <Controls.lists:Remover name="remover"
+                                    <Controls.list:Remover name="remover"
                                                            nodeProperty="Раздел@"
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"
                                                            on:afterItemsRemove="_afterItemsRemove()"/>
-                                    <Controls.lists:Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
+                                    <Controls.list:Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
                                         <ws:moveDialogTemplate>
                                             <Controls.List.Mover.MoveDialog
                                                root="{{null}}"
@@ -65,6 +65,8 @@
                                                filter="{{_moveDialogFilter}}"
                                                multiSelectVisibility="visible"
                                                parentProperty="Раздел"
+                                               markedKey="{{_markedKeyMoveDialog}}"
+                                               expandedItems="{{_expandedItemsMoveDialog}}"
                                                showRoot="{{true}}"
                                                source="{{_moverSource}}"
                                                searchParam="department"
@@ -72,7 +74,7 @@
                                                hasChildrenProperty="Раздел$"
                                                nodeProperty="Раздел@"/>
                                         </ws:moveDialogTemplate>
-                                    </Controls.lists:Mover>
+                                    </Controls.list:Mover>
                                 </ws:actions>
                                 <ws:content>
                                     <Controls.treeGrid:View
@@ -93,6 +95,6 @@
         </ws:items>
     </Layout.Browser.Tabs>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-    <Controls.Popup.Opener.Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/Operations/ReportDialog">
+    <Controls.Popup.Opener.Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/operationsPopup:ReportDialog">
     </Controls.Popup.Opener.Dialog>
 </div>

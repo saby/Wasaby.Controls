@@ -1,0 +1,27 @@
+.controls-PreviewerController {
+   animation-duration: @animation-duration_Previewer;
+   animation-fill-mode: forwards;
+   animation-name: openingPreviewer;
+}
+
+.controls-PreviewerController_close {
+   animation-name: closingPreviewer;
+}
+
+@keyframes openingPreviewer {
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
+}
+
+@keyframes closingPreviewer {
+   from {
+      opacity: 1;
+   }
+   to {
+      opacity: 0;
+   }
+}

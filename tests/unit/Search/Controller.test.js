@@ -1,4 +1,4 @@
-define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity'], function(Search, sourceLib, cInstance, collection, entity) {
+define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity'], function(searchMod, sourceLib, cInstance, collection, entity) {
 
    var data = [
       {
@@ -46,7 +46,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
    var defaultOptions = getDefaultOptions();
 
    var getSearchController = function() {
-      var controller = new Search(defaultOptions);
+      var controller = new searchMod.Controller(defaultOptions);
       controller.saveOptions(defaultOptions);
       return controller;
    };
@@ -76,7 +76,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          controller._searchContext = { updateConsumers: () => {} };
          controller._viewMode = 'tile';
 
-         Search._private.searchCallback(controller, {}, {test: 'testFilterValue'});
+         searchMod.Controller._private.searchCallback(controller, {}, {test: 'testFilterValue'});
 
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
@@ -104,7 +104,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          var filter = {
             test: 'test'
          };
-         Search._private.searchCallback(controller, result, filter);
+         searchMod.Controller._private.searchCallback(controller, result, filter);
 
          assert.equal(controller._misspellValue, 'testStr');
          assert.deepEqual(filter, {test: 'test'});
@@ -127,7 +127,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
          controller._searchContext = { updateConsumers: function() {} };
 
-         Search._private.abortCallback(controller);
+         searchMod.Controller._private.abortCallback(controller);
 
          assert.isTrue(filterChanged);
          assert.isFalse(controller._viewMode === 'search');
@@ -144,16 +144,16 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          self._forceUpdate = function() {
             forceUpdateCalled = true;
          };
-         Search._private.searchStartCallback(self);
+         searchMod.Controller._private.searchStartCallback(self);
          assert.isTrue(self._loading);
          assert.isTrue(forceUpdateCalled);
       });
 
       it('_private.needUpdateSearchController', function() {
-         assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
-         assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
-         assert.isTrue(Search._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
-         assert.isTrue(Search._private.needUpdateSearchController({minSearchLength: 3, sorting: [{}]}, {minSearchLength: 3, sorting: [{testField: "ASC"}]}));
+         assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
+         assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
+         assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
+         assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3, sorting: [{}]}, {minSearchLength: 3, sorting: [{testField: "ASC"}]}));
       });
 
       it('_private.getSearchController', function() {
@@ -161,7 +161,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          var controller;
          
          searchController._dataOptions = defaultOptions;
-         controller = Search._private.getSearchController(searchController);
+         controller = searchMod.Controller._private.getSearchController(searchController);
          assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
       });
@@ -171,7 +171,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          var value;
          searchController._dataOptions = defaultOptions;
          //initialize searchController
-         Search._private.getSearchController(searchController);
+         searchMod.Controller._private.getSearchController(searchController);
 
          //moch method
          searchController._searchController.search = function(searchVal) {
@@ -195,11 +195,11 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          var searchController = getSearchController(defaultOptions);
          searchController._beforeMount({}, {dataOptions: defaultOptions});
    
-         Search._private.getSearchController(searchController);
+         searchMod.Controller._private.getSearchController(searchController);
          searchController._beforeUpdate({}, {dataOptions: defaultOptions});
          assert.isNull(searchController._searchController);
    
-         Search._private.getSearchController(searchController);
+         searchMod.Controller._private.getSearchController(searchController);
          var options = getDefaultOptions();
          options.filter = {test: 'testValue'};
          searchController._beforeUpdate(options, {dataOptions: defaultOptions});
