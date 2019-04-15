@@ -480,7 +480,8 @@ var SuggestLayout = Control.extend({
       this._stackWithSearchResultsOpened = true;
 
       //loading showAll templates
-      requirejs(['Controls/suggestPopup'], function() {
+      requirejs(['Controls/suggestPopup'], function(suggestPopup) {
+         self._children.stackOpener._options.template = suggestPopup.Dialog;
          self._children.stackOpener.open();
       });
       _private.close(this);
