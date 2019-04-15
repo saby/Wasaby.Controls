@@ -1,1 +1,1 @@
-<Controls.Toggle.Checkbox on:valueChanged="_valueChanged()" value="{{value}}"></Controls.Toggle.Checkbox>
+<Controls.toggle:Checkbox on:valueChanged="_valueChanged()" value="{{value}}"></Controls.toggle:Checkbox>

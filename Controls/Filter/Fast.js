@@ -174,7 +174,7 @@ define('Controls/Filter/Fast',
             return newItems;
          },
 
-         onResult: function(result) {
+         onResult: function(event, result) {
             if (result.action === 'selectorResult') {
                this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this, result.data));
             }

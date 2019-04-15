@@ -135,8 +135,8 @@ define('Controls/Explorer', [
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
     *
     * @class Controls/Explorer
     * @extends Core/Control
@@ -198,7 +198,7 @@ define('Controls/Explorer', [
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;
 
-         if (this._options.itemsDragNDrop && cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
+         if (this._options.itemsDragNDrop && cInstance.instanceOfModule(dragObject.entity, 'Controls/_dragnDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
             this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());

@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Controller name="dragNDrop"
+<Controls.dragnDrop:Container name="dragNDrop"
                                on:dragStart="_dragStart()"
                                on:dragMove="_dragMove()"
                                on:dragEnd="_dragEnd()">
@@ -28,4 +28,4 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.list:View>
-</Controls.DragNDrop.Controller>
+</Controls.dragnDrop:Container>

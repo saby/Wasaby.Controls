@@ -8,6 +8,7 @@
          source="{{_getMemorySource(_defaultItemsWithoutToolbutton)}}"
          popupClassName="controls-Toolbar_test_popupClassName"
          on:itemClick="_itemClick()"
+         itemsSpacing="big"
       />
    </div>
    <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons, toolButtons):
@@ -20,6 +21,7 @@
               source="{{_getMemorySource(_defaultItems)}}"
               popupClassName="controls-Toolbar_test_popupClassName"
               on:itemClick="_itemClick()"
+              itemsSpacing="big"
       />
    </div>
    <div style="padding: 5px;">Пример тулбара из toolButtons:

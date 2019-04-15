@@ -1,5 +1,5 @@
 import cDeferred = require('Core/Deferred');
-import {ListView} from 'Controls/list';
+import {ListView, GridLayoutUtil} from 'Controls/list';
 import GridViewTemplateChooser = require('wml!Controls/_grids/GridViewTemplateChooser');
 import DefaultItemTpl = require('wml!Controls/_grids/Item');
 import ColumnTpl = require('wml!Controls/_grids/Column');
@@ -16,7 +16,6 @@ import 'wml!Controls/_grids/ColGroup';
 import 'css!theme?Controls/_grids/Grid';
 import 'css!theme?Controls/_grids/OldGrid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
-import { getTemplateColumnsStyle, isPartialSupport, supportStatus, SupportStatusesEnum } from './utils/GridLayoutUtil';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
 function isEqualWithSkip(obj1, obj2, skipFields) {
@@ -62,7 +61,7 @@ var
                 columnsWidths.push(column.width || '1fr');
             });
 
-            return getTemplateColumnsStyle(columnsWidths);
+            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
         prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
@@ -104,12 +103,12 @@ var
             return result;
         },
         chooseGridTemplate: function (): Function {
-            switch (supportStatus) {
-                case SupportStatusesEnum.Full:
+            switch (GridLayoutUtil.supportStatus) {
+                case GridLayoutUtil.SupportStatusesEnum.Full:
                     return FullGridSupportLayout;
-                case SupportStatusesEnum.Partial:
+                case GridLayoutUtil.SupportStatusesEnum.Partial:
                     return PartialGridSupportLayout;
-                case SupportStatusesEnum.None:
+                case GridLayoutUtil.SupportStatusesEnum.None:
                     return NoGridSupportLayout;
             }
         },
@@ -180,7 +179,7 @@ var
 
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (isPartialSupport && itemData.item !== this._hoveredItem) {
+            if (GridLayoutUtil.isPartialSupport && itemData.item !== this._hoveredItem) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);

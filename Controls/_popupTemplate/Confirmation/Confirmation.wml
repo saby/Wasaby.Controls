@@ -1,0 +1,12 @@
+<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_style}}{{_size == 'l' ? ' controls-ConfirmationTemplate__size-l' : ' controls-ConfirmationTemplate__size-m'}} controls-Popup__isolatedFocusingContext"
+    ws-tab-cycling="true"
+    ws-delegates-tabfocus="true">
+    <div class="controls-ConfirmationTemplate__body">
+        <div class="controls-ConfirmationTemplate__main">
+            <ws:partial template="{{_options.contentArea||_options.bodyContentTemplate}}"/>
+        </div>
+        <div class="controls-ConfirmationTemplate__footer">
+            <ws:partial template="{{_options.footerArea||_options.footerContentTemplate}}"/>
+        </div>
+    </div>
+</div>

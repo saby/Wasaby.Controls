@@ -1,7 +1,6 @@
-import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
-import GridViewModel = require('Controls/List/Grid/GridViewModel');
-import {calcTopOffset, calcGroupRowIndex, calcRowIndexByKey} from "../../_grids/utils/RowIndexUtil";
-import {getCellStyles, isPartialSupport, toCssString} from "../../_grids/utils/GridLayoutUtil";
+import {GridViewModel} from 'Controls/grid';
+import {GridLayoutUtil, RowIndexUtil} from 'Controls/list';
+import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
 
 function isLastColumn(
    itemData: object,
@@ -19,7 +18,7 @@ var _private = {
     calcGroupRowIndex: function (self, current): number {
         let groupItem = self._model.getDisplay().at(current.index);
 
-        return calcGroupRowIndex(
+        return RowIndexUtil.calcGroupRowIndex(
             groupItem,
             self._model.getDisplay(),
             !!self.getHeader(),
@@ -32,7 +31,7 @@ var _private = {
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
         current.rowIndex = _private.calcGroupRowIndex(self, current);
-        current.gridGroupStyles = toCssString([
+        current.gridGroupStyles = GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',
                 value: current.rowIndex+1
@@ -48,7 +47,7 @@ var _private = {
     getFooterStyles: function (self, rowIndex, columnsCount) {
         let offsetForMultiselect = self._options.multiSelectVisibility === 'hidden' ? 0 : 1;
 
-        return toCssString([
+        return GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',
                 value: rowIndex + 1
@@ -74,7 +73,7 @@ var _private = {
 
     // Using util for calculating real rows' index on display considering footers, headers, results
     calcRowIndex: function (self, current) {
-        return calcRowIndexByKey(
+        return RowIndexUtil.calcRowIndexByKey(
             current.key,
             self.getDisplay(),
             !!self.getHeader(),
@@ -138,7 +137,7 @@ var
 
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
             // with grid-row and grid-column
-            if (isPartialSupport) {
+            if (GridLayoutUtil.isPartialSupport) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
                 } else {
@@ -162,8 +161,8 @@ var
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
                 }
 
-                if (isPartialSupport) {
-                    currentColumn.gridCellStyles = getCellStyles(current.rowIndex, currentColumn.columnIndex);
+                if (GridLayoutUtil.isPartialSupport) {
+                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
 
                 return currentColumn;
@@ -192,10 +191,10 @@ var
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
             if (current.nodeFooter) {
                 current.nodeFooter.columns = current.columns;
-                current.nodeFooter.isPartialSupport = isPartialSupport;
+                current.nodeFooter.isPartialSupport = GridLayoutUtil.isPartialSupport;
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
-                if (isPartialSupport) {
-                    current.nodeFooter.rowIndex += calcTopOffset(!!this.getHeader(), this.getResultsPosition());
+                if (GridLayoutUtil.isPartialSupport) {
+                    current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());
                     current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
                 }
             }

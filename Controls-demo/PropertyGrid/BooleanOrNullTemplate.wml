@@ -1,4 +1,4 @@
-<Controls.Toggle.Checkbox caption="{{_options.caption}}"
+<Controls.toggle:Checkbox caption="{{_options.caption}}"
                           readOnly="{{false}}"
                           value="{{_options.value}}"
                           triState="{{_options.triState}}"

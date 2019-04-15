@@ -59,13 +59,13 @@
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{true}}" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" size="l"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
+    <Controls.toggle:Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" style="secondary" viewMode="link"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="secondary" viewMode="link"/>
-</div>`
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="secondary" viewMode="link"/>
+</div>

@@ -5,7 +5,7 @@ import runDelayed = require('Core/helpers/Function/runDelayed');
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
-import 'Controls/Decorator/WrapURLs';
+import 'Controls/decorator';
       
 
       /**

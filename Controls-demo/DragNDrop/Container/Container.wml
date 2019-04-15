@@ -1,9 +1,9 @@
 <div>
-    <Controls.Toggle.Checkbox bind:value="_hasList" caption="List" attr:class="demo-CheckBox__List"/>
-    <Controls.Toggle.Checkbox bind:value="_hasGrid" caption="Grid" attr:class="demo-CheckBox__Grid"/>
-    <Controls.Toggle.Checkbox bind:value="_hasTree" caption="Tree" attr:class="demo-CheckBox__Tree"/>
-    <Controls.Toggle.Checkbox bind:value="_hasNotes" caption="Notes" attr:class="demo-CheckBox__Notes"/>
-    <Controls.Toggle.Checkbox bind:value="_hasMasterDetail" caption="MasterDetail" attr:class="demo-CheckBox__MasterDetail"/>
+    <Controls.toggle:Checkbox bind:value="_hasList" caption="List" attr:class="demo-CheckBox__List"/>
+    <Controls.toggle:Checkbox bind:value="_hasGrid" caption="Grid" attr:class="demo-CheckBox__Grid"/>
+    <Controls.toggle:Checkbox bind:value="_hasTree" caption="Tree" attr:class="demo-CheckBox__Tree"/>
+    <Controls.toggle:Checkbox bind:value="_hasNotes" caption="Notes" attr:class="demo-CheckBox__Notes"/>
+    <Controls.toggle:Checkbox bind:value="_hasMasterDetail" caption="MasterDetail" attr:class="demo-CheckBox__MasterDetail"/>
     <ws:if data="{{_hasList}}">
         <Controls-demo.DragNDrop.List attr:class="demo-DragNDrop__List"/>
     </ws:if>

@@ -49,6 +49,7 @@ define('Controls-demo/Input/Search/SearchPG',
                maxLength: 100,
                selectOnClick: true,
                readOnly: false,
+               searchButtonVisible: true,
                tooltip: 'myTooltip'
             };
             this._metaData = config[this._content].properties['ws-config'].options;

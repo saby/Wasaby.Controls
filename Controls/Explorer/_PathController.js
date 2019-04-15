@@ -3,13 +3,13 @@ define('Controls/Explorer/_PathController', [
    'Controls/Utils/tmplNotify',
    'wml!Controls/Explorer/_PathController/_PathController',
    'Controls/breadcrumbs',
-   'Controls/List/resources/utils/ItemsUtil'
+   'Controls/list'
 ], function(
    Control,
    tmplNotify,
    template,
    crumbs,
-   ItemsUtil
+   list
 ) {
    'use strict';
 
@@ -23,7 +23,7 @@ define('Controls/Explorer/_PathController', [
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: options.backButtonStyle,
-                  backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
+                  backButtonCaption: list.ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
                width: options.header[0].width,

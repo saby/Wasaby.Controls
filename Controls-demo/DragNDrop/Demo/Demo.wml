@@ -4,9 +4,9 @@
    <Controls.list:DataContainer source="{{_viewSourceFirst}}" keyProperty="id" attr:class="demo-DragNDrop__list">
       <div>
          <Controls.list:Mover name="listMoverFirst"/>
-         <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
+         <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
             <Controls.list:Container>
-               <Controls.List.MultiSelector>
+               <Controls.operations:Container>
                   <Controls.list:View
                      on:dragStart="_dragStartFirst()"
                      on:dragEnd="_dragEndFirst()"
@@ -29,16 +29,16 @@
                         </ws:partial>
                      </ws:itemTemplate>
                      <ws:draggingTemplate>
-                        <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                        <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                     mainText="{{draggingTemplate.entity._options.mainText}}"
                                     image="{{draggingTemplate.entity._options.image}}"
                                     additionalText="{{draggingTemplate.entity._options.additionalText}}">
                         </ws:partial>
                      </ws:draggingTemplate>
                   </Controls.list:View>
-               </Controls.List.MultiSelector>
+               </Controls.operations:Container>
             </Controls.list:Container>
-         </Controls.Container.MultiSelector>
+         </Controls.operations:Controller>
       </div>
    </Controls.list:DataContainer>
    <h2>Перемещение в реестре с иерархией</h2>
@@ -61,7 +61,7 @@
                expandedItems="{{_expandedItems}}"
                itemsReadyCallback="{{_itemsReadyCallbackSecond}}">
                <ws:draggingTemplate>
-                  <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                  <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                               mainText="{{draggingTemplate.entity._options.mainText}}"
                               image="{{draggingTemplate.entity._options.image}}"
                               logo="{{draggingTemplate.entity._options.logo}}"
@@ -88,7 +88,7 @@
                viewMode="tile"
                itemsReadyCallback="{{_itemsReadyCallbackThird}}">
                <ws:draggingTemplate>
-                  <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                  <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                               mainText="{{draggingTemplate.entity._options.mainText}}"
                               image="{{draggingTemplate.entity._options.image}}"
                               logo="{{draggingTemplate.entity._options.logo}}"

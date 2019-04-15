@@ -1,5 +1,5 @@
 define([
-   'Controls/_grids/utils/GridLayoutUtil'
+   'Controls/_lists/utils/GridLayoutUtil'
 ], function (Util) {
 
    describe('Controls/_grids/GridLayoutUtil', function () {

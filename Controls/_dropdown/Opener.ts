@@ -5,7 +5,7 @@ import Env = require('Env/Env');
       /**
        * Opener for dropdown menu.
        *
-       * @class Controls/_dropdown/Opener
+       * @class Controls/Dropdown/Opener
        * @mixes Controls/interface/IDropdownList
        * @extends Controls/Popup/Opener/Sticky
        * @control
@@ -46,7 +46,7 @@ import Env = require('Env/Env');
            * @param config
            */
          checkIcons: function(self, config) {
-            var templateOptions = Merge(config.templateOptions, (self._options.popupOptions && self._options.popupOptions.templateOptions) || {}),
+            var templateOptions = Merge(config.templateOptions, self._options.templateOptions || {}),
                parentProperty = templateOptions && templateOptions.parentProperty,
                items = templateOptions && templateOptions.items,
                headerIcon = templateOptions && (templateOptions.headConfig && templateOptions.headConfig.icon || templateOptions.showHeader && templateOptions.icon),
@@ -83,11 +83,7 @@ import Env = require('Env/Env');
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, popupOptions) {
-            //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
-            if (self._options.className) {
-               Env.IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
-            }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeOnOutsideClick = true;
          }
@@ -116,6 +112,7 @@ import Env = require('Env/Env');
                _vdomOnOldPage: true
             });
       };
+
 
       export = DropdownOpener;
    

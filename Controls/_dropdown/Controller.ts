@@ -9,7 +9,7 @@ import dropdownUtils = require('Controls/_dropdown/Util');
       /**
        * Container for dropdown lists
        *
-       * @class Controls/_dropdown/Controller
+       * @class Controls/Dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
@@ -29,23 +29,23 @@ import dropdownUtils = require('Controls/_dropdown/Util');
        */
 
       /**
-       * @event Controls/_dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
+       * @event Controls/Dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
        */
 
       /**
-       * @name Controls/_dropdown/Controller#typeShadow
+       * @name Controls/Dropdown/Controller#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow.
        * @variant suggestionsContainer Shadow on the right, left, bottom.
        */
 
       /**
-       * @name Controls/_dropdown/Controller#marker
+       * @name Controls/Dropdown/Controller#marker
        * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
        */
 
       /**
-       * @name Controls/_dropdown/Controller#showClose
+       * @name Controls/Dropdown/Controller#showClose
        * @cfg {Boolean} Determines whether the cross is displayed.
        */
 
@@ -126,7 +126,7 @@ import dropdownUtils = require('Controls/_dropdown/Util');
             }
          },
 
-         onResult: function(result) {
+         onResult: function(event, result) {
             switch (result.action) {
                case 'pinClicked':
                   this._notify('pinClicked', [result.data]);
@@ -162,11 +162,19 @@ import dropdownUtils = require('Controls/_dropdown/Util');
          },
 
          // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
-         closeHandler: function() {
+         closeHandler: function(event) {
             if (this._options.close) {
                this._options.close();
             }
             this._notify('_close', []);
+         },
+
+         setOpenHandler: function(self, options) {
+            self._onOpen = function(event, args) {
+               if (typeof (options.open) === 'function') {
+                  options.open(args);
+               }
+            };
          }
       };
 
@@ -177,6 +185,7 @@ import dropdownUtils = require('Controls/_dropdown/Util');
          _beforeMount: function(options, context, receivedState) {
             this._onResult = _private.onResult.bind(this);
             this._onClose = _private.closeHandler.bind(this);
+            _private.setOpenHandler(this, options);
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
@@ -189,6 +198,9 @@ import dropdownUtils = require('Controls/_dropdown/Util');
          },
 
          _beforeUpdate: function(newOptions) {
+            if (newOptions.open !== this._options.open) {
+               _private.setOpenHandler(this, newOptions);
+            }
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
@@ -250,7 +262,7 @@ import dropdownUtils = require('Controls/_dropdown/Util');
                   itemsLoadCallback(items);
                   return items;
                });
-            } else {
+            } else if (this._items) {
                itemsLoadCallback(this._items);
             }
          },

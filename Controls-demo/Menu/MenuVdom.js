@@ -176,7 +176,7 @@ define('Controls-demo/Menu/MenuVdom', [
                // TEST_HISTORY_ID
                // TEST_HISTORY_ID_V1
                historySource: new historyService({
-                  historyIds: ['TEST_HISTORY_ID'],
+                  historyId: 'TEST_HISTORY_ID',
                   pinned: true,
                }),
                parentProperty: 'parent',

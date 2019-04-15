@@ -62,6 +62,7 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                 /* testing default templates */
                 assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/String");
                 assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
+                assert.strictEqual(Object.getPrototypeOf(pg.items.at(0))._moduleName, 'Controls/_propertyGrid/PropertyGridItem');
             });
 
             it("config with editingObject and source", () => {

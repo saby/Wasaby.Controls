@@ -2,7 +2,7 @@
    <ws:master>
       <div>
          <div class="ws-flexbox demo-DragNDrop__MasterDetail_search">
-            <Controls.Input.Search placeholder="Введите"
+            <Controls.search:Input placeholder="Введите"
                                    attr:class="demo-DragNDrop__MasterDetail_master_search_input"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_master">
@@ -25,7 +25,7 @@
                            columns="{{gridColumns}}"
                         >
                            <ws:draggingTemplate>
-                              <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                              <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                           mainText="{{draggingTemplate.entity._options.mainText}}"
                                           image="{{draggingTemplate.entity._options.image}}"
                                           additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -42,7 +42,7 @@
    <ws:detail>
       <div class="ws-flexbox ws-flex-column ws-flex-grow-1">
          <div class="ws-flexbox ws-flex-shrink-0 demo-DragNDrop__MasterDetail_search">
-            <Controls.Input.Search placeholder="Введите"/>
+            <Controls.search:Input placeholder="Введите"/>
          </div>
          <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_detail">
             <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
@@ -68,7 +68,7 @@
                            </ws:partial>
                         </ws:itemTemplate>
                         <ws:draggingTemplate>
-                           <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                           <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                        mainText="{{draggingTemplate.entity._options.mainText}}"
                                        image="{{draggingTemplate.entity._options.image}}"
                                        additionalText="{{draggingTemplate.entity._options.additionalText}}">

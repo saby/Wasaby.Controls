@@ -50,7 +50,7 @@ define('Controls/Input/Date/Link', [
                headerType: 'link',
                closeButtonEnabled: true,
                rangeselect: false,
-               quantun: null,
+               quantum: null,
                handlers: {
                   onChoose: this._onResultWS3.bind(this)
                }
