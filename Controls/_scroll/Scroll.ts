@@ -3,8 +3,8 @@ import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import ScrollData = require('Controls/_scroll/Scroll/Context');
-import StickyHeaderContext = require('Controls/StickyHeader/Context');
-import stickyHeaderUtils = require('Controls/StickyHeader/Utils');
+import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
+import stickyHeaderUtils = require('Controls/_scroll/StickyHeader/Utils');
 import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
@@ -183,7 +183,7 @@ import 'css!theme?Controls/_scroll/Scroll/Scroll';
             _pagingState: null,
 
             /**
-             * @type {Controls/StickyHeader/Context|null}
+             * @type {Controls/_scroll/Context|null}
              * @private
              */
             _stickyHeaderContext: null,

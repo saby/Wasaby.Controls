@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/StickyHeader/Controller/Controller');
+import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
 
 // @ts-ignore
 
@@ -60,7 +60,7 @@ class Component extends Control {
 
     /**
      * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event
-     * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
+     * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
      * @private
      */
     _fixedHandler(event, fixedHeaderData) {
@@ -85,7 +85,7 @@ class Component extends Control {
 
     /**
      * Update information about the fixation state.
-     * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
+     * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
      */
     private _updateFixationState(data: object) {
         if (!!data.fixedPosition) {

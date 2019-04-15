@@ -1,13 +1,11 @@
-define('Controls/StickyHeader/Utils', [
-   'Env/Env',
-   'Controls/Utils/getDimensions'
-], function(Env, getDimensions) {
+import Env = require('Env/Env');
+import getDimensions = require('Controls/Utils/getDimensions');
 
-   'use strict';
+   
 
    var lastId = 0;
 
-   return {
+   export = {
 
       /**
        * The position property with sticky value is not supported in ie and edge lower version 16.
@@ -40,4 +38,4 @@ define('Controls/StickyHeader/Utils', [
          }
       }
    };
-});
+

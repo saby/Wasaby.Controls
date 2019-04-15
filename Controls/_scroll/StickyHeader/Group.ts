@@ -1,12 +1,8 @@
-define('Controls/StickyHeader/Group',
-   [
-      'Core/Control',
-      'Controls/StickyHeader/Utils',
-      'wml!Controls/StickyHeader/Group',
-   ],
-   function(Control, stickyUtils, template) {
+import Control = require('Core/Control');
+import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
+import template = require('wml!Controls/_scroll/StickyHeader/Group');
 
-      'use strict';
+
 
       /**
        * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -14,19 +10,19 @@ define('Controls/StickyHeader/Group',
        * Behaves like one fixed header.
        *
        * @extends Core/Control
-       * @class Controls/StickyHeader/Group
+       * @class Controls/_scroll/StickyHeader/Group
        * @author Миронов А.Ю.
        */
 
       /**
-       * @name Controls/StickyHeader/Group#content
+       * @name Controls/_scroll/StickyHeader/Group#content
        * @cfg {Function} Content in which several fixed headers are inserted.
        */
 
       /**
-       * @event Controls/StickyHeader/Group#fixed Change the fixation state.
+       * @event Controls/_scroll/StickyHeader/Group#fixed Change the fixation state.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
-       * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
+       * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
        */
 
       var _private = {
@@ -148,6 +144,5 @@ define('Controls/StickyHeader/Group',
 
       Component._private = _private;
 
-      return Component;
-   }
-);
+      export = Component;
+

@@ -1,9 +1,5 @@
-define('Controls/StickyHeader/Context',
-   [
-      'Core/DataContext'
-   ],
-   function(DataContext) {
-      return DataContext.extend({
+import DataContext = require('Core/DataContext');
+      export = DataContext.extend({
 
          /**
           * The position of the fixed header content relative to the top of the container.
@@ -30,5 +26,4 @@ define('Controls/StickyHeader/Context',
             this.shadowPosition = config.shadowPosition || '';
          }
       });
-   }
-);
+   

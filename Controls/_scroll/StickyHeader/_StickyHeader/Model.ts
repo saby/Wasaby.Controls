@@ -1,15 +1,11 @@
-define('Controls/StickyHeader/_StickyHeader/Model',
-   [
-      'Env/Env',
-      'Core/core-simpleExtend'
-   ],
-   function(Env, simpleExtend) {
+import Env = require('Env/Env');
+import simpleExtend = require('Core/core-simpleExtend');
 
-      'use strict';
+
 
       /**
        * @extends Core/core-simpleExtend
-       * @class Controls/StickyHeader/Model
+       * @class Controls/_scroll/Model
        */
 
       /**
@@ -24,7 +20,7 @@ define('Controls/StickyHeader/_StickyHeader/Model',
        * @variant bottom Bottom target.
        */
 
-      return simpleExtend.extend({
+      export = simpleExtend.extend({
 
          /**
           * @type {Intersection|null} Determines whether the boundaries of content crossed.
@@ -89,7 +85,7 @@ define('Controls/StickyHeader/_StickyHeader/Model',
                case this._bottomTarget:
                   return 'bottom';
                default:
-                  Env.IoC.resolve('ILogger').error('Controls/StickyHeader/Model', 'Unexpected target');
+                  Env.IoC.resolve('ILogger').error('Controls/_scroll/StickyHeader/Model', 'Unexpected target');
                   return 'bottom';
             }
          },
@@ -111,5 +107,4 @@ define('Controls/StickyHeader/_StickyHeader/Model',
             return result;
          }
       });
-   }
-);
+
