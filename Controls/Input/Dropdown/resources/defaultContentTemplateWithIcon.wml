@@ -1,6 +1,1 @@
-<ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate">
-   <ws:contentTemplate>
-      <div if="{{icon}}" class="controls-Dropdown__icon theme_{{_options.theme}}" title="{{tooltip || text}}"><div class="{{icon}}"></div></div>
-      <div class="controls-Dropdown__text theme_{{_options.theme}}" title="{{tooltip || text}}">{{text}}</div>
-   </ws:contentTemplate>
-</ws:partial>
+<ws:partial template="wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplateWithIcon" scope="{{_options}}" />
