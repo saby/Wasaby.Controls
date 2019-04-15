@@ -1,4 +1,4 @@
-define('Controls/List/TreeTileView/Styles', ['Controls/_lists/TreeTileView/Styles'], function(Control) {
+define('Controls/List/TreeTileView/Styles', ['Controls/_tile/TreeTileView/Styles'], function(Control) {
 /**
  * @mixin Controls/List/TreeTileView/Styles
  * @public

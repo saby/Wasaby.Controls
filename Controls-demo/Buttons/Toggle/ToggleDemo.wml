@@ -2,7 +2,7 @@
     <div class="testBlock" test_name="BackButtonCapture">
         <div class="exampleBlock">
             <h2>Toggle button</h2>
-            <Controls.Toggle.Button bind:value="_value"
+            <Controls.toggle:Button bind:value="_value"
                                     readOnly="{{_readOnly}}"
                                     size="{{_selectedSize}}"
                                     icons="{{_icons}}"
@@ -66,9 +66,9 @@
             <Controls.input:Label name="myLabel1" caption="tooltip:"/>
             <Controls.input:Text bind:value="_tooltip"/>
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+            <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
+            <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>

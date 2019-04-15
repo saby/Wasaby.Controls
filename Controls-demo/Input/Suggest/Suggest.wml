@@ -162,9 +162,9 @@
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
-        <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="demo-TextBox"/>
-        <Controls.Toggle.Checkbox attr:id="footerTemplate" readOnly="{{false}}" bind:value="_footer" caption="footerTemplate"/>
-        <Controls.Toggle.Checkbox attr:id="filter" readOnly="{{false}}" bind:value="_filter" caption="filter"/>
+        <Controls.toggle:Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="demo-TextBox"/>
+        <Controls.toggle:Checkbox attr:id="footerTemplate" readOnly="{{false}}" bind:value="_footer" caption="footerTemplate"/>
+        <Controls.toggle:Checkbox attr:id="filter" readOnly="{{false}}" bind:value="_filter" caption="filter"/>
         <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
                                                  bind:readOnlyValue="_readOnly"
                                                  on:validationErrorsValueChanged="_validationChangedHandler()"

@@ -1,5 +1,5 @@
 define([
-   'Controls/_grids/utils/RowIndexUtil',
+   'Controls/_lists/utils/RowIndexUtil',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Core/core-instance',
    'Types/collection',

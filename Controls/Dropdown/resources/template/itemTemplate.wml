@@ -23,7 +23,7 @@
    </ws:if>
    <ws:else>
       <ws:if data="{{multiSelect}}">
-         <Controls.Toggle.Checkbox value="{{itemData.isSelected}}"
+         <Controls.toggle:Checkbox value="{{itemData.isSelected}}"
                                    attr:class="controls-DropdownList__row-checkbox controls-DropdownList__row-checkbox_{{itemData.isSelected ? 'active' : 'default'}} theme_{{_options.theme}}"/>
       </ws:if>
       <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}}">

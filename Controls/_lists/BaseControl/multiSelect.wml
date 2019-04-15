@@ -1,4 +1,4 @@
-<Controls.Toggle.Checkbox triState="{{triState}}"
+<Controls.toggle:Checkbox triState="{{triState}}"
                           readOnly="{{false}}"
                           attr:class="js-controls-ListView__notEditable controls-DragNDrop__notDraggable js-controls-ListView__checkbox"
                           value="{{multiSelectStatus}}"

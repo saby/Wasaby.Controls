@@ -12,11 +12,13 @@ import ItemTemplate = require('wml!Controls/_treeGrids/TreeGridView/Item');
 
 import ViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');
 import TreeControl = require('Controls/_treeGrids/TreeControl');
+import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
 
 export {
     View,
     ItemTemplate,
 
     ViewModel,
-    TreeControl
+    TreeControl,
+    TreeViewModel
 }

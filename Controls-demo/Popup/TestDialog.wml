@@ -11,7 +11,7 @@
                 <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestDialog">
                     <ws:templateOptions type="stack"/>
                 </Controls.Popup.Opener.Stack>
-                <Controls.Toggle.Checkbox bind:value="_draggable" caption="Включить d'n'd" on:valueChanged="_draggableChanged()"/>
+                <Controls.toggle:Checkbox bind:value="_draggable" caption="Включить d'n'd" on:valueChanged="_draggableChanged()"/>
                 <br />
                 <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
             </div>

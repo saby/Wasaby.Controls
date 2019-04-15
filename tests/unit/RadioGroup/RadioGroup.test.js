@@ -1,15 +1,15 @@
 define(
    [
-      'Controls/Toggle/RadioGroup',
+      'Controls/toggle',
       'Types/entity',
       'Types/source',
       'Types/collection'
    ],
-   function(RadioGroup, entity, sourceLib, collection) {
+   function(toggle, entity, sourceLib, collection) {
       'use strict';
       describe('Controls/Toggle/RadioGroup', function () {
          it('change selected key', function() {
-            var radio = new RadioGroup();
+            var radio = new toggle.RadioGroup();
             var keyChanged = false;
             var item = new entity.Model();
             item.set("2", "test");
@@ -26,7 +26,7 @@ define(
          });
 
          it('_beforeMount', function(done) {
-            var radio = new RadioGroup();
+            var radio = new toggle.RadioGroup();
             var source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
@@ -52,7 +52,7 @@ define(
          });
 
          it('_beforeUpdate', function(done) {
-            var radio = new RadioGroup();
+            var radio = new toggle.RadioGroup();
             var source = new sourceLib.Memory({
                idProperty: 'id',
                data: [

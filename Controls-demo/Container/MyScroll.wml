@@ -5,10 +5,10 @@
             <div class="ws-header_size_h3 ws-header_color_accent2 ws-header_size_weight">Задайте опции:</div>
          </div>
          <div class="ControlsDemo-Scroll__article">
-            <Controls.Toggle.Checkbox caption="Показать тень" bind:value="_showShadow"/>
-            <Controls.Toggle.Checkbox caption="Показать полосу прокрутки"
+            <Controls.toggle:Checkbox caption="Показать тень" bind:value="_showShadow"/>
+            <Controls.toggle:Checkbox caption="Показать полосу прокрутки"
                                       bind:value="_showScrollbar"/>
-            <Controls.Toggle.DoubleSwitch captions="{{['Темная тема', 'Светлая тема']}}" orientation="vertical"
+            <Controls.toggle:DoubleSwitch captions="{{['Темная тема', 'Светлая тема']}}" orientation="vertical"
                                           bind:value="_theme" attr:style="display: inline-flex;"/>
             <div class="ControlsDemo-Scroll__selectUser">
                <ws:partial if="{{_activeUser}}"
