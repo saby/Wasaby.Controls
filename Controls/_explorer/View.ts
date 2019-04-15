@@ -178,7 +178,7 @@ import 'Controls/breadcrumbs';
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;
 
-         if (this._options.itemsDragNDrop && cInstance.instanceOfModule(dragObject.entity, 'Controls/_dragnDrop/Entity/Items')) {
+         if (this._options.itemsDragNDrop && this._options.parentProperty && cInstance.instanceOfModule(dragObject.entity, 'Controls/_dragnDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
             this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
