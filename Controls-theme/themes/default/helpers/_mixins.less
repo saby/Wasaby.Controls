@@ -66,31 +66,6 @@
    cursor: grabbing !important;
 }
 
-.placeholder(@color: @default-placeholder-color) {
-  &::-webkit-input-placeholder {
-    opacity: 1;
-    color: @color;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    text-overflow:ellipsis;
-  }
-
-  &::-moz-placeholder {
-    opacity: 1;
-    color: @color;
-    -moz-user-select: none;
-    text-overflow:ellipsis;
-  }
-
-  &:-ms-input-placeholder {
-    opacity: 1;
-    color: @color;
-    //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
-    text-overflow:ellipsis;
-  }
-}
-
 .hiddenPlaceholder() {
   &::-webkit-input-placeholder { opacity: 0 }
   &:-moz-placeholder {  opacity: 0 }
@@ -147,19 +122,6 @@
   border-radius: @border-radius;
 }
 
-.button-default-style(@button-font-size: @font-size_Button_default, @button-default-shadow: none) {
-  display: inline-block;
-  outline: none;
-  line-height: normal;
-  .box-sizing(border-box);
-  font-family: @default-font-name;
-  font-size: @button-font-size;
-  font-weight: normal;
-  position: relative;
-  .box-shadow(@button-default-shadow);
-  border: none;
-  padding: 0;
-}
 .button-wrapper-default-style() {
   .inline-flexbox();
   box-sizing: border-box;
@@ -268,13 +230,6 @@
    margin-top: -(@height / 2 - @padding-top);
 }
 
-.marker(@bg-image, @position: left top) {
-  background-image: @bg-image;
-  background-position: @position;
-  background-repeat: repeat-y;
-  background-size: @background-size_Marker;
-}
-
 .inline-flexbox() {
   display: inline-flex;
 }
@@ -282,6 +237,7 @@
 .flexbox() {
   display: flex;
 }
+
 .flex-direction(@direction: row){
   flex-direction: @direction;
 
@@ -353,26 +309,12 @@
   }
 }
 
-.ws-header-mixin(@padding-left, @padding-right, @font-size, @color, @height, @hoverColor: @color) {
-  display: inline-block;
-  padding-left: @padding-left;
-  padding-right: @padding-right;
-  font-size: @font-size;
-  font-weight: @font-weight_Header;
-  font-family: @default-font-name;
-  color: @color;
-  height: @height;
-  line-height: @height;
-  body.ws-is-desktop-platform &:hover {
-    color:@hoverColor;
-  }
-}
-
 .ws-header-content-mixin(@content, @font, @color) {
   content: @content;
   font: @font;
   color: @color;
 }
+
 .link-hover-mixin(@textColor, @iconColor, @textSelector) {
   &:hover {
     color: @textColor;
@@ -398,25 +340,6 @@
   }
 }
 
-.checkbox() {
-  .user-select();
-  width: @width_CheckBox;
-  height: @height_CheckBox;
-}
-
-.checkbox-border-size() {
-  &:before {
-    .box-sizing();
-    content: '';
-    position: absolute;
-    border-width: @default-border-width;
-    border-style: solid;
-    width: @check-box-icon-box-size;
-    height: @check-box-icon-box-size;
-    margin: (@height_CheckBox - @check-box-icon-box-size) / 2 (@width_CheckBox - @check-box-icon-box-size) / 2;;
-  }
-}
-
 .checkbox-border-color(@enabledColor, @disabledColor, @selector) {
   .ws-enabled>.@{selector}:before {
     border-color: @enabledColor;
@@ -429,26 +352,6 @@
   font-family: 'cbuc-icons';
   content: '\e616';
 }
-.checkbox-checked-size() {
-  &:after {
-    .draw-checkbox();
-    position: absolute;
-    font-size: @check-box-icon-successful-size;
-    height: @check-box-icon-successful-size;
-    width: @check-box-icon-successful-size;
-    line-height: @check-box-icon-successful-size;
-    top: @check-box-icon-successful-top;
-    left: @check-box-icon-successful-left;
-
-
-    // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
-    // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
-    // увеличим line-height в iPad на 1px;
-    .ws-is-mobile-platform & {
-      line-height: calc(~"@{check-box-icon-successful-size} + 1px");
-    }
-  }
-}
 
 .checkbox-checked-color(@enabledColor, @disabledColor, @selector) {
   .ws-enabled.controls-Checked__checked>.@{selector}:after {
@@ -456,17 +359,6 @@
   }
   .ws-disabled.controls-Checked__checked>.@{selector}:after {
     color: @disabledColor;
-  }
-}
-.checkbox-null-size() {
-  &:after {
-    left: 0;
-    content: '';
-    position: absolute;
-    height: @check-box-icon-null-size;
-    width: @check-box-icon-null-size;
-    line-height: @check-box-icon-null-size;
-    margin: (@height_CheckBox - @check-box-icon-null-size) / 2 (@width_CheckBox - @check-box-icon-null-size) / 2;
   }
 }
 
@@ -531,31 +423,6 @@
   border-bottom-color: transparent;
 }
 
-.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0, @block-height: 100%) {
-  &:after {
-    content: '\200b';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: @block-height;
-    box-sizing: border-box;
-    border-style: solid;
-    border-width: @width;
-    border-color: @color;
-    border-radius: @border-radius;
-    pointer-events: none;
-  }
-}
-
-
-.ws-header-size-mixin(@text-size, @height: @default-height) {
-  display: inline-block;
-  font-size: @text-size;
-  height: @height;
-  line-height: @height;
-  font-family: @default-font-name;
-}
 .ws-back-arrow-size-mixin(@width, @height) {
   &:before {
     display: inline-block;
@@ -567,94 +434,4 @@
 //Position: sticky for grid in Safari and other browsers
 .position-sticky() {
    position: sticky;
-}
-
-.closeButton() {
-  width: @width_EditActions-cancelButton;
-  height: @height_EditActions-cancelButton;
-  margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
-  background: @background_EditActions-closeButton;
-  border-width: @border-width_IconButton_bordered;
-  border-style: solid;
-  border-color: @border-color_IconButton_bordered;
-  .box-shadow(@box-shadow_IconButton);
-  text-shadow: @text-shadow_IconButton_bordered;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-block;
-  &:hover {
-    border-color: @border-color_IconButton_bordered_standard_hovered;
-    background: @background_EditActions-closeButton_hovered;
-    box-shadow: @box-shadow_Button_bordered_hovered;
-    // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
-    // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
-    .controls-Button__icon.icon-primary, .icon-primary {
-      color: @color_Link-text_active;
-    }
-  }
-  &:active {
-    border-color: @border-color_IconButton_bordered_standard_hovered;
-    background: @background_EditActions-closeButton_active;
-    // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
-    // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
-    .controls-Button__icon.icon-primary, .icon-primary {
-      color: @color_Link-text_active;
-    }
-  }
-
-  .controls-ButtonBase__content {
-    .justify-content(center);
-  }
-
-  .icon-size {
-    .icon-size(@font-size_EditActions-cancelButton);
-  }
-}
-
-.closeButton__popup() {
-  cursor: pointer;
-  right: 0px;
-  z-index: 1;
-  top: @controls-Popup-closeButton-top;
-  .flexbox();
-  .align-items(center);
-  .justify-content(center);
-  &:before {
-    content: @content_CloseButton_icon;
-  }
-}
-
-.closeButton__popup_standard(@width, @height, @fontSize) {
-  border-style: solid;
-  width: @width - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-  height: @height - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-  font-family: @default-icon-font;
-  line-height: @height;
-  font-size: @fontSize;
-  box-shadow: @box-shadow_CloseButton;
-  border-width: @border-width_CloseButton;
-  border-color: @border-color_CloseButton;
-  border-radius: @border-radius_CloseButton;
-  background-color: @background-color_CloseButton_default;
-  &:before {
-    color: @color_CloseButton-icon;
-    text-shadow: @text-shadow_Button;
-  }
-  &:active {
-    box-shadow: none;
-  }
-}
-
-.closeButton__popup_standard_hover() {
-  &:hover, &:active {
-    background-color: @background-color_CloseButton_default_hover;
-    box-shadow: @box-shadow_CloseButton_active;
-    border-color: @border-color_CloseButton_hover;
-    &:before {
-      color: @color_CloseButton-icon_hover;
-    }
-  }
-  &:active {
-    box-shadow: none;
-  }
 }
