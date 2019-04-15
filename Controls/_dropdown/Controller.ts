@@ -6,6 +6,7 @@ import historyUtils = require('Controls/History/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
       
 
+      
       /**
        * Container for dropdown lists
        *
@@ -251,7 +252,7 @@ import dropdownUtils = require('Controls/_dropdown/Util');
             }
             function itemsLoadCallback(items) {
                if (items.getCount() === 1) {
-                  self._notify('selectedItemsChanged', [items.at(0)]);
+                  self._notify('selectedItemsChanged', [[items.at(0)]]);
                } else if (items.getCount() > 1) {
                   open();
                }
