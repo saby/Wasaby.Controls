@@ -1,4 +1,4 @@
-define('Controls/List/Mover/MoveDialog', ['Controls/_lists/Mover/MoveDialog'], function(Control) {
+define('Controls/List/Mover/MoveDialog', ['Controls/MoveDialog'], function(Control) {
 /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.

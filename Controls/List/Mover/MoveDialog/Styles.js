@@ -1,4 +1,4 @@
-define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_lists/Mover/MoveDialog/Styles'], function(Control) {
+define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_MoveDialog/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/Mover/MoveDialog/Styles
