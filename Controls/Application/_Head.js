@@ -97,10 +97,8 @@ define('Controls/Application/_Head',
 
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
-                  
-                  // TODO: uncomment it before tests runs.
-                  // this.headJson = undefined;
-                  // this.headValidHtml = undefined;
+                  this.headJson = undefined;
+                  this.headValidHtml = undefined;
                }
 
                if (document.getElementsByClassName('head-server-block').length > 0) {
@@ -141,6 +139,7 @@ define('Controls/Application/_Head',
             if (attributes) {
                for (var attributeName in attributes) {
                   if (attributes.hasOwnProperty(attributeName)) {
+                     // Try update all attributes as link, but only links would be updated.
                      attributes[attributeName] = updateLink(attributes[attributeName]);
                   }
                }
