@@ -82,6 +82,11 @@ import 'Controls/_popup/Opener/Notification/NotificationContent';
             return 100;
          },
 
+         getDefaultConfig(item) {
+            NotificationController.superclass.getDefaultConfig.apply(this, arguments);
+            _private.setNotificationContent(item);
+         },
+
          _updatePositions: function() {
             var height = 0;
 
@@ -98,4 +103,4 @@ import 'Controls/_popup/Opener/Notification/NotificationContent';
       });
 
       export = new NotificationController();
-   
+

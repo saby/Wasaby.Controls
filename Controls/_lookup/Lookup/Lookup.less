@@ -1,0 +1,130 @@
+.controls-Lookup {
+  max-width: 100%;
+  display: inline-block;
+}
+
+.controls-Lookup__suggest,
+.controls-Lookup__inputRender {
+  width: 100%;
+}
+
+.controls-Lookup__inputRender {
+  padding-left: @spacing_Lookup-between-inputRender-leftBorder;
+  padding-right: @spacing_Lookup-between-inputRender-rightBorder;
+}
+
+.controls-Lookup__inputRender .controls-Render__wrapper {
+  align-items: center;
+  position: relative;
+}
+
+.controls-Lookup__inputRender_multiLine .controls-Render__wrapper {
+  display: inline-block;
+  width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup})";
+}
+
+/*
+  Border is used as an indent for the input field.
+  Padding is not suitable because a non-native placeholder is used, which is positioned through absolute.
+  Margin is not suitable, because in  mode multi line for input, we set the width, which is determined by before update, and do not know what left space will be, since it is not constant.
+*/
+.controls-Lookup__fieldWrapper.controls-InputBase__field {
+  margin: 0;
+  box-sizing: border-box;
+  border-right: @spacing_Lookup-between-input-afterFieldWrapper solid transparent;
+}
+
+.controls-Lookup__fieldWrapper-left-spacing {
+  border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
+}
+
+.controls-Lookup__fieldWrapper_content_width_custom {
+  display: inline-flex;
+}
+
+.controls-Lookup__fieldWrapper_content_width_default {
+  line-height: @line-height_Lookup-input-wrapper;
+  width: auto;
+}
+
+.controls-Lookup__fieldWrapper_hidden {
+  display: none;
+}
+
+.controls-Lookup__afterFieldWrapper {
+  flex-shrink: 0;
+  display: inline-flex;
+  height: 100%;
+}
+
+.controls-Lookup__afterFieldWrapper_singleLine  {
+  margin-left: auto;
+  align-items: center;
+}
+
+.controls-Lookup__afterFieldWrapper_multiLine {
+  position: absolute;
+  top: 0;
+  right: -@spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup;
+  justify-content: space-between;
+  flex-flow: column;
+}
+
+.controls-Lookup__icon {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.controls-Lookup__showSelector {
+  .icon-size-without-important(@font-size_Lookup-showSelector);
+  padding: @spacing_Lookup-between-showSelector-border;
+  color: @color_Lookup-showSelector;
+}
+
+.ws-is-no-touch {
+  .controls-Lookup__showSelector:hover {
+    color: @color_Lookup-showSelector_hovered;
+  }
+}
+
+.controls-Lookup__showSelector:active {
+  color: @color_Lookup-showSelector_active;
+}
+
+
+.controls-Lookup__clearRecords {
+  .icon-size-without-important(@font-size_Lookup-clearRecords);
+  padding: @spacing_Lookup-between-clearRecords-border;
+  color: @color_Lookup-clearRecords;
+}
+
+.ws-is-no-touch {
+  .controls-Lookup__clearRecords:hover {
+    color: @color_Lookup-clearRecords_hovered;
+  }
+}
+
+.controls-Lookup__clearRecords:active {
+  color: @color_Lookup-clearRecords_active;
+}
+
+.controls-Lookup__clearRecords_multiLine {
+  order: 1;
+}
+
+// https://online.sbis.ru/opendoc.html?guid=731dbb95-6655-4ccd-ae34-e3b212e18bce
+.controls-SelectedCollection__collection.controls-Lookup__collection_single {
+  .flex-shrink(1);
+}
+
+.controls-SelectedCollection__collection.controls-Lookup__collection_multi {
+  .flex-shrink(0);
+}
+
+.controls-Lookup-collection__measurer {
+  top: 0;
+  left: -9999px;
+  position: absolute;
+  backface-visibility: hidden;
+}

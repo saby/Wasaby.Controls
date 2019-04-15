@@ -1,0 +1,32 @@
+<div attr:class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
+     attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
+   <ws:if data="{{_items.length > _options.maxVisibleItems}}">
+      <Controls.Popup.InfoBox
+              attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
+              style="default controls-SelectedCollection__popup"
+              trigger="click"
+              templateName="Controls/Selector/SelectedCollection/Popup"
+              templateOptions="{{_templateOptions}}"
+              targetSide="bottom"
+              on:openInfoBox="_openInfoBox()"
+              on:closeInfoBox="_notifyHandler('closeInfoBox')">
+          <ws:partial template="{{_counterTemplate}}" itemsCount="{{_items.length}}" attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
+      </Controls.Popup.InfoBox>
+   </ws:if>
+   <ws:for data="index, item in _visibleItems">
+      <ws:partial
+              attr:style="max-width: {{_getItemMaxWidth(index, _items.length, _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
+              attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
+              template="{{_options.itemTemplate}}"
+              item="{{item}}"
+              displayProperty="{{_options.displayProperty}}"
+              isSingleItem="{{_visibleItems.length === 1}}"
+              isLastItem="{{_visibleItems.length === index + 1}}"
+              readOnly="{{_options.readOnly}}"
+              itemsLayout="{{_options.itemsLayout}}"
+              contentTemplate="{{_contentTemplate}}"
+              crossTemplate="{{_crossTemplate}}"
+              on:click="_itemClick(item)">
+      </ws:partial>
+   </ws:for>
+</div>

@@ -79,6 +79,16 @@ define(
             NotificationController.elementDestroyed(item);
             assert.equal(NotificationController._stack.getCount(), 0);
          });
+
+         it('getDefaultConfig', function() {
+            const item = {
+               popupOptions: {}
+            };
+
+            NotificationController.getDefaultConfig(item);
+            assert.equal(item.popupOptions.content, 'Controls/_popup/Opener/Notification/NotificationContent');
+         });
+
       });
    }
 );

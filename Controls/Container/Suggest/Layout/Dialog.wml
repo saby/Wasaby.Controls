@@ -1,13 +1,1 @@
-<div class="controls-SuggestV__dialog">
-    <Controls.Popup.Templates.Stack.StackTemplate attr:class="controls-SuggestV__dialog-layout" headingCaption="Все записи">
-        <ws:bodyContentTemplate>
-            <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-Suggest__dialog-scrollContainer" name="scroll">
-                <ws:content>
-                    <ws:partial template="{{_options.template}}"
-                                on:itemClick="_itemClick()"
-                                dialogMode="{{true}}"/>
-                </ws:content>
-            </Controls.Container.Scroll>
-        </ws:bodyContentTemplate>
-    </Controls.Popup.Templates.Stack.StackTemplate>
-</div>
+<ws:partial template="wml!Controls/_suggestPopup/Dialog" scope="{{_options}}" />
