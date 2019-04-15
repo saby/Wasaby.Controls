@@ -13,6 +13,10 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import Env = require('Env/Env');
 import inputWml = require('wml!Controls/Input/resources/input');
+import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
+import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
+import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
+
 import 'css!theme?Controls/_lookup/Lookup/Lookup';
 
 
@@ -188,7 +192,10 @@ import 'css!theme?Controls/_lookup/Lookup/Lookup';
             }),
             _items: items,
             _visibleItems: visibleItems,
-            _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth
+            _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
+            _contentTemplate: ContentTemplate,
+            _crossTemplate: CrossTemplate,
+            _counterTemplate: CounterTemplate
          });
 
          if (newOptions.multiLine) {
@@ -268,6 +275,9 @@ import 'css!theme?Controls/_lookup/Lookup/Lookup';
       _maxVisibleItems: null,
       _clearRecordsTemplate: clearRecordsTemplate,
       _showSelectorTemplate: showSelectorTemplate,
+      _contentTemplate: ContentTemplate,
+      _crossTemplate: CrossTemplate,
+      _counterTemplate: CounterTemplate,
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
       _needSetFocusInInput: false,
@@ -319,6 +329,7 @@ import 'css!theme?Controls/_lookup/Lookup/Lookup';
                }
             });
          }
+
 
          if (isNeedUpdate) {
             _private.calculatingSizes(this, newOptions);
