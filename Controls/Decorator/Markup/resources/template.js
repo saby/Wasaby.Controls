@@ -32,7 +32,7 @@ define('Controls/Decorator/Markup/resources/template', [
       goodLinkAttributeRegExp = /^((https?|ftp|file|smb):\/\/|mailto:|\/)/,
       dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
-      longSpaceRegExp = /\u00a0/g;
+      additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
@@ -161,10 +161,12 @@ define('Controls/Decorator/Markup/resources/template', [
             });
          };
       } else {
-         // Markup Converter should escape long space characters too.
+         // Markup Converter should escape more characters, then markupGenerator.
          oldEscape = markupGenerator.escape;
          markupGenerator.escape = function(str) {
-            return oldEscape(str).replace(longSpaceRegExp, '&nbsp;');
+            return oldEscape(str).replace(additionalNotVdomEscapeRegExp, function(match) {
+               return match[0] === '&' ? '&amp;#' : '&nbsp;';
+            });
          };
       }
       try {
