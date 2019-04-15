@@ -1,6 +1,6 @@
 define('Controls/Container/Scroll',
-   ['Controls/_scroll/Scroll'],
+   ['Controls/scroll'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Container;
    });

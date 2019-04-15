@@ -3,8 +3,8 @@
  * @author Крайнов Д.О.
  */
 import BaseControl = require('Core/Control');
-import template = require('wml!Controls/_lists/Paging/Paging');
-import 'css!theme?Controls/_lists/Paging/Paging';
+import template = require('wml!Controls/_paging/Paging/Paging');
+import 'css!theme?Controls/_paging/Paging/Paging';
 
 var _private, ModuleClass;
 
@@ -42,8 +42,8 @@ _private = {
 
 /**
  *
- * @mixes Controls/_lists/Paging/Styles
- * @mixes Controls/_lists/Paging/DigitButtons/Styles
+ * @mixes Controls/_paging/Paging/Styles
+ * @mixes Controls/_paging/Paging/DigitButtons/Styles
  *
  */
 ModuleClass = BaseControl.extend({

@@ -1,5 +1,5 @@
 <ws:if data="{{_isStickySupport}}">
-   <Controls.StickyHeader._StickyHeader scope="{{_options}}"/>
+   <Controls._scroll.StickyHeader._StickyHeader scope="{{_options}}"/>
 </ws:if>
 <ws:else>
    <div>

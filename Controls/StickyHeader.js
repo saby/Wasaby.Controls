@@ -1,6 +1,6 @@
 define('Controls/StickyHeader',
-   ['Controls/_scroll/StickyHeader'],
+   ['Controls/scroll'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.StickyHeader;
    });

@@ -1,7 +1,7 @@
 <ws:template name="content">
-   <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
+   <Controls._scroll.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Registrator name="scrollDetect" register="scroll">
-         <Controls.StickyHeader.Controller name="stickyController">
+         <Controls._scroll.StickyHeader.Controller name="stickyController">
                <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
                Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
                Таким образом мы избавляемся от лишней вложенности.
@@ -26,9 +26,9 @@
                               on:checkboxClick="_tmplNotify('checkboxClick')"
                               on:itemActionsClick="_tmplNotify('itemActionsClick')"/>
                </div>
-         </Controls.StickyHeader.Controller>
+         </Controls._scroll.StickyHeader.Controller>
       </Controls.Event.Registrator>
-   </Controls.Container.Scroll.Watcher>
+   </Controls._scroll.Scroll.Watcher>
 </ws:template>
 
 <ws:template name="scrollTpl">
@@ -43,7 +43,7 @@
       </ws:else>
 
       <ws:if data="{{_scrollbarVisibility()}}">
-         <Controls.Container.Scroll.Scrollbar
+         <Controls._scroll.Scroll.Scrollbar
             position="{{_scrollTop}}"
             contentHeight="{{_displayState.contentHeight}}"
             attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}"
@@ -56,7 +56,7 @@
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">
-         <Controls.list:Paging class="controls-Scroll__paging"
+         <Controls.paging:Paging class="controls-Scroll__paging"
                                stateBegin="{{_pagingState.stateUp}}"
                                statePrev="{{_pagingState.stateUp}}"
                                stateEnd="{{_pagingState.stateDown}}"
