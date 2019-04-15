@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_lists/Mover/MoveDialog/MoveDialog');
-import 'css!theme?Controls/_lists/Mover/MoveDialog/MoveDialog';
+import template = require('wml!Controls/_MoveDialog/MoveDialog');
+import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
     * A standard dialog template for selecting a target item for moving items.
