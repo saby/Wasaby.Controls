@@ -1,6 +1,6 @@
 define('Controls/Container/Suggest/Layout/Dialog',
-   ['Controls/_suggestPopup/Dialog'],
+   ['Controls/suggestPopup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Dialog;
    });

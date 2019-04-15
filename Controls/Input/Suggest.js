@@ -1,6 +1,6 @@
 define('Controls/Input/Suggest',
-   ['Controls/_suggest/Input'],
+   ['Controls/suggest'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Input;
    });

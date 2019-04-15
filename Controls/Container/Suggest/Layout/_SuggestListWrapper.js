@@ -1,6 +1,6 @@
 define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
-   ['Controls/_suggestPopup/_ListWrapper'],
+   ['Controls/suggestPopup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control._ListWrapper;
    });
