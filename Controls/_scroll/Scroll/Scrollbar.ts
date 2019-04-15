@@ -1,19 +1,15 @@
-define('Controls/Container/Scroll/Scrollbar',
-   [
-      'Core/Control',
-      'Env/Env',
-      'wml!Controls/Container/Scroll/Scrollbar/Scrollbar',
-      'Controls/Event/Listener',
-      'css!theme?Controls/Container/Scroll/Scrollbar/Scrollbar'
-   ],
-   function(Control, Env, template) {
+import Control = require('Core/Control');
+import Env = require('Env/Env');
+import template = require('wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar');
+import 'Controls/Event/Listener';
+import 'css!theme?Controls/_scroll/Scroll/Scrollbar/Scrollbar';
 
-      'use strict';
+
 
       /**
        * Thin scrollbar.
        *
-       * @class Controls/Container/resources/Scrollbar
+       * @class Controls/_scroll/resources/Scrollbar
        * @extends Core/Control
        *
        * @event scrollbarBeginDrag Начала перемещения ползунка мышью.
@@ -22,14 +18,14 @@ define('Controls/Container/Scroll/Scrollbar',
        * @event scrollbarEndDrag Конец перемещения ползунка мышью.
        * @param {SyntheticEvent} eventObject Дескриптор события.
        *
-       * @name Controls/Container/resources/Scrollbar#position
+       * @name Controls/_scroll/resources/Scrollbar#position
        * @cfg {Number} Позиция ползунка спроецированная на контент.
        *
-       * @name Controls/Container/resources/Scrollbar#contentHeight
+       * @name Controls/_scroll/resources/Scrollbar#contentHeight
        * @cfg {Number} Высота контента на который проецируется тонкий скролл.
        * @remark Не может быть меньше высоты контейнера или 0.
        *
-       * @name Controls/Container/resources/Scrollbar#style
+       * @name Controls/_scroll/resources/Scrollbar#style
        * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
        * @variant normal стандартная схема
        * @variant inverted противоположная схема
@@ -283,6 +279,5 @@ define('Controls/Container/Scroll/Scrollbar',
 
       Scrollbar._private = _private;
 
-      return Scrollbar;
-   }
-);
+      export = Scrollbar;
+

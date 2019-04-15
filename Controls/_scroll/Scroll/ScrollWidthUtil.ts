@@ -1,10 +1,6 @@
-define('Controls/Container/Scroll/ScrollWidthUtil',
-   [
-      'Env/Env'
-   ],
-   function(Env) {
+import Env = require('Env/Env');
 
-      'use strict';
+      
 
       var _private = {
 
@@ -67,7 +63,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
          }
       };
 
-      return {
+      export = {
          _private: _private,
 
          calcStyleHideScrollbar: function() {
@@ -90,5 +86,4 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
             return styleHideScrollbar;
          }
       };
-   }
-);
+   

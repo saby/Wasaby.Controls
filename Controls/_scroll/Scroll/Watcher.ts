@@ -3,17 +3,13 @@
  * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
  * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
  */
-define('Controls/Container/Scroll/Watcher',
-   [
-      'Core/Control',
-      'wml!Controls/Container/Scroll/Watcher/Watcher',
-      'Controls/Event/Registrar',
-      'Env/Env',
-      'Core/helpers/Object/isEmpty'
-   ],
-   function(Control, template, Registrar, Env, isEmpty) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_scroll/Scroll/Watcher/Watcher');
+import Registrar = require('Controls/Event/Registrar');
+import Env = require('Env/Env');
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
-      'use strict';
+
 
       var SCROLL_LOAD_OFFSET = 100;
       var global = (function() {
@@ -86,7 +82,7 @@ define('Controls/Container/Scroll/Watcher',
                clientHeight: clientHeight
             };
          },
-         
+
          getSizeCache: function(self, container) {
             if (isEmpty(self._sizeCache)) {
                _private.calcSizeCache(self, container);
@@ -281,11 +277,11 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _beforeMount: function() {
-            
+
             //чтобы не было лишних синхронизаций при обработке событий
             //удалим по проекту
             //https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
-            
+
             this._forceUpdate = function() {};
             this._registrar = new Registrar({register: 'listScroll'});
          },
@@ -358,6 +354,5 @@ define('Controls/Container/Scroll/Watcher',
       //для тестов
       Scroll._private = _private;
 
-      return Scroll;
-   }
-);
+      export = Scroll;
+

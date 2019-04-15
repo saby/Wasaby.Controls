@@ -1,29 +1,25 @@
-define('Controls/Container/Scroll',
-   [
-      'Core/Control',
-      'Core/Deferred',
-      'Env/Env',
-      'Core/helpers/Object/isEqual',
-      'Controls/Container/Scroll/Context',
-      'Controls/StickyHeader/Context',
-      'Controls/StickyHeader/Utils',
-      'Controls/Container/Scroll/ScrollWidthUtil',
-      'Controls/Container/Scroll/ScrollHeightFixUtil',
-      'wml!Controls/Container/Scroll/Scroll',
-      'Controls/Utils/tmplNotify',
-      'Controls/Container/Scroll/Watcher',
-      'Controls/Event/Listener',
-      'Controls/Container/Scroll/Scrollbar',
-      'css!theme?Controls/Container/Scroll/Scroll'
-   ],
-   function(Control, Deferred, Env, isEqual, ScrollData, StickyHeaderContext, stickyHeaderUtils, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
-      'use strict';
+import Control = require('Core/Control');
+import Deferred = require('Core/Deferred');
+import Env = require('Env/Env');
+import isEqual = require('Core/helpers/Object/isEqual');
+import ScrollData = require('Controls/_scroll/Scroll/Context');
+import StickyHeaderContext = require('Controls/StickyHeader/Context');
+import stickyHeaderUtils = require('Controls/StickyHeader/Utils');
+import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
+import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
+import template = require('wml!Controls/_scroll/Scroll/Scroll');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import 'Controls/_scroll/Scroll/Watcher';
+import 'Controls/Event/Listener';
+import 'Controls/_scroll/Scroll/Scrollbar';
+import 'css!theme?Controls/_scroll/Scroll/Scroll';
+
 
       /**
        * Container with thin scrollbar.
-       * For the component, a {@link Controls/Container/Scroll/Context context} is required.
+       * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
        *
-       * @class Controls/Container/Scroll
+       * @class Controls/_scroll/Scroll
        * @extends Core/Control
        * @control
        * @public
@@ -40,22 +36,22 @@ define('Controls/Container/Scroll',
        */
 
       /**
-       * @name Controls/Container/Scroll#content
+       * @name Controls/_scroll/Scroll#content
        * @cfg {Content} Container contents.
        */
 
       /**
-       * @name Controls/Container/Scroll#shadowVisible
+       * @name Controls/_scroll/Scroll#shadowVisible
        * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
        */
 
       /**
-       * @name Controls/Container/Scroll#scrollbarVisible
+       * @name Controls/_scroll/Scroll#scrollbarVisible
        * @cfg {Boolean} Whether scrollbar should be shown.
        */
 
       /**
-       * @name Controls/Container/Scroll#style
+       * @name Controls/_scroll/Scroll#style
        * @cfg {String} Color scheme (colors of the shadow and scrollbar).
        * @variant normal Default theme (for bright backgrounds).
        * @variant inverted Inverted theme (for dark backgrounds).
@@ -470,7 +466,7 @@ define('Controls/Container/Scroll',
             },
 
             getDataId: function() {
-               return 'Controls/Container/Scroll';
+               return 'Controls/_scroll/Scroll';
             },
 
             /**
@@ -547,5 +543,5 @@ define('Controls/Container/Scroll',
 
       Scroll._private = _private;
 
-      return Scroll;
-   });
+      export = Scroll;
+

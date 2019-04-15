@@ -1,10 +1,6 @@
-define('Controls/Container/Scroll/ScrollHeightFixUtil',
-   [
-      'Env/Env'
-   ],
-   function(Env) {
+import Env = require('Env/Env');
 
-      'use strict';
+      
 
       var _private = {
 
@@ -47,10 +43,9 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
          }
       };
 
-      return {
+      export = {
          _private: _private,
 
          calcHeightFix: _private.calcHeightFixFn(Env.detection)
       };
-   }
-);
+   
