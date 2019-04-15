@@ -22,6 +22,7 @@
         layerName="Controls/Container/Suggest/__PopupLayer">
    <Controls.Input.Suggest.InputRender
            size="{{_options.size}}"
+           value="{{_value}}"
            style="{{_options.style}}"
            tooltip="{{_options.tooltip}}"
            tagStyle="{{_options.tagStyle}}"
