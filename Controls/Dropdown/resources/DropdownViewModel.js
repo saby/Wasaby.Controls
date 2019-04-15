@@ -4,13 +4,12 @@
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
       'Controls/list',
-      'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'Types/entity',
       'Controls/List/ItemActions/Utils/getStyle'
    ],
 
-   function(lists, ItemsUtil, ItemsViewModel, entity, getStyle) {
+   function(lists, ItemsViewModel, entity, getStyle) {
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -23,21 +22,21 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             }
             return parent === this._options.rootKey;
          },
-         
+
          isHistoryItem: function(item) {
             return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
          },
-         
+
          filterAdditional: function(item) {
             var isAdditional, isHistory;
-            
+
             if (!this._options.additionalProperty || this._expanded === true || !item.get) {
                return true;
             }
-            
+
             isAdditional = item.get(this._options.additionalProperty);
             isHistory = _private.isHistoryItem(item);
-            
+
             //additional item in history must be showed
             return isAdditional !== true || isHistory;
          },
@@ -50,7 +49,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var nextItemInHistory = _private.isHistoryItem(nextItem);
             return itemInHistory && !nextItemInHistory;
          },
-         
+
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
             return self._itemsModel._display.getGroupItems(key).length === 0;
@@ -239,7 +238,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                });
                emptyItem.item = item;
                emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
-               emptyItem.getPropValue = ItemsUtil.getPropertyValue;
+               emptyItem.getPropValue = lists.ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';
                return emptyItem;

@@ -28,7 +28,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="withDragNDrop">
-    <Controls.DragNDrop.Controller
+    <Controls.dragnDrop:Container
         on:dragStart="_dragStart()"
         on:dragEnd="_dragEnd()"
         on:dragLeave="_dragLeave()"
@@ -40,7 +40,7 @@
         <ws:content>
             <ws:partial template="{{viewContent}}" />
         </ws:content>
-    </Controls.DragNDrop.Controller>
+    </Controls.dragnDrop:Container>
 </ws:template>
 <ws:template name="viewTpl">
     <ws:partial

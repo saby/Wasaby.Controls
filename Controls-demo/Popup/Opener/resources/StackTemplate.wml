@@ -9,10 +9,10 @@
                 <Controls.list:DataContainer source="{{_viewSource}}"
                                          keyProperty="id"
                                          attr:class="ControlsDemo-Grid__Container">
-                    <Controls.Container.MultiSelector>
+                    <Controls.operations:Controller>
                         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                             <Controls.list:Container>
-                                <Controls.List.MultiSelector>
+                                <Controls.operations:Container>
                                     <Controls.treeGrid:View
                                             attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                                             parentProperty="Раздел"
@@ -28,10 +28,10 @@
                                             <Controls.list:AddButton caption="Новая запись"/>
                                         </ws:nodeFooterTemplate>
                                     </Controls.treeGrid:View>
-                                </Controls.List.MultiSelector>
+                                </Controls.operations:Container>
                             </Controls.list:Container>
                         </Controls.Container.Scroll>
-                    </Controls.Container.MultiSelector>
+                    </Controls.operations:Controller>
                 </Controls.list:DataContainer>
             </div>
     </ws:bodyContentTemplate>

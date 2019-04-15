@@ -1,12 +1,12 @@
 define([
-   'Controls/DragNDrop/Controller',
+   'Controls/dragnDrop',
    'Vdom/Vdom'
-], function(Controller, Vdom) {
+], function(dragnDrop, Vdom) {
    'use strict';
 
 
    //mock method, because it works with DOM
-   Controller._private.preventClickEvent = function() {};
+   dragnDrop.Container._private.preventClickEvent = function() {};
 
    function createNativeEvent(type, pageX, pageY) {
       //mock dom event
@@ -43,27 +43,27 @@ define([
       var events = [];
 
       it('isDragStarted', function() {
-         assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 25, 10)));
-         assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 15)));
-         assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 5)));
-         assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 15, 10)));
-         assert.isFalse(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 24, 10)));
-         assert.isFalse(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 14)));
-         assert.isFalse(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 16, 10)));
-         assert.isFalse(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 6)));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 25, 10)));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 15)));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 5)));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 15, 10)));
+         assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 24, 10)));
+         assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 14)));
+         assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 16, 10)));
+         assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 6)));
       });
       it('getDragOffset', function() {
-         assert.deepEqual(Controller._private.getDragOffset(startEvent, createNativeEvent('mousemove', 40, 20)), {x: -20, y: -10});
-         assert.deepEqual(Controller._private.getDragOffset(startEvent, createNativeEvent('mousemove', 0, 0)), {x: 20, y: 10});
-         assert.deepEqual(Controller._private.getDragOffset(startEvent, createNativeEvent('mousemove', -10, -10)), {x: 30, y: 20});
+         assert.deepEqual(dragnDrop.Container._private.getDragOffset(startEvent, createNativeEvent('mousemove', 40, 20)), {x: -20, y: -10});
+         assert.deepEqual(dragnDrop.Container._private.getDragOffset(startEvent, createNativeEvent('mousemove', 0, 0)), {x: 20, y: 10});
+         assert.deepEqual(dragnDrop.Container._private.getDragOffset(startEvent, createNativeEvent('mousemove', -10, -10)), {x: 30, y: 20});
       });
       describe('getPageXY', function() {
          it('touchstart and touchmove', function() {
             var
                touchmove = createNativeEvent('touchmove', 40, 10),
                touchstart = createNativeEvent('touchstart', 30, 20),
-               touchmoveXY = Controller._private.getPageXY(touchmove),
-               touchstartXY = Controller._private.getPageXY(touchstart);
+               touchmoveXY = dragnDrop.Container._private.getPageXY(touchmove),
+               touchstartXY = dragnDrop.Container._private.getPageXY(touchstart);
 
             assert.deepEqual(touchmoveXY, {x: 40, y: 10});
             assert.deepEqual(touchstartXY, {x: 30, y: 20});
@@ -71,14 +71,14 @@ define([
          it('touchend', function() {
             var
                touchend = createNativeEvent('touchend', 50, 60),
-               touchendXY = Controller._private.getPageXY(touchend);
+               touchendXY = dragnDrop.Container._private.getPageXY(touchend);
 
             assert.deepEqual(touchendXY, {x: 50, y: 60});
          });
          it('mouse events', function() {
             var
                mouseup = createNativeEvent('mouseup', 15, 25),
-               mouseupXY = Controller._private.getPageXY(mouseup);
+               mouseupXY = dragnDrop.Container._private.getPageXY(mouseup);
 
             assert.deepEqual(mouseupXY, {x: 15, y: 25});
          });
@@ -87,7 +87,7 @@ define([
          var
             dragObject,
             entity = {},
-            controller = new Controller(),
+            controller = new dragnDrop.Container(),
             startEvent = createSyntheticEvent('mousedown', 20, 10);
 
          controller._afterMount();

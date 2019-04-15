@@ -1,15 +1,15 @@
 <div>
    <div>Demo Controls/Explorer</div>
    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
-      <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"
+      <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                         bind:excludedKeys="_excludedKeys">
-         <Controls.Search.Controller searchParam="title" minSearchLength="{{3}}">
+         <Controls.search:Controller searchParam="title" minSearchLength="{{3}}">
             <div class="ws-fragment">
-               <Controls.Search.Input.Container>
+               <Controls.search:InputContainer>
                   <Controls.Input.Search/>
-               </Controls.Search.Input.Container>
+               </Controls.search:InputContainer>
                <Controls.list:Container>
-                  <Controls.List.MultiSelector>
+                  <Controls.operations:Container>
                      <Controls.Explorer
                         attr:class="demo-Explorer"
                         multiSelectVisibility="visible"
@@ -19,10 +19,10 @@
                         nodeProperty="parent@"
                         columns="{{_viewColumns}}">
                      </Controls.Explorer>
-                  </Controls.List.MultiSelector>
+                  </Controls.operations:Container>
                </Controls.list:Container>
             </div>
-         </Controls.Search.Controller>
-      </Controls.Container.MultiSelector>
+         </Controls.search:Controller>
+      </Controls.operations:Controller>
    </Controls.list:DataContainer>
 </div>

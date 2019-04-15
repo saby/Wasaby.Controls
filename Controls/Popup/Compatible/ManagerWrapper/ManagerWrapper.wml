@@ -16,11 +16,11 @@
                                                 on:closePreviewer="PopupGlobal._closePreviewerHandler()"
                                                 on:managerPopupBeforeDestroyed="_beforePopupDestroyedHandler()">
                            <Controls.Application.TouchDetector name="touchDetector">
-                              <Controls.DragNDrop.Container name="dragNDropContainer">
+                              <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
                                     <Controls.Popup.Manager.Container name="PopupContainer" attr:id="popup"/>
                                  </div>
-                              </Controls.DragNDrop.Container>
+                              </Controls.dragnDrop:Controller>
                            </Controls.Application.TouchDetector>
                         </Controls.Popup.Manager>
                      </Controls.Event.Registrator>

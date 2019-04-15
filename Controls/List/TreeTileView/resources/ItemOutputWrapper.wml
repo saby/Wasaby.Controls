@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_lists/TreeTileView/resources/ItemOutputWrapper" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_tile/TreeTileView/resources/ItemOutputWrapper" scope="{{_options}}" />

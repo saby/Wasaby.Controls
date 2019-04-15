@@ -2,7 +2,7 @@
     <div class="event-example__wrapper">
         <div class="exampleBlock example-DoubleSwitch__block">
             <h3>Example</h3>
-            <Controls.Toggle.DoubleSwitch 
+            <Controls.toggle:DoubleSwitch 
                attr:class="demo-switch__element ControlsDemo-DoubleSwitcher__caption1_{{_caption1}} ControlsDemo-DoubleSwitcher__caption2_{{_caption2}}" 
                on:valueChanged="changeValue()" 
                readOnly="{{_readOnly}}" 
@@ -23,7 +23,7 @@
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
+        <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
         <Controls.input:Label caption="First caption"/>
         <Controls.input:Text bind:value="_caption1" attr:class="ControlsDemo__caption"/>
@@ -43,6 +43,6 @@
                 attr:class="ControlsDemo__direction"
         />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:class="ControlsDemo__value"/>
+        <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:class="ControlsDemo__value"/>
     </div>
 </div>

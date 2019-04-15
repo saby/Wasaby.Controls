@@ -2,12 +2,12 @@
    <Controls.buttons:Button caption="Toggle columns" on:click="_onToggleColumnsClicked()"/>
    <div class="demo-Grid__container">
       <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
-         <Controls.Container.MultiSelector
+         <Controls.operations:Controller
                  bind:selectedKeys="_firstSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
                <Controls.list:Container>
-                  <Controls.List.MultiSelector>
+                  <Controls.operations:Container>
                      <Controls.grid:View
                              attr:class="demo-Grid__control test_grid_1"
                              displayProperty="title"
@@ -25,10 +25,10 @@
                              columns="{{gridColumns}}"
                              bind:sorting="_sorting">
                      </Controls.grid:View>
-                  </Controls.List.MultiSelector>
+                  </Controls.operations:Container>
                </Controls.list:Container>
             </Controls.Container.Scroll>
-         </Controls.Container.MultiSelector>
+         </Controls.operations:Controller>
       </Controls.list:DataContainer>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
@@ -55,12 +55,12 @@
    </div>
    <div class="demo-Grid__container">
       <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
-         <Controls.Container.MultiSelector
+         <Controls.operations:Controller
                  bind:selectedKeys="_secondSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
                <Controls.list:Container>
-                  <Controls.List.MultiSelector>
+                  <Controls.operations:Container>
                      <Controls.grid:View
                              attr:class="demo-Grid__control test_grid_3"
                              leftPadding="M"
@@ -76,10 +76,10 @@
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}">
                      </Controls.grid:View>
-                  </Controls.List.MultiSelector>
+                  </Controls.operations:Container>
                </Controls.list:Container>
             </Controls.Container.Scroll>
-         </Controls.Container.MultiSelector>
+         </Controls.operations:Controller>
       </Controls.list:DataContainer>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>

@@ -1,7 +1,7 @@
 <div>
     <div attr:class="exampleBlock">
         <h2>Radio group</h2>
-        <Controls.Toggle.RadioGroup
+        <Controls.toggle:RadioGroup
                 attr:class="demo-RadioGroup"
                 on:selectedKeyChanged="changeKey()"
                 keyProperty="id"
@@ -19,10 +19,10 @@
                     contentTemplate="{{_contentTemplate}}"
                 />
             </ws:itemTemplate>
-        </Controls.Toggle.RadioGroup>
+        </Controls.toggle:RadioGroup>
     </div>
     <div attr:class="optionsBlock">
-        <Controls.Toggle.Checkbox 
+        <Controls.toggle:Checkbox 
             attr:class="ControlsDemo__readOnly"
             readOnly="{{false}}"
             bind:value="_readOnly" 
@@ -50,7 +50,7 @@
             on:selectedKeyChanged="changeSource()"
         />
         <br/>
-        <Controls.Toggle.Checkbox 
+        <Controls.toggle:Checkbox 
             attr:class="ControlsDemo-RadioGroupDemo__item_tmpl"
             readOnly="{{false}}"
             bind:value="_itemTemplatePropertyFlag"
@@ -68,14 +68,14 @@
             on:selectedKeyChanged="changeContentTemplate()"
         />
         <Controls.input:Label caption="Display property:"/>
-        <Controls.Toggle.DoubleSwitch 
+        <Controls.toggle:DoubleSwitch 
             attr:class="ControlsDemo-RadioGroupDemo__displayProperty"
             on:valueChanged="changedDisplayProperty()" 
             captions="{{['caption', 'title']}}" 
             bind:value="_displayPropertyValue"
         />
         <Controls.input:Label caption="Selected key:"/>
-        <Controls.Toggle.RadioGroup
+        <Controls.toggle:RadioGroup
             attr:class="ControlsDemo-RadioGroupDemo__selectedKey"
             on:selectedKeyChanged="changeSelectedKey()"
             keyProperty="id"
@@ -91,7 +91,7 @@
                     displayProperty="id"
                 />
             </ws:itemTemplate>
-        </Controls.Toggle.RadioGroup>
+        </Controls.toggle:RadioGroup>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>

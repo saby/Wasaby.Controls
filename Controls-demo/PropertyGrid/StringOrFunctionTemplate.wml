@@ -3,7 +3,7 @@
 
    <ws:if data="{{!_options.items}}">
       <div style="display: flex; width: 100%;">
-         <Controls.Toggle.DoubleSwitch bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()" captions="{{['function','string']}}"
+         <Controls.toggle:DoubleSwitch bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()" captions="{{['function','string']}}"
                                    attr:class="demo-DoubleSwitch js-Controls-PropertyGridEditor__StringOrFunction"/>
          <Controls.input:Text value="{{_value}}"
                               readOnly="{{_options.readOnly}}"

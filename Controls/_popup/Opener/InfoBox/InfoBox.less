@@ -1,3 +1,6 @@
+@spacing_Infobox-between-border-arrow: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2;
+
+
 .controls-InfoBox {
    padding-top:   @spacing_Infobox-between-content-border-top;
    padding-right: @spacing_Infobox-between-content-border-right;
@@ -42,21 +45,21 @@
       &.controls-Popup-align-horizontal-right:before {
          transform: rotate(45deg);
          bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
+         left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
       }
 
       //tr
       &.controls-Popup-align-horizontal-left:before {
          transform: rotate(45deg);
          bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         right: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
+         right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
       }
 
       //tc
       &.controls-Popup-align-horizontal-center:before {
          transform: rotate(45deg);
          bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
+         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
       }
    }
 
@@ -65,21 +68,21 @@
       &.controls-Popup-align-horizontal-right:before {
          transform: rotate(225deg);
          top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
+         left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
       }
 
       //br
       &.controls-Popup-align-horizontal-left:before {
          transform: rotate(225deg);
          top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         right: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
+         right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
       }
 
       //bc
       &.controls-Popup-align-horizontal-center:before {
          transform: rotate(225deg);
          top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
+         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow~')';
       }
    }
 
@@ -88,21 +91,21 @@
       &.controls-Popup-align-vertical-bottom:before {
          transform: rotate(135deg);
          left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
+         top: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
       }
 
       //rb
       &.controls-Popup-align-vertical-top:before {
          transform: rotate(135deg);
          left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         bottom: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
+         bottom: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
       }
 
       //rc
       &.controls-Popup-align-vertical-center:before {
          transform: rotate(135deg);
          left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
+         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
       }
    }
 
@@ -111,21 +114,21 @@
       &.controls-Popup-align-vertical-bottom:before {
          transform: rotate(-45deg);
          right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
+         top: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
       }
 
       //lb
       &.controls-Popup-align-vertical-top:before {
          transform: rotate(-45deg);
          right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         bottom: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
+         bottom: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
       }
 
       //lc
       &.controls-Popup-align-vertical-center:before {
          transform: rotate(-45deg);
          right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
+         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
       }
    }
 }
