@@ -1,4 +1,4 @@
-define('Controls/_tile/Tile/Styles', ['Controls/_lists/Tile/Styles'], function(Control) {
+define('Controls/Tile/Styles', ['Controls/_lists/Tile/Styles'], function(Control) {
 /**
  * @mixin Controls/List/Tile/Styles
  * @public

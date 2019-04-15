@@ -8,7 +8,7 @@ import 'css!theme?Controls/_popupTemplate/CloseButton/CloseButton';
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     *
-    * @class Controls/Button/Close
+    * @class Controls/_popupTempalte/CloseButton
     * @extends Core/Control
     * @control
     * @public
@@ -19,7 +19,7 @@ import 'css!theme?Controls/_popupTemplate/CloseButton/CloseButton';
     */
 
    /**
-    * @name Controls.buttons:Button/Close#viewMode
+    * @name Controls/_popupTempalte/CloseButton#viewMode
     * @cfg {String} Close button display view mode.
     * @variant toolButton  Close display style as button toolButton.
     * @variant link Close display style as button link.
@@ -36,7 +36,7 @@ import 'css!theme?Controls/_popupTemplate/CloseButton/CloseButton';
     */
 
    /**
-    * @name Controls.buttons:Button/Close#transparent
+    * @name Controls/_popupTempalte/CloseButton#transparent
     * @cfg {String} Determines whether close button background color.
     * @variant true Close button has transparent background.
     * @variant false Close button has their viewmode's background.
@@ -53,7 +53,7 @@ import 'css!theme?Controls/_popupTemplate/CloseButton/CloseButton';
     */
 
    /**
-    * @name Controls.buttons:Button/Close#size
+    * @name Controls/_popupTempalte/CloseButton#size
     * @cfg {String} Close button size. The value is given by common size notations.
     * @variant l Medium button size.
     * @variant m Large button size.
