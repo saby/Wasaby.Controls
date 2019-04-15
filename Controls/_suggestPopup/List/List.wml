@@ -1,0 +1,17 @@
+<div class="controls-Suggest_list">
+    <ws:if data="{{_options.tabsOptions}}">
+        <Controls.Container.Async templateName="Controls/tabs:Buttons">
+            <ws:partial template="{{'Controls/tabs:Buttons'}}"
+                        attr:class="controls-Suggest__tabs"
+                        on:selectedKeyChanged="_tabsSelectedKeyChanged()"
+                        style="secondary"
+                        displayProperty="{{_options.tabsOptions.displayProperty}}"
+                        keyProperty="{{_options.tabsOptions.keyProperty}}"
+                        source="{{_options.tabsOptions.source}}"
+                        selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
+        </Controls.Container.Async>
+    </ws:if>
+    <Controls.Container.List scope="{{_suggestListOptions}}" name="list" navigation="{{_navigation}}" content="{{_options.content}}" on:markedKeyChanged="_notifyHandler('markedKeyChanged')"/>
+
+    <Controls.Event.Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
+</div>
