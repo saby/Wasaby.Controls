@@ -3,17 +3,13 @@
  * Компонент слушает события "снизу". События register и сохраняет Listener'ы в списке
  * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
  */
-define('Controls/Event/Registrator',
-   [
-      'Core/Control',
-      'wml!Controls/Event/Registrator',
-      'Controls/Event/Registrar',
-      'Types/entity',
-      'wml!Controls/Application/CompatibleScripts'
-   ],
-   function(Control, template, Registrar, entity) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Event/Registrator');
+import Registrar = require('Controls/Event/Registrar');
+import entity = require('Types/entity');
+import 'wml!Controls/Application/CompatibleScripts';
 
-      'use strict';
+      
 
       var EventRegistrator = Control.extend({
          _template: template,
@@ -54,6 +50,5 @@ define('Controls/Event/Registrator',
          };
       };
 
-      return EventRegistrator;
-   }
-);
+      export = EventRegistrator;
+   

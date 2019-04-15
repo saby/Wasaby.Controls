@@ -4,15 +4,11 @@
  * Вставляем в tmpl:
  * <Controls.Event.Listener event="scroll" callback="myScrollCallback()" />
  */
-define('Controls/Event/Listener',
-   [
-      'Core/Control',
-      'wml!Controls/Event/Listener',
-      'Types/entity'
-   ],
-   function(Control, template, entity) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Event/Listener');
+import entity = require('Types/entity');
 
-      'use strict';
+      
 
       var EventListener = Control.extend({
          _template: template,
@@ -33,6 +29,5 @@ define('Controls/Event/Listener',
          };
       };
 
-      return EventListener;
-   }
-);
+      export = EventListener;
+   

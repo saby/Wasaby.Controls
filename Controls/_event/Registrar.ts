@@ -1,8 +1,4 @@
-define('Controls/Event/Registrar',
-   [
-      'Core/core-simpleExtend'
-   ],
-   function(cExtend) {
+import cExtend = require('Core/core-simpleExtend');
       var _private = {
 
       };
@@ -79,5 +75,5 @@ define('Controls/Event/Registrar',
 
       });
 
-      return Registrar;
-   });
+      export = Registrar;
+   
