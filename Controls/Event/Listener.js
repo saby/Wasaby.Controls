@@ -1,6 +1,6 @@
 define('Controls/Event/Listener',
-   ['Controls/_event/Listener'],
+   ['Controls/event'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Listener;
    });
