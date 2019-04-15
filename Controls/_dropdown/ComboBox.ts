@@ -93,7 +93,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
       ComboBox._private = _private;
 
-      ComboBox._theme = ['Controls/Input/ComboBox/ComboBox'];
+      ComboBox._theme = ['Controls/_dropdown/ComboBox/ComboBox'];
 
       export = ComboBox;
    
