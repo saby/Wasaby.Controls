@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Input/ComboBox/ComboBox');
+import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import Utils = require('Types/util');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import tmplNotify = require('Controls/Utils/tmplNotify');
@@ -7,7 +7,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
        * <a href="/materials/demo-ws4-input-combobox">Demo-example</a>.
-       * @class Controls/Input/ComboBox
+       * @class Controls/_dropdown/ComboBox
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IItemTemplate
