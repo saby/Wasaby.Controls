@@ -378,6 +378,7 @@ var SuggestLayout = Control.extend({
          });
       } else {
          _private.setSearchValue(self, shouldSearch ? value : '');
+         _private.setFilter(self, self._options.filter);
          _private.updateSuggestState(this);
       }
    },
