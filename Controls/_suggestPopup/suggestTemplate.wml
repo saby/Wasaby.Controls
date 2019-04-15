@@ -1,0 +1,7 @@
+<Controls._suggestPopup.List>
+   <Controls.list:View>
+      <ws:itemTemplate>
+         <ws:partial template="Controls/list:ItemTemplate" displayProperty="{{displayProperty}}"/>
+      </ws:itemTemplate>
+   </Controls.list:View>
+</Controls._suggestPopup.List>
