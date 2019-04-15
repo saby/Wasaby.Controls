@@ -1,28 +1,30 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{[Выбор раздела]}" attr:class="controls-MoveDialog">
    <ws:bodyContentTemplate>
-      <Controls._lists.Data source="{{_options.source}}"
+      <Controls.list:DataContainer source="{{_options.source}}"
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
-         <Controls.search:Controller searchParam="{{_options.searchParam}}">
+         <Controls.Search.Controller searchParam="{{_options.searchParam}}">
             <div class="controls-MoveDialog__content">
-               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
+               <Controls.Search.Input.Container attr:class="controls-MoveDialog__search">
                   <Controls.Input.Search/>
-               </Controls.search:InputContainer>
+               </Controls.Search.Input.Container>
                <ws:if data="{{_options.showRoot}}">
                   <Controls.buttons:Button attr:class="controls-MoveDialog__root"
                                            viewMode="link"
                                            caption="{[В корень]}"
                                            on:click="_onItemActionsClick('move', _options.root)"
-                                           icon="icon-small icon-primary icon-Home3"/>
+                                           icon="icon-small icon-primary icon-Undo2"/>
                </ws:if>
                <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
-                  <Controls._lists.Container>
+                  <Controls.list:Container>
                      <Controls.Explorer
                         name="explorer"
                         itemActions="{{_itemActions}}"
                         itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                         showActionButton="{{false}}"
+                        expandedItems="{{_options.expandedItems}}"
+                        markedKey="{{_options.markedKey}}"
                         on:itemActionsClick="_onItemActionsClick()"
                         on:itemClick="_onItemClick()"
                         parentProperty="{{_options.parentProperty}}"
@@ -33,10 +35,10 @@
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
                         columns="{{_options.columns}}"/>
-                  </Controls._lists.Container>
+                  </Controls.list:Container>
                </Controls.Container.Scroll>
             </div>
-         </Controls.search:Controller>
-      </Controls._lists.Data>
+         </Controls.Search.Controller>
+      </Controls.list:DataContainer>
    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Dialog.DialogTemplate>

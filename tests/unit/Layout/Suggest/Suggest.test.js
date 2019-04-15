@@ -415,7 +415,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._changeValueHandler(null, 'te');
          assert.equal(suggestComponent._searchValue, '');
          assert.deepEqual(suggestComponent._filter.historyKeys, IDENTIFICATORS);
-         
+
+         self._options.historyId = '';
+         suggestComponent._options.autoDropDown = true;
+         suggestComponent._changeValueHandler(null, 'test');
+         assert.deepEqual(suggestComponent._filter, {searchParam: 'test'});
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.deepEqual(suggestComponent._filter, {searchParam: ''});
       });
    
       it('Suggest::_private.loadDependencies', function(done) {
