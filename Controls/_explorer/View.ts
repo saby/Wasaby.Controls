@@ -186,6 +186,10 @@ import 'Controls/breadcrumbs';
       },
       _hoveredCrumbChanged: function(event, item) {
          this._hoveredBreadCrumb = item ? item.getId() : undefined;
+
+         // If you change hovered bread crumb, must be called installed in the breadcrumbs highlighter,
+         // but is not called, because the template has no reactive properties.
+         this._forceUpdate();
       },
       _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
