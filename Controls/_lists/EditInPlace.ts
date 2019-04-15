@@ -359,6 +359,10 @@ var EditInPlace = Control.extend(/** @lends Controls/_lists/EditInPlace.prototyp
                     clientY: originalEvent.nativeEvent.clientY,
                     item: record
                 };
+                // The click should not bubble over the editing controller to ensure correct control works.
+                // e.c., a click can be processed by the selection controller, which should not occur when starting editing in place.
+                // https://online.sbis.ru/opendoc.html?guid=b3254c65-596b-4f89-af0f-c160217ce7a3
+                e.stopPropagation();
             }
         }
     },
