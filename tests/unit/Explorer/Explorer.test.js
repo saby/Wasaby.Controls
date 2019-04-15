@@ -589,7 +589,7 @@ define([
             explorerCfg.parentProperty = undefined;
             explorer.saveOptions(explorerCfg);
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
