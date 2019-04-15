@@ -1,14 +1,14 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{[Выбор раздела]}" attr:class="controls-MoveDialog">
    <ws:bodyContentTemplate>
-      <Controls._lists.Data source="{{_options.source}}"
+      <Controls.list:DataContainer source="{{_options.source}}"
                                filter="{{_options.filter}}"
                                navigation="{{_options.navigation}}"
                                keyProperty="{{_options.keyProperty}}">
-         <Controls.search:Controller searchParam="{{_options.searchParam}}">
+         <Controls.Search.Controller searchParam="{{_options.searchParam}}">
             <div class="controls-MoveDialog__content">
-               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
+               <Controls.Search.Input.Container attr:class="controls-MoveDialog__search">
                   <Controls.Input.Search/>
-               </Controls.search:InputContainer>
+               </Controls.Search.Input.Container>
                <ws:if data="{{_options.showRoot}}">
                   <Controls.buttons:Button attr:class="controls-MoveDialog__root"
                                            viewMode="link"
@@ -23,6 +23,8 @@
                         itemActions="{{_itemActions}}"
                         itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                         showActionButton="{{false}}"
+                        expandedItems="{{_options.expandedItems}}"
+                        markedKey="{{_options.markedKey}}"
                         on:itemActionsClick="_onItemActionsClick()"
                         on:itemClick="_onItemClick()"
                         parentProperty="{{_options.parentProperty}}"
@@ -36,7 +38,7 @@
                   </Controls.list:Container>
                </Controls.Container.Scroll>
             </div>
-         </Controls.search:Controller>
-      </Controls._lists.Data>
+         </Controls.Search.Controller>
+      </Controls.list:DataContainer>
    </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
