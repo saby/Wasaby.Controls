@@ -1,3 +1,14 @@
+.checkbox-null-size() {
+   &:after {
+      left: 0;
+      content: '';
+      position: absolute;
+      height: @check-box-icon-null-size;
+      width: @check-box-icon-null-size;
+      line-height: @check-box-icon-null-size;
+      margin: (@height_CheckBox - @check-box-icon-null-size) / 2 (@width_CheckBox - @check-box-icon-null-size) / 2;
+   }
+}
 
 // 6 использований
 // Только в SBIS3.Controls
@@ -208,4 +219,45 @@
    &:active {
       box-shadow: none;
    }
+}
+
+.icon-size(@size: 16px, @fontFamily: @default-icon-font) {
+   font-size: @size !important;
+   line-height: @size !important;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily !important;
+}
+
+.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
+   font-size: @size;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily;
+}
+
+.icon(@size: @default-icon-size, @fontFamily: @default-icon-font) {
+   font-size: @size;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily;
+   speak: none;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   display: inline-block;
+}
+
+.compatPlaceholder(@color: @default-placeholder-color) {
+   .user-select(none);
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 100%;
+   cursor: text;
+   color: @color;
+   font: inherit;
 }

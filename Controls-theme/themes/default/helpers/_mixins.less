@@ -1,3 +1,5 @@
+// do not add variables usages to this file. You should add it to _new-mixins for Controls and to _old-mixins for SBIS3.Controls
+
 .text-overflow() {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -31,35 +33,6 @@
   font-family: 'cbuc-icons' !important;
 }
 
-.icon-size(@size: 16px, @fontFamily: @default-icon-font) {
-  font-size: @size !important;
-  line-height: @size !important;
-  width: @size;
-  height: @size;
-  font-family: @fontFamily !important;
-}
-
-.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
-  font-size: @size;
-  width: @size;
-  height: @size;
-  font-family: @fontFamily;
-}
-
-.icon(@size: @default-icon-size, @fontFamily: @default-icon-font) {
-  font-size: @size;
-  width: @size;
-  height: @size;
-  font-family: @fontFamily;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  display: inline-block;
-}
-
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
@@ -71,18 +44,6 @@
   &:-moz-placeholder {  opacity: 0 }
   &::-moz-placeholder {  opacity: 0 }
   &:-ms-input-placeholder {  opacity: 0 }
-}
-
-.compatPlaceholder(@color: @default-placeholder-color) {
-  .user-select(none);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  cursor: text;
-  color: @color;
-  font: inherit;
 }
 
 .box-sizing(@type: border-box) {
