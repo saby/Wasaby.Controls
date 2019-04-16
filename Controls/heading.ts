@@ -1,10 +1,10 @@
 /**
  * heading library
  * @library Controls/heading
- * @includes Title Controls/_heading/Menu
- * @includes Back Controls/_heading/heading
- * @includes Separator Controls/_heading/Controller
- * @includes Counter Controls/_heading/Opener
+ * @includes Title Controls/_heading/Heading
+ * @includes Back Controls/_heading/Back
+ * @includes Separator Controls/_heading/Separator
+ * @includes Counter Controls/_heading/Counter
  * @public
  * @author Kraynov D.
  */
