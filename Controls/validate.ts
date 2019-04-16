@@ -16,7 +16,7 @@ import Container = require('Controls/_validate/Controller');
 import InputContainer = require('Controls/_validate/Input');
 import isInn = require('Controls/_validate/Validators/IsINN');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
-import isRequired = require('wml!Controls/_validate/Validators/IsRequired');
+import isRequired = require('Controls/_validate/Validators/IsRequired');
 
 export {
     Controller,
