@@ -6,6 +6,8 @@ import { constants } from 'Env/Env';
 import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import { Dialog } from 'Controls/popup';
 import Mode from 'Controls/_dataSource/_error/Mode';
+// @ts-ignore
+import { load } from 'Core/library';
 
 type Options = {
     /**
@@ -17,6 +19,12 @@ type Options = {
 type Config = ViewConfig & {
     isShowed?: boolean;
 }
+let getTemplate = (template: string | Control): Promise<Control> => {
+    if (typeof template == 'string') {
+        return load(template);
+    }
+    return Promise.resolve(template);
+};
 
 /**
  * Component to display a parking error template
@@ -76,11 +84,13 @@ export default class Container extends Control {
         ) {
             return;
         }
-        this.__opener.open({
-            template: config.template,
-            templateOptions: config.options
-        });
         config.isShowed = true;
+        getTemplate(config.template).then((template) => {
+            this.__opener.open({
+                template,
+                templateOptions: config.options
+            });
+        });
     }
     private __hideDialog() {
         if (
@@ -94,7 +104,7 @@ export default class Container extends Control {
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;
         if (this.__viewConfig) {
-            this.__viewConfig.isShowed = this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
         }
     }
     private __createOpener() {
@@ -106,7 +116,8 @@ export default class Container extends Control {
              */
             let el = document.createElement('div');
             el.classList.add('ws-hidden');
-            this._container.appendChild(el);
+            let container = this._container instanceof HTMLElement? this._container: this._container[0];
+            container.appendChild(el);
             this.__opener = Control.createControl(Dialog, {}, el);
         }
     }
