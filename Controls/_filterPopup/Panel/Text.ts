@@ -1,8 +1,6 @@
-define('Controls/Filter/Button/Panel/Text', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/Panel/Text/Text',
-   'css!theme?Controls/Filter/Button/Panel/Text/Text'
-], function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/Text/Text');
+import 'css!theme?Controls/Filter/Button/Panel/Text/Text';
 
    /**
     * Control text with cross
@@ -18,7 +16,7 @@ define('Controls/Filter/Button/Panel/Text', [
     * @cfg {Object} Caption
     */
 
-   'use strict';
+   
 
    var FilterText = Control.extend({
       _template: template,
@@ -39,6 +37,6 @@ define('Controls/Filter/Button/Panel/Text', [
       };
    };
 
-   return FilterText;
+   export = FilterText;
 
-});
+

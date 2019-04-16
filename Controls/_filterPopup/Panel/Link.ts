@@ -1,8 +1,6 @@
-define('Controls/Filter/Button/Panel/Link', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/Panel/Link/Link',
-   'css!theme?Controls/Filter/Button/Panel/Link/Link'
-], function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/Link/Link');
+import 'css!theme?Controls/Filter/Button/Panel/Link/Link';
    /**
     * Control filter link
     * @class Controls/Filter/Button/Panel/Link
@@ -16,7 +14,7 @@ define('Controls/Filter/Button/Panel/Link', [
     * @cfg {Object} Caption
     */
 
-   'use strict';
+   
 
    var FilterLink = Control.extend({
       _template: template,
@@ -27,5 +25,5 @@ define('Controls/Filter/Button/Panel/Link', [
 
    });
 
-   return FilterLink;
-});
+   export = FilterLink;
+

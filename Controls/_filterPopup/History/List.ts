@@ -1,16 +1,14 @@
 /**
  * Created by kraynovdo on 31.01.2018.
  */
-define('Controls/Filter/Button/History/List', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/History/List',
-   'Types/chain',
-   'Core/helpers/Object/isEqual',
-   'Types/util',
-   'Controls/Filter/Button/History/resources/historyUtils',
-   'css!theme?Controls/Filter/Button/History/List'
-], function(BaseControl, template, chain, isEqual, Utils, historyUtils) {
-   'use strict';
+import BaseControl = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/History/List');
+import chain = require('Types/chain');
+import isEqual = require('Core/helpers/Object/isEqual');
+import Utils = require('Types/util');
+import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
+import 'css!theme?Controls/Filter/Button/History/List';
+   
 
    var MAX_NUMBER_ITEMS = 5;
 
@@ -110,5 +108,5 @@ define('Controls/Filter/Button/History/List', [
    });
 
    HistoryList._private = _private;
-   return HistoryList;
-});
+   export = HistoryList;
+

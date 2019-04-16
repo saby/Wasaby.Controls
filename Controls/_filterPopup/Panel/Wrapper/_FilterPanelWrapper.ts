@@ -1,13 +1,8 @@
-define('Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-   [
-      'Core/Control',
-      'wml!Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-      'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions'
-   ],
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper');
+import _FilterPanelWrapper = require('Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions');
 
-   function(Control, template, _FilterPanelWrapper) {
-
-      'use strict';
+      
 
       /**
        * Proxy container for filter panel options.
@@ -17,7 +12,7 @@ define('Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
        * @control
        */
 
-      return Control.extend({
+      export = Control.extend({
 
          _template: template,
 
@@ -28,5 +23,5 @@ define('Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
          }
       });
 
-   });
+   
 

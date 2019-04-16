@@ -1,12 +1,10 @@
-define('Controls/Filter/Button/Panel/AdditionalParams', [
-   'Core/Control',
-   'Types/util',
-   'Core/helpers/Object/isEqual',
-   'Core/core-clone',
-   'wml!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
-   'Types/chain',
-   'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
-], function(Control, Utils, isEqual, Clone, template, chain) {
+import Control = require('Core/Control');
+import Utils = require('Types/util');
+import isEqual = require('Core/helpers/Object/isEqual');
+import Clone = require('Core/core-clone');
+import template = require('wml!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams');
+import chain = require('Types/chain');
+import 'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams';
    /**
     * Control "Additional params". Used in the filter panel.
     * @class Controls/Filter/Button/Panel/AdditionalParams
@@ -25,7 +23,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
     * @css @height_AdditionalParams-arrow Height of the arrow to unfold the block.
     */
 
-   'use strict';
+   
 
    var MAX_NUMBER_ITEMS_COLUMN = 5;
 
@@ -145,5 +143,5 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
    AdditionalParams._private = _private;
 
-   return AdditionalParams;
-});
+   export = AdditionalParams;
+

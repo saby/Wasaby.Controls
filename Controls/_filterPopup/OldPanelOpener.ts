@@ -1,31 +1,17 @@
-define('Controls/Filter/Button/OldPanelOpener',
-   [
-      'Core/CommandDispatcher',
-      'Lib/Control/CompoundControl/CompoundControl',
-      'View/Executor/Utils',
-      'tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
-      'SBIS3.CONTROLS/Mixins/FilterMixin',
-      'SBIS3.CONTROLS/Mixins/PickerMixin',
-      'SBIS3.CONTROLS/Utils/TemplateUtil',
-      'SBIS3.CONTROLS/Utils/FilterPanelUtils',
-      'Controls/Filter/Button/converterFilterStructure',
-      'SBIS3.CONTROLS/Button/IconButton',
-      'i18n!SBIS3.CONTROLS/Filter/Button',
-      'css!SBIS3.CONTROLS/Filter/Button/FilterButton'
-   ],
-   function(
-      CommandDispatcher,
-      CompoundControl,
-      Utils,
-      dotTplForComp,
-      FilterMixin,
-      PickerMixin,
-      TemplateUtil,
-      FilterPanelUtils,
-      converterFilterStructure
-   ) {
+import CommandDispatcher = require('Core/CommandDispatcher');
+import CompoundControl = require('Lib/Control/CompoundControl/CompoundControl');
+import Utils = require('View/Executor/Utils');
+import dotTplForComp = require('tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate');
+import FilterMixin = require('SBIS3.CONTROLS/Mixins/FilterMixin');
+import PickerMixin = require('SBIS3.CONTROLS/Mixins/PickerMixin');
+import TemplateUtil = require('SBIS3.CONTROLS/Utils/TemplateUtil');
+import FilterPanelUtils = require('SBIS3.CONTROLS/Utils/FilterPanelUtils');
+import converterFilterStructure = require('Controls/Filter/Button/converterFilterStructure');
+import 'SBIS3.CONTROLS/Button/IconButton';
+import 'i18n!SBIS3.CONTROLS/Filter/Button';
+import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
 
-      'use strict';
+      
 
       /**
        * Класс контрола "Кнопка фильтров".
@@ -327,5 +313,5 @@ define('Controls/Filter/Button/OldPanelOpener',
 
       });
 
-      return OldPanelOpener;
-   });
+      export = OldPanelOpener;
+   

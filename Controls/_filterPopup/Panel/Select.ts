@@ -1,8 +1,6 @@
-define('Controls/Filter/Button/Panel/Select', [
-   'Core/Control',
-   'Types/util',
-   'wml!Controls/Filter/Button/Panel/Select/Select'
-], function(Control, Utils, template) {
+import Control = require('Core/Control');
+import Utils = require('Types/util');
+import template = require('wml!Controls/Filter/Button/Panel/Select/Select');
    /**
     * Control that displays items through delimiter.
     *
@@ -30,7 +28,7 @@ define('Controls/Filter/Button/Panel/Select', [
     * @cfg {String} The name of the field whose value is displayed.
     */
 
-   'use strict';
+   
 
    var FilterSelect = Control.extend({
       _template: template,
@@ -48,5 +46,5 @@ define('Controls/Filter/Button/Panel/Select', [
       };
    };
 
-   return FilterSelect;
-});
+   export = FilterSelect;
+

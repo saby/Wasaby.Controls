@@ -1,17 +1,14 @@
-define('Controls/Filter/Button/Panel', [
-   'Core/Control',
-   'Types/chain',
-   'Types/util',
-   'Core/core-clone',
-   'Core/helpers/Object/isEqual',
-   'Controls/Filter/Button/History/resources/historyUtils',
-   'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
-   'wml!Controls/Filter/Button/Panel/Panel',
-   'Env/Env',
-   'css!theme?Controls/Filter/Button/Panel/Panel',
-   'Controls/Controllers/PrimaryAction'
-
-], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, Env) {
+import Control = require('Core/Control');
+import chain = require('Types/chain');
+import Utils = require('Types/util');
+import Clone = require('Core/core-clone');
+import isEqual = require('Core/helpers/Object/isEqual');
+import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
+import _FilterPanelOptions = require('Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions');
+import template = require('wml!Controls/Filter/Button/Panel/Panel');
+import Env = require('Env/Env');
+import 'css!theme?Controls/Filter/Button/Panel/Panel';
+import 'Controls/Controllers/PrimaryAction';
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -35,7 +32,7 @@ define('Controls/Filter/Button/Panel', [
     * @param {Object} items items
     */
 
-   'use strict';
+   
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
    var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -239,5 +236,5 @@ define('Controls/Filter/Button/Panel', [
    };
 
    FilterPanel._private = _private;
-   return FilterPanel;
-});
+   export = FilterPanel;
+

@@ -1,12 +1,10 @@
-define('Controls/Filter/Button/Panel/PropertyGrid', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid',
-   'Types/util',
-   'Core/helpers/Object/isEqual',
-   'Core/core-clone',
-   'Types/chain',
-   'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid'
-], function(Control, template, Utils, isEqual, Clone, chain) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid');
+import Utils = require('Types/util');
+import isEqual = require('Core/helpers/Object/isEqual');
+import Clone = require('Core/core-clone');
+import chain = require('Types/chain');
+import 'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid';
 
    /**
     * Control PropertyGrid
@@ -25,7 +23,7 @@ define('Controls/Filter/Button/Panel/PropertyGrid', [
     * @css @spacing_PropertyGrid-between-items Spacing between items.
     */
 
-   'use strict';
+   
 
    var _private = {
       cloneItems: function(items) {
@@ -98,6 +96,6 @@ define('Controls/Filter/Button/Panel/PropertyGrid', [
 
    PropertyGrid._private = _private;
 
-   return PropertyGrid;
+   export = PropertyGrid;
 
-});
+

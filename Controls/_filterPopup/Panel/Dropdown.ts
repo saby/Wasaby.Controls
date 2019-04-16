@@ -1,8 +1,6 @@
-define('Controls/Filter/Button/Panel/Dropdown', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/Panel/Dropdown/Dropdown',
-   'css!theme?Controls/Filter/Button/Panel/Dropdown/Dropdown'
-], function(Control, template) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/Dropdown/Dropdown');
+import 'css!theme?Controls/Filter/Button/Panel/Dropdown/Dropdown';
    /**
     * Input for selection from the list of options with cross.
     *
@@ -15,7 +13,7 @@ define('Controls/Filter/Button/Panel/Dropdown', [
     * @author Герасимов А.М.
     */
 
-   'use strict';
+   
 
    var FilterDropdown = Control.extend({
       _template: template,
@@ -40,5 +38,5 @@ define('Controls/Filter/Button/Panel/Dropdown', [
       };
    };
 
-   return FilterDropdown;
-});
+   export = FilterDropdown;
+

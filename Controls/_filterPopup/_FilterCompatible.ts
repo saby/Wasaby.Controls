@@ -1,17 +1,12 @@
 /**
  * Created by am.gerasimov on 21.02.2018.
  */
-define('Controls/Filter/Button/_FilterCompatible',
-   [
-      'Core/core-extend',
-      'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
-      'Controls/Filter/Button/OldPanelOpener',
-      'Controls/Filter/Button/converterFilterStructure'
-   ],
-   
-   function(extend, stringTransformer, OldPanelOpener, converterFilterStructure) {
+import extend = require('Core/core-extend');
+import stringTransformer = require('SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil');
+import OldPanelOpener = require('Controls/Filter/Button/OldPanelOpener');
+import converterFilterStructure = require('Controls/Filter/Button/converterFilterStructure');
       
-      'use strict';
+      
       
       var _private = {
          
@@ -85,5 +80,5 @@ define('Controls/Filter/Button/_FilterCompatible',
          
       });
       
-      return FilterCompatible;
-   });
+      export = FilterCompatible;
+   

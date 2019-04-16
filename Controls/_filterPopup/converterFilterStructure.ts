@@ -1,12 +1,8 @@
-define('Controls/Filter/Button/converterFilterStructure',
-   [
-      'Types/chain',
-      'Types/collection',
-      'Types/util'
-   ],
-   function(chain, collection, Utils) {
+import chain = require('Types/chain');
+import collection = require('Types/collection');
+import Utils = require('Types/util');
       
-      'use strict';
+      
       
       /* мапинг новой структуры в старую*/
       var recordToSructureElemMap = {
@@ -56,8 +52,8 @@ define('Controls/Filter/Button/converterFilterStructure',
 
       }
       
-      return {
+      export = {
          convertToFilterStructure: convertToFilterStructure,
          convertToSourceData: convertToSourceData
       };
-   });
+   

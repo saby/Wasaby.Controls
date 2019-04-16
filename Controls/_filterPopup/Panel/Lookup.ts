@@ -1,10 +1,8 @@
-define('Controls/Filter/Button/Panel/Lookup', [
-   'Core/Control',
-   'wml!Controls/Filter/Button/Panel/Lookup/Lookup',
-   'Controls/Utils/tmplNotify',
-   'Env/Env',
-   'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup'
-], function(Control, template, tmplNotify, Env) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/Filter/Button/Panel/Lookup/Lookup');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import Env = require('Env/Env');
+import 'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup';
    /**
     * Control link with lookup
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
@@ -42,7 +40,7 @@ define('Controls/Filter/Button/Panel/Lookup', [
     * </pre>
     */
 
-   'use strict';
+   
 
    var _private = {
       getLookup: function(self) {
@@ -88,5 +86,5 @@ define('Controls/Filter/Button/Panel/Lookup', [
       };
    };
 
-   return Lookup;
-});
+   export = Lookup;
+
