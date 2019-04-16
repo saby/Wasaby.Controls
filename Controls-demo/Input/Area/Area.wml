@@ -52,7 +52,7 @@
          on:selectedKeyChanged="changeNewLineKey()"
       />
       <div>
-         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="ControlsDemo-Area__trim"/>
+         <Controls.toggle:Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="ControlsDemo-Area__trim"/>
          <Controls-demo.PropertyGrid.PropertyGrid 
             attr:id="propertyGrid"
             attr:class="ControlsDemo-Area__propertyGrid"

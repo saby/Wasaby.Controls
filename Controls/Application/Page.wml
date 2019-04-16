@@ -29,7 +29,7 @@
                   <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.Popup.Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
-                           <Controls.DragNDrop.Container name="dragNDropContainer">
+                           <Controls.dragnDrop:Controller name="dragNDropContainer">
                               <body
                                  class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
@@ -128,7 +128,7 @@
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
                               </body>
-                           </Controls.DragNDrop.Container>
+                           </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.Popup.Manager>
                   </Controls.Event.Registrator>

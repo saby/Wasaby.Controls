@@ -4,7 +4,7 @@ define('Controls-demo/Decorators/Number/Number',
       'wml!Controls-demo/Decorators/Number/Number',
 
       'Controls/input',
-      'Controls/Decorator/Number',
+      'Controls/decorator',
       'css!Controls-demo/Decorators/Number/Number'
    ],
    function(Control, template) {

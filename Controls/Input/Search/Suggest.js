@@ -3,7 +3,7 @@ define('Controls/Input/Search/Suggest',
       'Core/Control',
       'wml!Controls/Input/Search/Suggest',
       'Types/entity',
-      'Controls/Input/Search'
+      'Controls/search'
    ],
    function(Control, template, entity) {
       

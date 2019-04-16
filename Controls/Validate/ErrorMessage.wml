@@ -1,7 +1,1 @@
-<div>
-    <ws:for data="item in content" >
-        <div class="controls-ValidateController__errorMessage">
-            <ws:partial template="{{item}}"></ws:partial>
-        </div>
-    </ws:for>
-</div>
+<ws:partial template="wml!Controls/_validate/ErrorMessage" scope="{{_options}}" />

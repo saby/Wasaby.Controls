@@ -4,12 +4,12 @@
             <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__1">
                 <h3>Custom layout with Input/Search and List</h3>
                 <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_search">
-                    <Controls.Search.Controller searchParam="department">
+                    <Controls.search:Controller searchParam="department">
                         <div>
                             <div class="controls-demo__filterSearch-topWrapper">
-                                <Controls.Search.Input.Container>
-                                    <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
-                                </Controls.Search.Input.Container>
+                                <Controls.search:InputContainer>
+                                    <Controls.search:Input bind:value="_searchValue" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
+                                </Controls.search:InputContainer>
                             </div>
                             <Controls.list:Container>
                                 <Controls.list:View emptyTemplate="Не найдено">
@@ -26,7 +26,7 @@
                                 </Controls.list:View>
                             </Controls.list:Container>
                         </div>
-                    </Controls.Search.Controller>
+                    </Controls.search:Controller>
                 </Controls.list:DataContainer>
             </div>
 
@@ -34,13 +34,13 @@
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List</h3>
                 <Controls.Filter.Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-                        <Controls.Search.Controller searchParam="department">
+                        <Controls.search:Controller searchParam="department">
                             <div>
                                 <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
                                     <div class="controls-demo__filterSearch-topWrapper">
-                                        <Controls.Search.Input.Container>
-                                            <Controls.Input.Search bind:value="_searchValueWithFilters" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
-                                        </Controls.Search.Input.Container>
+                                        <Controls.search:InputContainer>
+                                            <Controls.search:Input bind:value="_searchValueWithFilters" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
+                                        </Controls.search:InputContainer>
                                         <div class="controls-demo__filterSearch-filters">
                                             <Controls.Filter.Fast.Container>
                                                 <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
@@ -67,7 +67,7 @@
                                     </Controls.list:View>
                                 </Controls.list:Container>
                             </div>
-                        </Controls.Search.Controller>
+                        </Controls.search:Controller>
                     </Controls.list:DataContainer>
                 </Controls.Filter.Controller>
             </div>
@@ -113,9 +113,9 @@
                 <h3>Filters are located in the tabs.</h3>
                 <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-                        <Controls.Search.Controller searchParam="department">
+                        <Controls.search:Controller searchParam="department">
                             <div>
-                                <Controls.Tabs.Buttons
+                                <Controls.tabs:Buttons
                                         bind:selectedKey='_tabSelectedKey'
                                         keyProperty="id"
                                         source="{{_tabSource}}"
@@ -131,11 +131,11 @@
                                             </Controls.Filter.Fast.Container>
                                         </div>
                                     </ws:tabSpaceTemplate>
-                                </Controls.Tabs.Buttons>
+                                </Controls.tabs:Buttons>
                                 <div class="controls-demo__filterSearch-topWrapper">
-                                    <Controls.Search.Input.Container>
-                                        <Controls.Input.Search bind:value="_searchValueWithFiltersTabs" attr:class="controls-demo__filterSearch-search" placeholder="Укажите ФИО, подразделение..."/>
-                                    </Controls.Search.Input.Container>
+                                    <Controls.search:InputContainer>
+                                        <Controls.search:Input bind:value="_searchValueWithFiltersTabs" attr:class="controls-demo__filterSearch-search" placeholder="Укажите ФИО, подразделение..."/>
+                                    </Controls.search:InputContainer>
                                 </div>
                                 <Controls.list:Container>
                                     <Controls.list:View emptyTemplate="Не найдено">
@@ -152,7 +152,7 @@
                                     </Controls.list:View>
                                 </Controls.list:Container>
                             </div>
-                        </Controls.Search.Controller>
+                        </Controls.search:Controller>
                     </Controls.list:DataContainer>
                 </Controls.Filter.Controller>
             </div>

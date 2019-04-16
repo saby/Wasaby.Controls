@@ -3,12 +3,12 @@
                             fastFilterSource="{{_fastFilterData}}"
                             attr:class="controls-demo__FilterLayout">
    <Controls.list:DataContainer source="{{_dataSource}}" navigation="{{_navigation}}" keyProperty="id">
-      <Controls.Search.Controller searchParam="firstName">
+      <Controls.search:Controller searchParam="firstName">
          <div class="controls-demo__LayoutInner">
             <div class="controls-demo__Layouts_filterComponents">
-               <Controls.Search.Input.Container>
-                  <Controls.Input.Search bind:value="_searchValue"/>
-               </Controls.Search.Input.Container>
+               <Controls.search:InputContainer>
+                  <Controls.search:Input bind:value="_searchValue"/>
+               </Controls.search:InputContainer>
                <div class="controls-demo__Layouts_filter">
                   <Controls.Filter.Fast.Container>
                      <Controls.Filter.Fast/>
@@ -41,6 +41,6 @@
                </Controls.list:View>
             </Controls.list:Container>
          </div>
-      </Controls.Search.Controller>
+      </Controls.search:Controller>
    </Controls.list:DataContainer>
 </Controls.Filter.Controller>

@@ -40,9 +40,9 @@
        <Controls.input:Label caption="tooltip"/>
        <Controls.input:Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive"
+         <Controls.toggle:Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive"
                                    caption="onlyPositive"/>
-         <Controls.Toggle.Checkbox attr:id="showEmptyDecimals" readOnly="{{false}}" bind:value="_showEmptyDecimals"
+         <Controls.toggle:Checkbox attr:id="showEmptyDecimals" readOnly="{{false}}" bind:value="_showEmptyDecimals"
                                    caption="showEmptyDecimals"/>
          <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
                                       bind:readOnlyValue="_readOnly"

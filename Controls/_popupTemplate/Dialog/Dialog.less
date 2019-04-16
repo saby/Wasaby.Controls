@@ -1,0 +1,102 @@
+.controls-DialogTemplate {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
+   box-sizing: border-box;
+   height: 100%;
+   background-color: @background-color_dialogTemplate-content;
+   position: relative;
+   overflow: hidden;
+   box-shadow: @size_DialogTemplate-shadow @color_DialogTemplate-shadow;
+   border: @size_DialogTemplate-border solid @color-border_DialogTemplate;
+}
+
+.controls-DialogTemplate__top-area {
+   background-color: @background-color_dialogTemplate-top-area;
+   display: flex;
+   flex-shrink: 0;
+   min-height: @height_DialogTemplate-top-area;
+}
+
+.controls-DialogTemplate__content-area {
+   display: flex;
+   height: 100%;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
+   min-height: 1px;
+   overflow: hidden;
+   z-index: 1;
+}
+
+.controls-DialogTemplate__headerContentTemplate {
+   margin-right: @spacing_DialogTemplate-between-content-close-button;
+   position: relative;
+   overflow: hidden;
+}
+
+.controls-DialogTemplate__top-area-content {
+   width: 100%;
+   flex-shrink: 1;
+   display: flex;
+   align-items: baseline;
+   overflow: hidden;
+   justify-content: space-between;
+}
+
+.controls-DialogTemplate__close_button {
+   position: relative;
+   z-index: 2; // The close button is above the content
+   margin-top: @spacing_DialogTemplate-between-border-close-button;
+   align-self: flex-start;
+}
+
+.controls-DialogTemplate__close-button_without_head {
+   position: absolute;
+   right: 0;
+   top: 0;
+   display: flex;
+}
+
+.controls-DialogTemplate__caption{
+   font-size: @font-size_dialogTemplate_head;
+   font-weight: 700 !important;
+   overflow: hidden;
+   cursor: default;
+   height: @height_dialogTemplate_caption; //todo themes value equal min-height
+   line-height: @line-height_dialogTemplate_caption; // the baseline is not centered
+   align-items: baseline;
+   flex-shrink: 1;
+   display: flex;
+   margin-left: @spacing_DialogTemplate-between-caption-border-left;
+}
+
+.controls-DialogTemplate__caption_style_secondary{
+   color: @color_DialogTemplate-caption-secondary;
+}
+
+.controls-DialogTemplate__caption_style_primary{
+   color: @color_DialogTemplate-caption-primary;
+}
+
+.controls-DialogTemplate__caption_style_info{
+   color: @color_DialogTemplate-caption-info;
+}
+
+.controls-DialogTemplate__caption_text {
+   text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+}
+
+.controls-DialogTemplate__top-area-draggable {
+   cursor: move;
+}
+
+.controls-DialogTemplate__footer {
+   background: @background-color_dialogTemplate-footer;
+   height: @height_dialogTemplate_footer;
+   flex-shrink: 0;
+   border-top: @size_DialogTemplate-border solid @color_DialogTemplate-border-top-footer;
+}

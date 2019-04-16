@@ -39,6 +39,7 @@ define([
       data = {
             id: 2,
             position: 'top',
+            mode: 'stackable',
             inst: {
                getOffset: function() {
                   return 0;
@@ -126,13 +127,29 @@ define([
 
       describe('StickyHeader', function() {
          var event = {
-            stopPropagation: function() {}
+            stopImmediatePropagation: function() {}
          };
 
          describe('_fixedHandler', function() {
+            beforeEach(function() {
+               component._headers = {
+                  sticky1: {
+                     mode: 'stackable',
+                     inst: {
+                        height: 10
+                     }
+                  },
+                  sticky2: {
+                     mode: 'stackable',
+                     inst: {
+                        height: 10
+                     }
+                  }
+               }
+            });
             it('Header with id equal to "sticky" stops being fixed', function() {
                component._fixedHandler(event, coreMerge({
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: ''
                }, data, {preferSource: true}));
 
@@ -141,24 +158,24 @@ define([
             });
             it('Header with id equal to "sticky" fixed', function() {
                component._fixedHandler(event, {
-                  id: 'stickyTop',
+                  id: 'sticky1',
                   fixedPosition: 'top'
                });
-               assert.include(component._fixedHeadersStack.top, 'stickyTop');
+               assert.include(component._fixedHeadersStack.top, 'sticky1');
 
                component._fixedHandler(event, {
-                  id: 'stickyBottom',
+                  id: 'sticky2',
                   fixedPosition: 'bottom'
                });
-               assert.include(component._fixedHeadersStack.bottom, 'stickyBottom');
+               assert.include(component._fixedHeadersStack.bottom, 'sticky2');
             });
             it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
                component._fixedHandler(event, {
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: 'top'
                });
                component._fixedHandler(event, {
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: '',
                   prevPosition: 'top'
                });
@@ -260,6 +277,29 @@ define([
          });
          it('should return the correct height after a new header has been registered.', function () {
             component._stickyRegisterHandler(event, data, true);
+            assert.equal(component.getHeadersHeight('top'), 0);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+         it('should return the correct height after a new replaceable header has been registered and fixed.', function () {
+            component._stickyRegisterHandler(event, data, true);
+            component._fixedHandler(event, {
+                  id: data.id,
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  height: 10
+               });
+            assert.equal(component.getHeadersHeight('top'), 10);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+
+         it('should return the correct height after a new stackable header has been registered and fixed.', function () {
+            component._stickyRegisterHandler(event, coreMerge({ mode: 'stackable' }, data, { preferSource: true }), true);
+            component._fixedHandler(event, {
+                  id: data.id,
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  height: 10
+               });
             assert.equal(component.getHeadersHeight('top'), 10);
             assert.equal(component.getHeadersHeight('bottom'), 0);
          });

@@ -11,7 +11,7 @@
    </div>
    <ws:if data="{{_arrowVisible}}">
       <div class="controls-FilterPanel__separator">
-         <Controls.Button.BigSeparator
+         <Controls.toggle:BigSeparator
                  value="{{!_isMaxHeight}}"
                  on:click="_clickSeparatorHandler()"/>
       </div>

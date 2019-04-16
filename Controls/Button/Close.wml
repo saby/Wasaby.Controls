@@ -1,8 +1,1 @@
-<span class="controls-Button__close theme_{{_options.theme}}">
-    <span class="controls-Button__close__wrapper controls-Button__close_{{_viewMode}}
-                 controls-Button__close_{{_viewMode}}_{{_transparent ? 'transparent' : 'untransparent'}}
-                 controls-Button__close_{{_viewMode}}_{{_options.size}} theme_{{_options.theme}}">
-        <!--Если не блочный, то не отображается https://jsfiddle.net/mwst2cxr/-->
-        <div class="controls-Button__close__icon_{{_viewMode}} theme_{{_options.theme}}"></div>
-    </span>
-</span>
+<ws:partial template="wml!Controls/_popupTemplate/CloseButton/CloseButton" scope="{{_options}}" />

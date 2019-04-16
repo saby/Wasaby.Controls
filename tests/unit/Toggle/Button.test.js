@@ -1,9 +1,9 @@
-define(['Controls/Toggle/Button'], function(Button) {
+define(['Controls/toggle'], function(toggle) {
    'use strict';
    var Btn, changeValue;
    describe('Controls.Toggle.Button', function() {
       beforeEach(function() {
-         Btn = new Button({
+         Btn = new toggle.Button({
             style: 'linkMain'
          });
 

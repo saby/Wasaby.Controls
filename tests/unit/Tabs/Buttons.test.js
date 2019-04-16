@@ -2,19 +2,19 @@
  * Created by ps.borisov on 16.02.2018.
  */
 define([
-   'Controls/Tabs/Buttons',
+   'Controls/tabs',
    'Types/source',
    'Types/entity'
-], function(TabsButtons, sourceLib, entity) {
+], function(tabsMod, sourceLib, entity) {
    describe('Controls.Tabs.Buttons', function() {
       it('prepareItemOrder', function() {
          var
             expected = '-ms-flex-order:2; order:2';
-         assert.equal(expected, TabsButtons._private.prepareItemOrder(2), 'wrong order cross-brwoser styles');
+         assert.equal(expected, tabsMod.Buttons._private.prepareItemOrder(2), 'wrong order cross-brwoser styles');
       });
       it('initItems', function(done) {
          var
-            tabInstance = new TabsButtons(),
+            tabInstance = new tabsMod.Buttons(),
             data = [
                {
                   id: 1,
@@ -79,7 +79,7 @@ define([
                idProperty: 'id'
             });
 
-         TabsButtons._private.initItems(source, tabInstance).addCallback(function(result) {
+         tabsMod.Buttons._private.initItems(source, tabInstance).addCallback(function(result) {
             var itemsOrder = result.itemsOrder;
             assert.equal(1, itemsOrder[0], 'incorrect  left order');
             assert.equal(30, itemsOrder[1], 'incorrect right order');
@@ -129,13 +129,13 @@ define([
             expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_default controls-Tabs__item_state_default controls-Tabs__item_type_photo',
             expected3 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_default controls-Tabs__item_state_default controls-Tabs__item_canShrink',
             expected4 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_extreme controls-Tabs__item_extreme_last controls-Tabs__item_state_default';
-         assert.equal(expected, TabsButtons._private.prepareItemClass(item, 1, options, 144), 'wrong order cross-brwoser styles');
-         assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, 2, options, 144), 'wrong order cross-brwoser styles');
-         assert.equal(expected3, TabsButtons._private.prepareItemClass(item3, 2, options, 144));
-         assert.equal(expected4, TabsButtons._private.prepareItemClass(item4, 144, options, 144));
+         assert.equal(expected, tabsMod.Buttons._private.prepareItemClass(item, 1, options, 144), 'wrong order cross-brwoser styles');
+         assert.equal(expected2, tabsMod.Buttons._private.prepareItemClass(item2, 2, options, 144), 'wrong order cross-brwoser styles');
+         assert.equal(expected3, tabsMod.Buttons._private.prepareItemClass(item3, 2, options, 144));
+         assert.equal(expected4, tabsMod.Buttons._private.prepareItemClass(item4, 144, options, 144));
       });
       it('_beforeMount with received state', function() {
-         var tabs = new TabsButtons(),
+         var tabs = new tabsMod.Buttons(),
             receivedState = {
                items: 'items',
                itemsOrder: 'itemsOrder'
@@ -149,7 +149,7 @@ define([
          tabs.destroy();
       });
       it('_beforeMount without received state', function() {
-         var tabs = new TabsButtons(),
+         var tabs = new tabsMod.Buttons(),
             data = [
                {
                   id: '1',
@@ -171,7 +171,7 @@ define([
          });
       });
       it('_beforeUpdate', function() {
-         var tabs = new TabsButtons(),
+         var tabs = new tabsMod.Buttons(),
             data = [
                {
                   id: '1',
@@ -200,7 +200,7 @@ define([
          });
       });
       it('_onItemClick', function() {
-         var tabs = new TabsButtons(),
+         var tabs = new tabsMod.Buttons(),
             notifyCorrectCalled = false;
          tabs._notify = function(eventName) {
             if (eventName === 'selectedKeyChanged') {
@@ -212,15 +212,15 @@ define([
          tabs.destroy();
       });
       it('_prepareItemClass', function() {
-         var tabs = new TabsButtons(),
-            originalFunc = TabsButtons._private.prepareItemClass,
+         var tabs = new tabsMod.Buttons(),
+            originalFunc = tabsMod.Buttons._private.prepareItemClass,
             prepareItemClassCorrectCalled = false;
          tabs._options = 'options';
          tabs._itemsOrder = [
             'itemsOrder'
          ];
          tabs._lastRightOrder = 'lastRightOrder';
-         TabsButtons._private.prepareItemClass = function(item, itemsOrder, options, lastRightOrder) {
+         tabsMod.Buttons._private.prepareItemClass = function(item, itemsOrder, options, lastRightOrder) {
             if (item === 'item' && itemsOrder === 'itemsOrder' && options === 'options' && lastRightOrder === 'lastRightOrder') {
                prepareItemClassCorrectCalled = true;
             }
@@ -228,16 +228,16 @@ define([
          tabs._prepareItemClass('item', 0);
          assert.equal(prepareItemClassCorrectCalled, true, 'uncorrect _prepareItemClass');
          tabs.destroy();
-         TabsButtons._private.prepareItemClass = originalFunc;
+         tabsMod.Buttons._private.prepareItemClass = originalFunc;
       });
       it('_prepareItemOrder', function() {
-         var tabs = new TabsButtons(),
-            originalFunc = TabsButtons._private.prepareItemOrder,
+         var tabs = new tabsMod.Buttons(),
+            originalFunc = tabsMod.Buttons._private.prepareItemOrder,
             prepareItemOrderCorrectCalled = false;
          tabs._itemsOrder = [
             'itemsOrder'
          ];
-         TabsButtons._private.prepareItemOrder = function(itemsOrder) {
+         tabsMod.Buttons._private.prepareItemOrder = function(itemsOrder) {
             if (itemsOrder === 'itemsOrder') {
                prepareItemOrderCorrectCalled = true;
             }
@@ -245,7 +245,7 @@ define([
          tabs._prepareItemOrder(0);
          assert.equal(prepareItemOrderCorrectCalled, true, 'uncorrect _prepareItemOrder');
          tabs.destroy();
-         TabsButtons._private.prepareItemClass = originalFunc;
+         tabsMod.Buttons._private.prepareItemClass = originalFunc;
       });
    });
 });

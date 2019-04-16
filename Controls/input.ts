@@ -32,6 +32,8 @@ import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
+import INewLineKey from 'Controls/_input/interface/INewLineKey';
+
 const InputCallback = {
     lengthConstraint
 };
@@ -50,5 +52,6 @@ export {
     BaseViewModel,
     MaskFormatBuilder,
     MaskInputProcessor,
-    InputCallback
+    InputCallback,
+    INewLineKey
 };

@@ -122,7 +122,7 @@ define(
 
                   result = model.fixedPosition;
 
-                  assert.equal(result, 'bottom');
+                  assert.equal(result, '');
                });
                it('The top target not intersection and the bottom target intersection', function () {
                   model.update([

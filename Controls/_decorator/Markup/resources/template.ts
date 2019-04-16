@@ -31,7 +31,7 @@ import validHtml = require('Core/validHtml');
       goodLinkAttributeRegExp = /^((https?|ftp|file|smb):\/\/|mailto:|\/)/,
       dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
-      longSpaceRegExp = /\u00a0/g;
+      additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
@@ -147,7 +147,8 @@ import validHtml = require('Core/validHtml');
          // Markup Converter should escape long space characters too.
          oldEscape = markupGenerator.escape;
          markupGenerator.escape = function(str) {
-            return oldEscape(str).replace(longSpaceRegExp, '&nbsp;');
+            return oldEscape(str).replace(additionalNotVdomEscapeRegExp,
+               (match) => match[0] === '&' ? '&amp;#' : '&nbsp;');
          };
       }
       try {

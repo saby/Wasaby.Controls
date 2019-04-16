@@ -1,9 +1,9 @@
 <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
    <div>
       <Controls.list:Mover name="listMover"/>
-      <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys">
+      <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
          <Controls.list:Container>
-            <Controls.List.MultiSelector>
+            <Controls.operations:Container>
                <Controls.list:View
                        on:dragStart="_dragStart()"
                        on:dragEnd="_dragEnd()"
@@ -26,15 +26,15 @@
                      </ws:partial>
                   </ws:itemTemplate>
                   <ws:draggingTemplate>
-                     <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+                     <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                         mainText="{{draggingTemplate.entity._options.mainText}}"
                         image="{{draggingTemplate.entity._options.image}}"
                         additionalText="{{draggingTemplate.entity._options.additionalText}}">
                      </ws:partial>
                   </ws:draggingTemplate>
                </Controls.list:View>
-            </Controls.List.MultiSelector>
+            </Controls.operations:Container>
          </Controls.list:Container>
-      </Controls.Container.MultiSelector>
+      </Controls.operations:Controller>
    </div>
 </Controls.list:DataContainer>
