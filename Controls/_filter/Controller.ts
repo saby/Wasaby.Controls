@@ -1,21 +1,16 @@
-define('Controls/Filter/Controller',
-   [
-      'Core/Control',
-      'wml!Controls/Filter/Controller',
-      'Core/Deferred',
-      'Types/chain',
-      'Types/util',
-      'Core/helpers/Object/isEqual',
-      'Controls/Filter/Button/History/resources/historyUtils',
-      'Controls/Controllers/SourceController',
-      'Core/core-merge',
-      'Core/core-clone',
-      'Core/helpers/Object/isEmpty',
-      'Controls/Container/Data/ContextOptions'
-   ],
+import Control = require('Core/Control');
+import template = require('wml!Controls/_filter/Controller');
+import Deferred = require('Core/Deferred');
+import chain = require('Types/chain');
+import Utils = require('Types/util');
+import isEqual = require('Core/helpers/Object/isEqual');
+import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
+import SourceController = require('Controls/Controllers/SourceController');
+import merge = require('Core/core-merge');
+import clone = require('Core/core-clone');
+import isEmpty = require('Core/helpers/Object/isEmpty');
+import 'Controls/Container/Data/ContextOptions';
 
-   function(Control, template, Deferred, chain, Utils, isEqual, historyUtils, SourceController, merge, clone, isEmpty) {
-      'use strict';
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
       var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -79,7 +74,7 @@ define('Controls/Filter/Controller',
          getHistoryItems: function(self, id) {
             var source = historyUtils.getHistorySource(id),
                result, recent, lastFilter;
-   
+
             if (!id) {
                result =  Deferred.success([]);
             }
@@ -89,10 +84,10 @@ define('Controls/Filter/Controller',
                   source: source
                });
             }
-            
+
             if (id) {
                result = new Deferred();
-   
+
                self._sourceController.load({ $_history: true })
                   .addCallback(function(res) {
                      recent = source.getRecent();
@@ -110,7 +105,7 @@ define('Controls/Filter/Controller',
                      return error;
                   });
             }
-   
+
             return result;
          },
 
@@ -234,7 +229,7 @@ define('Controls/Filter/Controller',
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems, historyItems) {
             var historyItemsDef = historyItems ? Deferred.success(historyItems) : _private.getHistoryItems(self, historyId);
-            
+
             return historyItemsDef.addCallback(function(historyItems) {
                _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
@@ -441,7 +436,7 @@ define('Controls/Filter/Controller',
        * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
-   
+
       /**
        * Controls/Filter/Controller#historyItems
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
@@ -504,5 +499,5 @@ define('Controls/Filter/Controller',
       Container._private = _private;
       Container.getCalculatedFilter = getCalculatedFilter;
       Container.updateFilterHistory = updateFilterHistory;
-      return Container;
-   });
+      export = Container;
+

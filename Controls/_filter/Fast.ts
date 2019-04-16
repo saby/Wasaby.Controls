@@ -1,24 +1,19 @@
-define('Controls/Filter/Fast',
-   [
-      'Core/Control',
-      'wml!Controls/Filter/Fast/Fast',
-      'Controls/Controllers/SourceController',
-      'Types/chain',
-      'Types/collection',
-      'Core/core-instance',
-      'Core/core-clone',
-      'Core/ParallelDeferred',
-      'Core/Deferred',
-      'Types/util',
-      'Core/helpers/Object/isEqual',
-      'Core/core-merge',
-      'Controls/History/dropdownHistoryUtils',
-      'css!theme?Controls/Filter/Fast/Fast',
-      'css!theme?Controls/Input/Dropdown/Dropdown'
+import Control = require('Core/Control');
+import template = require('wml!Controls/_filter/Fast/Fast');
+import SourceController = require('Controls/Controllers/SourceController');
+import chain = require('Types/chain');
+import collection = require('Types/collection');
+import cInstance = require('Core/core-instance');
+import clone = require('Core/core-clone');
+import pDeferred = require('Core/ParallelDeferred');
+import Deferred = require('Core/Deferred');
+import Utils = require('Types/util');
+import isEqual = require('Core/helpers/Object/isEqual');
+import Merge = require('Core/core-merge');
+import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import 'css!theme?Controls/_filter/Fast/Fast';
+import 'css!theme?Controls/Input/Dropdown/Dropdown';
 
-   ],
-   function(Control, template, SourceController, chain, collection, cInstance, clone, pDeferred, Deferred, Utils, isEqual, Merge, historyUtils) {
-      'use strict';
 
       /**
        * Control "Fast Filter".
@@ -331,5 +326,5 @@ define('Controls/Filter/Fast',
       });
 
       Fast._private = _private;
-      return Fast;
-   });
+      export = Fast;
+
