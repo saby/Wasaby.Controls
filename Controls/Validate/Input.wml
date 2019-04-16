@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_validate/Input" scope="{{_options}}" />

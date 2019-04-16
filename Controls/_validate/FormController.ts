@@ -1,17 +1,8 @@
-define('Controls/Validate/FormController',
-   [
-      'Core/Control',
-      'wml!Controls/Validate/FormController',
-      'Env/Env',
-      'Core/ParallelDeferred'
-   ],
-   function(
-      Base,
-      template,
-      Env,
-      ParallelDeferred
-   ) {
-      'use strict';
+import Base = require('Core/Control');
+import template = require('wml!Controls/_validate/FormController');
+import Env = require('Env/Env');
+import ParallelDeferred = require('Core/ParallelDeferred');
+      
 
       var Form = Base.extend({
          _template: template,
@@ -81,5 +72,5 @@ define('Controls/Validate/FormController',
             return results;
          }
       });
-      return Form;
-   });
+      export = Form;
+   

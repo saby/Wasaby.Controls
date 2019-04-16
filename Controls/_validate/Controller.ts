@@ -1,26 +1,13 @@
-define('Controls/Validate/Controller',
-   [
-      'Core/Control',
-      'wml!Controls/Validate/Controller',
-      'Env/Env',
-      'Core/ParallelDeferred',
-      'Core/Deferred',
-      'Core/helpers/isNewEnvironment',
-      'Controls/Utils/getZIndex',
-      'wml!Controls/Validate/ErrorMessage',
-      'css!theme?Controls/Validate/ErrorMessage'
-   ],
-   function(
-      Base,
-      template,
-      Env,
-      ParallelDeferred,
-      Deferred,
-      isNewEnvironment,
-      getZIndex,
-      errorMessage
-   ) {
-      'use strict';
+import Base = require('Core/Control');
+import template = require('wml!Controls/_validate/Controller');
+import Env = require('Env/Env');
+import ParallelDeferred = require('Core/ParallelDeferred');
+import Deferred = require('Core/Deferred');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import getZIndex = require('Controls/Utils/getZIndex');
+import errorMessage = require('wml!Controls/_validate/ErrorMessage');
+import 'css!theme?Controls/_validate/ErrorMessage';
+      
 
       var _private = {
 
@@ -272,5 +259,5 @@ define('Controls/Validate/Controller',
          },
          _private: _private
       });
-      return Validate;
-   });
+      export = Validate;
+   

@@ -1,41 +1,39 @@
-define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], function(cInstance) {
-   'use strict';
+import cInstance = require('Core/core-instance');
 
-   return function(args) {
-      //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
-      if (args.doNotValidate) {
-         return true;
-      }
+export = function (args) {
+   //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
+   if (args.doNotValidate) {
+      return true;
+   }
 
-      var isEmpty = false;
+   var isEmpty = false;
 
-      switch (typeof args.value) {
-         case 'string':
-            isEmpty = !Boolean(args.value);
-            break;
-         case 'number':
-            isEmpty = isNaN(args.value);
-            break;
-         case 'object':
-            if (cInstance.instanceOfModule(args.value, 'Types/collection:List')) {
-               isEmpty = !Boolean(args.value.getCount());
-            } else if (args.value instanceof Array) {
-               isEmpty = !Boolean(args.value.length) || (args.value.length === 1 && args.value[0] === null);
-            } else if (args.value instanceof Date) {
-               isEmpty = false;
-            } else if (args.value instanceof Object) {
-               isEmpty = !(Object.keys(args.value).length);
-            } else if (args.value === null) {
-               isEmpty = true;
-            }
-            break;
-         case 'undefined':
+   switch (typeof args.value) {
+      case 'string':
+         isEmpty = !Boolean(args.value);
+         break;
+      case 'number':
+         isEmpty = isNaN(args.value);
+         break;
+      case 'object':
+         if (cInstance.instanceOfModule(args.value, 'Types/collection:List')) {
+            isEmpty = !Boolean(args.value.getCount());
+         } else if (args.value instanceof Array) {
+            isEmpty = !Boolean(args.value.length) || (args.value.length === 1 && args.value[0] === null);
+         } else if (args.value instanceof Date) {
+            isEmpty = false;
+         } else if (args.value instanceof Object) {
+            isEmpty = !(Object.keys(args.value).length);
+         } else if (args.value === null) {
             isEmpty = true;
-            break;
-      }
+         }
+         break;
+      case 'undefined':
+         isEmpty = true;
+         break;
+   }
 
-      return isEmpty
-         ? rk('Поле обязательно для заполнения')
-         : true;
-   };
-});
+   return isEmpty ?
+      rk('Поле обязательно для заполнения') :
+      true;
+};

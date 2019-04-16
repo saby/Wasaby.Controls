@@ -1,15 +1,8 @@
-define('Controls/Validate/Selection',
-   [
-      'Controls/Validate/Controller',
-      'wml!Controls/Validate/Selection'
-   ],
-   function(
-      Controller,
-      template
-   ) {
-      'use strict';
+import Controller = require('Controls/_validate/Controller');
+import template = require('wml!Controls/_validate/Selection');
+      
 
-      return Controller.extend({
+      export = Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
             this._shouldValidate = true;
@@ -27,4 +20,4 @@ define('Controls/Validate/Selection',
             }
          }
       });
-   });
+   

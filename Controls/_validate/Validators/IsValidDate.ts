@@ -1,15 +1,9 @@
-define('Controls/Validate/Validators/IsValidDate', [
-   'Controls/Utils/Date'
-], function(
-   dateUtils
-) {
-   'use strict';
+import dateUtils = require('Controls/Utils/Date');
 
-   return function(args) {
-      if (args.doNotValidate || !args.value || dateUtils.isValidDate(args.value)) {
-         return true;
-      }
+export = function (args) {
+   if (args.doNotValidate || !args.value || dateUtils.isValidDate(args.value)) {
+      return true;
+   }
 
-      return rk('Дата или время заполнены некорректно.');
-   };
-});
+   return rk('Дата или время заполнены некорректно.');
+};

@@ -1,15 +1,8 @@
-define('Controls/Validate/Input',
-   [
-      'Controls/Validate/Controller',
-      'wml!Controls/Validate/Input'
-   ],
-   function(
-      Controller,
-      template
-   ) {
-      'use strict';
+import Controller = require('Controls/_validate/Controller');
+import template = require('wml!Controls/_validate/Input');
+      
 
-      return Controller.extend({
+      export = Controller.extend({
          _template: template,
          _currentValue: undefined,
          _deactivatedHandler: function() {
@@ -35,4 +28,4 @@ define('Controls/Validate/Input',
             }
          }
       });
-   });
+   
