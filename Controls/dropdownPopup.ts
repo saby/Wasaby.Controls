@@ -1,14 +1,14 @@
 /**
  * dropdownPopup library
  * @library Controls/dropdownPopup
- * @includes Template Controls/_dropdownPopup/Menu
- * @includes List Controls/_dropdownPopup/dropdownPopup
+ * @includes Template wml!Controls/_dropdownPopup/defaultHeadTemplate
+ * @includes List Controls/_dropdownPopup/DropdownList
  * @public
  * @author Kraynov D.
  */
 
-import Template = require('Controls/_dropdownPopup/Menu');
-import List = require('Controls/_dropdownPopup/dropdownPopup');
+import Template = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
+import List = require('Controls/_dropdownPopup/DropdownList');
 
 export {
     Template,
