@@ -1,19 +1,19 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/Dropdown/Dropdown');
-import 'css!theme?Controls/Filter/Button/Panel/Dropdown/Dropdown';
+import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
+import 'css!theme?Controls/_filterPopup/Panel/Dropdown/Dropdown';
    /**
     * Input for selection from the list of options with cross.
     *
     * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
     *
-    * @class Controls/Filter/Button/Panel/Dropdown
+    * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Control/Input/Dropdown
     * @control
     * @public
     * @author Герасимов А.М.
     */
 
-   
+
 
    var FilterDropdown = Control.extend({
       _template: template,

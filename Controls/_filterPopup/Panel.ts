@@ -3,17 +3,17 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
 import isEqual = require('Core/helpers/Object/isEqual');
-import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
-import _FilterPanelOptions = require('Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions');
-import template = require('wml!Controls/Filter/Button/Panel/Panel');
+import historyUtils = require('Controls/_filterPopup/History/resources/historyUtils');
+import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
+import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
-import 'css!theme?Controls/Filter/Button/Panel/Panel';
+import 'css!theme?Controls/_filterPopup/Panel/Panel';
 import 'Controls/Controllers/PrimaryAction';
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
     *
-    * @class Controls/Filter/Button/Panel
+    * @class Controls/_filterPopup/Panel
     * @extends Core/Control
     * @mixes Controls/interface/IFilterPanel
     * @demo Controls-demo/Filter/Button/panelOptions/panelPG
@@ -27,12 +27,12 @@ import 'Controls/Controllers/PrimaryAction';
     */
 
    /**
-    * @event Controls/Filter/Button/Panel#sendResult Happens when clicking the button "Select".
+    * @event Controls/_filterPopup/Panel#sendResult Happens when clicking the button "Select".
     * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
     * @param {Object} items items
     */
 
-   
+
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
    var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -45,9 +45,9 @@ import 'Controls/Controllers/PrimaryAction';
             self._items = this.cloneItems(options.items);
          } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the items option for the panel.');
          } else {
-            throw new Error('Controls/Filter/Button/Panel::items option is required');
+            throw new Error('Controls/filterPopup:Panel::items option is required');
          }
       },
 
@@ -56,7 +56,7 @@ import 'Controls/Controllers/PrimaryAction';
             self._historyId = options.historyId;
          } else if (context && context.historyId) {
             self._historyId = context.historyId;
-            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the historyId option for the panel.');
          }
       },
 

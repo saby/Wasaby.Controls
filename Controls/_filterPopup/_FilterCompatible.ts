@@ -3,17 +3,17 @@
  */
 import extend = require('Core/core-extend');
 import stringTransformer = require('SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil');
-import OldPanelOpener = require('Controls/Filter/Button/OldPanelOpener');
-import converterFilterStructure = require('Controls/Filter/Button/converterFilterStructure');
-      
-      
-      
+import OldPanelOpener = require('Controls/_filterPopup/OldPanelOpener');
+import converterFilterStructure = require('Controls/_filterPopup/converterFilterStructure');
+
+
+
       var _private = {
-         
+
          notifyOnFilterChange: function(self, filter) {
             self._filterButton._notify('filterChanged', [filter]);
          },
-         
+
          oldPanelChangeHandler: function(self) {
             var filterStructure = self._oldPanelOpener.getFilterStructure();
             self._filterButton._text = stringTransformer.string(filterStructure, 'itemTemplate');
@@ -21,7 +21,7 @@ import converterFilterStructure = require('Controls/Filter/Button/converterFilte
             _private.notifyOnFilterChange(self, self._oldPanelOpener.getFilter());
             self._filterButton._forceUpdate();
          },
-         
+
          getOldPanelConfig: function(self) {
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             return {
@@ -35,7 +35,7 @@ import converterFilterStructure = require('Controls/Filter/Button/converterFilte
                componentOptions: self._options.componentOptions || {}
             };
          },
-         
+
          getOldPanelOpener: function(self) {
             if (!self._oldPanelOpener) {
                self._oldPanelOpener = new OldPanelOpener(_private.getOldPanelConfig(self));
@@ -50,24 +50,24 @@ import converterFilterStructure = require('Controls/Filter/Button/converterFilte
             }
             return self._oldPanelOpener;
          }
-         
+
       };
-      
+
       var FilterCompatible = extend({
-         
+
          _oldPanelOpener: null,
          _filterButton: null,
-         
+
          constructor: function(options) {
             FilterCompatible.superclass.constructor.call(this, options);
             this._filterButton = options.filterButton;
             this._options = options.filterButtonOptions;
          },
-         
+
          clearFilter: function() {
             _private.getOldPanelOpener(this).sendCommand('reset-filter');
          },
-         
+
          showFilterPanel: function() {
             _private.getOldPanelOpener(this).showPicker();
          },
@@ -77,8 +77,8 @@ import converterFilterStructure = require('Controls/Filter/Button/converterFilte
                this._oldPanelOpener.setFilterStructure(converterFilterStructure.convertToFilterStructure(items));
             }
          }
-         
+
       });
-      
+
       export = FilterCompatible;
-   
+

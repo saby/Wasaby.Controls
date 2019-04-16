@@ -6,12 +6,12 @@ import FilterMixin = require('SBIS3.CONTROLS/Mixins/FilterMixin');
 import PickerMixin = require('SBIS3.CONTROLS/Mixins/PickerMixin');
 import TemplateUtil = require('SBIS3.CONTROLS/Utils/TemplateUtil');
 import FilterPanelUtils = require('SBIS3.CONTROLS/Utils/FilterPanelUtils');
-import converterFilterStructure = require('Controls/Filter/Button/converterFilterStructure');
+import converterFilterStructure = require('Controls/_filterPopup/converterFilterStructure');
 import 'SBIS3.CONTROLS/Button/IconButton';
 import 'i18n!SBIS3.CONTROLS/Filter/Button';
 import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
 
-      
+
 
       /**
        * Класс контрола "Кнопка фильтров".
@@ -314,4 +314,4 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
       });
 
       export = OldPanelOpener;
-   
+

@@ -2,13 +2,13 @@
  * Created by kraynovdo on 31.01.2018.
  */
 import BaseControl = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/History/List');
+import template = require('wml!Controls/_filterPopup/History/List');
 import chain = require('Types/chain');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Utils = require('Types/util');
-import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
-import 'css!theme?Controls/Filter/Button/History/List';
-   
+import historyUtils = require('Controls/_filterPopup/History/resources/historyUtils');
+import 'css!theme?Controls/_filterPopup/History/List';
+
 
    var MAX_NUMBER_ITEMS = 5;
 

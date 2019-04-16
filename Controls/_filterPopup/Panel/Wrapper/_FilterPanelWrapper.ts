@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper');
-import _FilterPanelWrapper = require('Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions');
+import template = require('wml!Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
+import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 
-      
+
 
       /**
        * Proxy container for filter panel options.
        *
-       * @class Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper
+       * @class Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper
        * @extends Core/Control
        * @control
        */
@@ -23,5 +23,5 @@ import _FilterPanelWrapper = require('Controls/Filter/Button/Panel/Wrapper/_Filt
          }
       });
 
-   
+
 

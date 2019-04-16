@@ -1,16 +1,16 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid');
+import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
-import 'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid';
+import 'css!theme?Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid';
 
    /**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
     *
-    * @class Controls/Filter/Button/Panel/PropertyGrid
+    * @class Controls/_filterPopup/Panel/PropertyGrid
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
     * @mixes Controls/interface/ISource
@@ -23,7 +23,7 @@ import 'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid';
     * @css @spacing_PropertyGrid-between-items Spacing between items.
     */
 
-   
+
 
    var _private = {
       cloneItems: function(items) {

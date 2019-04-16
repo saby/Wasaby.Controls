@@ -1,11 +1,11 @@
 import Control = require('Core/Control');
 import Utils = require('Types/util');
-import template = require('wml!Controls/Filter/Button/Panel/Select/Select');
+import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
    /**
     * Control that displays items through delimiter.
     *
     * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
-    * @class Controls/Filter/Button/Panel/Select
+    * @class Controls/_filterPopup/Panel/Select
     * @extends Controls/Control
     * @control
     * @public
@@ -13,22 +13,22 @@ import template = require('wml!Controls/Filter/Button/Panel/Select/Select');
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Select#items
+    * @name Controls/_filterPopup/Panel/Select#items
     * @cfg {Array} Data to build the mapping.
     * Text is taken from the title field.
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Select#keyProperty
+    * @name Controls/_filterPopup/Panel/Select#keyProperty
     * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Select#displayProperty
+    * @name Controls/_filterPopup/Panel/Select#displayProperty
     * @cfg {String} The name of the field whose value is displayed.
     */
 
-   
+
 
    var FilterSelect = Control.extend({
       _template: template,

@@ -2,12 +2,12 @@ import Control = require('Core/Control');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Clone = require('Core/core-clone');
-import template = require('wml!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams');
+import template = require('wml!Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams');
 import chain = require('Types/chain');
-import 'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams';
+import 'css!theme?Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams';
    /**
     * Control "Additional params". Used in the filter panel.
-    * @class Controls/Filter/Button/Panel/AdditionalParams
+    * @class Controls/_filterPopup/Panel/AdditionalParams
     * @extends Core/Control
     * @control
     * @public
@@ -23,7 +23,7 @@ import 'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams
     * @css @height_AdditionalParams-arrow Height of the arrow to unfold the block.
     */
 
-   
+
 
    var MAX_NUMBER_ITEMS_COLUMN = 5;
 

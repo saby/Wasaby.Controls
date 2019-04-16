@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/Lookup/Lookup');
+import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
-import 'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup';
+import 'css!theme?Controls/_filterPopup/Panel/Lookup/Lookup';
    /**
     * Control link with lookup
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
-    * @class Controls/Filter/Button/Panel/Lookup
+    * @class Controls/_filterPopup/Panel/Lookup
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/interface/ISelectorDialog
     * @mixes Controls/Input/interface/ISearch
@@ -26,12 +26,12 @@ import 'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup';
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Lookup#caption
+    * @name Controls/_filterPopup/Panel/Lookup#caption
     * @cfg {String} Caption
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Lookup#lookupTemplateName
+    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
     * @cfg {String} Name of the control with same interface as Lookup.
     * @default Controls/Selector/Lookup
     * @example
@@ -40,14 +40,14 @@ import 'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup';
     * </pre>
     */
 
-   
+
 
    var _private = {
       getLookup: function(self) {
          if (typeof self._options.lookupTemplateName === 'string') {
             return self._children.lookup;
          } else {
-            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplateName" only supports string type');
+            Env.IoC.resolve('ILogger').error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type');
          }
       }
    };

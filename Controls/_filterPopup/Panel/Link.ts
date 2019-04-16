@@ -1,20 +1,20 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/Link/Link');
-import 'css!theme?Controls/Filter/Button/Panel/Link/Link';
+import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
+import 'css!theme?Controls/_filterPopup/Panel/Link/Link';
    /**
     * Control filter link
-    * @class Controls/Filter/Button/Panel/Link
+    * @class Controls/_filterPopup/Panel/Link
     * @extends Controls/Control
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Link#caption
+    * @name Controls/_filterPopup/Panel/Link#caption
     * @cfg {Object} Caption
     */
 
-   
+
 
    var FilterLink = Control.extend({
       _template: template,

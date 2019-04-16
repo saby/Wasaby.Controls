@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/Filter/Button/Panel/Text/Text');
-import 'css!theme?Controls/Filter/Button/Panel/Text/Text';
+import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
+import 'css!theme?Controls/_filterPopup/Panel/Text/Text';
 
    /**
     * Control text with cross
-    * @class Controls/Filter/Button/Panel/FilterText
+    * @class Controls/_filterPopup/Panel/FilterText
     * @extends Controls/Control
     * @control
     * @public
@@ -12,11 +12,11 @@ import 'css!theme?Controls/Filter/Button/Panel/Text/Text';
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/FilterText#caption
+    * @name Controls/_filterPopup/Panel/FilterText#caption
     * @cfg {Object} Caption
     */
 
-   
+
 
    var FilterText = Control.extend({
       _template: template,
