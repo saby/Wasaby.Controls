@@ -34,9 +34,9 @@ var _private = {
       var result = new Deferred();
       requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
          Layer.load().addCallback(function(res) {
-            requirejs(['Controls/Filter/Button/_FilterCompatible'], function(_FilterCompatible) {
+            requirejs(['Controls/filterPopup'], function(filterPopup) {
                if (!self._filterCompatible) {
-                  self._filterCompatible = new _FilterCompatible({
+                  self._filterCompatible = new filterPopup._FilterCompatible({
                      filterButton: self,
                      filterButtonOptions: self._options,
                      tabindex: 0
@@ -140,7 +140,7 @@ var _private = {
             historyId: self._options.historyId
          },
          fittingMode: 'fixed',
-         template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+         template: 'Controls/filterPopup:_FilterPanelWrapper',
          target: self._children.panelTarget
       };
    }

@@ -36,7 +36,7 @@ import 'css!theme?Controls/_filterPopup/Panel/Lookup/Lookup';
     * @default Controls/Selector/Lookup
     * @example
     * <pre>
-    *   <Controls.Filter.Button.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
+    *   <Controls._filterPopup.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
     * </pre>
     */
 

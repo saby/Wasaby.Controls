@@ -4,7 +4,7 @@ import Deferred = require('Core/Deferred');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
-import historyUtils = require('Controls/Filter/Button/History/resources/historyUtils');
+import {historyUtils} from 'Controls/filterPopup';
 import SourceController = require('Controls/Controllers/SourceController');
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
@@ -358,15 +358,15 @@ import 'Controls/Container/Data/ContextOptions';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls.Filter.Controller
+       *    <Controls._filter.Controller
        *       historyId="myHistoryId"
        *       filterButtonSource="{{_filterButtonData}}">
        *          ...
-       *          <Controls.Filter.Button.Container>
-       *             <Controls.Filter.Button />
-       *          </Controls.Filter.Button.Container>
+       *          <Controls._filter.Button.Container>
+       *             <Controls._filter.Button />
+       *          </Controls._filter.Button.Container>
        *          ...
-       *    </Controls.Filter.Controller>
+       *    </Controls._filter.Controller>
        * </pre>
        * JS:
        * <pre>
@@ -393,17 +393,17 @@ import 'Controls/Container/Data/ContextOptions';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls.Filter.Controller
+       *    <Controls._filter.Controller
        *       historyId="myHistoryId"
        *       fastFilterSource="{{_fastFilterSource}}">
        *       <Controls.list:DataContainer>
        *          ...
-       *          <Controls.Filter.Fast.Container>
-       *             <Controls.Filter.Fast />
-       *          </Controls.Filter.Fast.Container>
+       *          <Controls._filter.Fast.Container>
+       *             <Controls._filter.Fast />
+       *          </Controls._filter.Fast.Container>
        *          ...
        *       </Controls.list:DataContainer>
-       *    </Controls.Filter.Controller>
+       *    </Controls._filter.Controller>
        * </pre>
        * JS:
        * <pre>
