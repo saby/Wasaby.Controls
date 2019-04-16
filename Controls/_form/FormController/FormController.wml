@@ -1,5 +1,5 @@
 <Controls.Validate.FormController name="validation" >
-   <Controls.Container.Crud
+   <Controls._form.Crud
          on:updateSuccessed="_crudHandler()"
          on:updateFailed="_crudHandler()"
          on:createSuccessed="_crudHandler()"
@@ -28,6 +28,6 @@
                record="{{ _record }}"/>
          </Controls.dataSource:error.Container>
       </div>
-   </Controls.Container.Crud>
+   </Controls._form.Crud>
 </Controls.Validate.FormController>
 

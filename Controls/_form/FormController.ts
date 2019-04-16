@@ -1,17 +1,15 @@
-define('Controls/FormController', [
-   'Core/Control',
-   'Core/core-instance',
-   'wml!Controls/FormController/FormController',
-   'Core/Deferred',
-   'Env/Env',
-   'Controls/dataSource'
-], function(Control, cInstance, tmpl, Deferred, Env, dataSource) {
-   'use strict';
+import Control = require('Core/Control');
+import cInstance = require('Core/core-instance');
+import tmpl = require('wml!Controls/_form/FormController/FormController');
+import Deferred = require('Core/Deferred');
+import Env = require('Env/Env');
+import dataSource = require('Controls/dataSource');
+   
 
    /**
     * Record editing controller
     * @category FormController
-    * @class Controls/FormController
+    * @class Controls/_form/FormController
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IFormController
     * @demo Controls-demo/Popup/Edit/Opener
@@ -593,5 +591,5 @@ define('Controls/FormController', [
    });
 
    FormController._private = _private;
-   return FormController;
-});
+   export = FormController;
+

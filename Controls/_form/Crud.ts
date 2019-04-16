@@ -1,9 +1,7 @@
-define('Controls/Container/Crud', [
-   'Core/Control',
-   'wml!Controls/Container/Crud/Crud',
-   'Env/Env'
-], function(Control, tmpl, Env) {
-   'use strict';
+import Control = require('Core/Control');
+import tmpl = require('wml!Controls/_form/Crud/Crud');
+import Env = require('Env/Env');
+   
 
    var module = Control.extend({
       _template: tmpl,
@@ -93,5 +91,5 @@ define('Controls/Container/Crud', [
       }
    });
 
-   return module;
-});
+   export = module;
+
