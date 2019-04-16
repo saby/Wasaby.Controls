@@ -29,11 +29,11 @@ define(
             });
             it('Test_02', function() {
                result = Formatter._private.getValueGroups(format[1], '+7(915)972-11-61');
-               assert.deepEqual(result, ['+7', '(', '9', '1', '5', ')', '972', '-', '11', '-', '61']);
+               assert.deepEqual(result, ['+', '7', '(', '9', '1', '5', ')', '972', '-', '11', '-', '61']);
             });
             it('Test_03', function() {
                result = Formatter._private.getValueGroups(format[2], '+7(   )972-  -61');
-               assert.deepEqual(result, ['+7', '(', ' ', ' ', ' ', ')', '972', '-', '  ', '-', '61']);
+               assert.deepEqual(result, ['+', '7', '(', ' ', ' ', ' ', ')', '972', '-', '  ', '-', '61']);
             });
             it('Test_04', function() {
                result = Formatter._private.getValueGroups(format[3], '(123(456)789)');
@@ -161,6 +161,17 @@ define(
                   position: 3
                });
                assert.equal(result, false);
+            });
+
+            [{
+               format: format[1],
+               clearData: { value: '1234567890', position: 0 },
+               resultClearData: { value: '+7(123)456-78-90', position: 3 }
+            }].forEach(function(test, testNumber) {
+               it(`Test_${testNumber}`, function() {
+                  result = Formatter.getFormatterData(test.format, test.clearData);
+                  assert.deepEqual(result, test.resultClearData);
+               });
             });
          });
       });
