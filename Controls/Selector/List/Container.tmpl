@@ -1,9 +1,1 @@
-<ws:partial template="{{_options.content}}"
-            scope="{{_options}}"
-            bind:markedKey="_markedKey"
-            on:itemClick="_itemClick()"
-            on:checkboxClick="_checkboxClick()"
-            on:itemActionsClick="_itemActionsClick()"
-            itemActions="{{_itemActions}}"
-            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-/>
+<ws:partial template="wml!Controls/_lookupPopup/List/Container" scope="{{_options}}" />

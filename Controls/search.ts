@@ -16,10 +16,14 @@ import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
 import Input = require('Controls/_search/Input/Search');
 
+import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+
 export {
    InputContainer,
    Misspell,
    MisspellContainer,
    Controller,
-   Input
+   Input,
+
+   getSwitcherStrFromData
 }

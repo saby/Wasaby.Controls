@@ -361,7 +361,7 @@ define(
                }
             };
             dropdownController._open();
-            assert.deepEqual(selectedItems, item.at(0));
+            assert.deepEqual(selectedItems, [item.at(0)]);
          });
 
          it('_open lazyLoad', () => {

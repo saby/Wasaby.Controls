@@ -1,8 +1,1 @@
-<div class="controls-Suggest__footer">
-    <ws:if data="{{showMoreButtonTemplate}}">
-        <ws:partial template="{{showMoreButtonTemplate}}"/>
-    </ws:if>
-    <ws:if data="{{showSelectorButtonTemplate}}">
-        <ws:partial template="{{showSelectorButtonTemplate}}"/>
-    </ws:if>
-</div>
+<ws:partial template="wml!Controls/_suggestPopup/footer" scope="{{_options}}" />

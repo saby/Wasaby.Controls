@@ -1,0 +1,57 @@
+.controls-Selectorbutton {
+   max-width: 100%;
+   min-height: @min-height_SelectorButton;
+   display: inline-block;
+   align-items: center;
+}
+
+.controls-Selectorbutton_empty {
+   display: inline-flex;
+}
+
+.controls-Selectorbutton__button-reset {
+   font-size: @font-size_SelectorButton-button-reset;
+   color: @color_SelectorButton-button-reset;
+   cursor: pointer;
+}
+
+.controls-Selectorbutton_button-more {
+   font-size: @font-size_SelectorButton-button-more;
+   color: @color_SelectorButton-button-more;
+   margin-right: @spacing_SelectorButton-between-buttonMore-buttonReset;
+   cursor: pointer;
+}
+
+.ws-is-no-touch {
+   .controls-Selectorbutton__button-reset:hover,
+   .controls-Selectorbutton_button-more:hover {
+      text-decoration: underline;
+   }
+}
+
+.controls-Selectorbutton__button-reset:active,
+.controls-Selectorbutton_button-more:active {
+   text-decoration: underline;
+}
+
+.controls-Selectorbutton_selectedItem_single {
+   color: @color_Selectorbutton-single-item;
+}
+
+.ws-is-no-touch {
+   .controls-Selectorbutton_selectedItem_single:hover {
+      color: @color_Selectorbutton-single-item_hovered;
+   }
+}
+
+.controls-Selectorbutton_selectedItem_single:active {
+   color: @color_Selectorbutton-single-item_active;
+}
+
+.controls-Selectorbutton_button-select_readOnly {
+   font-size: @font-size_SelectorButton-button-select_readOnly;
+}
+
+.controls-Selectorbutton_selectedCollection_multiSelect {
+   padding-right: @spacing_SelectorButton-multiSelect-between-buttonMore-selectedCollection;
+}

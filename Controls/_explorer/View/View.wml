@@ -1,0 +1,42 @@
+<div class="controls-Explorer">
+   <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
+      <Controls._explorer.PathController
+                                 scope="{{_options}}"
+                                 items="{{_breadCrumbsItems}}"
+                                 rootVisible="{{_dragOnBreadCrumbs}}"
+                                 highlighter="{{[_breadCrumbsDragHighlighter]}}"
+                                 on:hoveredItemChanged="_hoveredCrumbChanged()"
+                                 on:arrowActivated="_notifyHandler('arrowActivated')"
+                                 on:itemClick="_onBreadCrumbsClick()">
+         <Controls.treeGrid:TreeControl root="{{_getRoot()}}"
+                                    scope="{{_options}}"
+                                    header="{{content.header}}"
+                                    name="treeControl"
+                                    viewName="{{_viewName}}"
+                                    viewModelConstructor="{{_viewModelConstructor}}"
+                                    leftPadding="{{_leftPadding}}"
+                                    swipeDirection="{{ _viewMode === 'tile' ? 'column' : _options.swipeDirection }}"
+                                    titlePosition="{{ _viewMode === 'tile' ? 'none' : _options.titlePosition }}"
+                                    itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
+                                    on:itemClick="_onItemClick()"
+                                    on:checkboxClick="_notifyHandler('checkboxClick')"
+                                    on:itemSwipe="_notifyHandler('itemSwipe')"
+                                    on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                                    on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                                    on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                                    on:afterEndEdit="_notifyHandler('afterEndEdit')"
+                                    on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                                    on:dragStart="_notifyHandler('dragStart')"
+                                    on:dragEnd="_notifyHandler('dragEnd')"
+                                    on:changeDragTarget="_notifyHandler('changeDragTarget')"
+                                    on:dragEnter="_notifyHandler('dragEnter')"
+                                    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                                    on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                                    on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                                    on:keyDown="_onExplorerKeyDown()"
+                                    on:sortingChanged="_notifyHandler('sortingChanged')"
+                                    itemsReadyCallback="{{_itemsReadyCallback}}"
+                                    dataLoadCallback="{{_dataLoadCallback}}"/>
+      </Controls._explorer.PathController>
+   </Controls.dragnDrop:Container>
+</div>

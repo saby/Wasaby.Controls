@@ -1,0 +1,77 @@
+.controls-SuggestV {
+	max-width: 100%;
+	position: relative;
+	display: inline-block;
+}
+
+.controls-Suggest__layout-input {
+	width: 100%;
+}
+
+.controls-Suggest__suggestionsContainer {
+	border: @border-color_Suggest @border-width_Suggest solid;
+	box-sizing: border-box;
+	background-color: @background-color_Suggest;
+	/* Почему тут z-index:2
+		Контекст наложения формируется по определённым правилам, его формирует либо корневой элемент (тег HTML),
+		либо один из списка стилей https://developer.mozilla.org/ru/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context.
+		По-умолчанию элементы находятся в стеке в порядке следования в DOM дереве. Поэтому для того, чтобы список был выше, делаем ему z-index: 1;
+		Но, под автодополнением (ниже по дом дереву) может лежать scrollContainer у котого в стилях контента тоже z-index:1,
+		и если ему никто не создал контекст наложения, то он будет перекрывать автодополнение.  Поэтому необходимый минимум - z-index: 2*/
+	z-index: 2;
+}
+
+.controls-Suggest-Text_style_overInput {
+	z-index: 3;
+}
+
+.controls-Suggest__footer {
+	.flexbox();
+}
+
+.controls-Suggest__showAllLink {
+	color: @color_Suggest-showAll;
+	height: @height_Suggest-showAll;
+	cursor: pointer;
+	padding: 0 @spacing_Suggest-showAll-between-rightBorder-content 0 @spacing_Suggest-showAll-between-leftBorder-content;
+	margin-left: auto;
+}
+
+.ws-is-no-touch {
+	.controls-Suggest__showAllLink:hover {
+		color: @color_Suggest-showAll_hovered;
+		text-decoration: underline;
+	}
+}
+
+.controls-Suggest__showAllLink:active {
+	color: @color_Suggest-showAll_active;
+	text-decoration: underline;
+}
+
+.controls-Suggest__showAllLink-content {
+	display: inline-flex;
+	align-items: center;
+	height: 100%;
+}
+
+.controls-Suggest__tabs {
+	width: 100%;
+	margin-bottom: @spacing_Suggest-between-tabs-suggestions;
+}
+
+.controls-Suggest__empty {
+	color: @color_Suggest-empty;
+	text-align: center;
+	padding: @spacing_Suggest-empty-between-topBorder-content 0 @spacing_Suggest-empty-between-bottomBorder-content 0;
+}
+
+.controls-Suggest__scrollContainer {
+	height: 100%;
+	width: 100%;
+}
+
+.controls-Suggest__Misspell {
+	padding: 0 @spacing_Suggest-misspell-between-rightBorder-content 0 @spacing_Suggest-misspell-between-leftBorder-content;
+	box-sizing: border-box;
+}

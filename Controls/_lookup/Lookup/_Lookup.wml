@@ -1,0 +1,77 @@
+<Controls.Container.Suggest.Layout
+      name="layout"
+      on:choose="_choose()"
+      on:deactivated="_deactivated()"
+      suggestTemplate="{{_options.suggestTemplate}}"
+      footerTemplate="{{_options.suggestFooterTemplate}}"
+      emptyTemplate="{{_options.emptyTemplate}}"
+      on:suggestStateChanged="_suggestStateChanged()"
+      minSearchLength="{{_options.minSearchLength}}"
+      source="{{_options.source}}"
+      keyProperty="{{_options.keyProperty}}"
+      historyId="{{_options.historyId}}"
+      searchParam="{{_options.searchParam}}"
+      searchDelay="{{_options.searchDelay}}"
+      trim="{{_options.trim}}"
+      navigation="{{_options.navigation}}"
+      tooltip="{{_options.tooltip}}"
+      bind:suggestState="_suggestState"
+      filter="{{_options.filter}}"
+      sorting="{{_options.sorting}}"
+      autoDropDown="{{_determineAutoDropDown()}}"
+      layerName="Controls/Container/Suggest/__PopupLayer"
+      value="{{_inputValue}}"
+      attr:class="controls-Lookup__suggest">
+   <Controls._lookup.Lookup.InputRender
+         name="inputRender"
+         inputWidth="{{ _inputWidth }}"
+         isInputVisible="{{_isInputVisible()}}"
+         multiline="{{ _multiLineState }}"
+         spacingLeftInput="{{!_multiLineState && !_isEmpty() || _multiLineState && _inputWidth}}"
+         size="{{ _options.size }}"
+         trim="{{ _options.trim }}"
+         style="{{ _options.style }}"
+         selectOnClick="{{ _options.selectOnClick }}"
+         constraint="{{ _options.constraint }}"
+         value="{{_inputValue}}"
+         tagStyle="{{ _options.tagStyle }}"
+         placeholder="{{ _options.placeholder }}"
+         on:valueChanged="_changeValueHandler()"
+         on:inputCompleted="_notifyHandler('inputCompleted')"
+         on:keyDownInput="_keyDown()"
+         attr:class="controls-Lookup__inputRender controls-Lookup__inputRender_{{_multiLineState ? 'multiLine' : 'singleLine'}}">
+
+      <ws:beforeFieldWrapper>
+         <ws:if data="{{!_isEmpty() && (_maxVisibleItems || _options.readOnly)}}">
+            <Controls._lookup.SelectedCollection
+                  name="collection"
+                  itemTemplate="{{_options.itemTemplate}}"
+                  displayProperty="{{_options.displayProperty}}"
+                  itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
+                  items="{{_options.items}}"
+                  _counterWidth="{{_counterWidth}}"
+                  maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems : 0}}"
+                  readOnly="{{_options.readOnly}}"
+                  on:itemClick="_itemClick()"
+                  on:crossClick="_crossClick()"
+                  on:openInfoBox="_openInfoBox()"
+                  on:closeInfoBox="_closeInfoBox()"
+                  attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}"
+                  attr:style="max-width:{{_options.multiSelect && !_options.readOnly ? _availableWidthCollection}}px;"/>
+         </ws:if>
+      </ws:beforeFieldWrapper>
+
+      <ws:afterFieldWrapper>
+         <ws:if data="{{!_options.readOnly}}">
+            <div class="controls-Lookup__afterFieldWrapper controls-Lookup__afterFieldWrapper_{{_multiLineState ? 'multiLine' : 'singleLine'}}">
+               <ws:if data="{{!_options.readOnly && _options.items.getCount() > 1}}">
+                  <ws:partial template="{{_clearRecordsTemplate}}" name="clearRecords" on:click="_onClickClearRecords()"
+                              attr:class="controls-Lookup__clearRecords_{{_multiLineState ? 'multiLine' : 'singleLine'}}"/>
+               </ws:if>
+               <ws:partial template="{{_showSelectorTemplate}}" name="showSelector" on:click="_onClickShowSelector()"/>
+            </div>
+         </ws:if>
+      </ws:afterFieldWrapper>
+   </Controls._lookup.Lookup.InputRender>
+   <Controls.Event.Listener event="controlResize" on:controlResize="_resize()"/>
+</Controls.Container.Suggest.Layout>
