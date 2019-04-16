@@ -15,7 +15,7 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
  * @mixes Controls/interface/IBreadCrumbs
  * @control
  * @private
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  */
 
 var BreadCrumbsView = Control.extend({

@@ -62,7 +62,7 @@ import buttons = require('Controls/buttons');
     * @mixes Controls/List/interface/IHierarchy
     * @control
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @demo Controls-demo/OperationsPanel/Panel
     *
     * @css @background-color_OperationsPanel Background color of the panel.
