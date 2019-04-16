@@ -1,5 +1,5 @@
 /**
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @mixin Controls/_lists/ItemActions/ItemActionsStyles
  * @public
  *

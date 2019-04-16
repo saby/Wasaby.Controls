@@ -242,7 +242,7 @@ var
  * @class Controls/_lists/EditInPlace
  * @extends Core/Control
  * @mixes Controls/interface/IEditableList
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @private
  */
 

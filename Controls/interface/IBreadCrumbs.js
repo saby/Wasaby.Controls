@@ -6,7 +6,7 @@ define('Controls/interface/IBreadCrumbs', [
     *
     * @interface Controls/interface/IBreadCrumbs
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     */
 
    /**
