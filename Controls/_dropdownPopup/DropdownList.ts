@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
-import MenuItemsTpl = require('wml!Controls/Dropdown/resources/template/DropdownList');
-import DropdownViewModel = require('Controls/Dropdown/resources/DropdownViewModel');
-import groupTemplate = require('wml!Controls/Dropdown/resources/template/defaultGroupTemplate');
+import MenuItemsTpl = require('wml!Controls/_dropdownPopup/DropdownList');
+import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
+import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate');
 import itemTemplate = require('wml!Controls/Dropdown/resources/template/itemTemplate');
-import defaultHeadTemplate = require('wml!Controls/Dropdown/resources/template/defaultHeadTemplate');
+import defaultHeadTemplate = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
 import debounce = require('Core/helpers/Function/debounce');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Clone = require('Core/core-clone');
@@ -118,7 +118,7 @@ import chain = require('Types/chain');
        *
        * Template for controls, that opens dropdown list.
        * @control
-       * @mixes Controls/Dropdown/template/DropdownListStyles
+       * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
        * @category Popup
        */
@@ -383,7 +383,7 @@ import chain = require('Types/chain');
          };
       };
 
-      DropdownList._theme = ['Controls/Dropdown/resources/template/DropdownList'];
+      DropdownList._theme = ['Controls/_dropdownPopup/DropdownList'];
 
       export = DropdownList;
    

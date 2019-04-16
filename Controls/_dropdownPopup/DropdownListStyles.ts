@@ -1,5 +1,5 @@
 /**
-    * @mixin Controls/Dropdown/resources/template/DropdownListStyles
+    * @mixin Controls/_dropdownPopup/DropdownListStyles
     * @public
     *
     * @css @max-width_DropdownList Max width dropdown list.
