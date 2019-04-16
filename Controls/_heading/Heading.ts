@@ -1,18 +1,16 @@
-define('Controls/Heading', [
-   'Core/Control',
-   'wml!Controls/Heading/Heading',
-   'Types/entity',
-   'css!theme?Controls/Heading/Heading'
-], function(Control, template, entity) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_heading/Heading/Heading');
+import entity = require('Types/entity');
+import 'css!theme?Controls/_heading/Heading/Heading';
+   
 
    /**
-    * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
+    * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     *
-    * @class Controls/Heading
+    * @class Controls/_heading/Heading
     * @extends Core/Control
     * @control
     * @public
@@ -21,11 +19,11 @@ define('Controls/Heading', [
     *
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ICaption
-    * @mixes Controls/Heading/HeadingStyles
+    * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
    /**
-    * @name Controls/Heading#size
+    * @name Controls/_heading/Heading#size
     * @cfg {String} Heading size.
     * @variant s Small text size.
     * @variant m Medium text size.
@@ -35,7 +33,7 @@ define('Controls/Heading', [
     */
 
    /**
-    * @name Controls/Heading#style
+    * @name Controls/_heading/Heading#style
     * @cfg {String} Heading display style.
     * @variant primary
     * @variant secondary
@@ -71,5 +69,5 @@ define('Controls/Heading', [
       };
    };
 
-   return Header;
-});
+   export = Header;
+

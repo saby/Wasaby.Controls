@@ -1,18 +1,16 @@
-define('Controls/Heading/Separator', [
-   'Core/Control',
-   'wml!Controls/Heading/Separator/Separator',
-   'Types/entity',
-   'css!theme?Controls/Heading/Separator/Separator'
-], function(Control, template, entity) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_heading/Separator/Separator');
+import entity = require('Types/entity');
+import 'css!theme?Controls/_heading/Separator/Separator';
+   
 
    /**
     * Heading separator with support some display styles. Used as part of complex headings(you can see it in Demo-example)
-    * consisting of a <a href="/docs/js/Controls/Heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a> and a <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">counter</a>.
+    * consisting of a <a href="/docs/js/Controls/_heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a> and a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Heading/Separator
+    * @class Controls/_heading/Separator
     * @extends Core/Control
     * @control
     * @public
@@ -20,12 +18,12 @@ define('Controls/Heading/Separator', [
     *
     * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
     *
-    * @mixes Controls/Heading/Separator/SeparatorStyles
+    * @mixes Controls/_heading/Separator/SeparatorStyles
     * @mixes Controls/interface/ICaption
     */
 
    /**
-    * @name Controls/Heading/Separator#style
+    * @name Controls/_heading/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary
     * @variant secondary
@@ -51,5 +49,5 @@ define('Controls/Heading/Separator', [
       };
    };
 
-   return Separator;
-});
+   export = Separator;
+

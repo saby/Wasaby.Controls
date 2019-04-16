@@ -1,11 +1,5 @@
-define('Controls/Heading/Back/BackStyles',
-   [
-   ],
-   function() {
-   }
-
-   /**
-    * @mixin Controls/Heading/Back/BackStyles
+/**
+    * @mixin Controls/_heading/Back/BackStyles
     * @public
     *
     * @css @background-image-Back_style-primary_size-s Arrow image of back heading with options size 's' and style 'primary'.
@@ -41,4 +35,3 @@ define('Controls/Heading/Back/BackStyles',
     * @css @content_Back_primary Content in before pseudo-element of before  back heading with option style set to 'primary'.
     * @css @content_Back_secondary Content in before pseudo-element of back heading with option style set to 'secondary'.
     */
-);

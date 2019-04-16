@@ -1,18 +1,16 @@
-define('Controls/Heading/Counter', [
-   'Core/Control',
-   'wml!Controls/Heading/Counter/Counter',
-   'Types/entity',
-   'css!theme?Controls/Heading/Counter/Counter'
-], function(Control, template, entity) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/_heading/Counter/Counter');
+import entity = require('Types/entity');
+import 'css!theme?Controls/_heading/Counter/Counter';
+   
 
    /**
     * Counter with support different display styles and sizes. Used as part of complex headers(you can see it in Demo-example)
-    * consisting of a <a href="/docs/js/Controls/Heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
+    * consisting of a <a href="/docs/js/Controls/_heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Heading/Counter
+    * @class Controls/_heading/Counter
     * @extends Core/Control
     * @control
     * @public
@@ -20,11 +18,11 @@ define('Controls/Heading/Counter', [
     *
     * @demo Controls-demo/Headers/Counter/counterDemo
     *
-    * @mixes Controls/Heading/Counter/HeadingCounterStyles
+    * @mixes Controls/_heading/Counter/HeadingCounterStyles
     */
 
    /**
-    * @name Controls/Heading/Counter#size
+    * @name Controls/_heading/Counter#size
     * @cfg {String} Size of Counter.
     * @variant l Large counter size.
     * @variant m Medium counter size.
@@ -33,7 +31,7 @@ define('Controls/Heading/Counter', [
     */
 
    /**
-    * @name Controls/Heading/Counter#style
+    * @name Controls/_heading/Counter#style
     * @cfg {String} Counter displaying style.
     * @variant primary
     * @variant secondary
@@ -68,5 +66,5 @@ define('Controls/Heading/Counter', [
       };
    };
 
-   return Counter;
-});
+   export = Counter;
+

@@ -1,21 +1,19 @@
-define('Controls/Heading/Back', [
-   'Core/Control',
-   'wml!Controls/Heading/Back/Back',
-   'Types/entity',
-   'Env/Env',
-   'css!theme?Controls/Heading/Back/Back'
-], function(Control, template, entity, Env) {
+import Control = require('Core/Control');
+import template = require('wml!Controls/_heading/Back/Back');
+import entity = require('Types/entity');
+import Env = require('Env/Env');
+import 'css!theme?Controls/_heading/Back/Back';
    /**
     * Specialized heading to go to the previous level.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Heading/Back
+    * @class Controls/_heading/Back
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/interface/ITooltip
-    * @mixes Controls/Heading/Back/BackStyles
+    * @mixes Controls/_heading/Back/BackStyles
     * @control
     * @public
     * @author Михайловский Д.С.
@@ -25,7 +23,7 @@ define('Controls/Heading/Back', [
     */
 
    /**
-    * @name Controls/Heading/Back#style
+    * @name Controls/_heading/Back#style
     * @cfg {String} Back heading display style.
     * @variant primary
     * @variant secondary
@@ -33,16 +31,16 @@ define('Controls/Heading/Back', [
     * @example
     * Back heading has default style.
     * <pre>
-    *    <Controls.Heading.Back/>
+    *    <Controls._heading.Back/>
     * </pre>
     * Back heading has 'secondary' style.
     * <pre>
-    *    <Controls.Heading.Back style="secondary"/>
+    *    <Controls._heading.Back style="secondary"/>
     * </pre>
     */
 
    /**
-    * @name Controls/Heading/Back#size
+    * @name Controls/_heading/Back#size
     * @cfg {String} Back heading size.
     * @variant s Small heading size.
     * @variant m Medium heading size.
@@ -51,11 +49,11 @@ define('Controls/Heading/Back', [
     * @example
     * Back heading has default size.
     * <pre>
-    *    <Controls.Heading.Back/>
+    *    <Controls._heading.Back/>
     * </pre>
     * Back heading has 'l' size.
     * <pre>
-    *    <Controls.Heading.Back size="l"/>
+    *    <Controls._heading.Back size="l"/>
     * </pre>
     */
 
@@ -105,5 +103,5 @@ define('Controls/Heading/Back', [
       };
    };
 
-   return BackButton;
-});
+   export = BackButton;
+

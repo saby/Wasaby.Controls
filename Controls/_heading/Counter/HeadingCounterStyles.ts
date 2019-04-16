@@ -1,12 +1,6 @@
-define('Controls/Heading/Counter/HeadingCounterStyles',
-   [
-   ],
-   function() {
-   }
-
-   /**
+/**
     *
-    * @mixin Controls/Heading/Counter/HeadingCounterStyles
+    * @mixin Controls/_heading/Counter/HeadingCounterStyles
     * @public
     *
     * @css @font-size_Counter_size-s Small text size.
@@ -20,4 +14,3 @@ define('Controls/Heading/Counter/HeadingCounterStyles',
     * @css @color_Counter_style-primary_hovered Primary text color in hovered and activated state.
     * @css @color_Counter_style-secondary_hovered Default text color in hovered and activated state.
     */
-);

@@ -1,12 +1,6 @@
-define('Controls/Heading/Separator/SeparatorStyles',
-   [
-   ],
-   function() {
-   }
-
-   /**
+/**
     *
-    * @mixin Controls/Heading/Separator/SeparatorStyles
+    * @mixin Controls/_heading/Separator/SeparatorStyles
     * @public
     *
     * @css @width-HeaderSeparator Header-separator width.
@@ -19,4 +13,3 @@ define('Controls/Heading/Separator/SeparatorStyles',
     * @css @color_HeaderSeparator_primary_hovered Primary icon color in hovered and activated state.
     * @css @color_HeaderSeparator_secondary_hovered Default icon color in hovered and activated state.
     */
-);
