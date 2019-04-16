@@ -1,6 +1,7 @@
-<div style="padding: 20px;">
-<div class="validateDemo_block">
-      <span id="info_focusout" class="validateDemo_header">Validate/Input (Валидация происходит по focusOut)</span>
+<div class="validateDemo">
+      <span id="info_focusout" class="validateDemo_header">
+          Validate/Input (Валидация происходит по focusOut)
+      </span>
       <div class="validateDemo_content">
                 <Controls.Validate.Input name="InputValidate" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
                     <ws:validators>
@@ -15,14 +16,13 @@
                 </Controls.Validate.Input>
                 <Controls.Validate.Input name="InputValidate2" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
                     <ws:validators>
-                        <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsINN</ws:Function>
+                        <ws:Function value="{{_valueInn}}">Controls/Validate/Validators/IsINN</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.input:Number
                                 name="textBox"
-                                bind:value="_value3"
-                                placeholder="Введите ИНН"
-                        />
+                                bind:value="_valueInn"
+                                placeholder="Введите ИНН"/>
                     </ws:content>
                 </Controls.Validate.Input>
                  <Controls.Validate.Input name="InputValidate3" attr:class="ControlsDemo-ValidateInfobox_inputValidate3">
@@ -33,22 +33,26 @@
                         <Controls.input:Text
                                 name="textBox"
                                 bind:value="_value6"
-                                placeholder="Введите код"
-                        />
+                                placeholder="Введите код"/>
                     </ws:content>
                 </Controls.Validate.Input>
       </div>
     <span id="info_focusout" class="validateDemo_header">Валидация на стековой панели</span>
     <div class="validateDemo_content">
-                <Controls.buttons:Button name="Panel" on:click="_openPanel()" caption="Открыть StackPanel" attr:class="ControlsDemo-ValidateInfobox_panel"/>
+                <Controls.buttons:Button name="Panel"
+                                         on:click="_openPanel()"
+                                         caption="Открыть StackPanel"
+                                         attr:class="ControlsDemo-ValidateInfobox_panel"/>
                 <Controls.Popup.Opener.Stack name="opener"
                                              template="Controls-demo/Input/Validate/Text">
                 </Controls.Popup.Opener.Stack>
     </div>
     <Controls.Validate.FormController name="formController">
         <ws:content>
-            <div>
-                <div class="validateDemo_header">Validate/Controller(Кнопка запускает процесс валидации)</div>
+        <div>
+            <div class="validateDemo_header">
+                    Validate/Controller(Кнопка запускает процесс валидации)
+            </div>
             <div class="validateDemo_content">
                 <Controls.Validate.Controller  name="ControllerValidate">
                     <ws:validators>
@@ -57,8 +61,7 @@
                     <ws:content>
                         <Controls.input:Text
                                 name="textBox2"
-                                bind:value="_value2"
-                                placeholder="Email"/>
+                                bind:value="_value2"/>
                     </ws:content>
                 </Controls.Validate.Controller>
                 <Controls.Validate.Controller  name="ControllerValidate2" attr:class="ControlsDemo-ValidateInfobox_infobox">
@@ -89,13 +92,13 @@
                     </ws:validators>
                     <ws:content>
                         <Controls.Input.Text
-                                attr:style="width:400px"
+                                attr:style="width:150px"
                                 name="textBox5"
-                                bind:value="_value7"
-                                placeholder="Email"/>
+                                bind:value="_value7"/>
                     </ws:content>
                 </Controls.Validate.Controller>
             </div>
+        </div>
         </ws:content>
     </Controls.Validate.FormController>
     <Controls.buttons:Button caption="Submit"  name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />

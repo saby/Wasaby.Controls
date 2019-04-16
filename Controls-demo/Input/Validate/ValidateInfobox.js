@@ -14,7 +14,7 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
       _valueEmail: '',
       _value: '',
       _value2: 'is required',
-      _value3: '',
+      _valueInn: '',
       _value4: '',
       _value5: '',
       _value6: '',
