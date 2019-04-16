@@ -62,6 +62,12 @@ import Deferred = require('Core/Deferred');
        * @cfg {String} 	Cancel button text
        */
       /**
+       * @name Controls/_popup/Opener/Confirmation#PrimaryAction
+       * @cfg {String} Determines which button is activated when ctrl+enter is pressed
+       * @variant yes
+       * @variant no
+       */
+      /**
        * @name Controls/_popup/Opener/Confirmation#okCaption
        * @cfg {String} Accept button text
        */
