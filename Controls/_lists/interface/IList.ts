@@ -67,10 +67,21 @@
  * @name Controls/_lists/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
+ * <pre>
  * [
  *    { price: 'desc' },
  *    { balance: 'asc' }
  * ]
+ * </pre>
+ * You can also define null-policy by set 3-members array for each field where the 3rd member of an array defines a null
+ * policy. So you can choose between two of them: false - NULLS in the beginning, true - NULLS in the end:
+ * <pre>
+ * [
+ *    ['price', 'desc', false],
+ *    ['balance', 'asc', true]
+ * ]
+ * </pre>
+ * See topic about {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript declarative method signature} for details.
  */
 
 /**
