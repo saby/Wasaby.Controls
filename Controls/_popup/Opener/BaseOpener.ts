@@ -214,8 +214,11 @@ import library = require('Core/library');
                baseCfg.fittingMode = baseCfg.locationStrategy;
             }
 
-            // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
+            // if the .opener property is not set, then set the defaultOpener or the current control
+            if (!baseCfg.hasOwnProperty('opener')) {
+               baseCfg.opener = Vdom.DefaultOpenerFinder.find(this) || this;
+            }
+
             this._prepareNotifyConfig(baseCfg);
             return baseCfg;
          },
