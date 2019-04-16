@@ -1,0 +1,101 @@
+@spacing_Infobox-between-border-arrow: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2;
+
+.controls-InfoBoxTemplate {
+   display: flex;
+}
+
+.controls-InfoBoxTemplate__arrow-side-position-left {
+   flex-direction: row-reverse;
+}
+
+.controls-InfoBoxTemplate__arrow-side-position-top {
+   flex-direction: column-reverse;
+}
+
+.controls-InfoBoxTemplate__arrow-side-position-bottom {
+   flex-direction: column;
+}
+
+.controls-InfoBoxTemplate__arrow-wrapper {
+   width: @spacing_Infobox-between-content-border-right;
+   height: @spacing_Infobox-between-content-border-right;
+}
+
+.controls-InfoBoxTemplate__arrow {
+   width: @size_Infobox-arrow;
+   height: @size_Infobox-arrow;
+   border: @border-width_Infobox solid;
+   background: @background-color_Infobox_default;
+   border-color: @border-color_Infobox_default;
+   border-top: none;
+   border-left: none;
+   content: '';
+   box-sizing: border-box;
+   position: relative;
+}
+
+.controls-InfoBoxTemplate__content {
+   position: relative;
+}
+
+.controls-InfoBox__closeButton {
+   position: absolute;
+   top: @spacing_Infobox-between-top-close-button;
+   right: @spacing_Infobox-between-right-close-button;
+   cursor: pointer;
+   color: @color_Infobox-close-button;
+
+   &:hover {
+      color: @color_Infobox-close-button_hover;
+   }
+}
+
+.controls-InfoBoxTemplate__arrow-top {
+   transform: rotate(-135deg);
+   top: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+}
+
+.controls-InfoBoxTemplate__arrow-bottom {
+   transform: rotate(45deg);
+   bottom: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+}
+
+.controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
+   &.controls-InfoBoxTemplate__arrow-position-start {
+      left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+   }
+   &.controls-InfoBoxTemplate__arrow-position-end {
+      right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+   }
+}
+
+.controls-InfoBoxTemplate__arrow-left {
+   transform: rotate(135deg);
+   left: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+}
+
+.controls-InfoBoxTemplate__arrow-right {
+   transform: rotate(-45deg);
+   right: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+}
+
+.controls-InfoBoxTemplate__arrow-left, .controls-InfoBoxTemplate__arrow-right {
+   &.controls-InfoBoxTemplate__arrow-position-start {
+      top: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+   }
+   &.controls-InfoBoxTemplate__arrow-position-end {
+      bottom: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+   }
+}
+
+.controls-InfoBoxTemplate__arrow-side-start {
+   align-items: flex-start;
+}
+
+.controls-InfoBoxTemplate__arrow-side-center {
+   align-items: center;
+}
+
+.controls-InfoBoxTemplate__arrow-side-end {
+   align-items: flex-end;
+}

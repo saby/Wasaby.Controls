@@ -1,0 +1,23 @@
+<div class="ControlsDemo-InfoboxTemplate" attr:style="display:flex;width: 100%; height: 100%; align-items: center;justify-content: center;">
+   <Controls.Popup.Opener.Sticky name="sticky"
+                                 onResult="{{_onResult}}"
+                                 template="Controls/popupTemplate:InfoBox"
+                                 autoHide="{{true}}"
+   >
+      <ws:templateOptions closeButtonVisibility="{{false}}"/>
+      <ws:direction vertical="{{_verticalDirection ? 'bottom' : 'top'}}" horizontal="{{_horizontalDirection ? 'left' : 'right'}}"/>
+      <ws:targetPoint vertical="{{_verticalPoint ? 'bottom' : 'top'}}" horizontal="{{_horizontalPoint ? 'left' : 'right'}}"/>
+   </Controls.Popup.Opener.Sticky>
+
+   <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-InfoboxTemplate__stickyButton"/>
+   <div style="margin-left: 20px;">
+      <span>direction vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalDirection"/>
+      <br />
+      <span>direction horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalDirection"/>
+      <br />
+      <span>Point vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalPoint"/>
+      <br />
+      <span>Point horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalPoint"/>
+   </div>
+
+</div>

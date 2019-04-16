@@ -1,0 +1,16 @@
+<div class="controls-InfoBoxTemplate controls-InfoBoxTemplate__arrow-side-position-{{_arrowSide}} controls-InfoBoxTemplate__arrow-side-{{_arrowPosition}}" >
+   <div class="controls-InfoBoxTemplate__content">
+      <ws:if data="{{_options.template}}">
+         <ws:partial
+            template="{{_options.template}}"
+            scope="{{_options.templateOptions}}"
+         />
+      </ws:if>
+      <ws:if data="{{_options.closeButtonVisibility}}">
+         <Controls.Button.Close attr:class="controls-InfoBox__closeButton" on:click="_close()" style="light"/>
+      </ws:if>
+   </div>
+   <div class="controls-InfoBoxTemplate__arrow-wrapper">
+      <div class="controls-InfoBoxTemplate__arrow controls-InfoBoxTemplate__arrow-{{_arrowSide}} controls-InfoBoxTemplate__arrow-position-{{_arrowPosition}}"></div>
+   </div>
+</div>
