@@ -72,9 +72,9 @@ define(
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
          let frequentData = {
@@ -84,16 +84,16 @@ define(
                   '6', null, 'TEST_HISTORY_ID_V1'
                ],
                [
-                  '4',  null, 'TEST_HISTORY_ID_V1'
+                  '4', null, 'TEST_HISTORY_ID_V1'
                ],
                [
-                  '9',  null, 'TEST_HISTORY_ID_V1'
+                  '9', null, 'TEST_HISTORY_ID_V1'
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
          let recentData = {
@@ -104,9 +104,9 @@ define(
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
 
@@ -133,19 +133,19 @@ define(
                _type: 'record',
                d: ['7', 'Запись 7', '3', null],
                s: [
-                  {n: 'id', t: 'Строка'},
-                  {n: 'title', t: 'Строка'},
-                  {n: 'parent', t: 'Строка'},
-                  {n: 'pinned', t: 'Строка'}
+                  { n: 'id', t: 'Строка' },
+                  { n: 'title', t: 'Строка' },
+                  { n: 'parent', t: 'Строка' },
+                  { n: 'pinned', t: 'Строка' }
                ]
             },
             adapter: new entity.adapter.Sbis(),
             idProperty: 'id',
             format: [
-               {name: 'id', type: 'string'},
-               {name: 'title', type: 'string'},
-               {name: 'Parent', type: 'string'},
-               {name: 'pinned', type: 'string'}
+               { name: 'id', type: 'string' },
+               { name: 'title', type: 'string' },
+               { name: 'Parent', type: 'string' },
+               { name: 'pinned', type: 'string' }
             ]
          });
          let config = {
@@ -201,14 +201,14 @@ define(
                assert.equal(!!hS._historyId, false);
             });
          });
-   
+
          describe('serialize tests', function() {
             it('clone', function() {
                var sourceClone = util.object.clone(hSource);
                assert.isTrue(sourceClone instanceof historySource);
             });
          });
-         
+
          describe('checkHistory', function() {
             it('query', function(done) {
                let query = new sourceLib.Query().where();
@@ -223,7 +223,7 @@ define(
                historyDef.addCallback(function(data) {
                   let records = data.getAll();
                   assert.isFalse(records.at(0).has('pinned'));
-   
+
                   query = new sourceLib.Query().where({
                      $_history: true
                   });
@@ -231,10 +231,10 @@ define(
                   historyDef.addCallback(function(data) {
                      let records = data.getAll();
                      assert.isTrue(records.at(0).get('pinned'));
-   
+
                      hSource.historySource = errorSource;
                      historyDef = hSource.query(query);
-   
+
                      historyDef.addCallback(function(data) {
                         let records = data.getAll();
                         assert.isFalse(records.at(0).has('pinned'));
@@ -314,7 +314,7 @@ define(
                assert.deepEqual(myItem, updatedData);
 
             });
-            it('prepareHistoryBySourceItems', function(done){
+            it('prepareHistoryBySourceItems', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
                      frequent: createRecordSet(frequentData),
@@ -332,13 +332,13 @@ define(
                   let sourceItems = res.getAll();
                   let preparedHistory = historySource._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
                   assert.equal(preparedHistory.get('frequent').getCount(), 2);
-                  preparedHistory.get('frequent').forEach(function(historyItem){
-                     assert.isFalse(historyItem.getId()=='9');
+                  preparedHistory.get('frequent').forEach(function(historyItem) {
+                     assert.isFalse(historyItem.getId() === '9');
                   });
                   done();
-               })
+               });
             });
-            it('initHistory', function(done){
+            it('initHistory', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
                      frequent: createRecordSet(frequentData),
@@ -353,13 +353,20 @@ define(
                   data: items
                });
                memorySource.query().addCallback(function(res) {
-                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let self = {
+                     _pinned: ['1', '2'],
+                     historySource: {
+                        getHistoryId: () => {
+                           'TEST_ID';
+                        }
+                     }
+                  };
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
                   assert.equal(self._recentCount, 2);
-                  self._history.pinned.forEach(function(pinnedItem){
-                     assert.isFalse(pinnedItem.getId()=='9');
+                  self._history.pinned.forEach(function(pinnedItem) {
+                     assert.isFalse(pinnedItem.getId() === '9');
                   });
                   done();
                });
@@ -381,16 +388,38 @@ define(
                   data: itemsWithoutId
                });
                memorySource.query().addCallback(function(res) {
-                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let self = {
+                     _pinned: ['1', '2'],
+                     historySource: {
+                        getHistoryId: () => {
+                           'TEST_ID';
+                        }
+                     }
+                  };
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
-                  self._history.pinned.forEach(function(pinnedItem){
-                     assert.isFalse(pinnedItem.getId()=='1');
-                     assert.isFalse(pinnedItem.getId()=='9');
+                  self._history.pinned.forEach(function(pinnedItem) {
+                     assert.isFalse(pinnedItem.getId() == '1');
+                     assert.isFalse(pinnedItem.getId() == '9');
                   });
                   done();
                });
+            });
+
+            it('_private:getPinnedIds', function() {
+               let pinnedIds = historySource._private.getPinnedIds(hSource._history.pinned);
+               assert.deepEqual(pinnedIds, ['5']);
+            });
+
+            it('_private:getFrequentIds', function() {
+               let frequentIds = historySource._private.getFrequentIds(hSource, hSource._history.frequent, hSource._history.pinned);
+               assert.deepEqual(frequentIds, ['6', '4']);
+            });
+
+            it('_private:getRecentIds', function() {
+               let recentIds = historySource._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
+               assert.deepEqual(recentIds, ['7', '8']);
             });
          });
          describe('check source original methods', function() {
@@ -418,8 +447,9 @@ define(
                });
             });
             it('getOptions', function() {
-               assert.deepEqual(hSource.getOptions(), {debug: false});
+               assert.deepEqual(hSource.getOptions(), { debug: false });
             });
          });
       });
-   });
+   }
+);
