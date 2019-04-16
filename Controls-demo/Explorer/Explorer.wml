@@ -33,6 +33,9 @@
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:tileItemTemplate>
+                     <ws:footerTemplate>
+                        <Controls.input:Label caption="Footer" underline="hovered"/>
+                     </ws:footerTemplate>
                   </Controls.Explorer>
                </Controls.operations:Container>
             </Controls.list:Container>
