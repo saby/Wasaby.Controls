@@ -5,7 +5,7 @@
  * <Controls.Event.Listener event="scroll" callback="myScrollCallback()" />
  */
 import Control = require('Core/Control');
-import template = require('wml!Controls/Event/Listener');
+import template = require('wml!Controls/_event/Listener');
 import entity = require('Types/entity');
 
 

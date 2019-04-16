@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_event/Registrator" scope="{{_options}}" />
+<ws:partial template="wml!Controls/event:Register" scope="{{_options}}" />
