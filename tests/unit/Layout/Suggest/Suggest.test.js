@@ -42,6 +42,8 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          };
       };
 
+      let getRecentKeys = Suggest._private.getRecentKeys;
+
       Suggest._private.getRecentKeys = function() {
          return Deferred.success(IDENTIFICATORS);
       };
@@ -752,6 +754,20 @@ self._options.historyId = '';
          assert.isFalse(isCallOpenPopup);
 
          Suggest._private.open = _privateOpen;
+      });
+
+      it('Suggest::_private.getRecentKeys', function() {
+         let self = {};
+         Suggest._private.getHistoryService = function() {
+            let hService = { query: () => { return new Deferred.fail(new Error('History Service')); } };
+            return new Deferred.success(hService);
+         };
+         return new Promise(function(resolve) {
+            getRecentKeys(self).addCallback(function(keys) {
+               assert.deepEqual([], keys);
+               resolve();
+            });
+         });
       });
 
       it('Suggest::_inputClicked', function() {
