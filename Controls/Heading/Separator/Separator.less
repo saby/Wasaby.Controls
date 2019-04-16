@@ -1,1 +1,49 @@
-@import "Controls/_heading/Separator/Separator.less";
+.controls-HeaderSeparator_size {
+   width: @width-HeaderSeparator;
+   height: @height-HeaderSeparator;
+   padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
+}
+//in ie click to svg not bubble without it
+.controls-HeaderSeparator__svg_click {
+   pointer-events: none;
+}
+
+.controls-HeaderSeparator__wrapper {
+   display: inline-flex;
+   align-items: center;
+}
+
+.controls-HeaderSeparator__wrapper:before {
+   content: '\200b';
+}
+
+.controls-HeaderSeparator {
+   display: inline-block;
+   cursor: pointer;
+}
+
+.controls-HeaderSeparator__icon_style-secondary {
+   fill: @color_HeaderSeparator_secondary;
+}
+
+.controls-HeaderSeparator__icon_style-primary {
+   fill: @color_HeaderSeparator_primary;
+}
+
+.controls-HeaderSeparator__icon_style-secondary:active {
+   fill: @color_HeaderSeparator_secondary_hovered;
+}
+
+.controls-HeaderSeparator__icon_style-primary:active {
+   fill: @color_HeaderSeparator_primary_hovered;
+}
+
+.ws-is-no-touch {
+   .controls-HeaderSeparator__icon_style-secondary:hover {
+      fill: @color_HeaderSeparator_secondary_hovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-primary:hover {
+      fill: @color_HeaderSeparator_primary_hovered;
+   }
+}
