@@ -21,6 +21,7 @@
                     <ws:content>
                         <Controls.input:Number
                                 name="textBox"
+                                precision="0"
                                 bind:value="_valueInn"
                                 placeholder="Введите ИНН"/>
                     </ws:content>
@@ -51,10 +52,12 @@
         <ws:content>
         <div>
             <div class="validateDemo_header">
-                    Validate/Controller(Кнопка запускает процесс валидации)
+                    Validate/Controler внутри Validate/FormController(Кнопка запускает процесс валидации)
             </div>
             <div class="validateDemo_content">
-                <Controls.Validate.Controller  name="ControllerValidate">
+            <div class="validateDemo_form">
+                Введите имя получателя:
+                <Controls.Validate.Controller attr:class="validateDemo_element" name="ControllerValidate">
                     <ws:validators>
                         <ws:Function value="{{_value2}}" >Controls/Validate/Validators/IsRequired</ws:Function>
                     </ws:validators>
@@ -64,7 +67,8 @@
                                 bind:value="_value2"/>
                     </ws:content>
                 </Controls.Validate.Controller>
-                <Controls.Validate.Controller  name="ControllerValidate2" attr:class="ControlsDemo-ValidateInfobox_infobox">
+                Введите Email получателя:
+                <Controls.Validate.Controller  name="ControllerValidate2" attr:class="ControlsDemo-ValidateInfobox_infobox validateDemo_element">
                     <ws:validators>
                         <ws:Function value="{{_value1}}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
@@ -75,7 +79,8 @@
                                 placeholder="Email"/>
                     </ws:content>
                 </Controls.Validate.Controller>
-                 <Controls.Validate.Controller  name="ControllerValidate3">
+                Введите Email отправителя:
+                 <Controls.Validate.Controller  name="ControllerValidate3" attr:class="validateDemo_element">
                     <ws:validators>
                         <ws:Function value="{{_value5 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
@@ -86,20 +91,22 @@
                                 placeholder="Email"/>
                     </ws:content>
                 </Controls.Validate.Controller>
-                 <Controls.Validate.Controller  readOnly="{{true}}" name="ControllerValidate4" attr:class="ControlsDemo-ValidateInfobox_readonly">
+                Код сообщения:
+                 <Controls.Validate.Controller readOnly="{{true}}" name="ControllerValidate4" attr:class="ControlsDemo-ValidateInfobox_readonly validateDemo_element">
                     <ws:validators>
-                        <ws:Function value="{{_value7 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                        <ws:Function value="{{_valueReadOnly }}">Controls/Validate/Validators/IsRequired</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.Input.Text
-                                attr:style="width:150px"
+                                attr:style="width:163px"
                                 name="textBox5"
-                                bind:value="_value7"/>
+                                bind:value="_valueReadOnly"/>
                     </ws:content>
                 </Controls.Validate.Controller>
+            </div>
             </div>
         </div>
         </ws:content>
     </Controls.Validate.FormController>
-    <Controls.buttons:Button caption="Submit"  name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />
+    <Controls.buttons:Button caption="Submit" attr:style="margin: 0 71px;" name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />
 </div>

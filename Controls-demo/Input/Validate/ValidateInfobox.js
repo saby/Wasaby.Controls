@@ -18,7 +18,7 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
       _value4: '',
       _value5: '',
       _value6: '',
-      _value7: 'readOnly',
+      _valueReadOnly: '234567',
       _items: null,
       _placeholder: 'Input text',
       _setValue: function(e, record) {
