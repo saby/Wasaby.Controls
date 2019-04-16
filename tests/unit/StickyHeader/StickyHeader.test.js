@@ -68,10 +68,24 @@ define([
          it('should update top', function () {
             const component = createComponent(StickyHeader, {});
             component._model = {fixedPosition: ''};
+            sinon.stub(component, '_forceUpdate');
 
             assert.strictEqual(component._stickyHeadersHeight.top, 0);
             component.top = 20;
             assert.strictEqual(component._stickyHeadersHeight.top, 20);
+            sinon.assert.called(component._forceUpdate);
+            sinon.restore();
+         });
+
+         it('should not force update if top did not changed', function () {
+            const component = createComponent(StickyHeader, {});
+            component._model = {fixedPosition: ''};
+            sinon.stub(component, '_forceUpdate');
+
+            component._stickyHeadersHeight.top = 20;
+            component.top = 20;
+            sinon.assert.notCalled(component._forceUpdate);
+            sinon.restore();
          });
       });
 
@@ -79,10 +93,24 @@ define([
          it('should update bottom', function () {
             const component = createComponent(StickyHeader, {});
             component._model = {fixedPosition: ''};
+            sinon.stub(component, '_forceUpdate');
 
             assert.strictEqual(component._stickyHeadersHeight.bottom, 0);
             component.bottom = 20;
             assert.strictEqual(component._stickyHeadersHeight.bottom, 20);
+            sinon.assert.called(component._forceUpdate);
+            sinon.restore();
+         });
+
+         it('should not force update if bottom did not changed', function () {
+            const component = createComponent(StickyHeader, {});
+            component._model = {fixedPosition: ''};
+            sinon.stub(component, '_forceUpdate');
+
+            component._stickyHeadersHeight.bottom = 20;
+            component.bottom = 20;
+            sinon.assert.notCalled(component._forceUpdate);
+            sinon.restore();
          });
       });
 
