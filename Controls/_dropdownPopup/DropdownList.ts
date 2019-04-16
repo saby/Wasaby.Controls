@@ -1,20 +1,16 @@
-define('Controls/Dropdown/resources/template/DropdownList',
-   [
-      'Core/Control',
-      'Env/Env',
-      'wml!Controls/Dropdown/resources/template/DropdownList',
-      'Controls/Dropdown/resources/DropdownViewModel',
-      'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
-      'wml!Controls/Dropdown/resources/template/itemTemplate',
-      'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'Core/helpers/Function/debounce',
-      'Core/helpers/Object/isEqual',
-      'Core/core-clone',
-      'Types/collection',
-      'Core/core-merge',
-      'Types/chain'
-   ],
-   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce, isEqual, Clone, collection, Merge, chain) {
+import Control = require('Core/Control');
+import Env = require('Env/Env');
+import MenuItemsTpl = require('wml!Controls/Dropdown/resources/template/DropdownList');
+import DropdownViewModel = require('Controls/Dropdown/resources/DropdownViewModel');
+import groupTemplate = require('wml!Controls/Dropdown/resources/template/defaultGroupTemplate');
+import itemTemplate = require('wml!Controls/Dropdown/resources/template/itemTemplate');
+import defaultHeadTemplate = require('wml!Controls/Dropdown/resources/template/defaultHeadTemplate');
+import debounce = require('Core/helpers/Function/debounce');
+import isEqual = require('Core/helpers/Object/isEqual');
+import Clone = require('Core/core-clone');
+import collection = require('Types/collection');
+import Merge = require('Core/core-merge');
+import chain = require('Types/chain');
    
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -389,5 +385,5 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       DropdownList._theme = ['Controls/Dropdown/resources/template/DropdownList'];
 
-      return DropdownList;
-   });
+      export = DropdownList;
+   

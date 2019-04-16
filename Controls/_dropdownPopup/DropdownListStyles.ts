@@ -1,7 +1,4 @@
-define('Controls/Dropdown/resources/template/DropdownListStyles', [],
-   function() {}
-
-   /**
+/**
     * @mixin Controls/Dropdown/resources/template/DropdownListStyles
     * @public
     *
@@ -71,4 +68,3 @@ define('Controls/Dropdown/resources/template/DropdownListStyles', [],
     * @css @spacing_DropdownList-between-footer-bottomBorder Spacing between bottom border and footer.
     * @css @spacing_DropdownList-between-moreButton-leftBorder Spacing between more button and left border.
     */
-);

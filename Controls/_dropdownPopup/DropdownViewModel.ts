@@ -1,15 +1,10 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-define('Controls/Dropdown/resources/DropdownViewModel',
-   [
-      'Controls/list',
-      'Controls/List/ItemsViewModel',
-      'Types/entity',
-      'Controls/List/ItemActions/Utils/getStyle'
-   ],
-
-   function(lists, ItemsViewModel, entity, getStyle) {
+import lists = require('Controls/list');
+import ItemsViewModel = require('Controls/List/ItemsViewModel');
+import entity = require('Types/entity');
+import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -250,5 +245,5 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       });
 
       DropdownViewModel._private = _private;
-      return DropdownViewModel;
-   });
+      export = DropdownViewModel;
+   
