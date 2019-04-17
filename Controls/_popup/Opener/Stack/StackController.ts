@@ -175,6 +175,9 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
 
          elementMaximized: function(item, container, state) {
             _private.setMaximizedState(item, state);
+
+            //todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.width = state ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
             _private.prepareSizes(item, container);
             this._update();
          },
