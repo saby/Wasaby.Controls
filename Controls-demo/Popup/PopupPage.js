@@ -87,8 +87,6 @@ define('Controls-demo/Popup/PopupPage',
 
          openMaximizedStack: function () {
             this._children.maximizedStack.open({
-               minimizedWidth: 600,
-               maximized: true,
                opener: this._children.stackButton
             });
          },
