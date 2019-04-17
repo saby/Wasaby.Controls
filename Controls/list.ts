@@ -29,6 +29,7 @@ import VirtualScroll = require('Controls/_lists/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_lists/Data');
 import _forTemplate = require('wml!Controls/_lists/resources/For');
 
+import * as GridLayoutUtil from 'Controls/_lists/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_lists/EditInPlace/EditingTemplate');
 import ItemActionsHelpers = require('Controls/_lists/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_lists/BaseViewModel');
@@ -41,6 +42,10 @@ import SwipeHorizontalMeasurer = require('Controls/_lists/Swipe/HorizontalMeasur
 import 'css!Controls/_lists/Swipe/Swipe';
 import GroupContentResultsTemplate = require('wml!Controls/_lists/GroupContentResultsTemplate');
 import ItemOutputWrapper = require('wml!Controls/_lists/resources/ItemOutputWrapper');
+import ItemOutput = require('wml!Controls/_lists/resources/ItemOutput');
+import ItemsUtil = require('Controls/_lists/resources/utils/ItemsUtil');
+import TreeItemsUtil = require('Controls/_lists/resources/utils/TreeItemsUtil');
+import RowIndexUtil = require('Controls/_lists/utils/RowIndexUtil');
 import BaseControl = require('Controls/_lists/BaseControl');
 
 export {
@@ -57,6 +62,7 @@ export {
     DataContainer,
     _forTemplate,
 
+    GridLayoutUtil,
     EditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
@@ -68,5 +74,9 @@ export {
     SwipeHorizontalMeasurer,
     GroupContentResultsTemplate,
     ItemOutputWrapper,
+    ItemOutput,
+    ItemsUtil,
+    TreeItemsUtil,
+    RowIndexUtil,
     BaseControl
 };

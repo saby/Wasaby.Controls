@@ -14,14 +14,6 @@
 
          if (item.popupOptions.width) {
             panelWidth = item.popupOptions.width;
-         } else if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
-            panelWidth = item.popupOptions.minimizedWidth;
-         } else if (!minWidth || !maxWidth) { // If no configuration is specified then get the size of the container
-            if (item.containerWidth > maxPanelWidthWithOffset) {
-               panelWidth = maxPanelWidthWithOffset; // returns the width of the content no larger than the allowed width
-            }
-         } else if (maxWidth <= maxPanelWidthWithOffset) {
-            panelWidth = maxWidth;
          } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;
@@ -30,10 +22,13 @@
                tCoords.right = 0;
             }
             panelWidth = minWidth;
-         } else {
-            panelWidth = maxPanelWidthWithOffset; // return allowed width
+         } else if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            if (!_private.isMaximizedState(item)) {
+               panelWidth = item.popupOptions.minimizedWidth;
+            } else {
+               panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
+            }
          }
-
          return panelWidth;
       },
       isMaximizedPanel: function(item) {
@@ -60,7 +55,8 @@
             stackWidth: width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
-            bottom: 0
+            bottom: 0,
+            position: 'fixed'
          };
 
          if (item.popupOptions.minWidth) {

@@ -1,4 +1,4 @@
-define('Controls/List/interface/ITile', ['Controls/_lists/interface/ITile'], function(Control) {
+define('Controls/List/interface/ITile', ['Controls/_tile/interface/ITile'], function(Control) {
 /**
  * Interface for lists in which items are displayed as tiles.
  *

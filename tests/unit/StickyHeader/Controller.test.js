@@ -9,6 +9,7 @@ define([
    stickyUtils,
    coreMerge
 ) {
+   'use strict';
 
    const
       createComponent = function(Component, cfg) {
@@ -21,11 +22,24 @@ define([
          mv._beforeMount(cfg);
          return mv;
       },
+      getRegisterObject = function(cfg) {
+         return {
+            id: stickyUtils.getNextId(),
+            position: (cfg && cfg.position) || 'top',
+            inst: {
+               getOffset: function() {
+                  return 0;
+               },
+               height: 10
+            }
+         }
+      },
       options = {
       },
       data = {
             id: 2,
             position: 'top',
+            mode: 'stackable',
             inst: {
                getOffset: function() {
                   return 0;
@@ -34,7 +48,6 @@ define([
             }
          };
 
-   'use strict';
    describe('Controls.StickyHeader.Controller', function() {
       let component, result;
 
@@ -54,34 +67,89 @@ define([
             component._stickyRegisterHandler(event, data, true);
             sinon.assert.calledOnce(event.stopImmediatePropagation);
          });
-         it('should register new header', function() {
-            let
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
-            component._stickyRegisterHandler(event, data, true);
-            assert.deepEqual(component._headers[data.id], data);
+
+         [{
+            position: 'top'
+         }, {
+            position: 'bottom',
+         }, {
+            position: 'topbottom'
+         }].forEach(function(test) {
+            it(`should register new header on position ${test.position}`, function() {
+               let
+                  event = {
+                     stopImmediatePropagation: sinon.fake()
+                  },
+                  data = getRegisterObject(test);
+               component._stickyRegisterHandler(event, data, true);
+               assert.deepEqual(component._headers[data.id], data);
+               if (test.position === 'topbottom') {
+                  assert.include(component._headersStack['top'], data.id);
+                  assert.include(component._headersStack['bottom'], data.id);
+               } else {
+                  assert.include(component._headersStack[test.position], data.id);
+               }
+            });
          });
-         it('should unregister deleted header', function() {
-            let event = {
-               blockUpdate: false,
-               stopImmediatePropagation: sinon.fake()
-            };
-            component._headers[data.id] = data;
-            component._stickyRegisterHandler(event, data, false);
-            assert.isUndefined(component._headers[data.id]);
+
+         [{
+            position: 'top'
+         }, {
+            position: 'bottom',
+         }, {
+            position: 'topbottom'
+         }].forEach(function(test) {
+            it('should unregister deleted header on position ${test.position}', function() {
+               let event = {
+                     blockUpdate: false,
+                     stopImmediatePropagation: sinon.fake()
+                  },
+                  data = getRegisterObject(test);
+
+               component._headers[data.id] = data;
+               if (test.position === 'topbottom') {
+                  component._headersStack['top'].push(data.id);
+                  component._headersStack['bottom'].push(data.id);
+               } else {
+                  component._headersStack[test.position].push(data.id);
+               }
+               component._stickyRegisterHandler(event, data, false);
+               assert.isUndefined(component._headers[data.id]);
+               if (test.position === 'topbottom') {
+                  assert.notInclude(component._headersStack['top'], data.id);
+                  assert.notInclude(component._headersStack['bottom'], data.id);
+               } else {
+                  assert.notInclude(component._headersStack[test.position], data.id);
+               }
+            });
          });
       });
 
       describe('StickyHeader', function() {
          var event = {
-            stopPropagation: function() {}
+            stopImmediatePropagation: function() {}
          };
 
          describe('_fixedHandler', function() {
+            beforeEach(function() {
+               component._headers = {
+                  sticky1: {
+                     mode: 'stackable',
+                     inst: {
+                        height: 10
+                     }
+                  },
+                  sticky2: {
+                     mode: 'stackable',
+                     inst: {
+                        height: 10
+                     }
+                  }
+               }
+            });
             it('Header with id equal to "sticky" stops being fixed', function() {
                component._fixedHandler(event, coreMerge({
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: ''
                }, data, {preferSource: true}));
 
@@ -90,24 +158,24 @@ define([
             });
             it('Header with id equal to "sticky" fixed', function() {
                component._fixedHandler(event, {
-                  id: 'stickyTop',
+                  id: 'sticky1',
                   fixedPosition: 'top'
                });
-               assert.include(component._fixedHeadersStack.top, 'stickyTop');
+               assert.include(component._fixedHeadersStack.top, 'sticky1');
 
                component._fixedHandler(event, {
-                  id: 'stickyBottom',
+                  id: 'sticky2',
                   fixedPosition: 'bottom'
                });
-               assert.include(component._fixedHeadersStack.bottom, 'stickyBottom');
+               assert.include(component._fixedHeadersStack.bottom, 'sticky2');
             });
             it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
                component._fixedHandler(event, {
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: 'top'
                });
                component._fixedHandler(event, {
-                  id: 'sticky',
+                  id: 'sticky1',
                   fixedPosition: '',
                   prevPosition: 'top'
                });
@@ -209,6 +277,29 @@ define([
          });
          it('should return the correct height after a new header has been registered.', function () {
             component._stickyRegisterHandler(event, data, true);
+            assert.equal(component.getHeadersHeight('top'), 0);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+         it('should return the correct height after a new replaceable header has been registered and fixed.', function () {
+            component._stickyRegisterHandler(event, data, true);
+            component._fixedHandler(event, {
+                  id: data.id,
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  height: 10
+               });
+            assert.equal(component.getHeadersHeight('top'), 10);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+
+         it('should return the correct height after a new stackable header has been registered and fixed.', function () {
+            component._stickyRegisterHandler(event, coreMerge({ mode: 'stackable' }, data, { preferSource: true }), true);
+            component._fixedHandler(event, {
+                  id: data.id,
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  height: 10
+               });
             assert.equal(component.getHeadersHeight('top'), 10);
             assert.equal(component.getHeadersHeight('bottom'), 0);
          });

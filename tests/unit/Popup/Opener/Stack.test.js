@@ -29,10 +29,11 @@ define(
 
          it('stack with config sizes', () => {
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.isTrue(position.stackWidth === item.popupOptions.maxWidth);
+            assert.isTrue(position.stackMaxWidth === item.popupOptions.maxWidth);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
+            assert.isTrue(position.position === 'fixed');
          });
 
          it('stack shadow', () => {
@@ -77,7 +78,7 @@ define(
             StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
-            assert.equal(itemConfig.position.stackWidth, 800);
+            assert.equal(itemConfig.position.stackWidth, undefined);
             assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/_popup/Opener/Stack/StackContent');
          });
@@ -155,7 +156,7 @@ define(
             assert.equal(itemConfig.popupOptions.maximized, true);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
             position = StackStrategy.getPosition({ top: 0, right: 0 }, itemConfig);
-            assert.equal(position.stackWidth, popupOptions.maxWidth);
+            assert.equal(position.stackMaxWidth, popupOptions.maxWidth);
 
             StackController._private.prepareMaximizedState(1600, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
@@ -213,7 +214,7 @@ define(
 
          it('stack from target container', () => {
             var position = StackStrategy.getPosition({ top: 100, right: 100 }, item);
-            assert.equal(position.stackWidth, item.popupOptions.maxWidth);
+            assert.equal(position.stackMaxWidth, item.popupOptions.maxWidth);
             assert.isTrue(position.top === 100);
             assert.isTrue(position.right === 100);
             assert.isTrue(position.bottom === 0);
@@ -232,7 +233,7 @@ define(
 
             item.containerWidth = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.equal(position.stackWidth, StackStrategy.getMaxPanelWidth());
+            assert.equal(position.stackWidth, undefined);
          });
 
          it('stack with wrong options type', () => {
@@ -243,7 +244,7 @@ define(
                }
             };
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.equal(position.stackWidth, parseInt(item.popupOptions.maxWidth, 10));
+            assert.equal(position.stackMaxWidth, parseInt(item.popupOptions.maxWidth, 10));
          });
 
          it('stack reduced width', () => {
@@ -255,7 +256,6 @@ define(
                }
             };
             var position = StackStrategy.getPosition({ top: 0, right: 0 }, item);
-            assert.isTrue(position.stackWidth === StackStrategy.getMaxPanelWidth());
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
             assert.isTrue(position.bottom === 0);
@@ -313,7 +313,7 @@ define(
             StackController._private.getStackParentCoords = () => targetPos;
 
             StackController.elementCreated(item);
-            assert.equal(item.position.stackWidth, 900);
+            assert.equal(item.position.stackWidth, undefined);
          });
       });
    }

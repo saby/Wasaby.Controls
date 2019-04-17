@@ -15,7 +15,7 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
  * @mixes Controls/interface/IBreadCrumbs
  * @control
  * @private
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  */
 
 var BreadCrumbsView = Control.extend({
@@ -68,7 +68,7 @@ var BreadCrumbsView = Control.extend({
        this._forceUpdate();
     },
 
-    _onResult: function (args) {
+    _onResult: function (event, args) {
         var actionName = args && args.action;
 
         if (actionName === 'itemClick') {

@@ -161,17 +161,6 @@ import RegExpUtil = require('Controls/Utils/RegExp');
                      positionGroup++;
                   }
 
-                  // Конец группы одиночных разделителей.
-                  if (singlingDelimitersGroup && maskCharData.type !== 'singlingDelimiter') {
-                     delimiterGroups[positionGroup] = {
-                        value: singlingDelimitersGroup,
-                        type: 'single'
-                     };
-                     singlingDelimitersGroup = '';
-                     searchingGroups += ')?';
-                     positionGroup++;
-                  }
-
                   // Начало группы ключей или группы разделителей.
                   if (
                      (maskCharData.type === 'key' && !keysGroup) ||
@@ -205,10 +194,18 @@ import RegExpUtil = require('Controls/Utils/RegExp');
                      positionGroup++;
                   }
 
-                  // Найденый символ одиночный разделитель.
+                  // Found single delimiter character. We do not group single separators characters
+                  // that follow each other. Everywhere we work by inserting and deleting one character at a time.
                   if (maskCharData.type === 'singlingDelimiter') {
                      searchingGroups += RegExpUtil.escapeSpecialChars(maskCharData.value);
                      singlingDelimitersGroup += maskCharData.value;
+                     delimiterGroups[positionGroup] = {
+                        value: singlingDelimitersGroup,
+                        type: 'single'
+                     };
+                     singlingDelimitersGroup = '';
+                     searchingGroups += ')?';
+                     positionGroup++;
                   }
 
                   //while loop

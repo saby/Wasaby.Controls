@@ -3,7 +3,7 @@ import Env = require('Env/Env');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_slider/sliderTemplate');
 import utils from 'Controls/_slider/Utils';
-import DragNDrop = require('Controls/DragNDrop/Controller');
+import {Container as DragNDrop} from 'Controls/dragnDrop';
 
 
 const _private = {
@@ -58,7 +58,7 @@ const Range = Control.extend({
    /**
     * Slider with two movable points for choosing range.
     *
-    * <a href="/materials/demo/demo-ws4-sliderrange">Demo-example</a>.
+    * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
     * @public
     * @extends Core/Control
     * @class Controls/_slider/Range

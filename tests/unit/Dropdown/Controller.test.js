@@ -219,7 +219,7 @@ define(
             dropdownController._notify = (e) => {
                assert.equal(e, 'footerClick');
             };
-            dropdownController._onResult({action: 'footerClick'});
+            dropdownController._onResult(null, {action: 'footerClick'});
          });
 
          it('check item click', () => {
@@ -246,25 +246,25 @@ define(
             };
 
             // returned false from handler and no hierarchy
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(4)]});
             assert.isFalse(closed);
 
             // returned undefined from handler and there is hierarchy
             closed = false;
             closeByNodeClick = false;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isFalse(closed);
 
             // returned undefined from handler and no hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(4)]});
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
          });
 
@@ -327,22 +327,22 @@ define(
             let dropdownController = getDropdownController(config),
                opened = false;
             dropdownController._beforeMount(config);
-            dropdownController._items = itemsRecords;
+            dropdownController._items = Clone(itemsRecords);
             dropdownController._children.DropdownOpener = {
                open: () => { opened = true;}
             };
             dropdownController._open();
             assert.isTrue(opened);
-         });
 
-         it('_open dropdown without items', () => {
-            let dropdownController = getDropdownController(config),
-               opened = false;
-            dropdownController._items = Clone(itemsRecords);
+            // items is empty recordSet
+            opened = false;
             dropdownController._items.clear();
-            dropdownController._children.DropdownOpener = {
-               open: () => { opened = true;}
-            };
+            dropdownController._open();
+            assert.isFalse(opened);
+
+            // items = null
+            opened = false;
+            dropdownController._items = null;
             dropdownController._open();
             assert.isFalse(opened);
          });
@@ -361,7 +361,7 @@ define(
                }
             };
             dropdownController._open();
-            assert.deepEqual(selectedItems, item.at(0));
+            assert.deepEqual(selectedItems, [item.at(0)]);
          });
 
          it('_open lazyLoad', () => {
@@ -576,7 +576,7 @@ define(
                   filter: {}
                });
 
-               dropdownController._onResult({data: items, action: 'applyClick'});
+               dropdownController._onResult(null, {data: items, action: 'applyClick'});
                assert.deepEqual(selectedItems, items);
                assert.isTrue(updated);
             });

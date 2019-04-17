@@ -34,7 +34,7 @@ define(['Controls/List/TileView/TileView',
          cfg = {
             listModel: treeTileViewModel,
             keyProperty: 'id',
-            hoverMode: 'outside'
+            tileScalingMode: 'outside'
          },
          tileView = new TileView(cfg);
 
@@ -217,7 +217,7 @@ define(['Controls/List/TileView/TileView',
          assert.equal(hoveredItem.endPosition, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
 
-         cfg.hoverMode = '';
+         cfg.tileScalingMode = 'none';
          tileView.saveOptions(cfg);
 
          tileView._setHoveredItem({
@@ -274,7 +274,7 @@ define(['Controls/List/TileView/TileView',
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
-         assert.isTrue(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
+         assert.isFalse(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
       });
 
       it('_afterMount', function() {
@@ -373,11 +373,11 @@ define(['Controls/List/TileView/TileView',
       });
 
       it('_getZoomCoefficient', function() {
-         cfg.hoverMode = 'outside';
+         cfg.tileScalingMode = 'outside';
          tileView.saveOptions(cfg);
          assert.equal(tileView._getZoomCoefficient(), 1.5);
 
-         cfg.hoverMode = '';
+         cfg.tileScalingMode = 'none';
          tileView.saveOptions(cfg);
          assert.equal(tileView._getZoomCoefficient(), 1);
       });

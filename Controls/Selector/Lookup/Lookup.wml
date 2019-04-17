@@ -1,15 +1,1 @@
-<Controls.Selector.SelectedCollection.Controller
-      name="controller"
-      source="{{_options.source}}"
-      selectedKeys="{{_options.selectedKeys}}"
-      keyProperty="{{_options.keyProperty}}"
-      displayProperty="{{_options.displayProperty}}"
-      filter="{{_options.filter}}"
-      selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
-      isCompoundTemplate="{{_options.isCompoundTemplate}}"
-      multiSelect="{{_options.multiSelect}}"
-      historyId="{{_options.historyId}}"
-      dataLoadCallback="{{_options.dataLoadCallback}}"
-      attr:class="controls-Lookup">
-   <Controls.Selector.Lookup._Lookup scope="{{_options}}"/>
-</Controls.Selector.SelectedCollection.Controller>
+<ws:partial template="wml!Controls/_lookup/Lookup/Lookup" scope="{{_options}}" />

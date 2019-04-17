@@ -1,0 +1,4 @@
+<ws:partial scope="{{draggingTemplateOptions}}" template="{{draggingTemplate}}"
+   attr:class="controls-DragNDrop__draggingTemplate-wrapper"
+   attr:style="{{'top:' + (draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset) + 'px; ' +
+                 'left:' + (draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset) + 'px;'}}"/>

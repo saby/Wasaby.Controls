@@ -1,0 +1,54 @@
+<ws:template name="folderTpl">
+   <div class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+            {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
+            {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
+            {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+            {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
+        attr:style="{{'-ms-flex-preferred-size: ' + (folderWidth || itemData.defaultFolderWidth) + 'px; flex-basis: ' + (folderWidth || itemData.defaultFolderWidth)+ 'px;'}}">
+      <ws:partial if="{{itemData.multiSelectVisibility !== 'hidden'}}"
+                  template="{{multiSelectTpl}}"
+                  attr:class="controls-TileView__checkbox controls-TreeTileView__checkbox">
+         <ws:templateOptions triState="{{true}}"
+                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             key="{{itemData.key}}" />
+      </ws:partial>
+      <span class="controls-TreeTileView__nodeIcon icon-large icon-Folder icon-disabled"></span>
+      <ws:if data="{{!!itemData.dragTargetNode}}">
+         <div class="controls-TreeTileView__dragTargetNode"></div>
+      </ws:if>
+      <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+      <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+                  highlightOnHover="{{highlightOnHover}}"
+                  template="{{swipeTemplate}}"
+                  itemData="{{itemData}}"
+                  itemActionsTemplate="{{itemActionsTemplate}}"/>
+      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
+                  template="{{itemActionsTemplate}}"
+                  highlightOnHover="{{highlightOnHover}}"
+                  itemData="{{itemData}}"
+                  itemActionsClass="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
+   </div>
+</ws:template>
+<ws:if data="{{invisible}}">
+   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (folderWidth || itemData.defaultFolderWidth) + 'px; flex-basis: ' + (folderWidth || itemData.defaultFolderWidth) + 'px;'}}"></div>
+</ws:if>
+<ws:else>
+   <ws:if data="{{itemData.dispItem.isNode()}}">
+      <ws:partial template="folderTpl"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial
+         template="wml!Controls/_tile/TileView/DefaultItemTpl"
+         width="{{itemWidth}}"
+         hasTitle="{{hasTitle}}"
+         itemData="{{itemData}}"
+         invisible="{{invisible}}"
+         marker="{{marker}}"
+         shadowVisibility="{{shadowVisibility}}"
+         markerVisibility="{{markerVisibility}}"
+         contentTemplate="{{contentTemplate}}"
+         itemActionsTemplate="{{itemActionsTemplate}}"
+         swipeTemplate="{{swipeTemplate}}"
+         multiSelectTpl="{{multiSelectTpl}}"/>
+   </ws:else>
+</ws:else>

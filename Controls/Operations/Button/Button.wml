@@ -1,1 +1,1 @@
-<div on:click="_onClick()" class="controls-OperationsButton {{_options.expanded ? ' icon-MarkCollapseBold' : ' icon-MarkExpandBold'}}"></div>
+<ws:partial template="wml!Controls/_operations/Button/Button" scope="{{_options}}" />

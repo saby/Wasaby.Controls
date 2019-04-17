@@ -105,8 +105,8 @@
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
           </Controls.Input.Suggest>
-            <Controls.Toggle.Checkbox attr:id="readOnly" bind:value="_readOnly" caption="readOnly" attr:class="demo-TextBox"/>
-             <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="_validationChangedHandler()"
+            <Controls.toggle:Checkbox attr:id="readOnly" bind:value="_readOnly" caption="readOnly" attr:class="demo-TextBox"/>
+             <Controls.toggle:Checkbox attr:id="validationErrors" on:valueChanged="_validationChangedHandler()"
                                     bind:value="_validationErrorsValue" caption="validationErrors"/>
       </ws:componentProperty>
 </Controls-demo.Wrapper.Wrapper>

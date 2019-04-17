@@ -1,13 +1,6 @@
-define('Controls/Selector/__ControllerContext', [
-   'Core/DataContext'
-], function(DataContext) {
-   'use strict';
-   
-   return DataContext.extend({
-      selectedItems: null,
-      
-      constructor: function(selectedItems) {
-         this.selectedItems = selectedItems;
-      }
+define('Controls/Selector/__ControllerContext',
+   ['Controls/_lookupPopup/__ControllerContext'],
+   function(Control) {
+      'use strict';
+      return Control;
    });
-});

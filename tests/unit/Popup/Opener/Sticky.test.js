@@ -26,7 +26,6 @@ define(
 
          function getPositionConfig() {
             return {
-               revertPositionStyle: true,
                corner: {
                   vertical: 'top',
                   horizontal: 'left'
@@ -52,38 +51,6 @@ define(
                }
             };
          }
-
-
-         it('Centered sticky', () => {
-            var position = StickyStrategy.getPosition({
-               corner: {
-                  vertical: 'bottom',
-                  horizontal: 'center'
-               },
-               align: {
-                  vertical: {
-                     side: 'bottom',
-                     offset: 0
-                  },
-                  horizontal: {
-                     side: 'center',
-                     offset: 0
-                  }
-               },
-               config: {},
-               sizes: {
-                  width: 200,
-                  height: 200,
-                  margins: {
-                     top: 0,
-                     left: 0
-                  }
-               }
-            }, targetCoords);
-            assert.isTrue(position.top === 400);
-            assert.isTrue(position.left === 200);
-         });
-
 
          it('Sticky initializing state', () => {
             let itemConfig = {
@@ -133,7 +100,9 @@ define(
             let right = 1900;
             let top = 800;
             let bottom = 1000;
-            let targetC = {...targetCoords, left, right, top, bottom};
+            let targetC = {
+               ...targetCoords, left, right, top, bottom
+            };
 
             var position = StickyStrategy.getPosition({
                fittingMode: 'overflow',
@@ -166,7 +135,7 @@ define(
             assert.equal(position.left, 1520);
          });
 
-         it('Sticky', () => {
+         it('Sticky position', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
@@ -346,6 +315,44 @@ define(
             assert.equal(popupCfg.align.vertical.side, 'bottom');
             assert.equal(popupCfg.align.vertical.offset, -10);
             assert.equal(popupCfg.sizes.margins.top, -15);
+         });
+
+         it('Sticky fix position', () => {
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+            let baseFixPosition = StickyStrategy._private.fixPosition;
+            let baseCheckOverflow = StickyStrategy._private.checkOverflow;
+            let i = 0;
+            StickyStrategy._private.checkOverflow = () => (i++ === 0 ? 100 : -100);
+
+            StickyStrategy._private.fixPosition = (position) => {
+               if (position.bottom) { // метод вызвался, проставилась координата bottom
+                  position.bottom = -10;
+               }
+            };
+
+            let position = StickyStrategy._private.calculatePosition(cfg, targetCoords, 'vertical');
+            assert.equal(position.bottom, -10);
+
+            StickyStrategy._private.checkOverflow = baseCheckOverflow;
+            StickyStrategy._private.fixPosition = baseFixPosition;
+         });
+
+         it('Centered sticky', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1920,
+               height: 1040
+            });
+            let popupCfg = { ...getPositionConfig() };
+            popupCfg.align.horizontal.side = 'center';
+
+            popupCfg.sizes.width = 100;
+            popupCfg.sizes.height = 100;
+
+            var position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.bottom, 840);
+            assert.equal(position.left, 250);
          });
       });
    }

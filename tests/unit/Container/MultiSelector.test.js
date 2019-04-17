@@ -1,5 +1,5 @@
 define([
-   'Controls/Container/MultiSelector',
+   'Controls/operations',
    'Controls/Utils/tmplNotify'
 ], function(
    MultiSelector,
@@ -8,7 +8,7 @@ define([
    'use strict';
    describe('Controls.Container.MultiSelector', function() {
       it('_selectedTypeChangedHandler', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.Controller();
          instance._children = {
             registrator: {
                start: function(typeName) {
@@ -21,7 +21,7 @@ define([
 
       it('_selectedKeysCountChanged', function() {
          var
-            instance = new MultiSelector(),
+            instance = new MultiSelector.Controller(),
             count = 1;
          instance._notify = function(eventName, eventArgs) {
             assert.equal(eventName, 'selectedKeysCountChanged');
@@ -46,7 +46,7 @@ define([
       });
 
       it('_notifyHandler', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.Controller();
          assert.equal(instance._notifyHandler, tmplNotify);
       });
    });

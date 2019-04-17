@@ -1,8 +1,1 @@
-<a attr:class="controls-Lookup__link controls-Lookup__link-{{_options.readOnly ? 'readOnly' : 'default'}}"
-   attr:title="{{_options.tooltip}}"
-   on:click="_clickHandler()"
-   on:keypress="_keyUpHandler()">
-    <span attr:class="controls-Lookup__link__content">
-        <span attr:class="controls-Lookup__link__text controls-Lookup__link__text-{{_options.readOnly ? 'readOnly' : 'default'}}">{{_options.caption}}</span>
-    </span>
-</a>
+<ws:partial template="wml!Controls/_lookup/Lookup/Link/LookUp_Link" scope="{{_options}}" />

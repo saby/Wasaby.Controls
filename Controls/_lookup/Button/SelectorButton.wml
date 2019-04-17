@@ -1,0 +1,14 @@
+<Controls._lookup.SelectedCollection.Controller
+      source="{{_options.source}}"
+      selectedKeys="{{_options.selectedKeys}}"
+      keyProperty="{{_options.keyProperty}}"
+      displayProperty="{{_options.displayProperty}}"
+      filter="{{_options.filter}}"
+      isCompoundTemplate="{{_options.isCompoundTemplate}}"
+      multiSelect="{{_options.multiSelect}}"
+      selectorTemplate="{{_options.selectorTemplate}}"
+      dataLoadCallback="{{_options.dataLoadCallback}}">
+   <ws:content>
+      <Controls._lookup.Button._SelectorButton scope="{{_options}}"/>
+   </ws:content>
+</Controls._lookup.SelectedCollection.Controller>

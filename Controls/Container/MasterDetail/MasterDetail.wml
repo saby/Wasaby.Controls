@@ -1,9 +1,1 @@
-<div class="controls-MasterDetail">
-   <ws:partial
-      attr:class="controls-MasterDetail_master"
-      template="{{_options.master}}"
-      on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
-   <ws:partial
-      template="{{_options.detail}}"
-      selectedMasterValue="{{_selected}}"/>
-</div>
+<ws:partial template="wml!Controls/_masterDetail/Base/Base" scope="{{_options}}" />

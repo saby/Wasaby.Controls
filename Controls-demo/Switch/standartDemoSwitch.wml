@@ -4,22 +4,22 @@
             <h1>Switchers</h1>
             <h2>Single switcher</h2>
             <div class="demo__block">
-                <Controls.Toggle.Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOff" bind:value="value" caption="State"/>
-                <Controls.Toggle.Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOn" bind:value="value1" captionPosition="left" caption="State"/>
+                <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOff" bind:value="value" caption="State"/>
+                <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOn" bind:value="value1" captionPosition="left" caption="State"/>
             </div>
             <h2>Horizontal double switcher</h2>
             <div class="demo__block">
-                <Controls.Toggle.DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOff" bind:value="value2" captions="{{['State1', 'State2']}}"/>
+                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOff" bind:value="value2" captions="{{['State1', 'State2']}}"/>
             </div>
             <h2>Vertical double switcher</h2>
             <div class="demo__block">
-                <Controls.Toggle.DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOn" bind:value="value3" orientation="vertical" captions="{{['State1', 'State2']}}" />
+                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOn" bind:value="value3" orientation="vertical" captions="{{['State1', 'State2']}}" />
             </div>
         </div>
         <div class="ControlsDemo-standartDemoSwitch_RadioGroups">
             <h2>Horizontal radio group</h2>
             <div class="demo__block">
-                <Controls.Toggle.RadioGroup
+                <Controls.toggle:RadioGroup
                    attr:class="demo__element horizontal__element ControlsDemo-standartDemoSwitch_HorizontalRadio"
                    on:selectedKeyChanged="changeKey(1)"
                    keyProperty="id"
@@ -30,7 +30,7 @@
             </div>
             <h2>Vertical radio group</h2>
             <div class="demo__block_inline">
-                <Controls.Toggle.RadioGroup
+                <Controls.toggle:RadioGroup
                    attr:class="demo__element vertical__element"
                    on:selectedKeyChanged="changeKey(2)"
                    keyProperty="id"
@@ -40,7 +40,7 @@
                    readOnly="{{false}}"/>
             </div>
             <div class="demo__block_inline">
-                <Controls.Toggle.RadioGroup
+                <Controls.toggle:RadioGroup
                    attr:class="demo__element vertical__element"
                    on:selectedKeyChanged="changeKey(3)"
                    keyProperty="id"
@@ -52,9 +52,9 @@
         </div>
         <h2>readOnly state</h2>
         <div class="demo__block">
-            <Controls.Toggle.Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{true}}" value="{{value4}}" caption="State"/>
-            <Controls.Toggle.DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlyDoubleSwitchOn" readOnly="{{true}}" value="{{value5}}" captions="{{['State1', 'State2']}}"/>
-            <Controls.Toggle.RadioGroup
+            <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{true}}" value="{{value4}}" caption="State"/>
+            <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlyDoubleSwitchOn" readOnly="{{true}}" value="{{value5}}" captions="{{['State1', 'State2']}}"/>
+            <Controls.toggle:RadioGroup
                attr:class="demo__element horizontal__element ControlsDemo-standartDemoSwitch_ReadOnlyRadioGroup"
                keyProperty="id"
                selectedKey="1"
@@ -65,8 +65,8 @@
     </div>
     <div class="demo__block demo__block_center">
         <h2>custom itemTemplate</h2>
-        <Controls.Toggle.Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{false}}" bind:value="value6" caption="tmpl!Controls-demo/Switch/resources/customCaptionTemplate"/>
-        <Controls.Toggle.RadioGroup
+        <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{false}}" bind:value="value6" caption="tmpl!Controls-demo/Switch/resources/customCaptionTemplate"/>
+        <Controls.toggle:RadioGroup
            on:selectedKeyChanged="changeKey(4)"
            attr:class="demo__element demo__element_width horizontal__element ControlsDemo-standartDemoSwitch_ReadOnlyRadioGroup"
            keyProperty="id"
@@ -85,6 +85,6 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls.Toggle.RadioGroup>
+        </Controls.toggle:RadioGroup>
     </div>
 </div>

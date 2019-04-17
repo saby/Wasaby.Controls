@@ -242,7 +242,7 @@ var
  * @class Controls/_lists/EditInPlace
  * @extends Core/Control
  * @mixes Controls/interface/IEditableList
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @private
  */
 
@@ -359,6 +359,10 @@ var EditInPlace = Control.extend(/** @lends Controls/_lists/EditInPlace.prototyp
                     clientY: originalEvent.nativeEvent.clientY,
                     item: record
                 };
+                // The click should not bubble over the editing controller to ensure correct control works.
+                // e.c., a click can be processed by the selection controller, which should not occur when starting editing in place.
+                // https://online.sbis.ru/opendoc.html?guid=b3254c65-596b-4f89-af0f-c160217ce7a3
+                e.stopPropagation();
             }
         }
     },
@@ -405,8 +409,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_lists/EditInPlace.prototyp
                     previousWidth = currentWidth;
                 }
 
-                // EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
-                // Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
+                /**
+                 * When editing starts, EditingRow calls this.activate() to focus first focusable element.
+                 * But if a user has clicked on an editable field, we can do better - we can set caret exactly
+                 * where the user has clicked. But before moving the caret we should manually focus the right field.
+                 */
                 target.focus();
 
                 lastLetterWidth = currentWidth - previousWidth;
