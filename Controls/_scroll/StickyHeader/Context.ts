@@ -22,8 +22,10 @@ import DataContext = require('Core/DataContext');
           */
          shadowPosition: '',
 
+         _moduleName: 'Controls/_scroll/StickyHeader/Context',
+
          constructor: function(config) {
             this.shadowPosition = config.shadowPosition || '';
          }
       });
-   
+
