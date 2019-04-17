@@ -11,7 +11,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
     * @extends Core/Control
     * @mixes Controls/interface/IPromisedSelectable
     * @control
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @public
     */
 

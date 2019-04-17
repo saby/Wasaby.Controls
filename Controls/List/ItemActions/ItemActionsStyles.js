@@ -1,6 +1,6 @@
 define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_lists/ItemActions/ItemActionsStyles'], function(Control) {
 /**
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @mixin Controls/List/ItemActions/ItemActionsStyles
  * @public
  *

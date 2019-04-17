@@ -471,7 +471,13 @@ define([
       });
 
       describe('DragNDrop', function() {
-         var explorer;
+         var
+            explorer,
+            explorerCfg = {
+               parentProperty: 'parent',
+               root: null,
+               itemsDragNDrop: true,
+            };
 
          beforeEach(function() {
             var
@@ -482,17 +488,12 @@ define([
                      { id: 3, title: 'item3', parent: 2 }
                   ],
                   idProperty: 'id'
-               }),
-               cfg = {
-                  parentProperty: 'parent',
-                  root: null,
-                  itemsDragNDrop: true,
-               };
+               })
 
-            explorer = new Explorer(cfg);
+            explorer = new Explorer(explorerCfg);
 
-            explorer.saveOptions(cfg);
-            explorer._beforeMount(cfg);
+            explorer.saveOptions(explorerCfg);
+            explorer._beforeMount(explorerCfg);
             explorer._items = items;
          });
 
@@ -583,6 +584,16 @@ define([
                })
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
+
+            explorer._dragOnBreadCrumbs = false;
+            explorerCfg.parentProperty = undefined;
+            explorer.saveOptions(explorerCfg);
+            explorer._documentDragStart({}, {
+               entity: new dragnDrop.ItemsEntity({
+                  items: [2]
+               })
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
             var
