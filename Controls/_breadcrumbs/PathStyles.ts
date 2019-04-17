@@ -13,5 +13,5 @@
  * @css @color_Path-home Color of the "Home" icon.
  * @css @color_Path-home_hovered Color of the "Home" icon on hover.
  * @public
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  */

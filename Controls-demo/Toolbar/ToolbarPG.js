@@ -178,6 +178,22 @@ define('Controls-demo/Toolbar/ToolbarPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
+               },
+               itemsSpacing: {
+                  readOnly: false,
+                  value: 'medium',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'big',
+                        value: 'big'
+                     },
+                     {
+                        id: '2',
+                        title: 'medium',
+                        value: 'medium'
+                     }
+                  ]
                }
             };
             this._componentOptions = {
@@ -190,7 +206,8 @@ define('Controls-demo/Toolbar/ToolbarPG',
                displayProperty: 'title',
                name: 'Toolbar',
                itemTemplate: null,
-               itemTemplateProperty: 'customTemplate'
+               itemTemplateProperty: 'customTemplate',
+               itemsSpacing: 'big'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -12,7 +12,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
    /**
     * @class Controls/Controllers/Multiselect/HierarchySelection
     * @extends Controls/Controllers/Multiselect/Selection
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @private
     */
 

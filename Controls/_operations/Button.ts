@@ -9,7 +9,7 @@ import template = require('wml!Controls/_operations/Button/Button');
     * @extends Core/Control
     * @mixes Controls/interface/IExpandable
     * @control
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @public
     *
     * @css @width_OperationsButton Width of the button.

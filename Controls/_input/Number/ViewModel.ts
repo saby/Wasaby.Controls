@@ -1,124 +1,205 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
-import SplitValueHelper = require('Controls/_input/Number/SplitValueHelper');
-import InputProcessor = require('Controls/_input/Number/InputProcessor');
-      
 
-      /**
-       * @class Controls/_input/Number/ViewModel
-       * @private
-       * @author Журавлев М.С.
-       */
+import {format} from 'Controls/_input/Number/format';
+import {IText, paste} from 'Controls/_input/Base/Util';
+import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
+import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant';
 
-      var _private = {
-         valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(([1-9]|([0.])(?!0*$))*)?/,
+/**
+ * @class Controls/_input/Number/ViewModel
+ * @private
+ * @author Журавлев М.С.
+ */
 
-         valueWithOneTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
+const _private = {
+    valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(([1-9]|([0.])(?!0*$))*)?/,
 
-         integerPartRegExp: /^-?[0-9 ]+$/,
+    valueWithOneTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
 
-         onlyIntegerPart: function(value) {
-            return _private.integerPartRegExp.test(value);
-         },
+    integerPartRegExp: /^-?[0-9 ]+$/,
 
-         isDecimalPartEqualZero: function(value) {
-            return !!value && value.indexOf('.0') === value.length - 2;
-         },
+    onlyIntegerPart: function (value) {
+        return _private.integerPartRegExp.test(value);
+    },
 
-         joinGroups: function(value) {
-            return value.replace(/ /g, '');
-         },
+    isDecimalPartEqualZero: function (value) {
+        return !!value && value.indexOf('.0') === value.length - 2;
+    },
 
-         prepareData: function(result, useGrouping) {
-            var position = result.position;
-            var before = result.value.substring(0, position);
-            var after = result.value.substring(position, result.value.length);
+    joinGroups: function (value) {
+        return value.replace(/ /g, '');
+    },
 
-            if (!useGrouping) {
-               before = _private.joinGroups(before);
-               after = _private.joinGroups(after);
+    prepareData: function ({value, carriagePosition}: IText) {
+        const position = carriagePosition;
+        const before = value.substring(0, position);
+        const after = value.substring(position, value.length);
+
+        return {
+            before, after,
+            insert: '',
+            delete: ''
+        };
+    },
+
+    superHandleInput: function (self, result: IText, inputType: string) {
+        return ViewModel.superclass.handleInput.call(self, _private.prepareData(result), inputType);
+    },
+
+    handleRemovalSplitterTriad: function (splitValue, inputType) {
+        if (splitValue.delete === ' ') {
+            if (inputType === 'deleteBackward') {
+                splitValue.before = splitValue.before.slice(0, -1);
+            }
+            if (inputType === 'deleteForward') {
+                splitValue.after = splitValue.after.substring(1);
+            }
+        }
+    },
+
+    recoverText: function (splitValue): IText {
+        let value: string = splitValue.before;
+        const carriagePosition: number = _private.joinGroups(value).length;
+
+        value += splitValue.after;
+
+        value = _private.joinGroups(value);
+
+        if (value && splitValue.delete.includes(decimalSplitter)) {
+            value = paste(value, decimalSplitter, carriagePosition);
+        }
+
+        return {value, carriagePosition};
+    },
+
+    pasteInIntegerPart: function ({value, carriagePosition}: IText, parsedNumber: IParsedNumber, splitterPosition: number) {
+        value = paste(value, parsedNumber.integer, carriagePosition);
+
+        if (parsedNumber.fractional) {
+            if (splitterPosition === -1) {
+                splitterPosition = value.length;
+                value += decimalSplitter;
+            } else {
+                splitterPosition += parsedNumber.integer.length;
             }
 
-            return {
-               before: before,
-               after: after,
-               insert: '',
-               delete: ''
-            };
-         }
-      };
+            value = paste(value, parsedNumber.fractional, splitterPosition + 1);
+            carriagePosition = splitterPosition + parsedNumber.fractional.length + 1;
+        } else {
+            carriagePosition += parsedNumber.integer.length;
+        }
 
-      var ViewModel = BaseViewModel.extend({
+        return {value, carriagePosition};
+    },
 
-         /**
-          * @param {String} displayValue
-          * @return {Number}
-          * @protected
-          */
-         _convertToValue: function(displayValue) {
+    pasteInFractionalPart: function ({value, carriagePosition}: IText, parsedNumber: IParsedNumber) {
+        const pastedValue: string = parsedNumber.integer + parsedNumber.fractional;
+
+        value = paste(value, pastedValue, carriagePosition);
+        carriagePosition += pastedValue.length;
+
+        return {value, carriagePosition};
+    }
+};
+
+var ViewModel = BaseViewModel.extend({
+
+    /**
+     * @param {String} displayValue
+     * @return {Number}
+     * @protected
+     */
+    _convertToValue: function (displayValue) {
+        /**
+         * The displayed value can be separated by spaces into triads.
+         * You need to remove these gaps to parseFloat processed value completely.
+         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+         */
+        var value = parseFloat(_private.joinGroups(displayValue));
+
+        return Number.isNaN(value) ? null : value;
+    },
+
+    /**
+     * @param {Number} value
+     * @return {String}
+     * @protected
+     */
+    _convertToDisplayValue: function (value) {
+        var displayValue = value === null ? '' : value.toString();
+
+        if (this._options.useGrouping) {
+            displayValue = splitIntoTriads(displayValue);
+        }
+
+        return displayValue;
+    },
+
+    handleInput: function (splitValue, inputType) {
+        let parsedNumber: IParsedNumber;
+
+        _private.handleRemovalSplitterTriad(splitValue, inputType);
+
+        let text: IText = _private.recoverText(splitValue);
+
+        if (inputType !== 'insert' && text.value === '') {
+            return _private.superHandleInput(this, text, inputType);
+        }
+
+        /**
+         * To enter the fractional part, you can go directly by pressing a dot or a comma.
+         */
+        if (decimalSplitters.includes(splitValue.insert) && splitValue.delete === '') {
+            const splitterPosition: number = text.value.indexOf(decimalSplitter);
+
+            if (splitterPosition !== -1) {
+                text.carriagePosition = splitterPosition + 1;
+            }
+
+            return _private.superHandleInput(this, text, inputType);
+        }
+
+        if (inputType === 'insert') {
+            parsedNumber = parse(splitValue.insert);
+
             /**
-             * The displayed value can be separated by spaces into triads.
-             * You need to remove these gaps to parseFloat processed value completely.
-             * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+             * If entered a negative number, then change the current one to the opposite.
              */
-            var value = parseFloat(_private.joinGroups(displayValue));
-
-            return Number.isNaN(value) ? null : value;
-         },
-
-         /**
-          * @param {Number} value
-          * @return {String}
-          * @protected
-          */
-         _convertToDisplayValue: function(value) {
-            var displayValue = value === null ? '' : value.toString();
-
-            if (this._options.useGrouping) {
-               displayValue = splitIntoTriads(displayValue);
+            if (parsedNumber.negative && text.value[0] !== '-') {
+                text.carriagePosition++;
+                text.value = paste(text.value, '-', 0);
             }
 
-            return displayValue;
-         },
+            const splitterPosition: number = text.value.indexOf(decimalSplitter);
 
-         handleInput: function(splitValue, inputType) {
-            var
-               result,
-               splitValueHelper = new SplitValueHelper(splitValue),
-               inputProcessor = new InputProcessor();
-
-            /**
-             * If by mistake instead of a point entered a comma or "b" or "Yu", then perform the replacement
-             */
-            splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
-
-            switch (inputType) {
-               case 'insert':
-                  result = inputProcessor.processInsert(splitValue, this._options, splitValueHelper);
-                  break;
-               case 'delete':
-                  result = inputProcessor.processDelete(splitValue, this._options, splitValueHelper);
-                  break;
-               case 'deleteForward':
-                  result = inputProcessor.processDeleteForward(splitValue, this._options, splitValueHelper);
-                  break;
-               case 'deleteBackward':
-                  result = inputProcessor.processDeleteBackward(splitValue, this._options, splitValueHelper);
-                  break;
+            if (splitterPosition === -1) {
+                text = _private.pasteInIntegerPart(text, parsedNumber, splitterPosition);
+            } else {
+                text = splitterPosition < text.carriagePosition ?
+                    _private.pasteInFractionalPart(text, parsedNumber) :
+                    _private.pasteInIntegerPart(text, parsedNumber, splitterPosition);
             }
+        }
 
-            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result, this._options.useGrouping), inputType);
-         },
+        if (text.value === '') {
+            return _private.superHandleInput(this, text, inputType);
+        }
 
-         trimTrailingZeros: function(leaveOneZero) {
-            if (this._options.showEmptyDecimals) {
-               return false;
-            }
+        parsedNumber = parse(text.value);
 
-            var regExp = leaveOneZero
-               ? _private.valueWithOneTrailingZerosRegExp
-               : _private.valueWithoutTrailingZerosRegExp;
-            var trimmedValue = this._displayValue.match(regExp)[0];
+        return _private.superHandleInput(this, format(parsedNumber, this._options, text.carriagePosition), inputType);
+    },
+
+    trimTrailingZeros: function (leaveOneZero) {
+        if (this._options.showEmptyDecimals) {
+            return false;
+        }
+
+        var regExp = leaveOneZero
+            ? _private.valueWithOneTrailingZerosRegExp
+            : _private.valueWithoutTrailingZerosRegExp;
+        var trimmedValue = this._displayValue.match(regExp)[0];
 
             if (this._displayValue !== trimmedValue) {
                var oldValue = this._displayValue;
@@ -131,11 +212,11 @@ import InputProcessor = require('Controls/_input/Number/InputProcessor');
 
                this._shouldBeChanged = true;
 
-               return true;
-            }
+            return true;
+        }
 
-            return false;
-         },
+        return false;
+    },
 
          addTrailingZero: function() {
             if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
@@ -143,12 +224,12 @@ import InputProcessor = require('Controls/_input/Number/InputProcessor');
                this._nextVersion();
                this._shouldBeChanged = true;
 
-               return true;
-            }
+            return true;
+        }
 
-            return false;
-         }
-      });
+        return false;
+    }
+});
 
-      export = ViewModel;
+export = ViewModel;
    

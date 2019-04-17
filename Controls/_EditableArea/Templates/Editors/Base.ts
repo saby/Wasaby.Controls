@@ -10,7 +10,7 @@ import 'css!theme?Controls/_EditableArea/Templates/Editors/Base';
  *
  * @class Controls/_EditableArea/Templates/Editors/Base
  * @extends Core/Control
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @public
  *
  * @css @border-width_EditableAreaTemplate-Base Size of the border of the input field.
