@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel',
-   ['Controls/_filterPopup/Panel'],
+   ['Controls/filterPopup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Panel;
    });

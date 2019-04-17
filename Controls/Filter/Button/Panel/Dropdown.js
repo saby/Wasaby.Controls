@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel/Dropdown',
-   ['Controls/_filterPopup/Panel/Dropdown'],
+   ['Controls/filterPopup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Dropdown;
    });
