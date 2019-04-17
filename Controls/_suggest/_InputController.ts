@@ -487,7 +487,10 @@ var SuggestLayout = Control.extend({
    },
 
    _missSpellClick: function() {
-      this._notify('valueChanged', [this._misspellingCaption]);
+      // Return focus to the input field by changing the keyboard layout
+      this.activate();
+      this._notify('valueChanged', [this._misspellingCaption])
+      this._changeValueHandler(null, this._misspellingCaption);
       _private.setMissSpellingCaption(this, '');
    },
 
