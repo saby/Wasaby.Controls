@@ -1,4 +1,4 @@
-import {ListViewModel, BaseViewModel} from 'Controls/list';
+import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
 
 import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
@@ -6,12 +6,6 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import {
-    isFullSupport, isNoSupport, isPartialSupport, getCellStyles,
-    toCssString, getTemplateColumnsStyle, getDefaultStylesFor, CssTemplatesEnum
-} from './utils/GridLayoutUtil';
-import {calcGroupRowIndex, calcResultsRowIndex, calcRowIndexByKey, ResultsPosition} from "./utils/RowIndexUtil";
 
 var
     _private = {
@@ -319,7 +313,7 @@ var
         getEditingRowStyles: function (self, rowIndex) {
 
             // display: grid with prefixes
-            let styles = getDefaultStylesFor(CssTemplatesEnum.GridIE) + ' ';
+            let styles = GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
 
             // value 'auto' will break alignment in subgrid(editing row).
             let columnsWidths: Array<string|number> = [];
@@ -333,36 +327,38 @@ var
             });
 
             // grid column template with prefixes
-            styles += getTemplateColumnsStyle(columnsWidths);
+            styles += GridLayoutUtil.getTemplateColumnsStyle(columnsWidths) + ' ';
+
+            let colspan = self._columns.length + (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0);
 
             // grid-row and grid-column with prefixes
-            styles += getCellStyles(rowIndex+1, 0, null, 3);
+            styles += GridLayoutUtil.getCellStyles(rowIndex+1, 0, null, colspan);
 
             return styles;
         },
 
         calcRowIndexByKey: function(self, key): number {
-            return calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
+            return RowIndexUtil.calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
         },
 
         calcResultsRowIndex: function (self): number {
-            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
         },
 
         calcGroupRowIndex: function (self, current): number {
             let groupItem = self._model.getDisplay().at(current.index);
-            return calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
+            return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
         getEmptyTemplateStyles: function (self): string {
             let
                 styles = '';
 
-            if (isPartialSupport) {
+            if (GridLayoutUtil.isPartialSupport) {
                 let
                     columnsLength = self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
                     rowIndex = 0;
 
-                styles += toCssString([
+                styles += GridLayoutUtil.toCssString([
                     {
                         name: '-ms-grid-column-span',
                         value: columnsLength
@@ -371,7 +367,7 @@ var
 
                 rowIndex += self.getHeader() ? 1 : 0;
                 rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                styles += getCellStyles(rowIndex, 0);
+                styles += GridLayoutUtil.getCellStyles(rowIndex, 0);
             }
 
             return styles;
@@ -445,7 +441,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i], isNoSupport));
+                result.push(this._prepareCrossBrowserColumn(columns[i], GridLayoutUtil.isNoSupport));
             }
             return result;
         },
@@ -546,8 +542,8 @@ var
             }
 
             // For browsers with partial grid support need to set its grid-row and grid-column
-            if (isPartialSupport) {
-                headerColumn.gridCellStyles = getCellStyles(0, columnIndex);
+            if (GridLayoutUtil.isPartialSupport) {
+                headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
             }
 
             if (headerColumn.column.sortingProperty) {
@@ -622,9 +618,9 @@ var
             resultsColumn.cellClasses = cellClasses;
 
             // For browsers with partial grid support need to set its grid-row and grid-column
-            if (isPartialSupport) {
+            if (GridLayoutUtil.isPartialSupport) {
                 resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
-                resultsColumn.gridCellStyles = getCellStyles(resultsColumn.rowIndex, columnIndex);
+                resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
 
             return resultsColumn;
@@ -823,9 +819,9 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isFullGridSupport = isFullSupport;
-            current.isPartialGridSupport = isPartialSupport;
-            current.isNoGridSupport = isNoSupport;
+            current.isFullGridSupport = GridLayoutUtil.isFullSupport;
+            current.isPartialGridSupport = GridLayoutUtil.isPartialSupport;
+            current.isNoGridSupport = GridLayoutUtil.isNoSupport;
 
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
@@ -841,7 +837,7 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (isPartialSupport && !current.isGroup) {
+            if (GridLayoutUtil.isPartialSupport && !current.isGroup) {
                 current.rowIndex = _private.calcRowIndexByKey(this, current.key);
             }
 
@@ -850,9 +846,9 @@ var
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
 
                     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                    if (isPartialSupport) {
+                    if (GridLayoutUtil.isPartialSupport) {
                         current.rowIndex = _private.calcGroupRowIndex(this, current);
-                        current.gridGroupStyles = toCssString([
+                        current.gridGroupStyles = GridLayoutUtil.toCssString([
                             {
                                 name: 'grid-row',
                                 value: current.rowIndex + 1
@@ -895,8 +891,8 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
-            
-            if (current.isEditing && isPartialSupport) {
+
+            if (current.isEditing && GridLayoutUtil.isPartialSupport) {
                 current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
             }
 
@@ -950,8 +946,8 @@ var
                 }
 
                 // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                if (isPartialSupport) {
-                    currentColumn.gridCellStyles = getCellStyles(current.rowIndex, currentColumn.columnIndex);
+                if (GridLayoutUtil.isPartialSupport) {
+                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
                 return currentColumn;
             };
@@ -1148,15 +1144,15 @@ var
         },
 
         isFullGridSupport: function():boolean{
-            return isFullSupport;
+            return GridLayoutUtil.isFullSupport;
         },
 
         isPartialGridSupport: function():boolean{
-            return isPartialSupport;
+            return GridLayoutUtil.isPartialSupport;
         },
 
         isNoGridSupport: function():boolean{
-            return isNoSupport;
+            return GridLayoutUtil.isNoSupport;
         },
 
         getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
@@ -1178,7 +1174,7 @@ var
                 }
             }
 
-            return getTemplateColumnsStyle(columnsWidths);
+            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
         // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column

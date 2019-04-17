@@ -128,11 +128,11 @@
       <Controls.Heading caption="Хлебные крошки в результатах поиска"
                         size="xl"/>
       <Controls.list:DataContainer source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
-         <Controls.Search.Controller searchParam="name" minSearchLength="{{3}}">
+         <Controls.search:Controller searchParam="name" minSearchLength="{{3}}">
             <div class="ws-fragment">
-               <Controls.Search.Input.Container>
+               <Controls.search:InputContainer>
                   <Controls.Input.Search/>
-               </Controls.Search.Input.Container>
+               </Controls.search:InputContainer>
                <Controls.list:Container>
                   <Controls.Explorer
                      displayProperty="department"
@@ -142,7 +142,7 @@
                   </Controls.Explorer>
                </Controls.list:Container>
             </div>
-         </Controls.Search.Controller>
+         </Controls.search:Controller>
       </Controls.list:DataContainer>
    </div>
    <div class="demo-BreadCrumbs__example">

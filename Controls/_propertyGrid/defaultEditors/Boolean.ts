@@ -3,7 +3,7 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/Boolean');
 
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
-import 'Controls/Toggle/Checkbox';
+import 'Controls/toggle';
 
 /**
  * Editor for boolean type.

@@ -1,4 +1,1 @@
-<ws:partial template="{{_options.content}}"
-            scope="{{_options}}"
-            on:register="_registerIt()"
-            on:unregister="_unRegisterIt()" />
+<ws:partial template="wml!Controls/event:Register" scope="{{_options}}" />

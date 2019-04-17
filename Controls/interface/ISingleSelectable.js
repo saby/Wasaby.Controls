@@ -6,7 +6,7 @@ define('Controls/interface/ISingleSelectable', [
     *
     * @interface Controls/interface/ISingleSelectable
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @see Controls/interface/IMultiSelectable
     * @see Controls/interface/IPromisedSelectable
     */
@@ -18,7 +18,7 @@ define('Controls/interface/ISingleSelectable', [
     * @example
     * The following example creates RadioGroup and selects first item. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
     * <pre>
-    *    <Controls.Toggle.RadioGroup bind:selectedKey="_selectedKey"/>
+    *    <Controls.toggle:RadioGroup bind:selectedKey="_selectedKey"/>
     * </pre>
     * <pre>
     *    _beforeMount: function() {
@@ -37,7 +37,7 @@ define('Controls/interface/ISingleSelectable', [
     * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
     * <pre>
     *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
-    *       <Controls.Operations.Panel source="{{ _panelSource }} />
+    *       <Controls.operations:Panel source="{{ _panelSource }} />
     *    </Controls.Container.RadioGroup>
     * </pre>
     * <pre>

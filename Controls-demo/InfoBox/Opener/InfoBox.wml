@@ -7,7 +7,7 @@
       </div>
       <div class="controls-InfoBoxDemo-targets">
          <ws:for data="item in block.items">
-            <div class="controls-InfoBoxDemo-target {{_minTargetMode ? 'controls-InfoBoxDemo-target-mini' : 'controls-InfoBoxDemo-target-standard'}}" on:mouseenter="_open(item.cfg)">
+            <div class="controls-InfoBoxDemo-target controls-InfoBoxDemo-target-standard controls-InfoBoxDemo__{{item.text.toLowerCase().replace(' ', '')}}" on:mouseenter="_open(item.cfg)">
                {{item.text}}
             </div>
          </ws:for>
@@ -16,26 +16,32 @@
 
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__top-right"
                               attr:style="position: absolute; right: 0px; top: 6px"
                               on:mouseenter="_open(_cfgRight)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__bottom-right"
                               attr:style="position: absolute; right: 0px; bottom: 5px"
                               on:mouseenter="_open(_cfgRight)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__top-left"
                               attr:style="position: absolute; left: 0px; top: 6px"
                               on:mouseenter="_open(_cfgLeft)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__bottom-left"
                               attr:style="position: absolute; left: 0px; bottom: 5px"
                               on:mouseenter="_open(_cfgLeft)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__top"
                               attr:style="position: absolute"
                               on:mouseenter="_open(_cfgTop)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
+                              attr:class="controls-InfoBoxDemo__bottom"
                               attr:style="position: absolute; bottom: 0px"
                               on:mouseenter="_open(_cfgBottom)"/>
 
@@ -49,6 +55,7 @@
             <ws:for data="config in item.items">
                  <div class="controls-InfoBoxDemo-icon">
                 <Controls._buttons.Button viewMode ='link'
+                                          attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.position}}"
                                           icon="icon-EmptyMessage icon-{{config.cfg.size}}"
                                           on:mouseenter="_open(config.cfg)"/>
                  </div>
@@ -56,12 +63,5 @@
             </div>
         </ws:for>
   </div>
-
-
-   <div class="controls-InfoBoxDemo-min-targets-mode">Режим маленьких таргетов:
-      <span class="controls-InfoBoxDemo-min-targets-mode-button" on:click="_toggleMinTargetMode()">
-         {{_minTargetMode ? 'ВЫКЛ' : 'ВКЛ'}}
-      </span>
-   </div>
 
 </div>

@@ -34,7 +34,7 @@
        <Controls.input:Label caption="tooltip"/>
        <Controls.input:Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
+         <Controls.toggle:Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
          <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick" attr:class="ControlsDemo-Text__propertyGrid"
                                       bind:readOnlyValue="_readOnly"
                                       on:validationErrorsValueChanged="valueChangedHandler()"

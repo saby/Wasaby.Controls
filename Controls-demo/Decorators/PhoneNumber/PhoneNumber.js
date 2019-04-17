@@ -4,12 +4,12 @@
 define('Controls-demo/Decorators/PhoneNumber/PhoneNumber',
    [
       'Core/Control',
-      'Controls/Decorator/PhoneNumber',
+      'Controls/decorator',
       'wml!Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls/input',
       'css!Controls-demo/Decorators/PhoneNumber/PhoneNumber'
    ],
-   function(Control, PhoneNumber, template) {
+   function(Control, decorator, template) {
 
       'use strict';
 
@@ -20,7 +20,7 @@ define('Controls-demo/Decorators/PhoneNumber/PhoneNumber',
 
          _result: '',
 
-         _phoneNumberDecorator: PhoneNumber
+         _phoneNumberDecorator: decorator.PhoneNumber
       })
    }
 );

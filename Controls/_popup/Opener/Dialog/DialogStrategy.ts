@@ -35,8 +35,8 @@
 
          var popupOptions = item.popupOptions;
 
-         width = this._calculateValue(popupOptions, containerSizes.width, popupOptions.width || windowData.width);
-         height = this._calculateValue(popupOptions, containerSizes.height, popupOptions.height || windowData.height);
+         width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width);
+         height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height);
          left = this._getLeftCoord(windowData.width, width || containerSizes.width);
          top = this._getTopCoord(windowData, height || containerSizes.height);
 
@@ -51,8 +51,10 @@
             top: top
          };
       },
-      _calculateValue: function(popupOptions, containerValue, windowValue) {
-         if (popupOptions.maximize || containerValue > windowValue) {
+      _calculateValue: function(popupOptions, containerValue, windowValue, popupValue) {
+         if (popupValue) {
+            return popupValue;
+         } else if (popupOptions.maximize || containerValue > windowValue) {
             return windowValue;
          }
       },

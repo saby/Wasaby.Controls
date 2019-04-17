@@ -1,5 +1,5 @@
 <div class="my_class_slider">
-   <Controls.DragNDrop.Controller name="dragNDrop"
+   <Controls.dragnDrop:Container name="dragNDrop"
                                   on:dragmove="_onDragMoveHandler()">
       <div class="controls-Slider_theme-{{_options.theme}}
                   controls-Slider{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
@@ -37,5 +37,5 @@
             </ws:for>
          </div>
       </div>
-   </Controls.DragNDrop.Controller>
+   </Controls.dragnDrop:Container>
 </div>

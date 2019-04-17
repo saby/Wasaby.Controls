@@ -5,7 +5,7 @@ define('Controls/interface/IPrinter', [], function() {
     *
     * @interface Controls/interface/IPrinter
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     *
     * @see Unload/Action/PDF
     * @see Unload/Action/Excel

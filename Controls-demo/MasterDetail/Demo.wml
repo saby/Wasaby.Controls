@@ -5,7 +5,7 @@
 
          <div>
             <div class="controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
@@ -26,7 +26,7 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
@@ -54,7 +54,7 @@
       <ws:master>
          <div>
             <div class="controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
@@ -79,7 +79,7 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
@@ -107,7 +107,7 @@
 
          <div>
             <div class="ws-flexbox controls-demo_MasterDetail_master_search">
-               <Controls.Input.Search placeholder="Введите"
+               <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
@@ -128,7 +128,7 @@
       <ws:detail>
          <div class="ws-flex-grow-1">
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
-               <Controls.Input.Search placeholder="Введите"/>
+               <Controls.search:Input placeholder="Введите"/>
             </div>
             <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View

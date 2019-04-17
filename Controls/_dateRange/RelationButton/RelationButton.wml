@@ -1,4 +1,4 @@
-<Controls.Toggle.Button
+<Controls.toggle:Button
    icons="{{['icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_normal', 'icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_byCapacity']}}"
    iconStyle="{{ _value ? 'secondary' : 'info' }}"
    viewMode="link"

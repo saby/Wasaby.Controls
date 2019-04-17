@@ -1,7 +1,7 @@
 <div>
-    <Controls.Toggle.Switch bind:value="_switchValue" on:valuechanged="_switchValueHandler()">
+    <Controls.toggle:Switch bind:value="_switchValue" on:valuechanged="_switchValueHandler()">
         <ws:caption>
             <ws:String>Фильтруем по Sasha</ws:String>
         </ws:caption>
-    </Controls.Toggle.Switch>
+    </Controls.toggle:Switch>
 </div>

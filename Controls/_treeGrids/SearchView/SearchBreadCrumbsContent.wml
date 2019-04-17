@@ -1,0 +1,1 @@
+<Controls.decorator:Highlight highlight="{{searchValue}}" text="{{itemData.getPropValue(itemData.item, displayProperty)}}"/>

@@ -49,8 +49,8 @@
             selectedKey="{{_size}}"
             on:selectedKeyChanged="changeSize()"
          />
-         <Controls.Toggle.Checkbox caption="borderVisible" on:valueChanged="changeBorderVisible()" bind:value="_borderVisible"/>
-         <Controls.Toggle.Checkbox caption="readOnly" on:valueChanged="changeReadOnly()" bind:value="_readOnly"/>
+         <Controls.toggle:Checkbox caption="borderVisible" on:valueChanged="changeBorderVisible()" bind:value="_borderVisible"/>
+         <Controls.toggle:Checkbox caption="readOnly" on:valueChanged="changeReadOnly()" bind:value="_readOnly"/>
 
    </div>
 </div>
