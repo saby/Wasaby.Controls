@@ -1,5 +1,1 @@
-<span attr:class="controls-Header__caption
-                  controls-Header__caption_size-{{_options.size}}
-                  controls-Header__caption_style-{{_options.style}}{{_options.readOnly ? '':'_hovered'}}"
-      attr:title="{{_options.tooltip}}"
->{{_options.caption}}</span>
+<ws:partial template="wml!Controls/_heading/Heading/Heading" scope="{{_options}}" />
