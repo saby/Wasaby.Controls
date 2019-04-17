@@ -117,8 +117,10 @@ var StickyHeader = Control.extend({
    },
 
    set top(value) {
-      this._stickyHeadersHeight.top = value;
-      this._forceUpdate();
+      if (this._stickyHeadersHeight.top !== value) {
+         this._stickyHeadersHeight.top = value;
+         this._forceUpdate();
+      }
    },
 
    get bottom() {
@@ -126,8 +128,10 @@ var StickyHeader = Control.extend({
    },
 
    set bottom(value) {
-      this._stickyHeadersHeight.bottom = value;
-      this._forceUpdate();
+      if (this._stickyHeadersHeight.bottom !== value) {
+         this._stickyHeadersHeight.bottom = value;
+         this._forceUpdate();
+      }
    },
 
    _resizeHandler: function() {
@@ -285,4 +289,3 @@ StickyHeader.getOptionTypes = function() {
 };
 
 export = StickyHeader;
-
