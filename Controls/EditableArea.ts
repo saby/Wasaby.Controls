@@ -70,7 +70,7 @@ var
  * @class Controls/EditableArea
  * @extends Core/Control
  * @mixes Controls/interface/IEditableArea
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @public
  *
  * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
