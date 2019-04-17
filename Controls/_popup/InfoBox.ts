@@ -151,13 +151,14 @@ import Env = require('Env/Env');
          _template: template,
 
          _isNewEnvironment: InfoBoxOpener.isNewEnvironment,
-         _isTouch: Env.compatibility.touch,
+         _isTouch: null,
 
          _openId: null,
 
          _closeId: null,
 
          _beforeMount: function(options) {
+            this._isTouch =  Env.compatibility.touch;
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {

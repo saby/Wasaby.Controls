@@ -12,7 +12,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
       var message = 'MESSAGE';
       var InfoBox = Control.extend({
          _template: template,
-         _isTouch: Env.compatibility.touch,
+         _isTouch: null,
          _blocks: null,
          _icons: null,
          _cfgRight: null,
@@ -20,6 +20,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _cfgTop: null,
          _cfgBottom: null,
          _beforeMount: function() {
+            this._isTouch =  Env.compatibility.touch;
             this._cfgRight = {
                message: message,
                targetSide: 'right',
