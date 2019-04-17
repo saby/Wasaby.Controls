@@ -46,12 +46,12 @@
 }
 
 .controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom{
-   width: @spacing_Infobox-between-target-popup_val + 1;
-   height: @spacing_Infobox-between-target-popup_val;
+   width: @spacing_Infobox-between-target-popup + 1;
+   height: @spacing_Infobox-between-target-popup;
 }
 .controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right{
-   width: @spacing_Infobox-between-target-popup_val;
-   height: @spacing_Infobox-between-target-popup_val + 1;
+   width: @spacing_Infobox-between-target-popup;
+   height: @spacing_Infobox-between-target-popup + 1;
 }
 
 .controls-InfoBoxTemplate__arrow-top {
@@ -66,10 +66,10 @@
 
 .controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      left: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
+      left: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow  + @border-width_Infobox;
    }
    &.controls-InfoBoxTemplate__arrow-position-end {
-      right: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
+      right: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
 }
 
@@ -85,10 +85,10 @@
 
 .controls-InfoBoxTemplate__arrow-left, .controls-InfoBoxTemplate__arrow-right {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      top: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
+      top: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
    &.controls-InfoBoxTemplate__arrow-position-end {
-      bottom: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
+      bottom: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
 }
 
