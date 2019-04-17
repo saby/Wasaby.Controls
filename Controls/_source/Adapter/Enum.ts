@@ -2,7 +2,7 @@
  * Created by kraynovdo on 26.04.2018.
  */
 import Control = require('Core/Control');
-import template = require('wml!Controls/Container/Adapter/Enum/Enum');
+import template = require('wml!Controls/_source/Adapter/Enum/Enum');
 import source = require('Types/source');
 
 var _private = {
