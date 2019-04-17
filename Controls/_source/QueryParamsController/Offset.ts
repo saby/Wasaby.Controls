@@ -1,6 +1,5 @@
-define('Controls/Controllers/QueryParamsController/Offset',
-   ['Core/core-simpleExtend', 'Types/source'],
-   function(cExtend, sourceLib) {
+import cExtend = require('Core/core-simpleExtend');
+import sourceLib = require('Types/source');
       /**
        *
        * @author Крайнов Дмитрий
@@ -55,7 +54,7 @@ define('Controls/Controllers/QueryParamsController/Offset',
          }
       });
 
-      return OffsetNavigation;
-   });
+      export = OffsetNavigation;
+   
 
 

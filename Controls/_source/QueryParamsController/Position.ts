@@ -1,6 +1,6 @@
-define('Controls/Controllers/QueryParamsController/Position',
-   ['Core/core-simpleExtend', 'Types/source', 'Env/Env'],
-   function(cExtend, sourceLib, Env) {
+import cExtend = require('Core/core-simpleExtend');
+import sourceLib = require('Types/source');
+import Env = require('Env/Env');
       var _private = {
          resolveField: function(optField) {
             return (optField instanceof Array) ? optField : [optField];
@@ -219,7 +219,7 @@ define('Controls/Controllers/QueryParamsController/Position',
          }
       });
 
-      return PositionNavigation;
-   });
+      export = PositionNavigation;
+   
 
 

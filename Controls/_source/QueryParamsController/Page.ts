@@ -1,6 +1,5 @@
-define('Controls/Controllers/QueryParamsController/Page',
-   ['Core/core-simpleExtend', 'Types/source'],
-   function(cExtend, sourceLib) {
+import cExtend = require('Core/core-simpleExtend');
+import sourceLib = require('Types/source');
       /**
        *
        * @author Крайнов Дмитрий
@@ -127,6 +126,6 @@ define('Controls/Controllers/QueryParamsController/Page',
          }
       });
 
-      return PageNavigation;
-   });
+      export = PageNavigation;
+   
 
