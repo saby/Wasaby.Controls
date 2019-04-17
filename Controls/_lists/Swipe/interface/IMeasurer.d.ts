@@ -1,13 +1,13 @@
 import { ISwipeConfig } from './ISwipeConfig';
 import { IItemAction } from './IItemAction';
-import { TitlePosition } from './ISwipeControl';
+import { ISwipeControlOptions } from './ISwipeControl';
 
 export interface IMeasurer {
    getSwipeConfig(
       actions: IItemAction[],
       rowHeight: number,
-      titlePosition: TitlePosition
+      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig;
-   needIcon(action: IItemAction, titlePosition: TitlePosition, hasActionWithIcon?: boolean): boolean;
-   needTitle(action: IItemAction, titlePosition: TitlePosition): boolean;
+   needIcon(action: IItemAction, actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'], hasActionWithIcon?: boolean): boolean;
+   needTitle(action: IItemAction, actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']): boolean;
 }

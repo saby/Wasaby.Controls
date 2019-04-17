@@ -138,6 +138,8 @@
             on:closeSwipe="_closeSwipe()"
             swipeDirection="{{_options.swipeDirection}}"
             titlePosition="{{_options.titlePosition}}"
+            actionAlignment="{{_options.actionAlignment}}"
+            actionCaptionPosition="{{_options.actionCaptionPosition}}"
             viewName="{{ _options.viewName }}"
             listModel="{{_listViewModel}}"
             itemActions="{{_options.itemActions}}"
