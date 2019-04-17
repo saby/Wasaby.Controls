@@ -6,7 +6,7 @@
  * @author Kraynov D.
  */
 
-import EnumAdapter = require('Controls/_source/Enum');
+import EnumAdapter = require('Controls/_source/Adapter/Enum');
 import Controller = require('Controls/_source/SourceController');
 
 export {
