@@ -83,6 +83,7 @@
                isLastPosition = clearData.position === clearData.value.length,
                clearPosition = clearData.position,
                groups = _private.getValueGroups(format, clearData.value),
+               firstSingleDelimiters = false,
                pairPosition, every;
 
             // Определяем значение и позицию с разделителями, через сцепление групп.
@@ -102,8 +103,11 @@
 
                   switch (format.delimiterGroups[groupIndex].type) {
                      case 'single':
-                        // Первая группа одиночных разделителей в маске должна быть добавлена к данным.
+                        // Initial single delimiters in the mask must be added to the data.
                         if (groupIndex === 0) {
+                           firstSingleDelimiters = true;
+                        }
+                        if (firstSingleDelimiters) {
                            value += group;
                            position += group.length;
                         } else {
@@ -111,6 +115,7 @@
                         }
                         break;
                      case 'pair':
+                        firstSingleDelimiters = false;
                         if (format.delimiterGroups[groupIndex].subtype === 'open') {
                            if (!pairs[format.delimiterGroups[groupIndex].pair]) {
                               pairs[format.delimiterGroups[groupIndex].pair] = [];

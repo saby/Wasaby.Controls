@@ -3,6 +3,7 @@
  *
  * @interface Controls/_input/interface/IInputBase
  *
+ * @mixes Controls/_input/interface/IPaste
  * @mixes Controls/_input/interface/IInputTag
  * @mixes Controls/_input/interface/IInputPlaceholder
  *
