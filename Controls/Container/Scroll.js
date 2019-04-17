@@ -117,7 +117,7 @@ define('Controls/Container/Scroll',
             },
 
             getContentHeight: function(self) {
-               return _private.getScrollHeight(self._children.content);
+               return _private.getScrollHeight(self._children.content) - self._headersHeight.top - self._headersHeight.bottom;
             },
 
             getShadowPosition: function(self) {
@@ -194,6 +194,9 @@ define('Controls/Container/Scroll',
 
             _isStickyInEdge: null,
 
+            _headersHeight: null,
+            _scrollbarStyles: '',
+
             constructor: function(cfg) {
                Scroll.superclass.constructor.call(this, cfg);
                this._isStickyInEdge = stickyHeaderUtils.isStickySupport() && Env.detection.isIE;
@@ -208,6 +211,10 @@ define('Controls/Container/Scroll',
                this._stickyHeaderContext = new StickyHeaderContext({
                   shadowPosition: options.shadowVisible ? 'bottom' : ''
                });
+               this._headersHeight = {
+                  top: 0,
+                  bottom: 0
+               };
 
                if (context.ScrollData && context.ScrollData.pagingVisible) {
                   this._pagingState = {
@@ -529,6 +536,13 @@ define('Controls/Container/Scroll',
                 */
                e.stopPropagation();
                this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
+            },
+
+            _fixedHandler: function(event, topHeight, bottomHeight) {
+               this._headersHeight.top = topHeight;
+               this._headersHeight.bottom = bottomHeight;
+               this._displayState.contentHeight = _private.getContentHeight(this);
+               this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
             }
          });
 
