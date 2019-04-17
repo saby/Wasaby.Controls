@@ -11,7 +11,7 @@ define('Controls/Controllers/Multiselect/Selection', [
    /**
     * @class Controls/Controllers/Multiselect/Selection
     * @extends Core/core-simpleExtend
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @private
     */
 

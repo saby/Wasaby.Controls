@@ -3,7 +3,7 @@ define('Controls/List/BaseControl/SelectionController', ['Controls/_lists/BaseCo
  * @class Controls/List/BaseControl/SelectionController
  * @extends Core/Control
  * @control
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @private
  */
    /*

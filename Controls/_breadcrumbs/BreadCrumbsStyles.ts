@@ -13,5 +13,5 @@
  * @css @height_BreadCrumbs-menuItem Height of the item in the dropdown menu with the full path.
  * @css @min-width_BreadCrumbs-text Min width of the breadcrumb's text.
  * @public
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  */
