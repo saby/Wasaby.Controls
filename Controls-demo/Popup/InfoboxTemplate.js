@@ -21,8 +21,7 @@ define('Controls-demo/Popup/InfoboxTemplate',
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
                templateOptions: {
-                  template: 'Controls-demo/Popup/TestDialog',
-                  type: this._firstClick ? 'sticky' : 'dialog'
+                  type: 'dialog'
                }
             });
             this._firstClick = true;

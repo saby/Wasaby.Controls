@@ -7,6 +7,10 @@ import 'css!theme?Controls/_popupTemplate/InfoBox/InfoBox';
 var InfoBoxTemplate = Control.extend({
     _template: template,
 
+    _beforeMount: function(newOptions) {
+        this._setPositionSide(newOptions.stickyPosition);
+    },
+
     _beforeUpdate: function(newOptions) {
         this._setPositionSide(newOptions.stickyPosition);
     },

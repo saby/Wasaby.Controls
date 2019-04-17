@@ -16,11 +16,6 @@
    flex-direction: column;
 }
 
-.controls-InfoBoxTemplate__arrow-wrapper {
-   width: @spacing_Infobox-between-content-border-right;
-   height: @spacing_Infobox-between-content-border-right;
-}
-
 .controls-InfoBoxTemplate__arrow {
    width: @size_Infobox-arrow;
    height: @size_Infobox-arrow;
@@ -38,7 +33,7 @@
    position: relative;
 }
 
-.controls-InfoBox__closeButton {
+.controls-InfoBoxTemplate__closeButton {
    position: absolute;
    top: @spacing_Infobox-between-top-close-button;
    right: @spacing_Infobox-between-right-close-button;
@@ -50,41 +45,50 @@
    }
 }
 
+.controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom{
+   width: @spacing_Infobox-between-target-popup_val + 1;
+   height: @spacing_Infobox-between-target-popup_val;
+}
+.controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right{
+   width: @spacing_Infobox-between-target-popup_val;
+   height: @spacing_Infobox-between-target-popup_val + 1;
+}
+
 .controls-InfoBoxTemplate__arrow-top {
    transform: rotate(-135deg);
-   top: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+   top: @size_Infobox-arrow/2 - @border-width_Infobox;
 }
 
 .controls-InfoBoxTemplate__arrow-bottom {
    transform: rotate(45deg);
-   bottom: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+   bottom: @size_Infobox-arrow/2;
 }
 
 .controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+      left: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
    }
    &.controls-InfoBoxTemplate__arrow-position-end {
-      right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+      right: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
    }
 }
 
 .controls-InfoBoxTemplate__arrow-left {
    transform: rotate(135deg);
-   left: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+   left: @size_Infobox-arrow/2 - @border-width_Infobox;
 }
 
 .controls-InfoBoxTemplate__arrow-right {
    transform: rotate(-45deg);
-   right: @length_Infobox-arrow-diagonal/2 - @border-width_Infobox * 2;
+   right: @size_Infobox-arrow/2;
 }
 
 .controls-InfoBoxTemplate__arrow-left, .controls-InfoBoxTemplate__arrow-right {
    &.controls-InfoBoxTemplate__arrow-position-start {
-      top: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+      top: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
    }
    &.controls-InfoBoxTemplate__arrow-position-end {
-      bottom: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
+      bottom: @spacing_Infobox-between-target-popup_val + @spacing_Infobox-between-border-arrow - @border-width_Infobox;
    }
 }
 
