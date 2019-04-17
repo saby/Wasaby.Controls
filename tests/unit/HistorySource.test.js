@@ -421,6 +421,44 @@ define(
                let recentIds = historySource._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
                assert.deepEqual(recentIds, ['7', '8']);
             });
+
+            it('_private:getFilterHistory', function() {
+               let expectedResult = {
+                  pinned: ['5'],
+                  frequent: ['6', '4'],
+                  recent: ['7', '8']
+               };
+               let actualResult = historySource._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
+
+
+               expectedResult = {
+                  pinned: ['5'],
+                  frequent: ['6', '4'],
+                  recent: ['8', '1', '2', '3', '7']
+               };
+               let recentFilteredData = {
+                  _type: 'recordset',
+                  d: [
+                     ['8', null, 'TEST_HISTORY_ID_V1'],
+                     ['1', null, 'TEST_HISTORY_ID_V1'],
+                     ['2', null, 'TEST_HISTORY_ID_V1'],
+                     ['3', null, 'TEST_HISTORY_ID_V1'],
+                     ['4', null, 'TEST_HISTORY_ID_V1'],
+                     ['5', null, 'TEST_HISTORY_ID_V1'],
+                     ['6', null, 'TEST_HISTORY_ID_V1'],
+                     ['7', null, 'TEST_HISTORY_ID_V1']
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               };
+               hSource._history.recent = createRecordSet(recentFilteredData);
+               actualResult = historySource._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
+            });
          });
          describe('check source original methods', function() {
             it('create', function() {
