@@ -193,29 +193,33 @@ define(
             it('Test_03', function() {
                result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[0]);
                assert.deepEqual(result, {
-                  searchingGroups: '(\\+7)?(\\()?([0-9]?)([0-9]?)([0-9]?)(\\))?([0-9]?[0-9]?[0-9]?)(-)?([0-9]?[0-9]?)(-)?([0-9]?[0-9]?)',
+                  searchingGroups: '(\\+)?(7)?(\\()?([0-9]?)([0-9]?)([0-9]?)(\\))?([0-9]?[0-9]?[0-9]?)(-)?([0-9]?[0-9]?)(-)?([0-9]?[0-9]?)',
                   delimiterGroups: {
                      0: {
-                        value: '+7',
+                        value: '+',
                         type: 'single'
                      },
                      1: {
+                        value: '7',
+                        type: 'single'
+                     },
+                     2: {
                         value: '(',
                         type: 'pair',
                         subtype: 'open',
                         pair: ')'
                      },
-                     5: {
+                     6: {
                         value: ')',
                         type: 'pair',
                         subtype: 'close',
                         pair: '('
                      },
-                     7: {
+                     8: {
                         value: '-',
                         type: 'single'
                      },
-                     9: {
+                     10: {
                         value: '-',
                         type: 'single'
                      }
@@ -225,29 +229,33 @@ define(
             it('Test_04', function() {
                result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[1]);
                assert.deepEqual(result, {
-                  searchingGroups: '(\\+7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| )(?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))',
+                  searchingGroups: '(\\+)?(7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| )(?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))',
                   delimiterGroups: {
                      0: {
-                        value: '+7',
+                        value: '+',
                         type: 'single'
                      },
                      1: {
+                        value: '7',
+                        type: 'single'
+                     },
+                     2: {
                         value: '(',
                         type: 'pair',
                         subtype: 'open',
                         pair: ')'
                      },
-                     5: {
+                     6: {
                         value: ')',
                         type: 'pair',
                         subtype: 'close',
                         pair: '('
                      },
-                     7: {
+                     8: {
                         value: '-',
                         type: 'single'
                      },
-                     9: {
+                     10: {
                         value: '-',
                         type: 'single'
                      }
