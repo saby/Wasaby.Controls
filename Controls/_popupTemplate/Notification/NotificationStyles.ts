@@ -1,5 +1,5 @@
 /**
- * @mixin Controls/Popup/Templates/Notification/NotificationStyles
+ * @mixin Controls/_popupTemplate/Notification/NotificationStyles
  * @public
  * @css @border-width_NotificationBase Width of border.
  * @css @size_NotificationBase-shadow Size of shadow
@@ -18,8 +18,8 @@
  * @css @spacing_NotificationBase-between-closeButton-border-top Spacing between close-button and border-top
  * @css @spacing_NotificationBase-between-content-border Spacing between content and border.
  * @css @spacing_NotificationBase-between-icon-and-message Spacing between message and icon.
- * @css @spacing_NotificationBase-between-notofications-right Spacing between notifications right.
- * @css @spacing_NotificationBase-between-notofications-bottom Spacing between notifications bottom
+ * @css @spacing_NotificationBase-between-notifications-right Spacing between notifications right.
+ * @css @spacing_NotificationBase-between-notifications-bottom Spacing between notifications bottom
  * @css @spacing_NotificationBase-between-border-top-message Spacing between message and border-top.
  * @css @font-size_NotificationBase-message Font size of message.
  */
