@@ -1,6 +1,6 @@
 define('Controls/Popup/Manager',
-   ['Controls/_popup/Manager'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Manager;
    });
