@@ -138,7 +138,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
-            this._nextModelVersion(false, 'indexesChanged');
+            this._nextModelVersion(true, 'indexesChanged');
         }
     },
 
