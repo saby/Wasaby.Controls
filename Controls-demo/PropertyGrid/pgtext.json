@@ -324,6 +324,11 @@
             "title": "Name of the field that contains information about parent node.",
             "type": "String",
             "default": ""
+          },
+          "itemsSpacing": {
+            "title": "Type of spacing between items.",
+            "type": "String",
+            "default": ""
           }
         }
       }
