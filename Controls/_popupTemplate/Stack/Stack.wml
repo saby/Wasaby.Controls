@@ -16,7 +16,7 @@
                     <ws:partial template="{{_options.topArea || _options.headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate"></ws:partial>
                 </ws:if>
                 <div class="controls-StackTemplate__command_buttons">
-                    <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
+                    <ws:if data="{{_options.showMaximizedButton || _maximizeButtonVisibility}}">
                         <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
                     </ws:if>
                     <ws:if data="{{ _options.closeButtonVisibility}}">
@@ -28,7 +28,7 @@
     </ws:if>
     <ws:else>
         <div class="controls-StackTemplate__command_buttons_without_head">
-            <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
+            <ws:if data="{{_options.showMaximizedButton || _maximizeButtonVisibility}}">
                 <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
             </ws:if>
             <ws:if data="{{_options.closeButtonVisibility}}">
