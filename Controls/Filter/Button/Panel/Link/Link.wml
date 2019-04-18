@@ -1,3 +1,1 @@
-<span attr:class="controls-FilterLink" on:click="_clickHandler()">
-    <span attr:class="controls-FilterLink__text">{{_options.caption}}</span>
-</span>
+<ws:partial template="wml!Controls/_filterPopup/Panel/Link/Link" scope="{{_options}}" />
