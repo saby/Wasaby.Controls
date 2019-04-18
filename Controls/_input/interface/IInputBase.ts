@@ -14,6 +14,8 @@
  * @mixes Controls/_input/Base/Styles
  * @mixes Controls/_input/Render/Styles
  *
+ * @mixes Controls/_input/InputCallback/ICallback
+ *
  * @public
  * @author Журавлев М.С.
  */
