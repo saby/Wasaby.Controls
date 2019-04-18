@@ -16,7 +16,7 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.
  *
- * @class Controls/Date/PeriodDialog
+ * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/Date/interface/IDateRangeSelectable
  * @mixes Controls/_input/interface/IDateMask
@@ -317,13 +317,13 @@ Component.getDefaultOptions = function () {
     return coreMerge({
 
         /**
-         * @name Controls/Date/PeriodDialog#emptyCaption
+         * @name Controls/datePopup#emptyCaption
          * @cfg {String} Text that is used if the period is not selected
          */
         emptyCaption: rk('Не указан'),
 
         /**
-         * @name Controls/Date/PeriodDialog#headerType
+         * @name Controls/datePopup#headerType
          * @cfg {String} Type of the header.
          * @variant link
          * @variant input
