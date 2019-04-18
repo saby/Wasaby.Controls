@@ -1,6 +1,6 @@
 define('Controls/StickyHeader/Context',
-   ['Controls/_scroll/StickyHeader/Context'],
+   ['Controls/scroll'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control._stickyHeaderContext;
    });

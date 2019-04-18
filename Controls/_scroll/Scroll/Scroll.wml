@@ -57,7 +57,6 @@
       <div class="controls-Scroll__shadow controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
       <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom {{!_shadowVisible('bottom') ? ' ws-invisible'}}"></div>
    </ws:if>
-
    <ws:if data="{{_pagingState.visible}}">
          <Controls.paging:Paging class="controls-Scroll__paging"
                             stateBegin="{{_pagingState.stateUp}}"
