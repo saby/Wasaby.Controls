@@ -13,7 +13,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @mixes Controls/_decorator/Money/Styles
  *
  * @public
- * @demo Controls-demo/_decorators/Money/Money
+ * @demo Controls-demo/Decorators/Money/Money
  *
  * @author Журавлев М.С.
  */

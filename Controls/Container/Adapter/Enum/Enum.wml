@@ -1,1 +1,1 @@
-<ws:partial template="{{_options.content}}" source="{{_source}}" keyProperty="title" idProperty="title" selectedKey="{{_selectedKey}}" selectedKeys="{{[_selectedKey]}}" markedKey="{{_selectedKey}}" on:selectedKeyChanged="_changeKey()" on:selectedKeysChanged="_changeKey()"></ws:partial>
+<ws:partial template="wml!Controls/_source/Adapter/Enum/Enum" scope="{{_options}}" />

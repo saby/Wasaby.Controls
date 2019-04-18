@@ -53,7 +53,8 @@ define(
          enabled: true,
          draggable: true,
          closeChildWindows: true,
-         closeOnTargetScroll: true
+         closeOnTargetScroll: true,
+         width: 'auto'
       };
 
       describe('Controls/Popup/Compatible/BaseOpener', function() {
@@ -220,6 +221,7 @@ define(
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.fixed, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
+            assert.equal(config.templateOptions.width, undefined);
             assert.equal(config.templateOptions.record, config.record);
             assert.equal(config.templateOptions.__parentFromCfg, config.parent);
             assert.equal(config.templateOptions.__openerFromCfg, config.opener);
