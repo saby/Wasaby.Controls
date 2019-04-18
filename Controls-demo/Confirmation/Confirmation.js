@@ -44,7 +44,8 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     type: 'yesnocancel'
+                     type: 'yesnocancel',
+                     primaryAction: 'no'
                   }
                }]
             }, {

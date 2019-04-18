@@ -85,7 +85,7 @@ import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
          if (e.nativeEvent.keyCode === Env.constants.key.esc) {
             // for 'ok' and 'yesnocancel' type value equal undefined
             var result = this._options.type === 'yesno' ? false : undefined;
-            this._sendResult(null, result);
+            this._sendResult(result);
             e.stopPropagation();
          }
       }
@@ -106,7 +106,11 @@ import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
          this._escProcessing = new EscProcessing();
       },
 
-      _sendResult: function(e, res) {
+      _sendResultHandler: function(e, res) {
+         this._sendResult(res);
+      },
+
+      _sendResult: function(res) {
          this._options.closeHandler(res);
          this._notify('close');
       },
@@ -138,6 +142,14 @@ import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
       _hasMarkup: function() {
          var message = this._options.message;
          return typeof message === 'string' && message.indexOf('<a') > -1 && message.indexOf('</a>') > -1;
+      },
+
+      _onTriggerHandler: function() {
+         if (this._options.primaryAction === 'no') {
+            this._sendResult(false);
+         } else {
+            this._sendResult(true);
+         }
       }
    });
 
@@ -145,6 +157,7 @@ import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
       return {
          type: 'yesno',
          style: 'default',
+         primaryAction: 'yes',
          yesCaption: rk('Да'),
          noCaption: rk('Нет'),
          cancelCaption: rk('Отмена'),
