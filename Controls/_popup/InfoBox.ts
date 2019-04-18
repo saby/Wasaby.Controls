@@ -317,7 +317,7 @@ import Env = require('Env/Env');
       };
 
 
-InfoBox.getDefaultOptions = function() {
+      InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
             targetSide: 'top',

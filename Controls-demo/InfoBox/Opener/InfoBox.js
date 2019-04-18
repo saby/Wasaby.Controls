@@ -307,11 +307,12 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                this._children.IBOpener.open(cfg);
             }
          },
-         _openTouch:function(e, cfg){
+         _openTouch: function(e, cfg) {
             cfg.target = e.target;
             this._children.IBOpener.open(cfg);
          }
       });
+
       InfoBox.contextTypes = function() {
          return {
             isTouch: TouchContext
