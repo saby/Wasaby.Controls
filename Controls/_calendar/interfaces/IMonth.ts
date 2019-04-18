@@ -12,7 +12,7 @@ export default {
         return {
 
             /**
-             * @name Controls/Calendar/interface/IMonth#month
+             * @name Controls/_calendar/interface/IMonth#month
              * @cfg {Date|String} Месяц с которого откроется календарь
              * @remark
              * Строка должна быть формата ISO 8601.
@@ -25,13 +25,13 @@ export default {
             month: dateUtil.getStartOfMonth(new Date()),
 
             /**
-             * @name Controls/Calendar/interface/IMonth#showCaption
+             * @name Controls/_calendar/interface/IMonth#showCaption
              * @cfg {String} Тип заголовка "text"|null
              */
             showCaption: false,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#captionFormat
+             * @name Controls/_calendar/interface/IMonth#captionFormat
              * @cfg {String} Формат заголовка
              * @remark
              * Строка должна быть в формате поддерживаемым Core/helpers/Date/format.
@@ -39,19 +39,19 @@ export default {
             captionFormat: dateFormat.FULL_MONTH,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#showWeekdays
+             * @name Controls/_calendar/interface/IMonth#showWeekdays
              *  @cfg {Boolean} Если true, то дни недели отображаются
              */
             showWeekdays: true,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#dayFormatter
+             * @name Controls/_calendar/interface/IMonth#dayFormatter
              * @cfg {Function} Возможность поменять конфигурацию для дня. В функцию приходит объект даты. Опция необходима для производственных каледнадрей.
              */
             dayFormatter: undefined,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#mode
+             * @name Controls/_calendar/interface/IMonth#mode
              * @cfg {String} Month view mode
              * @variant current Only the current month is displayed
              * @variant extended 6 weeks are displayed. The first week of the current month is complete,
