@@ -25,7 +25,7 @@
                         showActionButton="{{false}}"
                         expandedItems="{{_options.expandedItems}}"
                         markedKey="{{_options.markedKey}}"
-                        on:itemActionsClick="_onItemActionsClick()"
+                        on:actionClick="_onItemActionsClick()"
                         on:itemClick="_onItemClick()"
                         parentProperty="{{_options.parentProperty}}"
                         nodeProperty="{{_options.nodeProperty}}"

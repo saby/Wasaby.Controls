@@ -122,6 +122,7 @@
                 on:menuActionsClick="_showActionsMenu()"
                 on:menuActionClick="_showActionMenu()"
                 on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                on:actionClick="_notifyHandler('actionClick')"
                 toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
                 name="itemActions"
                 style="{{_options.style}}"
