@@ -216,6 +216,7 @@
 @border-color_List-masterList-item_selected-left_val:             transparent;
 @border-color_List-masterList-item_selected-top_val:              #C2D0DE;
 @border-color_List-masterList-item_selected-bottom_val:           #9CB3CA;
+@padding_List-editAtPlace:                                        4px;
 
 // Menu
 @shift-top_MenuButton-button-popup_val:                           -6px;
@@ -231,6 +232,19 @@
 @height-gradient_Scroll-shadow:                                   8px;
 @start-color-gradient_Scroll-shadow:                              rgba(0, 0, 0, .15);
 @end-color-gradient_Scroll-shadow:                                rgba(0, 0, 0, 0);
+
+// Scrollbar
+@margin_Scrollbar:                                                2px;
+@width_Scrollbar:                                                 4px;
+@width_Scrollbar_animation:                                       12px;
+@animation-duration_Scrollbar:                                    0.3s;
+@min-height_Scrollbar-thumb:                                      46px;
+@border-radius_Scrollbar-thumb:                                   2px;
+@bg_Scrollbar-thumb_normal:                                       rgba(0, 0, 0, .1);
+@bg_Scrollbar-thumb_active_normal:                                rgba(0, 0, 0, .15);
+@bg_Scrollbar-thumb_inverted:                                     rgba(255, 255, 255, .2);
+@bg_Scrollbar-thumb_active_inverted:                              rgba(255, 255, 255, .5);
+@border-radius_Scrollbar-thumb_animation:                         5px;
 
 // MoveDialog
 @width_MoveDialog_val:                                            408px;
@@ -265,6 +279,23 @@
 @background-color_DateRangeBigChoose-range-selected-unfinishedEdge:       #E6ECFA;
 @background-color_DateRangeBigChoose-range-selected-startEnd:             #E5ECFA;
 
+// DatePicker
+@spacing_DatePicker-between-input-button:                                 7px;
+
+// DateLink
+@height_DateLinkView:                                                     24px;
+@height_PeriodLiteDialog-currentValue:                                    32px;
+@standart-line-height_PeriodLiteDialog:                                   32px;
+@font-size_DateLinkView:                                                  15px;
+@font-size_DateLinkView-prev-next-buttons:                                16px;
+@width_DateLinkView-prev-next-buttons:                                    24px;
+@min-width_DateLinkView-value:                                            102px;
+@width_DateLinkView-year-state:                                           81px;
+@font-weight_DateLinkView-value:                                          bold;
+@padding_DateLinkView-value:                                              1px;
+@color_CloseButton-light-icon:                                            #CCC;
+@color_CloseButton-light-icon_hover:                                      #313E78;
+
 // Range selection
 @border-color_RangeSelection-selected-startEnd:                           #8991A9;
 @border-color_RangeSelection-selected-startEnd-edgeBorder:                #0055BB;
@@ -290,15 +321,24 @@
 @font-size_MontView-weekDayHeader:                                @font-size_text_s;
 @border-color__MonthView-item-selected:                           #8991A9;
 @width__MonthView-item-selected-startEnd-hover:                   3px;
+@border-color__MonthView-item-hover:                              rgba(0, 0, 0, 10%);
 @border-color__MonthView-item-selected-startEnd-hover:            #0055BB;
 @color_MonthView-item:                                            @color_text_default;
 @color_MonthView-item-weekend:                                    #D94700;
+@color_MonthView-item-today:                                      #FFFFFF;
+@background-color_MonthView-item-today:                           #DA4600;
 @background-spacing_MonthView-item-today:                         7.7%;
 @border-radius_MonthView-item-today:                              50%;
 @background-color_MonthView-item-today:                           #DA4600;
 
 // DateRangeRelationButton
 @color_DateRangeRelationButton-byCapacity_hovered_val:            #999;
+
+// Previewer
+@animation-duration_Previewer:                                    200ms;
+
+// FilterLink
+@color_FilterLink:                                                #313e78;
 
 // Render
 @size_Render-tagStyle_val:                                        8px;
@@ -352,10 +392,17 @@
 // TabButtons
 @max-width_Tabs_item_val:                                         630px;
 @border-color_Tabs_val:                                           #F0F0F0;
-@background-color_Tabs-separator_val:                             #F0F0F0;
+
+// Button/Separator
+@size-Separator:                                                  @height_control_default;
 @size-Separator__icon:                                            @size_icon_s;
+@background-color_Tabs-separator_val:                             #F0F0F0;
 @color-Separator__icon_style-secondary:                           @color_secondary;
 @color-Separator__icon_style-primary:                             #D94700;
+@color-Separator__icon_style-additional:                          @color_additional;
+@color-Separator__icon_style-secondary_hovered:                   #313E78;
+@color-Separator__icon_style-primary_hovered:                     #FF7033;
+@color-Separator__icon_style-additional_hovered:                  #313E78;
 
 // Money decorator
 @money-decorator-integer-font-size:                               @font-size_text_m;
@@ -377,6 +424,27 @@
 @money-decorator-integer-no-accent-registry-font-color:           #999999;
 @money-decorator-fraction-font-size:                              @font-size_text_s;
 @money-decorator-fraction-font-color:                             #CCCCCC;
+
+// Header
+@font-size_Counter_size-l:                                       18px;
+@font-size_Counter_size-s:                                       14px;
+@font-size_Counter_size-m:                                       15px;
+@color_Counter_style-primary_hovered:                            #D94700;
+@color_Counter_style-secondary_hovered:                          #0055BB;
+@color_Counter_style-secondary:                                  #313E78;
+@color_Counter_style-primary:                                    #D94700;
+@color_Counter_style-disabled:                                   #999999;
+
+// ComboBox
+@margin-top_ComboBox-popup:                                      -@thickness_border_default;
+
+@width-HeaderSeparator:                                          6px;
+@height-HeaderSeparator:                                         10px;
+@spacing-HeaderSeparator_between_headerSeparator_Header:         10px;
+@color_HeaderSeparator_secondary:                                #729EE6;
+@color_HeaderSeparator_primary:                                  #729EE6;
+@color_HeaderSeparator_primary_hovered:                          #729EE6;
+@color_HeaderSeparator_secondary_hovered:                        #729EE6;
 
 // Toolbar
 @shift-top_Toolbar-toolButton-popup_val:                          -6px;
@@ -400,10 +468,17 @@
 @border-color_TreeGridView-item_dragging_val:                     #0055BB;
 
 // DialogTemplate
-@spacing_dialogTemplate-between-head-border-right_val:                    48px;
-@line-height_dialogTemplate_caption_val:                                  42px;
-@height_DialogTemplate-top-area-val:                                      44px;
+@margin_dialogTemplate_head:                                              0 48px 0 0;
+@height_dialogTemplate_caption:                                           44px;
 @height_dialogTemplate_footer_val:                                        64px;
+@height_DialogTemplate-top-area-val:                                      44px;
+@margin-left_dialogTemplate_caption:                                      12px;
+@line-height_dialogTemplate_caption:                                      42px;
+@line-height_dialogTemplate_caption_val:                                  42px;
+@top_dialogTemplate_compatible_close-button:                              5px;
+@spacing_StackTemplate-between-header-border:                             39px;
+@spacing_DialogTemplate-between-header-border:                            40px;
+@spacing_dialogTemplate-between-head-border-right_val:                    48px;
 
 // TileView
 @spacing_TileView-between-title-topBorder_val:                            3px;
