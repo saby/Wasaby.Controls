@@ -1,6 +1,6 @@
 /**
  * dragnDrop library
- * @library Controls/_dragnDrop
+ * @library Controls/dragnDrop
  * @includes Container Controls/_dragnDrop/Controller
  * @includes Controller Controls/_dragnDrop/Container
  * @includes DraggingTemplate Controls/_dragnDrop/DraggingTemplate
