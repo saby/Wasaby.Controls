@@ -1,0 +1,59 @@
+<ws:template name="defaultTemplate">
+   <div class="controls-FilterView__wrapper_theme_{{_options.theme}} controls-FilterView__wrapper_state_{{_options.readOnly ? 'disabled' : 'enabled'}}_theme_{{_options.theme}}">
+      <div class="controls-FilterView__block_theme_{{_options.theme}}" on:click="_open()">
+         <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}}
+                  controls-FilterView__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}} "></div>
+         <div class="controls-FilterView__text-wrapper_theme_{{_options.theme}} controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
+              title="{{_displayText[index].title}}">
+            <div class="controls-FilterView__text_theme_{{_options.theme}}">{{text}}</div>
+            <span class="controls-FilterView__hasMoreText_theme_{{_options.theme}}">{{hasMoreText}}</span>
+         </div>
+      </div>
+      <ws:if data="{{!hideCross}}">
+         <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-Close" ws-no-focus="{{true}}" on:click="_reset(item, index)"></span>
+      </ws:if>
+   </div>
+</ws:template>
+
+<ws:template name="buttonTemplate">
+   <div name="panelTarget">
+      <div class="controls-FilterView__icon_theme_{{_options.theme}} controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme_{{_options.theme}} icon-FilterBig"
+           on:click="_open()">
+      </div>
+   </div>
+</ws:template>
+
+<ws:template name="resetedTemplate">
+   <ws:if data="{{_hasEditorItems}}">
+      <ws:partial template="defaultTemplate"
+                  text="{[Все]}"
+                  hideCross="{{true}}"/>
+   </ws:if>
+</ws:template>
+
+<div class="controls-FilterView_theme_{{_options.theme}}">
+<ws:partial template="buttonTemplate" />
+<ws:if data="{{editorType==='dateRange'}}">
+   <!--Data range-->
+</ws:if>
+<ws:if data="{{_isReseted()}}">
+   <ws:partial template="resetedTemplate" />
+</ws:if>
+<ws:else>
+   <ws:for data="index, item in _items">
+      <ws:if data="{{_displayText[index].text}}">
+         <ws:partial template="defaultTemplate"
+                     text="{{_displayText[index].text}}"
+                     hasMoreText="{{_displayText[index].hasMoreText}}" />
+
+      </ws:if>
+   </ws:for>
+</ws:else>
+<Controls.Popup.Opener.Sticky
+        name="DropdownOpener"
+        className="controls-FilterView-popup"
+        template="Controls/_filterPopup/FastViewPanel"
+        closeOnOutsideClick="{{true}}"
+        on:result="_resultHandler()">
+</Controls.Popup.Opener.Sticky>
+</div>

@@ -14,6 +14,7 @@
 
 import Selector = require('Controls/_filter/Button');
 import Fast = require('Controls/_filter/Fast');
+import View = require('Controls/_filter/View');
 import ButtonContainer = require('Controls/_filter/Button/Container');
 import FastContainer = require('Controls/_filter/Fast/Container');
 import Controller = require('Controls/_filter/Controller');
@@ -22,6 +23,7 @@ import HistoryUtils = require('Controls/_filter/HistoryUtils');
 export {
    Selector,
    Fast,
+   View,
    ButtonContainer,
    FastContainer,
    Controller,

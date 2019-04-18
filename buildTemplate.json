@@ -25,6 +25,15 @@
       "path": "./Controls-demo"
     },
     {
+      "name": "Layout",
+      "path": "./Layout",
+      "required": true
+    },
+    {
+      "name": "Engine-demo",
+      "path": "./Engine-demo"
+    },
+    {
       "name": "Controls-theme",
       "path": "./Controls-theme"
     },

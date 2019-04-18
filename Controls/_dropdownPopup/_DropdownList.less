@@ -37,7 +37,6 @@
    min-height: @height_DropdownList-row;
    .flexbox();
    .align-items(center);
-   font-size: @font-size_DropdownList;
    box-sizing: border-box;
 }
 
@@ -63,6 +62,10 @@
 //не удалять, высота необходима, чтобы корректно работал align-items:center в IE
 .controls-DropdownList__row_singleLine.theme_@{themeName} {
    height: @height_DropdownList-row;
+}
+
+.controls-DropdownList__defaultItem.theme_@{themeName} {
+   font-size: @font-size_DropdownList;
 }
 
 .controls-DropdownList__emptyItem.theme_@{themeName} {
@@ -94,7 +97,6 @@
 }
 
 .controls-DropdownList__content.theme_@{themeName} {
-   font-size: @font-size_DropdownList;
    width: 100%;
    flex-shrink: 1;
 }
@@ -282,6 +284,12 @@
    visibility: hidden;
 }
 
-.controls-DropdownList__row-checkbox_active.theme_@{themeName} {
+.controls-DropdownList__row-checkbox_active_theme_@{themeName} {
    visibility: visible;
+}
+
+.controls-DropdownList__row-checkbox-right_theme_@{themeName} {
+   position: absolute;
+   top: 4px;
+   right: 6px;
 }

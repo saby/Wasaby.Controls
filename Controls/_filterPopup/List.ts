@@ -1,0 +1,56 @@
+import Control = require('Core/Control');
+import template = require('wml!Controls/_filterPopup/List/List');
+import defaultItemTemplate = require('wml!Controls/_dropdown/ItemTemplate');
+import emptyItemTemplate = require('wml!Controls/_filterPopup/List/emptyTemplate');
+
+import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
+
+var _private = {
+    isNeedUpdateSelectedKeys: function(self, target, item,) {
+        var clickOnEmptyItem = item.get(self._options.keyProperty) === null,
+            clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
+            hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null;
+        return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+    }
+};
+
+var List = Control.extend({
+    _template: template,
+    _items: null,
+    _defaultItemTemplate: defaultItemTemplate,
+    _emptyItemTemplate: emptyItemTemplate,
+
+    _beforeMount: function(options) {
+        this._listModel = new DropdownViewModel({
+            items: options.items,
+            selectedKeys: options.selectedKeys,
+            keyProperty: options.keyProperty,
+            itemTemplateProperty: options.itemTemplateProperty,
+            displayProperty: options.displayProperty,
+            emptyText: options.emptyText
+        });
+    },
+
+    _beforeUpdate: function(newOptions) {
+        //
+    },
+
+    _itemClickHandler: function(event, item) {
+        if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+            this._listModel.updateSelection(item);
+            this._notify('checkBoxClick', [this._listModel.getSelectedKeys()]);
+        } else {
+            this._notify('itemClick', [[item.get(this._options.keyProperty)]]);
+        }
+    },
+
+    _selectorDialogResult: function(event, result) {
+        this._notify('selectorResult', [result]);
+    }
+});
+
+List._theme = ['Controls/_filterPopup/List/List'];
+
+List._private = _private;
+
+export = List;
