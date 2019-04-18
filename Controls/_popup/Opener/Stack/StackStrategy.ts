@@ -11,9 +11,12 @@
          var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
          var minWidth = parseInt(item.popupOptions.minWidth, 10);
          var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
+         var availableMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
 
          if (item.popupOptions.width) {
-            panelWidth = item.popupOptions.width;
+            // todo: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            panelWidth = Math.min(item.popupOptions.width, availableMaxWidth); // less then maxWidth
+            panelWidth = Math.max(panelWidth, item.popupOptions.minimizedWidth || minWidth || 0); // more then minWidth
          } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;

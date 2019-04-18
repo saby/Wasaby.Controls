@@ -4,11 +4,15 @@ define(['Controls/Popup/Templates/Stack/StackTemplate'], (StackTemplate) => {
       it('maximize button title', () => {
          let Stack = new StackTemplate();
          Stack._beforeMount({
-            maximized: true
+            stackMinWidth: 100,
+            stackWidth: 700,
+            stackMaxWidth: 1000
          });
          assert.equal(Stack._maximizeButtonTitle, 'Свернуть');
          Stack._beforeUpdate({
-            maximized: false
+            stackMinWidth: 100,
+            stackWidth: 300,
+            stackMaxWidth: 1000
          });
          assert.equal(Stack._maximizeButtonTitle, 'Развернуть');
          Stack.destroy();
