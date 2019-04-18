@@ -1,10 +1,14 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager" maximized="{{_options.maximized}}" maximizeButtonVisibility="{{_options.showMaximizedButton}}">
+<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager"
+                                              maximizeButtonVisibility="{{true}}"
+                                              stackWidth="{{_options.stackWidth}}"
+                                              stackMinWidth="{{_options.stackMinWidth}}"
+                                              stackMaxWidth="{{_options.stackMaxWidth}}">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-        <Controls.input:Text value="maximized: {{_options.maximized}} | showMaximizedButton: {{_options.showMaximizedButton}}" />
+        <Controls.input:Text value="width: {{_options.stackWidth}} | minWidth: {{_options.stackMinWidth}} | maxWidth: {{_options.stackMaxWidth}}" />
     </ws:bodyContentTemplate>
 </Controls.Popup.Templates.Stack.StackTemplate>

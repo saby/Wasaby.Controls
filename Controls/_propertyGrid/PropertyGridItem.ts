@@ -38,5 +38,5 @@ class PropertyGridItem extends Model {
     };
 }
 
-PropertyGridItem._moduleName = 'Controls/_propertyGrid/PropertyGridItem';
+PropertyGridItem.prototype._moduleName = 'Controls/_propertyGrid/PropertyGridItem';
 export = PropertyGridItem;
