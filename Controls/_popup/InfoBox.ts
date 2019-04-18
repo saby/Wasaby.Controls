@@ -316,7 +316,6 @@ import Env = require('Env/Env');
          };
       };
 
-
       InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
