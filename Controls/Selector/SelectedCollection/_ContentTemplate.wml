@@ -1,8 +1,1 @@
-<div class="js-controls-SelectedCollection__item__caption
-            controls-SelectedCollection__item__caption
-            controls-SelectedCollection__item__caption-style-{{style}}
-            controls-SelectedCollection__item__caption-size-{{size}}
-            {{clickable ? 'controls-SelectedCollection__item__caption-clickable'}}"
-     title="{{item.get(displayProperty || 'title')}}">
-    {{item.get(displayProperty || 'title')}}
-</div>
+<ws:partial template="wml!Controls/_lookup/SelectedCollection/_ContentTemplate" scope="{{_options}}" />

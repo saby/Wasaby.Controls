@@ -1,1 +1,1 @@
-<div class="controls-Lookup__icon controls-Lookup__showSelector icon-ListView"></div>
+<ws:partial template="wml!Controls/_lookup/Lookup/resources/showSelectorTemplate" scope="{{_options}}" />

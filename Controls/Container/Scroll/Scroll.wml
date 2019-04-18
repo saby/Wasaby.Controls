@@ -1,7 +1,9 @@
 <ws:template name="content">
    <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Registrator name="scrollDetect" register="scroll">
-         <Controls.StickyHeader.Controller name="stickyController">
+         <Controls.StickyHeader.Controller
+               name="stickyController"
+               on:fixed="_fixedHandler()">
                <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
                Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
                Таким образом мы избавляемся от лишней вложенности.
@@ -48,7 +50,8 @@
             contentHeight="{{_displayState.contentHeight}}"
             attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}"
             on:positionChanged="_positionChangedHandler()"
-            on:draggingChanged="_draggingChangedHandler()"/>
+            on:draggingChanged="_draggingChangedHandler()"
+            attr:style="{{_scrollbarStyles}}"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
          <div class="controls-Scroll__shadow controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>

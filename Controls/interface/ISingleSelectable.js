@@ -6,7 +6,7 @@ define('Controls/interface/ISingleSelectable', [
     *
     * @interface Controls/interface/ISingleSelectable
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @see Controls/interface/IMultiSelectable
     * @see Controls/interface/IPromisedSelectable
     */
