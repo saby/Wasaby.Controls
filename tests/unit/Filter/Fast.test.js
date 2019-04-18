@@ -254,6 +254,15 @@ define(
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
          });
 
+         it('onResult footerClick', function() {
+            let closed = false;
+            let fastFilter = getFastFilter(configWithItems);
+            fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
+            fastFilter._beforeMount(configWithItems);
+            fastFilter._onResult(null, { action: 'footerClick' });
+            assert.isFalse(closed);
+         });
+
          it('onResult itemClick', function(done) {
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
