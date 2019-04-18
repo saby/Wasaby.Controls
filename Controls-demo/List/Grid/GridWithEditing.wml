@@ -16,7 +16,7 @@
                         source = "{{_viewSource}}"
                         columns="{{gridColumns}}"
                         itemActions="{{_itemActions}}"
-                        on:itemActionsClick="_onActionClick()"
+                        on:actionClick="_onActionClick()"
                         itemActionVisibilityCallback="{{_showAction}}"
                         itemActionsPosition="outside">
                     <ws:editingConfig>
@@ -42,7 +42,7 @@
                         source = "{{_viewSource}}"
                         columns="{{gridColumns}}"
                         itemActions="{{_itemActions}}"
-                        on:itemActionsClick="_onActionClick()"
+                        on:actionClick="_onActionClick()"
                         itemActionVisibilityCallback="{{_showAction}}"
                         itemActionsPosition="inside">
                     <ws:editingConfig>
