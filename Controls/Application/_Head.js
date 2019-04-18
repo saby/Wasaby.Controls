@@ -3,10 +3,12 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
+      'Env/Env',
       'Application/Env',
+      'Controls/_decorator/Markup/resolvers/noOuterTag',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Env, ThemesControllerNew) {
+   function(Base, Deferred, template, Env, AppEnv, noOuterTagResolver, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -35,6 +37,19 @@ define('Controls/Application/_Head',
                'class': true
             }
          };
+      }
+
+      function updateLink(link) {
+         var updatedLink = link,
+            resourceRoot = Env.constants.resourceRoot;
+         if (link.indexOf(resourceRoot) === 0) {
+            updatedLink = link.substr(resourceRoot.length);
+            var moduleName = updatedLink.substr(0, updatedLink.indexOf('/')),
+               moduleBuildNumber = moduleName && Env.constants.modules[moduleName] &&
+                  Env.constants.modules[moduleName].buildnumber;
+            updatedLink = resourceRoot + updatedLink + (moduleBuildNumber ? '?x_version=' + moduleBuildNumber : '');
+         }
+         return updatedLink;
       }
 
       var Page = Base.extend({
@@ -95,7 +110,7 @@ define('Controls/Application/_Head',
                this.simpleCss = [];
                return;
             }
-            var headData = Env.getStore('HeadData');
+            var headData = AppEnv.getStore('HeadData');
             var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
@@ -117,8 +132,19 @@ define('Controls/Application/_Head',
          isArrayHead: function() {
             return Array.isArray(this.head);
          },
-         headTagResolver: function(value) {
-            return Array.isArray(value) && value[0] === 'div' ? value[1] : value;
+         headTagResolver: function(value, parent) {
+            var newValue = noOuterTagResolver(value, parent),
+               attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
+                  !Array.isArray(newValue[1]) && newValue[1];
+            if (attributes) {
+               for (var attributeName in attributes) {
+                  if (attributes.hasOwnProperty(attributeName)) {
+                     // Try update all attributes as link, but only links would be updated.
+                     attributes[attributeName] = updateLink(attributes[attributeName]);
+                  }
+               }
+            }
+            return newValue;
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);

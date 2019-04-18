@@ -1,3 +1,1 @@
-<ws:partial template="{{ _options.content }}"
-            on:validateCreated="onValidateCreated()"
-            on:validateDestroyed="onValidateDestroyed()"/>
+<ws:partial template="wml!Controls/_validate/FormController" scope="{{_options}}" />

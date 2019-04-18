@@ -8,7 +8,7 @@ import Deferred = require('Core/Deferred');
  * @class Controls/_lists/BaseControl/SelectionController
  * @extends Core/Control
  * @control
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @private
  */
 
