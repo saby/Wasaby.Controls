@@ -1,19 +1,17 @@
 define('Controls-demo/InfoBox/Opener/InfoBox',
    [
       'Core/Control',
-      'Env/Env',
       'Controls/Context/TouchContextField',
       'wml!Controls-demo/InfoBox/resources/content',
       'wml!Controls-demo/InfoBox/Opener/InfoBox',
       'css!Controls-demo/InfoBox/Opener/InfoBox'
    ],
-   function(Control, Env, TouchContext, contentTpl, template) {
+   function(Control, TouchContext, contentTpl, template) {
       'use strict';
 
       var message = 'MESSAGE';
       var InfoBox = Control.extend({
          _template: template,
-         _isTouch: null,
          _blocks: null,
          _icons: null,
          _cfgRight: null,
@@ -21,7 +19,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _cfgTop: null,
          _cfgBottom: null,
          _beforeMount: function() {
-            this._isTouch =  Env.compatibility.touch;
             this._cfgRight = {
                message: message,
                targetSide: 'right',
