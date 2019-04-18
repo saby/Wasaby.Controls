@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
 import InfoBoxOpener = require('Controls/_popup/Opener/InfoBox');
+import TouchContext = require('Controls/Context/TouchContextField');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
       
@@ -151,14 +152,12 @@ import Env = require('Env/Env');
          _template: template,
 
          _isNewEnvironment: InfoBoxOpener.isNewEnvironment,
-         _isTouch: null,
 
          _openId: null,
 
          _closeId: null,
 
          _beforeMount: function(options) {
-            this._isTouch =  Env.compatibility.touch;
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {
@@ -225,7 +224,7 @@ import Env = require('Env/Env');
             /**
              * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
              */
-            if (!this._isTouch) {
+            if (!this._context.isTouch.isTouch) {
                this._startOpeningPopup();
             }
          },
@@ -311,7 +310,14 @@ import Env = require('Env/Env');
          }
       });
 
-      InfoBox.getDefaultOptions = function() {
+      InfoBox.contextTypes = function() {
+         return {
+            isTouch: TouchContext
+         };
+      };
+
+
+InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
             targetSide: 'top',
