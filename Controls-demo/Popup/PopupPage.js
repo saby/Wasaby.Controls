@@ -27,6 +27,7 @@ define('Controls-demo/Popup/PopupPage',
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
                templateOptions: {
+                  template: 'Controls-demo/Popup/TestDialog',
                   type: this._firstClick ? 'sticky' : 'dialog'
                }
             });

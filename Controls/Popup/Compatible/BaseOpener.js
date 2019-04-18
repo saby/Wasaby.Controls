@@ -114,6 +114,11 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+
+         if (cfg.width == 'auto') {
+            cfg.width = undefined;
+         }
+
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 

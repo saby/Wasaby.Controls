@@ -15,6 +15,8 @@ import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
+import 'wml!Controls/_input/Base/Stretcher';
+
       var _private = {
 
          /**
@@ -566,6 +568,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             this._field = {
                template: fieldTemplate,
                scope: {
+                  _useStretcher: false,
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
