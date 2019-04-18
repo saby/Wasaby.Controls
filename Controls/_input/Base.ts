@@ -15,8 +15,6 @@ import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
-import {IoC} from 'Env/Env';
-
       var _private = {
 
          /**
@@ -555,10 +553,6 @@ import {IoC} from 'Env/Env';
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._viewModel.value !== newOptions.value) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'The value option is used to change the value in a field through a synchronization cycle. To speed up the control, use the inputCallback option.');
-            }
-
             const newViewModelOptions = this._getViewModelOptions(newOptions);
 
             _private.updateViewModel(this, newViewModelOptions, newOptions.value);

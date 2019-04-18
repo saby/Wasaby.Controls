@@ -12,6 +12,7 @@
  * @default '' (empty string)
  * @remark
  * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+ * It is not recommended to use the option to change the behavior of input processing.This approach increases the redrawing time. Use the inputCallback option.
  * @example
  * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
  * <pre>
