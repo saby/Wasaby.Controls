@@ -85,7 +85,7 @@ import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
          if (e.nativeEvent.keyCode === Env.constants.key.esc) {
             // for 'ok' and 'yesnocancel' type value equal undefined
             var result = this._options.type === 'yesno' ? false : undefined;
-            this._sendResult(null, result);
+            this._sendResult(result);
             e.stopPropagation();
          }
       }
