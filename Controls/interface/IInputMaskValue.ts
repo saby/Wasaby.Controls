@@ -1,41 +1,45 @@
 /**
  * Interface for text inputs.
  *
- * @interface Controls/_input/interface/IInputMaskValue
+ * @interface Controls/interface/IInputMaskValue
  * @public
  * @author Миронов А.Ю.
  */
+interface IInputMaskValue {
+    readonly _options: {
+        /**
+         * @name Controls/interface/IInputMaskValue#value
+         * @cfg {String} Text in the field without delimiters.
+         * @default '' (empty string)
+         * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+         * The value passed must be raw without delimiters. If you need to get a value with delimiters, then you can do this by the {@link Controls/interface/IInputMaskValue#valueChanged} event.
+         * @example
+         * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+         * <pre>
+         *    <Controls._input.Mask bind:value="_inputValue" />
+         *    <Controls.Button on:click="_sendButtonClick()" />
+         * </pre>
+         *
+         * <pre>
+         *    Control.extend({
+         *       ...
+         *       _inputValue: '',
+         *
+         *       _sendButtonClick() {
+         *          this._sendData(this._inputValue);
+         *       }
+         *
+         *    });
+         * </pre>
+         * @see valueChanged
+         * @see inputCompleted
+         */
+        value: string;
+    }
+}
 
 /**
- * @name Controls/_input/interface/IInputMaskValue#value
- * @cfg {String} Text in the field without delimiters.
- * @default '' (empty string)
- * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
- * The value passed must be raw without delimiters. If you need to get a value with delimiters, then you can do this by the {@link Controls/_input/interface/IInputMaskValue#valueChanged} event.
- * @example
- * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
- * <pre>
- *    <Controls._input.Mask bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputValue: '',
- *
- *       _sendButtonClick() {
- *          this._sendData(this._inputValue);
- *       }
- *
- *    });
- * </pre>
- * @see valueChanged
- * @see inputCompleted
- */
-
-/**
- * @event Controls/_input/interface/IInputMaskValue#valueChanged Occurs when field value was changed.
+ * @event Controls/interface/IInputMaskValue#valueChanged Occurs when field value was changed.
  * @param {String} value Value of the field without delimiters.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark
@@ -66,7 +70,7 @@
  */
 
 /**
- * @event Controls/_input/interface/IInputMaskValue#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @event Controls/interface/IInputMaskValue#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
  * @param {String} value Value of the field.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark
@@ -88,3 +92,5 @@
  * </pre>
  * @see value
  */
+
+export default IInputMaskValue;

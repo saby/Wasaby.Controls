@@ -12,7 +12,7 @@ define('Controls/Input/Date/Range', [
     * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
     * @class Controls/Input/Date/Range
     * @extends Core/Control
-    * @mixes Controls/_input/interface/IInputBase
+    * @mixes Controls/interface/IInputBase
     * @mixes Controls/_dateRange/interfaces/IRange
     * @mixes Controls/_dateRange/interfaces/IInput
     * @mixes Controls/_dateRange/interfaces/IInputDateTag

@@ -8,7 +8,7 @@ define('Controls/Input/Time/Interval', [
     * @class Controls/Input/Time/Interval
     * @mixes Controls/Input/interface/IInputField
     * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/_input/interface/IInputTag
+    * @mixes Controls/interface/IInputTag
     * @control
     * @public
     * @author Мироново А.Ю.
