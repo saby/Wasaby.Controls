@@ -263,18 +263,6 @@ define([
       });
 
       describe('_beforeMount', function() {
-         it('should load HorizontalMeasurer and log warning about deprecated option', async function() {
-            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
-            await instance._beforeMount({
-               swipeDirection: 'row',
-               listModel: mockListModel({})
-            });
-
-            assert.equal(instance._measurer, HorizontalMeasurer.default);
-            assert.isTrue(consoleSpy.calledOnce);
-            assert.equal(instance._actionAlignment, 'horizontal');
-         });
-
          it('should load HorizontalMeasurer', async function() {
             await instance._beforeMount({
                actionAlignment: 'horizontal',
@@ -282,19 +270,6 @@ define([
             });
 
             assert.equal(instance._measurer, HorizontalMeasurer.default);
-            assert.equal(instance._actionAlignment, 'horizontal');
-         });
-
-         it('should load VerticalMeasurer and log warning about deprecated option', async function() {
-            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
-            await instance._beforeMount({
-               swipeDirection: 'column',
-               listModel: mockListModel({})
-            });
-
-            assert.equal(instance._measurer, VerticalMeasurer.default);
-            assert.isTrue(consoleSpy.calledOnce);
-            assert.equal(instance._actionAlignment, 'vertical');
          });
 
          it('should load VerticalMeasurer', async function() {
@@ -304,7 +279,6 @@ define([
             });
 
             assert.equal(instance._measurer, VerticalMeasurer.default);
-            assert.equal(instance._actionAlignment, 'vertical');
          });
       });
 

@@ -16,15 +16,10 @@ export interface ISwipeContext {
    };
 }
 
-export interface ISwipeControlOptions extends IDeprecatedOptions {
+export interface ISwipeControlOptions {
    listModel: IListModel;
    itemActions: IItemAction[];
    itemActionsPosition?: ItemActionsPosition;
    actionAlignment?: 'horizontal' | 'vertical';
    actionCaptionPosition?: 'right' | 'bottom' | 'none';
-}
-
-export interface IDeprecatedOptions {
-   swipeDirection?: 'row' | 'column';
-   titlePosition?: 'right' | 'bottom' | 'none';
 }

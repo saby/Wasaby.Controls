@@ -1,5 +1,3 @@
-import { IoC } from 'Env/Env';
-
 export = {
     itemActionsClick: function (self, event, action, itemData, listModel, showAll) {
         event.stopPropagation();
@@ -17,8 +15,6 @@ export = {
                     return item.className.indexOf('controls-ListView__itemV') !== -1;
                 })[itemData.index - listModel.getStartIndex()]
             ];
-            self._notify('itemActionsClick', args.concat(event));
-            IoC.resolve('ILogger').warn('Событие itemActionsClick было переименовано и будет удалено в версию 19.400. Используйте событие actionClick.');
             self._notify('actionClick', args);
             action.handler && action.handler(itemData.item);
         }
