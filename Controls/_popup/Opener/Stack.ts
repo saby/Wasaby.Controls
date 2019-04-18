@@ -8,12 +8,17 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
        * @control
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/_popup/Opener/Stack/StackStyles
        * @mixes Controls/interface/IOpener
        * @demo Controls-demo/Popup/Opener/StackPG
        * @public
        *
+       *@css @size_Stack-border-left   Thickness of left border
+       *@css @color_Stack-border-left  Color of left border
+       *@css @padding_Stack-shadow     Padding for shadow
+       *@css @size_Stack-shadow        Size of shadow
+       *@css @color_Stack-shadow       Color of shadow
        */
+
 
       var _private = {
          getStackConfig: function(config) {

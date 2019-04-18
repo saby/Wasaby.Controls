@@ -14,6 +14,9 @@ define(
             format = FormatBuilder.getFormat('dd.dd', {
                d: '[0-9]'
             }, replacer),
+            telepfoneFormat = FormatBuilder.getFormat('+7 (ddd)ddd-dd-dd', {
+               d: '[0-9]'
+            }, ''),
             clearData = Formatter.getClearData(format, '1 . 4'),
             result;
 
@@ -148,6 +151,23 @@ define(
                      format: oldFormat
                   });
                });
+
+               [{
+                  splitValue: {
+                     after: "",
+                     before: "+7 ",
+                     delete: "",
+                     insert: "+7 (123) 323-02-32"
+                  },
+                  format: telepfoneFormat,
+                  result: { value: '+7(123) 323-02-32', position: 18 }
+               }].forEach(function(test, testNumber) {
+                  it(`Test_${testNumber}`, function() {
+                     result = InputProcessor.input(test.splitValue, 'insert', '', test.format, test.format);
+                     assert.equal(result.value, result.value);
+                     assert.equal(result.position, result.position);
+                  });
+               })
             });
             describe('delete', function() {
                it('Test_01', function() {

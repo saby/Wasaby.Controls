@@ -78,7 +78,7 @@ define(
             StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
-            assert.equal(itemConfig.position.stackWidth, undefined);
+            assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/_popup/Opener/Stack/StackContent');
          });
@@ -103,23 +103,22 @@ define(
                }
             };
             StackController.getDefaultConfig(itemConfig);
-            assert.equal(itemConfig.popupOptions.minWidth, 800);
-            assert.equal(itemConfig.popupOptions.maxWidth, 1200);
-            assert.equal(itemConfig.popupOptions.minimizedWidth, 500);
+            assert.equal(itemConfig.popupOptions.stackMinWidth, 500);
+            assert.equal(itemConfig.popupOptions.stackMaxWidth, 1000);
+            assert.equal(itemConfig.popupOptions.stackWidth, 800);
 
             itemConfig = {
                popupOptions: {
-                  minWidth: 850,
-                  maxWidth: 1250,
-                  minimizedWidth: 550,
+                  minWidth: 600,
+                  maxWidth: 900,
                   templateOptions: {},
                   template: TestMaximizedStack
                }
             };
             StackController.getDefaultConfig(itemConfig);
-            assert.equal(itemConfig.popupOptions.minWidth, 850);
-            assert.equal(itemConfig.popupOptions.maxWidth, 1250);
-            assert.equal(itemConfig.popupOptions.minimizedWidth, 550);
+            assert.equal(itemConfig.popupOptions.stackMinWidth, 600);
+            assert.equal(itemConfig.popupOptions.stackMaxWidth, 900);
+            assert.equal(itemConfig.popupOptions.stackWidth, 800);
          });
 
          it('stack panel maximized', () => {
@@ -163,6 +162,7 @@ define(
 
             StackController._private.prepareMaximizedState(800, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, false);
+            delete itemConfig.popupOptions.width;
          });
 
          it('stack state', () => {
@@ -289,7 +289,7 @@ define(
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
             assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
-            assert.equal(position.stackWidth, 1200);
+            assert.equal(position.stackWidth, 1000);
          });
 
          it('stack compatible popup', () => {
