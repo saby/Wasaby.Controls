@@ -3,6 +3,7 @@ import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
 import 'css!theme?Controls/_popupTemplate/Stack/Stack';
 
+      var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 
       var DialogTemplate = Control.extend({
 
@@ -66,6 +67,7 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
           */
 
          _template: template,
+         _maximizeButtonVisibility: false,
          _beforeMount: function(options) {
             if (options.contentArea) {
                Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
@@ -89,13 +91,11 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
             if (options.closeButtonStyle) {
                Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
-            this._updateMaximizeButtonTitle(options.maximized);
+            this._updateMaximizeButton(options);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.maximized !== newOptions.maximized) {
-               this._updateMaximizeButtonTitle(newOptions.maximized);
-            }
+            this._updateMaximizeButton(newOptions);
          },
 
          _afterUpdate: function(oldOptions) {
@@ -104,7 +104,17 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
             }
          },
 
-         _updateMaximizeButtonTitle: function(maximized) {
+         _updateMaximizeButton: function(options) {
+            this._updateMaximizeButtonTitle(options);
+            if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
+               this._maximizeButtonVisibility = false;
+            } else {
+               this._maximizeButtonVisibility = options.maximizeButtonVisibility;
+            }
+         },
+
+         _updateMaximizeButtonTitle: function(options) {
+            var maximized = this._calculateMaximized(options);
             this._maximizeButtonTitle = maximized ? rk('Свернуть') : rk('Развернуть');
          },
 
@@ -120,7 +130,16 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
              * @event maximized
              * Occurs when you click the expand / collapse button of the panels.
              */
-            this._notify('maximized', [!this._options.maximized], { bubbling: true });
+            var maximized = this._calculateMaximized(this._options);
+            this._notify('maximized', [!maximized], { bubbling: true });
+         },
+         _calculateMaximized: function(options) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            if (!options.minimizedWidth) {
+               var middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
+               return options.stackWidth - middle > 0;
+            }
+            return options.maximized;
          }
       });
 
