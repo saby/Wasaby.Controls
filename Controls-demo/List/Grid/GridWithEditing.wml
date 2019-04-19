@@ -10,7 +10,7 @@
                         attr:test_name="test_grid_1"
                         keyProperty="id"
                         displayProperty="title"
-                        markedKey="{{448390}}"
+                        markedKey="448390"
                         multiselect="{{true}}"
                         header="{{gridHeader}}"
                         source = "{{_viewSource}}"
