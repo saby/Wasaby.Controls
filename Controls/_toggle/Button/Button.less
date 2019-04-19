@@ -6,6 +6,7 @@
 
 .controls-Button_viewMode-pushButton.theme_@{themeName} {
    cursor: pointer;
+   text-shadow: @text-shadow_ToggleButton_pushButton;
 }
 
 .controls-Button_viewMode-pushButton_readOnly.theme_@{themeName} {
@@ -35,103 +36,58 @@
    background: @background_ToggleButton_pushButton_toggled;
 }
 
-.controls-Button_style-secondary_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_secondary;
+.controls-Button_style {
+   @variants: secondary, primary, info, danger, warning, success;
+   .for(@variants, { &-@{_item}_viewMode-pushButton_toggle_on.theme_@{themeName} {
+      border-color: ~"@{border-color_ToggleButton_pushButton_toggle_on-@{_item}}";
+   }});
 }
 
-.controls-Button_style-primary_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_primaryV;
-}
-
-.controls-Button_style-info_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_info;
-}
-
-.controls-Button_style-danger_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_danger;
-}
-
-.controls-Button_style-warning_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_warning;
-}
-
-.controls-Button_style-success_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   border-color: @color_success;
+.controls-Button_style {
+   @variants: secondary, primary, info, danger, warning, success;
+   .for(@variants, { &-@{_item}_viewMode-toolButton_toggle_on.theme_@{themeName} {
+      border-color: ~"@{border-color_ToggleButton_toolButton_toggle_on-@{_item}}";
+   }});
 }
 
 .controls-Button_viewMode-pushButton_size-s.theme_@{themeName} {
    height: @height_ToggleButton-pushButton_s;
    min-width: @min-width_ToggleButton-pushButton_s;
+   font-size: @font-size_ToggleButton-pushButton_l;
 }
 
 .controls-Button_viewMode-pushButton_size-m.theme_@{themeName} {
    height: @height_ToggleButton-pushButton_m;
    min-width: @min-width_ToggleButton-pushButton_m;
+   font-size: @font-size_ToggleButton-pushButton_l;
 }
 
 .controls-Button_viewMode-pushButton_size-l.theme_@{themeName} {
    height: @height_ToggleButton-pushButton_l;
    min-width: @min-width_ToggleButton-pushButton_l;
+   font-size: @font-size_ToggleButton-pushButton_l;
 }
 
 .controls-Button__wrapper_viewMode-pushButton_size-s.theme_@{themeName} {
+   padding: @padding_Button-wrapper-pushButton_size_s;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-pushButton_size-m.theme_@{themeName} {
+   padding: @padding_Button-wrapper-pushButton_size_m;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-pushButton_size-l.theme_@{themeName} {
+   padding: @padding_Button-wrapper-pushButton_size_l;
    .justify-content(center);
 }
 
-.controls-Button_style-success_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_success;
-}
-
-.controls-Button_style-warning_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_warning;
-}
-
-.controls-Button_style-danger_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_danger;
-}
-
-.controls-Button_style-info_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_info;
-}
-
-.controls-Button_style-primary_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_primaryV;
-}
-
-.controls-Button_style-secondary_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   border-color: @color_secondary;
-}
-
-.controls-Button__icon-info_toggle_on.theme_@{themeName} {
-   color: @color_info;
-}
-
-.controls-Button__icon-success_toggle_on.theme_@{themeName} {
-   color: @color_success;
-}
-
-.controls-Button__icon-danger_toggle_on.theme_@{themeName} {
-   color: @color_danger;
-}
-
-.controls-Button__icon-warning_toggle_on.theme_@{themeName} {
-   color: @color_warning;
-}
-
-.controls-Button__icon-secondary_toggle_on.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-Button__icon-primary_toggle_on.theme_@{themeName} {
-   color: @color_primaryV;
+.controls-Button__icon{
+   @variants: secondary, primary, info, danger, warning, success;
+   .for(@variants, { &-@{_item}_toggle_on.theme_@{themeName} {
+      border-color: ~"@{color_ToggleButton_icon-@{_item}_toggle_on}";
+   }});
 }
 
 .controls-Button_viewMode-pushButton:active.theme_@{themeName} {
@@ -148,24 +104,8 @@
    color: @color_secondary;
 }
 
-.controls-Button__icon-danger_toggle_on.theme_@{themeName} {
-   color: @color_danger;
-}
-
-.controls-Button__icon-success_toggle_on.theme_@{themeName} {
-   color: @color_success;
-}
-
-.controls-Button__icon-warning_toggle_on.theme_@{themeName} {
-   color: @color_warning;
-}
-
-.controls-Button__icon-info_toggle_on.theme_@{themeName} {
-   color: @color_info;
-}
-
-.controls-Button__icon-primary_toggle_on.theme_@{themeName} {
-   color: @color_primaryV;
+.controls-Button__text_viewMode-pushButton.theme_@{themeName}{
+   color: @color_ToggleButton_pushButton-text;
 }
 
 .ws-is-no-touch {
