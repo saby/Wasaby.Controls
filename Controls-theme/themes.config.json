@@ -1,13 +1,8 @@
 {
   "multi": true,
   "old": {
-    "exclude": [
-      "**/*.less"
-    ]
-  },
-  "new": {
-    "exclude": [
-      "**/*.less"
+    "include": [
+      "themes/default/helpers/AreaBlocks*.less"
     ]
   }
 }
