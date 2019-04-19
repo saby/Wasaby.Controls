@@ -39,14 +39,14 @@
 .controls-Button_style {
    @variants: secondary, primary, info, danger, warning, success;
    .for(@variants, { &-@{_item}_viewMode-pushButton_toggle_on.theme_@{themeName} {
-      border-color: ~"@{border-color_ToggleButton_pushButton_toggle_on-@{_item}}";
+      border-color: ~"@{border-color_ToggleButton_toggle_on-@{_item}}";
    }});
 }
 
 .controls-Button_style {
    @variants: secondary, primary, info, danger, warning, success;
    .for(@variants, { &-@{_item}_viewMode-toolButton_toggle_on.theme_@{themeName} {
-      border-color: ~"@{border-color_ToggleButton_toolButton_toggle_on-@{_item}}";
+      border-color: ~"@{border-color_ToggleButton_toggle_on-@{_item}}";
    }});
 }
 
@@ -86,7 +86,7 @@
 .controls-Button__icon{
    @variants: secondary, primary, info, danger, warning, success;
    .for(@variants, { &-@{_item}_toggle_on.theme_@{themeName} {
-      border-color: ~"@{color_ToggleButton_icon-@{_item}_toggle_on}";
+      color: ~"@{color_ToggleButton_icon-@{_item}_toggle_on}";
    }});
 }
 
