@@ -1,19 +1,19 @@
 import entity = require('Types/entity');
 
-   /**
-    * Interface for date/time inputs mask.
-    *
-    * @interface Controls/_input/interface/IDateTimeMask
-    * @public
-    * @author Миронов А.Ю.
-    */
+/**
+ * Interface for date/time inputs mask.
+ *
+ * @interface Controls/interface/IDateTimeMask
+ * @public
+ * @author Миронов А.Ю.
+ */
 
-   export = {
-      getDefaultOptions: function() {
-         return {
+export = {
+    getDefaultOptions: function () {
+        return {
 
             /**
-             * @name Controls/_input/interface/IDateTimeMask#mask
+             * @name Controls/interface/IDateTimeMask#mask
              * @cfg {String} Date format.
              * @variant 'DD.MM.YYYY'
              * @variant 'DD.MM.YY'
@@ -75,40 +75,40 @@ import entity = require('Types/entity');
              * </pre>
              */
             mask: 'DD.MM.YY'
-         };
-      },
+        };
+    },
 
-      getOptionTypes: function() {
-         return {
+    getOptionTypes: function () {
+        return {
             mask: entity.descriptor(String).oneOf([
-               'DD.MM.YYYY',
-               'DD.MM.YY',
-               'DD.MM',
-               'YYYY-MM-DD',
-               'YY-MM-DD',
-               'HH:mm:ss.UUU',
-               'HH:mm:ss',
-               'HH:mm',
-               'DD.MM.YYYY HH:mm:ss.UUU',
-               'DD.MM.YYYY HH:mm:ss',
-               'DD.MM.YYYY HH:mm',
-               'DD.MM.YY HH:mm:ss.UUU',
-               'DD.MM.YY HH:mm:ss',
-               'DD.MM.YY HH:mm',
-               'DD.MM HH:mm:ss.UUU',
-               'DD.MM HH:mm:ss',
-               'DD.MM HH:mm',
-               'YYYY-MM-DD HH:mm:ss.UUU',
-               'YYYY-MM-DD HH:mm:ss',
-               'YYYY-MM-DD HH:mm',
-               'YY-MM-DD HH:mm:ss.UUU',
-               'YY-MM-DD HH:mm:ss',
-               'YY-MM-DD HH:mm',
-               'YYYY',
-               'MM.YYYY'
+                'DD.MM.YYYY',
+                'DD.MM.YY',
+                'DD.MM',
+                'YYYY-MM-DD',
+                'YY-MM-DD',
+                'HH:mm:ss.UUU',
+                'HH:mm:ss',
+                'HH:mm',
+                'DD.MM.YYYY HH:mm:ss.UUU',
+                'DD.MM.YYYY HH:mm:ss',
+                'DD.MM.YYYY HH:mm',
+                'DD.MM.YY HH:mm:ss.UUU',
+                'DD.MM.YY HH:mm:ss',
+                'DD.MM.YY HH:mm',
+                'DD.MM HH:mm:ss.UUU',
+                'DD.MM HH:mm:ss',
+                'DD.MM HH:mm',
+                'YYYY-MM-DD HH:mm:ss.UUU',
+                'YYYY-MM-DD HH:mm:ss',
+                'YYYY-MM-DD HH:mm',
+                'YY-MM-DD HH:mm:ss.UUU',
+                'YY-MM-DD HH:mm:ss',
+                'YY-MM-DD HH:mm',
+                'YYYY',
+                'MM.YYYY'
             ])
-         };
-      }
-   };
+        };
+    }
+};
 
 
