@@ -13,8 +13,6 @@ const DEFAULT_EDITORS: object = {
 };
 
 class PropertyGridItem extends Model {
-    _moduleName: string = 'Controls/_propertyGrid/PropertyGridItem';
-
     _$idProperty: string = 'name';
     _$properties: object = {
         editorTemplateName: {
@@ -40,4 +38,5 @@ class PropertyGridItem extends Model {
     };
 }
 
+PropertyGridItem.prototype._moduleName = 'Controls/_propertyGrid/PropertyGridItem';
 export = PropertyGridItem;

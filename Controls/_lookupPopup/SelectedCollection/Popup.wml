@@ -1,0 +1,15 @@
+<div class="controls-SelectedCollection__infobox_content">
+   <Controls.Heading caption="Выбрано" size="s" readOnly="{{true}}"/>
+   <Controls.Container.Scroll>
+      <Controls.Selector.SelectedCollection
+            items="{{_items}}"
+            displayProperty="{{_options.displayProperty}}"
+            itemTemplate="{{_options.itemTemplate}}"
+            readOnly="{{_options.readOnly}}"
+            itemsLayout="twoColumns"
+            on:crossClick="_crossClick()"
+            on:itemClick="_itemClick()"
+            attr:style="width: {{_options.width}}px">
+      </Controls.Selector.SelectedCollection>
+   </Controls.Container.Scroll>
+</div>

@@ -36,7 +36,7 @@
       </div>
       <div class="ControlsDemo-Markup__block">
          <Controls.input:Label name="myLabel6" caption="Результат:" />
-         <Controls.Decorator.Markup value="{{ json }}"
+         <Controls.decorator:Markup value="{{ json }}"
                                     attr:id="ControlsDemo-Markup__result"
                                     tagResolver="{{ tagResolver }}"
                                     resolverParams="{{ resolverParams }}" />

@@ -28,7 +28,7 @@
       </ws:emptyTemplate>
    </Controls.Explorer>
    <h2>Плитка с разной шириной (без увеличения)</h2>
-   <Controls.Tile
+   <Controls.tile:View
       attr:class="demo-Tile__dynamic"
       tileMode="dynamic"
       displayProperty="title"
@@ -44,9 +44,9 @@
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>
-   </Controls.Tile>
+   </Controls.tile:View>
    <h2>Плитка с разной шириной (с увеличением)</h2>
-   <Controls.Tile
+   <Controls.tile:View
       attr:class="demo-Tile__dynamic"
       tileMode="dynamic"
       displayProperty="title"
@@ -63,5 +63,5 @@
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>
-   </Controls.Tile>
+   </Controls.tile:View>
 </div>

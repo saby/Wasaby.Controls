@@ -8,7 +8,7 @@ define('Controls-demo/Filter/Container', [
    'Controls-demo/Utils/MemorySourceData',
    'css!Controls-demo/Filter/Container',
    'Controls/Container/List',
-   'Controls/Search/Input/Container',
+   'Controls/search',
    'Controls/Filter/Button/Container',
    'Controls/Filter/Fast/Container'
 ], function(Control, template, sourceLib, memorySourceData) {

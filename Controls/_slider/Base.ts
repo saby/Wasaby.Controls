@@ -3,7 +3,7 @@ import Env = require('Env/Env');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_slider/sliderTemplate');
 import utils from 'Controls/_slider/Utils';
-import DragNDrop = require('Controls/DragNDrop/Controller');
+import {Container as DragNDrop} from 'Controls/dragnDrop';
 import Range from './Range';
 
 var _private = {
@@ -34,7 +34,7 @@ var Base = Control.extend({
    /**
     * Basic slider with single movable point for choosing value.
     *
-    * <a href="/materials/demo/demo-ws4-sliderbase">Demo-example</a>.
+    * <a href="/materials/demo-ws4-sliderbase">Demo-example</a>.
     * @public
     * @extends Core/Control
     * @class Controls/_slider/Base
@@ -43,17 +43,7 @@ var Base = Control.extend({
     */
 
    /**
-    * Slider with two movable points for choosing range.
-    *
-    * @public
-    * @extends Core/Control
-    * @class Controls/_slider/Range
-    * @author Колесов В.А.
-    * @demo Controls-demo/Slider/Range/SliderRangeDemo
-    */
-
-   /**
-    * @name Controls/_slider/Range#size
+    * @name Controls/_slider/Base#size
     * @cfg {Boolean} sets the size of slider point
     * @example
     * Slider with diameter of point = 12px
@@ -63,7 +53,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#borderVisible
+    * @name Controls/_slider/Base#borderVisible
     * @cfg {Boolean} sets the stroke around control
     * @example
     * Slider with border
@@ -73,7 +63,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#minValue
+    * @name Controls/_slider/Base#minValue
     * @cfg {Number} sets the minimum value of slider
     * @remark must be less than maxValue
     * @example
@@ -85,7 +75,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#maxValue
+    * @name Controls/_slider/Base#maxValue
     * @cfg {Number} sets the maximum value of slider
     * @remark must be greater than minValue
     * @example
@@ -97,7 +87,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#scaleStep
+    * @name Controls/_slider/Base#scaleStep
     * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
     * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
     * @example
@@ -108,7 +98,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#value
+    * @name Controls/_slider/Base#value
     * @cfg {Number} sets the current value of slider
     * @remark Must be in range of [minValue..maxValue]
     * @example
@@ -119,7 +109,7 @@ var Base = Control.extend({
     */
 
    /**
-    * @name Controls/_slider/Range#precision
+    * @name Controls/_slider/Base#precision
     * @cfg {Number} Number of characters in decimal part.
     * @remark Must be non-negative
     * @example

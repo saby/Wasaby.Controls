@@ -1,7 +1,7 @@
 <div attr:class="demo-Checkbox__wrapper">
     <div attr:class="demo-CheckBox__exampleBlock">
         <h3>Checkbox</h3>
-        <Controls.Toggle.Checkbox on:valueChanged="changeValue()"
+        <Controls.toggle:Checkbox on:valueChanged="changeValue()"
                                   attr:class="demo-Checkbox_width"
                                   value="{{_value}}"
                                   readOnly="{{_readOnly}}"
@@ -16,9 +16,9 @@
         <Controls.input:Label caption="tooltip"/>
         <Controls.input:Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:class="ControlsDemo__readOnly"/>
+        <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
-        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:class="ControlsDemo-Checkbox__state"/>
+        <Controls.toggle:Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:class="ControlsDemo-Checkbox__state"/>
         <Controls.input:Label name="myLabel1" caption="value:"/>
         <Controls.Input.ComboBox
                 source="{{_source}}"

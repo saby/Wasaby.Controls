@@ -103,7 +103,7 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
          var navigation = {};
          var sourceController = Container._private.getSourceController(source, navigation);
 
-         assert.equal(sourceController._moduleName, 'Controls/Controllers/SourceController');
+         assert.equal(sourceController._moduleName, 'Controls/_source/SourceController');
       });
 
    });

@@ -2,28 +2,33 @@
    <ws:if data="{{isFieldFocused()}}">
       <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>
-   <input
-      readOnly="{{readOnly || ''}}"
-      autocorrect="off"
-      type="{{type}}"
-      name="{{fieldName}}"
-      value="{{calculateValueForTemplate()}}"
-      placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
-      autocomplete="{{options.autoComplete ? 'on' : 'off'}}"
-      class="controls-InputBase__nativeField_theme_{{options.theme}}
+   <ws:partial template="wml!Controls/_input/Base/Stretcher"
+               emptySymbol="{{emptySymbol}}"
+               _use="{{_useStretcher}}"
+               value="{{calculateValueForTemplate()}}">
+      <input
+         readOnly="{{readOnly || ''}}"
+         autocorrect="off"
+         type="{{type}}"
+         name="{{fieldName}}"
+         placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
+         autocomplete="{{options.autoComplete ? 'on' : 'off'}}"
+         class="controls-InputBase__nativeField_theme_{{options.theme}}
              controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{value ? 'Filled' : 'Empty'}}
-            {{isEdge ? 'controls-InputBase__nativeField_edge'}}
-            {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
-      on:keyup="_keyUpHandler()"
-      on:click="_clickHandler()"
-      on:input="_inputHandler()"
-      on:select="_selectHandler()"
-      on:focusin="_focusInHandler()"
-      on:focusout="_focusOutHandler()"
-      on:mousedown="_mouseDownHandler()"
-      on:touchstart="_touchStartHandler()"
-      on:DOMAutoComplete="_domAutoCompleteHandler()"
-   />
+             {{isEdge ? 'controls-InputBase__nativeField_edge'}}
+             {{stretcher ? 'controls-InputBase__nativeField_stretcher'}}
+             {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
+         on:keyup="_keyUpHandler()"
+         on:click="_clickHandler()"
+         on:input="_inputHandler()"
+         on:select="_selectHandler()"
+         on:focusin="_focusInHandler()"
+         on:focusout="_focusOutHandler()"
+         on:mousedown="_mouseDownHandler()"
+         on:touchstart="_touchStartHandler()"
+         on:DOMAutoComplete="_domAutoCompleteHandler()"
+      />
+   </ws:partial>
    <ws:if data="{{!value}}">
       <div class="controls-InputBase__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>

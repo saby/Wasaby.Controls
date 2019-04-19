@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
-import {isPartialSupport} from 'Controls/_grids/utils/GridLayoutUtil'
+import {isPartialSupport} from 'Controls/_lists/utils/GridLayoutUtil'
 
 /**
  *

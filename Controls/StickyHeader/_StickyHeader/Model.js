@@ -104,7 +104,7 @@ define('Controls/StickyHeader/_StickyHeader/Model',
 
             if (this._position.indexOf('top') !== -1 && !this._intersection.top && this._intersection.bottom) {
                result = 'top';
-            } else if (this._position.indexOf('bottom') !== -1 && !this._intersection.bottom) {
+            } else if (this._position.indexOf('bottom') !== -1 && !this._intersection.bottom && this._intersection.top) {
                result = 'bottom';
             }
 

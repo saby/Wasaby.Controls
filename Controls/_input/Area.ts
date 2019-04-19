@@ -5,7 +5,7 @@ import runDelayed = require('Core/helpers/Function/runDelayed');
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
-import 'Controls/Decorator/WrapURLs';
+import 'Controls/decorator';
       
 
       /**
@@ -17,6 +17,7 @@ import 'Controls/Decorator/WrapURLs';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
+       * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
@@ -39,13 +40,6 @@ import 'Controls/Decorator/WrapURLs';
        * A value between 1 and 10 is supported.
        */
 
-      /**
-       * @name Controls/_input/Area#newLineKey
-       * @cfg {String} The behavior of creating a new line.
-       * @variant enter When user presses Enter.
-       * @variant ctrlEnter When user presses Ctrl + Enter.
-       * @default enter
-       */
       var _private = {
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');

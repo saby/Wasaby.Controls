@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Controller
+<Controls.dragnDrop:Container
         on:dragEnter="_dragEnter()"
         on:dragLeave="_dragLeave()"
         on:dragEnd="_dragEnd()"
@@ -14,4 +14,4 @@
          </ws:else>
       </div>
    </div>
-</Controls.DragNDrop.Controller>
+</Controls.dragnDrop:Container>

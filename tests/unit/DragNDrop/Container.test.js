@@ -1,13 +1,13 @@
 define([
-   'Controls/DragNDrop/Container'
-], function(Container) {
+   'Controls/dragnDrop'
+], function(dragnDrop) {
    'use strict';
 
    describe('Controls.DragNDrop.Container', function() {
       var
          endDetected = false,
          startDetected = false,
-         container = new Container();
+         container = new dragnDrop.Controller();
       container._children = {
          dragStartDetect: {
             start: function() {

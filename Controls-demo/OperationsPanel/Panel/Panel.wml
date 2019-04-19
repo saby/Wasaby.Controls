@@ -3,7 +3,7 @@
       <div class="exampleBlock">
          <h2>Панель операций</h2>
          <ws:if data="{{ _expanded }}">
-            <Controls.Operations.Panel
+            <Controls.operations:Panel
                expanded="{{_expanded}}"
                source="{{_source}}"
                parentProperty="parent"
@@ -23,16 +23,16 @@
       <div class="optionsBlock">
          <h3>Опции</h3>
          <Controls.input:Label caption="expanded:"/>
-         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
+         <Controls.toggle:Checkbox attr:class="ControlsDemo-OperationsPanel__expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
          <Controls.input:Label caption="source:"/>
-         <Controls.Toggle.RadioGroup
+         <Controls.toggle:RadioGroup
             attr:class="ControlsDemo-OperationsPanel__source"
             on:selectedKeyChanged="sourceChange()"
             keyProperty="id"
             selectedKey="{{_sourceNumber}}"
             source="{{_sourceConfig}}"/>
          <Controls.input:Label caption="rightTemplate:"/>
-         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
+         <Controls.toggle:Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
       </div>
       <div class="eventBlock">
          <span>Event that surfaced:</span>

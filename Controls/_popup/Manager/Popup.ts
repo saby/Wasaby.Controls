@@ -152,6 +152,21 @@ import 'wml!Controls/_popup/Manager/PopupContent';
             this._notify('popupResult', [this._options.id].concat(args), { bubbling: true });
          },
 
+         _touchStartHandler: function(e) {
+            var event = e.nativeEvent;
+            this._touchStartX = event.changedTouches[0].pageX;
+         },
+
+         _touchEndHandler: function(e) {
+            var event = e.nativeEvent;
+            var touchEndX = event.changedTouches[0].pageX;
+
+            // if swipe more then 100px from left to right, then close popup
+            if (touchEndX - this._touchStartX > 100) {
+               this._close();
+            }
+         },
+
          /**
           * key up handler
           * @function Controls/_popup/Manager/Popup#_keyUp

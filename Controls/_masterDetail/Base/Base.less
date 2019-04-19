@@ -1,0 +1,37 @@
+.controls-MasterDetail {
+   display: flex;
+}
+
+.controls-MasterDetail_master {
+   position: relative;
+   background-color: @background-color_List-masterList;
+   flex-shrink: 0;
+   width: 27%;
+
+   &:after {
+      content: '';
+      z-index: 0;
+      width: @border-width_List-masterList-right;
+      background-color: @border-color_List-masterList;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+   }
+}
+
+.ws-is-mobile-safari .controls-MasterDetail_master > .controls-Scroll__content {
+   //if width more than 100.3 ipad sometimes can scroll container to left
+   //100.3 is needed to resolve bug https://css-tricks.com/percentage-bugs-in-webkit/, https://bugs.webkit.org/show_bug.cgi?id=140371 with subpixel render
+   width: 100.3%;
+   //z-index is needed in mobile safari, because scroll have webkit-overflow-scrolling: touch style,
+   //webkit-overflow-scrolling creating stacking context, and all elements inside can not be higher by z-index,
+   //than elements on the same level with the scroll.
+   //Grey line of master (master option of the MasterDetail control) is on the same level with the scroll,
+   //white line, that should overlaps grey line is in list item (list control is inside scroll container).
+   //Because of the webkit-overflow-scrolling, white line can not overlaps grey line,
+   // to solve this problem make z-index: 1 on scroll.
+   z-index: 1;
+   //https://stackoverflow.com/questions/37696746/ios-not-respecting-z-index-with-webkit-overflow-scrolling
+   transform: translateX(0);
+}

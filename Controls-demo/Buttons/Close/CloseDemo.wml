@@ -7,7 +7,7 @@
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.input:Label name="myLabel1" caption="style:"/>
-            <Controls.Toggle.RadioGroup
+            <Controls.toggle:RadioGroup
                     on:selectedKeyChanged="closeChangeStyle()"
                     keyProperty="title"
                     selectedKey="{{_closeSelectedStyle}}"

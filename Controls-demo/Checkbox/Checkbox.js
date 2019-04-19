@@ -2,7 +2,7 @@ define('Controls-demo/Checkbox/Checkbox', [
    'Core/Control',
    'wml!Controls-demo/Checkbox/Checkbox',
    'Types/source',
-   'Controls/Toggle/Checkbox',
+   'Controls/toggle',
    'css!Controls-demo/Checkbox/Checkbox',
 ], function(Control, template, source) {
    'use strict';
