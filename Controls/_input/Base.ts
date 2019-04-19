@@ -369,7 +369,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/interface/IInputBase
        *
        * @private
        * @demo Controls-demo/Input/Base/Base

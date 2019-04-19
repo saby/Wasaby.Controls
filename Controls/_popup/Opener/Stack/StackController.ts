@@ -59,6 +59,9 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             item.popupOptions.stackWidth = item.position.stackWidth;
             item.popupOptions.stackMinWidth = item.position.stackMinWidth;
             item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+
+            //todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
             _private.updatePopupOptions(item);
             return item.position;
          },

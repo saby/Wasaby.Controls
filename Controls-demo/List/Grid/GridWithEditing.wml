@@ -10,13 +10,13 @@
                         attr:test_name="test_grid_1"
                         keyProperty="id"
                         displayProperty="title"
-                        markedKey="{{448390}}"
+                        markedKey="448390"
                         multiselect="{{true}}"
                         header="{{gridHeader}}"
                         source = "{{_viewSource}}"
                         columns="{{gridColumns}}"
                         itemActions="{{_itemActions}}"
-                        on:itemActionsClick="_onActionClick()"
+                        on:actionClick="_onActionClick()"
                         itemActionVisibilityCallback="{{_showAction}}"
                         itemActionsPosition="outside">
                     <ws:editingConfig>
@@ -42,7 +42,7 @@
                         source = "{{_viewSource}}"
                         columns="{{gridColumns}}"
                         itemActions="{{_itemActions}}"
-                        on:itemActionsClick="_onActionClick()"
+                        on:actionClick="_onActionClick()"
                         itemActionVisibilityCallback="{{_showAction}}"
                         itemActionsPosition="inside">
                     <ws:editingConfig>

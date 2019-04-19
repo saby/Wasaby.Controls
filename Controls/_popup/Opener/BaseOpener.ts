@@ -7,7 +7,8 @@ import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-import library = require('Core/library');
+import {parse as parserLib, load} from 'Core/library';
+
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
@@ -130,7 +131,7 @@ import library = require('Core/library');
           * @private
           */
          _requireModule: function(module) {
-            return typeof module === 'string' ? library.load(module) : Promise.resolve(module);
+            return typeof module === 'string' ? load(module) : Promise.resolve(module);
          },
 
          _getConfig: function(popupOptions) {
@@ -214,8 +215,11 @@ import library = require('Core/library');
                baseCfg.fittingMode = baseCfg.locationStrategy;
             }
 
-            // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
+            // if the .opener property is not set, then set the defaultOpener or the current control
+            if (!baseCfg.hasOwnProperty('opener')) {
+               baseCfg.opener = Vdom.DefaultOpenerFinder.find(this) || this;
+            }
+
             this._prepareNotifyConfig(baseCfg);
             return baseCfg;
          },
@@ -355,12 +359,21 @@ import library = require('Core/library');
             }
 
             if (typeof cfg.template === 'string') {
-               deps.push(cfg.template);
+               var libInfo = parserLib(cfg.template);
+
+               deps.push(libInfo.name);
             }
 
             requirejs(deps, function(CompatibleOpener, Action, Tpl) {
                if (opener && opener._options.closeOnTargetScroll) {
                   cfg.closeOnTargetScroll = true;
+               }
+
+               if (libInfo && libInfo.path.length !== 0) {
+                  cfg.template = Tpl;
+                  libInfo.path.forEach(function(key) {
+                     cfg.template = cfg.template[key];
+                  });
                }
 
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
@@ -468,4 +481,4 @@ import library = require('Core/library');
       Base._private = _private;
 
       export = Base;
-   
+

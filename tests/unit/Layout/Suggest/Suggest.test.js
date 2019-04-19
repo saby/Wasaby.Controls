@@ -574,19 +574,26 @@ self._options.historyId = '';
       });
 
       it('Suggest::_missSpellClick', function() {
-         var suggestComponent = new Suggest();
-         var value;
+         var
+            value,
+            suggestComponent = new Suggest();
 
+         suggestComponent.activate = function() {
+            suggestComponent._inputActive = true;
+         }
          suggestComponent._notify = function(event, val) {
             if (event === 'valueChanged') {
                value = val[0];
             }
          };
+         suggestComponent._options.minSearchLength = 3;
          suggestComponent._misspellingCaption = 'test';
          suggestComponent._missSpellClick();
 
          assert.equal(value, 'test');
          assert.equal(suggestComponent._misspellingCaption, '');
+         assert.equal(suggestComponent._searchValue, 'test');
+         assert.isTrue(suggestComponent._inputActive);
       });
 
       it('Suggest::_private.setMissSpellingCaption', function() {

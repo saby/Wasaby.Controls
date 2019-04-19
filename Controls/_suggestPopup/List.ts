@@ -7,15 +7,7 @@ import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
-      /**
-       * Container for list inside Suggest.
-       *
-       * @class Controls/_suggestPopup/List
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
+
 
 
 
@@ -61,6 +53,15 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
          }
       };
 
+/**
+ * Container for list inside Suggest.
+ *
+ * @class Controls/_suggestPopup/List
+ * @extends Core/Control
+ * @author Герасимов Александр
+ * @control
+ * @public
+ */
       var List = Control.extend({
 
          _template: template,
