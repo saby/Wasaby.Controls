@@ -261,6 +261,7 @@ var _private = {
  * @mixes Controls/Input/interface/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @public
  */
 var SuggestLayout = Control.extend({
    _template: template,
