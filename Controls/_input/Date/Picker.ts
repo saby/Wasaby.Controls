@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask = require('Controls/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Date/Picker/Picker');
 import 'css!theme?Controls/_input/Date/Picker/Picker';
@@ -12,11 +12,11 @@ import 'css!theme?Controls/_input/Date/Picker/Picker';
     *
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
-    * @mixes Controls/_input/interface/IInputDateTime
-    * @mixes Controls/_input/interface/IDateMask
-    * @mixes Controls/_input/interface/IInputTag
-    * @mixes Controls/_input/interface/IInputBase
-    * @mixes Controls/_input/interface/IInputPlaceholder
+    * @mixes Controls/interface/IInputDateTime
+    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/interface/IInputTag
+    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/interface/IInputPlaceholder
     *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
     *

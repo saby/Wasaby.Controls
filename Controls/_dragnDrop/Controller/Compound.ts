@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_dragnDrop/Container/Compound/Compound');
+import template = require('wml!Controls/_dragnDrop/Controller/Compound/Compound');
 import draggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
 import Vdom = require('Vdom/Vdom');
       var ZINDEX_FOR_OLD_PAGE = 10000;
@@ -51,4 +51,4 @@ import Vdom = require('Vdom/Vdom');
             }
          }
       });
-   
+

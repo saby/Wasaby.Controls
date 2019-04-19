@@ -22,7 +22,7 @@
                                             multiSelectVisibility="visible"
                                             itemActions="{{_itemActions}}"
                                             itemActionsPosition="outside"
-                                            on:itemActionsClick="_onActionClick()"
+                                            on:actionClick="_onActionClick()"
                                             itemActionVisibilityCallback="{{_showAction}}">
                                         <ws:nodeFooterTemplate>
                                             <Controls.list:AddButton caption="Новая запись"/>

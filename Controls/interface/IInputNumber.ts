@@ -1,26 +1,26 @@
 /**
  * Interface for Input.Number.
  *
- * @interface Controls/_input/interface/IInputNumber
+ * @interface Controls/interface/IInputNumber
  * @public
  * @author Журалев М.С.
  */
-
-/**
- * @name Controls/_input/interface/IInputNumber#value
- * @cfg {Number|null} The number that will be projected to the text in the field.
- * @default 0
- * @remark
- * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
- * @example
- * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
- * </pre>
- *
- * <pre>
- *    Control.extend({
+interface IInputNumber {
+    /**
+     * @name Controls/interface/IInputNumber#value
+     * @cfg {Number|null} The number that will be projected to the text in the field.
+     * @default 0
+     * @remark
+     * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+     * @example
+     * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+     * <pre>
+     *    <Controls.input:Number bind:value="_inputValue" />
+     *    <Controls.Button on:click="_sendButtonClick()" />
+     * </pre>
+     *
+     * <pre>
+     *    Control.extend({
  *       ...
  *       _inputValue: 0,
  *
@@ -29,13 +29,15 @@
  *       }
  *       ...
  *    });
- * </pre>
- * @see valueChanged
- * @see inputCompleted
- */
+     * </pre>
+     * @see valueChanged
+     * @see inputCompleted
+     */
+    value: number | null;
+}
 
 /**
- * @event Controls/_input/interface/IInputNumber#valueChanged Occurs when field value was changed.
+ * @event Controls/interface/IInputNumber#valueChanged Occurs when field value was changed.
  * @param {Number|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark
@@ -65,7 +67,7 @@
  */
 
 /**
- * @event Controls/_input/interface/IInputNumber#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @event Controls/interface/IInputNumber#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
  * @param {Number|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark
@@ -87,3 +89,5 @@
  * </pre>
  * @see value
  */
+
+export default IInputNumber;

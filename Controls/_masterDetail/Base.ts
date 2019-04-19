@@ -4,9 +4,9 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
 
    /**
     * Control that allows to implement the Master-Detail interface
-    * @class Controls/Container/MasterDetail
+    * @class Controls/_masterDetail/Base
     * @extends Core/Control
-    * @mixes Controls/Container/MasterList/Styles
+    * @mixes Controls/_masterDetail/List/Styles
     * @control
     * @author Волоцкой В.Д.
     * @public
@@ -14,12 +14,12 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
     */
 
    /**
-    * @name Controls/Container/MasterDetail#master
+    * @name Controls/_masterDetail/Base#master
     * @cfg {Function} Master content template
     */
 
    /**
-    * @name Controls/Container/MasterDetail#detail
+    * @name Controls/_masterDetail/Base#detail
     * @cfg {Function} Detail content template
     */
 
