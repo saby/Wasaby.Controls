@@ -18,8 +18,8 @@ import 'css!theme?Controls/_suggest/Input/Input';
  * @mixes Controls/interface/INavigation
  * @mixes Controls/Input/Suggest/SuggestStyles
  * @mixes Controls/Input/resources/InputRender/InputRenderStyles
- * @mixes Controls/_input/interface/IPaste
- * @mixes Controls/_input/interface/IInputText
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputText
  * @control
  * @public
  * @category Input
