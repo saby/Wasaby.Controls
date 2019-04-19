@@ -41,7 +41,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
 function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number } {
    if (scrollableElement.controlNodes) {
       for (let component of scrollableElement.controlNodes) {
-         if (cInstance.instanceOfModule(component.control, 'Controls/_scroll/StickyHeader/Controller')) {
+         if (cInstance.instanceOfModule(component.control, 'Controls/scroll:_stickyHeaderController')) {
             return {
                top: component.control.getHeadersHeight('top'),
                bottom: component.control.getHeadersHeight('bottom')

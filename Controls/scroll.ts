@@ -15,7 +15,7 @@ import Watcher = require('Controls/_scroll/Scroll/Watcher');
 import StickyHeader = require('Controls/_scroll/StickyHeader');
 import _scrollContext = require('Controls/_scroll/Scroll/Context');
 import _stickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
-
+import _stickyHeaderController  from 'Controls/_scroll/StickyHeader/Controller';
 
 
 export {
@@ -23,5 +23,6 @@ export {
    Watcher,
    StickyHeader,
    _scrollContext,
-   _stickyHeaderContext
+   _stickyHeaderContext,
+   _stickyHeaderController
 }
