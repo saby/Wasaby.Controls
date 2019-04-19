@@ -15,7 +15,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
-       * @mixes Controls/_input/interface/IInputPlaceholder
+       * @mixes Controls/interface/IInputPlaceholder
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IInputDropdown
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
