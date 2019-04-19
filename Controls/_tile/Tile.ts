@@ -50,8 +50,8 @@ var Tile = View.extend({
 
 Tile.getDefaultOptions = function() {
    return {
-      swipeDirection: 'column',
-      titlePosition: 'none'
+      actionAlignment: 'vertical',
+      actionCaptionPosition: 'none'
    };
 };
 

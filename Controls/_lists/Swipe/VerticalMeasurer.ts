@@ -1,10 +1,10 @@
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig, ItemActionsSize } from './interface/ISwipeConfig';
-import { TitlePosition } from './interface/ISwipeControl';
+import { ISwipeControlOptions } from './interface/ISwipeControl';
 
 const breakpoints: Record<
-   TitlePosition,
+   ISwipeControlOptions['actionCaptionPosition'],
    {
       lowerBound: number;
       upperBound: number;
@@ -29,7 +29,7 @@ const MIN_SPACING = 12;
 function getItemActionsSize(
    countOfActions: number,
    rowHeight: number,
-   titlePosition: TitlePosition
+   actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
 ): {
    itemActionsSize: ItemActionsSize;
    countOfActions: number;
@@ -44,12 +44,12 @@ function getItemActionsSize(
    const x =
       (rowHeight - MIN_SPACING - (MIN_SPACING + 1) * (countOfActions - 1)) / countOfActions;
 
-   if (x < breakpoints[titlePosition].lowerBound) {
-      return getItemActionsSize(countOfActions - 1, rowHeight, titlePosition);
+   if (x < breakpoints[actionCaptionPosition].lowerBound) {
+      return getItemActionsSize(countOfActions - 1, rowHeight, actionCaptionPosition);
    }
    if (
-      x >= breakpoints[titlePosition].lowerBound &&
-      x < breakpoints[titlePosition].upperBound
+      x >= breakpoints[actionCaptionPosition].lowerBound &&
+      x < breakpoints[actionCaptionPosition].upperBound
    ) {
       return {
          countOfActions,
@@ -63,10 +63,10 @@ function getItemActionsSize(
 }
 
 function getPaddingSize(
-   titlePosition: TitlePosition,
+   actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
    itemActionsSize: ItemActionsSize
 ): 's' | 'm' | 'l' {
-   switch (titlePosition) {
+   switch (actionCaptionPosition) {
       case 'none':
          return 'm';
       case 'right':
@@ -80,7 +80,7 @@ const VerticalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
       rowHeight: number,
-      titlePosition: TitlePosition
+      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
       let itemActions = actions;
       const {
@@ -89,7 +89,7 @@ const VerticalMeasurer: IMeasurer = {
       }: {
          itemActionsSize: ItemActionsSize;
          countOfActions: number;
-      } = getItemActionsSize(actions.length, rowHeight, titlePosition);
+      } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
 
       if (countOfActions !== actions.length) {
          itemActions = actions.slice(0, countOfActions - 1);
@@ -107,18 +107,18 @@ const VerticalMeasurer: IMeasurer = {
             all: actions,
             showed: itemActions
          },
-         paddingSize: getPaddingSize(titlePosition, itemActionsSize)
+         paddingSize: getPaddingSize(actionCaptionPosition, itemActionsSize)
       };
    },
    needIcon(
       action: IItemAction,
-      titlePosition: TitlePosition,
+      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
       hasActionWithIcon: boolean = false
    ): boolean {
-      return !!action.icon || (hasActionWithIcon && titlePosition === 'right');
+      return !!action.icon || (hasActionWithIcon && actionCaptionPosition === 'right');
    },
-   needTitle(action: IItemAction, titlePosition: TitlePosition): boolean {
-      return !action.icon || titlePosition !== 'none' && !!action.title;
+   needTitle(action: IItemAction, actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']): boolean {
+      return !action.icon || actionCaptionPosition !== 'none' && !!action.title;
    }
 };
 
