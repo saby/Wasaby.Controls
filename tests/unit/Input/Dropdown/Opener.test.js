@@ -7,25 +7,23 @@ define(
    (Opener, BaseOpener) => {
       describe('Dropdown/Opener', () => {
          let config = {
-            popupOptions: {
-               templateOptions: {
-                  itemTemplate: 'itemTemplate',
-                  headTemplate: 'headTemplate',
-                  footerTemplate: 'footerTemplate',
-                  keyProperty: 'keyProperty',
-                  selectedKeys: 'selectedKeys',
-                  parentProperty: 'parentProperty',
-                  itemTemplateProperty: 'itemTemplateProperty',
-                  nodeProperty: 'nodeProperty',
-                  headConfig: {
-                     icon: 'icon-small'
-                  },
-                  items: {
-                     each: () => {}
-                  }
+            templateOptions: {
+               itemTemplate: 'itemTemplate',
+               headTemplate: 'headTemplate',
+               footerTemplate: 'footerTemplate',
+               keyProperty: 'keyProperty',
+               selectedKeys: 'selectedKeys',
+               parentProperty: 'parentProperty',
+               itemTemplateProperty: 'itemTemplateProperty',
+               nodeProperty: 'nodeProperty',
+               headConfig: {
+                  icon: 'icon-small'
                },
-               className: 'myClass'
-            }
+               items: {
+                  each: () => {}
+               }
+            },
+            className: 'myClass'
          };
 
          function getOpener(openerConfig) {
@@ -99,10 +97,10 @@ define(
          it('checkIcons', function() {
             let opener = getOpener(config);
             Opener._private.checkIcons(opener, config);
-            assert.deepEqual(config.popupOptions.templateOptions.iconPadding, { null: [null, 'icon-small'] });
-            config.popupOptions.templateOptions.rootKey = 'testKey';
+            assert.deepEqual(config.templateOptions.iconPadding, { null: [null, 'icon-small'] });
+            config.templateOptions.rootKey = 'testKey';
             Opener._private.checkIcons(opener, config);
-            assert.deepEqual(config.popupOptions.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
+            assert.deepEqual(config.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
          });
 
          it('getIconSize', function() {

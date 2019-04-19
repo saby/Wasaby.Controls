@@ -1,0 +1,10 @@
+<div class="controls-ConfirmationDialog__message {{hasDetails ? 'controls-ConfirmationDialog__message_withDetails'}}">
+  <div class="controls-ConfirmationDialog__message-centered">
+    <ws:if data="{{hasMarkup}}">
+      <Controls.decorator:Markup value="{{ content }}" />
+    </ws:if>
+    <ws:else>
+      <ws:partial template="{{content}}"/>
+    </ws:else>
+  </div>
+</div>

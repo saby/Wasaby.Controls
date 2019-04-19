@@ -118,6 +118,26 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
+         it('calcItemColumnVersion', function() {
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'hidden'
+               }
+            }, 1, 0), '1_1_0');
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'visible'
+               }
+            }, 1, 0), '1_1_-1');
+            assert.equal(GridViewModel._private.calcItemColumnVersion({
+               _columnsVersion: 1,
+               _options: {
+                  multiSelectVisibility: 'visible'
+               }
+            }, 1, 1), '1_1_0');
+         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -733,7 +753,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion'],
+                  'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
             gridViewModel._model = {};
@@ -922,47 +942,87 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
          it('_prepareCrossBrowserColumn', function() {
             var
-               initialColumns = [
-                  {
-                     title: 'first',
-                     width: ''
-                  },
-                  {
-                     title: 'second',
-                     width: '1fr'
-                  },
-                  {
-                     title: 'third',
-                     width: '100px'
-                  },
-                  {
-                     title: 'last',
-                     width: 'auto'
-                  }
-               ],
-               resultColumns = [
-                  {
-                     title: 'first',
-                     width: ''
-                  },
-                  {
-                     title: 'second',
-                     width: 'auto'
-                  },
-                  {
-                     title: 'third',
-                     width: '100px'
-                  },
-                  {
-                     title: 'last',
-                     width: 'auto'
-                  }
-               ];
-            for (var i = 0; i < initialColumns.length; i++) {
-               assert.deepEqual(resultColumns[i], gridViewModel._prepareCrossBrowserColumn(initialColumns[i], true),
-                  'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
+               noGridSupport = {
+                  initialColumns: [
+                     {
+                        title: 'first',
+                        width: ''
+                     },
+                     {
+                        title: 'second',
+                        width: '1fr'
+                     },
+                     {
+                        title: 'third',
+                        width: '100px'
+                     },
+                     {
+                        title: 'last',
+                        width: 'auto'
+                     }
+                  ],
+                  resultColumns: [
+                     {
+                        title: 'first',
+                        width: ''
+                     },
+                     {
+                        title: 'second',
+                        width: 'auto'
+                     },
+                     {
+                        title: 'third',
+                        width: '100px'
+                     },
+                     {
+                        title: 'last',
+                        width: 'auto'
+                     }
+                  ]
+               },
+                partialOfFullGridSupport={};
+            partialOfFullGridSupport.initialColumns = noGridSupport.initialColumns;
+
+            for (var i = 0; i < noGridSupport.initialColumns.length; i++) {
+               assert.deepEqual(noGridSupport.resultColumns[i], gridViewModel._prepareCrossBrowserColumn(noGridSupport.initialColumns[i], true),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
+            }
+
+            for (var i = 0; i < partialOfFullGridSupport.initialColumns.length; i++) {
+               assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
             }
          });
+
+         it('getEditingRowStyles', function () {
+            var
+                gridViewModel = new GridViewModel(cfg);
+
+            gridViewModel._options.multiSelectVisibility = 'hidden';
+
+            gridViewModel._columns = [
+               {
+                  width: '1fr'
+               },
+               {
+                  width: null,
+                  realWidth: '127px'
+               },
+               {
+                  width: 'auto'
+               }
+            ];
+
+            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 3;');
+
+            gridViewModel._options.multiSelectVisibility = 'onhover';
+
+            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 4;');
+
+         });
+
          it('_prepareHeaderColumns', function() {
             assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
             gridViewModel._prepareHeaderColumns([], false);

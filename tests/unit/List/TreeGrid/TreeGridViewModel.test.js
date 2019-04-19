@@ -7,7 +7,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
-         assert.isTrue(cInstance.instanceOfModule(createdModel, 'Controls/_lists/Tree/TreeViewModel'), 'Invalid type of created model.');
+         assert.isTrue(cInstance.instanceOfModule(createdModel, 'Controls/_treeGrids/Tree/TreeViewModel'), 'Invalid type of created model.');
       });
       it('toggleExpanded', function() {
          var
@@ -213,6 +213,129 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
          assert.equal(expected.l_xl, current.getLevelIndentClasses('l', 'xl'));
       });
 
+      it('calcGroupRowIndex', function () {
+         var
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             current = model.getCurrent();
+
+         assert.equal(TreeGridViewModel._private.calcGroupRowIndex(model, current), 0);
+
+      });
+
+      it('getFooterStyles', function () {
+         var
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             self = {
+                _options: {
+                   multiSelectVisibility: 'hidden'
+                }
+             };
+
+         assert.equal(TreeGridViewModel._private.getFooterStyles(self, 1, 2),
+             'grid-row: 2; -ms-grid-row: 2; grid-column: 1 / 2; -ms-grid-column: 1; -ms-grid-column-span: 1;'
+         );
+
+         self._options.multiSelectVisibility = 'visible';
+
+         assert.equal(TreeGridViewModel._private.getFooterStyles(self, 1, 2),
+             'grid-row: 2; -ms-grid-row: 2; grid-column: 2 / 2; -ms-grid-column: 2; -ms-grid-column-span: 1;'
+         );
+      });
+
+      it('calcRowIndex', function () {
+         var
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             current = model.getCurrent();
+
+         assert.equal(TreeGridViewModel._private.calcRowIndex(model, current), 0);
+
+      });
+
+      it('prepareGroupGridStyles', function () {
+         var
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             current = model.getCurrent();
+
+         var safeFunc = TreeGridViewModel.calcGroupRowIndex;
+
+         TreeGridViewModel._private.calcGroupRowIndex = function () {
+            return 1;
+         };
+
+         TreeGridViewModel._private.prepareGroupGridStyles(model, current);
+
+         assert.equal(current.gridGroupStyles, 'grid-row: 2; -ms-grid-row: 2;');
+
+         TreeGridViewModel._private.calcGroupRowIndex = safeFunc;
+      });
 
       it('setExpandedItems', function() {
 

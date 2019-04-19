@@ -114,6 +114,11 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+
+         if (cfg.width == 'auto') {
+            cfg.width = undefined;
+         }
+
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 
@@ -412,12 +417,27 @@ function(cMerge,
             newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
          }
 
-         if (cfg.verticalAlign && cfg.verticalAlign.side) {
-            newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
+         // из новых преобразуем
+         if (cfg.targetPoint) {
+            cfg.corner = cfg.targetPoint;
          }
-         if (cfg.verticalAlign && cfg.verticalAlign.offset) {
-            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
-            newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
+         if (cfg.direction && typeof cfg.direction === 'object') {
+            cfg.horizontalAlign = { side: cfg.direction.horizontal };
+            cfg.verticalAlign = { side: cfg.direction.vertical };
+            cfg.direction = null;
+         }
+         if (cfg.offset && typeof cfg.offset === 'object') {
+            if (cfg.horizontalAlign) {
+               cfg.horizontalAlign.offset = cfg.offset.horizontal;
+            } else {
+               cfg.horizontalAlign = { offset: cfg.offset.horizontal };
+            }
+            if (cfg.verticalAlign) {
+               cfg.verticalAlign.offset = cfg.offset.vertical;
+            } else {
+               cfg.verticalAlign = { offset: cfg.offset.vertical };
+            }
+            cfg.offset = null;
          }
 
          // Если задали direction, то берем его (для исключительных случаев, задавать его не должны, т.к. это старое api)
@@ -438,6 +458,14 @@ function(cMerge,
                   newCfg.dialogOptions.direction = 'right';
                }
             }
+         }
+
+         if (cfg.verticalAlign && cfg.verticalAlign.side) {
+            newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
+         }
+         if (cfg.verticalAlign && cfg.verticalAlign.offset) {
+            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
+            newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
          }
          if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
             newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
@@ -481,6 +509,9 @@ function(cMerge,
 
          if (cfg.minWidth || optFromTmpl.minWidth) {
             newCfg.dialogOptions.minWidth = cfg.minWidth || optFromTmpl.minWidth;
+         }
+         if (cfg.width) {
+            newCfg.dialogOptions.width = cfg.width;
          }
 
          if (cfg.maxWidth || optFromTmpl.maxWidth) {

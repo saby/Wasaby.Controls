@@ -1,21 +1,17 @@
-<div class="controls-DateRangeLinkLite">
+<div class="controls-DateRangeSelectorLite">
    <Controls.Input.Date.LinkView
       scope="{{_options}}"
       bind:startValue="_rangeModel.startValue"
       bind:endValue="_rangeModel.endValue"
       on:linkClick="openDialog()"
-      attr:class="controls-DateRangeLinkLite__view"
+      attr:class="controls-DateRangeSelectorLite__view {{_isMinWidth ? 'controls-DateRangeSelectorLite__view_minWidth'}}"
    />
 
-   <Controls.Popup.Opener.Sticky name="opener">
-      <ws:popupOptions
-         template="Controls/Date/PeriodLiteDialog"
-         closeOnOutsideClick="{{true}}"
-      >
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:verticalAlign side="bottom"/>
-         <ws:horizontalAlign side="center"/>
-         <ws:corner vertical="top" horizontal="center"/>
-      </ws:popupOptions>
+   <Controls.Popup.Opener.Sticky name="opener"
+                                 template="Controls/dateLitePopup"
+                                 closeOnOutsideClick="{{true}}"
+                                 on:result="_onResult()">
+      <ws:direction vertical="bottom" horizontal="center"/>
+      <ws:targetPoint vertical="top" horizontal="center"/>
    </Controls.Popup.Opener.Sticky>
 </div>

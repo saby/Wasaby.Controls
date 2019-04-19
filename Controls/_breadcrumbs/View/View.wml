@@ -1,0 +1,25 @@
+<div attr:class="controls-BreadCrumbsView">
+    <ws:if data="{{_options.visibleItems.length > 0}}">
+        <div attr:class="controls-BreadCrumbsView__wrapper">
+            <ws:partial template="{{_itemsTemplate}}"
+                        displayProperty="{{ _options.displayProperty }}"
+                        highlighter="{{_options.highlighter}}"
+                        applyHighlighter="{{_applyHighlighter}}"
+                        items="{{_options.visibleItems}}"
+                        itemTemplate="{{_options.itemTemplate}}" />
+        </div>
+    </ws:if>
+
+    <Controls.Dropdown.Opener
+            on:result="_onResult()"
+            name="menuOpener"
+            keyProperty="id"
+            className="controls-BreadCrumbsController__menu">
+        <ws:targetPoint vertical="top"
+                   horizontal="right"/>
+        <ws:direction horizontal="left"/>
+    </Controls.Dropdown.Opener>
+
+    <Controls.Event.Listener event="controlResize"
+                            on:controlResize="_onResize()"/>
+</div>

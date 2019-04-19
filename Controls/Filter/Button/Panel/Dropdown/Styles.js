@@ -1,11 +1,6 @@
-define('Controls/Filter/Button/Panel/Dropdown/Styles', [],
-   function() {}
-   
-   /**
-    * @author Золотова Элина
-    * @mixin Controls/Filter/Button/Panel/Dropdown/Styles
-    * @public
-    *
-    * @css @color_FilterDropdown-text Text color.
-    */
-);
+define('Controls/Filter/Button/Panel/Dropdown/Styles',
+   ['Controls/_filterPopup/Panel/Dropdown/Styles'],
+   function(Control) {
+      'use strict';
+      return Control;
+   });

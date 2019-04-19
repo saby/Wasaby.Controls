@@ -1,4 +1,4 @@
-<div style="height: 200px; min-width: 500px; max-width: 700px;">
+<div style="height: 200px; width:550px">
     <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="Создание категории" closeButtonVisibility="true">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;" ws-no-focus="true">
@@ -6,7 +6,7 @@
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
-            <div class="dialog-content">
+            <div style="margin: 20px;display: flex; justify-content: space-around;">
                 <Controls.input:Text placeholder="Название" />
                 <Controls.input:Text placeholder="Описание" value="{{value}}"/>
             </div>

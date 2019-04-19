@@ -1,4 +1,4 @@
-define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
+define(['Controls/toggle'], function (toggleMod) {
    'use strict';
    var SW, switcherClickedFlag;
    describe('Controls.Toggle.DoubleSwitch', function () {
@@ -11,7 +11,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
       });
       describe('update captions (function _beforeUpdate)',function () {
          beforeEach(function(){
-            SW = new Switch({
+            SW = new toggleMod.DoubleSwitch({
                captions: ['capt1', 'capt2']
             });
          });
@@ -55,7 +55,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
 
          it('without captions', function () {
             try {
-               SW = new Switch({
+               SW = new toggleMod.DoubleSwitch({
                   captions: []
                });
             }
@@ -66,7 +66,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
 
          it('with one caption', function () {
             try {
-               SW = new Switch({
+               SW = new toggleMod.DoubleSwitch({
                   captions: ['capt1']
                });
             }
@@ -76,7 +76,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
          });
 
          it('with two captions', function () {
-            SW = new Switch({
+            SW = new toggleMod.DoubleSwitch({
                captions: ['capt1', 'capt2']
             });
             assert(true);
@@ -84,7 +84,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
 
          it('with three captions', function () {
             try {
-               SW = new Switch({
+               SW = new toggleMod.DoubleSwitch({
                   captions: ['capt1', 'capt2','capt3']
                });
             }
@@ -96,7 +96,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
 
       describe('click', function () {
          beforeEach(function() {
-            SW = new Switch({
+            SW = new toggleMod.DoubleSwitch({
                captions: ['capt1','capt2']
             });
             switcherClickedFlag = false;
@@ -169,7 +169,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     Switch._private.checkCaptions(SW._options.captions);
+                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -183,7 +183,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     Switch._private.checkCaptions(SW._options.captions);
+                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -197,7 +197,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     Switch._private.checkCaptions(SW._options.captions);
+                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -210,14 +210,14 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                      captions: ['capt1', 'capt2']
                   };
                   SW.saveOptions(opt);
-                  Switch._private.checkCaptions(SW._options.captions);
+                  toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
                   assert(true);
                });
             });
          });
          describe('state hover of toggle',function () {
             beforeEach(function(){
-               SW = new Switch({
+               SW = new toggleMod.DoubleSwitch({
                   captions: ['capt1', 'capt2']
                });
             });

@@ -4,7 +4,7 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
-   'Controls/lists',
+   'Controls/list',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
 ], function(Control, template, source, TreeMemory, Data, lists) {
@@ -31,6 +31,7 @@ define('Controls-demo/OperationsPanel/Demo', [
       _excludedKeys: null,
       _selectedKey: 0,
       _expanded: false,
+      _markedKeyMoveDialog: 15,
 
       _beforeMount: function() {
          this._filterButtonSource = filterButtonData;
@@ -40,6 +41,7 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
          this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
          this._moveDialogFilter = {};
+         this._expandedItemsMoveDialog = [2];
          this._gridColumns = [{
             template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
          }];
@@ -154,10 +156,13 @@ define('Controls-demo/OperationsPanel/Demo', [
       },
 
       _afterItemsMove: function(event, items, target, position) {
-         // To display the records in the correct order
-         if (position === 'on') {
-            this._children.list.reload();
-         }
+         this._children.operationsResultOpener.open({
+            templateOptions: {
+               operationsCount: items.length,
+               operationsSuccess: items.length,
+               title: 'Move items'
+            }
+         });
       },
 
       _beforeItemsRemove: function(event, items) {

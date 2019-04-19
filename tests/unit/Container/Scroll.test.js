@@ -33,16 +33,19 @@ define(
                top: [],
                bottom: []
             };
-            scroll._stickyHeadersHeight = {
+            scroll._headersHeight = {
                top: 0,
                bottom: 0
             };
             scroll._children.stickyHeaderShadow = {
                start: sinon.fake()
             };
-            scroll._children.stickyHeaderHeight = {
-               start: sinon.fake()
+            scroll._children.content = {
+               scrollHeight: 50
             };
+            scroll._displayState = {
+               contentHeight: 0
+            }
          });
 
          describe('_scrollbarTaken', function() {
@@ -110,9 +113,9 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                                       '<div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
-                                       '</span>' +
+                                       '</div>' +
                                        '<div></div>' +
                                     '</div>');
 
@@ -120,9 +123,9 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<span style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
+                                       '<div style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
-                                       '</span>' +
+                                       '</div>' +
                                        '<div></div>' +
                                     '</div>');
             });
@@ -155,6 +158,20 @@ define(
             });
 
          });
+
+         describe('_fixedHandler', function() {
+            it('Should update scroll style when header fixed', function() {
+               scroll._fixedHandler(null, 10, 10);
+               assert.strictEqual(scroll._scrollbarStyles, 'top:10px; bottom:10px;');
+               assert.strictEqual(scroll._displayState.contentHeight, 30);
+            });
+            it('Should update scroll style when header unfixed', function() {
+               scroll._headersHeight = { top: 10, bottom: 20 };
+               scroll._fixedHandler(null, 0, 0);
+               assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
+               assert.strictEqual(scroll._displayState.contentHeight, 50);
+            });
+         })
       });
 
       describe('selectedKeysChanged', function() {

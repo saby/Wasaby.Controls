@@ -1,11 +1,11 @@
 <div class="demo-Grid">
     <div class="demo-Grid__container">
-        <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
-            <Controls.Container.MultiSelector>
+        <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+            <Controls.operations:Controller>
                 <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                    <Controls.lists:Container>
-                        <Controls.List.MultiSelector>
-                            <Controls.treeGrids:View
+                    <Controls.list:Container>
+                        <Controls.operations:Container>
+                            <Controls.treeGrid:View
                                     name="list"
                                     attr:class="demo-Grid__control"
                                     keyProperty="id"
@@ -13,11 +13,11 @@
                                     nodeProperty="Раздел@"
                                     multiSelectVisibility="visible"
                                     columns="{{gridColumns}}">
-                            </Controls.treeGrids:View>
-                        </Controls.List.MultiSelector>
-                    </Controls.lists:Container>
+                            </Controls.treeGrid:View>
+                        </Controls.operations:Container>
+                    </Controls.list:Container>
                 </Controls.Container.Scroll>
-            </Controls.Container.MultiSelector>
-        </Controls.lists:DataContainer>
+            </Controls.operations:Controller>
+        </Controls.list:DataContainer>
     </div>
 </div>

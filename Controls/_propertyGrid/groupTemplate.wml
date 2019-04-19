@@ -1,0 +1,10 @@
+<div attr:class="controls-PropertyGrid__group-theme_{{theme}}" attr:key="group-{{itemData.item}}">
+    <div class="controls-PropertyGrid__group-content-theme_{{theme}}">
+        <ws:if data="{{!!contentTemplate}}">
+            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+        </ws:if>
+        <ws:else>
+            {{itemData.item}}
+        </ws:else>
+    </div>
+</div>

@@ -1,8 +1,8 @@
-<ws:partial template="Controls/grids:ColumnTemplate"
+<ws:partial template="Controls/grid:ColumnTemplate"
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
-      <Controls.Decorator.Money number="{{itemData.item[itemData.column.displayProperty]}}"
+      <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
                                 delimiters="{{true}}"/>
    </ws:contentTemplate>
 </ws:partial>

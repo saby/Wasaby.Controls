@@ -3,14 +3,14 @@ define([
    'Core/Deferred',
    'Types/collection',
    'Types/chain',
-   'Controls/DragNDrop/Entity/Items',
+   'Controls/dragnDrop',
    'Types/entity'
 ], function(
    Explorer,
    Deferred,
    collection,
    chain,
-   DragEntity,
+   dragnDrop,
    entityLib
 ) {
    describe('Controls.Explorer', function() {
@@ -189,21 +189,32 @@ define([
             cfg = {
                root: 'rootNode',
                viewMode: 'tree'
-            },
-            newCfg = {
-               viewMode: 'search',
-               root: 'rootNode'
-            },
-            instance = new Explorer(cfg);
+            };
+         var newCfg = {
+            viewMode: 'search',
+            root: 'rootNode'
+         };
+         var instance = new Explorer(cfg);
+         var rootChanged = false;
+
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
+         instance._notify = function(eventName) {
+            if (eventName === 'rootChanged') {
+               rootChanged = true;
+            }
+         };
+
          assert.equal(instance._viewMode, 'tree');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.tree);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.tree);
+         assert.isFalse(rootChanged);
+
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
+         assert.isFalse(rootChanged);
       });
 
       it('_onBreadCrumbsClick', function() {
@@ -460,7 +471,13 @@ define([
       });
 
       describe('DragNDrop', function() {
-         var explorer;
+         var
+            explorer,
+            explorerCfg = {
+               parentProperty: 'parent',
+               root: null,
+               itemsDragNDrop: true,
+            };
 
          beforeEach(function() {
             var
@@ -471,17 +488,12 @@ define([
                      { id: 3, title: 'item3', parent: 2 }
                   ],
                   idProperty: 'id'
-               }),
-               cfg = {
-                  parentProperty: 'parent',
-                  root: null,
-                  itemsDragNDrop: true,
-               };
+               })
 
-            explorer = new Explorer(cfg);
+            explorer = new Explorer(explorerCfg);
 
-            explorer.saveOptions(cfg);
-            explorer._beforeMount(cfg);
+            explorer.saveOptions(explorerCfg);
+            explorer._beforeMount(explorerCfg);
             explorer._items = items;
          });
 
@@ -518,7 +530,8 @@ define([
 
             explorer._dragOnBreadCrumbs = true;
             assert.equal(explorer._dragHighlighter(1), '');
-            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget');
+            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget_withoutArrow');
+            assert.equal(explorer._dragHighlighter(2, true), 'controls-BreadCrumbsView__dropTarget_withArrow');
          });
          it('_documentDragStart', function() {
             explorer._documentDragStart({}, {
@@ -529,7 +542,7 @@ define([
             //drag in the root
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [1]
                })
             });
@@ -537,7 +550,7 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
@@ -546,7 +559,7 @@ define([
             explorer._dragOnBreadCrumbs = false;
             explorer._options.itemsDragNDrop = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
@@ -558,7 +571,7 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [1]
                })
             });
@@ -566,16 +579,26 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new DragEntity({
+               entity: new dragnDrop.ItemsEntity({
                   items: [2]
                })
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
+
+            explorer._dragOnBreadCrumbs = false;
+            explorerCfg.parentProperty = undefined;
+            explorer.saveOptions(explorerCfg);
+            explorer._documentDragStart({}, {
+               entity: new dragnDrop.ItemsEntity({
+                  items: [2]
+               })
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
             var
                dragEnrArgs,
-               dragEntity = new DragEntity();
+               dragEntity = new dragnDrop.ItemsEntity();
 
             explorer._notify = function(e, args) {
                if (e === 'dragEnd') {

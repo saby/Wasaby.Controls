@@ -1,9 +1,9 @@
-import {View as Grid} from 'Controls/grids';
-import TreeGridViewModel = require('Controls/List/TreeGridView/TreeGridViewModel');
+import {View as Grid} from 'Controls/grid';
+import TreeGridViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');
 import entity = require('Types/entity');
-import 'Controls/List/TreeGridView/TreeGridView';
-import 'Controls/List/TreeControl';
-   
+import TreeGridView = require('Controls/_treeGrids/TreeGridView/TreeGridView');
+import TreeControl = require('Controls/_treeGrids/TreeControl');
+
 
    /**
     * Hierarchical list with custom item template. Can load data from data source.
@@ -21,23 +21,23 @@ import 'Controls/List/TreeControl';
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IList
-    * @mixes Controls/List/interface/IHierarchy
-    * @mixes Controls/List/interface/ITreeControl
+    * @mixes Controls/_lists/interface/IList
+    * @mixes Controls/_lists/interface/IHierarchy
+    * @mixes Controls/_lists/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/List/interface/IDraggable
+    * @mixes Controls/_lists/interface/IDraggable
     *
-    * @mixes Controls/List/BaseControlStyles
-    * @mixes Controls/List/ListStyles
-    * @mixes Controls/List/Grid/GridStyles
-    * @mixes Controls/List/TreeGrid/Styles
-    * @mixes Controls/List/ItemActions/ItemActionsStyles
+    * @mixes Controls/_lists/BaseControlStyles
+    * @mixes Controls/_lists/ListStyles
+    * @mixes Controls/_grids/GridStyles
+    * @mixes Controls/_treeGrids/Styles
+    * @mixes Controls/_lists/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/List/Mover/MoveDialog/Styles
-    * @mixes Controls/List/PagingStyles
-    * @mixes Controls/List/DigitButtonsStyles
-    * @mixes Controls/List/Grid/SortButtonStyles
+    * @mixes Controls/_lists/Mover/MoveDialog/Styles
+    * @mixes Controls/_lists/PagingStyles
+    * @mixes Controls/_lists/DigitButtonsStyles
+    * @mixes Controls/_grids/SortButtonStyles
     *
     * @control
     * @public
@@ -47,8 +47,8 @@ import 'Controls/List/TreeControl';
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
-      _viewName: 'Controls/List/TreeGridView/TreeGridView',
-      _viewTemplate: 'Controls/List/TreeControl',
+      _viewName: TreeGridView,
+      _viewTemplate: TreeControl,
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },

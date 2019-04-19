@@ -1,37 +1,32 @@
-<div style="padding: 20px;">
-    <Controls.Validate.FormController name="formController1">
-        <ws:content>
-            <div>
-                Validate/Input (Валидация происходит по focusOut)
-                <Controls.Validate.Input name="InputValidate" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
+<div class="validateDemo">
+      <span id="info_focusout" class="validateDemo_header">
+          Validate/Input (Валидация происходит по focusOut)
+      </span>
+      <div class="validateDemo_content">
+                <Controls.Validate.Input name="InputValidate" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
                     <ws:validators>
-                        <ws:Function value="{{_value }}">Controls/Validate/Validators/IsINN</ws:Function>
-                        <ws:Function value="{{_value }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                        <ws:Function value="{{_valueEmail}}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.input:Text
                                 name="textBox"
-                                bind:value="_value"
-                                placeholder="{{_placeholder}}"
-                                tagStyle="primary"
-                        />
+                                bind:value="_valueEmail"
+                                placeholder="Введите Email"/>
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
+                <Controls.Validate.Input name="InputValidate2" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
                     <ws:validators>
-                        <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsINN</ws:Function>
-                        <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                        <ws:Function value="{{_valueInn}}">Controls/Validate/Validators/IsINN</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.input:Text
+                        <Controls.input:Number
                                 name="textBox"
-                                bind:value="_value3"
-                                placeholder="{{_placeholder}}"
-                                tagStyle="success"
-                        />
+                                precision="{{0}}"
+                                bind:value="_valueInn"
+                                placeholder="Введите ИНН"/>
                     </ws:content>
                 </Controls.Validate.Input>
-                 <Controls.Validate.Input name="InputValidate3" attr:style="margin: 30px">
+                 <Controls.Validate.Input name="InputValidate3" attr:class="ControlsDemo-ValidateInfobox_inputValidate3">
                     <ws:validators>
                          <ws:Function value="{{_value6 }}">Controls-demo/Input/Validate/Validator</ws:Function>
                     </ws:validators>
@@ -39,37 +34,53 @@
                         <Controls.input:Text
                                 name="textBox"
                                 bind:value="_value6"
-                                placeholder="{{_placeholder}}"
-                                tagStyle="success"
-                        />
+                                placeholder="Введите код"/>
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.buttons:Button name="Panel" on:click="_openPanel()" caption="Panel" attr:class="ControlsDemo-ValidateInfobox_panel"/>
+      </div>
+    <span id="info_focusout" class="validateDemo_header">Валидация на стековой панели</span>
+    <div class="validateDemo_content">
+                <Controls.buttons:Button name="Panel"
+                                         on:click="_openPanel()"
+                                         caption="Открыть StackPanel"
+                                         attr:class="ControlsDemo-ValidateInfobox_panel"/>
                 <Controls.Popup.Opener.Stack name="opener"
                                              template="Controls-demo/Input/Validate/Text">
                 </Controls.Popup.Opener.Stack>
-
-            </div>
-        </ws:content>
-    </Controls.Validate.FormController>
+    </div>
     <Controls.Validate.FormController name="formController">
         <ws:content>
-            <div>
-                Validate/Controller(Кнопка запускает процесс валидации)
-                <Controls.Validate.Controller  name="ControllerValidate"   attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
+        <div>
+            <div class="validateDemo_header">
+                    Validate/Controler внутри Validate/FormController(Кнопка запускает процесс валидации)
+            </div>
+            <div class="validateDemo_content">
+            <div class="validateDemo_form">
+                Введите имя получателя:
+                <Controls.Validate.Controller attr:class="validateDemo_element" name="ControllerValidate">
                     <ws:validators>
-                        <ws:Function value="{{_value2 }}" >Controls/Validate/Validators/IsEmail</ws:Function>
+                        <ws:Function value="{{_value2}}" >Controls/Validate/Validators/IsRequired</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.input:Text
                                 name="textBox2"
-                                bind:value="_value2"
-                                placeholder="Email"
-                                tagStyle="primary"
-                        />
+                                bind:value="_value2"/>
                     </ws:content>
                 </Controls.Validate.Controller>
-                <Controls.Validate.Controller readOnly="true"  name="ControllerValidate2"  attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
+                Введите Email получателя:
+                <Controls.Validate.Controller  name="ControllerValidate2" attr:class="ControlsDemo-ValidateInfobox_infobox validateDemo_element">
+                    <ws:validators>
+                        <ws:Function value="{{_value1}}">Controls/Validate/Validators/IsEmail</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.Input.Text
+                                name="textBox5"
+                                bind:value="_value1"
+                                placeholder="Email"/>
+                    </ws:content>
+                </Controls.Validate.Controller>
+                Введите Email отправителя:
+                 <Controls.Validate.Controller  name="ControllerValidate3" attr:class="validateDemo_element">
                     <ws:validators>
                         <ws:Function value="{{_value5 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
@@ -77,13 +88,25 @@
                         <Controls.input:Text
                                 name="textBox5"
                                 bind:value="_value5"
-                                placeholder="Email"
-                                tagStyle="primary"
-                        />
+                                placeholder="Email"/>
+                    </ws:content>
+                </Controls.Validate.Controller>
+                Код сообщения:
+                 <Controls.Validate.Controller readOnly="{{true}}" name="ControllerValidate4" attr:class="ControlsDemo-ValidateInfobox_readonly validateDemo_element">
+                    <ws:validators>
+                        <ws:Function value="{{_valueReadOnly }}">Controls/Validate/Validators/IsRequired</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.Input.Text
+                                attr:style="width:163px"
+                                name="textBox5"
+                                bind:value="_valueReadOnly"/>
                     </ws:content>
                 </Controls.Validate.Controller>
             </div>
+            </div>
+        </div>
         </ws:content>
     </Controls.Validate.FormController>
-    <Controls.buttons:Button caption="Submit"  name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />
+    <Controls.buttons:Button caption="Submit" attr:style="margin: 0 71px;" name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />
 </div>

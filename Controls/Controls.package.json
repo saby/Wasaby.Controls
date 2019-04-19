@@ -255,6 +255,7 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/Layer",
+    "Controls/Popup/Compatible/EscProcessing",
     "Controls/Popup/Compatible/ManagerWrapper/Controller"
   ],
   "output": "controls-popup-compat.package.js"
@@ -265,8 +266,7 @@
   "output": "controls-render.package.js"
 }, {
   "include": [
-    "Controls/Tabs/*",
-    "Controls/Tabs"
+    "Controls/Tabs/*"
   ],
   "output": "controls-tabs.package.js"
 }, {
@@ -288,13 +288,6 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
-}, {
-  "include": [
-    "Controls/HighCharts",
-    "Controls/HighChartsLight",
-    "Controls/HighCharts/resources/ParseDataUtil"
-  ],
-  "output": "controls-highcharts.package.js"
 }, {
   "include": [
     "Controls/DragNDrop/*"

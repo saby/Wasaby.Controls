@@ -2,7 +2,7 @@ define('Controls/List/ListControl', ['Controls/_lists/ListControl'], function(Co
 /**
  * Plain list control with custom item template. Can load data from data source.
  *
- * @class Controls/lists:View
+ * @class Controls/list:View
  * @extends Controls/List/BaseControl
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -18,6 +18,6 @@ define('Controls/List/ListControl', ['Controls/_lists/ListControl'], function(Co
  * @author Авраменко А.С.
  * @category List
  */
-   /** @lends Controls/List/ListControl.prototype */
+   /** @lends Controls/list:ListControl.prototype */
    return Control;
 });

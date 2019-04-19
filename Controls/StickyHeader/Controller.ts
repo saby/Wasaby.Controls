@@ -40,11 +40,21 @@ class Component extends Control {
     }
 
     getHeadersHeight(position: string): number {
-        let height: number = 0;
-        for (let headerId of this._headersStack[position]) {
-            height += this._headers[headerId].inst.height
+        let
+            height: number = 0,
+            replaceableHeight: number = 0,
+            header;
+        for (let headerId of this._fixedHeadersStack[position]) {
+            header = this._headers[headerId];
+            // If the header is "replaceable", we take into account the last one after all "stackable" headers.
+            if (header.mode === 'stackable') {
+                height += header.inst.height;
+                replaceableHeight = 0;
+            } else if (header.mode === 'replaceable') {
+                replaceableHeight = header.inst.height;
+            }
         }
-        return height;
+        return height + replaceableHeight;
     }
 
     _stickyRegisterHandler(event, data: object, register: boolean) {
@@ -64,19 +74,19 @@ class Component extends Control {
      * @private
      */
     _fixedHandler(event, fixedHeaderData) {
+        event.stopImmediatePropagation();
         this._updateFixationState(fixedHeaderData);
+        this._notify('fixed', [this.getHeadersHeight('top'), this.getHeadersHeight('bottom')]);
 
         // If the header is single, then it makes no sense to send notifications.
         // Thus, we prevent unnecessary force updates on receiving messages.
-        if (Object.keys(this._headers).length < 2) {
+        if (fixedHeaderData.fixedPosition && this._fixedHeadersStack[fixedHeaderData.fixedPosition].length < 2) {
             return;
         }
         this._children.stickyHeaderShadow.start([
             this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
             this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
         ]);
-
-        event.stopImmediatePropagation();
     }
 
     _resizeHandler() {
@@ -102,8 +112,15 @@ class Component extends Control {
     }
 
     private _addToHeadersStack(id: number, position: string) {
+        if (position === 'topbottom') {
+            this._addToHeadersStack(id, 'top');
+            this._addToHeadersStack(id, 'bottom');
+            return;
+        }
+        //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        let container = (this._container && this._container.get) ? this._container.get(0) : this._container;
         let index = this._headersStack[position].findIndex((headerId) => {
-            return this._headers[headerId].inst.getOffset(this._container, position) < this._headers[id].inst.getOffset(this._container, position);
+            return this._headers[headerId].inst.getOffset(container, position) < this._headers[id].inst.getOffset(container, position);
         });
         this._headersStack[position].splice(index + 1, 0, id);
         this._updateTopBottom();

@@ -190,7 +190,7 @@ define([
             }, 10);
          });
       });
-   
+
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
             columns: [],
@@ -212,7 +212,7 @@ define([
                }
             }
          };
-   
+
          TreeControl._private.toggleExpanded(treeControl, {
             getContents: function() {
                return {
@@ -226,10 +226,18 @@ define([
             }
          });
          TreeControl._private.createSourceController = originalCreateSourceController;
-         
+
          assert.deepEqual([{sortField: 'DESC'}], expandSorting);
       });
 
+
+      it('_private.isDeepReload', function() {
+         assert.isFalse(!!TreeControl._private.isDeepReload({}, false));
+         assert.isTrue(!!TreeControl._private.isDeepReload({}, true));
+
+         assert.isTrue(!!TreeControl._private.isDeepReload({ deepReload: true }, false));
+         assert.isFalse(!!TreeControl._private.isDeepReload({ deepReload: false}, false));
+      });
 
       it('TreeControl.reload', function(done) {
          var treeControl = correctCreateTreeControl({
@@ -520,6 +528,16 @@ define([
             };
          assert.deepEqual(hasMoreResult, TreeControl._private.prepareHasMoreStorage(sourceControllers),
             'Invalid value returned from "prepareHasMoreStorage(sourceControllers)".');
+      });
+      it('TreeControl._private.beforeLoadToDirectionCallback', function() {
+         var filter = {
+            field1: 'value 1'
+         };
+         TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent' });
+         assert.deepEqual(filter, {
+            field1: 'value 1',
+            parent: 'myCurrentRoot'
+         });
       });
       it('TreeControl._private.loadMore', function() {
          var

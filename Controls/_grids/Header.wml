@@ -24,11 +24,14 @@
    </ws:if>
 </ws:template>
 <ws:template name="cell">
-   <ws:if data="{{listModel.isNotFullGridSupport()}}">
+   <ws:if data="{{listModel.isNoGridSupport()}}">
       <th attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
          <ws:partial template="cellContent"/>
       </th>
    </ws:if>
+   <ws:else data="{{listModel.isPartialGridSupport()}}">
+      <ws:partial template="cellContent" attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.gridCellStyles}}" />
+   </ws:else>
    <ws:else>
       <div attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
          <ws:partial template="cellContent"/>
@@ -50,11 +53,14 @@
    </Controls.StickyHeader>
 </ws:template>
 <ws:template name="header">
-   <ws:if data="{{listModel.isNotFullGridSupport()}}">
+   <ws:if data="{{listModel.isNoGridSupport()}}">
       <thead class="controls-Grid__header">
          <ws:partial template="headContent" />
       </thead>
    </ws:if>
+   <ws:else data="{{listModel.isPartialGridSupport()}}">
+         <ws:partial template="headContent" />
+   </ws:else>
    <ws:else>
       <div class="controls-Grid__header">
          <ws:partial template="headContent" />
@@ -63,8 +69,7 @@
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.StickyHeader.Group>
-      <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
-      <ws:partial template="header" listModel="{{ listModel }}" temp="{{ listModel.getVersion() }}"/>
+      <ws:partial template="header" listModel="{{ listModel }}" />
    </Controls.StickyHeader.Group>
 </ws:if>
 <ws:else>

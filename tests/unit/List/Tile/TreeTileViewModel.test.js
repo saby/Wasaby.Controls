@@ -97,6 +97,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
             imageProperty: 'image',
             itemCompressionCoefficient: 0.7,
             itemsHeight: 200,
+            defaultShadowVisibility: 'visible',
             tileMode: 'dynamic'
          });
       });

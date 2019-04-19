@@ -2,7 +2,7 @@
  * Created by kraynovdo on 02.03.2018.
  */
 define([
-   'Controls/lists'
+   'Controls/list'
 ], function(lists){
    describe('Controls.List.Paging', function () {
       var result = false;

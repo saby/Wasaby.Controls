@@ -68,7 +68,7 @@
         </div>
         <h3>Button-link for table</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__linkForTable">
-            <Controls.lists:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
+            <Controls.list:AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
         </div>
     </div>
     <h2 class="ControlsDemo__Button-icon-text">Button-icon</h2>
@@ -88,15 +88,15 @@
         <h3>Icon toggle-button</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__iconToggle">
             <div attr:class="test_element_two_column">
-                <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" icons="{{['icon-16 icon-ArrangeList03', 'icon-16 icon-ArrangeList04']}}" style="secondary" viewMode="link" attr:class="ControlsDemo__iconToggleButton"/>
+                <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="m" icons="{{['icon-16 icon-ArrangeList03', 'icon-16 icon-ArrangeList04']}}" style="secondary" viewMode="link" attr:class="ControlsDemo__iconToggleButton"/>
             </div>
             <div attr:class="test_element_two_column">
-                <Controls.Toggle.Button attr:class="test_element" readOnly="{{false}}" bind:value="toggleState2" size="m" icons="{{['icon-16 icon-ArrangePreview', 'icon-16 icon-ArrangeList']}}" style="secondary" viewMode="link"/>
+                <Controls.toggle:Button attr:class="test_element" readOnly="{{false}}" bind:value="toggleState2" size="m" icons="{{['icon-16 icon-ArrangePreview', 'icon-16 icon-ArrangeList']}}" style="secondary" viewMode="link"/>
             </div>
         </div>
         <h3>Text toggle-button</h3>
         <div attr:class="demo-Button_margin-10  ControlsDemo__textToggle">
-            <Controls.Toggle.Button theme="online" readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
+            <Controls.toggle:Button theme="online" readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
         </div>
         <h3>Bordered button-icon with m size</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__borderedIconM">
@@ -167,46 +167,46 @@
             <div>
                 <div class="demo-Button__Label">For the color picker panel.</div>
                 <div class="ControlsDemo__colorPanel">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the text editor. First variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the text editor. Second variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor2">
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the image edit.</div>
                 <div class="ControlsDemo__imageEditor">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState22" size="l" icons="{{['icon-24 icon-Handwrite2']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState23" size="l" icons="{{['icon-24 icon-Preferment']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState24" size="l" icons="{{['icon-24 icon-MagicWand']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState25" size="l" icons="{{['icon-24 icon-Line']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState26" size="l" icons="{{['icon-24 icon-Rectangle']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState27" size="l" icons="{{['icon-24 icon-Degradation']}}" style="linkMain"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState28" size="l" icons="{{['icon-24 icon-Scissors']}}" style="linkMain"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState22" size="l" icons="{{['icon-24 icon-Handwrite2']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState23" size="l" icons="{{['icon-24 icon-Preferment']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState24" size="l" icons="{{['icon-24 icon-MagicWand']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState25" size="l" icons="{{['icon-24 icon-Line']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState26" size="l" icons="{{['icon-24 icon-Rectangle']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState27" size="l" icons="{{['icon-24 icon-Degradation']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState28" size="l" icons="{{['icon-24 icon-Scissors']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
         </div>
@@ -216,102 +216,102 @@
         <div attr:class="test_element_three_column">
             <h4>Button-icon 16px</h4>
             <div>
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Save" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Save" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Unload</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Send" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Send" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Message</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Print" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Print" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Print</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Question2" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Question2" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Reference</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-ExpandList" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-ExpandList" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">History</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Favorite" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Favorite" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Favorites</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Link" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Link" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Get the link</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Erase" iconStyle="error" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Erase" iconStyle="error" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
         </div>
         <div attr:class="test_element_three_column">
             <h4>Button icon 24px</h4>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Save" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Save" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Unload</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Send" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Send" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Message</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Print" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Print" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Print</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Question2" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Question2" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Reference</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ExpandList" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ExpandList" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">History</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Favorite" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Favorite" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Favorites</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Link" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Link" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Get the link</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-NewTab" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-NewTab" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Open in new window</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-FilterBig" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-FilterBig" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Filter</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Erase" iconStyle="error" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-Erase" iconStyle="error" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-CollapseExpand" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-CollapseExpand" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Open to full window</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">List</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangePreview" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangePreview" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Tile</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-TreeView" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-TreeView" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Tree</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList04" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList04" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Folders on top</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList03" style="linkMain" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList03" style="secondary" viewMode="link" size="m"/>
                 <div class="demo-Button__Label">Folders on the left</div>
             </div>
             <div attr:class="test_element">
@@ -326,15 +326,15 @@
         <div attr:class="test_element_three_column">
             <h4>Bordered icon button</h4>
             <div>
-                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Add" style="iconButtonBordered" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-16 icon-Add" style="secondary" viewMode="toolButton" size="m"/>
                 <div class="demo-Button__Label">Add</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBordered" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="secondary" viewMode="toolButton" size="m"/>
                 <div class="demo-Button__Label">Confirm</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-Erase" style="iconButtonBordered" size="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-Erase" style="secondary" viewMode="toolButton" size="m"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
             <div attr:class="test_element">
@@ -346,5 +346,9 @@
     <h2 class="ControlsDemo__textLink-text">Text link</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__textLink">
         Today the site with the <a attr:class="ws-link" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
+    </div>
+    <div attr:class="ControlsDemo__baseLine">
+        <h2>Проверка базовой линии</h2>
+        <Controls-demo.Buttons.ButtonsVdom/>
     </div>
 </div>

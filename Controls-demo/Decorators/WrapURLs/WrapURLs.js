@@ -4,7 +4,7 @@ define('Controls-demo/Decorators/WrapURLs/WrapURLs',
       'wml!Controls-demo/Decorators/WrapURLs/WrapURLs',
 
       'Controls/input',
-      'Controls/Decorator/WrapURLs',
+      'Controls/decorator',
       'css!Controls-demo/Decorators/WrapURLs/WrapURLs'
    ],
    function(Control, template) {

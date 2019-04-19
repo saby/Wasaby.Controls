@@ -26,11 +26,19 @@ var Component = BaseControl.extend({
     _template: componentTmpl,
 
     _rangeModel: null,
+    _isMinWidth: null,
 
     _beforeMount: function (options) {
         this._rangeModel = new DateRangeModel();
         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         this._rangeModel.update(options);
+
+        // when adding control arrows, set the minimum width of the block,
+        // so that the arrows are always fixed and not shifted.
+        // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
+        if ((options.prevArrowVisibility && options.prevArrowVisibility) || (options.showPrevArrow && options.showNextArrow)) {
+            return this._isMinWidth = true;
+        }
     },
 
     _beforeUpdate: function (options) {
@@ -41,18 +49,15 @@ var Component = BaseControl.extend({
         var className;
 
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeLinkLite__picker-years-only';
+            className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
-            className = 'controls-DateRangeLinkLite__picker-normal';
+            className = 'controls-DateRangeSelectorLite__picker-normal';
         }
 
         this._children.opener.open({
             opener: this,
             target: this._container,
             className: className,
-            eventHandlers: {
-                onResult: this._onResult.bind(this)
-            },
             templateOptions: {
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
@@ -70,7 +75,7 @@ var Component = BaseControl.extend({
         });
     },
 
-    _onResult: function (startValue, endValue) {
+    _onResult: function (event, startValue, endValue) {
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._forceUpdate();

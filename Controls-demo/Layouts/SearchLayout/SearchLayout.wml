@@ -2,13 +2,13 @@
                             filterButtonSource="{{_filterSource}}"
                             fastFilterSource="{{_fastFilterData}}"
                             attr:class="controls-demo__FilterLayout">
-   <Controls.lists:DataContainer source="{{_dataSource}}" navigation="{{_navigation}}" keyProperty="id">
-      <Controls.Search.Controller searchParam="firstName">
+   <Controls.list:DataContainer source="{{_dataSource}}" navigation="{{_navigation}}" keyProperty="id">
+      <Controls.search:Controller searchParam="firstName">
          <div class="controls-demo__LayoutInner">
             <div class="controls-demo__Layouts_filterComponents">
-               <Controls.Search.Input.Container>
-                  <Controls.Input.Search bind:value="_searchValue"/>
-               </Controls.Search.Input.Container>
+               <Controls.search:InputContainer>
+                  <Controls.search:Input bind:value="_searchValue"/>
+               </Controls.search:InputContainer>
                <div class="controls-demo__Layouts_filter">
                   <Controls.Filter.Fast.Container>
                      <Controls.Filter.Fast/>
@@ -19,10 +19,10 @@
                   </Controls.Filter.Button.Container>
                </div>
             </div>
-            <Controls.lists:Container>
-               <Controls.lists:View emptyTemplate="Не найдено">
+            <Controls.list:Container>
+               <Controls.list:View emptyTemplate="Не найдено">
                   <ws:itemTemplate>
-                     <ws:partial template="Controls/lists:ItemTemplate">
+                     <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <div style="padding: 4px; display: flex; justify-content: space-between">
                               <div style="width: 200px">
@@ -38,9 +38,9 @@
                         </ws:contentTemplate>
                      </ws:partial>
                   </ws:itemTemplate>
-               </Controls.lists:View>
-            </Controls.lists:Container>
+               </Controls.list:View>
+            </Controls.list:Container>
          </div>
-      </Controls.Search.Controller>
-   </Controls.lists:DataContainer>
+      </Controls.search:Controller>
+   </Controls.list:DataContainer>
 </Controls.Filter.Controller>

@@ -2,9 +2,10 @@ define(
    [
       'Controls/Popup/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
-      'Controls/Popup/Opener/InfoBox/InfoBoxController'
+      'Controls/Popup/Opener/InfoBox/InfoBoxController',
+      'Controls/_popupTemplate/InfoBox'
    ],
-   (InfoBox, OpenerTemplate, InfoBoxController) => {
+   (InfoBox, OpenerTemplate, InfoBoxController, InfoBoxTemplate) => {
       'use strict';
 
       describe('Controls/Popup/InfoBox', () => {
@@ -23,6 +24,17 @@ define(
             assert.equal(newConfig.style, 'error');
             assert.equal(newConfig.position, 'tl');
             assert.equal(newConfig.template, OpenerTemplate);
+         });
+
+         it('PopupInfoBox: resetTimeOut', () => {
+            let Infobox = new InfoBox();
+            Infobox._openId = 300;
+            Infobox._closeId = 500;
+            assert.equal(Infobox._closeId, 500);
+            assert.equal(Infobox._openId, 300);
+            InfoBox._private.resetTimeOut(Infobox);
+            assert.equal(Infobox._closeId, null);
+            assert.equal(Infobox._openId, null);
          });
 
          it('InfoBoxController: check position', () => {
@@ -88,7 +100,44 @@ define(
             offsetHeight = null;
             InfoBoxController._private.getHorizontalOffset(target, true);
             assert.equal(offsetHeight, 200);
-         })
+         });
+      });
+
+      describe('Controls/Popup/Template/InfoBox', () => {
+         let getStickyPosition = (hAlign, vAlign, hCorner, vCorner) => ({
+            horizontalAlign: {
+               side: hAlign
+            },
+            verticalAlign: {
+               side: vAlign
+            },
+            corner: {
+               vertical: vCorner,
+               horizontal: hCorner
+            }
+         });
+         let InfoBoxInstance = new InfoBoxTemplate();
+         it('InfoBoxTemplate: beforeUpdate', () => {
+            let stickyPosition = getStickyPosition('left', 'top', 'left');
+            InfoBoxInstance._beforeUpdate({ stickyPosition });
+            assert.equal(InfoBoxInstance._arrowSide, 'right');
+            assert.equal(InfoBoxInstance._arrowPosition, 'end');
+
+            stickyPosition = getStickyPosition('right', 'bottom', 'right');
+            InfoBoxInstance._beforeUpdate({ stickyPosition });
+            assert.equal(InfoBoxInstance._arrowSide, 'left');
+            assert.equal(InfoBoxInstance._arrowPosition, 'start');
+
+            stickyPosition = getStickyPosition('right', 'top', 'left', 'top');
+            InfoBoxInstance._beforeUpdate({ stickyPosition });
+            assert.equal(InfoBoxInstance._arrowSide, 'bottom');
+            assert.equal(InfoBoxInstance._arrowPosition, 'start');
+
+            stickyPosition = getStickyPosition('left', 'bottom', 'right', 'bottom');
+            InfoBoxInstance._beforeUpdate({ stickyPosition });
+            assert.equal(InfoBoxInstance._arrowSide, 'top');
+            assert.equal(InfoBoxInstance._arrowPosition, 'end');
+         });
       });
    }
 );

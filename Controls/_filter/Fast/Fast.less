@@ -1,0 +1,108 @@
+//Reset button
+.controls-FastFilter__iconReset {
+   .icon-size(@font-size_FastFilter-reset);
+   display: flex;
+   color: @color_FastFilter-reset;
+   cursor: pointer;
+   flex-shrink: 0;
+}
+
+.controls-FastFilter__iconReset:active {
+   color: @color_FastFilter-reset_active;
+}
+
+.ws-is-no-touch {
+   .controls-FastFilter__iconReset:hover {
+      color: @color_FastFilter-reset_hover;
+   }
+}
+
+//arrow
+.controls-FastFilter__iconArrow {
+   .icon-size(@font-size_FastFilter-arrow);
+   flex-shrink: 0;
+}
+
+.controls-FastFilter__iconArrow_state_enabled {
+   color: @color_FastFilter-arrow;
+}
+
+.controls-FastFilter__iconArrow_state_readOnly {
+   color: @color_FastFilter-arrow_readOnly;
+}
+
+//Text
+.controls-FastFilter__text-wrapper {
+   box-sizing: border-box;
+   width: 100%;
+   overflow: hidden;
+   display: inline-flex;
+   font-size: @font-size_FastFilter-text;
+}
+
+.controls-FastFilter__text {
+    .text-overflow();
+ }
+
+.controls-FastFilter__text_state_enabled {
+   color: @color_FastFilter-text;
+}
+
+.controls-FastFilter__text_state_readOnly {
+   color: @color_FastFilter-text_readOnly;
+}
+
+.controls-FastFilter {
+   display: flex;
+   height: @height_FastFilter;
+}
+
+.controls-FastFilter__wrapper {
+   display: inline-flex;
+   align-items: center;
+   overflow: hidden;
+}
+
+.controls-FastFilter__wrapper_state_enabled {
+   cursor: pointer;
+}
+
+.controls-FastFilter__block {
+   white-space: nowrap;
+   display: inline-flex;
+   align-items: center;
+   min-width: 0;
+}
+
+.ws-is-no-touch {
+   .controls-FastFilter__block:hover {
+      .controls-FastFilter__text_state_enabled {
+         cursor: pointer;
+         color: @color_FastFilter-text_hover;
+         text-decoration: underline;
+      }
+      .controls-FastFilter__iconArrow_state_enabled {
+         color: @color_FastFilter-arrow_hover;
+      }
+   }
+}
+
+.controls-FastFilter__block:active {
+   .controls-FastFilter__text_state_enabled {
+      color: @color_FastFilter-text_active;
+      text-decoration: underline;
+   }
+   .controls-FastFilter__iconArrow_state_enabled {
+      color: @color_FastFilter-arrow_active;
+   }
+}
+
+.controls-FastFilter-popup {
+   margin-top: @shift-top_FastFilter-popup;
+   margin-left: @font-size_FastFilter-arrow - (@spacing_DropdownList-item-between-leftBorder-content + @border-width_DropdownList);;
+}
+
+.controls-FastFilter_multiSelect-popup {
+   margin-top: @shift-top_FastFilter-popup;
+   margin-left: @font-size_FastFilter-arrow - (@width_CheckBox__clickArea + @border-width_DropdownList);;
+}

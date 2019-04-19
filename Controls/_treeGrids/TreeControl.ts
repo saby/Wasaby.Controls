@@ -120,6 +120,9 @@ var _private = {
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
     },
+    isDeepReload: function({deepReload}, deepReloadState: boolean): boolean {
+        return  deepReload || deepReloadState;
+    },
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
         var parentProperty = cfg.parentProperty;
         var baseControl = self._children.baseControl;
@@ -143,7 +146,7 @@ var _private = {
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
         }
 
-        if (self._deepReload && expandedItemsKeys.length && !isExpandAll) {
+        if (_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll) {
             filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
             filter[parentProperty].push(self._root);
             filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
@@ -153,11 +156,15 @@ var _private = {
         }
     },
 
-    afterReloadCallback: function(self) {
+    afterReloadCallback: function(self, options) {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        if (self._children.baseControl && !self._deepReload) {
+        if (self._children.baseControl && !_private.isDeepReload(options, self._deepReload)) {
             self._children.baseControl.getViewModel().resetExpandedItems();
         }
+    },
+
+    beforeLoadToDirectionCallback: function(self, filter, cfg) {
+        filter[cfg.parentProperty] = self._root;
     },
 
     reloadItem: function(self, key) {
@@ -228,16 +235,16 @@ var _private = {
 /**
  * Hierarchical list control with custom item template. Can load data from data source.
  *
- * @class Controls/List/TreeControl
+ * @class Controls/_treeGrids/TreeControl
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/TreeGridView/Styles
- * @extends Controls/List/ListControl
+ * @mixes Controls/_treeGrids/TreeGridView/Styles
+ * @extends Controls/_lists/ListControl
  * @control
  * @public
  * @category List
  */
 
-var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype */{
+var TreeControl = Control.extend(/** @lends Controls/_treeGrids/TreeControl.prototype */{
     _onNodeRemovedFn: null,
     _template: TreeControlTpl,
     _root: null,
@@ -246,6 +253,7 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
     _nodesSourceControllers: null,
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
+    _beforeLoadToDirectionCallback: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -257,6 +265,7 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
         }
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
+        this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {

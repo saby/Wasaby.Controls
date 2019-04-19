@@ -21,14 +21,14 @@
     </ws:if>
 </ws:template>
 <ws:template name="emptyTemplateIf">
-    <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
+    <ws:if data="{{__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _loadingState)}}">
         <div class="controls-BaseControl__emptyTemplate">
             <ws:partial template="{{_options.emptyTemplate}}"/>
         </div>
     </ws:if>
 </ws:template>
 <ws:template name="withDragNDrop">
-    <Controls.DragNDrop.Controller
+    <Controls.dragnDrop:Container
         on:dragStart="_dragStart()"
         on:dragEnd="_dragEnd()"
         on:dragLeave="_dragLeave()"
@@ -40,7 +40,7 @@
         <ws:content>
             <ws:partial template="{{viewContent}}" />
         </ws:content>
-    </Controls.DragNDrop.Controller>
+    </Controls.dragnDrop:Container>
 </ws:template>
 <ws:template name="viewTpl">
     <ws:partial
@@ -91,8 +91,9 @@
 <Controls.dataSource:error.Container
     name="errorContainer"
     viewConfig="{{ __error }}"
+    on:keyDown="_onViewKeyDown()"
 >
-    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
+    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
             <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>

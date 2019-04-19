@@ -21,6 +21,28 @@ define(
             model = new ViewModel({}, '123456');
             assert.equal(model.isFilled(), true);
          });
+
+         describe('handleInput', function() {
+            [{
+               inputType: 'insert',
+               splitValue: {
+                  after: '',
+                  before: '',
+                  delete: '',
+                  insert: '8-916-865-43-21'
+               },
+               respValue: '89168654321',
+               respDisplayValue: '8 (916) 865-43-21'
+            }].forEach(function(test, testNumber) {
+               it(`${test.inputType} ${testNumber}`, function() {
+                  const
+                     model = new ViewModel({}, '');
+                  model.handleInput(test.splitValue, test.inputType);
+                  assert.equal(model.value, test.respValue);
+                  assert.equal(model.displayValue, test.respDisplayValue);
+               });
+            });
+         });
       });
    }
 );

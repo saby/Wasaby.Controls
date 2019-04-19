@@ -4,7 +4,7 @@ define([
    'Types/entity',
    'Core/Deferred',
    'Types/source',
-   'Controls/lists',
+   'Controls/list',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Constants'
 ], function(
@@ -1146,13 +1146,19 @@ define([
 
       describe('_onItemClick', function() {
          it('clickItemInfo', function() {
+            var
+               clickPropagationStopped = false;
             eip.beginEdit = function() {};
             eip.saveOptions({
                editingConfig: {
                   editOnClick: true
                }
             });
-            eip._onItemClick({}, newItem, {
+            eip._onItemClick({
+               stopPropagation: function() {
+                  clickPropagationStopped = true;
+               }
+            }, newItem, {
                target: {
                   closest: function() {
                      return false;
@@ -1167,6 +1173,7 @@ define([
             assert.equal(eip._clickItemInfo.item, newItem);
             assert.equal(eip._clickItemInfo.clientX, 10);
             assert.equal(eip._clickItemInfo.clientY, 20);
+            assert.isTrue(clickPropagationStopped);
          });
 
          it('editOnClick: true, notEditable element', function(done) {

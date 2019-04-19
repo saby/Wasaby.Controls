@@ -3,14 +3,14 @@
       <Controls.StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
          <Controls.Heading caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
       </Controls.StickyHeader>
-      <Controls.lists:View source="{{dataSource}}"
+      <Controls.list:View source="{{dataSource}}"
                      idProperty="{{dataSource.getIdProperty()}}">
          <ws:itemTemplate>
             <ws:partial
                template="{{'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/' + dataSource.getIdProperty()}}"
                attr:class="example-NotificationCenter__item"/>
          </ws:itemTemplate>
-      </Controls.lists:View>
+      </Controls.list:View>
    </div>
 </ws:template>
 
@@ -32,7 +32,7 @@
    </Controls.Container.Scroll>
    <div class="example-NotificationCenter__settings ws-flexbox ws-flex-column ws-justify-content-between">
       <Controls.Heading caption="Settings" size="xl" attr:class="ws-align-self-center"/>
-      <Controls.Toggle.Switch caption="Заголовок" bind:value="_titleVisible"/>
-      <Controls.Toggle.Switch caption="Тень" bind:value="_shadowVisible"/>
+      <Controls.toggle:Switch caption="Заголовок" bind:value="_titleVisible"/>
+      <Controls.toggle:Switch caption="Тень" bind:value="_shadowVisible"/>
    </div>
 </div>

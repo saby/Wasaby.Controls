@@ -37,7 +37,7 @@
 </ws:template>
 
 <ws:template name="tagging">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="operation">
@@ -63,12 +63,14 @@
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.Dropdown
-        keyProperty="key"
-        source="{{item.source}}"
-        showCross="{{true}}"
-        bind:textValue="item.textValue"
-        bind:selectedKeys="item.value"/>
+<Controls.Container.Adapter.SelectedKey bind:selectedKey="item.value">
+   <Controls.Filter.Button.Panel.Dropdown
+           emptyText="Not selected"
+           keyProperty="key"
+           source="{{item.source}}"
+           showCross="{{true}}"
+           bind:textValue="item.textValue"/>
+</Controls.Container.Adapter.SelectedKey>
 </ws:template>
 
 <ws:template name="our organisation">

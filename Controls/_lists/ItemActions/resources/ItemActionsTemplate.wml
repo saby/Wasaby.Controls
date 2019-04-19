@@ -1,5 +1,5 @@
 <div attr:class="controls-itemActionsV
-            controls-itemActionsV_style_{{style}}
+            {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + style }}
             {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
             controls-itemActionsV_{{itemActionsPosition}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
@@ -13,20 +13,12 @@
                 size="{{size}}"
                 showedActions="{{itemData.itemActions.showed}}"/>
         <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
-            <Controls.buttons:Button
-               on:click="_applyEdit()"
-               attr:class="controls-itemActionsV__action_padding"
-               viewMode="toolButton"
-               size="s"
-               iconStyle="success"
-               icon="icon-small icon-Yes"
-               style="secondary"
-            />
-            <Controls.Button.Close
-               on:click="_cancelEdit()"
-               viewMode="toolButton"
-               size="m"
-            />
+            <div class="controls-itemActionsV__applyButton controls-itemActionsV__action_padding" on:click="_applyEdit()">
+                <div class="controls-itemActionsV__applyButton-icon icon-Yes"></div>
+            </div>
+            <div class="controls-itemActionsV__closeButton" on:click="_cancelEdit()">
+                <div class="controls-itemActionsV__closeButton-icon"></div>
+            </div>
         </ws:if>
     </div>
 </div>

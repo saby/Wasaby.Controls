@@ -1,0 +1,41 @@
+<div class="my_class_slider">
+   <Controls.dragnDrop:Container name="dragNDrop"
+                                  on:dragmove="_onDragMoveHandler()">
+      <div class="controls-Slider_theme-{{_options.theme}}
+                  controls-Slider{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
+                  {{!_options.borderVisible ? (' controls-Slider' + (_options.size=='m'  ? '_big' : '_small') + '_withoutBorder_theme-'+_options.theme)}}">
+         <div class="controls-Slider__wrapper{{_options.borderVisible ? ' controls-Slider__withBorder_theme-'+_options.theme}}"
+                                  on:mousedown="_onMouseDownHandler()">
+            <div class="controls-Slider__mainSlider{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}" name="area">
+               <ws:for data="key, point in _pointData">
+                  <div class="controls-Slider__point_theme-{{_options.theme}}
+                              controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
+                              controls-Slider__point{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}"
+                       name="{{point.name}}"
+                       style="left:{{point.position}}%;">
+                  </div>
+               </ws:for>
+               <div class="controls-Slider__line__wrapper_theme-{{_options.theme}}
+                           controls-Slider__line__wrapper{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
+                           controls-Slider__line__wrapper{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}">
+                  <div class="controls-Slider__line_theme-{{_options.theme}}
+                              controls-Slider__line{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
+                              controls-Slider__line__empty{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}">
+                  </div>
+                  <div class="controls-Slider__line_theme-{{_options.theme}}
+                              controls-Slider__line{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
+                              controls-Slider__line__full{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}"
+                       style="left:{{_lineData.position}}%; width:{{_lineData.width}}%;">
+
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div if="{{_scaleData && !_options.borderVisible}}" class="controls-Slider__scale_theme-{{_options.theme}}">
+            <ws:for data="key, segment in _scaleData">
+               <span class="controls-Slider__segment_theme-{{_options.theme}} controls-Slider__segment{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}" style="position:realative; left:{{segment.position}}%;">{{segment.value}}</span>
+            </ws:for>
+         </div>
+      </div>
+   </Controls.dragnDrop:Container>
+</div>

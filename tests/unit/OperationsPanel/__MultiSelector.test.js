@@ -1,5 +1,5 @@
 define([
-   'Controls/Operations/__MultiSelector'
+   'Controls/_operations/__MultiSelector'
 ], function(
    MultiSelector
 ) {

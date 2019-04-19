@@ -157,7 +157,7 @@ var ListView = BaseControl.extend(
         },
 
         _onItemContextMenu: function(event, itemData) {
-            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false) {
+           if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.getEditingItemData()) {
                 this._notify('itemContextMenu', [itemData, event, true]);
             }
         },
@@ -206,6 +206,14 @@ var ListView = BaseControl.extend(
 
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
+        },
+
+        setHoveredItem: function (item) {
+            this._listModel.setHoveredItem(item);
+        },
+
+        getHoveredItem: function () {
+            return this._listModel.getHoveredItem();
         }
     });
 

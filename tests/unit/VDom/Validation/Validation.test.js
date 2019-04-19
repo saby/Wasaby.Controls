@@ -7,12 +7,15 @@ define([
 ], function(ValidateFC, Controller, Input, Deferred, ProxyCall) {
    'use strict';
 
-   function getValidator(validateResult) {
+   function getValidator(validateResult, readOnly) {
       let validator = {
          _validateCall: false,
          _activateCall: false,
          _validationResult: false,
          _isValidCall: false,
+         _options: {
+            readOnly: readOnly
+         },
          validate: () => {
             validator._validateCall = true;
             return (new Deferred()).callback(validateResult);
@@ -86,6 +89,19 @@ define([
          let results = FC.isValid();
          assert.equal(validator1._isValidCall, results[0], true);
          assert.equal(validator2._isValidCall, results[1], true);
+
+         FC.destroy();
+      });
+      it('activateFirstValidField', () => {
+         let FC = new ValidateFC();
+         let validator1 = getValidator();
+         let validator2 = getValidator(null, true);
+         let validator3 = getValidator('Error');
+         let validator4 = getValidator('Error');
+
+         FC._validates.push(validator1, validator2, validator3, validator4);
+         FC.submit();
+         assert.equal(validator3._activateCall, true);
 
          FC.destroy();
       });

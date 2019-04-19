@@ -30,6 +30,17 @@ define([
          });
       });
 
+      describe('_openDialog with minRange', function() {
+         it('should open opener with parametr month', function() {
+            const component = calendarTestUtils.createComponent(RangeLink, cMerge({ minRange: 'month' }, options));
+            component._children.opener = {
+               open: sinon.fake()
+            };
+            component._openDialog();
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {minQuantum: 'month'} }));
+         });
+      });
+
       describe('_onResult', function() {
          it('should generate valueChangedEvent and close opener', function() {
             const

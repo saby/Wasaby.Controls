@@ -24,7 +24,7 @@ define('Controls-demo/SerializerDepsStorage/SerializerDepsStorage', [
             } else {
                // Если функция успешно сериализовалась, её можно использовать на клиенте.
                // В зависимости от того, выполнено это условие или нет, в шаблоне отрисуется "верно" или "неверно".
-               self.result = typeof rs.opt === 'function' && rs.opt() === 'function result' ? 'верно' : 'неверно';
+               self.result = rs && typeof rs.opt === 'function' && rs.opt() === 'function result' ? 'верно' : 'неверно';
                resolve();
             }
          });

@@ -1,0 +1,38 @@
+<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
+    <div class="controls-DialogTemplate" ws-tab-cycling="true">
+        <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate }}">
+            <div class="controls-DialogTemplate__top-area {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
+            <div class="controls-DialogTemplate__top-area-content" on:mousedown="_onMouseDown()" on:touchstart="_onMouseDown()">
+                <ws:if data="{{_options.caption|| _options.headingCaption}}">
+                    <div class="controls-DialogTemplate__caption controls-DialogTemplate__caption_style_{{_options.headingStyle}}"
+                    title="{{_options.caption || _options.headingCaption}}">
+                        <div class="controls-DialogTemplate__caption_text">{{_options.caption || _options.headingCaption}}</div>
+                    </div>
+                </ws:if>
+                <ws:if data="{{_options.topArea || _options.headerContentTemplate}}" >
+                    <ws:partial template="{{_options.topArea || _options.headerContentTemplate}}"
+                                scope="{{_options.topAreaOptions}}"
+                                attr:class="controls-DialogTemplate__headerContentTemplate">
+                    </ws:partial>
+                </ws:if>
+                <ws:if data="{{_closeButtonVisibility}}">
+                    <Controls._popupTemplate.CloseButton name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
+                </ws:if>
+            </div>
+            </div>
+        </ws:if>
+        <ws:else>
+            <div class="controls-DialogTemplate__close-button_without_head">
+            <ws:if data="{{_closeButtonVisibility}}">
+            <Controls._popupTemplate.CloseButton name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
+        </ws:if>
+            </div>
+        </ws:else>
+        <div class="controls-DialogTemplate__content-area">
+            <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
+        </div>
+       <ws:if data="{{ _options.footerContentTemplate }}">
+                       <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer"></ws:partial>
+               </ws:if>
+    </div>
+</Controls.dragnDrop:Container>

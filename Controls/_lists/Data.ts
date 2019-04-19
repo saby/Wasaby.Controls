@@ -4,12 +4,22 @@ import template = require('wml!Controls/Container/Data/Data');
 import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
+import source = require('Types/source');
+
+import {RecordSet} from 'Types/collection'
+import {ICrud} from 'Types/source';
+
+type GetSourceResult = {
+   data: RecordSet,
+   source: ICrud
+}
+
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
-       * @class Controls/Container/Data
+       * @class Controls/_lists/Data
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control
@@ -19,12 +29,12 @@ import Deferred = require('Core/Deferred');
        */
 
       /**
-       * @name Controls/Container/Data#source
+       * @name Controls/_lists/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
 
       /**
-       * @name Controls/Container/Data#keyProperty
+       * @name Controls/_lists/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
 
@@ -60,7 +70,7 @@ import Deferred = require('Core/Deferred');
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
 
-         createPrefetchSource: function(self, data) {
+         createPrefetchSource: function(self, data): Deferred<GetSourceResult> {
             var resultDef = new Deferred();
 
             getPrefetchSource({
@@ -111,7 +121,7 @@ import Deferred = require('Core/Deferred');
           * @param self control instance
           * @param result {prefetchSourceResult}
           */
-         createDataContextBySourceResult: function(self, result) {
+         createDataContextBySourceResult: function(self, result: GetSourceResult) {
             _private.resolvePrefetchSourceResult(self, result);
             self._dataOptionsContext = _private.getDataContext(self);
          },
@@ -121,7 +131,7 @@ import Deferred = require('Core/Deferred');
          }
       };
 
-      var Data = Control.extend(/** @lends Controls/Container/Data.prototype */{
+      var Data = Control.extend(/** @lends Controls/_lists/Data.prototype */{
 
          _template: template,
 
@@ -129,11 +139,16 @@ import Deferred = require('Core/Deferred');
             var self = this;
             _private.resolveOptions(this, options);
             if (receivedState) {
-               _private.createDataContextBySourceResult(this, receivedState);
+               // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
+               // and source from receivedState will lose all subscriptions
+               _private.createDataContextBySourceResult(this, {
+                  data: receivedState,
+                  source: new source.PrefetchProxy({target: options.source})
+               });
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
-                  return result;
+                  return result ? result.data : null;
                });
             } else {
                self._dataOptionsContext = _private.getDataContext(self);

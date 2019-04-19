@@ -68,7 +68,7 @@ define('Controls-demo/Popup/Opener/DialogPG',
                closeOnOutsideClick: true,
                template:  'wml!Controls-demo/Popup/Opener/DialogTpl',
                templateOptions:  { value: 'My text' },
-               width: 500,
+               width: 550,
                height: 200,
                maxHeight: 200,
             };

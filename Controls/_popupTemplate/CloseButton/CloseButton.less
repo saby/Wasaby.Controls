@@ -1,0 +1,90 @@
+.controls-Button__close.theme_@{themeName} {
+   display: inline-block;
+}
+
+.theme_@{themeName}.controls-Button__close__wrapper:before {
+   content: "\200b";
+}
+
+.controls-Button__close__icon_toolButton.theme_@{themeName} {
+   background-image: @background-image_CloseButton-toolButton;
+   height: @height_CloseButton-icon_toolButton;
+   width: @width_CloseButton-icon_toolButton;
+   display: inline-block;
+}
+
+.controls-Button__close__wrapper.theme_@{themeName} {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+}
+
+.controls-Button__close_toolButton_transparent.theme_@{themeName} {
+   background-color: @background-color_CloseButton_toolButton_transparent;
+}
+
+.controls-Button__close_toolButton_untransparent.theme_@{themeName} {
+   background-color: @background-color_CloseButton_primary_untransparent;
+}
+
+.controls-Button__close_toolButton_untransparent:active.theme_@{themeName} {
+   background-color: @background-color_CloseButton-primary-untransparent_active;
+}
+
+.controls-Button__close_toolButton_l.theme_@{themeName} {
+   width: @width_CloseButton_toolButton_l - @border-right-width_CloseButton_toolButton - @border-left-width_CloseButton_toolButton;
+   height: @height_CloseButton_toolButton_l - @border-top-width_CloseButton_toolButton - @border-bottom-width_CloseButton_toolButton;
+}
+
+.controls-Button__close_toolButton_l.theme_@{themeName}, .controls-Button__close_toolButton_m.theme_@{themeName} {
+   border: solid @border-color_CloseButton_toolButton;
+   border-width: @border-top-width_CloseButton_toolButton @border-right-width_CloseButton_toolButton @border-bottom-width_CloseButton_toolButton @border-left-width_CloseButton_toolButton;
+   border-radius: @border-top-radius_CloseButton_toolButton @border-right-radius_CloseButton_toolButton @border-bottom-radius_CloseButton_toolButton @border-left-radius_CloseButton_toolButton;
+   box-shadow: @box-shadow_CloseButton_toolButton;
+}
+
+.controls-Button__close_toolButton_m.theme_@{themeName} {
+   width: @width_CloseButton_toolButton_m - @border-right-width_CloseButton_toolButton - @border-left-width_CloseButton_toolButton;
+   height: @height_CloseButton_toolButton_m - @border-top-width_CloseButton_toolButton - @border-bottom-width_CloseButton_toolButton;
+}
+
+.controls-Button__close_link_l.theme_@{themeName}, .controls-Button__close_link_m.theme_@{themeName} {
+   font-family: @font-family_CloseButton_link;
+   width: @width_CloseButton_link;
+   height: @height_CloseButton_link;
+}
+
+.controls-Button__close__icon_link.theme_@{themeName} {
+   background-image: @background-image_CloseButton-link;
+   height: @height_CloseButton-icon_link;
+   width: @width_CloseButton-icon_link;
+}
+
+.controls-Button__close__icon_link:active.theme_@{themeName} {
+   background-image: @background-image_CloseButton-link_active;
+}
+
+.controls-Button__close_toolButton:active.theme_@{themeName} {
+   border-color: @default-border-color-second;
+   box-shadow: @box-shadow_CloseButton-toolButton_active;
+   .controls-Button__close__icon_default:active, .controls-Button__close__icon_primary {
+      background-image: @background-image_CloseButton-toolButton_active;
+   }
+}
+
+.ws-is-no-touch{
+   .controls-Button__close__icon_link:hover.theme_@{themeName}, .controls-Button__close__icon_link:hover.theme_@{themeName} {
+      background-image: @background-image_CloseButton-link_hovered;
+   }
+
+   .controls-Button__close_toolButton:hover.theme_@{themeName} {
+      border-color: @border-color_CloseButton_toolButton_hover;
+      .controls-Button__close__icon_toolButton, .controls-Button__close__icon_toolButton {
+         background-image: @background-image_CloseButton-toolButton_hovered;
+      }
+   }
+   .controls-Button__close_toolButton_untransparent:hover.theme_@{themeName} {
+      background-color: @background-color_CloseButton-primary-untransparent_hovered;
+   }
+}

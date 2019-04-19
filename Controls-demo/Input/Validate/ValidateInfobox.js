@@ -1,20 +1,24 @@
 define('Controls-demo/Input/Validate/ValidateInfobox', [
    'Core/Control',
    'wml!Controls-demo/Input/Validate/ValidateInfobox',
+   'css!Controls-demo/Input/Validate/ValidateInfobox',
    'css!Controls-demo/Input/resources/VdomInputs',
    'Controls/Validate/Validators/IsINN',
+   'Controls/Validate/Validators/IsRequired',
    'Controls/Validate/Validators/IsEmail',
    'Controls-demo/Input/Validate/Validator'
 ], function(Control, template) {
    'use strict';
    var VdomDemoText = Control.extend({
       _template: template,
+      _valueEmail: '',
       _value: '',
-      _value2: '',
-      _value3: '',
+      _value2: 'is required',
+      _valueInn: '',
       _value4: '',
-      _value5: 'readOnly',
+      _value5: '',
       _value6: '',
+      _valueReadOnly: '234567',
       _items: null,
       _placeholder: 'Input text',
       _setValue: function(e, record) {

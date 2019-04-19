@@ -4,14 +4,14 @@
         </div>
         <div class="control_wrapper__demo">
             <div class="control__demo">
-                <Controls.lists:DataContainer source="{{_viewSource}}" keyProperty="id">
-                    <Controls.Container.MultiSelector
+                <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+                    <Controls.operations:Controller
                             bind:selectedKeys="_firstSelectedKeys"
                             name="multiSelector">
                         <Controls.Container.Scroll attr:class="grid-scroll-container" attr:test_name="default">
-                            <Controls.lists:Container>
-                                <Controls.List.MultiSelector>
-                                    <Controls.grids:View
+                            <Controls.list:Container>
+                                <Controls.operations:Container>
+                                    <Controls.grid:View
                                             displayProperty="title"
                                             markedKey="{{448390}}"
                                             rowSeparatorVisibility="{{true}}"
@@ -23,12 +23,12 @@
                                             itemActionsPosition="outside"
                                             columns="{{gridColumns}}"
                                             bind:sorting="_sorting">
-                                    </Controls.grids:View>
-                                </Controls.List.MultiSelector>
-                            </Controls.lists:Container>
+                                    </Controls.grid:View>
+                                </Controls.operations:Container>
+                            </Controls.list:Container>
                         </Controls.Container.Scroll>
-                    </Controls.Container.MultiSelector>
-                </Controls.lists:DataContainer>
+                    </Controls.operations:Controller>
+                </Controls.list:DataContainer>
             </div>
             <div class="events__demo">
                 <Controls.input:Area readonly="{{true}}" minLines="{{3}}" maxLines="{{3}}"/>

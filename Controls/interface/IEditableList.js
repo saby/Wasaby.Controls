@@ -6,7 +6,7 @@ define('Controls/interface/IEditableList', [
     *
     * @interface Controls/interface/IEditableList
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @see Controls/EditableArea
     */
 
@@ -19,7 +19,7 @@ define('Controls/interface/IEditableList', [
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editingConfig.editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
-    * @property {Boolean} [editingConfig.sequentialEditing=false] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
+    * @property {Boolean} [editingConfig.sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [editingConfig.toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
     * @property {Types/entity:Record} [editingConfig.item=undefined] If present, editing of this item will begin on first render.
     */
@@ -51,20 +51,23 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to prevent editing of an element if it matches condition:
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, options) {
-    *       if (options.item.getId() === 1) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          if (options.item.getId() === 1) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * The following example shows how to read item from BL and open it for editing.
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
@@ -79,21 +82,24 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing with an item created on the client.
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
     * </pre>
     * JS:
     * <pre>
-    *    beforeBeginEditHandler: function(e, options) {
-    *       return {
-    *          item: new Model({
-    *             rawData: {
-    *                //Obviously, you would use something else instead of Date.now() to generate id, but we'll use it here to keep the example simple
-    *                id: Date.now(),
-    *                title: ''
-    *             }
-    *          })
+    *    define('ModuleName', ['Types/entity'], function(entity) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          return {
+    *             item: new entity.Model({
+    *                rawData: {
+    *                   //Obviously, you would use something else instead of Date.now() to generate id, but we'll use it here to keep the example simple
+    *                   id: Date.now(),
+    *                   title: ''
+    *                }
+    *             })
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see afterBeginEdit
     * @see beforeEndEdit
@@ -113,9 +119,9 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to hide the add button after the start of editing\adding.
     * WML:
     * <pre>
-    *    <Controls.List on:afterBeginEdit="afterBeginEditHandler()" />
+    *    <Controls.list:View on:afterBeginEdit="afterBeginEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
-    *       <Controls.lists:AddButton />
+    *       <Controls.list:AddButton />
     *    </ws:if>
     * </pre>
     * JS:
@@ -143,15 +149,18 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to prevent the end of editing of an element if it matches condition:
     * WML:
     * <pre>
-    *    <Controls.lists:View on:beforeEndEdit="beforeEndEditHandler()" />
+    *    <Controls.list:View on:beforeEndEdit="beforeEndEditHandler()" />
     * </pre>
     * JS:
     * <pre>
-    *    beforeEndEditHandler: function(e, item, commit, isAdd) {
-    *       if (!item.get('text').length) {
-    *          return EditConstants.CANCEL;
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeEndEditHandler: function(e, item, commit, isAdd) {
+    *          if (!item.get('text').length) {
+    *             return constants.editing.CANCEL;
+    *          }
     *       }
-    *    }
+    *    });
     * </pre>
     * @see beforeBeginEdit
     * @see afterBeginEdit
@@ -170,9 +179,9 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to show the add button after the end of editing\adding.
     * WML:
     * <pre>
-    *    <Controls.List on:afterEndEdit="afterEndEditHandler()" />
+    *    <Controls.list:View on:afterEndEdit="afterEndEditHandler()" />
     *    <ws:if data="{{ showAddButton }}">
-    *       <Controls.lists:AddButton />
+    *       <Controls.list:AddButton />
     *    </ws:if>
     * </pre>
     * JS:
@@ -193,11 +202,11 @@ define('Controls/interface/IEditableList', [
     * @example
     * WML:
     * <pre>
-    *    <Controls.lists:View>
+    *    <Controls.list:View>
     *       <ws:editingConfig>
     *          <ws:Object editOnClick="{{true}}" showToolbar="{{true}}" />
     *       </ws:editingConfig>
-    *    </Controls.lists:View>
+    *    </Controls.list:View>
     * </pre>
     */
 
@@ -212,7 +221,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing of an item.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -238,7 +247,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to start editing of an item.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -261,7 +270,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to end editing and commit changes.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>
@@ -284,7 +293,7 @@ define('Controls/interface/IEditableList', [
     * The following example shows how to end editing and discard changes.
     * WML:
     * <pre>
-    *    <Controls.lists:View name="list" />
+    *    <Controls.list:View name="list" />
     * </pre>
     * JS:
     * <pre>

@@ -51,6 +51,16 @@ define(
             });
          });
 
+         it('_beforeMount receivedState', function() {
+            let suggest = getSuggest(config);
+            let receivedState = new entity.Model({ rawData:  {
+               id: '3',
+               title: 'Запись 3'
+            }});
+            suggest._beforeMount(config, {}, receivedState);
+            assert.equal(suggest._value, 'Запись 3');
+         });
+
          it('_beforeMount historyId', function() {
             let historyConfig = Clone(config);
             historyConfig.historyId = 'TEST_HISTORY_ID';
@@ -170,6 +180,15 @@ define(
             suggest._suggestState = false;
             suggest._open();
             assert.isFalse(suggest._suggestState);
+         });
+
+         it('_private::setValue', function() {
+            let item = new entity.Model({
+               rawData: {id: '1', title: 'Запись 1'}
+            });
+            let self = {};
+            Suggest._private.setValue(self, item, 'title');
+            assert.equal(self._value, 'Запись 1');
          });
       });
    }

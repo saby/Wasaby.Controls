@@ -1,1 +1,6 @@
-<div>selected: {{selected}} content 2</div>
+<div style="padding: 20px;">
+   content 2 <br />
+   selected: {{selected}} <br />
+   additionalOptions: {{additionalOptions}} <br />
+   <Controls.input:Text placeholder="forFocus 2" attr:class="ControlsDemo-SwitchableArea__input_content2"/>
+</div>

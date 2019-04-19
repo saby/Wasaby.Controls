@@ -17,7 +17,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _cfgLeft: null,
          _cfgTop: null,
          _cfgBottom: null,
-         _minTargetMode: false,
          _beforeMount: function() {
             this._cfgRight = {
                message: message,
@@ -304,10 +303,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _open: function(e, cfg) {
             cfg.target = e.target;
             this._children.IBOpener.open(cfg);
-         },
-
-         _toggleMinTargetMode: function() {
-            this._minTargetMode = !this._minTargetMode;
          }
       });
 

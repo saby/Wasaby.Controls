@@ -8,6 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
+import {isPartialSupport} from 'Controls/_lists/utils/GridLayoutUtil'
 
 /**
  *
@@ -65,6 +66,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _actions: null,
     _selectedKeys: null,
     _markedKey: null,
+    _hoveredItem: null,
 
     constructor: function(cfg) {
         var self = this;
@@ -169,8 +171,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _calcItemVersion: function(item, key) {
-        var
-            version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+        var version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
 
         if (this._dragEntity && this._dragEntity.getItems().indexOf(key) !== -1) {
             version = 'DRAG_ITEM_' + version;
@@ -186,9 +187,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
+        if (isPartialSupport && this._hoveredItem === item) {
+            version = 'HOVERED_' + version;
+        }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
             version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
         }
+
         return version;
     },
 
@@ -367,6 +372,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
+    setHoveredItem: function(item){
+        this._hoveredItem = item;
+        this._nextModelVersion(true);
+    },
+
+    getHoveredItem: function () {
+        return this._hoveredItem;
+    },
+
     updateIndexes: function(startIndex, stopIndex) {
         if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
             _private.updateIndexes(self, startIndex, stopIndex);
@@ -413,6 +427,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
+    getEditingItemData(): object | null {
+        return this._editingItemData;
+    },
+
     setItemActions: function(item, actions) {
         if (item.get) {
             const id = item.get(this._options.keyProperty);
@@ -433,7 +451,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getActiveItem: function() {
@@ -447,7 +465,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setMultiSelectVisibility: function(multiSelectVisibility) {
         this._options.multiSelectVisibility = multiSelectVisibility;
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getMultiSelectVisibility: function() {

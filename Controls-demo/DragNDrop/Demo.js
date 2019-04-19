@@ -4,17 +4,18 @@ define('Controls-demo/DragNDrop/Demo', [
    'Types/source',
    'Core/core-clone',
    'Controls-demo/DragNDrop/Demo/Data',
-   'Controls/DragNDrop/Entity/Items',
+   'Controls/dragnDrop',
    'Core/core-instance',
    'css!Controls-demo/DragNDrop/Demo/Demo',
    'wml!Controls-demo/DragNDrop/Demo/columnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/timeColumnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/receivedColumnTemplate'
-], function(BaseControl, template, source, cClone, DemoData, Entity, cInstance) {
+], function(BaseControl, template, source, cClone, DemoData, dragnDrop, cInstance) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
       _template: template,
+      _root: null,
 
       _beforeMount: function() {
          this._itemsReadyCallbackFirst = this._itemsReadyFirst.bind(this);
@@ -99,7 +100,7 @@ define('Controls-demo/DragNDrop/Demo', [
       _dragStartFirst: function(event, items) {
          var firstItem = this._itemsFirst.getRecordById(items[0]);
 
-         return new Entity({
+         return new dragnDrop.ItemsEntity({
             items: items,
             mainText: firstItem.get('title'),
             image: firstItem.get('image'),
@@ -110,7 +111,7 @@ define('Controls-demo/DragNDrop/Demo', [
       _dragStartSecond: function(event, items) {
          var firstItem = this._itemsSecond.getRecordById(items[0]);
 
-         return new Entity({
+         return new dragnDrop.ItemsEntity({
             items: items,
             mainText: firstItem.get('title'),
             image: firstItem.get('image'),
@@ -122,7 +123,7 @@ define('Controls-demo/DragNDrop/Demo', [
       _dragStartThird: function(event, items) {
          var firstItem = this._itemsThird.getRecordById(items[0]);
 
-         return new Entity({
+         return new dragnDrop.ItemsEntity({
             items: items,
             mainText: firstItem.get('title'),
             logo: firstItem.get('type') ? 'icon-FolderClosed' : 'icon-DocumentW icon-primary',
