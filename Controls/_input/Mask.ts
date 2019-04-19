@@ -19,8 +19,8 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        * @class Controls/_input/Mask
        * @extends Control/_input/Base
        *
-       * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IInputMaskValue
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/interface/IInputMaskValue
        * @public
        * @author Миронов А.Ю.
        * @demo Controls-demo/Input/Mask/MaskPG

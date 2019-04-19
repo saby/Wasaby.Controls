@@ -83,7 +83,7 @@
                                        itemsReadyCallback="{{_itemsReadyCallback}}"
                                        itemActions="{{_itemActions}}"
                                        itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-                                       on:itemActionsClick="_itemActionsClick()"
+                                       on:actionClick="_itemActionsClick()"
                                        columns="{{_gridColumns}}"
                                     />
                                 </ws:content>
