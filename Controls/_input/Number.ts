@@ -11,9 +11,9 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
        * @class Controls/_input/Number
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IOnlyPositive
-       * @mixes Controls/_input/interface/IInputNumber
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/interface/IOnlyPositive
+       * @mixes Controls/interface/IInputNumber
        *
        * @public
        * @demo Controls-demo/Input/Number/NumberPG

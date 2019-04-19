@@ -1,41 +1,46 @@
 /**
  * Interface for input fields.
  *
- * @interface Controls/Input/interface/IInputField
+ * @interface Controls/interface/IInputField
  * @public
  * @author Журавлев М.С.
  */
+interface IInputField {
+    readonly _options: {
+        /**
+         * @name Controls/interface/IInputField#value
+         * @cfg {String|null} Text in the field.
+         * @default '' (empty string)
+         * @remark
+         * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+         * @example
+         * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+         * <pre>
+         *    <Input.Text bind:value="_inputValue" />
+         *    <Controls.Button on:click="_sendButtonClick()" />
+         * </pre>
+         *
+         * <pre>
+         *    Control.extend({
+         *       ...
+         *       _inputValue: '',
+         *
+         *       _sendButtonClick() {
+         *          this._sendData(this._inputValue);
+         *       }
+         *
+         *    });
+         * </pre>
+         * @see valueChanged
+         * @see inputCompleted
+         */
+        value: string | null;
+    }
+}
+
 
 /**
- * @name Controls/Input/interface/IInputField#value
- * @cfg {String|null} Text in the field.
- * @default '' (empty string)
- * @remark
- * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
- * @example
- * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
- * <pre>
- *    <Input.Text bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputValue: '',
- *
- *       _sendButtonClick() {
- *          this._sendData(this._inputValue);
- *       }
- *
- *    });
- * </pre>
- * @see valueChanged
- * @see inputCompleted
- */
-
-/**
- * @event Controls/Input/interface/IInputField#valueChanged Occurs when field display value was changed.
+ * @event Controls/interface/IInputField#valueChanged Occurs when field display value was changed.
  * @param {String} value Value of the field.
  * @param {String} displayValue Display value of the field.
  * @remark
@@ -85,3 +90,5 @@
  * </pre>
  * @see value
  */
+
+export default IInputField;

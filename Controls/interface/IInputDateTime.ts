@@ -1,40 +1,45 @@
 /**
  * Interface for date/time inputs.
  *
- * @interface Controls/_input/interface/IInputDateTime
+ * @interface Controls/interface/IInputDateTime
  * @public
  * @author Миронов А.Ю.
  */
+interface IInputDateTime {
+    readonly _options: {
+        /**
+         * @name Controls/interface/IInputDateTime#value
+         * @cfg {Date} The date that the user entered in the input field.
+         * @default null
+         * @remark If you don`t update value option, will not be able to enter anything in the field.
+         * You need to subscribe to “valueChanged” event and update value that is passed to the control.
+         * To make it simpler, you can use bind notation.
+         * @example
+         * In this example you bind _inputValue in control's state to the value of input field.
+         * At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+         * <pre>
+         *    <Controls._input.DateTime bind:value="_inputValue" />
+         *    <Controls.Button on:click="_sendButtonClick()" />
+         * </pre>
+         * <pre>
+         *    Control.extend({
+         *       ...
+         *       _inputValue: new Date(),
+         *
+         *       _sendButtonClick() {
+         *          this._sendData(this._inputValue);
+         *       }
+         *       ...
+         *  });
+         * </pre>
+         */
+        value: Date;
+    }
+}
+
 
 /**
- * @name Controls/_input/interface/IInputDateTime#value
- * @cfg {Date} The date that the user entered in the input field.
- * @default null
- * @remark If you don`t update value option, will not be able to enter anything in the field.
- * You need to subscribe to “valueChanged” event and update value that is passed to the control.
- * To make it simpler, you can use bind notation.
- * @example
- * In this example you bind _inputValue in control's state to the value of input field.
- * At any time of control's lifecycle, _inputValue will contain the current value of the input field.
- * <pre>
- *    <Controls._input.DateTime bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
- * </pre>
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputValue: new Date(),
- *
- *       _sendButtonClick() {
- *          this._sendData(this._inputValue);
- *       }
- *       ...
- *  });
- * </pre>
- */
-
-/**
- * @event Controls/_input/interface/IInputDateTime#valueChanged Occurs when field value was changed.
+ * @event Controls/interface/IInputDateTime#valueChanged Occurs when field value was changed.
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark
@@ -65,7 +70,7 @@
  */
 
 /**
- * @event Controls/_input/interface/IInputDateTime#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @event Controls/interface/IInputDateTime#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
  * @param {Date} value Field value.
  * @param {String} displayValue Text value of the field.
  * @remark
