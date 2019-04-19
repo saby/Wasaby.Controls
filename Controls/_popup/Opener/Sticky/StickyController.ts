@@ -57,10 +57,10 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
                   };
                }
                if ('horizontal' in config.targetPoint) {
-                  newCfg.corner = {
-                     horizontal: config.targetPoint.horizontal
-                  };
+                  newCfg.corner = newCfg.corner || {};
+                  newCfg.corner.horizontal = config.targetPoint.horizontal;
                }
+
             }
             return newCfg;
          },
