@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_dropdown/Menu/Menu');
-import MenuUtils = require('Controls/_dropdown/Menu/MenuUtils');
+import template = require('wml!Controls/_dropdown/Button/Button');
+import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 
 /**
  * Button by clicking on which a drop-down list opens.
  *
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
  *
- * @class Controls/_dropdown/Menu
+ * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/interface/ICaption
  * @mixes Controls/interface/ITooltip
@@ -31,12 +31,12 @@ import MenuUtils = require('Controls/_dropdown/Menu/MenuUtils');
  */
 
 /**
- * @event Controls/_dropdown/Menu#menuItemActivate Occurs when an item is selected from the list.
+ * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
  */
 
-var Menu = Control.extend({
+var Button = Control.extend({
    _template: template,
    _filter: null,
 
@@ -57,7 +57,7 @@ var Menu = Control.extend({
 
 });
 
-Menu.getDefaultOptions = function () {
+Button.getDefaultOptions = function () {
    return {
       showHeader: true,
       filter: {},
@@ -69,6 +69,6 @@ Menu.getDefaultOptions = function () {
    };
 };
 
-Menu._theme = ['Controls/_dropdown/Menu/Menu'];
+Button._theme = ['Controls/_dropdown/Button/Button'];
 
-export = Menu;
+export = Button;

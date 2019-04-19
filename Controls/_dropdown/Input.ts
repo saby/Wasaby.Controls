@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_dropdown/Dropdown/Dropdown');
-import defaultContentTemplate = require('wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate');
+import template = require('wml!Controls/_dropdown/Input/Input');
+import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -57,26 +57,26 @@ var _private = {
  */
 
 /**
- * @name Controls/_dropdown/Dropdown#contentTemplate
+ * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Template that will be render calling element.
  * @remark
- * To determine the template, you should call the base template "wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate".
+ * To determine the template, you should call the base template "wml!Controls/_dropdown/Input/resources/defaultContentTemplate".
  * The template should be placed in the component using the <ws:partial> tag with the template attribute.
  * You can redefine content using the contentTemplate option.
- * By default, the base template wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplate will display only text.
- * To display the icon and text, use the "wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplateWithIcon" template.
+ * By default, the base template wml!Controls/_dropdown/Input/resources/defaultContentTemplate will display only text.
+ * To display the icon and text, use the "wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon" template.
  * @example
  * Display text and icon
  *
  * WML:
  * <pre>
- * <Controls.dropdown:Dropdown
+ * <Controls.dropdown:Input
  *       bind:selectedKeys="_selectedKeys"
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
- *       contentTemplate="wml!Controls/_dropdown/Dropdown/resources/defaultContentTemplateWithIcon">
- * </Controls.dropdown:Dropdown>
+ *       contentTemplate="wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon">
+ * </Controls.dropdown:Input>
  * </pre>
  * JS:
  * <pre>
@@ -91,19 +91,19 @@ var _private = {
  */
 
 /**
- * @name Controls/_dropdown/Dropdown#multiSelect
+ * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Determines whether multiple selection is set.
  * @example
  * Multiple selection is set.
  * WML:
  * <pre>
- * <Controls.dropdown:Dropdown
+ * <Controls.dropdown:Input
  *       bind:selectedKeys="_selectedKeys"
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
  *       multiSelect={{true}}>
- * </Controls.dropdown:Dropdown>
+ * </Controls.dropdown:Input>
  * </pre>
  * JS:
  * <pre>
@@ -119,7 +119,7 @@ var _private = {
  * </pre>
  */
 
-var Dropdown = Control.extend({
+var Input = Control.extend({
    _template: template,
    _defaultContentTemplate: defaultContentTemplate,
    _text: '',
@@ -171,6 +171,6 @@ var Dropdown = Control.extend({
    }
 });
 
-Dropdown._theme = ['Controls/_dropdown/Dropdown/Dropdown'];
+Input._theme = ['Controls/_dropdown/Input/Input'];
 
-export = Dropdown;
+export = Input;

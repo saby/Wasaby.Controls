@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_dropdown/Controller');
+import template = require('wml!Controls/_dropdown/_Controller');
 import SourceController = require('Controls/Controllers/SourceController');
 import chain = require('Types/chain');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
@@ -137,7 +137,7 @@ var _private = {
 /**
  * Container for dropdown lists
  *
- * @class Controls/_dropdown/Controller
+ * @class Controls/_dropdown/_Controller
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
@@ -157,27 +157,27 @@ var _private = {
  */
 
 /**
- * @event Controls/_dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
+ * @event Controls/_dropdown/_Controller#selectedItemsChanged Occurs when the selected items change.
  */
 
 /**
- * @name Controls/_dropdown/Controller#typeShadow
+ * @name Controls/_dropdown/_Controller#typeShadow
  * @cfg {String} Specifies the type of shadow around the popup.
  * @variant default Default shadow.
  * @variant suggestionsContainer Shadow on the right, left, bottom.
  */
 
 /**
- * @name Controls/_dropdown/Controller#marker
+ * @name Controls/_dropdown/_Controller#marker
  * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
  */
 
 /**
- * @name Controls/_dropdown/Controller#showClose
+ * @name Controls/_dropdown/_Controller#showClose
  * @cfg {Boolean} Determines whether the cross is displayed.
  */
 
-var Dropdown = Control.extend({
+var _Controller = Control.extend({
    _template: template,
    _items: null,
 
@@ -286,12 +286,12 @@ var Dropdown = Control.extend({
    }
 });
 
-Dropdown.getDefaultOptions = function getDefaultOptions() {
+_Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: defaultFilter,
       selectedKeys: defaultSelectedKeys
    };
 };
 
-Dropdown._private = _private;
-export = Dropdown;
+_Controller._private = _private;
+export = _Controller;

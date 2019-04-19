@@ -1,5 +1,5 @@
 <div class="controls-MenuButton_theme_{{_options.theme}}">
-   <Controls._dropdown.Controller
+   <Controls._dropdown._Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
         parentProperty="{{_options.parentProperty}}"
@@ -36,6 +36,6 @@
                     transparent="{{_options.transparent}}"
                     size="{{_options.size}}"
                     tooltip="{{_options.tooltip}}"/>
-   </Controls._dropdown.Controller>
+   </Controls._dropdown._Controller>
    <Controls.Popup.Opener.Notification name="notificationOpener"/>
 </div>
