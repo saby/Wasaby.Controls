@@ -1,11 +1,12 @@
 define('Controls-demo/InfoBox/Opener/InfoBox',
    [
       'Core/Control',
+      'Controls/Context/TouchContextField',
       'wml!Controls-demo/InfoBox/resources/content',
       'wml!Controls-demo/InfoBox/Opener/InfoBox',
       'css!Controls-demo/InfoBox/Opener/InfoBox'
    ],
-   function(Control, contentTpl, template) {
+   function(Control, TouchContext, contentTpl, template) {
       'use strict';
 
       var message = 'MESSAGE';
@@ -301,10 +302,22 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          },
 
          _open: function(e, cfg) {
+            if (!this._context.isTouch.isTouch) {
+               cfg.target = e.target;
+               this._children.IBOpener.open(cfg);
+            }
+         },
+         _openTouch: function(e, cfg) {
             cfg.target = e.target;
             this._children.IBOpener.open(cfg);
          }
       });
+
+      InfoBox.contextTypes = function() {
+         return {
+            isTouch: TouchContext
+         };
+      };
 
       return InfoBox;
    });
