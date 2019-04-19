@@ -1,0 +1,276 @@
+/**
+ *
+ * @mixin Controls/Header/HeadingStyles
+ * @public
+ *
+ * @css @font-size_Heading__caption_size-s Small text size.
+ * @css @font-size_Heading__caption_size-m Medium text size.
+ * @css @font-size_Heading__caption_size-l Large text size.
+ * @css @font-size_Heading__caption_size-xl Extrlarge text size.
+ *
+ * @css @color_Heading__caption_style-secondary Primary text color.
+ * @css @color_Heading__caption_style-primary Default text color.
+ *
+ * @css @color_Heading__caption_style-secondary_hovered Primary text color in hovered and activated state.
+ * @css @color_Heading__caption_style-primary_hovered Default text color in hovered and activated state.
+ */
+
+.controls-Header__caption {
+   font-weight: @font-weight_Heading-caption;
+   display: inline-block;
+}
+
+.controls-Header__caption_size-s {
+   font-size: @font-size_Heading__caption_size-s;
+}
+
+.controls-Header__caption_size-m {
+   font-size: @font-size_Heading__caption_size-m;
+}
+
+.controls-Header__caption_size-l {
+   font-size: @font-size_Heading__caption_size-l;
+}
+
+.controls-Header__caption_size-xl {
+   font-size: @font-size_Heading__caption_size-xl;
+}
+
+.controls-Header__caption_style-secondary, .controls-Header__caption_style-secondary_hovered {
+   color: @color_Heading__caption_style-secondary;
+}
+
+.controls-Header__caption_style-primary, .controls-Header__caption_style-primary_hovered {
+   color: @color_Heading__caption_style-primary;
+}
+
+.controls-Header__caption_style-info, .controls-Header__caption_style-info_hovered {
+   color: @color_Heading__caption_style-info;
+}
+
+.controls-Header__caption_style-primary_hovered:active {
+   color: @color_Heading__caption_style-primary_hovered;
+   cursor: pointer;
+}
+
+.controls-Header__caption_style-secondary_hovered:active {
+   color: @color_Heading__caption_style-secondary_hovered;
+   cursor: pointer;
+}
+
+.controls-Header__caption_style-info_hovered:active {
+   color: @color_Heading__caption_style-info_hovered;
+   cursor: pointer;
+}
+
+.ws-is-no-touch {
+   .controls-Header__caption_style-primary_hovered:hover {
+      color: @color_Heading__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-secondary_hovered:hover {
+      color: @color_Heading__caption_style-secondary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-info_hovered:hover {
+      color: @color_Heading__caption_style-info_hovered;
+      cursor: pointer;
+   }
+}
+
+//Классы для прикладников, чтоб когда они собирали из компонентов заголовок который им нужен, то могли повесить любой ховер.
+//Например, заголовок сложный и состоит из заголовка, загловка-разделителя и счетчика. Ховер в таком случае может висеть раздельный, на загловке и заглоовке разделители,
+//а на счетчике ховер по умолчанию, в таком случае прикладник повесит на контейнер с этим сложным компонентом класс: controls-Header_Separator__clickable и все заработает по стандарту.
+
+.controls-Header_Counter__clickable:active {
+   .controls-Header__caption_style-primary_hovered {
+      color: @color_Heading__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-secondary_hovered {
+      color: @color_Heading__caption_style-secondary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-info_hovered {
+      color: @color_Heading__caption_style-info_hovered;
+      cursor: pointer;
+   }
+
+   .controls-HeaderCounter_style-primary_hovered {
+      color: @color_Counter__style-primary_hovered;
+   }
+
+   .controls-HeaderCounter_style-secondary_hovered {
+      color: @color_Counter__style-secondary_hovered;
+   }
+}
+
+.controls-Header_all__clickable:active {
+   .controls-Header__caption_style-primary_hovered {
+      color: @color_Heading__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-secondary_hovered {
+      color: @color_Heading__caption_style-secondary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-info_hovered {
+      color: @color_Heading__caption_style-info_hovered;
+      cursor: pointer;
+   }
+
+   .controls-HeaderCounter_style-primary_hovered {
+      color: @color_Counter__style-primary_hovered;
+   }
+
+   .controls-HeaderCounter_style-secondary_hovered {
+      color: @color_Counter__style-secondary_hovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-primary {
+      fill: @color_HeaderSeparator__primary_hovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-secondary {
+      fill: @color_HeaderSeparator__secondary_hovered;
+   }
+
+   .controls-Separator__icon_style-secondary {
+      color: @color-Separator__icon_style-secondary_hovered;
+   }
+
+   .controls-Separator__icon_style-primary {
+      color: @color-Separator__icon_style-primary_hovered;
+   }
+
+   .controls-Separator__icon_style-Additional {
+      color: @color-Separator__icon_style-additional_hovered;
+   }
+}
+
+.controls-Header_Separator__clickable:active {
+   .controls-Header__caption_style-primary_hovered {
+      color: @color_Heading__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-secondary_hovered {
+      color: @color_Heading__caption_style-secondary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-info_hovered {
+      color: @color_Heading__caption_style-info_hovered;
+      cursor: pointer;
+   }
+
+   .controls-HeaderSeparator__icon_style-primary {
+      fill: @color_HeaderSeparator__primary_hovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-secondary {
+      fill: @color_HeaderSeparator__secondary_hovered;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Header_Counter__clickable:hover {
+      .controls-Header__caption_style-primary_hovered {
+         color: @color_Heading__caption_style-primary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-secondary_hovered {
+         color: @color_Heading__caption_style-secondary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-info_hovered {
+         color: @color_Heading__caption_style-info_hovered;
+         cursor: pointer;
+      }
+
+      .controls-HeaderCounter_style-primary_hovered {
+         color: @color_Counter__style-primary_hovered;
+      }
+
+      .controls-HeaderCounter_style-secondary_hovered {
+         color: @color_Counter__style-secondary_hovered;
+      }
+   }
+
+   .controls-Header_all__clickable:hover {
+      .controls-Header__caption_style-primary_hovered {
+         color: @color_Heading__caption_style-primary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-secondary_hovered {
+         color: @color_Heading__caption_style-secondary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-info_hovered {
+         color: @color_Heading__caption_style-info_hovered;
+         cursor: pointer;
+      }
+
+      .controls-HeaderCounter_style-primary_hovered {
+         color: @color_Counter__style-primary_hovered;
+      }
+
+      .controls-HeaderCounter_style-secondary_hovered {
+         color: @color_Counter__style-secondary_hovered;
+      }
+
+      .controls-HeaderSeparator__icon_style-primary {
+         fill: @color_HeaderSeparator__primary_hovered;
+      }
+
+      .controls-HeaderSeparator__icon_style-secondary {
+         fill: @color_HeaderSeparator__secondary_hovered;
+      }
+
+      .controls-Separator__icon_style-secondary {
+         color: @color-Separator__icon_style-secondary_hovered;
+      }
+
+      .controls-Separator__icon_style-primary {
+         color: @color-Separator__icon_style-primary_hovered;
+      }
+
+      .controls-Separator__icon_style-Additional {
+         color: @color-Separator__icon_style-additional_hovered;
+      }
+   }
+   .controls-Header_Separator__clickable:hover {
+      .controls-Header__caption_style-primary_hovered {
+         color: @color_Heading__caption_style-primary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-secondary_hovered {
+         color: @color_Heading__caption_style-secondary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-info_hovered {
+         color: @color_Heading__caption_style-info_hovered;
+         cursor: pointer;
+      }
+
+      .controls-HeaderSeparator__icon_style-primary {
+         fill: @color_HeaderSeparator__primary_hovered;
+      }
+
+      .controls-HeaderSeparator__icon_style-secondary {
+         fill: @color_HeaderSeparator__secondary_hovered;
+      }
+   }
+}

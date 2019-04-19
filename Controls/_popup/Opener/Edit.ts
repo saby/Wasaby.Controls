@@ -110,9 +110,9 @@ import Deferred = require('Core/Deferred');
           * @param {Object} meta Data to edit: key, record.
           * @param {Object} popupOptions options for edit popup.
           * <ul>
-          *     <li>if mode option equal 'stack' see {@link Controls/Popup/Opener/Stack/typedefs/PopupOptions popupOptions}</li>
-          *     <li>if mode option equal 'dialog' see {@link Controls/Popup/Opener/Dialog/typedefs/PopupOptions popupOptions}</li>
-          *     <li>if mode option equal 'sticky' see {@link Controls/Popup/Opener/Sticky/typedefs/PopupOptions popupOptions}</li>
+          *     <li>if mode option equal 'stack' see {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions}</li>
+          *     <li>if mode option equal 'dialog' see {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions}</li>
+          *     <li>if mode option equal 'sticky' see {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions}</li>
           * </ul>
           * @returns {undefined}
           * @example

@@ -3,7 +3,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
       /**
        * Template (WML) of simple notification.
        *
-       * @class Controls/Popup/Templates/Notification/Simple
+       * @class Controls/_popupTemplate/Notification/Simple
        * @extends Core/Control
        * @control
        * @public
@@ -44,12 +44,12 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
 
 
 /**
- * @name Controls/Popup/Templates/Notification/Simple#autoClose
+ * @name Controls/_popupTemplate/Notification/Simple#autoClose
  * @cfg {Number} Close by timeout after open
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Simple#style
+ * @name Controls/_popupTemplate/Notification/Simple#style
  * @cfg {String} Notification display style.
  * @variant warning
  * @variant primary
@@ -58,16 +58,16 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Simple#closeButtonVisibility
+ * @name Controls/_popupTemplate/Notification/Simple#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Simple#icon
+ * @name Controls/_popupTemplate/Notification/Simple#icon
  * @cfg {Object} Notification message icon.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Simple#text
+ * @name Controls/_popupTemplate/Notification/Simple#text
  * @cfg {String} Notification message.
  */

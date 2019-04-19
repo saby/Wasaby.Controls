@@ -3,10 +3,6 @@ import Control = require('Core/Control');
 import entity = require('Types/entity');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 import template = require('wml!Controls/_decorator/Money/Money');
-import 'css!theme?Controls/_decorator/Money/Money';
-
-
-'use strict';
 
 /**
  * Converts a number to money.
@@ -17,7 +13,7 @@ import 'css!theme?Controls/_decorator/Money/Money';
  * @mixes Controls/_decorator/Money/Styles
  *
  * @public
- * @demo Controls-demo/_decorators/Money/Money
+ * @demo Controls-demo/Decorators/Money/Money
  *
  * @author Журавлев М.С.
  */
@@ -151,6 +147,8 @@ Money.getOptionTypes = function () {
       value: entity.descriptor(String)
    };
 };
+
+Money._theme = ['Controls/decorator'];
 
 Money._private = _private;
 

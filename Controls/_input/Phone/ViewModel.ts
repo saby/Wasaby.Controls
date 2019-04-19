@@ -19,6 +19,8 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
             '+': '[+]'
          },
 
+         NOT_PHONE_NUMBER_SYMBOLS_REGEXP: /[^0-9+]/g,
+
          updateFormat: function(self, value) {
             var mask = MaskBuilder.getMask(value);
 
@@ -59,6 +61,8 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
          },
 
          handleInput: function(splitValue, inputType) {
+            // Let the user past phone numbers from buffer in any format. Clear data from unnecessary characters.
+            splitValue.insert = splitValue.insert.replace(_private.NOT_PHONE_NUMBER_SYMBOLS_REGEXP, '');
             var newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after);
             var newFormat = FormatBuilder.getFormat(newMask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
             var result = InputProcessor.input(splitValue, inputType, _private.REPLACER, this._format, newFormat);
