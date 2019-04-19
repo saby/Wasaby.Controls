@@ -3,8 +3,8 @@ import template = require('wml!Controls/_popup/Manager/Popup');
 import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import Env = require('Env/Env');
-import 'wml!Controls/_popup/Manager/PopupContent';
-      
+import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
+
 
       var _private = {
          keyUp: function(event) {
@@ -183,10 +183,10 @@ import 'wml!Controls/_popup/Manager/PopupContent';
 
       Popup.getDefaultOptions = function() {
          return {
-            content: 'wml!Controls/_popup/Manager/PopupContent',
+            content: PopupContent,
             autofocus: true
          };
       };
 
       export = Popup;
-   
+
