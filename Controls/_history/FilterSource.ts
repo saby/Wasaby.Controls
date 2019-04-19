@@ -9,37 +9,6 @@ import chain = require('Types/chain');
 import entity = require('Types/entity');
 import cEqual = require('Core/helpers/Object/isEqual');
 import Serializer = require('Core/Serializer');
-/**
- * A proxy that works only takes data from the history source
- * @class Controls/_history/FilterSource
- * @extends Types/entity:Abstract
- * @mixes Types/entity:OptionsToPropertyMixin
- * @control
- * @public
- * @author Герасимов А.М.
- * @category Menu
- * @example
- * <pre>
- *    var source = new filterSource({
- *           originSource: new Memory({
- *               idProperty: 'id',
- *               data: []
- *           }),
- *           historySource: new historyService({
- *               historyId: 'TEST_FILTER_HISTORY_ID',
- *               dataLoaded: true
- *           })
- *       });
- * </pre>
- * @name Controls/MenuButton#originSource
- * @cfg {Source} A data source
- *
- * @name Controls/MenuButton#historySource
- * @cfg {Source} A source which work with history
- * @see {Controls/_history/Service} Source working with the service of InputHistory
- */
-
-
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 var DEFAULT_FILTER = '{}';
@@ -265,7 +234,37 @@ var _private = {
    }
 };
 
-var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
+/**
+ * A proxy that works only takes data from the history source
+ * @class Controls/_history/FilterSource
+ * @extends Types/entity:Abstract
+ * @mixes Types/entity:OptionsToPropertyMixin
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Menu
+ * @example
+ * <pre>
+ *    var source = new filterSource({
+ *           originSource: new Memory({
+ *               idProperty: 'id',
+ *               data: []
+ *           }),
+ *           historySource: new historyService({
+ *               historyId: 'TEST_FILTER_HISTORY_ID',
+ *               dataLoaded: true
+ *           })
+ *       });
+ * </pre>
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} A data source
+ *
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} A source which work with history
+ * @see {Controls/_history/Service} Source working with the service of InputHistory
+ */
+
+var Source = CoreExtend.extend({}, [entity.OptionsToPropertyMixin], {
    _history: null,
    _serialize: false,
    '[Types/_source/ICrud]': true,
