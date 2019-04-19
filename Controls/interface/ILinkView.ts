@@ -58,7 +58,7 @@ const EMPTY_CAPTIONS = {
 
 function getDefaultOptions(): ILinkView {
     return {
-        style: 'default',
+        style: undefined,
         linkClickable: true,
         showNextArrow: false,
         showPrevArrow: false,

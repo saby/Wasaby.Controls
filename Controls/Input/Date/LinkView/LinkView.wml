@@ -1,27 +1,30 @@
 <div class="controls-DateLinkView">
     <div class="controls-DateLinkView-wrapper">
-        <ws:if data="{{ (_options.prevArrowVisibility || _options.showPrevArrow) && _options.style === 'default' }}">
+        <ws:if data="{{ (_options.prevArrowVisibility || _options.showPrevArrow) && _viewMode == 'selector' }}">
            <span
-              class="controls-DateLinkView__prev {{ _prevNextButtonsEnabledClass }}"
+              class="controls-DateLinkView__prev {{ _styleClass }}"
               on:click="shiftBack()">
            </span>
         </ws:if>
         <span class="controls-DateLinkView__value-wrapper {{_isMinWidth ? 'controls-DateLinkView__value-wrapper-minWidth'}}">
-           <ws:if data="{{ _options.style == 'default' }}">
-              <span class="controls-DateLinkView__value {{ _valueEnabledClass }}" on:click="_onClick()">
+           <ws:if data="{{ _viewMode == 'selector' }}">
+              <span class="controls-DateLinkView__value {{ _styleClass }} {{ _valueEnabledClass }}" on:click="_onClick()">
                  {{ _caption }}
               </span>
            </ws:if>
+           <ws:else data="{{ _viewMode == 'link' }}">
+              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_styleMode}}" viewMode="link" on:click="_onClick()"/>
+           </ws:else>
            <ws:else>
-              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" viewMode="{{_options.viewMode}}" on:click="_onClick()"/>
+              <Controls.input:Label name="Link" caption="{{ _caption }}" underline="hovered" on:click="_onClick()"/>
            </ws:else>
         </span>
         <ws:if data="{{ _options.clearButtonVisibility && _options.startValue }}">
               <span class="controls-DateLinkView__clear" on:click="_clearDate()"></span>
         </ws:if>
-        <ws:if data="{{ (_options.nextArrowVisibility || _options.showNextArrow) && _options.style === 'default' }}">
+        <ws:if data="{{ (_options.nextArrowVisibility || _options.showNextArrow) && _viewMode == 'selector' }}">
            <span
-              class="controls-DateLinkView__next {{ _prevNextButtonsEnabledClass }}"
+              class="controls-DateLinkView__next {{ _styleClass }}"
               on:click="shiftForward()">
            </span>
         </ws:if>

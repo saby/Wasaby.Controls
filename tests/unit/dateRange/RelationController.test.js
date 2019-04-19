@@ -358,6 +358,86 @@ define([
          });
       })
 
+      describe('The type of relation sets by control.', function() {
+         describe('Relation type is byCapacity.', function() {
+            [{
+               componentOptions: [new Date(2015, 0, 1), 1, {}, 2],
+               updateToRange: [new Date(2014, 1, 1), new Date(2014, 2, 0)],
+               updatedRangesOptions: [new Date(2014, 1, 1), 12, 1, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 3, {}, 2],
+               updateToRange: [new Date(2014, 3, 1), new Date(2014, 6, 0)],
+               updatedRangesOptions: [new Date(2014, 3, 1), 12, 3, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 6, {}, 2],
+               updateToRange: [new Date(2014, 6, 1), new Date(2014, 12, 0)],
+               updatedRangesOptions: [new Date(2014, 6, 1), 12, 6, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+               updateToRange: [new Date(2013, 0, 1), new Date(2013, 1, 0)],
+               updatedRangesOptions: [new Date(2013, 0, 1), 1, 1, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 2, 1), 1, {}, 2],
+               updateToRange: [new Date(2015, 0, 1), new Date(2015, 1, 0)],
+               updatedRangesOptions: [new Date(2015, 0, 1), 3, 1, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+               updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
+               updatedRangesOptions: [new Date(2013, 0, 1), 36, 12, 2],
+               relationType: 'byCapacity'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 1, {}, 2],
+               updateToRange: [new Date(2014, 1, 1), new Date(2014, 2, 0)],
+               updatedRangesOptions: [new Date(2014, 1, 1), 1, 1, 2],
+               relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 3, {}, 2],
+               updateToRange: [new Date(2014, 3, 1), new Date(2014, 6, 0)],
+               updatedRangesOptions: [new Date(2014, 3, 1), 3, 3, 2],
+               relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 6, {}, 2],
+               updateToRange: [new Date(2014, 6, 1), new Date(2014, 12, 0)],
+               updatedRangesOptions: [new Date(2014, 6, 1), 6, 6, 2],
+               relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+               updateToRange: [new Date(2013, 0, 1), new Date(2013, 1, 0)],
+               updatedRangesOptions: [new Date(2013, 0, 1), 12, 1, 2],
+               relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 2, 1), 1, {}, 2],
+               updateToRange: [new Date(2015, 0, 1), new Date(2015, 1, 0)],
+               updatedRangesOptions: [new Date(2015, 0, 1), 1, 1, 2],
+               relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+               updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
+               updatedRangesOptions: [new Date(2013, 0, 1), 12, 12, 2],
+               relationType: 'normal'
+            }].forEach(function(test, testNumber) {
+               it(`Test ${testNumber}`, function() {
+                  let
+                     options = getOptions.apply(null, test.componentOptions),
+                     component = calendarTestUtils.createComponent(RelationController, options),
+                     sandbox = sinon.sandbox.create();
+                  sandbox.stub(component, '_notify');
+                  component._onRelationWrapperRangeChanged(null, test.updateToRange[0], test.updateToRange[1], 0, test.relationType);
+                  let dates = createMonths.apply(null, test.updatedRangesOptions);
+                  for (let [i, range] of component._model.ranges.entries()) {
+                     assert.deepEqual(range, dates[i]);
+                  }
+                  sandbox.restore();
+               });
+            });
+         });
+      });
+
       describe('shift periods', function() {
          [{
             period: '1 day',

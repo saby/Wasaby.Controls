@@ -31,15 +31,27 @@ define('Controls/Input/Date/LinkView', [
     */
 
    var _private = {
-      _updateEnabled: function(self, readOnly) {
-         if (self._options === readOnly) {
-            return;
+      styleMap: {
+         default: {
+            viewMode: 'selector',
+            styleMode: 'secondary'
+         },
+         linkMain: {
+            viewMode: 'link',
+            styleMode: 'secondary'
+         },
+         linkMain2: {
+            viewMode: 'link',
+            styleMode: 'info'
+         },
+         linkAdditional: {
+            viewMode: 'label',
+            styleMode: null
          }
-         self._prevNextButtonsEnabledClass = 'controls-DateLinkView__prevNextButtons-';
-         self._prevNextButtonsEnabledClass += readOnly ? 'disabled' : 'enabled';
-
-         self._valueEnabledClass = 'controls-DateLinkView__value-';
-         self._valueEnabledClass += readOnly ? 'disabled' : 'enabled';
+      },
+      defaultStyleMap: {
+         selector: 'secondary',
+         link: 'secondary'
       },
 
       _updateCaption: function(self, options) {
@@ -50,6 +62,33 @@ define('Controls/Input/Date/LinkView', [
             self._rangeModel.endValue,
             opt.emptyCaption
          );
+      },
+
+      _updateStyles: function(self, options) {
+         var changed = false;
+         if (options.style && self._options.style !== options.style) {
+            self._viewMode = _private.styleMap[options.style].viewMode;
+            self._styleMode = _private.styleMap[options.style].styleMode;
+            changed = true;
+         } else if (self._options.viewMode !== options.viewMode || self._options.styleMode !== options.styleMode) {
+            self._viewMode = options.viewMode;
+            self._styleMode = options.styleMode || _private.defaultStyleMap[options.viewMode];
+            changed = true;
+         }
+         if (self._options.readOnly !== options.readOnly) {
+            changed = true;
+         }
+         if (changed) {
+            if (self._styleMode) {
+               self._styleClass = 'controls-DateLinkView__style-';
+               self._styleClass += self._styleMode;
+            }
+            if (options.readOnly) {
+               self._styleClass +=  '_readOnly';
+            }
+
+            self._valueEnabledClass = options.readOnly ? '' : 'controls-DateLinkView__value-enabled';
+         }
       }
    };
 
@@ -58,8 +97,10 @@ define('Controls/Input/Date/LinkView', [
 
       _rangeModel: null,
       _caption: '',
-      _prevNextButtonsEnabledClass: null,
+      _styleClass: null,
       _valueEnabledClass: null,
+      _viewMode: null,
+      _styleMode: null,
 
       constructor: function() {
          Component.superclass.constructor.apply(this, arguments);
@@ -70,7 +111,11 @@ define('Controls/Input/Date/LinkView', [
       _beforeMount: function(options) {
          this._rangeModel.update(options);
          _private._updateCaption(this, options);
-         _private._updateEnabled(this, options.readOnly);
+         _private._updateStyles(this, options);
+
+         if (options.style) {
+            Env.IoC.resolve('ILogger').error('LinkView', rk('You should use viewMode and styleMode options instead of style option.'));
+         }
 
          if (options.showPrevArrow || options.showNextArrow) {
             Env.IoC.resolve('ILogger').error('LinkView', rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'));
@@ -87,7 +132,7 @@ define('Controls/Input/Date/LinkView', [
          if (changed) {
             _private._updateCaption(this, options);
          }
-         _private._updateEnabled(this, options.readOnly);
+         _private._updateStyles(this, options);
       },
 
       shiftBack: function() {
