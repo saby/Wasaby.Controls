@@ -28,11 +28,20 @@ function calcRowIndexByKey(
     return rowTopOffset + itemIndex + _calcHasMoreButtonsBefore(itemIndex, display, hasMoreStorage, hierarchyRelation);
 }
 
+function calcFooterRowIndex(
+    display,
+    hasResults: boolean = false,
+    hasHeader: boolean = false,
+    hierarchyRelation?,
+    hasMoreStorage?
+): number {
+    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
+}
+
 function calcResultsRowIndex(
     display,
     resultsPosition: ResultsPosition|null = null,
     hasHeader: boolean = false,
-    hasFooterTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
@@ -42,10 +51,17 @@ function calcResultsRowIndex(
     }
 
     let
-        lastItem = ItemsUtil.getLastItem(display),
-        lastRowIndex = calcRowIndexByKey(lastItem.getId(), display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
+        lastItemId = ItemsUtil.getLastItem(display).getId(),
+        lastRowIndex = calcRowIndexByKey(lastItemId, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
 
-    return lastRowIndex + (hasFooterTemplate ? 1 : 0);
+    // If after last item exists node footer
+    if (hierarchyRelation && hasMoreStorage) {
+        if (hasMoreStorage[lastItemId]){
+            lastRowIndex++;
+        }
+    }
+
+    return lastRowIndex + 1;
 }
 
 function calcGroupRowIndex(groupItem, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
@@ -111,7 +127,8 @@ export {
     calcRowIndexByKey,
     calcResultsRowIndex,
     calcGroupRowIndex,
-    calcTopOffset
+    calcTopOffset,
+    calcFooterRowIndex
 }
 
 
