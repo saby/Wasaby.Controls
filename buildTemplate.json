@@ -17,7 +17,8 @@
   "modules": [
     {
       "name": "Controls",
-      "path": "./Controls"
+      "path": "./Controls",
+      "required": true
     },
     {
       "name": "Controls-demo",
