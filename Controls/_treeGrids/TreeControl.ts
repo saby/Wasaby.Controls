@@ -240,7 +240,7 @@ var _private = {
  * @mixes Controls/_treeGrids/TreeGridView/Styles
  * @extends Controls/_lists/ListControl
  * @control
- * @public
+ * @private
  * @category List
  */
 

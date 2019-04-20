@@ -1,13 +1,14 @@
 /**
  * Grid library
  * @library Controls/treeGrid
- * @includes View Controls/_treeGrids/TreeGrid
+ * @includes View Controls/_treeGrids/View
  * @includes ItemTemplate wml!Controls/_treeGrids/TreeGridView/Item
+ * @includes TreeGridStyles Controls/_treeGrids/TreeGrid/Styles
  * @public
  * @author Kraynov D.
  */
 
-import View = require('Controls/_treeGrids/TreeGrid');
+import View = require('Controls/_treeGrids/View');
 import ItemTemplate = require('wml!Controls/_treeGrids/TreeGridView/Item');
 
 import ViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');

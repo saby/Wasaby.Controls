@@ -12,7 +12,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
     * </ul>
     *
-    * @class Controls/TreeGrid
+    * @class Controls/_treeGrids/View
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
