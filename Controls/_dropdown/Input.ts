@@ -32,7 +32,7 @@ var _private = {
  * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
  *
  * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
- * @class Controls/_dropdown/Dropdown
+ * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/List/interface/IHierarchy
