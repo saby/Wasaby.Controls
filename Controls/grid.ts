@@ -8,6 +8,8 @@
  * @includes LadderWrapper wml!Controls/_grids/LadderWrapper
  * @includes ColumnTemplate wml!Controls/_grids/Column
  * @includes RowEditor wml!Controls/_grids/RowEditor
+ * @includes GridStyles Controls/_grids/GridStyles
+ * @includes SortButtonStyles Controls/_grids/SortButtonStyles
  * @public
  * @author Kraynov D.
  */
