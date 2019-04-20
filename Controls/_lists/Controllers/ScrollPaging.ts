@@ -5,7 +5,7 @@ import cExtend = require('Core/core-simpleExtend');
 /**
  *
  * @author Авраменко А.С.
- * @public
+ * @private
  */
 
 var _private = {

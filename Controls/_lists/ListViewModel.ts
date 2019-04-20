@@ -13,7 +13,7 @@ import {isPartialSupport} from 'Controls/_lists/utils/GridLayoutUtil'
 /**
  *
  * @author Авраменко А.С.
- * @public
+ * @private
  */
 
 var _private = {

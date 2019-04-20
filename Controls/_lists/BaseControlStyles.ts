@@ -1,7 +1,7 @@
 /**
  * @author Родионов Е.А.
  * @mixin Controls/_lists/BaseControlStyles
- * @public
+ * @private
  *
  *
  * @css @height_BaseControl-button-loadMore height of button "load more"

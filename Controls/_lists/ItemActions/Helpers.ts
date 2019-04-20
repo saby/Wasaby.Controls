@@ -1,7 +1,7 @@
 /**
  * List of helpers for displaying item actions.
  * @class Controls/_lists/ItemActions/Helpers
- * @public
+ * @private
  * @author Сухоручкин А.С.
  * @category List
  */

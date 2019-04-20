@@ -12,6 +12,14 @@
  * @includes Paging Controls/_paging/Paging
  * @includes VirtualScroll Controls/_lists/Controllers/VirtualScroll
  * @includes DataContainer Controls/_lists/Data
+ * @includes AddButtonStyles Controls/_lists/AddButton/Styles
+ * @includes DigitButtonsStyles Controls/_lists/DigitButtonsStyles
+ * @includes IDraggable Controls/_lists/interface/IDraggable
+ * @includes IExplorer Controls/_lists/interface/IExplorer
+ * @includes IHierarchy Controls/_lists/interface/IHierarchy
+ * @includes IList Controls/_lists/interface/IList
+ * @includes ItemActionsStyles Controls/_lists/ItemActions/ItemActionsStyles
+ * @includes SwipeStyles Controls/_lists/Swipe/SwipeStyles
  * @public
  * @author Kraynov D.
  */

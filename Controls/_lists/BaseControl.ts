@@ -905,7 +905,7 @@ var _private = {
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_lists/BaseControl/Styles
  * @control
- * @public
+ * @private
  * @author Авраменко А.С.
  * @category List
  */

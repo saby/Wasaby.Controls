@@ -17,7 +17,7 @@ import Deferred = require('Core/Deferred');
  * @mixes Controls/_lists/interface/IList
  * @mixes Controls/interface/IEditableList
  * @control
- * @public
+ * @private
  * @author Авраменко А.С.
  * @category List
  */

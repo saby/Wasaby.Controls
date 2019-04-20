@@ -11,7 +11,7 @@ import collection = require('Types/collection');
 /**
  *
  * @author Авраменко А.С.
- * @public
+ * @private
  */
 
 var _private = {

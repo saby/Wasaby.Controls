@@ -10,7 +10,7 @@ import entity = require('Types/entity');
 /**
  *
  * @author Авраменко А.С.
- * @public
+ * @private
  */
 var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
 
