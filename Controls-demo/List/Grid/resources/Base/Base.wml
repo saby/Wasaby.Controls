@@ -18,7 +18,7 @@
                                             header="{{gridHeader}}"
                                             itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                                             itemActions="{{_itemActions}}"
-                                            on:itemActionsClick="_onActionClick()"
+                                            on:actionClick="_onActionClick()"
                                             itemActionVisibilityCallback="{{_showAction}}"
                                             itemActionsPosition="outside"
                                             columns="{{gridColumns}}"

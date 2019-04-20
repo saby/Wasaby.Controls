@@ -135,7 +135,7 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
          },
          _calculateMaximized: function(options) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
-            if (!options.minimizedWidth) {
+            if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
                var middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
                return options.stackWidth - middle > 0;
             }

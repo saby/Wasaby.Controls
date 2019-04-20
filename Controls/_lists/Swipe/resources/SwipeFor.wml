@@ -6,11 +6,11 @@
        needTitle="{{needTitle}}"
        itemActionsSize="{{swipeConfig.itemActionsSize}}"
        paddingSize="{{swipeConfig.paddingSize}}"
-       titlePosition="{{titlePosition}}"
+       actionCaptionPosition="{{actionCaptionPosition}}"
        hasActionWithIcon="{{itemData.hasActionWithIcon}}"
        on:click="_onItemActionsClick(action, itemData)"/>
     <ws:if data="{{actionIndex !== showedActions.length - 1}}">
         <div class="controls-Swipe__separator
-        controls-Swipe__separator_{{swipeDirection === 'row' ? 'vertical' : 'horizontal'}}"></div>
+        controls-Swipe__separator_{{actionAlignment}}"></div>
     </ws:if>
 </ws:for>
