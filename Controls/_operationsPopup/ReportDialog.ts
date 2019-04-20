@@ -7,7 +7,7 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
    /**
     * The template of the dialog with the results of mass operations.
     *
-    * @class Controls/Operations/ReportDialog
+    * @class Controls/_operationsPopup/ReportDialog
     * @extends Core/Control
     * @control
     * @author Сухоручкин А.С.
@@ -24,29 +24,29 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     */
 
    /**
-    * @name Controls/Operations/ReportDialog#title
+    * @name Controls/_operationsPopup/ReportDialog#title
     * @cfg {String} The title of the operation.
     */
 
    /**
-    * @name Controls/Operations/ReportDialog#operationsCount
+    * @name Controls/_operationsPopup/ReportDialog#operationsCount
     * @cfg {Number} The number of elements on which the operation was performed.
     */
 
    /**
-    * @name Controls/Operations/ReportDialog#operationsSuccess
+    * @name Controls/_operationsPopup/ReportDialog#operationsSuccess
     * @cfg {Number} Number of items for which the operation completed successfully.
     */
 
    /**
-    * @name Controls/Operations/ReportDialog#errors
+    * @name Controls/_operationsPopup/ReportDialog#errors
     * @cfg {Array.<String>} Error list.
     * @remark
     * If the error list is not passed, the default text will be shown.
     */
 
    /**
-    * @name Controls/Operations/ReportDialog#footerContentTemplate
+    * @name Controls/_operationsPopup/ReportDialog#footerContentTemplate
     * @cfg {Function} Template displayed at the bottom of the dialog.
     */
 

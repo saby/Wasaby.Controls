@@ -1,8 +1,6 @@
 import { IItemAction } from './IItemAction';
 import { IListModel } from 'Controls/_lists/interface/IListViewModel';
 
-export type TitlePosition = 'right' | 'bottom' | 'none';
-export type SwipeDirection = 'row' | 'column';
 export type ItemActionsPosition = 'inside' | 'outside';
 
 export interface ISwipeEvent extends Event {
@@ -22,6 +20,6 @@ export interface ISwipeControlOptions {
    listModel: IListModel;
    itemActions: IItemAction[];
    itemActionsPosition?: ItemActionsPosition;
-   swipeDirection?: SwipeDirection;
-   titlePosition?: TitlePosition;
+   actionAlignment?: 'horizontal' | 'vertical';
+   actionCaptionPosition?: 'right' | 'bottom' | 'none';
 }

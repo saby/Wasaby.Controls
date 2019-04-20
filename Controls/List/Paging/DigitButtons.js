@@ -1,4 +1,4 @@
-define('Controls/List/Paging/DigitButtons', ['Controls/_lists/Paging/DigitButtons'], function(Control) {
+define('Controls/List/Paging/DigitButtons', ['Controls/_paging/Paging/DigitButtons'], function(Control) {
 /**
  * Created by kraynovdo on 01.11.2017.
  */

@@ -3,6 +3,8 @@
  * @library Controls/breadcrumbs
  * @includes Path Controls/_breadcrumbs/Path
  * @includes HeadingPath Controls/_breadcrumbs/HeadingPath
+ * @includes BreadCrumbsStyles Controls/_breadcrumbs/BreadCrumbsStyles
+ * @includes PathStyles Controls/_breadcrumbs/PathStyles
  * @author Авраменко А. С.
  */
 import ItemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');

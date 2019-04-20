@@ -6,7 +6,7 @@ import template = require('wml!Controls/Label/Label');
       /**
        * Label.
        *
-       * @class Controls/Label
+       * @class Controls/_input/Label
        * @extends Core/Control
        * @public
        * @demo Controls-demo/Label/Label

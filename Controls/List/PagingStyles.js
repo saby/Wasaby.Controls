@@ -1,4 +1,4 @@
-define('Controls/List/PagingStyles', ['Controls/_lists/PagingStyles'], function(Control) {
+define('Controls/List/PagingStyles', ['Controls/_paging/PagingStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/PagingStyles

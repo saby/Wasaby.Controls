@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/Container/MasterList/Styles
+ * @mixin Controls/_masterDetail/List/Styles
  * @public
  *
  *

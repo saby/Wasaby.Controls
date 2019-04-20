@@ -17,7 +17,7 @@ import 'Controls/decorator';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
-       * @mixes Controls/_input/interface/INewLineKey
+       * @mixes Controls/interface/INewLineKey
        *
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
