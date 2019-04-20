@@ -264,7 +264,7 @@ var _private = {
  * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
 
-var Source = CoreExtend.extend({}, [entity.OptionsToPropertyMixin], {
+var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
    _serialize: false,
    '[Types/_source/ICrud]': true,

@@ -123,7 +123,7 @@ var _private = {
  *
  */
 
-var Service = CoreExtend.extend({}, [source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
+var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,
    _historyId: null,
    _historyIds: null,
