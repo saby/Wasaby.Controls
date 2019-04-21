@@ -57,7 +57,7 @@
  * @css @padding_Button-wrapper-pushButton_size_l Toggle button padding with viewMode 'pushButton' and size 'l'.
  *
  * @css @font-size_ToggleButton-pushButton_s Toggle button font-size with viewMode 'pushButton' and size 's'.
- * @css @font-size_ToggleButton-pushButton_m Toggle button font-size with viewMode 'pushButton' and size 's'.
- * @css @font-size_ToggleButton-pushButton_l Toggle button font-size with viewMode 'pushButton' and size 's'.
+ * @css @font-size_ToggleButton-pushButton_m Toggle button font-size with viewMode 'pushButton' and size 'm'.
+ * @css @font-size_ToggleButton-pushButton_l Toggle button font-size with viewMode 'pushButton' and size 'l'.
  */
 
