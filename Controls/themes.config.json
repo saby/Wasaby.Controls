@@ -6,7 +6,8 @@
     "compatibility": {
         "**/*.less": [
             "ws4-retail",
-            "ws4-default"
+            "ws4-default",
+            "ws4-default-layout"
         ]
     }
 }
