@@ -260,7 +260,7 @@ define(
             fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
             fastFilter._beforeMount(configWithItems);
             fastFilter._onResult(null, { action: 'footerClick' });
-            assert.isFalse(closed);
+            assert.isTrue(closed);
          });
 
          it('onResult itemClick', function(done) {
