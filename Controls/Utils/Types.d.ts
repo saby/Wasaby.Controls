@@ -11,3 +11,5 @@ export type OptionalProperties<T> = Exclude<{
  * Construct a type with only optional properties of T.
  */
 export type PickOptionalProperties<T> = Required<Pick<T, OptionalProperties<T>>>;
+
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

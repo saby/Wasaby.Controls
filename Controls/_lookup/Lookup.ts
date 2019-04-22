@@ -19,7 +19,7 @@ import Env = require('Env/Env');
  * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/Input/interface/IInputField
  * @mixes Controls/_lookup/Lookup/LookupStyles
  * @control
