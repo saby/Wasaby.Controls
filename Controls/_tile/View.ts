@@ -1,4 +1,4 @@
-import {View} from 'Controls/list';
+import {View as List} from 'Controls/list';
 import TreeTileViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
 import {TreeControl} from 'Controls/treeGrid';
@@ -40,7 +40,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @category List
  */
 
-var View = View.extend({
+var View = List.extend({
    _viewName: TreeTileView,
    _viewTemplate: TreeControl,
    _getModelConstructor: function() {
