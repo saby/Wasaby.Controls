@@ -2,7 +2,7 @@ define([
    'Controls/_lists/utils/GridLayoutUtil'
 ], function (Util) {
 
-   describe('Controls/_grids/GridLayoutUtil', function () {
+   describe('Controls/_grid/GridLayoutUtil', function () {
       it('toCssString', function () {
 
          assert.equal(Util.toCssString([
