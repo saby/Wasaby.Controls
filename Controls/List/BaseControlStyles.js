@@ -1,4 +1,4 @@
-define('Controls/List/BaseControlStyles', ['Controls/_lists/BaseControlStyles'], function(Control) {
+define('Controls/List/BaseControlStyles', ['Controls/_list/BaseControlStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/BaseControlStyles

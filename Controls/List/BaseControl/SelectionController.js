@@ -1,4 +1,4 @@
-define('Controls/List/BaseControl/SelectionController', ['Controls/_lists/BaseControl/SelectionController'], function(Control) {
+define('Controls/List/BaseControl/SelectionController', ['Controls/_list/BaseControl/SelectionController'], function(Control) {
 /**
  * @class Controls/List/BaseControl/SelectionController
  * @extends Core/Control

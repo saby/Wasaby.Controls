@@ -1,4 +1,4 @@
-define('Controls/List/ItemActions/Helpers', ['Controls/_lists/ItemActions/Helpers'], function(Control) {
+define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers'], function(Control) {
 /**
  * List of helpers for displaying item actions.
  * @class Controls/list:ItemActionsHelpers

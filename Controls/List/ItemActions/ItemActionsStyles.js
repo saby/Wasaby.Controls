@@ -1,4 +1,4 @@
-define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_lists/ItemActions/ItemActionsStyles'], function(Control) {
+define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_list/ItemActions/ItemActionsStyles'], function(Control) {
 /**
  * @author Авраменко А.С.
  * @mixin Controls/List/ItemActions/ItemActionsStyles

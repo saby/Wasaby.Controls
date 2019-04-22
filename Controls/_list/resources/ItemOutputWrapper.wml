@@ -1,0 +1,13 @@
+<ws:partial
+   __noDirtyChecking="{{true}}"
+   template="wml!Controls/_list/resources/ItemOutput"
+   listModel="{{listModel}}"
+   editingItemData="{{editingItemData}}"
+   isAdd="{{isAdd}}"
+   itemActionsTemplate="{{itemActionsTemplate}}"
+   swipeTemplate="{{swipeTemplate}}"
+   multiSelectTpl="{{multiSelectTpl}}"
+   itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
+   itemData="{{listModel.getCurrent()}}"
+   itemActionsPosition="{{itemActionsPosition}}" />
+{{listModel.goToNext()}}
