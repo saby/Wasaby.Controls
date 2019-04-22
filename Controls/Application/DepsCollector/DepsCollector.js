@@ -212,7 +212,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                splitted.shift();
                node = splitted.join('!');
                if (!modInfo[node]) {
-                  return;
+                  continue;
                }
             }
             var module = parseModuleName(node);
@@ -251,7 +251,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       collectDependencies: function(deps) {
          var files = {
-            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: [],
+            js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: [],
             cssToDefine: []
          };
          var allDeps = {};

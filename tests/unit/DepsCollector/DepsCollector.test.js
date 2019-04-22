@@ -102,5 +102,10 @@ define([
          var deps = depsCollectorWithLocalization.collectDependencies(["aaa/aaa"]);
          assert.deepEqual(deps.js, [ "bdl/lang/ru-RU/ru-RU.json", "bdl/aaa.package" ]);
       });
+      it('missing optional dep', function() {
+         var deps = depsCollectorWithThemes.collectDependencies(["optional!nosuchdep", "tmpl!ppp/ppp"]);
+         assert.deepEqual(deps.js, ["bdl/tmplpckd.package"]);
+         assert.deepEqual(deps.tmpl, []);
+      });
    });
 });

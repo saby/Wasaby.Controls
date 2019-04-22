@@ -1,10 +1,10 @@
 <div class="ws-flexbox ws-flex-column">
    <div class="ws-flexbox">
       <Controls.input:Label name="myLabel1" caption="Жмакни на меня" on:click="_labelClickHandler('myInputText1')"/>
-      <Controls.input:Text name="myInputText1"/>
+      <Controls.input:Text name="myInputText1" bind:value="_value1"/>
    </div>
    <div class="ws-flexbox">
       <Controls.input:Label name="myLabel2" caption="Жмакни на меня, а то обижусь" required="{{true}}" on:click="_labelClickHandler('myInputText2')"/>
-      <Controls.input:Text name="myInputText2"/>
+      <Controls.input:Text name="myInputText2" bind:value="_value2"/>
    </div>
 </div>

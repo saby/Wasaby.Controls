@@ -15,9 +15,7 @@ import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
-      
-
-import {IoC} from 'Env/Env';
+import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
 
@@ -338,7 +336,7 @@ import {IoC} from 'Env/Env';
        * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/interface/IInputBase
        *
        * @private
        * @demo Controls-demo/Input/Base/Base
@@ -559,10 +557,6 @@ import {IoC} from 'Env/Env';
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._viewModel.value !== newOptions.value) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'The value option is used to change the value in a field through a synchronization cycle. To speed up the control, use the inputCallback option.');
-            }
-
             const newViewModelOptions = this._getViewModelOptions(newOptions);
 
             _private.updateViewModel(this, newViewModelOptions, newOptions.value);
@@ -576,6 +570,7 @@ import {IoC} from 'Env/Env';
             this._field = {
                template: fieldTemplate,
                scope: {
+                  _useStretcher: false,
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)

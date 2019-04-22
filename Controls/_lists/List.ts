@@ -31,7 +31,7 @@ import viewTemplate = require('Controls/_lists/ListControl');
  * @mixes Controls/_lists/Swipe/SwipeStyles
  *
  * @mixes Controls/_lists/Mover/MoveDialog/Styles
- * @mixes Controls/_lists/PagingStyles
+ * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_lists/DigitButtonsStyles
  *
  * @control

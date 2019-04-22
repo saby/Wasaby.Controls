@@ -10,6 +10,7 @@ define('Controls-demo/Container/standardDemoScroll', [
         VAT = 18,
         COEFFICIENT_OF_PROFIT = 1.25;
 
+    var currentId = 0;
 
     function _getDemoData() {
         return [
@@ -37,6 +38,7 @@ define('Controls-demo/Container/standardDemoScroll', [
             sum = amount * price;
 
         return {
+            id: currentId++,
             name: name,
             amount: amount,
             costPrice: costPrice,
@@ -65,7 +67,8 @@ define('Controls-demo/Container/standardDemoScroll', [
                 menuItems = ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
                     'Calendar', 'My Page', 'Our Company'],
                 viewSource = new source.Memory({
-                    data: _getDemoData()
+                    data: _getDemoData(),
+                    idProperty: 'id'
                 }),
                 gridColumns = [{
                     width: '40%',

@@ -11,8 +11,8 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
        * @class Controls/_input/Text
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/_input/interface/IInputText
-       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/interface/IInputText
+       * @mixes Controls/interface/IInputBase
        *
        * @public
        * @demo Controls-demo/Input/Text/TextPG

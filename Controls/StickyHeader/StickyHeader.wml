@@ -1,8 +1,1 @@
-<ws:if data="{{_isStickySupport}}">
-   <Controls.StickyHeader._StickyHeader scope="{{_options}}"/>
-</ws:if>
-<ws:else>
-   <div>
-      <ws:partial if="{{_options.content}}" template="{{_options.content}}"/>
-   </div>
-</ws:else>
+<ws:partial template="wml!Controls/_scroll/StickyHeader/StickyHeader" scope="{{_options}}" />
