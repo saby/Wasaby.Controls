@@ -186,10 +186,10 @@ import getZIndex = require('Controls/Utils/getZIndex');
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // for user template: cfg.template
                   message: cfg.message,
+                  styleType: cfg.styleType || 'marker',
+                  style: cfg.style || 'default',
                   floatCloseButton: cfg.floatCloseButton
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController ' +
-                  'controls-InfoBox_style_' + (cfg.styleType || 'marker') + '_' + (cfg.style || 'default'),
                template: 'Controls/_popup/Opener/InfoBox/resources/template'
             }, 'Controls/_popup/Opener/InfoBox/InfoBoxController');
          },

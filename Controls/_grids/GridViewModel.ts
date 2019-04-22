@@ -6,6 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
+import {calcFooterRowIndex} from "../_lists/utils/RowIndexUtil";
 
 var
     _private = {
@@ -342,13 +343,30 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.footerTemplate);
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader());
         },
 
         calcGroupRowIndex: function (self, current): number {
             let groupItem = self._model.getDisplay().at(current.index);
             return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
+
+        getFooterStyles: function (self): string {
+            let styles = '';
+
+            if (GridLayoutUtil.isPartialSupport) {
+                let
+                    columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
+                    columnEnd = self._columns.length + columnStart,
+                    hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
+                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader());
+
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
+            }
+
+            return styles;
+        },
+
         getEmptyTemplateStyles: function (self): string {
             let
                 styles = '';
@@ -1177,14 +1195,19 @@ var
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
-        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        // Only for browsers with partial grid support. Explicit grid cell styles with grid row and grid column
         setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
             for (let i = 0; i< this._columns.length; i++){
                 this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
             }
         },
 
-        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column
+        // Only for browsers with partial grid support. Explicit grid styles for footer with grid row and grid column
+        getFooterStyles: function (): string {
+            return _private.getFooterStyles(this)
+        },
+
+        // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
         getEmptyTemplateStyles() {
             return _private.getEmptyTemplateStyles(this);
         },

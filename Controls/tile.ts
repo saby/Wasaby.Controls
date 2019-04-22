@@ -3,6 +3,9 @@
  * @library Controls/tile
  * @includes View Controls/_tile/Tile
  * @includes ItemTemplate wml!Controls/_tile/TreeTileView/DefaultItemTpl
+ * @includes TileStyles Controls/_tile/Tile/Styles
+ * @includes TreeTileViewStyles Controls/_tile/TreeTileView/Styles
+ * @includes ITile Controls/_tile/interface/ITile
  * @public
  * @author Kraynov D.
  */

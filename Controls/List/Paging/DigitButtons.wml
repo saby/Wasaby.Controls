@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_lists/Paging/DigitButtons" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_paging/Paging/DigitButtons" scope="{{_options}}" />
