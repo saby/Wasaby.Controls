@@ -2509,6 +2509,14 @@
             "title": "The minimum width of popup.",
             "type": "Number"
           },
+          "maxWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "minWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
           "height": {
             "title": "The minimum height of popup.",
             "type": "Number"
@@ -2516,17 +2524,21 @@
           "maxHeight": {
             "title": "The maximum height of popup.",
             "type": "Number"
+          },
+          "minHeight": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
           }
         }
       }
     }
   },
-  "Controls/Popup/Opener/Sticky": {
-    "name": "Controls/Popup/Opener/Sticky",
-    "className": "Controls/Popup/Opener/Sticky",
+  "Controls/_popup/Opener/Sticky": {
+    "name": "Controls/_popup/Opener/Sticky",
+    "className": "Controls/_popup/Opener/Sticky",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Opener/Sticky",
+    "fullname": "Controls/_popup/Opener/Sticky",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2551,12 +2563,15 @@
           "direction": {
             "type": "Object"
           },
+          "offset": {
+            "type": "Object"
+          },
           "targetPoint": {
             "type": "Object"
           },
           "fittingMode": {
             "type": "enum",
-            "default": "overflow",
+            "default": "fixed",
             "enum": {
               "fixed": "fixed",
               "adaptive": "adaptive",

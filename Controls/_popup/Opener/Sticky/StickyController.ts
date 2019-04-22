@@ -25,39 +25,32 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
       var _private = {
          prepareOriginPoint: function(config) {
             var newCfg = cClone(config);
-
+            newCfg.verticalAlign = newCfg.verticalAlign || {};
+            newCfg.horizontalAlign = newCfg.horizontalAlign || {};
             if (config.direction && typeof (config.direction) === 'object') {
                if ('horizontal' in config.direction) {
-                  newCfg.horizontalAlign = {
-                     side: config.direction.horizontal
-                  };
+                  newCfg.horizontalAlign.side = config.direction.horizontal;
                }
                if ('vertical' in config.direction) {
-                  newCfg.verticalAlign = {
-                     side: config.direction.vertical
-                  };
+                  newCfg.verticalAlign.side = config.direction.vertical;
                }
             }
             if (config.offset) {
                if ('horizontal' in config.offset) {
-                  newCfg.horizontalAlign = {
-                     offset: config.offset.horizontal
-                  };
-               }
+                  newCfg.horizontalAlign.offset = config.offset.horizontal
+                  }
                if ('vertical' in config.offset) {
-                  newCfg.verticalAlign = {
-                     offset: config.offset.vertical
-                  };
+                  newCfg.verticalAlign.offset = config.offset.vertical;
                }
             }
             if (config.targetPoint) {
+               newCfg.corner = newCfg.corner || {};
                if ('vertical' in config.targetPoint) {
                   newCfg.corner = {
                      vertical: config.targetPoint.vertical
                   };
                }
                if ('horizontal' in config.targetPoint) {
-                  newCfg.corner = newCfg.corner || {};
                   newCfg.corner.horizontal = config.targetPoint.horizontal;
                }
 

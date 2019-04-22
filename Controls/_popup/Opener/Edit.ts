@@ -218,9 +218,9 @@ import Deferred = require('Core/Deferred');
  * @cfg {Object} Sets the popup configuration.
  * @description
  * <ul>
- *     <li>if mode option equal 'stack' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
- *     <li>if mode option equal 'dialog' see {@link Controls/interface/IDialogOptions#popupOptions popupOptions}</li>
- *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStickyOptions#popupOptions popupOptions}</li>
+ *     <li>if mode option equal 'stack' see {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions}</li>
+ *     <li>if mode option equal 'dialog' see {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions}</li>
+ *     <li>if mode option equal 'sticky' see {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions}</li>
  * </ul>
  *
  */

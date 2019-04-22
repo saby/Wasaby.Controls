@@ -1,16 +1,13 @@
-<div style="height: 200px; width:550px">
-    <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="Создание категории" closeButtonVisibility="true">
-        <ws:headerContentTemplate>
-            <div style="display: flex;justify-content: flex-end;flex-grow: 1;" ws-no-focus="true">
-                <Controls.buttons:Button caption="Button" attr:ws-no-focus="true" attr:tabindex="-1"/>
-            </div>
-        </ws:headerContentTemplate>
-        <ws:bodyContentTemplate>
-            <div style="margin: 20px;display: flex; justify-content: space-around;">
-                <Controls.input:Text placeholder="Название" />
-                <Controls.input:Text placeholder="Описание" value="{{value}}"/>
-            </div>
-        </ws:bodyContentTemplate>
-    </Controls.Popup.Templates.Dialog.DialogTemplate>
-
-</div>
+<Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="Создание категории" closeButtonVisibility="true">
+    <ws:headerContentTemplate>
+        <div style="display: flex;justify-content: flex-end;flex-grow: 1;" ws-no-focus="true">
+            <Controls.buttons:Button caption="Button" attr:ws-no-focus="true" attr:tabindex="-1"/>
+        </div>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+        <div style="margin: 20px;display: flex; justify-content: space-around;">
+            <Controls.input:Text placeholder="Название" />
+            <Controls.input:Text placeholder="Описание" value="{{value}}"/>
+        </div>
+    </ws:bodyContentTemplate>
+</Controls.Popup.Templates.Dialog.DialogTemplate>

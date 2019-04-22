@@ -28,6 +28,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 
          /**
           * Open dialog popup.
+          * If you call this method while the window is already opened, it will cause the redrawing of the window.
           * @function Controls/_popup/Opener/Dialog#open
           * @returns {Undefined}
           * @param {PopupOptions[]} popupOptions Dialog popup options.

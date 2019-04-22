@@ -2,12 +2,13 @@ define('Controls-demo/Popup/Opener/resources/StackTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplate',
-     'Controls-demo/List/Tree/GridData',
+      'Controls-demo/List/Tree/GridData',
       'Controls-demo/List/Tree/TreeMemory',
       'Controls/Constants',
-      'wml!Controls-demo/List/Tree/DemoContentTemplate'
+      'wml!Controls-demo/List/Tree/DemoContentTemplate',
+      'css!Controls-demo/Popup/Opener/resources/Grid'
    ],
-   function (Control, template,  GridData, MemorySource, ControlsConstants) {
+   function (Control, template, GridData, MemorySource) {
       'use strict';
 
       var PopupPage = Control.extend({

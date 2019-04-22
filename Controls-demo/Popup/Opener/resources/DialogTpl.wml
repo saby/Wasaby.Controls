@@ -6,10 +6,10 @@
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
-            <div class="demo-Grid__container">
+            <div class="demo-Grid__container" attr:style="height:100%">
                 <Controls.list:DataContainer source="{{_viewSource}}"
                                          keyProperty="id"
-                                         attr:class="ControlsDemo-Grid__Container">
+                                         attr:class="ControlsDemo-Grid__Container" attr:style="height:100%">
                     <Controls.operations:Controller>
                         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                             <Controls.list:Container>
