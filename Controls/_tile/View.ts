@@ -9,7 +9,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * List in which items are displayed as tiles. Can load data from data source.
  * <a href="/materials/demo-ws4-tile">Demo examples</a>.
  *
- * @class Controls/_tile/Tile
+ * @class Controls/_tile/View
  * @extends Controls/list:View
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -26,7 +26,7 @@ import {TreeControl} from 'Controls/treeGrid';
  *
  * @mixes Controls/List/BaseControlStyles
  * @mixes Controls/List/ListStyles
- * @mixes Controls/List/Tile/Styles
+ * @mixes Controls/List/View/Styles
  * @mixes Controls/List/ItemActions/ItemActionsStyles
  * @mixes Controls/_tile/Swipe/SwipeStyles
  *
@@ -40,7 +40,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @category List
  */
 
-var Tile = View.extend({
+var View = View.extend({
    _viewName: TreeTileView,
    _viewTemplate: TreeControl,
    _getModelConstructor: function() {
@@ -48,11 +48,11 @@ var Tile = View.extend({
    }
 });
 
-Tile.getDefaultOptions = function() {
+View.getDefaultOptions = function() {
    return {
       actionAlignment: 'vertical',
       actionCaptionPosition: 'none'
    };
 };
 
-export = Tile;
+export = View;
