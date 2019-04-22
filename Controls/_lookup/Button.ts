@@ -21,6 +21,12 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 
+var Button = Control.extend({
+   _template: template
+});
+
+export = Button;
+
 /**
  * @name Controls/_lookup/Button#style
  * @cfg {Enum} Button display style.
@@ -33,8 +39,3 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @variant default
  * @default secondary
  */
-
-export = Control.extend({
-   _template: template
-});
-

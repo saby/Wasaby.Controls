@@ -1,6 +1,6 @@
 /**
  * Lookup popup library
- * @library Controls/_lookupPopup
+ * @library Controls/lookupPopup
  * @includes Container Controls/_lookupPopup/Container
  * @includes ListContainer Controls/_lookupPopup/List/Container
  * @includes Controller Controls/_lookupPopup/Controller

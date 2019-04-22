@@ -1,6 +1,6 @@
 /**
  * source library
- * @library Controls/slider
+ * @library Controls/source
  * @includes Base Controls/_slider/Base
  * @includes Range Controls/_slider/Range
  * @author Kraynov D.
