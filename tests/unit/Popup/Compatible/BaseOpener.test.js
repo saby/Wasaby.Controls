@@ -211,6 +211,14 @@ define(
             assert.equal(newConfig.maxWidth, newClass.dimensions.maxWidth);
             assert.equal(newConfig.minHeight, newClass.dimensions.minHeight);
             assert.equal(newConfig.maxHeight, newClass.dimensions.maxHeight);
+
+            newClass = {};
+            newConfig = {};
+            newClass.dimensions = {
+               width: 350
+            };
+            BaseOpener._setSizes(newConfig, newClass);
+            assert.isNaN(newConfig.minWidth);
          });
 
          it('_prepareConfigForOldTemplate', function() {
