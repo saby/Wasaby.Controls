@@ -116,6 +116,7 @@
 
    <ws:template name="partialGridSupportItem">
       <ws:partial template="colTpl"
+                  attr:data-r="{{ itemData.index }}"
                   currentColumn="{{currentColumn}}"
                   attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
                   controls-Grid__row_{{itemData.style || 'default'}} {{currentColumn.cellClasses}}

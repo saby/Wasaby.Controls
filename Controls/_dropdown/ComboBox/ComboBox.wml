@@ -1,4 +1,4 @@
-<Controls._dropdown.Controller
+<Controls._dropdown._Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
         displayProperty="{{_options.displayProperty}}"
@@ -34,4 +34,4 @@
          </ws:afterFieldWrapper>
 
       </Controls._dropdown.ComboBox.InputRender>
-</Controls._dropdown.Controller>
+</Controls._dropdown._Controller>

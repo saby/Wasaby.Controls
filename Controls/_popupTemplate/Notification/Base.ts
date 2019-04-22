@@ -20,13 +20,13 @@ import 'css!theme?Controls/_popupTemplate/Notification/Base/Base';
       /**
        * Base template of notification popup.
        *
-       * @class Controls/Popup/Templates/Notification/Base
+       * @class Controls/_popupTemplate/Notification/Base
        * @extends Core/Control
        * @control
        * @public
        * @category popup
        * @author Красильников А.С.
-       * @mixes Controls/Popup/Templates/Notification/NotificationStyles
+       * @mixes Controls/_popupTemplate/Notification/NotificationStyles
        * @demo Controls-demo/Popup/Templates/NotificationTemplatePG
        */
 
@@ -71,12 +71,12 @@ import 'css!theme?Controls/_popupTemplate/Notification/Base/Base';
 
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#autoClose
+ * @name Controls/_popupTemplate/Notification/Base#autoClose
  * @cfg {Number} Close by timeout after open.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#style
+ * @name Controls/_popupTemplate/Notification/Base#style
  * @cfg {String} Notification display style.
  * @variant warning
  * @variant primary
@@ -85,11 +85,11 @@ import 'css!theme?Controls/_popupTemplate/Notification/Base/Base';
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#closeButtonVisibility
+ * @name Controls/_popupTemplate/Notification/Base#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#bodyContentTemplate
+ * @name Controls/_popupTemplate/Notification/Base#bodyContentTemplate
  * @cfg {function|String} Main content.
  */

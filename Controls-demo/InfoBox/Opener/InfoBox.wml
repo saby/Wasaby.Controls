@@ -7,7 +7,7 @@
       </div>
       <div class="controls-InfoBoxDemo-targets">
          <ws:for data="item in block.items">
-            <div class="controls-InfoBoxDemo-target controls-InfoBoxDemo-target-standard controls-InfoBoxDemo__{{item.text.toLowerCase().replace(' ', '')}}" on:mouseenter="_open(item.cfg)">
+            <div class="controls-InfoBoxDemo-target controls-InfoBoxDemo-target-standard controls-InfoBoxDemo__{{item.text.toLowerCase().replace(' ', '')}}" on:mouseenter="_open(item.cfg)" on:touchstart="_openTouch(item.cfg)">
                {{item.text}}
             </div>
          </ws:for>

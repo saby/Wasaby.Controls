@@ -1,8 +1,8 @@
 /**
  * dragnDrop library
- * @library Controls/_dragnDrop
- * @includes Container Controls/_dragnDrop/Controller
- * @includes Controller Controls/_dragnDrop/Container
+ * @library Controls/dragnDrop
+ * @includes Container Controls/_dragnDrop/Container
+ * @includes Controller Controls/_dragnDrop/Controller
  * @includes DraggingTemplate Controls/_dragnDrop/DraggingTemplate
  * @includes Entity Controls/_dragnDrop/Entity
  * @includes ItemsEntity Controls/_dragnDrop/Entity/Items
@@ -10,8 +10,8 @@
  * @author Авраменко А. С.
  */
 
-import Container = require('Controls/_dragnDrop/Controller');
-import Controller = require('Controls/_dragnDrop/Container');
+import Container = require('Controls/_dragnDrop/Container');
+import Controller = require('Controls/_dragnDrop/Controller');
 import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
 import Entity = require('Controls/_dragnDrop/Entity');
 import ItemsEntity = require('Controls/_dragnDrop/Entity/Items');

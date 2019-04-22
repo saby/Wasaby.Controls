@@ -19,7 +19,7 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/Date/interface/IDateRangeSelectable
- * @mixes Controls/_input/interface/IDateMask
+ * @mixes Controls/interface/IDateMask
  * @mixes Controls/_datePopup/interface/IDatePopup
  * @control
  * @public

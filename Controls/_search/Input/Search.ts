@@ -14,10 +14,10 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  *
  * @class Controls/_search/Input/Search
  * @mixes Controls/Input/interface/IInputField
- * @mixes Controls/_input/interface/IInputText
- * @mixes Controls/_input/interface/IInputBase
- * @mixes Controls/_input/interface/IPaste
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputText
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/ITooltip
  *
  * @ignoreOptions style

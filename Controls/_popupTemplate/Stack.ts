@@ -9,23 +9,23 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
 
          /**
           * Base template of stack panel. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart See more}.
-          * @class Controls/Popup/Templates/Stack/StackTemplate
+          * @class Controls/_popupTemplate/Stack
           * @extends Core/Control
           * @control
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/Popup/Templates/Stack/StackTemplateStyles
+          * @mixes Controls/_popupTemplate/Stack/StackTemplateStyles
           * @demo Controls-demo/Popup/Templates/StackTemplatePG
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#headingCaption
+          * @name Controls/_popupTemplate/Stack#headingCaption
           * @cfg {String} Header title.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#headingStyle
+          * @name Controls/_popupTemplate/Stack#headingStyle
           * @cfg {String} Caption display style.
           * @variant secondary
           * @variant primary
@@ -33,33 +33,33 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#headerContentTemplate
+          * @name Controls/_popupTemplate/Stack#headerContentTemplate
           * @cfg {function|String} The content between the header and the cross closure.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#bodyContentTemplate
+          * @name Controls/_popupTemplate/Stack#bodyContentTemplate
           * @cfg {function|String} Main content.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#footerContentTemplate
+          * @name Controls/_popupTemplate/Stack#footerContentTemplate
           * @cfg {function|String} Content at the bottom of the stack panel.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonVisibility
+          * @name Controls/_popupTemplate/Stack#closeButtonVisibility
           * @cfg {Boolean} Determines whether display of the close button.
           */
 
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#maximizeButtonVisibility
+          * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
           * @cfg {Boolean} Determines the display maximize button.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonViewMode
+          * @name Controls/_popupTemplate/Stack#closeButtonViewMode
           * @cfg {String} Close button display style.
           * @variant default
           * @variant light
@@ -120,7 +120,7 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
 
          /**
           * Закрыть всплывающее окно
-          * @function Controls/Popup/Templates/Stack/StackTemplate#close
+          * @function Controls/_popupTemplate/Stack#close
           */
          close: function() {
             this._notify('close', [], { bubbling: true });
@@ -135,7 +135,7 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
          },
          _calculateMaximized: function(options) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
-            if (!options.minimizedWidth) {
+            if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
                var middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
                return options.stackWidth - middle > 0;
             }
@@ -154,6 +154,6 @@ import 'css!theme?Controls/_popupTemplate/Stack/Stack';
 
 
 /**
- * @name Controls/Popup/Templates/Stack/StackTemplate#close
+ * @name Controls/_popupTemplate/Stack#close
  * Close popup.
  */

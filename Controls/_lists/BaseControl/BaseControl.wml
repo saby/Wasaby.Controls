@@ -122,6 +122,7 @@
                 on:menuActionsClick="_showActionsMenu()"
                 on:menuActionClick="_showActionMenu()"
                 on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                on:actionClick="_notifyHandler('actionClick')"
                 toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
                 name="itemActions"
                 style="{{_options.style}}"
@@ -138,6 +139,8 @@
             on:closeSwipe="_closeSwipe()"
             swipeDirection="{{_options.swipeDirection}}"
             titlePosition="{{_options.titlePosition}}"
+            actionAlignment="{{_options.actionAlignment}}"
+            actionCaptionPosition="{{_options.actionCaptionPosition}}"
             viewName="{{ _options.viewName }}"
             listModel="{{_listViewModel}}"
             itemActions="{{_options.itemActions}}"
@@ -156,7 +159,7 @@
 
         <ws:if data="{{_pagingVisible}}">
             <div class="controls-BaseControl__pagingContainer">
-                <Controls._lists.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls._lists.Paging>
+                <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
             </div>
         </ws:if>
         <Controls.Dropdown.Opener
