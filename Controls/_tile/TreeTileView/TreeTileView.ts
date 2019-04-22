@@ -1,6 +1,6 @@
 import TileView = require('Controls/_tile/TileView/TileView');
 import Env = require('Env/Env');
-import {ItemTemplate as defaultItemTpl} from 'Controls/tile';
+import defaultItemTpl = require('wml!Controls/_tile/TreeTileView/DefaultItemTpl');
 import itemOutputWrapper = require('wml!Controls/_tile/TreeTileView/resources/ItemOutputWrapper');
 import 'css!theme?Controls/_tile/TreeTileView/TreeTileView';
 
