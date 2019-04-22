@@ -1,6 +1,6 @@
 /**
  * @interface Controls/_input/Render/Styles
- * @private
+ *
  * @css @color_Render-placeholder Tooltip color of the input field.
  *
  * @css @border-width_Render Size of the border of the input field.
