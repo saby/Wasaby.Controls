@@ -63,7 +63,7 @@
     "cookie-parser": "^1.4.3",
     "eslint": "^5.7.0",
     "express": "^4.16.3",
-    "sbis3-builder": "git+https://github.com/saby/Builder.git#19.300/feature/require-patched-require\n",
+    "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.300",
     "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300",
     "Router": "git+https://github.com/saby/Router.git#rc-19.300",
     "serve-static": "1.11.x",
