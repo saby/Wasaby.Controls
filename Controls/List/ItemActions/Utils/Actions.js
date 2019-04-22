@@ -1,3 +1,3 @@
-define('Controls/List/ItemActions/Utils/Actions', ['Controls/_lists/ItemActions/Utils/Actions'], function(Control) {
+define('Controls/List/ItemActions/Utils/Actions', ['Controls/_list/ItemActions/Utils/Actions'], function(Control) {
    return Control;
 });

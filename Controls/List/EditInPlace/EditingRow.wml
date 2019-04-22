@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_lists/EditInPlace/EditingRow" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_list/EditInPlace/EditingRow" scope="{{_options}}" />

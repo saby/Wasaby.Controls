@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/_lists/Mover/MoveDialog/Styles
+ * @mixin Controls/_MoveDialog/Styles
  * @public
  *
  * @css @width_MoveDialog width of the move dialog.
