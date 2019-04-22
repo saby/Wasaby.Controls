@@ -52,7 +52,7 @@ define([
       let component, result;
 
       beforeEach(function() {
-         component = createComponent(scroll._stickyHeaderController.default, {});
+         component = createComponent(scroll._stickyHeaderController, {});
          component._children.stickyHeaderShadow = {
             start: sinon.fake()
          };
