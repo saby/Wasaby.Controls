@@ -66,6 +66,8 @@ define('Controls/Input/Date/LinkView', [
 
       _updateStyles: function(self, options) {
          var changed = false;
+
+         // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
          if (options.style && self._options.style !== options.style) {
             self._viewMode = _private.styleMap[options.style].viewMode;
             self._styleMode = _private.styleMap[options.style].styleMode;
@@ -113,6 +115,7 @@ define('Controls/Input/Date/LinkView', [
          _private._updateCaption(this, options);
          _private._updateStyles(this, options);
 
+         // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
          if (options.style) {
             Env.IoC.resolve('ILogger').error('LinkView', rk('You should use viewMode and styleMode options instead of style option.'));
          }
