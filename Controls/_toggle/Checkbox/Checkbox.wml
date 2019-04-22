@@ -4,7 +4,7 @@
                                            {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
          title="{{_options.tooltip}}">
         <div class="{{_options.value === null && _options.triState ? 'controls-Checkbox__icon-tristate controls-Checkbox__icon-tristate-color__' + (_options.readOnly ? 'disabled':'enabled')}}
-                     controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}} controls-Checkbox__icon">
+                     controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}} controls-Checkbox__iconWrapper">
             <svg attr:xmlns="http://www.w3.org/2000/svg"
                  attr:viewBox="0 0 18 18"
                  attr:class="controls-Checkbox__icon-checked

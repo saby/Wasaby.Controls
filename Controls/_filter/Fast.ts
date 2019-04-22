@@ -173,8 +173,10 @@ import 'css!theme?Controls/Input/Dropdown/Dropdown';
             if (result.action === 'selectorResult') {
                this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this, result.data));
             }
-            _private.selectItems.call(this, result.data);
-            _private.notifyChanges(this, this._items);
+            if (result.data) {
+               _private.selectItems.call(this, result.data);
+               _private.notifyChanges(this, this._items);
+            }
             this._children.DropdownOpener.close();
          },
 

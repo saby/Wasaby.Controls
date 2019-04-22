@@ -10,6 +10,7 @@ import entity = require('Types/entity');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import clone = require('Core/core-clone');
+
 /**
  * Source
  * Proxy source adding history data to the original source
@@ -40,8 +41,6 @@ import clone = require('Core/core-clone');
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
-
-
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 
@@ -387,9 +386,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    query: function (query) {
       var self = this;
-      var pd = new ParallelDeferred({
-         stopOnFirstError: false
-      });
+      var pd = new ParallelDeferred({ stopOnFirstError: false });
       var where = query.getWhere();
       var newItems;
 
