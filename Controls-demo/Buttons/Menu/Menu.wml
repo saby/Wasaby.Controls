@@ -1,7 +1,7 @@
 <div class="ControlsDemo-ButtonsMenu" style="padding: 50px;">
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
-      <h4>One item</h4>
+      <h4 id="oneItemLabel">One item</h4>
       <Controls.Button.Menu
               keyProperty="id"
               iconStyle="secondary"
