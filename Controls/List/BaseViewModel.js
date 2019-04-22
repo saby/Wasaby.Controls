@@ -1,4 +1,4 @@
-define('Controls/List/BaseViewModel', ['Controls/_lists/BaseViewModel'], function(Control) {
+define('Controls/List/BaseViewModel', ['Controls/_list/BaseViewModel'], function(Control) {
 /**
  * Created by kraynovdo on 24.05.2018.
  */

@@ -238,7 +238,7 @@ var _private = {
  * @class Controls/_treeGrids/TreeControl
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_treeGrids/TreeGridView/Styles
- * @extends Controls/_lists/ListControl
+ * @extends Controls/_list/ListControl
  * @control
  * @public
  * @category List

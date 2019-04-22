@@ -1,4 +1,4 @@
-define('Controls/List/VirtualScroll', ['Controls/_lists/VirtualScroll'], function(Control) {
+define('Controls/List/VirtualScroll', ['Controls/_list/VirtualScroll'], function(Control) {
 /** **********************************************
      *
      *    Event handlers
