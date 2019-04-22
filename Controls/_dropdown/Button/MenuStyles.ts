@@ -1,6 +1,6 @@
 
 /**
-    * @mixin Controls/_dropdown/Menu/MenuStyles
+    * @mixin Controls/_dropdown/Button/MenuStyles
     * @public
     *
     * @css @shift-top_MenuButton-button-popup Offset on the top for pop-up at the menu with button viewMode.
