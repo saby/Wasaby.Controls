@@ -3,7 +3,7 @@
       <div class="demo-EditableGrid__editor-flexWrapper" style="width: 100%;">
          <div class="demo-EditableGrid__editor-flexWrapper">
             <span class="demo-EditableGrid__editor-description">Признак ТД</span>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     bind:selectedKey="itemData.item.documentSign"
                     keyProperty="id"
                     displayProperty="title"
@@ -33,7 +33,7 @@
       </div>
       <div class="demo-EditableGrid__editor-rowTopSpacing">
          <span class="demo-EditableGrid__editor-description">Грузоотправитель</span>
-         <Controls.Selector.Lookup placeholder="Укажите"/>
+         <Controls.lookup:Input placeholder="Укажите"/>
       </div>
       <div class="demo-EditableGrid__editor-description demo-EditableGrid__editor-rowTopSpacing">Сведения о маршрутном поручении (телеграмме)</div>
       <div class="demo-EditableGrid__editor-flexWrapper demo-EditableGrid__editor-rowTopSpacing" style="width: 100%;">

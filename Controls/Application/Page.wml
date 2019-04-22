@@ -62,9 +62,9 @@
                                        on:showIndicator="LoadingIndicator._showHandler()"
                                        on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
-                                 <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                 <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
                                     <div></div>
-                                 </Controls.Container.LoadingIndicator>
+                                 </Controls.LoadingIndicator>
                               </ws:if>
                               <ws:else>
                                  <Controls.Application._Wait content="">

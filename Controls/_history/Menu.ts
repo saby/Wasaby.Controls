@@ -1,4 +1,4 @@
-import Menu = require('Controls/Button/Menu');
+import {Button as Menu} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
 import MenuUtils = require('Controls/Button/Menu/MenuUtils');
 import 'css!theme?Controls/_history/Menu';

@@ -1,4 +1,4 @@
-<Controls.Validate.FormController name="formController">
+<Controls.validate:Controller name="formController">
     <ws:partial template="{{_options.content}}"
                 editingItemData="{{_editingItemData}}"
                 isAdd="{{_isAdd}}"
@@ -7,4 +7,4 @@
                 on:rowDeactivated="_onRowDeactivated()"
                 on:itemClick="_onItemClick()">
     </ws:partial>
-</Controls.Validate.FormController>
+</Controls.validate:Controller>

@@ -10,7 +10,7 @@
         </div>
     </ws:if>
 
-    <Controls.Dropdown.Opener
+    <Controls.dropdown:Opener
             on:result="_onResult()"
             name="menuOpener"
             keyProperty="id"
@@ -18,8 +18,8 @@
         <ws:targetPoint vertical="top"
                    horizontal="right"/>
         <ws:direction horizontal="left"/>
-    </Controls.Dropdown.Opener>
+    </Controls.dropdown:Opener>
 
-    <Controls.Event.Listener event="controlResize"
+    <Controls.event:Listener event="controlResize"
                             on:controlResize="_onResize()"/>
 </div>

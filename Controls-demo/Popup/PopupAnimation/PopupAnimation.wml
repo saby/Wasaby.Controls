@@ -1,5 +1,5 @@
 <div class="ControlsDemo-PopupAnimation">
-   <Controls.Container.LoadingIndicator name="loadingIndicator" message="Загрузка...">
+   <Controls.LoadingIndicator name="loadingIndicator" message="Загрузка...">
       <div>
          <Controls.Popup.Opener.Stack name="stack"
                                       template="Controls-demo/Popup/PopupAnimation/PopupAnimation_stack"
@@ -13,5 +13,5 @@
          <br />
          <Controls.Input.Number bind:value="_fullCreateDelay" on:valueChanged="_inputHandlerHandler('_fullCreateDelay')" precision="{{0}}"/> Задержка до полного построения шаблона. Допустимое значение от 0 до 10000
       </div>
-   </Controls.Container.LoadingIndicator>
+   </Controls.LoadingIndicator>
 </div>

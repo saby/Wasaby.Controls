@@ -1,13 +1,13 @@
 <ws:template name="genreKey">
-   <Controls.Filter.Button.Panel.Link caption="genreKey"/>
+   <Controls.filterPopup:Link caption="genreKey"/>
 </ws:template>
 
 <ws:template name="FIO">
-   <Controls.Filter.Button.Panel.Link caption="FIO"/>
+   <Controls.filterPopup:Link caption="FIO"/>
 </ws:template>
 
 <ws:template name="country">
-   <Controls.Filter.Button.Panel.Select
+   <Controls.filterPopup:Select
            keyProperty="key">
       <ws:items>
          <ws:Array>
@@ -16,11 +16,11 @@
             <ws:Object key="{{4}}" title="UK"/>
          </ws:Array>
       </ws:items>
-   </Controls.Filter.Button.Panel.Select>
+   </Controls.filterPopup:Select>
 </ws:template>
 
 <ws:template name="genreTip">
-   <Controls.Filter.Button.Panel.Link caption="Test1"/>
+   <Controls.filterPopup:Link caption="Test1"/>
 </ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

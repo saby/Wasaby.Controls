@@ -11,11 +11,11 @@ define('Controls/interface/IDropdown', [], function() {
    /**
     * @name Controls/interface/IDropdown#itemTemplate
     * @cfg {Function} Template for item render.
-    * @default "wml!Controls/Dropdown/resources/template/itemTemplate"
+    * @default "Controls/dropdown:ItemTemplate"
     * @remark
-    * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
+    * To determine the template, you should call the base template "Controls/dropdown:ItemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template Controls/dropdown:ItemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
     *    -  displayProperty - defines the display field (By default 'title'),
     *    -  marker - sets the display of the row marker,
     *    -  multiLine - sets the display record to several lines.
@@ -24,14 +24,14 @@ define('Controls/interface/IDropdown', [], function() {
     * Menu with text header - "Add".
     * TMPL:
     * <pre>
-    *    <Controls.Button.Menu
+    *    <Controls.dropdown:Button
     *          keyProperty="id"
     *          icon="icon-medium icon-AddButtonNew"
     *          source="{{_source)}}"
     *          tooltip="Add">
     *       <ws:itemTemplate>
     *          <ws:partial
-    *             template="wml!Controls/Dropdown/resources/template/itemTemplate" >
+    *             template="Controls/dropdown:ItemTemplate" >
     *          <ws:contentTemplate>
     *             <div class="demo-combobox__item">
     *                <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
@@ -40,7 +40,7 @@ define('Controls/interface/IDropdown', [], function() {
     *          </ws:contentTemplate>
     *          </ws:partial>
     *       </ws:itemTemplate>
-    *    </Controls.Button.Menu>
+    *    </Controls.dropdown:Button>
     * </pre>
     * JS:
     * <pre>
@@ -66,9 +66,9 @@ define('Controls/interface/IDropdown', [], function() {
     * @name Controls/interface/IDropdown#itemTemplateProperty
     * @cfg {Function} Name of the item property that contains template for item render.
     * @remark
-    * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
+    * To determine the template, you should call the base template "Controls/dropdown:ItemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template Controls/dropdown:ItemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
     *    -  displayProperty - defines the display field (By default 'title'),
     *    -  marker - sets the display of the row marker,
     *    -  multiLine - sets the display record to several lines.
@@ -77,7 +77,7 @@ define('Controls/interface/IDropdown', [], function() {
     * Second item in the menu will be displayed with comment.
     * TMPL:
     * <pre>
-    *    <Controls.Button.Menu
+    *    <Controls.dropdown:Button
     *          keyProperty="id"
     *          icon="icon-medium icon-AddButtonNew"
     *          source="{{_source)}}"
@@ -86,7 +86,7 @@ define('Controls/interface/IDropdown', [], function() {
     * </pre>
     * myItemTemplate.wml
     * <pre>
-    *    <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate" >
+    *    <ws:partial template="Controls/dropdown:ItemTemplate" >
     *       <ws:contentTemplate>
     *          <div class="demo-item">
     *             <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>

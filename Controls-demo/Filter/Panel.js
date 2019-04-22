@@ -4,7 +4,7 @@
 define('Controls-demo/Filter/Panel', [
    'Core/Control',
    'wml!Controls-demo/Filter/Panel',
-   'Controls/Input/Dropdown',
+   'Controls/dropdown',
    "wml!Controls-demo/Filter/itemTemplate"
 ], function(Control, tempalte) {
    

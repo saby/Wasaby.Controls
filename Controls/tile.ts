@@ -11,7 +11,7 @@
  */
 
 import View = require('Controls/_tile/Tile');
-import ItemTemplate = require('wml!Controls/_tile/TreeTileView/DefaultItemTpl');
+import {ItemTemplate} from 'Controls/tile';
 
 import TreeViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeView = require('Controls/_tile/TreeTileView/TreeTileView');

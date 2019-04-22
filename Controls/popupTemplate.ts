@@ -18,7 +18,7 @@ import Dialog = require('Controls/_popupTemplate/Dialog');
 import Confirmation = require('Controls/_popupTemplate/Confirmation');
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
 import Notification = require('Controls/_popupTemplate/Notification/Base');
-import NotificationSimple = require('Controls/_popupTemplate/Notification/Simple');
+import {NotificationSimple} from 'Controls/popupTemplate';
 
 export {
    CloseButton,

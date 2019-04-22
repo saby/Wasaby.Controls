@@ -4,7 +4,7 @@
          <ws:partial template="{{_options.content}}" />
       </ws:if>
       <ws:if data="{{_options.closeButtonVisibility}}">
-         <Controls.Button.Close attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" style="light"/>
+         <Controls.popupTemplate:CloseButton attr:class="controls-InfoBoxTemplate__closeButton" on:click="_close()" style="light"/>
       </ws:if>
    </div>
    <div class="controls-InfoBoxTemplate__arrow-wrapper-{{_arrowSide}}">

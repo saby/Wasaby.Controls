@@ -13,5 +13,5 @@
             <i class="icon-medium icon-ExpandDown"/>
         </div>
     </div>
-    <Controls.Dropdown.Opener name="menuOpener" scope="{{_popupOptions}}" />
+    <Controls.dropdown:Opener name="menuOpener" scope="{{_popupOptions}}" />
 </div>

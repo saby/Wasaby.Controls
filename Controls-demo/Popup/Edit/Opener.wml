@@ -7,7 +7,7 @@
          <br />
          События окна <Controls.input:Text bind:value="_eventText" class="demo-PopupEditOpener__eventText"/>
 
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
+         <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
             <Controls.list:Container>
                <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
@@ -23,7 +23,7 @@
                   columns="{{gridColumns}}">
                </Controls.grid:View>
             </Controls.list:Container>
-         </Controls.Container.Scroll>
+         </Controls.scroll:Container>
       </div>
 
       <Controls.toggle:Checkbox bind:value="_cancelEdit" caption="Отменить синхронизацию" class="demo-PopupEditOpener__cancelEdit"/>

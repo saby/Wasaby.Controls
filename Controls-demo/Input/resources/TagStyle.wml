@@ -1,4 +1,4 @@
-<Controls.Input.ComboBox
+<Controls.dropdown:Combobox
         source="{{_createMemory()}}"
         keyProperty="id"
         placeholder="{{_placeholder}}"

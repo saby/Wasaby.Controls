@@ -2,15 +2,14 @@ define('Controls/Selector/Suggest',
    [
       'Core/Control',
       'wml!Controls/Selector/Suggest/Suggest',
-      'Controls/Controllers/SourceController',
-      'Controls/History/Source',
-      'Controls/History/Service',
+      'Controls/source',
+      'Controls/history',
       'Types/util',
       'Types/entity',
       'Core/core-merge',
       'css!Controls/Selector/Suggest/Suggest'
    ],
-   function(Control, template, SourceController, HistorySource, HistoryService, util, entity, Merge) {
+   function(Control, template, scroll, history, util, entity, Merge) {
       'use strict';
 
       /**
@@ -33,7 +32,7 @@ define('Controls/Selector/Suggest',
          loadSelectedItem: function(self, options) {
             var filter = {};
             filter[options.keyProperty] = options.selectedKey;
-            self._sourceController = new SourceController({
+            self._sourceController = new scroll.Controller({
                source: options.source
             });
             return self._sourceController.load(filter).addCallback(function(items) {
@@ -57,9 +56,9 @@ define('Controls/Selector/Suggest',
          },
 
          createHistorySource: function(historyId, source) {
-            return new HistorySource({
+            return new history.Source({
                originSource: source,
-               historySource: new HistoryService({
+               historySource: new history.Service({
                   historyId: historyId
                })
             });

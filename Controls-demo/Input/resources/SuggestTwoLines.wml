@@ -1,4 +1,4 @@
-<Controls.Input.Suggest
+<Controls.suggest:Input
         value="{{_options.suggestValue}}"
         displayProperty="title"
         searchParam="title"
@@ -25,4 +25,4 @@
             </ws:itemSuggestTemplate>
         </ws:templateOptions>
     </ws:suggestTemplate>
-</Controls.Input.Suggest>
+</Controls.suggest:Input>

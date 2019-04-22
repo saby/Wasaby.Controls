@@ -2,16 +2,15 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
    [
       'Core/Control',
       'Types/di',
-      'Controls/History/Service',
+      'Controls/history',
       'Core/Deferred',
       'Types/source',
       'Types/collection',
       'Types/entity',
-      'Core/Serializer',
-      'Controls/History/Source'
+      'Core/Serializer'
    ],
 
-   function(Control, Di, HistoryService, Deferred, sourceLib, collection, entity, Serializer, HistorySource) {
+   function(Control, Di, history, Deferred, sourceLib, collection, entity, Serializer) {
       'use strict';
 
       var items = [
@@ -360,7 +359,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             idProperty: 'id',
             data: items
          }),
-         historySource: new HistoryService({
+         historySource: new history.Service({
             historyId: 'DEMO_HISTORY_ID'
          }),
          parentProperty: 'parent'

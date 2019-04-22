@@ -39,7 +39,7 @@
    </ws:else>
 </ws:template>
 <ws:template name="stickyCell">
-   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}" mode="stackable" fixedZIndex="3">
+   <Controls.scroll:StickyHeader attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}" mode="stackable" fixedZIndex="3">
       <!-- Set the listModel option only in order for the update of the internal templates to update -->
       <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
       <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
@@ -50,7 +50,7 @@
                   headerColumn="{{headerColumn}}"
                   multiselect="{{multiselect}}"
                   listModel="{{ listModel }}"/>
-   </Controls.StickyHeader>
+   </Controls.scroll:StickyHeader>
 </ws:template>
 <ws:template name="header">
    <ws:if data="{{listModel.isNoGridSupport()}}">
