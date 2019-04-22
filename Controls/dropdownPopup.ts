@@ -10,8 +10,10 @@
 
 import Template = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
 import List = require('Controls/_dropdownPopup/DropdownList');
+import MoreButton = require('Controls/_dropdownPopup/MoreButton');
 
 export {
     Template,
-    List
+    List,
+    MoreButton
 }
