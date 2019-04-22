@@ -1,4 +1,4 @@
-define('Controls/List/interface/ITreeControl', ['Controls/_treeGrids/interface/ITreeControl'], function(Control) {
+define('Controls/List/interface/ITreeControl', ['Controls/_treeGrid/interface/ITreeControl'], function(Control) {
 /**
  * Interface for tree-like lists.
  *

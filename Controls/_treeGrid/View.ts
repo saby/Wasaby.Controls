@@ -1,8 +1,8 @@
 import {View as Grid} from 'Controls/grid';
-import TreeGridViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');
+import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import entity = require('Types/entity');
-import TreeGridView = require('Controls/_treeGrids/TreeGridView/TreeGridView');
-import TreeControl = require('Controls/_treeGrids/TreeControl');
+import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
+import TreeControl = require('Controls/_treeGrid/TreeControl');
 
 
    /**
@@ -12,7 +12,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
     * </ul>
     *
-    * @class Controls/TreeGrid
+    * @class Controls/_treeGrid/View
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
@@ -29,15 +29,15 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     *
     * @mixes Controls/_lists/BaseControlStyles
     * @mixes Controls/_lists/ListStyles
-    * @mixes Controls/_lists/Grid/GridStyles
-    * @mixes Controls/_treeGrids/TreeGrid/Styles
+    * @mixes Controls/_grids/GridStyles
+    * @mixes Controls/_treeGrid/Styles
     * @mixes Controls/_lists/ItemActions/ItemActionsStyles
-    * @mixes Controls/_lists/Swipe/SwipeStyles
+    * @mixes Controls/_list/Swipe/SwipeStyles
     *
     * @mixes Controls/_lists/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_lists/DigitButtonsStyles
-    * @mixes Controls/_lists/Grid/SortButtonStyles
+    * @mixes Controls/_grids/SortButtonStyles
     *
     * @control
     * @public
