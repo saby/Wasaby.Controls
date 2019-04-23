@@ -31,9 +31,11 @@ define('Controls/interface/IDropdown', [], function() {
     *          tooltip="Add">
     *       <ws:itemTemplate>
     *          <ws:partial
-    *             template="wml!Controls/Dropdown/resources/template/itemTemplate" >
+    *             template="wml!Controls/Dropdown/resources/template/itemTemplate"
+    *             itemData="{{itemData}}"
+    *             multiLine="{{true}}">
     *          <ws:contentTemplate>
-    *             <div class="demo-combobox__item">
+    *             <div class="demo-menu__item">
     *                <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
     *                <div class="demo-comment">{{itemTemplate.itemData.item.get('comment')}}</div>
     *             </div>
@@ -86,7 +88,8 @@ define('Controls/interface/IDropdown', [], function() {
     * </pre>
     * myItemTemplate.wml
     * <pre>
-    *    <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate" >
+    *    <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate"
+    *                itemData="{{itemData}}">
     *       <ws:contentTemplate>
     *          <div class="demo-item">
     *             <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
