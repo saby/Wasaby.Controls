@@ -28,7 +28,38 @@
    box-sizing: border-box;
    position: relative;
 }
-
+.controls-InfoBoxTemplate__arrow-outline {
+  @variants: default,  danger;
+   .for(@variants, { &-@{_item} {
+     border-color: ~"@{border-color_Infobox_@{_item}}";
+   } });
+}
+.controls-InfoBoxTemplate__arrow-marker {
+  @variants: default,  danger, info, secondary, warning, success;
+  .for(@variants, { &-@{_item} {
+    &.controls-InfoBoxTemplate__arrow-top {
+      border-color: ~"@{border-color_Infobox_@{_item}}";
+    }
+  }
+  });
+}
+.controls-InfoBoxTemplate_style_outline {
+   @variants: default,  danger;
+   .for(@variants, { &_@{_item} {
+      background: @background-color_Infobox_default;
+      box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
+      border: @border-width_Infobox solid ~"@{border-color_Infobox_@{_item}}";
+   } });
+}
+.controls-InfoBoxTemplate_style_marker {
+   @variants: default,  danger, info, secondary, warning, success;
+   .for(@variants, { &_@{_item} {
+      background: @background-color_Infobox_default;
+      box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
+      border: @border-width_Infobox solid @border-color_Infobox_default;
+      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
+   } });
+}
 .controls-InfoBoxTemplate__content {
    position: relative;
 }
