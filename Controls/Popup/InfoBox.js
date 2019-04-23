@@ -1,6 +1,6 @@
 define('Controls/Popup/InfoBox',
-   ['Controls/_popup/InfoBox'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.InfoboxTarget;
    });
