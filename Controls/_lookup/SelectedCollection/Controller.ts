@@ -11,6 +11,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import LoadService = require('Controls/History/LoadService');
 
 
+
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
          var filter = clone(filter || {});
@@ -140,6 +141,15 @@ import LoadService = require('Controls/History/LoadService');
          return self._historyServiceLoad;
       }
    };
+
+   /**
+    * SelectedCollection Controller
+    * @class Controls/_lookup/SelectedCollection/Controller
+    * @extends Core/Control
+    * @control
+    * @private
+    * @author Kraynov D.
+    */
 
    var CollectionController = Control.extend({
       _template: template,
