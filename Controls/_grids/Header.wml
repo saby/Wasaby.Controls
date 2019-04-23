@@ -30,7 +30,9 @@
       </th>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <ws:partial template="cellContent" attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.gridCellStyles}}" />
+      <div attr:style="{{headerColumn.gridCellStyles}}" attr:class="{{headerColumn.cellClasses}}">
+         <ws:partial template="cellContent" />
+      </div>
    </ws:else>
    <ws:else>
       <div attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
