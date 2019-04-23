@@ -66,7 +66,7 @@ export default class Container extends Control {
         this.__updateConfig(options);
     }
     protected _afterMount() {
-        this.__createOpener();
+        // this.__createOpener();
         if (this.__viewConfig) {
             this.__showDialog(this.__viewConfig);
         }
@@ -86,10 +86,10 @@ export default class Container extends Control {
         }
         config.isShowed = true;
         getTemplate(config.template).then((template) => {
-            this.__opener.open({
+            /*this.__opener.open({
                 template,
                 templateOptions: config.options
-            });
+            });*/
         });
     }
     private __hideDialog() {
@@ -107,18 +107,18 @@ export default class Container extends Control {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
         }
     }
-    private __createOpener() {
+   /* private __createOpener() {
         if (!this.__opener) {
-            /*
+            /!*
              * Надо для того чтобы не "портить" вёрстку своим оборачивающим div
              * TODO Убрать после закрытия задачи:
              * https://online.sbis.ru/opendoc.html?guid=2a0f76a4-8b69-403a-ae5f-1af4f0443fe6
-             */
+             *!/
             let el = document.createElement('div');
             el.classList.add('ws-hidden');
             let container = this._container instanceof HTMLElement? this._container: this._container[0];
             container.appendChild(el);
             this.__opener = Control.createControl(Dialog, {}, el);
         }
-    }
+    }*/
 }
