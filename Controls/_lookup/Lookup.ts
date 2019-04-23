@@ -12,10 +12,10 @@ import Env = require('Env/Env');
  * @class Controls/_lookup/Lookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/Input/interface/ISearch
+ * @mixes Controls/interface/ISearch
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/Input/interface/ISuggest
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
