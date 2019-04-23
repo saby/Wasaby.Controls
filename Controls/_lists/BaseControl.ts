@@ -1538,7 +1538,9 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         newNavigation.sourceConfig.page = page - 1;
         this._recreateSourceController(this._options.source, newNavigation);
         this._notify('doScroll', ['top'], { bubbling: true });
-        this._calcDisplayedItem(this, this._options).addCallback(()=>{this._calcPagingOptions(this, this._options);});
+        this._calcDisplayedItem(this, this._options).addCallback(() => {
+            this._calcPagingOptions(this, this._options);
+        });
 
     },
 
