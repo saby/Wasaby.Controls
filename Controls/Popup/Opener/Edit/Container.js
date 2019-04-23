@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Edit/Container',
-   ['Controls/_popup/Opener/Edit/Container'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.EditContainer;
    });

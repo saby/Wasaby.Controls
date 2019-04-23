@@ -93,15 +93,12 @@ import Deferred = require('Core/Deferred');
             var def = new Deferred();
 
             if (options.mode === 'dialog') {
-               this._openerTemplate = 'Controls/_popup/Opener/Dialog';
+               this._openerTemplate = require('Controls/popup').Dialog;
             } else if (options.mode === 'sticky') {
-               this._openerTemplate = 'Controls/_popup/Opener/Sticky';
+               this._openerTemplate = require('Controls/popup').Sticky;
             } else {
-               this._openerTemplate = 'Controls/_popup/Opener/Stack';
+               this._openerTemplate = require('Controls/popup').Stack;
             }
-
-            requirejs([this._openerTemplate], def.callback.bind(def));
-            return def;
          },
 
          /**
@@ -205,7 +202,7 @@ import Deferred = require('Core/Deferred');
       Edit.CANCEL = 'cancel';
 
       export = Edit;
-   
+
 
 /**
  * @name Controls/_popup/Opener/Edit#close
