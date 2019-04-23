@@ -1,5 +1,4 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
-import StackController = require('Controls/_popup/Opener/Stack/StackController');
       /**
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
@@ -72,7 +71,7 @@ import StackController = require('Controls/_popup/Opener/Stack/StackController')
          open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
-            return BaseOpener.prototype.open.call(this, config, StackController);
+            return BaseOpener.prototype.open.call(this, config, require('Controls/popup').StackController);
          },
 
          _setCompatibleConfig: function(config) {

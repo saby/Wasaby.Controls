@@ -1,8 +1,6 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Deferred = require('Core/Deferred');
-import ConfirmationDialog = require('Controls/_popup/Opener/Confirmation/Dialog');
-import DialogController = require('Controls/_popup/Opener/Dialog/DialogController');
 
 
       /**
@@ -158,14 +156,14 @@ import DialogController = require('Controls/_popup/Opener/Dialog/DialogControlle
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
             _private.compatibleOptions(this, popupOptions);
-            Confirmation.superclass.open.call(this, popupOptions, DialogController);
+            Confirmation.superclass.open.call(this, popupOptions, require('Controls/popup').DialogController);
             return this._resultDef;
          },
 
          _getPopupOptions: function(templateOptions) {
             templateOptions.closeHandler = this._closeHandler;
             return {
-               template: ConfirmationDialog,
+               template: require('Controls/popup').ConfirmationDialog,
                modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions
