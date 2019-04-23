@@ -159,7 +159,7 @@ import buttons = require('Controls/buttons');
          itemTemplate: toolbars.ItemTemplate
       };
    };
-   Panel._theme = ['Controls/operations'];
+   Panel._theme = ['Controls/operations', 'Controls/_toolbars/View'];
 
    export = Panel;
 
