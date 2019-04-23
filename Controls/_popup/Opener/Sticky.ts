@@ -1,4 +1,5 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
+import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
 import coreMerge = require('Core/core-merge');
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
@@ -81,7 +82,7 @@ import coreMerge = require('Core/core-merge');
          open: function(config) {
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Sticky/StickyController');
+            Base.prototype.open.call(this, config, StickyController);
          },
 
          _setCompatibleConfig: function(config) {
@@ -93,7 +94,7 @@ import coreMerge = require('Core/core-merge');
          return coreMerge(Base.getDefaultOptions(), {});
       };
       export = Sticky;
-   
+
 
 
 /**

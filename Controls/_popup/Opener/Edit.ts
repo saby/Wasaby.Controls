@@ -7,6 +7,9 @@ import CoreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
+import Dialog = require('Controls/_popup/Opener/Dialog');
+import Sticky = require('Controls/_popup/Opener/Sticky');
+import Stack = require('Controls/_popup/Opener/Stack');
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
@@ -90,14 +93,13 @@ import Deferred = require('Core/Deferred');
 
          _beforeMount: function(options) {
             this._onResult = this._onResult.bind(this);
-            var def = new Deferred();
 
             if (options.mode === 'dialog') {
-               this._openerTemplate = require('Controls/popup').Dialog;
+               this._openerTemplate = Dialog;
             } else if (options.mode === 'sticky') {
-               this._openerTemplate = require('Controls/popup').Sticky;
+               this._openerTemplate = Sticky;
             } else {
-               this._openerTemplate = require('Controls/popup').Stack;
+               this._openerTemplate = Stack;
             }
          },
 

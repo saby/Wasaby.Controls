@@ -1,4 +1,5 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
+import DialogController = require('Controls/_popup/Opener/Dialog/DialogController');
       /**
        * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
        * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
@@ -65,7 +66,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
           */
          open: function(config) {
             config = _private.getDialogConfig(config, this);
-            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Dialog/DialogController');
+            Base.prototype.open.call(this, config, DialogController);
          }
       });
 

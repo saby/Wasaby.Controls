@@ -1,8 +1,8 @@
 define(
    [
-      'Controls/Popup/Opener/Notification/NotificationController'
+      'Controls/popup
    ],
-   (NotificationController) => {
+   (popup) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Notification', () => {
@@ -19,7 +19,7 @@ define(
          ];
 
          afterEach(function() {
-            NotificationController._stack.clear();
+            popup.NotificationController._stack.clear();
          });
 
          it('elementCreated', function() {
@@ -30,19 +30,19 @@ define(
                popupOptions: {}
             };
 
-            NotificationController.elementCreated(item1, containers[1]);
-            assert.equal(NotificationController._stack.getCount(), 1);
-            assert.equal(NotificationController._stack.at(0), item1);
+            popup.NotificationController.elementCreated(item1, containers[1]);
+            assert.equal(popup.NotificationController._stack.getCount(), 1);
+            assert.equal(popup.NotificationController._stack.at(0), item1);
             assert.equal(item1.height, containers[1].offsetHeight);
             assert.deepEqual(item1.position, {
                right: 0,
                bottom: 0
             });
 
-            NotificationController.elementCreated(item2, containers[2]);
-            assert.equal(NotificationController._stack.getCount(), 2);
-            assert.equal(NotificationController._stack.at(0), item2);
-            assert.equal(NotificationController._stack.at(1), item1);
+            popup.NotificationController.elementCreated(item2, containers[2]);
+            assert.equal(popup.NotificationController._stack.getCount(), 2);
+            assert.equal(popup.NotificationController._stack.at(0), item2);
+            assert.equal(popup.NotificationController._stack.at(1), item1);
             assert.equal(item2.height, containers[2].offsetHeight);
             assert.deepEqual(item2.position, {
                right: 0,
@@ -59,10 +59,10 @@ define(
                popupOptions: {}
             };
 
-            NotificationController.elementCreated(item, containers[1]);
-            NotificationController.elementUpdated(item, containers[2]);
-            assert.equal(NotificationController._stack.getCount(), 1);
-            assert.equal(NotificationController._stack.at(0), item);
+            popup.NotificationController.elementCreated(item, containers[1]);
+            popup.NotificationController.elementUpdated(item, containers[2]);
+            assert.equal(popup.NotificationController._stack.getCount(), 1);
+            assert.equal(popup.NotificationController._stack.at(0), item);
             assert.equal(item.height, containers[2].offsetHeight);
             assert.deepEqual(item.position, {
                right: 0,
@@ -75,9 +75,9 @@ define(
                popupOptions: {}
             };
 
-            NotificationController.elementCreated(item, containers[1]);
-            NotificationController.elementDestroyed(item);
-            assert.equal(NotificationController._stack.getCount(), 0);
+            popup.NotificationController.elementCreated(item, containers[1]);
+            popup.NotificationController.elementDestroyed(item);
+            assert.equal(popup.NotificationController._stack.getCount(), 0);
          });
 
          it('getDefaultConfig', function() {
@@ -85,8 +85,8 @@ define(
                popupOptions: {}
             };
 
-            NotificationController.getDefaultConfig(item);
-            assert.equal(item.popupOptions.content, 'Controls/_popup/Opener/Notification/NotificationContent');
+            popup.NotificationController.getDefaultConfig(item);
+            assert.equal(item.popupOptions.content, NotificationContent);
          });
 
       });
