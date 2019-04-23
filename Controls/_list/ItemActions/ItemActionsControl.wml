@@ -1,0 +1,27 @@
+<ws:if data="{{serverSide}}">
+   <ws:partial template="{{_options.content}}"
+           scope="{{_options}}">
+      <ws:itemActionsTemplate>
+         <invisible-node />
+      </ws:itemActionsTemplate>
+   </ws:partial>
+</ws:if>
+<ws:else>
+   <ws:partial
+      template="{{_options.content}}"
+      scope="{{_options}}"
+      attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}"
+   >
+      <ws:itemActionsTemplate>
+          {{ '' }}
+         <ws:partial
+                  toolbarVisibility="{{_options.toolbarVisibility}}"
+                  style="{{_options.style}}"
+                  size="{{_options.editingConfig ? 's' : 'm'}}"
+                  template="wml!Controls/_list/ItemActions/resources/ItemActionsTemplate"
+                  itemActionsPosition="{{_options.itemActionsPosition}}"
+                  actionMenuIsShown="{{_options.actionMenuIsShown}}"
+                  scope="{{itemActionsTemplate}}"/>
+      </ws:itemActionsTemplate>
+   </ws:partial>
+</ws:else>

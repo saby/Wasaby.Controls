@@ -1,4 +1,4 @@
-define('Controls/List/DigitButtonsStyles', ['Controls/_lists/DigitButtonsStyles'], function(Control) {
+define('Controls/List/DigitButtonsStyles', ['Controls/_list/DigitButtonsStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/DigitButtonsStyles

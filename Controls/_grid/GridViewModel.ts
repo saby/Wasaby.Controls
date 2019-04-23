@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "../_lists/utils/RowIndexUtil";
+import {calcFooterRowIndex} from "../_list/utils/RowIndexUtil";
 
 var
     _private = {

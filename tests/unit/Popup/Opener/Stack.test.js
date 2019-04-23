@@ -39,7 +39,6 @@ define(
          it('stack shadow', () => {
             let baseGetItemPosition = StackController._private.getItemPosition;
             StackController._private.getItemPosition = items => (items.position);
-            StackController._stack.add({ containerWidth: 840, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ position: { stackWidth: 600 }, popupOptions: { stackClassName: '' } });
@@ -54,14 +53,13 @@ define(
             StackController._update();
             assert.isTrue(StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(StackController._stack.at(9).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
             StackController._private.getItemPosition = baseGetItemPosition;
          });

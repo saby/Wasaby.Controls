@@ -1,4 +1,4 @@
-define('Controls/List/Remover', ['Controls/_lists/Remover'], function(Control) {
+define('Controls/List/Remover', ['Controls/_list/Remover'], function(Control) {
 /**
  * Сontrol to remove the list items in recordSet and dataSource.
  * Сontrol must be in one Controls.list:DataContainer with a list.

@@ -1,3 +1,3 @@
-define('Controls/List/ItemsViewModel', ['Controls/_lists/ItemsViewModel'], function(Control) {
+define('Controls/List/ItemsViewModel', ['Controls/_list/ItemsViewModel'], function(Control) {
    return Control;
 });
