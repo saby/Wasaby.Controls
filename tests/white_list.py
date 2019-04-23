@@ -57,3 +57,8 @@ icon_header_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:137)
 icon_button_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:138)
 groups_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:141)
 button_8_btn  # unused variable (int/SBIS3.CONTROLS/pages/ws_focuses.py:22)
+item_btn	# int/VDOM/pages/vdom_toggle.py:24
+no_icon_btn # int/VDOM/pages/vdom_toggle.py:29
+icon_button_big_btn	# int/VDOM/pages/vdom_toggle.py:35
+groups_2_btn	# int/VDOM/pages/vdom_toggle.py:39
+scroll_big_btn	# int/VDOM/pages/vdom_toggle.py:41
