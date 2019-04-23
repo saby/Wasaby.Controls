@@ -4,8 +4,10 @@ import template = require('wml!Controls/_dataSource/_error/Container');
 // @ts-ignore
 import { constants } from 'Env/Env';
 import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
+import { Dialog } from 'Controls/popup';
 import Mode from 'Controls/_dataSource/_error/Mode';
-import 'css!Controls/_dataSource/_error/Container';
+// @ts-ignore
+import { load } from 'Core/library';
 
 type Options = {
     /**
@@ -17,6 +19,12 @@ type Options = {
 type Config = ViewConfig & {
     isShowed?: boolean;
 }
+let getTemplate = (template: string | Control): Promise<Control> => {
+    if (typeof template == 'string') {
+        return load(template);
+    }
+    return Promise.resolve(template);
+};
 
 /**
  * Component to display a parking error template
@@ -26,6 +34,8 @@ type Config = ViewConfig & {
  */
 export default class Container extends Control {
     private __viewConfig: Config;
+    // @ts-ignore
+    private __opener: Dialog;
     protected _template = template;
     hide() {
         let mode = this.__viewConfig.mode;
@@ -43,6 +53,12 @@ export default class Container extends Control {
         this.__viewConfig = viewConfig;
         this._forceUpdate();
     }
+    protected destroy() {
+        if (this.__opener) {
+            this.__opener.destroy();
+        }
+        super.destroy();
+    }
     protected _beforeMount(options: Options) {
         this.__updateConfig(options);
     }
@@ -50,6 +66,7 @@ export default class Container extends Control {
         this.__updateConfig(options);
     }
     protected _afterMount() {
+        this.__createOpener();
         if (this.__viewConfig) {
             this.__showDialog(this.__viewConfig);
         }
@@ -63,29 +80,45 @@ export default class Container extends Control {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
-            constants.isBrowserPlatform && !this._children.dialogOpener
+            constants.isBrowserPlatform && !this.__opener
         ) {
             return;
         }
-        this._children.dialogOpener.open({
-            template: config.template,
-            templateOptions: config.options
-        });
         config.isShowed = true;
+        getTemplate(config.template).then((template) => {
+            this.__opener.open({
+                template,
+                templateOptions: config.options
+            });
+        });
     }
     private __hideDialog() {
         if (
             constants.isBrowserPlatform &&
-            this._children.dialogOpener &&
-            this._children.dialogOpener.isOpened()
+            this.__opener &&
+            this.__opener.isOpened()
         ) {
-            this._children.dialogOpener.close();
+            this.__opener.close();
         }
     }
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;
         if (this.__viewConfig) {
-            this.__viewConfig.isShowed = this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
+        }
+    }
+    private __createOpener() {
+        if (!this.__opener) {
+            /*
+             * Надо для того чтобы не "портить" вёрстку своим оборачивающим div
+             * TODO Убрать после закрытия задачи:
+             * https://online.sbis.ru/opendoc.html?guid=2a0f76a4-8b69-403a-ae5f-1af4f0443fe6
+             */
+            let el = document.createElement('div');
+            el.classList.add('ws-hidden');
+            let container = this._container instanceof HTMLElement? this._container: this._container[0];
+            container.appendChild(el);
+            this.__opener = Control.createControl(Dialog, {}, el);
         }
     }
 }

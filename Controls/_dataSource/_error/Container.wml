@@ -1,19 +1,16 @@
-<div class="ErrorContainer">
-    <Controls.Popup.Opener.Dialog name="dialogOpener" />
-    <ws:if data="{{ __viewConfig && __viewConfig.mode != 'dialog' }}">
-        <ws:partial
-            template="{{ __viewConfig.template }}"
-            scope="{{ __viewConfig.options }}"
-        />
-    </ws:if>
-    <ws:else>
-        <ws:partial
-            template="{{ _options.content }}"
-            scope="{{ _options }}" />
-        <!--
-            scope="{{  _options }}" нужен для того чтобы не ломать цепочку биндингов
-            убрать после исправления ошибки:
-            https://online.sbis.ru/doc/8dbda473-c716-4a9e-9cbb-1aadfdc96e66
-        -->
-    </ws:else>
-</div>
+<ws:if data="{{ __viewConfig && __viewConfig.mode != 'dialog' }}">
+    <ws:partial
+        template="{{ __viewConfig.template }}"
+        scope="{{ __viewConfig.options }}"
+    />
+</ws:if>
+<ws:else>
+    <ws:partial
+        template="{{ _options.content }}"
+        scope="{{ _options }}" />
+    <!--
+        scope="{{  _options }}" нужен для того чтобы не ломать цепочку биндингов
+        убрать после исправления ошибки:
+        https://online.sbis.ru/doc/8dbda473-c716-4a9e-9cbb-1aadfdc96e66
+    -->
+</ws:else>
