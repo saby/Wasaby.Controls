@@ -8,7 +8,16 @@ import SourceController = require('Controls/Controllers/SourceController');
 import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
 import Deferred = require('Core/Deferred');
 
-
+/**
+ *
+ * Control _lookupPopup/Container
+ *
+ * @class Controls/_lookupPopup/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var _private = {
          getFilteredItems: function(items, filterFunc) {

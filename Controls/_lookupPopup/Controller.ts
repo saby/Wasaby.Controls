@@ -6,7 +6,16 @@ import collection = require('Types/collection');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import chain = require('Types/chain');
 
-
+/**
+ *
+ * Control _lookupPopup/Controller
+ *
+ * @class Controls/_lookupPopup/Controller
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var _private = {
          prepareItems: function(items) {
