@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/popup'
+      'Controls/popup',
+      'Controls/_popup/Opener/Notification/NotificationContent'
    ],
-   (popup) => {
+   (popup, NotificationContent) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Notification', () => {
