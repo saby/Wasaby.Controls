@@ -3,10 +3,9 @@ define(
       'Controls/filterPopup',
       'Types/collection',
       'Core/core-clone',
-      'Core/Deferred',
-      'Controls/Filter/Button/History/resources/historyUtils'
+      'Core/Deferred'
    ],
-   function(filterPopup, collection, Clone, Deferred, historyUtils) {
+   function(filterPopup, collection, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -65,13 +64,13 @@ define(
                historyId: 'TEST_PANEL_HISTORY_ID'
             };
             var panel2 = getFilterPanel(config2);
-            let hUtilsLoader = historyUtils.loadHistoryItems;
-            historyUtils.loadHistoryItems = () => { return new Deferred.fail(); };
-            FilterPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
+            let hUtilsLoader = filterPopup.historyUtils.loadHistoryItems;
+            filterPopup.historyUtils.loadHistoryItems = () => { return new Deferred.fail(); };
+            filterPopup.Panel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
                assert.equal(panel2._historyItems.getCount(), 0);
                done();
             });
-            historyUtils.loadHistoryItems = hUtilsLoader;
+            filterPopup.historyUtils.loadHistoryItems = hUtilsLoader;
          });
 
          it('before update', function() {
