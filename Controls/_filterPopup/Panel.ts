@@ -7,6 +7,7 @@ import historyUtils = require('Controls/_filterPopup/History/resources/historyUt
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
+import {List} from 'Types/collection';
 import 'css!theme?Controls/_filterPopup/Panel/Panel';
 import 'Controls/Controllers/PrimaryAction';
    /**
@@ -65,6 +66,8 @@ import 'Controls/Controllers/PrimaryAction';
             return historyUtils.loadHistoryItems(historyId).addCallback(function(items) {
                self._historyItems = items;
                return items;
+            }).addErrback(function() {
+               self._historyItems = new List({ items: [] });
             });
          }
       },
