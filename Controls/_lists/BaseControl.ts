@@ -598,7 +598,7 @@ var _private = {
     },
 
     needScrollCalculation: function (navigationOpt) {
-        return navigationOpt && (navigationOpt.view === 'infinity' || navigationOpt.view === 'pages' );
+        return navigationOpt && navigationOpt.view === 'infinity';
     },
 
     needScrollPaging: function(navigationOpt) {
@@ -943,7 +943,8 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
     _popupOptions: null,
 
     _footerPagingCfg: null,
-    _currentPage: 0,
+    _knownPages: 2,
+    _currentPage: 1,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -969,11 +970,6 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         _private.bindHandlers(this);
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-
-        if (newOptions.navigation && newOptions.navigation.view === 'pages' && newOptions.pagerOptions) {
-            this._footerPagingCfg = newOptions.pagerOptions;
-            this._currentPage = newOptions.pagerOptions.selectedPage;
-        }
 
         if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
@@ -1007,6 +1003,8 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
                     navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                 });
 
+                self._calcPagingOptions(self, newOptions);
+
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
@@ -1027,6 +1025,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
                 return _private.reload(self, newOptions).addCallback(getState);
             }
         });
+
     },
 
     getViewModel: function() {
@@ -1110,7 +1109,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
 
         if (filterChanged || recreateSource || sortingChanged) {
             //return result here is for unit tests
-            return this._calcDisplayedItem(this);
+            return this._calcDisplayedItem(this, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -1538,12 +1537,13 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         var newNavigation = cClone(this._options.navigation);
         newNavigation.sourceConfig.page = page - 1;
         this._recreateSourceController(this._options.source, newNavigation);
-        this._calcDisplayedItem(this);
+        this._notify('doScroll', ['top'], { bubbling: true });
+        this._calcDisplayedItem(this, this._options).addCallback(()=>{this._calcPagingOptions(this, this._options);});
 
     },
 
-    _calcDisplayedItem:function(self){
-        return _private.reload(self, self._options).addCallback(() => {
+    _calcDisplayedItem: function(self, opts) {
+        return _private.reload(self, opts).addCallback(() => {
 
             /*
             * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
@@ -1568,7 +1568,7 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
         });
     },
 
-    _recreateSourceController: function(newSource, newNavigation){
+    _recreateSourceController: function(newSource, newNavigation) {
         if (this._sourceController) {
             this._sourceController.destroy();
         }
@@ -1576,6 +1576,30 @@ var BaseControl = Control.extend(/** @lends Controls/_lists/BaseControl.prototyp
             source: newSource,
             navigation: newNavigation
         });
+    },
+
+    _calcPagingOptions: function(self, opts) {
+        if (opts.navigation && opts.navigation.view === 'pages') {
+            if (self._sourceController) {
+                self._sourceController.load().addCallback(() => {
+                    var hasMore = self._sourceController.hasMoreData('down');
+                    if (typeof hasMore === 'number') {
+                        self._knownPages = Math.ceil(hasMore / opts.navigation.sourceConfig.pageSize);
+                    }
+                    if (typeof hasMore === 'boolean') {
+                        if (hasMore) {
+                            if (self._currentPage === self._knownPages)
+                                self._knownPages++;
+                        }
+                    }
+                    self._footerPagingCfg = {
+                        showDigits: true,
+                        pagesCount: self._knownPages,
+                        selectedPage: self._currentPage
+                    };
+                });
+            }
+        }
     }
 });
 
