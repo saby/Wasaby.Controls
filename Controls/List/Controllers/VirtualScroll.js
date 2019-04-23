@@ -1,4 +1,4 @@
-define('Controls/List/Controllers/VirtualScroll', ['Controls/_lists/Controllers/VirtualScroll'], function(Control) {
+define('Controls/List/Controllers/VirtualScroll', ['Controls/_list/Controllers/VirtualScroll'], function(Control) {
    /**
     * @class Controls/list:VirtualScroll
     * @author Rodionov E.A.

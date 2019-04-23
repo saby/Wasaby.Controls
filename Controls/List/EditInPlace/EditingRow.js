@@ -1,4 +1,4 @@
-define('Controls/List/EditInPlace/EditingRow', ['Controls/_lists/EditInPlace/EditingRow'], function(Control) {
+define('Controls/List/EditInPlace/EditingRow', ['Controls/_list/EditInPlace/EditingRow'], function(Control) {
 /*
          Останавливаем всплытие любых кликов, если строка редактируется. Если клики будут всплывать, то их будет ловить список
          и генерировать событие itemClick, которое не должно стрелять на редактируемой строке.

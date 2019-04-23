@@ -21,22 +21,22 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/_lists/interface/IList
-    * @mixes Controls/_lists/interface/IHierarchy
-    * @mixes Controls/_lists/interface/ITreeControl
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_list/interface/IHierarchy
+    * @mixes Controls/_list/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/_lists/interface/IDraggable
+    * @mixes Controls/_list/interface/IDraggable
     *
-    * @mixes Controls/_lists/BaseControlStyles
-    * @mixes Controls/_lists/ListStyles
+    * @mixes Controls/_list/BaseControlStyles
+    * @mixes Controls/_list/ListStyles
     * @mixes Controls/_grids/GridStyles
     * @mixes Controls/_treeGrid/Styles
-    * @mixes Controls/_lists/ItemActions/ItemActionsStyles
+    * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_lists/Mover/MoveDialog/Styles
+    * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_lists/DigitButtonsStyles
+    * @mixes Controls/_list/DigitButtonsStyles
     * @mixes Controls/_grids/SortButtonStyles
     *
     * @control

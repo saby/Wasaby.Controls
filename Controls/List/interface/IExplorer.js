@@ -1,4 +1,4 @@
-define('Controls/List/interface/IExplorer', ['Controls/_lists/interface/IExplorer'], function(Control) {
+define('Controls/List/interface/IExplorer', ['Controls/_list/interface/IExplorer'], function(Control) {
 /**
  * Interface for hierarchical lists that can open folders.
  *
