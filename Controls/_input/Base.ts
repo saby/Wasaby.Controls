@@ -29,8 +29,6 @@ import 'wml!Controls/_input/Base/Stretcher';
 
          DASH: '—',
 
-         remoteChar: '',
-
          /**
           * @param {Controls/_input/Base} self Control instance.
           * @param {Object} Ctr View model constructor.
@@ -695,12 +693,12 @@ import 'wml!Controls/_input/Base/Stretcher';
              * It is necessary to restore it and consider that entered "-".
              */
             if (this._isMobileIOS) {
-               if (_private.remoteChar && (splitValue.insert === _private.HYPHEN || splitValue.insert === _private.DASH)) {
-                  splitValue.before += _private.remoteChar;
+               if (this._remoteChar && (splitValue.insert === _private.HYPHEN || splitValue.insert === _private.DASH)) {
+                  splitValue.before += this._remoteChar;
                   splitValue.insert = '-';
                }
 
-               _private.remoteChar = inputType === 'deleteBackward' && splitValue.delete !== '-' ? splitValue.delete : '';
+               this._remoteChar = inputType === 'deleteBackward' && splitValue.delete !== '-' ? splitValue.delete : '';
             }
 
             _private.handleInput(this, splitValue, inputType);
