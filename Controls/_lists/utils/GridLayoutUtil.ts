@@ -42,7 +42,7 @@ function getCellStyles(rowIndex: number, columnIndex: number, rowSpan?: number, 
     if (colSpan) {
         rules.push({
             name: 'grid-column-end',
-            value: colSpan+columnIndex
+            value: colSpan + columnIndex + 1
         })
     }
 
@@ -67,7 +67,7 @@ function getCellStyles(rowIndex: number, columnIndex: number, rowSpan?: number, 
     return toCssString(rules);
 }
 
-function getTemplateColumnsStyle(columnsWidth: Array<string|number>) {
+function getTemplateColumnsStyle(columnsWidth: Array<string | number>) {
     let
         widths = columnsWidth.join(' '),
         rules = [
