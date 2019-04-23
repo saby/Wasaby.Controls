@@ -203,6 +203,7 @@ define(
                   testSelf = {
                      _options: {
                         size: 'size',
+                        theme: 'default',
                         keyProperty: 'keyProperty'
                      },
                      _items: 'items'
@@ -211,7 +212,7 @@ define(
                      currentTarget: 'target'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup__icon popupClassName',
+                     className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      corner: {
                         horizontal: 'left',
                         vertical: 'top'
@@ -237,6 +238,7 @@ define(
                var
                   testSelf = {
                      _options: {
+                        theme: 'default',
                         size: 'size',
                         popupClassName: 'popupClassName',
                         itemTemplateProperty: 'itp'
@@ -247,7 +249,7 @@ define(
                      _menuItems: 'menuItems'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup__list popupClassName',
+                     className: 'controls-Toolbar__popup__list_theme-default popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
                         items: 'menuItems',
