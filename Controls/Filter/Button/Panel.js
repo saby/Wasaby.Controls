@@ -4,6 +4,7 @@ define('Controls/Filter/Button/Panel', [
    'Types/util',
    'Core/core-clone',
    'Core/helpers/Object/isEqual',
+   'Types/collection',
    'Controls/Filter/Button/History/resources/historyUtils',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
@@ -11,7 +12,7 @@ define('Controls/Filter/Button/Panel', [
    'css!theme?Controls/Filter/Button/Panel/Panel',
    'Controls/Controllers/PrimaryAction'
 
-], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, Env) {
+], function(Control, chain, Utils, Clone, isEqual, collection, historyUtils, _FilterPanelOptions, template, Env) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -68,6 +69,8 @@ define('Controls/Filter/Button/Panel', [
             return historyUtils.loadHistoryItems(historyId).addCallback(function(items) {
                self._historyItems = items;
                return items;
+            }).addErrback(function() {
+               self._historyItems = new collection.List({ items: [] });
             });
          }
       },
