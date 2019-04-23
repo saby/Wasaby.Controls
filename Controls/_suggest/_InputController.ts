@@ -241,6 +241,10 @@ var _private = {
                });
                self._historyLoad.callback(keys);
             }
+         }).addErrback(function() {
+            if (self._historyLoad) {
+               self._historyLoad.callback([]);
+            }
          });
 
          return historyService;

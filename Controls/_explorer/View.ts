@@ -118,7 +118,7 @@ import 'Controls/breadcrumbs';
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
     *
-    * @class Controls/Explorer
+    * @class Controls/_explorer/View
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
