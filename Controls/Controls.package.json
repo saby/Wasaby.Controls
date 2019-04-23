@@ -133,10 +133,10 @@
 }, {
   "include": [
     "Controls/List/*",
-    "Controls/_lists/*",
-    "Controls/_lists",
+    "Controls/_list/*",
+    "Controls/_list",
     "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_lists/ItemActions/Utils/Actions"
+    "Controls/_list/ItemActions/Utils/Actions"
   ],
   "exclude": [
     "Controls/List/interface/*",
@@ -149,44 +149,44 @@
     "Controls/List/Paging/*",
     "Controls/List/Paging",
     "css!Controls/List/AddButton/AddButton",
-    "Controls/_lists/interface/*",
-    "Controls/_lists/ItemActions/resources/*",
-    "Controls/_lists/ItemActions/ItemActionsControl",
-    "Controls/_lists/Swipe/*",
-    "Controls/_lists/Mover",
-    "Controls/_lists/Mover/*",
-    "Controls/_lists/Remover",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging",
-    "css!Controls/_lists/AddButton/AddButton"
+    "Controls/_list/interface/*",
+    "Controls/_list/ItemActions/resources/*",
+    "Controls/_list/ItemActions/ItemActionsControl",
+    "Controls/_list/Swipe/*",
+    "Controls/_list/Mover",
+    "Controls/_list/Mover/*",
+    "Controls/_list/Remover",
+    "Controls/_paging/Paging/*",
+    "Controls/_paging/Paging",
+    "css!Controls/_list/AddButton/AddButton"
   ],
   "output": "controls-list.package.js"
 }, {
   "include": [
     "Controls/List/Paging/*",
     "Controls/List/Paging",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging"
+    "Controls/_paging/Paging/*",
+    "Controls/_paging/Paging"
   ],
   "output": "controls-paging.package.js"
 }, {
   "include": [
     "Controls/List/ItemActions/*",
     "Controls/List/Swipe/*",
-    "Controls/_lists/ItemActions/*",
-    "Controls/_lists/Swipe/*"
+    "Controls/_list/ItemActions/*",
+    "Controls/_list/Swipe/*"
   ],
   "exclude": [
     "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_lists/ItemActions/Utils/Actions"
+    "Controls/_list/ItemActions/Utils/Actions"
   ],
   "output": "controls-itemactions.package.js"
 }, {
   "include": [
     "Controls/List/Mover/*",
     "Controls/List/Mover",
-    "Controls/_lists/Mover/*",
-    "Controls/_lists/Mover"
+    "Controls/_list/Mover/*",
+    "Controls/_list/Mover"
   ],
   "output": "controls-mover.package.js"
 }, {

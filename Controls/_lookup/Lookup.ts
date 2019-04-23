@@ -19,7 +19,7 @@ import Env = require('Env/Env');
  * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/Input/interface/IInputField
  * @mixes Controls/_lookup/Lookup/LookupStyles
  * @control
@@ -29,7 +29,7 @@ import Env = require('Env/Env');
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 
-export = Control.extend({
+var Lookup = Control.extend({
    _template: template,
 
    _beforeMount: function (options) {
@@ -42,4 +42,6 @@ export = Control.extend({
       this._children.controller.showSelector(templateOptions);
    }
 });
+
+export = Lookup;
 

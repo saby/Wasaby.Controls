@@ -1,0 +1,78 @@
+.ws-is-no-touch {
+   .controls-ListView__itemV:hover,
+   /* In browsers with partial grid layout support, the hovered element is calculated on JS using this class */
+   .controls-Grid_row-cell_hovered {
+      .controls-EditingTemplateText_enabled {
+         background-color: @background-color_InputRender;
+         cursor: text;
+      }
+   }
+}
+
+.controls-EditingTemplateText_active {
+   background-color: @background-color_InputRender;
+}
+
+.controls-EditingTemplateText__editorWrapper {
+   flex-grow: 1;
+   min-width: 0;
+   max-width: 100%;
+}
+
+.ws-is-ie11 .controls-EditingTemplateText__editorWrapper {
+
+// Fixing bug in IE: "Flex items are not correctly justified when max-width is used"
+// https://github.com/philipwalton/flexbugs#flexbug-17
+   flex-basis: 100%;
+}
+
+.controls-EditingTemplateText__editorWrapper_align_left {
+   margin-left: -@padding_List-editAtPlace;
+}
+
+.controls-EditingTemplateText__editorWrapper_align_right {
+   margin-right: -@padding_List-editAtPlace;
+}
+
+.controls-EditingTemplateText {
+   .baseline-fix();
+   flex-shrink: 1;
+   display: inline-flex;
+   align-items: center;
+   box-sizing: border-box;
+   border-width: @border-width_InputRender;
+   border-style: solid;
+   border-color: transparent;
+   padding: @padding_InputRender;
+   width: 100%;
+}
+
+.controls-EditingTemplateText__editor {
+   width: 100%;
+}
+
+.controls-EditingTemplateText__inner {
+   .text-overflow();
+   width: 100%;
+   display: inline-block;
+}
+
+.controls-EditingTemplateText_size_default {
+   height: @height_InputRender_default;
+   font-size: @font-size_InputRender_default;
+}
+
+.controls-EditingTemplateText_size_m {
+   height: @height_InputRender_m;
+   font-size: @font-size_InputRender_m;
+}
+
+.controls-EditingTemplateText_size_l {
+   height: @height_InputRender_l;
+   font-size: @font-size_InputRender_l;
+}
+
+.controls-EditingTemplateText_size_s {
+   height: @height_InputRender_default;
+   font-size: @font-size_text_s;
+}

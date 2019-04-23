@@ -1,4 +1,4 @@
-define('Controls/List/interface/IList', ['Controls/_lists/interface/IList'], function(Control) {
+define('Controls/List/interface/IList', ['Controls/_list/interface/IList'], function(Control) {
    /**
     * Interface for lists.
     *
@@ -19,7 +19,7 @@ define('Controls/List/interface/IList', ['Controls/_lists/interface/IList'], fun
     * @cfg {Function} Template for the empty list.
     * <a href="/materials/demo-ws4-list-base">Example</a>.
     * @remark
-    * We recommend to use default template for emptyTemplate: wml!Controls/_lists/emptyTemplate
+    * We recommend to use default template for emptyTemplate: wml!Controls/_list/emptyTemplate
     * The template accepts the following options:
     * - contentTemplate content of emptyTemplate
     * - topSpacing Spacing between top border and content of emptyTemplate
@@ -28,7 +28,7 @@ define('Controls/List/interface/IList', ['Controls/_lists/interface/IList'], fun
     * <pre>
     *    <Controls.list:View>
     *       <ws:emptyTemplate>
-    *          <ws:partial template="wml!Controls/_lists/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+    *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
     *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
     *          </ws:partial>
     *       </ws:emptyTemplate>

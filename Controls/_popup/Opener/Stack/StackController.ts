@@ -59,6 +59,9 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             item.popupOptions.stackWidth = item.position.stackWidth;
             item.popupOptions.stackMinWidth = item.position.stackMinWidth;
             item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+
+            //todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
             _private.updatePopupOptions(item);
             return item.position;
          },
@@ -158,12 +161,12 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
          },
 
          elementCreated: function(item, container) {
+            _private.prepareSizes(item, container);
             if (item.popupOptions.isCompoundTemplate) {
-               _private.prepareSizes(item, container);
                _private.setStackContent(item);
                this._stack.add(item);
-               this._update();
             }
+            this._update();
          },
 
          elementUpdated: function(item, container) {
@@ -195,19 +198,22 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
+                  var currentWidth = item.containerWidth || item.position.stackWidth;
 
-                  // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
-                  if (currentWidth > maxWidth) {
-                     maxWidth = currentWidth;
-                     cache = {};
+                  if (currentWidth) {
+                     // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
+                     if (currentWidth > maxWidth) {
+                        maxWidth = currentWidth;
+                        cache = {};
+                     }
+                     if (!cache[currentWidth]) {
+                        cache[currentWidth] = 1;
+                        _private.addShadowClass(item);
+                     } else {
+                        _private.removeShadowClass(item);
+                     }
                   }
-                  if (!cache[currentWidth]) {
-                     cache[currentWidth] = 1;
-                     _private.addShadowClass(item);
-                  } else {
-                     _private.removeShadowClass(item);
-                  }
+
                   if (StackStrategy.isMaximizedPanel(item)) {
                      _private.prepareMaximizedState(maxPanelWidth, item);
                   }

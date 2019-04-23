@@ -319,7 +319,6 @@ define([
       });
 
       it('_onItemActionClick', function() {
-         var callBackCount = 0;
          var cfg = {
             listModel: listViewModel,
             itemActions: actions
@@ -345,20 +344,17 @@ define([
                }
             }
          };
-         var action = {
-            handler: function(item) {
-               callBackCount++;
-               assert.equal(item, fakeItemData.item);
-            }
+         const fakeEvent = {
+            stopPropagation: function() {}
          };
-         instance._notify = function(eventName, args) {
-            callBackCount++;
-            assert.equal(args[0], action);
-            assert.equal(args[1], fakeItemData.item);
-            assert.equal(args[2], fakeHTMLElement);
+         const action = {
+            handler: sandbox.stub()
          };
-         instance._onItemActionsClick({ stopPropagation: function() {} }, action, fakeItemData);
-         assert.equal(callBackCount, 2);
+         const notifyStub = sandbox.stub(instance, '_notify');
+
+         instance._onItemActionsClick(fakeEvent, action, fakeItemData);
+         assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
+         assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
          assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
       });
 
@@ -429,6 +425,13 @@ define([
    });
 
    describe('Controls.List.Utils.Actions', function() {
+      var sandbox;
+      beforeEach(function() {
+         sandbox = sinon.createSandbox();
+      });
+      afterEach(function() {
+         sandbox.restore();
+      });
       it('itemActionClick action with menu', function() {
          var
             stopPropagationCalled = false,
@@ -460,11 +463,8 @@ define([
 
       it('itemActionClick menu', function() {
          var
-            callBackCount = 0,
             fakeEvent = {
-               stopPropagation: function() {
-                  callBackCount++;
-               }
+               stopPropagation: sandbox.stub()
             },
             action = {
                _isMenu: true
@@ -473,28 +473,21 @@ define([
                item: 'test'
             },
             instance = {
-               _notify: function(eventName, args) {
-                  callBackCount++;
-                  assert.equal(args[0], itemData);
-                  assert.equal(args[1], fakeEvent);
-                  assert.equal(args[2], false);
-                  assert.equal(eventName, 'menuActionsClick');
-               }
+               _notify: sandbox.stub()
             };
+
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, {}, false);
-         assert.equal(callBackCount, 2);
+         assert.isTrue(instance._notify.withArgs('menuActionsClick', [itemData, fakeEvent, false]).calledOnce);
+         assert.isTrue(fakeEvent.stopPropagation.calledOnce);
       });
       it('itemActionsClick', function() {
          var
-            callBackCount = 0,
             fakeNativeEvent = {},
             fakeHTMLElement = {
                className: 'controls-ListView__itemV'
             },
             fakeEvent = {
-               stopPropagation: function() {
-                  callBackCount++;
-               },
+               stopPropagation: sandbox.stub(),
                nativeEvent: fakeNativeEvent
             },
             action = {},
@@ -503,24 +496,13 @@ define([
                index: 1
             },
             instance = {
-               _notify: function(eventName, args) {
-                  callBackCount++;
-                  assert.equal(args[0], action);
-                  assert.equal(args[1], itemData.item);
-                  assert.equal(args[2], fakeHTMLElement);
-                  assert.equal(args[3], fakeEvent);
-                  assert.equal(eventName, 'itemActionsClick');
-               },
+               _notify: sandbox.stub(),
                _container: {
-                  querySelector: function(selector) {
-                     if (selector === '.controls-ListView__itemV') {
-                        return {
-                           parentNode: {
-                              children: [fakeHTMLElement]
-                           }
-                        };
+                  querySelector: sandbox.stub().withArgs('.controls-ListView__itemV').returns({
+                     parentNode: {
+                        children: [fakeHTMLElement]
                      }
-                  }
+                  })
                }
             };
          var fakeListModel = {
@@ -528,8 +510,10 @@ define([
                return 1;
             }
          };
+
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, fakeListModel, false);
-         assert.equal(callBackCount, 2);
+         assert.isTrue(instance._notify.withArgs('actionClick', [action, itemData.item, fakeHTMLElement]).calledOnce);
+         assert.isTrue(fakeEvent.stopPropagation.calledOnce);
       });
    });
 });

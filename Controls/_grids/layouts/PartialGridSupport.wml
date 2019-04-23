@@ -23,7 +23,7 @@
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <div attr:class="{{_calcFooterPaddingClass(_options)}}"
-         attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() === 'visible' ? 1 : 0)) + ';'}}">
+         attr:style="{{_listModel.getFooterStyles()}}">
         <ws:partial template="{{_options.footerTemplate}}"/>
     </div>
 </div>
