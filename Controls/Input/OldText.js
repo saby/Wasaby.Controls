@@ -21,11 +21,11 @@ define('Controls/Input/OldText',
        * @class Controls/input:Text
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputTag
+       * @mixes Controls/interface/IInputTag
        * @mixes Controls/Input/interface/IInputField
-       * @mixes Controls/_input/interface/IPaste
-       * @mixes Controls/_input/interface/IInputBase
-       * @mixes Controls/_input/interface/IInputPlaceholder
+       * @mixes Controls/interface/IPaste
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        *
        * @private

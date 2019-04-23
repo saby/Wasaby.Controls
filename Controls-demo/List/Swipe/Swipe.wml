@@ -7,7 +7,7 @@
             allowEmptySelection="{{false}}"
             keyProperty="id"
             itemActions="{{_itemActions}}"
-            on:itemActionsClick="_onActionClick()"
+            on:actionClick="_onActionClick()"
             multiSelectVisibility="visible"
             attr:class="itemActionsDemo__list">
 

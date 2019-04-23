@@ -1,0 +1,8 @@
+<ws:partial
+        template="{{_options.content}}"
+        filter="{{_filter}}"
+        on:filterItemsChanged="_itemsChanged()"
+        on:filterChanged="_filterChanged()"
+        filterButtonItems="{{_filterButtonItems}}"
+        fastFilterItems="{{_fastFilterItems}}"
+        historyId="{{_options.historyId}}"/>

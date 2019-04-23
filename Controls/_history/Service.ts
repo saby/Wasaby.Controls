@@ -6,54 +6,6 @@ import Deferred = require('Core/Deferred');
 import coreClone = require('Core/core-clone');
 import Env = require('Env/Env');
 
-
-/**
- * Source working with the service of InputHistory
- *
- * @class Controls/_history/Service
- * @extends Types/entity:Abstract
- * @implements Types/source:ISource
- * @mixes Types/entity:OptionsToPropertyMixin
- * @public
- * @author Герасимов А.М.
- * @example
- * <pre>
- *    new historyService({
- *       historyId: 'TEST_HISTORY_ID'
- *    })
- * </pre>
- * @name Controls/MenuButton#historyId
- * @cfg {String} unique service history identifier
- *
- * @name Controls/MenuButton#historyIds
- * @cfg {Array of String} unique service history identifiers
- *
- * @name Controls/MenuButton#pinned
- * @cfg {Boolean} Loads pinned items from BL
- * @remark
- * true - Load items
- * false - No load items
- *
- * @name Controls/MenuButton#frequent
- * @cfg {Boolean} Loads frequent items from BL
- * @remark
- * true - Load items
- * false - No load items
- *
- * @name Controls/MenuButton#recent
- * @cfg {Boolean} Loads recent items from BL
- * @remark
- * true - Load items
- * false - No load items
- *
- * @name Controls/MenuButton#dataLoaded
- * @cfg {Boolean} Items loaded with object data
- * @remark
- * true - BL return items with data
- * false - BL return items without data
- *
- */
-
 var STORAGES = {};
 
 var STORAGES_USAGE = {};
@@ -123,6 +75,53 @@ var _private = {
       }
    }
 };
+
+/**
+ * Source working with the service of InputHistory
+ *
+ * @class Controls/_history/Service
+ * @extends Types/entity:Abstract
+ * @implements Types/source:ISource
+ * @mixes Types/entity:OptionsToPropertyMixin
+ * @public
+ * @author Герасимов А.М.
+ * @example
+ * <pre>
+ *    new historyService({
+ *       historyId: 'TEST_HISTORY_ID'
+ *    })
+ * </pre>
+ * @name Controls/_history/Service#historyId
+ * @cfg {String} unique service history identifier
+ *
+ * @name Controls/_history/Service#historyIds
+ * @cfg {Array of String} unique service history identifiers
+ *
+ * @name Controls/_history/Service#pinned
+ * @cfg {Boolean} Loads pinned items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ *
+ * @name Controls/_history/Service#frequent
+ * @cfg {Boolean} Loads frequent items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ *
+ * @name Controls/_history/Service#recent
+ * @cfg {Boolean} Loads recent items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ *
+ * @name Controls/_history/Service#dataLoaded
+ * @cfg {Boolean} Items loaded with object data
+ * @remark
+ * true - BL return items with data
+ * false - BL return items without data
+ *
+ */
 
 var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,

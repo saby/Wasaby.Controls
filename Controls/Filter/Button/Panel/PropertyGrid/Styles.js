@@ -1,11 +1,6 @@
-define('Controls/Filter/Button/Panel/PropertyGrid/Styles', [],
-   function() {}
-   
-   /**
-    * @author Золотова Элина
-    * @mixin Controls/Filter/Button/Panel/PropertyGrid/Styles
-    * @public
-    *
-    * @css @spacing_PropertyGrid-between-items Spacing between property grid items.
-    */
-);
+define('Controls/Filter/Button/Panel/PropertyGrid/Styles',
+   ['Controls/_filterPopup/Panel/PropertyGrid/Styles'],
+   function(Control) {
+      'use strict';
+      return Control;
+   });

@@ -149,7 +149,7 @@ define('Controls-demo/List/Grid/BasePG', [
             footerTemplate: undefined,
             emptyTemplate: undefined,
             resultsTemplate: undefined,
-            resultsPosition: 'top',
+            resultsPosition: 'bottom',
             itemPadding: this._dataObject.itemPadding,
             filter: {},
             header: data.fullHeaderForBase

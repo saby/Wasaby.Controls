@@ -3,7 +3,7 @@ import GridViewModel = require('Controls/_grids/GridViewModel');
 import viewName = require('Controls/_grids/GridView');
 import {ListControl as viewTemplate} from 'Controls/list';
 
-   
+
 
    /**
     * Table-looking list. Can load data from data source.
@@ -33,7 +33,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_lists/Swipe/SwipeStyles
     *
     * @mixes Controls/_lists/Mover/MoveDialog/Styles
-    * @mixes Controls/_lists/PagingStyles
+    * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_lists/DigitButtonsStyles
     * @mixes Controls/_grids/SortButtonStyles
     *

@@ -114,6 +114,11 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+
+         if (cfg.width == 'auto') {
+            cfg.width = undefined;
+         }
+
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 
@@ -566,7 +571,7 @@ function(cMerge,
       _setSizes: function(cfg, templateClass) {
          var dimensions = templateClass ? this._getDimensions(templateClass) : {};
          var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
-         var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
+         var minWidth = dimensions.minWidth || templateOptions.minWidth;
 
          if (!cfg.minWidth) {
             cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
