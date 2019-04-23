@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/popup
+      'Controls/popup'
    ],
    (popup) => {
       'use strict';
