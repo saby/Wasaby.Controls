@@ -216,7 +216,7 @@ import Vdom = require('Vdom/Vdom');
          },
 
          goUpByControlTree: function(target) {
-            return Vdom.DOMEnvironment._goUpByControlTree(target);
+            return Vdom.goUpByControlTree(target);
          },
 
          getActiveControl: function() {
