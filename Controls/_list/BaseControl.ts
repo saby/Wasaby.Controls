@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,

@@ -6,6 +6,7 @@
                             itemsSpacing="{{_options.itemsSpacing}}"
                         template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _defaultItemTemplate}}"
                         item="{{item}}"
+                        theme="{{_options.theme}}"
                         size="{{_options.size}}"/>
             </ws:if>
         </ws:for>
