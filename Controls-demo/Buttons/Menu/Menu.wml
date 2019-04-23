@@ -1,7 +1,7 @@
 <div class="ControlsDemo-ButtonsMenu" style="padding: 50px;">
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
-      <h4>One item</h4>
+      <h4 id="oneItemLabel">One item</h4>
       <Controls.dropdown:Button
               keyProperty="id"
               iconStyle="secondary"
@@ -9,7 +9,7 @@
               viewMode="button"
               caption="+ Add"
               source="{{_createMemory(_oneItem)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo-ButtonsMenu__oneItem"
               tooltip="Create"/>
    </div>
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -114,7 +114,7 @@
               style="secondary"
               size="m"
               source="{{_createMemory(_iconAddMedium)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
               tooltip="Add">
          <ws:headConfig caption="Add"/>
       </Controls.dropdown:Button>
@@ -156,7 +156,7 @@
               viewMode="link"
               icon="icon-Save icon-medium icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButtonBig"
               tooltip="All documents to disk">
          <ws:headConfig menuStyle="duplicateHead"/>
       </Controls.dropdown:Button>
@@ -188,7 +188,7 @@
               nodeProperty="@parent"
               itemTemplateProperty="myTemplate"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__levelsComments">
       </Controls.dropdown:Button>
    </div>
 
@@ -214,7 +214,7 @@
               icon="icon-medium icon-Linked"
               source="{{_createMemory(_groupTextItems)}}"
               groupingKeyCallback="{{_groupingKeyCallback}}"
-              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups2"
               tooltip="Add">
          <ws:groupTemplate>
             <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
@@ -243,7 +243,7 @@
               icon="icon-medium icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
               source="{{_createMemory(_scrollItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scrollBig"
               tooltip="Subtask">
       </Controls.dropdown:Button>
    </div>
