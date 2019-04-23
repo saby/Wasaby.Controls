@@ -94,7 +94,7 @@ import Env = require('Env/Env');
           */
          open: function(popupOptions) {
             if (isNewEnvironment()) {
-               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/_popup/Opener/Notification/NotificationController');
+               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), require('Controls/popup').NotificationController);
             } else {
                _private.compatibleOpen(this, popupOptions);
             }
@@ -126,7 +126,7 @@ import Env = require('Env/Env');
       };
 
       export = Notification;
-   
+
 
 /**
  * @typedef {Object} PopupOptions
