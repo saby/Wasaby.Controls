@@ -51,7 +51,7 @@
          <div class="controls-InfoBoxDemo-header">{{'ICONS'}}</div>
       </div>
         <ws:for data="item in _icons">
-            <div class="controls-InfoBoxDemo-targets">
+            <div class="controls-InfoBoxDemo-targets controls-InfoBoxDemo__{{item.items[0].cfg.size}}">
             <ws:for data="config in item.items">
                  <div class="controls-InfoBoxDemo-icon">
                 <Controls._buttons.Button viewMode ='link'
