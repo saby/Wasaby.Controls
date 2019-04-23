@@ -21,12 +21,11 @@
          window.buildnumber = '{{ _options.buildnumber }}';
          {{__setHTMLUnsafe(_options.preInitScript)}}
       </script>
-   </ws:if>
-
-   <ws:if data="{{!_options.compat}}">
-      <script>
-         window.themesActive = true;
-      </script>
+      <ws:if data="{{!_options.compat}}">
+         <script data-vdomignore="true">
+            window.themesActive = true;
+         </script>
+      </ws:if>
    </ws:if>
 
    <ws:if data="{{ head }}">
