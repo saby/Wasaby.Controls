@@ -172,7 +172,7 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
          },
 
          getWindowWidth: function() {
-            return window.innerWidth;
+            return window && window.innerWidth;
          },
          setStickyContent: function(item) {
             item.popupOptions.content = 'wml!Controls/_popup/Opener/Sticky/StickyContent';
