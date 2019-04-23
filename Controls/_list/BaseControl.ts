@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
@@ -700,7 +700,7 @@ var _private = {
                     closeOnOutsideClick: true,
                     corner: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
-                    className: 'controls-Toolbar__popup__list',
+                    className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
                 self._menuIsShown = true;
