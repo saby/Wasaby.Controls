@@ -172,7 +172,7 @@ import chain = require('Types/chain');
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
                   rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
-                  selectedKeys: Clone(newOptions.selectedKeys) || [],
+                  selectedKeys: Clone(newOptions.selectedKeys),
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
@@ -283,7 +283,7 @@ import chain = require('Types/chain');
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
-            if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+            if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
                this._listModel.updateSelection(item);
                this._needShowApplyButton = _private.needShowApplyButton(this._listModel.getSelectedKeys(), this._options.selectedKeys);
             } else {

@@ -31,7 +31,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  */
 
 /**
- * @name Controls/Input/Search#searchButtonVisible
+ * @name Controls/_search/Input/Search#searchButtonVisible
  * @cfg {Boolean} Determines whether to show the search icon.
  */
 

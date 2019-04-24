@@ -102,7 +102,7 @@ var _private = {
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
- *       multiSelect={{true}}>
+ *       multiSelect="{{true}}">
  * </Controls.dropdown:Input>
  * </pre>
  * JS:

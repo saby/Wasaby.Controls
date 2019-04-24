@@ -4,7 +4,7 @@ define('Controls-demo/Slider/Base/StandartSliderBaseDemo',
       'Types/source',
       'wml!Controls-demo/Slider/Base/StandartSliderBaseDemo',
       'css!Controls-demo/Slider/Base/StandartSliderBaseDemo',
-      'Controls/Slider'
+      'Controls/slider'
    ],
    function(Control, source, template) {
       'use strict';
