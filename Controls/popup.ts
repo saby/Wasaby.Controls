@@ -1,5 +1,5 @@
 /**
- * Popup library
+ * popup library
  * @library Controls/popup
  * @includes Confirmation Controls/_popup/Opener/Confirmation
  * @includes Dialog Controls/_popup/Opener/Dialog
