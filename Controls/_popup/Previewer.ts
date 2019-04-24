@@ -138,7 +138,13 @@ import 'css!Controls/_popup/Previewer/Previewer';
             }
             return this._children.openerPreviewer.isOpened();
          },
-
+         _scrollHandler: function(event) {
+            if(this._isPopupOpened()) {
+               if (this._options.closeOnTargetScroll) {
+                  this._close(event);
+               }
+            }
+         },
          // Pointer action on hover with content and popup are executed sequentially.
          // Collect in package and process the latest challenge
          _debouncedAction: function(method, args) {
@@ -231,7 +237,8 @@ import 'css!Controls/_popup/Previewer/Previewer';
 
       Previewer.getDefaultOptions = function() {
          return {
-            trigger: 'hoverAndClick'
+            trigger: 'hoverAndClick',
+            closeOnTargetScroll: true
          };
       };
 
