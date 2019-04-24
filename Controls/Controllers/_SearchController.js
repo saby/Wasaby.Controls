@@ -76,7 +76,7 @@ define('Controls/Controllers/_SearchController',
        * При необходимости загружает Controls/Controllers/_Search и делает запрос за данными.
        * @author Герасимов Александр
        * @class Controls/Controllers/_SearchController
-       * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISearch
        * @mixes Controls/interface/ISource
        */
       /**
