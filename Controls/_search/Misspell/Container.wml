@@ -1,13 +1,12 @@
-<ws:if data="{{_options.misspellValue}}">
-    <div class="ws-fragment">
-        <Controls._search.Misspell attr:class="{{_options.misspellClass}}">
-            <ws:caption>
-                <span on:click="_misspellClick()">{{_options.misspellValue}}</span>
-            </ws:caption>
-        </Controls._search.Misspell>
-        <ws:partial template="{{_options.content}}" scope="{{_options}}"/>
-    </div>
-</ws:if>
-<ws:else>
+<div>
+    <ws:if data="{{_options.misspellValue}}">
+        <Controls.Container.Async templateName="Controls/_search/Misspell" attr:class="{{_options.misspellClass}}">
+            <ws:templateOptions>
+                <ws:caption>
+                    <span on:click="_misspellClick()">{{_options.misspellValue}}</span>
+                </ws:caption>
+            </ws:templateOptions>
+        </Controls.Container.Async>
+    </ws:if>
     <ws:partial template="{{_options.content}}" scope="{{_options}}"/>
-</ws:else>
+</div>
