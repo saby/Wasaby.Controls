@@ -1,8 +1,8 @@
 <div>
-   <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
+   <Controls.scroll:Container attr:class="Demo-LoadMore__scroll">
       <Controls.list:View source="{{_viewSource}}" displayProperty="title" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}"/>
-   </Controls.Container.Scroll>
-   <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
+   </Controls.scroll:Container>
+   <Controls.scroll:Container attr:class="Demo-LoadMore__scroll">
       <Controls.grid:View source="{{_gridViewSource}}" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}">
          <ws:columns>
             <ws:Array>
@@ -10,5 +10,5 @@
             </ws:Array>
          </ws:columns>
       </Controls.grid:View>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </div>

@@ -6,6 +6,6 @@
                on:mouseleave="_contentMouseleaveHandler()"
                on:click="_previewerClickHandler()"/>
    <ws:if data="{{!_isNewEnvironment()}}">
-      <Controls.Popup.Opener.Previewer name="openerPreviewer"/>
+      <Controls._popup.Opener.Previewer name="openerPreviewer"/>
    </ws:if>
 </div>

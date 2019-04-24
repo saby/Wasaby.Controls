@@ -4,8 +4,8 @@
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
    <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top
                {{ !_isShadowVisible('top') ? ' ws-invisible' }}"></div>
-   <Controls.Event.Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
-   <Controls.Event.Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
+   <Controls.event:Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
+   <Controls.event:Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop" style="{{_getObserverStyle('top')}}"></div>
    <!-- Remove scope="{{_options}}" after complete https://online.sbis.ru/opendoc.html?guid=dd8d85ac-2024-41f6-b9b3-550b4413b566 -->
    <ws:partial template="{{_options.content}}"

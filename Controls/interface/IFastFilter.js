@@ -37,7 +37,7 @@ define('Controls/interface/IFastFilter', [
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.Filter.Fast
+    *    <Controls.filter:Fast
     *              bind:selectedKey='_selectedKey'
     *              source="{{_source}}"
     *    />

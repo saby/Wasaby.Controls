@@ -14,7 +14,7 @@
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.input:Label name="myLabel1" caption="style:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     source="{{_styleSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -24,7 +24,7 @@
                     on:selectedKeyChanged="changeStyle()"
             />
             <Controls.input:Label name="myLabel1" caption="size:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     source="{{_sizeSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -34,7 +34,7 @@
                     on:selectedKeyChanged="changeSize()"
             />
             <Controls.input:Label name="myLabel1" caption="captions:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     source="{{_captionsSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -44,7 +44,7 @@
                     on:selectedKeyChanged="changeCaptions()"
             />
             <Controls.input:Label name="myLabel1" caption="icons:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     source="{{_iconsSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -54,7 +54,7 @@
                     on:selectedKeyChanged="changeIcons()"
             />
             <Controls.input:Label name="myLabel1" caption="iconStyle(if there is an icon):"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     source="{{_iconStyleSource}}"
                     keyProperty="title"
                     placeholder="select"

@@ -1,12 +1,12 @@
 define('Controls/Button/MenuButton',
    [
-      'Controls/Button/Menu',
+      'Controls/dropdown',
       'Env/Env'
    ],
-   function(Menu, Env) {
+   function(dropdown, Env) {
 
       var logger = Env.IoC.resolve('ILogger');
       logger.warn('Controls/Button/MenuButton', 'Контрол перенесён, используйте "Controls/Button/Menu"');
-      return Menu;
+      return dropdown.Button;
    }
 );

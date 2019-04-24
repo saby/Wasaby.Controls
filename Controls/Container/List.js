@@ -9,11 +9,11 @@ define('Controls/Container/List',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
-      'Controls/History/Source',
+      'Controls/history',
       'Core/core-instance'
    ],
    
-   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, HistorySource, cInstance) {
+   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, historyMod, cInstance) {
       
       'use strict';
       
@@ -227,7 +227,7 @@ define('Controls/Container/List',
             }
 
             // In Selector/Suggest as source can be set historySource, in this case history should work differently
-            if (source instanceof HistorySource) {
+            if (source instanceof historyMod.Source) {
                return source.originSource;
             }
             return source;

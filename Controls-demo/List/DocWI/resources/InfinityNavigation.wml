@@ -1,4 +1,4 @@
-<Controls.Container.Scroll attr:style="height: 220px">
+<Controls.scroll:Container attr:style="height: 220px">
     <Controls.list:View
             source="{{_viewSource}}"
             keyProperty="id">
@@ -7,4 +7,4 @@
             <ws:viewConfig pagingMode="direct"></ws:viewConfig>
         </ws:navigation>
     </Controls.list:View>
-</Controls.Container.Scroll>
+</Controls.scroll:Container>

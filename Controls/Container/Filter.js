@@ -7,13 +7,13 @@ define('Controls/Container/Filter',
       'Types/chain',
       'Types/util',
       'Core/helpers/Object/isEqual',
-      'Controls/Filter/Button/History/resources/historyUtils',
-      'Controls/Controllers/SourceController',
+      'Controls/filterPopup',
+      'Controls/source',
       'Core/helpers/Object/isEmpty',
       'Env/Env'
    ],
    
-   function(Control, template, FilterContextField, Deferred, chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, Env) {
+   function(Control, template, FilterContextField, Deferred, chain, Utils, isEqual, filterPopup, scroll, isEmptyObject, Env) {
       
       'use strict';
       
@@ -40,7 +40,7 @@ define('Controls/Container/Filter',
          
          getHistorySource: function(self, hId) {
             if (!self._historySource) {
-               self._historySource = historyUtils.getHistorySource(hId);
+               self._historySource = filterPopup.historyUtils.getHistorySource(hId);
             }
             return self._historySource;
          },
@@ -53,7 +53,7 @@ define('Controls/Container/Filter',
             var recent, lastFilter;
             
             if (!self._sourceController) {
-               self._sourceController = new SourceController({
+               self._sourceController = new scroll.Controller({
                   source: this.getHistorySource(self, id)
                });
             }

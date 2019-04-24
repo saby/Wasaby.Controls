@@ -8,7 +8,7 @@
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.grid:View
                      source="{{_masterSource}}"
@@ -20,7 +20,7 @@
                   >
                   </Controls.grid:View>
                </Controls.Container.MasterList>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:master>
       <ws:detail>
@@ -28,7 +28,7 @@
             <div class="controls-demo_MasterDetail_detail_search">
                <Controls.search:Input placeholder="Введите"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}"
@@ -46,7 +46,7 @@
                      </ws:partial>
                   </ws:itemTemplate>
                </Controls.list:View>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:detail>
    </Controls.Container.MasterDetail>
@@ -57,7 +57,7 @@
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.list:View
                      style="master"
@@ -73,7 +73,7 @@
                      </ws:itemTemplate>
                   </Controls.list:View>
                </Controls.Container.MasterList>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:master>
       <ws:detail>
@@ -81,7 +81,7 @@
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
                <Controls.search:Input placeholder="Введите"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
@@ -98,7 +98,7 @@
                      </ws:partial>
                   </ws:itemTemplate>
                </Controls.list:View>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:detail>
    </Controls.Container.MasterDetail>
@@ -110,7 +110,7 @@
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.treeGrid:View
                      source="{{_masterSource}}"
@@ -122,7 +122,7 @@
                   >
                   </Controls.treeGrid:View>
                </Controls.Container.MasterList>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:master>
       <ws:detail>
@@ -130,7 +130,7 @@
             <div class="ws-flexbox controls-demo_MasterDetail_detail_search">
                <Controls.search:Input placeholder="Введите"/>
             </div>
-            <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
@@ -147,7 +147,7 @@
                      </ws:partial>
                   </ws:itemTemplate>
                </Controls.list:View>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </div>
       </ws:detail>
    </Controls.Container.MasterDetail>

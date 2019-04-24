@@ -3,12 +3,12 @@ import collection = require('Types/collection');
 import BaseController = require('Controls/_popup/Opener/BaseController');
 import NotificationStrategy = require('Controls/_popup/Opener/Notification/NotificationStrategy');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import 'Controls/_popup/Opener/Notification/NotificationContent';
+import NotificationContent = require('Controls/_popup/Opener/Notification/NotificationContent');
       var timeAutoClose = 5000;
 
       var _private = {
          setNotificationContent: function(item) {
-            item.popupOptions.content = 'Controls/_popup/Opener/Notification/NotificationContent';
+            item.popupOptions.content = NotificationContent;
          }
       };
 

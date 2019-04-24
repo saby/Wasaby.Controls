@@ -5,7 +5,7 @@ define('Controls-demo/Example/Input/Suggest',
       'wml!Controls-demo/Example/Input/Suggest/Suggest',
       'css!Controls-demo/Example/Input/Suggest/Suggest',
 
-      'Controls/Input/Suggest',
+      'Controls/suggest',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, sourceLib, template) {

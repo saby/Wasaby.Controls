@@ -4,9 +4,9 @@ define(
       'Core/core-clone',
       'Types/source',
       'Types/entity',
-      'Controls/History/Source'
+      'Controls/history'
    ],
-   (Suggest, Clone, sourceLib, entity, HistorySource) => {
+   (Suggest, Clone, sourceLib, entity, history) => {
       describe('Selector.Suggest', () => {
          let items = [
             {
@@ -67,7 +67,7 @@ define(
             historyConfig.selectedKey = undefined;
             let suggest = getSuggest(historyConfig);
             suggest._beforeMount(historyConfig);
-            assert.isTrue(suggest._historySource instanceof HistorySource);
+            assert.isTrue(suggest._historySource instanceof history.Source);
          });
 
          it('_beforeMount suggestTemplateOptions', function() {
