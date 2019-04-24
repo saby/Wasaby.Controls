@@ -140,7 +140,7 @@ import 'css!Controls/_popup/Previewer/Previewer';
          },
          _scrollHandler: function(event) {
             if(this._isPopupOpened()) {
-               if (this._options.closeOnTargetScroll) {
+               if (this._options.actionOnScroll === 'close') {
                   this._close(event);
                }
             }
@@ -238,7 +238,7 @@ import 'css!Controls/_popup/Previewer/Previewer';
       Previewer.getDefaultOptions = function() {
          return {
             trigger: 'hoverAndClick',
-            closeOnTargetScroll: true
+            actionOnScroll: 'close'
          };
       };
 

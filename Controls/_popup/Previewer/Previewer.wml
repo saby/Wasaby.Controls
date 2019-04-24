@@ -5,7 +5,7 @@
                on:mousemove="_contentMousemoveHandler()"
                on:mouseleave="_contentMouseleaveHandler()"
                on:click="_previewerClickHandler()"/>
-   <ws:if data="{{_options.closeOnTargetScroll}}">
+   <ws:if data="{{_options.actionOnScroll==='close'}}">
       <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>
    </ws:if>
    <ws:if data="{{!_isNewEnvironment()}}">
