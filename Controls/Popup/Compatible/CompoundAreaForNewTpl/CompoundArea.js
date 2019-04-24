@@ -52,6 +52,20 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
             this._maximized = !!this._options.templateOptions.maximized;
 
+            // Если внутри нас сработал вдомный фокус (активация), нужно активироваться
+            // самим с помощью setActive. Тогда и CompoundControl'ы-родители узнают
+            // об активации.
+            // Так как вдом зовет событие activated на каждом активированном контроле,
+            // можно просто слушать это событие на себе и активироваться если оно
+            // сработает.
+            this._activatedHandler = this._activatedHandler.bind(this);
+            this.subscribe('activated', this._activatedHandler);
+
+            // То же самое с деактивацией, ее тоже нужно делать через setActive,
+            // чтобы старый контрол-родитель мог об этом узнать.
+            this._deactivatedHandler = this._deactivatedHandler.bind(this);
+            this.subscribe('deactivated', this._deactivatedHandler);
+
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
 
@@ -268,6 +282,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
          destroy: function() {
             this._container[0].eventProperties = null;
+            this.unsubscribe('activated', this._activatedHandler);
+            this.unsubscribe('deactivated', this._deactivatedHandler);
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
             this.getContainer().unbind('keydown', this._keydownHandler);
@@ -309,6 +325,20 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          _updateVDOMTemplate: function(templateOptions) {
             this._vDomTemplate._options.templateOptions = templateOptions;
             this._vDomTemplate._forceUpdate();
+         },
+
+         _activatedHandler: function(event, args) {
+            if (!this.isActive()) {
+               var activationTarget = args[0];
+               this.setActive(true, activationTarget.isShiftKey, true, activationTarget._$to);
+            }
+         },
+
+         _deactivatedHandler: function(event, args) {
+            if (this.isActive()) {
+               var activationTarget = args[0];
+               this.setActive(false, activationTarget.isShiftKey, true);
+            }
          }
       });
 
