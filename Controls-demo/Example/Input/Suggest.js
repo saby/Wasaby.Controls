@@ -3,6 +3,7 @@ define('Controls-demo/Example/Input/Suggest',
       'Core/Control',
       'Types/source',
       'wml!Controls-demo/Example/Input/Suggest/Suggest',
+      'css!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/Input/Suggest',
       'Controls-demo/Example/resource/BaseDemoInput'
