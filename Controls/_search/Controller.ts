@@ -100,7 +100,7 @@ var _private = {
  *
  * @class Controls/_search/Controller
  * @extends Core/Control
- * @mixes Controls/Input/interface/ISearch
+ * @mixes Controls/interface/ISearch
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation

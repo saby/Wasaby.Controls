@@ -4,7 +4,7 @@ define('Controls-demo/Slider/Range/StandartSliderRangeDemo',
       'Types/source',
       'wml!Controls-demo/Slider/Range/StandartSliderRangeDemo',
       'css!Controls-demo/Slider/Range/StandartSliderRangeDemo',
-      'Controls/Slider'
+      'Controls/slider'
    ],
    function(Control, source, template) {
       'use strict';

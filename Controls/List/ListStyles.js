@@ -1,4 +1,4 @@
-define('Controls/List/ListStyles', ['Controls/_lists/ListStyles'], function(Control) {
+define('Controls/List/ListStyles', ['Controls/_list/ListStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/ListStyles

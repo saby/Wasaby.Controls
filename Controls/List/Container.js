@@ -1,4 +1,4 @@
-define('Controls/List/Container', ['Controls/_lists/Container'], function(Control) {
+define('Controls/List/Container', ['Controls/_list/Container'], function(Control) {
 /**
  * Container component for List. Options from context -> List.
  * @param Control

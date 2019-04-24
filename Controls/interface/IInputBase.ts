@@ -18,10 +18,10 @@ import IInputStyle from "./IInputStyle";
  * @mixes Controls/interface/IInputTooltip
  * @mixes Controls/interface/IInputStyle
  *
- * @mixes Controls/_input/Base/Styles
- * @mixes Controls/_input/Render/Styles
+ * @includes BaseStyles Controls/_input/Base/Styles
+ * @includes RenderStyles Controls/_input/Render/Styles
  *
- * @mixes Controls/_input/InputCallback/ICallback
+ * @mixes Controls/interface/ICallback
  *
  * @public
  * @author Журавлев М.С.

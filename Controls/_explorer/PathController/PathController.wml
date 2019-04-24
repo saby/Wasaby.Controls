@@ -1,19 +1,27 @@
+<ws:template name="headingPath">
+   <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
+                                     name="Path"
+                                     header="{{_header}}"
+                                     attr:class="controls-Explorer__Path"
+                                     on:backButtonClick="_notifyHandler('backButtonClick')"
+                                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                     on:arrowActivated="_notifyHandler('arrowActivated')"
+                                     on:itemClick="_notifyHandler('itemClick')" />
+</ws:template>
 <div>
-   <ws:if data="{{_options.items || _options.rootVisible}}">
+<ws:if data="{{_options.items || _options.rootVisible}}">
+   <ws:if data="{{_options.stickyHeader}}">
       <Controls.StickyHeader mode="stackable">
-         <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
-                                      name="Path"
-                                      header="{{_header}}"
-                                      attr:class="controls-Explorer__Path"
-                                      on:backButtonClick="_notifyHandler('backButtonClick')"
-                                      on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                                      on:arrowActivated="_notifyHandler('arrowActivated')"
-                                      on:itemClick="_notifyHandler('itemClick')" />
+         <ws:partial template="headingPath" />
       </Controls.StickyHeader>
    </ws:if>
-   <ws:partial template="{{ _options.content }}"
-               scope="{{ _options }}"
-               header="{{ _header || _options.header }}"
-               on:backButtonClick="_onBackButtonClick()"
-               on:arrowClick="_onArrowClick()" />
+   <ws:else>
+      <ws:partial template="headingPath" />
+   </ws:else>
+</ws:if>
+<ws:partial template="{{ _options.content }}"
+            scope="{{ _options }}"
+            header="{{ _header || _options.header }}"
+            on:backButtonClick="_onBackButtonClick()"
+            on:arrowClick="_onArrowClick()" />
 </div>

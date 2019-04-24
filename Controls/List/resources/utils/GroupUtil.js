@@ -1,4 +1,4 @@
-define('Controls/List/resources/utils/GroupUtil', ['Controls/_lists/resources/utils/GroupUtil'], function(Control) {
+define('Controls/List/resources/utils/GroupUtil', ['Controls/_list/resources/utils/GroupUtil'], function(Control) {
 /**
          * Store collapsed groups to UserConfig
          * @param groups List of the collapsed groups

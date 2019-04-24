@@ -232,6 +232,14 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             actualConfig.rootKey = null;
             dropDownList._beforeMount(expectedConfig);
             assert.deepEqual(dropDownList._listModel._options, actualConfig);
+            expectedConfig.selectedKeys = undefined;
+            actualConfig.selectedKeys = undefined;
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
+            expectedConfig.selectedKeys = false;
+            actualConfig.selectedKeys = false;
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
          });
          it('check popup options', function() {
             var dropDownConfig, dropDownList;
@@ -402,6 +410,13 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             dropdownList._beforeMount(config);
             dropdownList._itemClickHandler(event, items.at(1));
             assert.deepEqual(result, expectedResult);
+
+            config.selectedKeys = undefined;
+            dropdownList._needShowApplyButton = undefined;
+            dropdownList._beforeMount(config);
+            dropdownList._itemClickHandler(event, items.at(1));
+            assert.deepEqual(result, expectedResult);
+            assert.isUndefined(dropdownList._needShowApplyButton);
          });
 
          it('_openSelectorDialog', function() {
