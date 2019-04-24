@@ -171,6 +171,6 @@ var Input = Control.extend({
    }
 });
 
-Input._theme = ['Controls/_dropdown/Input/Input'];
+Input._theme = ['Controls/dropdown'];
 
 export = Input;
