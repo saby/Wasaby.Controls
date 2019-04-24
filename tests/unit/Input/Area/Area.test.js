@@ -40,11 +40,15 @@ define(
          });
          describe('Move to new line', function() {
             var event;
-            var preventDefault = function() {};
+            var preventDefault = function() {
+            };
+            var stopPropagation = function() {
+            };
 
             beforeEach(function() {
                ctrl.paste = ProxyCall.apply(ctrl.paste, 'paste', calls, true);
                preventDefault = ProxyCall.apply(preventDefault, 'preventDefault', calls, true);
+               stopPropagation = ProxyCall.apply(stopPropagation, 'stopPropagation', calls, true);
             });
 
             it('The option newLineKey is equal to enter. Press enter.', function() {
@@ -53,13 +57,17 @@ define(
                   ctrlKey: false,
                   altKey: false,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
                ctrl._keyDownHandler(event);
 
-               assert.equal(calls.length, 0);
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
             });
             it('The option newLineKey is equal to enter. Press ctrl + enter.', function() {
                event = new SyntheticEvent({
@@ -67,7 +75,8 @@ define(
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -84,7 +93,8 @@ define(
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: true,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -101,7 +111,8 @@ define(
                   altKey: true,
                   ctrlKey: false,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -118,7 +129,8 @@ define(
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: true,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -135,7 +147,8 @@ define(
                   altKey: true,
                   ctrlKey: true,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -152,7 +165,8 @@ define(
                   altKey: true,
                   ctrlKey: false,
                   shiftKey: true,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -169,7 +183,8 @@ define(
                   altKey: true,
                   ctrlKey: true,
                   shiftKey: true,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -186,7 +201,8 @@ define(
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'enter';
 
@@ -200,7 +216,8 @@ define(
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'ctrlEnter';
 
@@ -217,16 +234,23 @@ define(
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: false,
-                  preventDefault: preventDefault
+                  preventDefault: preventDefault,
+                  stopPropagation: stopPropagation
                });
                ctrl._options.newLineKey = 'ctrlEnter';
 
                ctrl._keyDownHandler(event);
 
-               assert.deepEqual(calls, [{
-                  name: 'paste',
-                  arguments: ['\n']
-               }]);
+               assert.deepEqual(calls, [
+                  {
+                     name: 'paste',
+                     arguments: ['\n']
+                  },
+                  {
+                     name: 'stopPropagation',
+                     arguments: []
+                  }
+               ]);
             });
          });
       });
