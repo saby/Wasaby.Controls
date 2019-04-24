@@ -2,7 +2,7 @@ define('Controls-demo/FilterButton/FilterButton',
    [
       'Core/Control',
       'wml!Controls-demo/FilterButton/FilterButton',
-      'Controls/Filter/Button',
+      'Controls/filter',
       'Controls/buttons',
       'Types/source'
    ],

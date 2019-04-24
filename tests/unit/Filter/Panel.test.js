@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Filter/Button/Panel',
+      'Controls/filterPopup',
       'Types/collection',
       'Core/core-clone',
       'Core/Deferred'
    ],
-   function(FilterPanel, collection, Clone, Deferred) {
+   function(filterPopup, collection, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -34,7 +34,7 @@ define(
          config.additionalTemplate = template;
 
          function getFilterPanel(FPconfig) {
-            var panel2 = new FilterPanel(FPconfig);
+            var panel2 = new filterPopup.Panel(FPconfig);
             panel2.saveOptions(FPconfig);
             return panel2;
          }
@@ -52,10 +52,25 @@ define(
                historyId: 'TEST_PANEL_HISTORY_ID'
             };
             var panel2 = getFilterPanel(config2);
-            FilterPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+            filterPopup.Panel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
                assert.equal(items.getCount(), 2);
                done();
             });
+         });
+
+         it('Init::historyItems fail loading', function(done) {
+            var config2 = {
+               items: items,
+               historyId: 'TEST_PANEL_HISTORY_ID'
+            };
+            var panel2 = getFilterPanel(config2);
+            let hUtilsLoader = filterPopup.historyUtils.loadHistoryItems;
+            filterPopup.historyUtils.loadHistoryItems = () => { return new Deferred.fail(); };
+            filterPopup.Panel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
+               assert.equal(panel2._historyItems.getCount(), 0);
+               done();
+            });
+            filterPopup.historyUtils.loadHistoryItems = hUtilsLoader;
          });
 
          it('before update', function() {
@@ -179,7 +194,7 @@ define(
             ];
             var panel2 = getFilterPanel({ items: changedItems });
             panel2._resetFilter();
-            assert.deepEqual({}, FilterPanel._private.getFilter(panel2._items));
+            assert.deepEqual({}, filterPopup.Panel._private.getFilter(panel2._items));
             assert.deepEqual(panel2._items, resetedItems);
             assert.isFalse(panel2._isChanged);
          });
@@ -187,14 +202,14 @@ define(
          it('isChangeValue', function() {
             var panel = getFilterPanel(config);
             panel._resetFilter();
-            assert.isFalse(FilterPanel._private.isChangedValue(panel._items));
+            assert.isFalse(filterPopup.Panel._private.isChangedValue(panel._items));
          });
 
          it('without add params', function() {
             var panel = getFilterPanel(config);
             panel._beforeMount(config);
             panel._items[2].visibility = true;
-            assert.isFalse(FilterPanel._private.hasAdditionalParams(panel._items));
+            assert.isFalse(filterPopup.Panel._private.hasAdditionalParams(panel._items));
          });
 
          it('recordSet', function() {
@@ -206,7 +221,7 @@ define(
                options = {};
             options.items = rs;
             options.additionalTemplate = template;
-            var panel2 = new FilterPanel(options);
+            var panel2 = new filterPopup.Panel(options);
             panel2._beforeMount(options);
             panel2._beforeUpdate(options);
             assert.isTrue(panel2._isChanged);
@@ -237,16 +252,16 @@ define(
             };
             var errorCathed = false;
 
-            FilterPanel._private.resolveItems(self, options);
+            filterPopup.Panel._private.resolveItems(self, options);
             assert.isTrue(options.items !== self._items);
             assert.equal(self._items[0], 'test');
 
-            FilterPanel._private.resolveItems(self, {}, context);
+            filterPopup.Panel._private.resolveItems(self, {}, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
 
             try {
-               FilterPanel._private.resolveItems(self, {}, {});
+               filterPopup.Panel._private.resolveItems(self, {}, {});
             } catch (e) {
                errorCathed = true;
             }
@@ -263,10 +278,10 @@ define(
                }
             };
 
-            FilterPanel._private.resolveItems(self, options, context);
+            filterPopup.Panel._private.resolveItems(self, options, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
-            FilterPanel._private.resolveHistoryId(self, {}, self._contextOptions);
+            filterPopup.Panel._private.resolveHistoryId(self, {}, self._contextOptions);
             assert.equal(self._historyId, 'testId');
          });
 
@@ -323,25 +338,25 @@ define(
                      visibility: false
                   }
                ];
-            assert.deepEqual(FilterPanel._private.prepareItems(changeItems), resetItems);
+            assert.deepEqual(filterPopup.Panel._private.prepareItems(changeItems), resetItems);
          });
 
          it('_historyItemsChanged', function() {
             var panel = getFilterPanel(config);
-            FilterPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
-            panel._historyId = 'TEST_PANEL_HISTORY_ID';
+            filterPopup.Panel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
+            panel._historyId = 'TEST_HISTORY_ID';
             panel._historyItemsChanged();
          });
 
          it('_private:isPassedValidation', function() {
             var validationResult = [null];
-            assert.isTrue(FilterPanel._private.isPassedValidation(validationResult));
+            assert.isTrue(filterPopup.Panel._private.isPassedValidation(validationResult));
 
             validationResult = [null, 'Дата заполнена некорректно.'];
-            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+            assert.isFalse(filterPopup.Panel._private.isPassedValidation(validationResult));
 
             validationResult = ['Дата заполнена некорректно.', null];
-            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+            assert.isFalse(filterPopup.Panel._private.isPassedValidation(validationResult));
          });
       });
    }

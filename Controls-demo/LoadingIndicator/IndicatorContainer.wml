@@ -3,7 +3,7 @@
       <Controls.buttons:Button caption="Open (will be closed after 3s)" class="controls-demo__indicator_open" on:click="_open()"/>
    </div>
 
-   <Controls.Container.LoadingIndicator
+   <Controls.LoadingIndicator
          name="loadingIndicator"
          attr:class="controls-demo__indicator_inst"
 
@@ -35,5 +35,5 @@
             text
          </div>
       </div>
-   </Controls.Container.LoadingIndicator>
+   </Controls.LoadingIndicator>
 </div>

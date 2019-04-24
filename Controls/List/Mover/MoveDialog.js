@@ -2,7 +2,7 @@ define('Controls/List/Mover/MoveDialog', ['Controls/MoveDialog'], function(Contr
 /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
-    * @class Controls/List/Mover/MoveDialog
+    * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/interface/IFilter
@@ -15,12 +15,12 @@ define('Controls/List/Mover/MoveDialog', ['Controls/MoveDialog'], function(Contr
     * @category List
     */
    /**
-    * @name Controls/List/Mover/MoveDialog#root
+    * @name Controls/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
     */
    /**
-    * @name Controls/Input/interface/ISearch#searchParam
+    * @name Controls/interface/ISearch#searchParam
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
    return Control;

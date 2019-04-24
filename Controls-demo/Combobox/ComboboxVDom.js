@@ -4,7 +4,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
       'wml!Controls-demo/Combobox/ComboboxVDom',
       'Types/source',
       'Controls-demo/Combobox/historySourceCombobox',
-      'Controls/Input/ComboBox',
+      'Controls/dropdown',
       'wml!Controls-demo/Combobox/itemTemplateCombobox',
       'wml!Controls-demo/Combobox/itemTemplateMultiline',
       'css!Controls-demo/Combobox/ComboboxVDom'

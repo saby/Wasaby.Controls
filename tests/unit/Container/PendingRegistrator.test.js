@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/PendingRegistrator',
+      'Controls/Pending',
       'Core/Deferred'
    ],
    (PendingRegistrator, Deferred) => {

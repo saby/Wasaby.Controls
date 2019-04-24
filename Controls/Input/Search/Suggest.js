@@ -12,12 +12,12 @@ define('Controls/Input/Search/Suggest',
       /**
        * Search input that suggests options as you are typing.
        *
-       * @class Controls/Input/Suggest
+       * @class Controls/suggest:Input
        * @extends Controls/input:Text
-       * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
-       * @mixes Controls/Input/interface/ISuggest
+       * @mixes Controls/interface/ISuggest
        * @mixes Controls/interface/INavigation
        * @demo Controls-demo/Input/Search/Suggest/SuggestPG
        * @control

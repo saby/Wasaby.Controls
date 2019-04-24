@@ -1,4 +1,4 @@
-define('Controls/List/interface/IExplorer', ['Controls/_lists/interface/IExplorer'], function(Control) {
+define('Controls/List/interface/IExplorer', ['Controls/_list/interface/IExplorer'], function(Control) {
 /**
  * Interface for hierarchical lists that can open folders.
  *
@@ -30,7 +30,7 @@ define('Controls/List/interface/IExplorer', ['Controls/_lists/interface/IExplore
  * @name Controls/List/interface/IExplorer#backButtonStyle
  * @cfg {String} Back heading display style.
  * @default secondary
- * @see Controls/Heading/Back#style
+ * @see Controls/_heading:Back#style
  */
    /**
  * @name Controls/List/interface/IExplorer#showActionButton

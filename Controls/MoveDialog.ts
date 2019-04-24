@@ -5,13 +5,13 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
    /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
-    * @class Controls/_lists/Mover/MoveDialog
+    * @class Controls/_list/Mover/MoveDialog
     * @extends Core/Control
-    * @mixes Controls/_lists/interface/IHierarchy
+    * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/ISource
     *
-    * @mixes Controls/_lists/Mover/MoveDialog/Styles
+    * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -19,13 +19,13 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     */
 
    /**
-    * @name Controls/_lists/Mover/MoveDialog#root
+    * @name Controls/_list/Mover/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
     */
 
    /**
-    * @name Controls/Input/interface/ISearch#searchParam
+    * @name Controls/interface/ISearch#searchParam
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
 

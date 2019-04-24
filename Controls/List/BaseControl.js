@@ -1,3 +1,3 @@
-define('Controls/List/BaseControl', ['Controls/_lists/BaseControl'], function(Control) {
+define('Controls/List/BaseControl', ['Controls/_list/BaseControl'], function(Control) {
    return Control;
 });

@@ -9,7 +9,7 @@ define('Controls/Application',
       'Core/BodyClasses',
       'Env/Env',
       'Controls/Application/AppData',
-      'Controls/Container/Scroll/Context',
+      'Controls/scroll',
       'Core/LinkResolver/LinkResolver',
       'Application/Env',
       'Core/Themes/ThemesController',
@@ -118,7 +118,7 @@ define('Controls/Application',
       BodyClasses,
       Env,
       AppData,
-      ScrollContext,
+      scroll,
       LinkResolver,
       AppEnv,
       ThemesController) {
@@ -249,7 +249,7 @@ define('Controls/Application',
 
             var appData = AppData.getAppData();
 
-            self._scrollData = new ScrollContext({pagingVisible: false});
+            self._scrollData = new scroll._scrollContext({pagingVisible: false});
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;

@@ -9,11 +9,11 @@ import 'css!theme?Controls/_filterPopup/Panel/Lookup/Lookup';
     * @class Controls/_filterPopup/Panel/Lookup
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/interface/ISelectorDialog
-    * @mixes Controls/Input/interface/ISearch
+    * @mixes Controls/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
-    * @mixes Controls/Input/interface/ISuggest
+    * @mixes Controls/interface/ISuggest
     * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable

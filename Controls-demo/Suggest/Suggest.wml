@@ -2,7 +2,7 @@
     <div class="demo-block-suggest">
         <div class="demo-SuggestWrapper">
             <h3>Suggest</h3>
-            <Controls.Input.Suggest
+            <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__simple"
                     bind:value="_suggestValue"
                     displayProperty="text"
@@ -17,7 +17,7 @@
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
-            </Controls.Input.Suggest>
+            </Controls.suggest:Input>
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Search suggest</h3>
@@ -41,7 +41,7 @@
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Suggest with no footer</h3>
-            <Controls.Input.Suggest
+            <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__nofooter"
                     bind:value="_suggest5Value"
                     displayProperty="text"
@@ -57,13 +57,13 @@
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
-            </Controls.Input.Suggest>
+            </Controls.suggest:Input>
         </div>
     </div>
     <div class="demo-block-suggest">
         <div class="demo-SuggestWrapper">
             <h3>Suggest with tabs</h3>
-            <Controls.Input.Suggest
+            <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__simpleTabs"
                     bind:value="_suggest3Value"
                     displayProperty="text"
@@ -78,7 +78,7 @@
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
-            </Controls.Input.Suggest>
+            </Controls.suggest:Input>
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Search suggest with tabs</h3>

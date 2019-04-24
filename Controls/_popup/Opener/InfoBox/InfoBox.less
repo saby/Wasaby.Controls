@@ -7,9 +7,6 @@
    padding-bottom: @spacing_Infobox-between-content-border-bottom;
    padding-left:   @spacing_Infobox-between-content-border-left;
 
-   border: @border-width_Infobox solid;
-   box-sizing: border-box;
-   max-width: @max-width_Infobox;
    overflow: auto;
 }
 
@@ -26,8 +23,8 @@
 
 .controls-InfoBox__closeButton {
    position: absolute;
-   top: @spacing_Infobox-between-top-close-button + @border-width_Infobox;
-   right: @spacing_Infobox-between-right-close-button + @border-width_Infobox;
+   top: @spacing_Infobox-between-top-close-button;
+   right: @spacing_Infobox-between-right-close-button;
    cursor: pointer;
    color: @color_Infobox-close-button;
 
@@ -50,32 +47,6 @@
    float: right;
 }
 
-.controls-InfoBox_style_outline {
-   @variants: default,  danger;
-   .for(@variants, { &_@{_item} {
-      background: @background-color_Infobox_default;
-      box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
-      border-color: ~"@{border-color_Infobox_@{_item}}";
-
-      &.controls-InfoBox__popup:before {
-         border-color: ~"@{border-color_Infobox_@{_item}}";
-      }
-   } });
-}
-
-.controls-InfoBox_style_marker {
-   @variants: default,  danger, info, secondary, warning, success;
-   .for(@variants, { &_@{_item} {
-      background: @background-color_Infobox_default;
-      box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
-      border-color: @border-color_Infobox_default;
-      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
-
-      &.controls-Popup-corner-vertical-bottom.controls-Popup-align-vertical-bottom:before {
-         border-color: ~"@{border-color_Infobox_@{_item}}";
-      }
-   } });
-}
 
 /*
    Class to access the constant themes from js

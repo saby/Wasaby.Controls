@@ -4,11 +4,20 @@ import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
 import Deferred = require('Core/Deferred');
 
-
+/**
+ *
+ * Control _lookupPopup/Container
+ *
+ * @class Controls/_lookupPopup/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var _private = {
          getFilteredItems: function(items, filterFunc) {

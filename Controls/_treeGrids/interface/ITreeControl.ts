@@ -1,7 +1,7 @@
 /**
  * Interface for tree-like lists.
  *
- * @interface Controls/_lists/interface/ITreeControl
+ * @interface Controls/_list/interface/ITreeControl
  * @public
  * @author Авраменко А.С.
  */
@@ -14,7 +14,7 @@
  */
 
 /**
- * @name Controls/_lists/interface/ITreeControl#expandedItems
+ * @name Controls/_list/interface/ITreeControl#expandedItems
  * @cfg {{Array.<String>}} Array of identifiers of expanded items.
  * <b>Note:</b>
  * To expand all items, this option must be set as array containing one element “null”.
@@ -23,26 +23,26 @@
  */
 
 /**
- * @name Controls/_lists/interface/ITreeControl#collapsedItems
+ * @name Controls/_list/interface/ITreeControl#collapsedItems
  * @cfg {Boolean} Array of identifiers of collapsed items.
- * This option is used only when the value of  {@link Controls/_lists/interface/ITreeControl#expandedItems expandedItems} is [null].
+ * This option is used only when the value of  {@link Controls/_list/interface/ITreeControl#expandedItems expandedItems} is [null].
  * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
  */
 
 /**
- * @name Controls/_lists/interface/ITreeControl#nodeFooterTemplate
+ * @name Controls/_list/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Sets footer template that will be shown for every node.
  * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
  */
 
 /**
- * @name Controls/_lists/interface/ITreeControl#hasChildrenProperty
+ * @name Controls/_list/interface/ITreeControl#hasChildrenProperty
  * @cfg {String} Name of the field that contains information whether the node has children.
  * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
  */
 
 /**
- * @name Controls/_lists/interface/ITreeControl#expanderVisibility
+ * @name Controls/_list/interface/ITreeControl#expanderVisibility
  * @cfg {String} Mode displaying expander indent.
  * @variant visible Always show expander for nodes and indentation for leaves.
  * @variant hasChildren Show expander only for nodes with children.
@@ -52,8 +52,8 @@
 
 
 /**
- * @event Controls/_lists/interface/ITreeControl#itemExpanded Occurs after node expansion.
+ * @event Controls/_list/interface/ITreeControl#itemExpanded Occurs after node expansion.
  */
 /**
- * @event Controls/_lists/interface/ITreeControl#itemCollapsed Occurs after node collapse.
+ * @event Controls/_list/interface/ITreeControl#itemCollapsed Occurs after node collapse.
  */

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Fast');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
 import collection = require('Types/collection');
 import cInstance = require('Core/core-instance');

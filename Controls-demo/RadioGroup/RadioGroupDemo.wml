@@ -30,7 +30,7 @@
         />
         <br/>
         <Controls.input:Label caption="Direction:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
             attr:class="comboboxWidth ControlsDemo__direction"
             source="{{_directionSource}}"
             keyProperty="title"
@@ -40,7 +40,7 @@
             on:selectedKeyChanged="changeDirection()"
         />
         <Controls.input:Label caption="Source:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
             attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__changeSource"
             source="{{_sourceOfSource}}"
             keyProperty="title"
@@ -58,7 +58,7 @@
         />
         <br/>
         <Controls.input:Label caption="Content template:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
             attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__content_tmpl"
             source="{{_sourceContentTemplate}}"
             keyProperty="title"

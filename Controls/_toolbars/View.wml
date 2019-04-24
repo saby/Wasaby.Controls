@@ -6,12 +6,13 @@
                             itemsSpacing="{{_options.itemsSpacing}}"
                         template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _defaultItemTemplate}}"
                         item="{{item}}"
+                        theme="{{_options.theme}}"
                         size="{{_options.size}}"/>
             </ws:if>
         </ws:for>
-        <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__item_icon_secondary"  name="popupTarget" on:click="_showMenu()">
+        <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__menu_theme-{{_options.theme}} controls-Toolbar__item_icon_secondary_theme-{{_options.theme}}"  name="popupTarget" on:click="_showMenu()">
             <i class="icon-medium icon-ExpandDown"/>
         </div>
     </div>
-    <Controls.Dropdown.Opener name="menuOpener" scope="{{_popupOptions}}" />
+    <Controls.dropdown:Opener name="menuOpener" scope="{{_popupOptions}}" />
 </div>

@@ -1,7 +1,7 @@
 import toolbars = require('Controls/toolbars');
 import tUtil = require('Controls/Utils/Toolbar');
 import getWidthUtil = require('Controls/Utils/getWidth');
-   
+
 
    var MENU_WIDTH = 0;
 
@@ -12,7 +12,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          }
       },
 
-      getItemsSizes: function(items, visibleKeys) {
+      getItemsSizes: function(items, visibleKeys, theme) {
          var
             measurer = document.createElement('div'),
             itemsSizes = [],
@@ -22,7 +22,8 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             itemsMark += toolbars.ItemTemplate({
                item: items.getRecordById(key),
                size: 'm',
-               itemsSpacing: 'medium'
+               itemsSpacing: 'medium',
+               theme: theme
             });
          });
 
@@ -44,7 +45,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 
    export = {
 
-      fillItemsType: function(keyProperty, parentProperty, items, availableWidth) {
+      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme) {
          var
             itemsSizes,
             currentWidth,
@@ -55,7 +56,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                visibleItemsKeys.push(item.get(keyProperty));
             }
          });
-         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys);
+         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme);
          currentWidth = itemsSizes.reduce(function(acc, width) {
             return acc + width;
          }, 0);

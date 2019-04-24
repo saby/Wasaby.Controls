@@ -1,4 +1,4 @@
 <div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-inInput {{!_options.showContent ? 'ws-hidden'}}" style="height:{{_height}};">
-    <Controls.Button.Close attr:class="controls-Suggest__close" on:click="_close()"/>
-    <Controls.Container.Scroll attr:class="controls-Suggest__scrollContainer" content="{{_options.content}}"/>
+    <Controls.popupTemplate:CloseButton attr:class="controls-Suggest__close" on:click="_close()"/>
+    <Controls.scroll:Container attr:class="controls-Suggest__scrollContainer" content="{{_options.content}}"/>
 </div>

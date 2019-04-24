@@ -65,7 +65,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
           */
          open: function(config) {
             config = _private.getDialogConfig(config, this);
-            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Dialog/DialogController');
+            Base.prototype.open.call(this, config, require('Controls/popup').DialogController);
          }
       });
 

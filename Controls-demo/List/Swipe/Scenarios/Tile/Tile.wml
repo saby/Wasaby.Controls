@@ -1,4 +1,4 @@
-<Controls.Explorer
+<Controls.explorers:View
    parentProperty="parent"
    nodeProperty="type"
    displayProperty="title"
@@ -11,4 +11,4 @@
    <ws:tileItemTemplate>
       <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
    </ws:tileItemTemplate>
-</Controls.Explorer>
+</Controls.explorers:View>

@@ -6,7 +6,7 @@ define('Controls-demo/List/Grid/StickyPG',
       'Types/source',
       'Controls-demo/List/Grid/resources/DataDemoPG',
 
-      'Controls/Container/Scroll',
+      'Controls/scroll',
       'wml!Controls-demo/List/Grid/resources/StickyPG/TasksPhoto',
       'wml!Controls-demo/List/Grid/resources/StickyPG/TasksDescr',
       'wml!Controls-demo/List/Grid/resources/StickyPG/TasksReceived',
