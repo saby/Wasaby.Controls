@@ -164,6 +164,7 @@ var ListView = BaseControl.extend(
 
         _onItemSwipe: function(event, itemData) {
             this._notify('itemSwipe', [itemData, event]);
+            event.stopPropagation();
         },
 
         _onRowDeactivated: function(event, eventOptions) {
