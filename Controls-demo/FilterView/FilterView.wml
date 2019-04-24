@@ -1,3 +1,0 @@
-<div class="controls-demo-FilterView__item">
-   <Controls.filter:View source="{{_items}}" />
-</div>

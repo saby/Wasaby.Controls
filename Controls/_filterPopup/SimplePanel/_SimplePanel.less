@@ -1,7 +1,7 @@
-.controls-FastViewPanel_theme_@{themeName} {
+.controls-SimplePanel_theme_@{themeName} {
    .flexbox();
    .flex-direction(column);
-   max-width: @max-width_FastViewPanel;
+   max-width: @max-width_SimplePanel;
    border: @border-width_DropdownList solid @border-color_DropdownList;
    background: @background_DropdownList;
    box-sizing: border-box;
@@ -10,12 +10,12 @@
    width: 100%;
 }
 
-.controls-FastViewPanel__scroll_theme_@{themeName} {
+.controls-SimplePanel__scroll_theme_@{themeName} {
    margin-top: @spacing_DropdownList-between-topBorder-content;
    margin-bottom: @spacing_DropdownList-between-bottomBorder-content;
 }
 
-.controls-FastViewPanel__block_separator_theme_@{themeName} {
+.controls-SimplePanel__block_separator_theme_@{themeName} {
    border-bottom: @thickness_DropdownList-group-separator solid @color_DropdownList-group-separator;
    margin-top: @spacing_DropdownList-group-between-content-topBorder;
    margin-right: @spacing_DropdownList-group-between-content-rightBorder;
@@ -23,23 +23,27 @@
    margin-left: @spacing_DropdownList-group-between-content-leftBorder;
 }
 
-.controls-FastViewPanel__applyButton_theme_@{themeName} {
+.controls-SimplePanel__applyButton_theme_@{themeName} {
    position: absolute;
-   top: @spacing_FastViewPanel-between-applyButton-topBorder + @border-width_DropdownList;
-   right: @spacing_FastViewPanel-between-applyButton-close + @size_icon_m + @spacing_DropdownList-between-close-rightBorder;
+   top: @spacing_SimplePanel-between-applyButton-topBorder + @border-width_DropdownList;
+   right: @spacing_SimplePanel-between-applyButton-close + @size_icon_m + @spacing_DropdownList-between-close-rightBorder;
    z-index: 2;
 }
 
-.controls-FastViewPanel-cross_theme_@{themeName} {
+.controls-SimplePanel-cross_theme_@{themeName} {
    position: absolute;
    right: @spacing_DropdownList-between-close-rightBorder;
    top: @spacing_DropdownList-between-close-topBorder;
    z-index: 2;
 }
 
-.controls-FastViewPanel-dropdown__emptyItem_theme_@{themeName} {
-   color: @color_FastViewPanel-dropdown__emptyItems;
-   font-size: @font-size_FilterPanel-dropdown__emptyItem;
+.controls-SimplePanel-dropdown__emptyItem_theme_@{themeName} {
+   color: @color_SimplePanel-dropdown__emptyItem;
+   font-size: @font-size_SimplePanel-dropdown__emptyItem;
    font-weight: bold;
    text-transform: uppercase;
+}
+
+.controls-FilterView-SimplePanel-popup {
+   margin-top: @shift-top_FilterView-SimplePanel-popup;
 }

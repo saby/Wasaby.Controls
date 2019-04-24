@@ -3,32 +3,52 @@ import template = require('wml!Controls/_filter/View/View');
 
 import isEqual = require('Core/helpers/Object/isEqual');
 import CoreClone = require('Core/core-clone');
+import Merge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import ParallelDeferred = require('Core/ParallelDeferred');
+import Deferred = require('Core/Deferred');
 import SourceController = require('Controls/Controllers/SourceController');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import converterFilterItems = require('Controls/_filter/converterFilterItems');
 
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
-import {List} from 'Types/collection';
 import {RecordSet} from 'Types/collection';
 
+/**
+ * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
+ * Clicking on a icon-button or a string opens the detail panel. {@link Controls/_filterPopup/DetailPanel}
+ * Clicking on fast filter parameters opens the simple panel. {@link Controls/_filterPopup/SimplePanel}
+ *
+ * @class Controls/_filter/View
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ */
+
 var _private = {
-    prepareItems: function(self, items) {
-        if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
-            // TODO need to support serialization of History/Source, will be done on the task https://online.sbis.ru/opendoc.html?guid=60a7e58e-44ff-4d82-857f-356e7c9007c9
-            self._items = new List({
-                items: CoreClone(items)
-            });
-        } else {
-            self._items = object.clone(items);
-        }
+    getItemByName: function(items, name) {
+        var result;
+        factory(items).each(function(item) {
+            if (item.name === name) {
+                result = item;
+            }
+        });
+        return result;
     },
 
-    calculateStateSourceControllers: function(configs, items) {
-        factory(configs).each(function(config, index) {
-            _private.getSourceController(config, object.getPropertyValue(items.at(index), 'options').source,
-                object.getPropertyValue(items.at(index), 'options').navigation).calculateState(config.items);
+    prepareItems: function(self, items) {
+        self._filterSource = object.clone(items);
+    },
+
+    calculateStateSourceControllers: function(configs, filterSource) {
+        factory(filterSource).each(function(item) {
+            if (item.viewMode === 'frequent') {
+                var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
+                     item.editorOptions.navigation);
+                sourceController.calculateState(configs[item.name].items);
+            }
         });
     },
 
@@ -43,57 +63,71 @@ var _private = {
     },
 
     setPopupConfig: function(self, configs, items) {
-        factory(configs).each(function(config, index) {
-            var item = items.at(index);
-            config.emptyText = item.emptyText;
-            config.selectedKeys = (item.value instanceof Array) ? item.value : [item.value];
-            config.hasMoreButton = _private.getSourceController(config, item.options.source, item.options.navigation).hasMoreData('down');
-        });
-    },
-
-    getItemConfig: function(properties) {
-        var itemConfig = {};
-
-        itemConfig.keyProperty = properties.keyProperty;
-        itemConfig.displayProperty = properties.displayProperty;
-        itemConfig.itemTemplate = properties.itemTemplate;
-        itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
-        itemConfig.headerTemplate = properties.headerTemplate;
-        itemConfig.footerTemplate = properties.footerTemplate;
-        itemConfig.multiSelect = properties.multiSelect;
-        itemConfig.selectorTemplate = properties.selectorTemplate;
-        return itemConfig;
-    },
-
-    setText: function(self, displayText, items, configs) {
-        factory(configs).each(function(config, index) {
-            displayText[index] = {};
-            if (!isEqual(items.at(index).value, items.at(index).resetValue)) {
-                var sKey = items.at(index).value,
-                    text = [];
-                if (!(sKey instanceof Array)) {
-                    sKey = [sKey];
+        var popupItems = [];
+        factory(items).each(function(item) {
+            if (item.viewMode === 'frequent') {
+                var popupItem = configs[item.name];
+                popupItem.id = item.name;
+                popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
+                if (item.editorOptions.source) {
+                    popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                 }
-                if (sKey[0] === null && config.emptyText) {
-                    text.push(config.emptyText);
-                } else {
-                    factory(config.items).each(function (item) {
-                        if (sKey.indexOf(object.getPropertyValue(item, config.keyProperty)) !== -1) {
-                            text.push(object.getPropertyValue(item, config.displayProperty));
-                        }
-                    });
-                }
-                displayText[index].text = text[0];
-                displayText[index].title = text.join(', ');
-                if (text.length > 1) {
-                    displayText[index].hasMoreText = ', ' + rk('еще ') + (text.length - 1);
-                } else {
-                    displayText[index].hasMoreText = '';
-                }
-                items.at(index).textValue = displayText[index].text + displayText[index].hasMoreText;
+                popupItems.push(popupItem);
             }
         });
+        return popupItems;
+    },
+
+    getFastText: function(config, selectedKeys) {
+        var textArr = [];
+        if (selectedKeys[0] === null && config.emptyText) {
+            textArr.push(config.emptyText);
+        } else if (config.items) {
+            factory(config.items).each(function (item) {
+                if (selectedKeys.indexOf(object.getPropertyValue(item, config.keyProperty)) !== -1) {
+                    textArr.push(object.getPropertyValue(item, config.displayProperty));
+                }
+            });
+        }
+        return {
+            text: textArr[0] || '',
+            title: textArr.join(', '),
+            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
+        };
+    },
+
+    getFilterButtonText: function(self, items) {
+        var textArr = [];
+        factory(items).each(function(item) {
+            if (item.viewMode !== 'frequent' && item.viewMode !== 'extended' && _private.isItemChanged(item)) {
+                var textValue = item.textValue;
+                if (textValue) {
+                    textArr.push(textValue);
+                }
+            }
+        });
+        return textArr.join(', ');
+    },
+
+    updateText: function(self, items, configs) {
+        factory(items).each(function(item) {
+            if (configs[item.name]) {
+                self._displayText[item.name] = {};
+                if (_private.isItemChanged(item)) {
+                    var sKey = configs[item.name].multiSelect ? item.value : [item.value];
+                    self._displayText[item.name] = _private.getFastText(configs[item.name], sKey);
+                    if (item.textValue !== undefined) {
+                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                    }
+                }
+            }
+        });
+        self._filterText = _private.getFilterButtonText(self, items);
         self._forceUpdate();
+    },
+
+    isItemChanged: function(item) {
+        return !isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'));
     },
 
     loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
@@ -107,14 +141,16 @@ var _private = {
         });
     },
 
-    loadItems: function(self, item, index) {
-        // TODO: Поддержать, если item.options - массив
-        var options = item.options;
+    loadItems: function(self, item) {
+        var options = item.editorOptions;
 
-        self._configs[index] = _private.getItemConfig(options);
+        self._configs[item.name] = CoreClone(options);
+        self._configs[item.name].emptyText = item.emptyText;
 
         if (options.source) {
-            return _private.loadItemsFromSource(self._configs[index], options.source, options.keyProperty, options.filter, options.navigation, options.dataLoadCallback);
+            return _private.loadItemsFromSource(self._configs[item.name], options.source, options.keyProperty, options.filter, options.navigation, options.dataLoadCallback);
+        } else {
+            return Deferred.success();
         }
     },
 
@@ -126,8 +162,8 @@ var _private = {
     getFilter: function(items) {
         var filter = {};
         factory(items).each(function(item) {
-            if (!isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'))) {
-                filter[object.getPropertyValue(item, 'id')] = object.getPropertyValue(item, 'value');
+            if (_private.isItemChanged(item)) {
+                filter[item.name] = item.value;
             }
         });
         return filter;
@@ -135,42 +171,42 @@ var _private = {
 
     reload: function(self) {
         var pDef = new ParallelDeferred();
-        factory(self._items).each(function(item, index) {
-            if (item.options) {
-                var result = _private.loadItems(self, item, index);
+        factory(self._filterSource).each(function(item) {
+            if (item.editorOptions) {
+                var result = _private.loadItems(self, item);
                 pDef.push(result);
             }
         });
 
         // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
         return pDef.done().getResult().addCallback(function() {
-            _private.setText(self, self._displayText, self._items, self._configs);
+            _private.updateText(self, self._filterSource, self._configs);
             return {
-                configs: self._configs,
-                items: self._items
+                configs: self._configs
             };
         });
     },
 
-    setValue: function(self, selectedKeys, index) {
+    setValue: function(self, selectedKeys, name) {
+        var item = _private.getItemByName(self._filterSource, name);
         if (!selectedKeys.length) {
-            var resetValue = object.getPropertyValue(self._items.at(index), 'resetValue');
-            object.setPropertyValue(self._items.at(index), 'value', resetValue);
-        } else if (self._configs[index].multiSelect) {
-            object.setPropertyValue(self._items.at(index), 'value', selectedKeys);
+            var resetValue = object.getPropertyValue(item, 'resetValue');
+            object.setPropertyValue(item, 'value', resetValue);
+        } else if (self._configs[name].multiSelect) {
+            object.setPropertyValue(item, 'value', selectedKeys);
         } else {
-            object.setPropertyValue(self._items.at(index), 'value', selectedKeys[0]);
+            object.setPropertyValue(item, 'value', selectedKeys[0]);
         }
     },
 
-    selectItems: function(self, items) {
-        factory(items).each(function(selectedKeys, index) {
-            if (selectedKeys) {
-                _private.setValue(self, selectedKeys, index);
+    selectItems: function(self, selectedKeys) {
+        factory(selectedKeys).each(function(sKey, index) {
+            if (sKey) {
+                _private.setValue(self, sKey, index);
             }
         });
 
-        _private.setText(self, self._displayText, self._items, self._configs);
+        _private.updateText(self, self._filterSource, self._configs);
     },
 
     getNewItems: function(self, selectedItems, config) {
@@ -186,10 +222,10 @@ var _private = {
         return newItems;
     },
 
-    getSelectedKeys: function(items, properties) {
+    getSelectedKeys: function(items, config) {
         var selectedKeys = [];
         factory(items).each(function(item) {
-            selectedKeys.push(object.getPropertyValue(item, properties.keyProperty));
+            selectedKeys.push(object.getPropertyValue(item, config.keyProperty));
         });
         return selectedKeys;
     }
@@ -199,86 +235,142 @@ var Filter = Control.extend({
     _template: template,
     _displayText: null,
     _configs: null,
-    _items: null,
+    _filterSource: null,
 
     _beforeMount: function(options, context, receivedState) {
-        this._configs = [];
-        this._displayText = [];
+        this._configs = {};
+        this._displayText = {};
 
         if (receivedState) {
             this._configs = receivedState.configs;
-            this._items = receivedState.items;
-            _private.calculateStateSourceControllers(this._configs, this._items);
-            _private.setText(this, this._displayText, this._items, this._configs);
-        } else if (options.source) {
-            _private.prepareItems(this, options.source);
+            _private.prepareItems(this, options.filterSource);
+            _private.calculateStateSourceControllers(this._configs, this._filterSource);
+            _private.updateText(this, this._filterSource, this._configs);
+        } else if (options.filterSource) {
+            _private.prepareItems(this, options.filterSource);
             return _private.reload(this);
         }
     },
 
-    _open: function() {
+    _beforeUpdate: function(newOptions) {
+        if (newOptions.filterSource && newOptions.filterSource !== this._options.filterSource) {
+            _private.prepareItems(this, newOptions.filterSource);
+            return _private.reload(this);
+        }
+    },
+
+    _openDetailPanel: function() {
+        if (this._options.detailPanelTemplateName) {
+            var panelItems = converterFilterItems.convertToDetailPanelItems(this._filterSource);
+            var className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
+            this._open(panelItems, this._options.detailPanelTemplateName, className);
+        } else {
+            this._openPanel();
+        }
+    },
+
+    _openPanel: function() {
+        if (this._options.panelTemplateName) {
+            var items = new RecordSet({
+                rawData: _private.setPopupConfig(this, this._configs, this._filterSource)
+            });
+            this._open(items, this._options.panelTemplateName, 'controls-FilterView-SimplePanel-popup');
+        }
+    },
+
+    _open: function(items, template, className) {
         if (this._children.DropdownOpener.isOpened()) {
             return;
         }
-        _private.setPopupConfig(this, this._configs, this._items);
+
+        var popupPosition = {};
+        if (this._options.alignment === 'right') {
+            popupPosition.corner = {
+                vertical: 'top',
+                horizontal: 'right'
+            };
+            popupPosition.horizontalAlign = {
+                side: 'left'
+            };
+        }
         var popupOptions = {
             templateOptions: {
-                items: new RecordSet({
-                    rawData: this._configs
-                })
+                items: items,
+                theme: this._options.theme
             },
-            target: (this._container[0] || this._container)
+            template: template,
+            className: className,
+            target: this._container[0] || this._container
         };
-        this._children.DropdownOpener.open(popupOptions, this);
+        this._children.DropdownOpener.open(Merge(popupOptions, popupPosition), this);
     },
 
     _resultHandler: function(event, result) {
+        if (!result.action) {
+            var filterSource = converterFilterItems.convertToFilterSource(result.items);
+            _private.prepareItems(this, filterSource);
+            _private.updateText(this, filterSource, this._configs);
+        }
         if (result.action === 'itemClick') {
-            _private.setValue(this, result.selectedKeys, result.index);
-            _private.setText(this, this._displayText, this._items, this._configs);
+            _private.setValue(this, result.selectedKeys, result.id);
+            _private.updateText(this, this._filterSource, this._configs);
         }
         if (result.action === 'applyClick') {
             _private.selectItems(this, result.selectedKeys);
         }
         if (result.action === 'selectorResult') {
-            var curConfig = this._configs[result.index],
+            var curConfig = this._configs[result.id],
                 newItems = _private.getNewItems(this, result.data, curConfig);
             curConfig.items.prepend(newItems);
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.index);
-            _private.setText(this, this._displayText, this._items, this._configs);
+            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+            _private.updateText(this, this._filterSource, this._configs);
         }
-        _private.notifyChanges(this, this._items);
+        _private.notifyChanges(this, this._filterSource);
         this._children.DropdownOpener.close();
     },
 
-    _isReseted: function() {
+    _isFastReseted: function() {
         var isReseted = true;
-        factory(this._items).each(function(item) {
-            if (!isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'))) {
+        factory(this._filterSource).each(function(item) {
+            if (item.viewMode === 'frequent' && _private.isItemChanged(item)) {
                 isReseted = false;
             }
         });
         return isReseted;
     },
 
-    _reset: function(event, item, index) {
+    _reset: function(event, item) {
         if (this._children.DropdownOpener.isOpened()) {
             return;
         }
-        var newValue = object.getPropertyValue(this._items.at(index), 'resetValue');
-        object.setPropertyValue(this._items.at(index), 'value', newValue);
-        _private.notifyChanges(this, this._items);
-        _private.setText(this, this._displayText, this._items, this._configs);
+        var newValue = object.getPropertyValue(item, 'resetValue');
+        object.setPropertyValue(item, 'value', newValue);
+        _private.notifyChanges(this, this._filterSource);
+        _private.updateText(this, this._filterSource, this._configs);
+    },
+
+    _resetFilterText: function() {
+        factory(this._filterSource).each(function(item) {
+            // Fast filters could not be reset from the filter button.
+            if (item.viewMode !== 'frequent') {
+                item.value = item.resetValue;
+                if (object.getPropertyValue(item, 'visibility') !== undefined) {
+                    object.setPropertyValue(item, 'visibility', false);
+                }
+            }
+        });
+        _private.notifyChanges(this, this._filterSource);
+        _private.updateText(this, this._filterSource, this._configs);
     }
 });
 
 Filter.getDefaultOptions = function() {
     return {
-        itemsSpacing: 'medium'
+        alignment: 'right'
     };
 };
 
-Filter._theme = ['Controls/_filter/View/View'];
+Filter._theme = ['Controls/filter'];
 
 Filter._private = _private;
 

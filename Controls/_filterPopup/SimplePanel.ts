@@ -1,23 +1,45 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_filterPopup/FastViewPanel/FastViewPanel');
+import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 
 import {factory} from 'Types/chain'
 import isEqual = require('Core/helpers/Object/isEqual');
 import coreMerge = require('Core/core-merge');
 import CoreClone = require('Core/core-clone');
 
+/**
+ * Control dropdown list for filter:View (@link {@link Controls/_filter/Button/View}.
+ *
+ * @class Controls/_filterPopup/SimplePanel
+ * @extends Core/Control
+ * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ *
+ */
+
 var _private = {
+    getItems: function(self, initItems) {
+        var items = [];
+        factory(initItems).each(function(item, index) {
+            var curItem = item.getRawData();
+            curItem.initSelectedKeys = self._items ? self._items[index].initSelectedKeys : CoreClone(item.get('selectedKeys'));
+            items.push(curItem);
+        });
+        return items;
+    },
+
     isEqualKeys: function(oldKeys, newKeys) {
         if (oldKeys[0] === null && !newKeys.length) {
             return false;
         }
-        return !isEqual(newKeys, oldKeys);
+        return isEqual(newKeys, oldKeys);
     },
 
     needShowApplyButton: function(items) {
         var isNeedShowApplyButton = false;
-        items.forEach(function(item) {
-            if (_private.isEqualKeys(item.initSelectedKeys, item.selectedKeys)) {
+        factory(items).each(function(item) {
+            if (!_private.isEqualKeys(item.initSelectedKeys, item.selectedKeys)) {
                 isNeedShowApplyButton = true;
             }
         });
@@ -28,19 +50,12 @@ var _private = {
         var result = {
             action: action,
             event: event,
-            selectedKeys: []
+            selectedKeys: {}
         };
-        factory(self._items).each(function(item, index) {
-            result.selectedKeys[index] = item.selectedKeys;
+        factory(self._items).each(function(item) {
+            result.selectedKeys[item.id] = item.selectedKeys;
         });
         return result;
-    },
-
-    isNeedUpdateSelectedKeys: function(self, target, item, index) {
-        var clickOnEmptyItem = item.get(self._items[index].keyProperty) === null,
-            clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-            hasSelection = self._items[index].listModel.getSelectedKeys().length && self._items[index].listModel.getSelectedKeys()[0] !== null;
-        return self._items[index].multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
     }
 };
 
@@ -49,25 +64,23 @@ var Panel = Control.extend({
     _items: null,
 
     _beforeMount: function(options) {
-        var self = this;
-        this._items = [];
-        options.items.forEach(function(item) {
-            var currentItems = item.getRawData();
-            currentItems.initSelectedKeys = CoreClone(item.get('selectedKeys'));
-            self._items.push(currentItems);
-        });
+        this._items = _private.getItems(this, options.items);
     },
 
     _beforeUpdate: function(newOptions) {
         var itemsChanged = newOptions.items !== this._options.items;
+        if (itemsChanged) {
+            this._items = _private.getItems(this, newOptions.items);
+            this._needShowApplyButton = _private.needShowApplyButton(this._items);
+        }
     },
 
-    _itemClickHandler: function(event, index, keys) {
+    _itemClickHandler: function(event, item, keys) {
         var result = {
             action: 'itemClick',
             event: event,
             selectedKeys: keys,
-            index: index
+            id: item.id
         };
         this._notify('sendResult', [result]);
     },
@@ -75,6 +88,7 @@ var Panel = Control.extend({
     _checkBoxClickHandler: function(event, index, keys) {
         this._items[index].selectedKeys = keys;
         this._needShowApplyButton = _private.needShowApplyButton(this._items);
+        this._notify('selectedKeysChangedIntent', [index, keys]);
     },
 
     _closeClick: function() {
@@ -86,13 +100,13 @@ var Panel = Control.extend({
         this._notify('sendResult', [result]);
     },
 
-    _selectorResultHandler: function(event, index, result) {
-        result.index = index;
+    _selectorResultHandler: function(event, item, result) {
+        result.id = item.id;
         this._notify('sendResult', [result]);
     }
 });
 
-Panel._theme = ['Controls/_filterPopup/FastViewPanel/FastViewPanel', 'Controls/_dropdownPopup/DropdownList'];
+Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup'];
 
 Panel._private = _private;
 

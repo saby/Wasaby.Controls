@@ -1,5 +1,5 @@
 <div>
-   <ws:partial template="wml!Controls/_dropdownPopup/For"
+   <ws:partial template="Controls/dropdownPopup:_ForTemplate"
                listModel="{{_listModel}}"
                selectedKeys="{{_options.selectedKeys}}"
                displayProperty="{{_options.displayProperty}}"
@@ -12,7 +12,7 @@
    />
    <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
    <Controls.dropdownPopup:MoreButton
-           class="controls-FastViewPanel-list__hasMoreButton_theme_{{_options.theme}}"
+           class="controls-SimplePanel-List__hasMoreButton_theme_{{_options.theme}}"
            caption="{[Еще]}..."
            items="{{_options.items}}"
            selectedKeys="{{_listModel.getSelectedKeys()}}"

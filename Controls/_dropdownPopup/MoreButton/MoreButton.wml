@@ -2,5 +2,5 @@
    <Controls.buttons:Button viewMode="link"
                             caption="{{_options.caption}}"
                             on:click="_openSelectorDialog()"/>
-   <Controls.Selector.Opener name="selectorDialog" on:result="_selectorDialogResult()" />
+   <Controls.lookup:Opener name="selectorDialog" on:result="_selectorDialogResult()" />
 </div>

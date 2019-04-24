@@ -3,6 +3,7 @@
  * @library Controls/filter
  * @includes Selector Controls/_filter/Button
  * @includes Fast Controls/_filter/Fast
+ * @includes View Controls/_filter/View
  * @includes ButtonContainer Controls/_filter/Button/Container
  * @includes FastContainer Controls/_filter/Fast/Container
  * @includes Controller Controls/_filter/Controller

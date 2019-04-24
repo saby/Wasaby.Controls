@@ -13,7 +13,9 @@ var MoreButton = Control.extend([], {
         var selectedItems = [],
             self = this;
         factory(this._options.selectedKeys).each(function(key) {
-            selectedItems.push(self._options.items.getRecordById(key));
+            if (key !== undefined && key !== null) {
+                selectedItems.push(self._options.items.getRecordById(key));
+            }
         });
 
         var templateConfig = {
