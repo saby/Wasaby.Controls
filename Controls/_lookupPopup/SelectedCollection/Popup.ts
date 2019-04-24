@@ -3,6 +3,16 @@ import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
 import 'css!theme?Controls/Popup/Opener/InfoBox/InfoBox';
 import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
 
+/**
+ *
+ * Control _lookupPopup/List/Container.ts
+ *
+ * @class Controls/_lookupPopup/SelectedCollection/Popup
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var itemHiddenTemplate = Control.extend({
          _template: template,

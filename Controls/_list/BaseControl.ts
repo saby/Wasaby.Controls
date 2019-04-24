@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
@@ -700,7 +700,7 @@ var _private = {
                     closeOnOutsideClick: true,
                     corner: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
-                    className: 'controls-Toolbar__popup__list',
+                    className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
                 self._menuIsShown = true;
@@ -1368,7 +1368,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender, .controls-Dropdown, .controls-Suggest_list')) {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender, .controls-Render, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 this._children.fakeFocusElem.focus();
             }, 0);
