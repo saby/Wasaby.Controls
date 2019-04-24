@@ -12,11 +12,7 @@ define(
          it('InfoBoxController: getDefaultConfig', () => {
             let item = {
                popupOptions: {
-                  position: 'tl',
-                  target: {
-                     offsetWidth: 1,
-                     offsetHeight: 1
-                  }
+                  position: 'tl'
                }
             };
             InfoBoxController.getDefaultConfig(item);
