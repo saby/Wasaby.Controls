@@ -18,7 +18,6 @@ import Text = require('Controls/_filterPopup/Panel/Text');
 
 import historyUtils = require('Controls/_filterPopup/History/resources/historyUtils');
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
-import _FilterCompatible = require('Controls/_filterPopup/_FilterCompatible');
 
 export {
    Panel,
@@ -28,6 +27,5 @@ export {
    Text,
 
    historyUtils,
-   _FilterPanelWrapper,
-   _FilterCompatible
+   _FilterPanelWrapper
 }
