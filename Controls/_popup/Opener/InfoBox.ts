@@ -2,7 +2,8 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
-      
+import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/template');
+
 
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
@@ -190,8 +191,8 @@ import getZIndex = require('Controls/Utils/getZIndex');
                   style: cfg.style || 'default',
                   floatCloseButton: cfg.floatCloseButton
                },
-               template: 'Controls/_popup/Opener/InfoBox/resources/template'
-            }, 'Controls/_popup/Opener/InfoBox/InfoBoxController');
+               template: InfoBoxTemplate
+            }, require('Controls/popup').InfoBoxController);
          },
 
          /**
@@ -227,4 +228,4 @@ import getZIndex = require('Controls/Utils/getZIndex');
       };
 
       export = InfoBox;
-   
+

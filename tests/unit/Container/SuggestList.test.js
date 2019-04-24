@@ -1,13 +1,13 @@
 define(
-   ['Controls/Container/Suggest/List'],
-   function(List) {
+   ['Controls/suggestPopup'],
+   function(suggestPopup) {
       
       'use strict';
       
       describe('Controls.Container.Suggest.List', function() {
          
          it('_beforeUpdate', function() {
-            var suggestList = new List();
+            var suggestList = new suggestPopup.ListContainer();
             var contextObject = {
                suggestOptionsField: {
                   options: {
@@ -46,7 +46,7 @@ define(
          });
          
          it('_tabsSelectedKeyChanged', function() {
-            var suggestList = new List();
+            var suggestList = new suggestPopup.ListContainer();
             var tab = null;
             suggestList._suggestListOptions = {
                tabsSelectedKeyChangedCallback: function(newtab) {
@@ -59,8 +59,8 @@ define(
          });
    
          it('isTabChanged', function() {
-            assert.isTrue(List._private.isTabChanged({tabsSelectedKey: 1}, 2));
-            assert.isFalse(List._private.isTabChanged({tabsSelectedKey: 1}, 1));
+            assert.isTrue(suggestPopup.ListContainer._private.isTabChanged({tabsSelectedKey: 1}, 2));
+            assert.isFalse(suggestPopup.ListContainer._private.isTabChanged({tabsSelectedKey: 1}, 1));
          });
 
          it('dispatchEvent', function() {
@@ -72,7 +72,7 @@ define(
                }
             }
 
-            List._private.dispatchEvent(container, {keyCode: 'testKeyCode'}, {});
+            suggestPopup.ListContainer._private.dispatchEvent(container, {keyCode: 'testKeyCode'}, {});
             assert.isTrue(eventDispatched);
          })
 
@@ -86,8 +86,8 @@ define(
                }
             };
       
-            assert.equal(List._private.getTabKeyFromContext(emptyContext), null);
-            assert.equal(List._private.getTabKeyFromContext(contextWithValue), 1);
+            assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(emptyContext), null);
+            assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(contextWithValue), 1);
          });
          
       });

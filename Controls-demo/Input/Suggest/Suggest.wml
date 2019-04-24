@@ -1,7 +1,7 @@
 <Controls-demo.Wrapper.Wrapper title="Suggest">
     <ws:componentClass>
         <Controls.Popup.Opener.InfoBox name="infoBoxSuggest"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 attr:test_name="Suggest"
                 name="suggest"
                 bind:value="_suggestValue"
@@ -33,17 +33,17 @@
                 <ws:templateOptions demoClass="demo-SuggestInputList" itemSuggestTemplate="{{_flag }}" title="title" comment="age"/>
             </ws:suggestTemplate>
 
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
         <br/>
         <br/>
         <h4>Events</h4>
-        <Controls.Container.Scroll
+        <Controls.scroll:Container
                 attr:style="height: 60px; z-index: 1"
                 scrollbarVisible="{{true}}"
                 shadowVisible="{{true}}"
         >
             <pre>{{ _events }}</pre>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </ws:componentClass>
     <ws:componentProperty>
         <Controls.input:Label name="myLabel1" caption="value"/>
@@ -75,7 +75,7 @@
                                                 attr:class="demo-TextBox"/>
 
         <Controls.input:Label name="myLabel1" caption="searchParam"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 bind:value="_searchParam"
                 displayProperty="title"
                 searchParam="title"
@@ -89,10 +89,10 @@
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title"/>
             </ws:suggestTemplate>
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
 
         <Controls.input:Label name="myLabel1" caption="displayProperty"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 bind:value="_displayProperty"
                 displayProperty="title"
                 searchParam="title"
@@ -106,10 +106,10 @@
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
 
         <Controls.input:Label name="myLabel1" caption="keyProperty"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 bind:value="_keyProperty"
                 displayProperty="title"
                 searchParam="title"
@@ -123,10 +123,10 @@
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title"/>
             </ws:suggestTemplate>
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
 
         <Controls.input:Label name="myLabel1" caption="source"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 bind:value="_resources"
                 displayProperty="title"
                 searchParam="title"
@@ -140,14 +140,14 @@
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
 
         <Controls.input:Label name="myLabel1" caption="constraint"/>
         <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint"
                                                        source="{{_items}}" attr:class="demo-TextBox"/>
 
         <Controls.input:Label name="myLabel1" caption="suggestTemplate"/>
-        <Controls.Input.Suggest
+        <Controls.suggest:Input
                 bind:value="_flag"
                 displayProperty="title"
                 searchParam="title"
@@ -161,7 +161,7 @@
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                 <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
-        </Controls.Input.Suggest>
+        </Controls.suggest:Input>
         <Controls.toggle:Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="demo-TextBox"/>
         <Controls.toggle:Checkbox attr:id="footerTemplate" readOnly="{{false}}" bind:value="_footer" caption="footerTemplate"/>
         <Controls.toggle:Checkbox attr:id="filter" readOnly="{{false}}" bind:value="_filter" caption="filter"/>

@@ -3,11 +3,11 @@
  */
 define(
    [
-      'Controls/Container/Adapter/Enum',
+      'Controls/source',
       'Types/collection',
       'Types/source'
    ],
-   function(EnumContainer, collection, sourceLib) {
+   function(scroll, collection, sourceLib) {
 
       'use strict';
 
@@ -22,11 +22,11 @@ define(
                });
             });
             it('getArrayFromEnum', function() {
-               var arr = EnumContainer._private.getArrayFromEnum(enumInstance);
+               var arr = scroll.EnumAdapter._private.getArrayFromEnum(enumInstance);
                assert.deepEqual([{title : 'First'}, {title : 'Second'}, {title: 'Third'}], arr, 'getArrayFromEnum: Wrong array');
             });
             it('getSourceFromEnum', function(done) {
-               var source = EnumContainer._private.getSourceFromEnum(enumInstance);
+               var source = scroll.EnumAdapter._private.getSourceFromEnum(enumInstance);
                var queryInstance = new sourceLib.Query();
                source.query(queryInstance).addCallback(function(dataSet){
                   var rawData = dataSet.getAll().getRawData();
@@ -48,9 +48,9 @@ define(
                var cfg = {
                   enum: enumInstance
                };
-               var containerInstance = new EnumContainer(cfg);
+               var containerInstance = new scroll.EnumAdapter(cfg);
 
-               EnumContainer._private.enumSubscribe(containerInstance, enumInstance);
+               scroll.EnumAdapter._private.enumSubscribe(containerInstance, enumInstance);
                enumInstance.set(2);
                assert.equal('Third', containerInstance._selectedKey, 'enumSubscribe: selectedKey doesn\'t change');
 
@@ -60,7 +60,7 @@ define(
                var cfg = {
                   enum: enumInstance
                };
-               var containerInstance = new EnumContainer(cfg);
+               var containerInstance = new scroll.EnumAdapter(cfg);
                containerInstance.saveOptions(cfg);
 
                containerInstance._beforeMount(cfg);

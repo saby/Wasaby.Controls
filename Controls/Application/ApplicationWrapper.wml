@@ -2,7 +2,7 @@
                       headJson="{{ headJson }}"
                       appRoot="/materials/">
     <ws:content>
-        <Controls.Container.Scroll attr:class="controls-ApplicationWrapper__scroll">
+        <Controls.scroll:Container attr:class="controls-ApplicationWrapper__scroll">
             <div>
                 <ws:partial template="{{_options.content}}"/>
                 <ws:if data="{{_version && _options.demoname}}">
@@ -12,6 +12,6 @@
                                      href="https://git.sbis.ru/sbis/controls/blob/rc-{{_version}}/{{_options.demoname}}"/>
                 </ws:if>
             </div>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </ws:content>
 </Controls.Application>

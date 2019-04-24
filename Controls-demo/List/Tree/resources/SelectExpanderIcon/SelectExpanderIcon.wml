@@ -1,4 +1,4 @@
-<Controls.Container.Scroll attr:class="ControlsDemo-TreeHiddenNodes__tasks">
+<Controls.scroll:Container attr:class="ControlsDemo-TreeHiddenNodes__tasks">
    <Controls.treeGrid:View
            name="tasksTreeGrid"
            keyProperty="id"
@@ -31,4 +31,4 @@
          </ws:Array>
       </ws:columns>
    </Controls.treeGrid:View>
-</Controls.Container.Scroll>
+</Controls.scroll:Container>

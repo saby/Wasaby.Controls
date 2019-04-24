@@ -1,11 +1,11 @@
 define(
    [
       'Env/Env',
-      'Controls/Container/Scroll',
+      'Controls/scroll',
       'Controls/StickyHeader/Utils',
       'wml!unit/Container/resources/Content'
    ],
-   function(Env, Scroll, stickyUtils, Content) {
+   function(Env, scrollMod, stickyUtils, Content) {
 
       'use strict';
 
@@ -13,7 +13,7 @@ define(
          var scroll, result;
 
          beforeEach(function() {
-            scroll = new Scroll({});
+            scroll = new scrollMod.Container({});
 
             var templateFn = scroll._template;
 
@@ -177,7 +177,7 @@ define(
       describe('selectedKeysChanged', function() {
          var instance;
          beforeEach(function() {
-            instance = new Scroll();
+            instance = new scrollMod.Container();
          })
          it('should forward event', function() {
             var
@@ -215,7 +215,7 @@ define(
       describe('excludedKeysChanged', function() {
          var instance;
          beforeEach(function() {
-            instance = new Scroll();
+            instance = new scrollMod.Container();
          })
          it('should forward event', function() {
             var
@@ -254,20 +254,20 @@ define(
          var result;
          describe('calcShadowPosition', function() {
             it('Тень сверху', function() {
-               result = Scroll._private.calcShadowPosition(100, 100, 200);
+               result = scrollMod.Container._private.calcShadowPosition(100, 100, 200);
                assert.equal(result, 'top');
             });
             it('Тень снизу', function() {
-               result = Scroll._private.calcShadowPosition(0, 100, 200);
+               result = scrollMod.Container._private.calcShadowPosition(0, 100, 200);
                assert.equal(result, 'bottom');
             });
             it('Should hide bottom shadow if there is less than 1 pixel to the bottom.', function() {
                // Prevent rounding errors in the scale do not equal 100%
-               result = Scroll._private.calcShadowPosition(99.234, 100, 200);
+               result = scrollMod.Container._private.calcShadowPosition(99.234, 100, 200);
                assert.notInclude(result, 'bottom');
             });
             it('Тень сверху и снизу', function() {
-               result = Scroll._private.calcShadowPosition(50, 100, 200);
+               result = scrollMod.Container._private.calcShadowPosition(50, 100, 200);
                assert.equal(result, 'topbottom');
             });
          });
@@ -279,15 +279,15 @@ define(
             };
 
             it('getScrollHeight', function() {
-               result = Scroll._private.getScrollHeight(container);
+               result = scrollMod.Container._private.getScrollHeight(container);
                assert.equal(result, 200);
             });
             it('getContainerHeight', function() {
-               result = Scroll._private.getContainerHeight(container);
+               result = scrollMod.Container._private.getContainerHeight(container);
                assert.equal(result, 100);
             });
             it('getScrollTop', function() {
-               result = Scroll._private.getScrollTop(container);
+               result = scrollMod.Container._private.getScrollTop(container);
                assert.equal(result, 0);
             });
          });

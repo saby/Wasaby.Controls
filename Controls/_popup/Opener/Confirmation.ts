@@ -1,7 +1,7 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Deferred = require('Core/Deferred');
-      
+
 
       /**
        * Component that opens the confirmation popup.
@@ -156,14 +156,14 @@ import Deferred = require('Core/Deferred');
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
             _private.compatibleOptions(this, popupOptions);
-            Confirmation.superclass.open.call(this, popupOptions, 'Controls/_popup/Opener/Dialog/DialogController');
+            Confirmation.superclass.open.call(this, popupOptions, require('Controls/popup').DialogController);
             return this._resultDef;
          },
 
          _getPopupOptions: function(templateOptions) {
             templateOptions.closeHandler = this._closeHandler;
             return {
-               template: 'Controls/_popup/Opener/Confirmation/Dialog',
+               template: require('Controls/popup').ConfirmationDialog,
                modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions
@@ -193,4 +193,4 @@ import Deferred = require('Core/Deferred');
        * @property {String} okCaption Accept text button.
        */
 
-   
+

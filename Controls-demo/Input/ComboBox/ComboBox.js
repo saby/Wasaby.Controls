@@ -4,7 +4,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
       'wml!Controls-demo/Input/ComboBox/ComboBox',
       'Types/source',
       'wml!Controls-demo/Input/ComboBox/resources/ItemTemplate',
-      'Controls/Input/ComboBox',
+      'Controls/dropdown',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template, sourceLib, myTmpl) {

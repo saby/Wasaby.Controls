@@ -2,44 +2,44 @@
    <div class="ControlsDemo-FilterButton-PanelVDom__items">
       <h4>Without the block "Possible to select"</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
+         <Controls.filter:Selector attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple"
                                  bind:items="_itemsSimple">
-         </Controls.Filter.Button>
+         </Controls.filter:Selector>
       </div>
    </div>
 
    <div class="panel-demo-item">
       <h4>The template for the block "Selected" is specified using the option "template" for each filter.</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
+         <Controls.filter:Selector attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  bind:items="_itemsTemplate"
                                  templateName="wml!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty">
-         </Controls.Filter.Button>
+         </Controls.filter:Selector>
       </div>
    </div>
 
    <div class="panel-demo-item">
       <h4>The template for the block "Selected" is specified using the option "itemTemplate".</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
+         <Controls.filter:Selector attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  on:filterChanged="_filterChangedHandler()"
                                  alignment="left"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_items">
-         </Controls.Filter.Button>
+         </Controls.filter:Selector>
       </div>
    </div>
 
    <div class="panel-demo-item">
       <h4>With history</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component ControlsDemo-FilterButton-PanelVDom__withHistory"
+         <Controls.filter:Selector attr:class="ControlsDemo-FilterButton-PanelVDom__component ControlsDemo-FilterButton-PanelVDom__withHistory"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_itemsHistory"
                                  alignment="left"
                                  historyId="DEMO_HISTORY_ID">
-         </Controls.Filter.Button>
+         </Controls.filter:Selector>
       </div>
    </div>
 </div>
