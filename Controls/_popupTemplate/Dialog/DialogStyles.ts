@@ -1,5 +1,5 @@
 /**
- * @mixin Controls/Popup/Templates/Dialog/DialogTmplStyles
+ * @mixin Controls/_popupTemplate/Dialog/DialogStyles
  * @public
  *
  * @css @background-color_dialogTemplate-content Background color of content.
