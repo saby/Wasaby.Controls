@@ -24,7 +24,8 @@ import 'css!theme?Controls/_validate/ErrorMessage';
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {
-                     onResult: self._mouseInfoboxHandler.bind(self)
+                     onResult: self._mouseInfoboxHandler.bind(self),
+                     onClose: self._closeHandler.bind(self)
                   }
                };
 
@@ -214,6 +215,9 @@ import 'css!theme?Controls/_validate/ErrorMessage';
                _private.openInfoBox(this);
             }
          },
+         _closeHandler:function(){
+            this._isOpened = false;
+         },
          _focusInHandler: function() {
             if (!this._isOpened) {
                _private.openInfoBox(this);
@@ -222,7 +226,7 @@ import 'css!theme?Controls/_validate/ErrorMessage';
          _mouseInfoboxHandler: function(event) {
             if (event.type === 'mouseenter') {
                this._hoverInfoboxHandler(this);
-            } else {
+            } else if (event.type === 'mouseleave'){
                this._mouseLeaveHandler(this);
             }
          },
