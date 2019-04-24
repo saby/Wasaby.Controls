@@ -167,6 +167,7 @@ var ListView = BaseControl.extend(
                 event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
+            event.stopPropagation();
         },
 
         _onRowDeactivated: function(event, eventOptions) {
