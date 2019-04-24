@@ -1,6 +1,6 @@
-import HistorySource = require('Controls/History/FilterSource');
-import HistoryService = require('Controls/History/Service');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Service as HistoryService, FilterSource as HistorySource} from 'Controls/history';
+
+import {Controller as SourceController} from 'Controls/source';
 import entity = require('Types/entity');
 import collection = require('Types/collection');
 import sourceLib = require('Types/source');

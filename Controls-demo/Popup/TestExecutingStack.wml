@@ -1,8 +1,8 @@
 <div>
-    <Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
+    <Controls.popupTemplate:Stack headingCaption="PopupManager">
         <ws:bodyContentTemplate>
             <Controls.input:Text name="textBox" bind:value="_textFotTest" />
             <Controls.input:Text name="textBox2" bind:value="_text" />
         </ws:bodyContentTemplate>
-    </Controls.Popup.Templates.Stack.StackTemplate>
+    </Controls.popupTemplate:Stack>
 </div>

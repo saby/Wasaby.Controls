@@ -1,6 +1,6 @@
 <div>
    <ws:if data="{{_options.items || _options.rootVisible}}">
-      <Controls.StickyHeader mode="stackable">
+      <Controls.scroll:StickyHeader mode="stackable">
          <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
                                       name="Path"
                                       header="{{_header}}"
@@ -9,7 +9,7 @@
                                       on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                                       on:arrowActivated="_notifyHandler('arrowActivated')"
                                       on:itemClick="_notifyHandler('itemClick')" />
-      </Controls.StickyHeader>
+      </Controls.scroll:StickyHeader>
    </ws:if>
    <ws:partial template="{{ _options.content }}"
                scope="{{ _options }}"

@@ -4,8 +4,8 @@
          <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
               style="z-index: {{_getPopupZIndex(item, index) - 1}};"></div>
       </ws:if>
-      <Controls.Container.PendingRegistrator name="{{item.id}}_registrator" attr:key="{{item.id}}">
-         <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
+      <Controls.Pending name="{{item.id}}_registrator" attr:key="{{item.id}}">
+         <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                        on:deactivated="_popupDeactivated(item.id)"
                                        on:activated="_popupActivated(item.id)"
                                        attr:class="controls-Container__popup
@@ -25,6 +25,6 @@
                 height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
                                        scope="{{item.popupOptions}}"
          />
-      </Controls.Container.PendingRegistrator>
+      </Controls.Pending>
    </ws:for>
 </div>

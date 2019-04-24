@@ -53,9 +53,7 @@ import Utils = require('Types/util');
 
          // Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
          getManagerController: function() {
-            if (requirejs.defined('Controls/_popup/Manager/ManagerController')) {
-               return requirejs('Controls/_popup/Manager/ManagerController');
-            }
+            return require('Controls/popup').Controller;
          }
       };
 
@@ -233,4 +231,4 @@ import Utils = require('Types/util');
       BaseController.prototype.POPUP_STATE_DESTROYING = BaseController.POPUP_STATE_DESTROYING = 'destroying';
       BaseController.prototype.POPUP_STATE_DESTROYED = BaseController.POPUP_STATE_DESTROYED = 'destroyed';
       export = BaseController;
-   
+

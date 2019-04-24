@@ -10,7 +10,7 @@ import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUti
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'Controls/_scroll/Scroll/Watcher';
-import 'Controls/Event/Listener';
+import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
 import 'css!theme?Controls/_scroll/Scroll/Scroll';
 

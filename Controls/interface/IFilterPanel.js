@@ -31,13 +31,13 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * In this example panel will be displayed in two column.
     * <pre>
-    *    <Controls.Filter.Button.Panel
+    *    <Controls.filterPopup:Panel
     *          items={{_items}}
     *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     */
 
@@ -48,14 +48,14 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * In this example, the panel has the caption "Sales"
     * <pre>
-    *    <Controls.Filter.Button.Panel
+    *    <Controls.filterPopup:Panel
     *          items={{_items}}
     *          headingCaption="Sales">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
-    * @see Controls/Heading#caption
+    * @see Controls/_heading:Title#caption
     */
 
    /**
@@ -67,14 +67,14 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * In this example, the panel has a primary heading style.
     * <pre>
-    *    <Controls.Filter.Button.Panel
+    *    <Controls.filterPopup:Panel
     *          items={{_items}}
     *          headingStyle="primary">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
-    * @see Controls/Heading#style
+    * @see Controls/_heading:Title#style
     */
 
    /**
@@ -86,15 +86,15 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * Example of setting options itemTemplate
     * <pre>
-    *    <Controls.Filter.Button.Panel items="{{_items}}">
+    *    <Controls.filterPopup:Panel items="{{_items}}">
     *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     *
     * Module/itemTemplate.wml
     * <pre>
     * <ws:template name="type">
-    *    <Controls.Filter.Button.Panel.Dropdown
+    *    <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          bind:textValue="item.textValue"
     *          keyProperty="key"
@@ -103,7 +103,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * </ws:template>
     *
     * <ws:template name="deleted">
-    *    <Controls.Filter.Button.Panel.Text
+    *    <Controls.filterPopup:Text
     *          bind:value="item.value"
     *          caption="{{item.textValue}}"/>/>
     * </ws:template>
@@ -136,16 +136,16 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * Example of setting options additionalTemplate
     * <pre>
-    *    <Controls.Filter.Button.Panel items={{_items}}>
+    *    <Controls.filterPopup:Panel items={{_items}}>
     *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     *
     * Module/itemTemplate.wml
     * <pre>
     * <ws:template name="type">
-    *    <Controls.Filter.Button.Panel.Dropdown
+    *    <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          bind:textValue="item.textValue"
     *          keyProperty="key"
@@ -154,7 +154,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * </ws:template>
     *
     * <ws:template name="deleted">
-    *    <Controls.Filter.Button.Panel.Text
+    *    <Controls.filterPopup:Text
     *          bind:value="item.value"
     *          caption="{{item.textValue}}"/>/>
     * </ws:template>
@@ -165,7 +165,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * MyModule/additionalTemplate.wml
     * <pre>
     *    <ws:template name="type">
-    *       <Controls.Filter.Button.Panel.Dropdown
+    *       <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          keyProperty="key"
     *          displayProperty="title"
@@ -173,7 +173,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    </ws:template>
     *
     *    <ws:template name="deleted">
-    *       <Controls.Filter.Button.Panel.Link caption="item.textValue"/>
+    *       <Controls.filterPopup:Link caption="item.textValue"/>
     *    </ws:template>
     *
     *    <ws:partial template="{{item.id}}" item="{{item}}"/>
@@ -204,18 +204,18 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @example
     * In this example, the template for the "deleted" filter in the additional block, will be loaded from the file MyModule/addTemplateDeleted.wml
     * <pre>
-    *    <Controls.Filter.Button.Panel
+    *    <Controls.filterPopup:Panel
     *       items={{_items}}
     *       additionalTemplateProperty="myAddTpl">
     *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     *
     * Module/itemTemplate.wml
     * <pre>
     * <ws:template name="type">
-    *    <Controls.Filter.Button.Panel.Dropdown
+    *    <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          bind:textValue="item.textValue"
     *          keyProperty="key"
@@ -224,7 +224,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * </ws:template>
     *
     * <ws:template name="deleted">
-    *    <Controls.Filter.Button.Panel.Text
+    *    <Controls.filterPopup:Text
     *          bind:value="item.value"
     *          caption="{{item.textValue}}"/>/>
     * </ws:template>
@@ -235,7 +235,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * MyModule/additionalTemplate.wml
     * <pre>
     *    <ws:template name="type">
-    *       <Controls.Filter.Button.Panel.Dropdown
+    *       <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          keyProperty="key"
     *          displayProperty="title"
@@ -247,7 +247,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *
     * MyModule/addTemplateDeleted.wml
     * <pre>
-    *     <Controls.Filter.Button.Panel.Link caption="item.textValue"/>
+    *     <Controls.filterPopup:Link caption="item.textValue"/>
     * </pre>
     *
     * JS:
@@ -277,7 +277,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * In this example, the template for the "type" filter in the main block, will be loaded from the file Module/myTemplateForType.wml
     * TMPL:
     * <pre>
-    *    <Controls.Filter.Button.Panel
+    *    <Controls.filterPopup:Panel
     *    items={{_items}}
     *    itemTemplateProperty="myTpl"/>
     *    <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
@@ -286,7 +286,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * Module/itemTemplate.wml
     * <pre>
     *    <ws:template name="deleted">
-    *       <Controls.Filter.Button.Panel.Text
+    *       <Controls.filterPopup:Text
     *             bind:value="item.value"
     *             caption="{{item.textValue}}"/>/>
     *    </ws:template>
@@ -296,7 +296,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *
     * Module/myTemplateForType.wml
     * <pre>
-    *    <Controls.Filter.Button.Panel.Dropdown
+    *    <Controls.filterPopup:Dropdown
     *          bind:selectedKeys="item.value"
     *          bind:textValue="item.textValue"
     *          keyProperty="key"

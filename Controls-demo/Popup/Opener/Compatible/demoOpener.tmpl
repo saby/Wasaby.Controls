@@ -74,7 +74,7 @@
    </div>
    <div class='controls-demo__combobox-container'>
       Set Width
-      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_widthItems)}}"
                                keyProperty="title"
                                emptyText="Set width"
                                readOnly="{{!!_minWidth || !!_maxWidth}}"
@@ -86,7 +86,7 @@
    </div>
    <div class='controls-demo__combobox-container'>
       Set min/max Width
-      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_widthItems)}}"
                                keyProperty="title"
                                emptyText="Set minWidth"
                                readOnly="{{!!_width}}"
@@ -95,7 +95,7 @@
                                placeholder="Set minWidth"
 							   attr:class="demo-OpenerCompatible__setMinWidth"
       />
-      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_widthItems)}}"
                                keyProperty="title"
                                emptyText="Set maxWidth"
                                readOnly="{{!!_width}}"
@@ -110,7 +110,7 @@
    </div>
    <div class='controls-demo__combobox-container'>
       Set min/max Height
-      <Controls.Input.ComboBox source="{{_createMemory(_heightItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_heightItems)}}"
                                keyProperty="title"
                                emptyText="Set minHeight"
                                displayProperty="title"
@@ -118,7 +118,7 @@
                                placeholder="Set minHeight"
 							   attr:class="demo-OpenerCompatible__setMinHeight"
       />
-      <Controls.Input.ComboBox source="{{_createMemory(_heightItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_heightItems)}}"
                                keyProperty="title"
                                emptyText="Set maxHeight"
                                displayProperty="title"
@@ -129,7 +129,7 @@
    </div>
    <div class='controls-demo__combobox-container'>
       Set side options
-      <Controls.Input.ComboBox source="{{_createMemory(_sideItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_sideItems)}}"
                                keyProperty="title"
                                emptyText="Set side"
                                displayProperty="title"
@@ -138,7 +138,7 @@
 							   attr:class="demo-OpenerCompatible__setSide"
       />
       Set direction options
-      <Controls.Input.ComboBox source="{{_createMemory(_directionItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_directionItems)}}"
                                keyProperty="title"
                                emptyText="Set direction"
                                displayProperty="title"
@@ -147,7 +147,7 @@
 							   attr:class="demo-OpenerCompatible__setDirection"
       />
       Set corner options
-      <Controls.Input.ComboBox source="{{_createMemory(_sideItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_sideItems)}}"
                                keyProperty="title"
                                emptyText="Set horizotal"
                                displayProperty="title"
@@ -155,7 +155,7 @@
                                placeholder="Set horizontal"
 							   attr:class="demo-OpenerCompatible__setHorizontal"
       />
-      <Controls.Input.ComboBox source="{{_createMemory(_verticalItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_verticalItems)}}"
                                keyProperty="title"
                                readOnly="{{!!_verticalAlign}}"
                                emptyText="Set vertical"
@@ -165,7 +165,7 @@
 							   attr:class="demo-OpenerCompatible__setVertical"
       />
       Set verticalAlign
-      <Controls.Input.ComboBox source="{{_createMemory(_verticalItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_verticalItems)}}"
                                keyProperty="title"
                                readOnly="{{!!_vertical}}"
                                emptyText="Set verticalAlign"
@@ -175,7 +175,7 @@
 							   attr:class="demo-OpenerCompatible__setVerticalAlign"
       />
       Set offset
-      <Controls.Input.ComboBox source="{{_createMemory(_offsetItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_offsetItems)}}"
                                keyProperty="title"
                                emptyText="Set X offset"
                                displayProperty="title"
@@ -183,7 +183,7 @@
                                placeholder="Set X offset"
 							   attr:class="demo-OpenerCompatible__setOffsetX"
       />
-      <Controls.Input.ComboBox source="{{_createMemory(_offsetItems)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_offsetItems)}}"
                                keyProperty="title"
                                emptyText="Set Y offset"
                                displayProperty="title"

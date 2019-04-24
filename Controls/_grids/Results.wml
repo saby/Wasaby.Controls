@@ -11,11 +11,11 @@
    </div>
 </ws:template>
 <ws:template name="stickyCell">
-   <Controls.StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
+   <Controls.scroll:StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
                           mode="stackable"
                           fixedZIndex="3">
       <ws:partial template="cellContent"/>
-   </Controls.StickyHeader>
+   </Controls.scroll:StickyHeader>
 </ws:template>
 <ws:template name="results">
 <ws:if data="{{contentTemplate}}">

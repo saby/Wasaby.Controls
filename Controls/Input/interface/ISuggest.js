@@ -31,19 +31,19 @@ define('Controls/Input/interface/ISuggest', [
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
     * @cfg {suggestTemplateProp|null} Template for suggest, that showing search results.
-    * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls.list:View or Controls/grid:View), that will displaying a list.
+    * @remark Root control of suggest must be Controls.suggestPopup:ListContainer, for this control you can pass in content option a control (such Controls.list:View or Controls/grid:View), that will displaying a list.
     * @remark You can set width of suggestions popup by adding own class on suggestTemplate and set min-width by this class. By default width of the suggest is equal input field width.
     * @editor function
     * @example
     * suggestTemplate.wml
     * <pre>
-    *    <Controls.Container.Suggest.List attr:class="myClass">
+    *    <Controls.suggestPopup:ListContainer attr:class="myClass">
     *       <Controls.list:View keyProperty="id">
     *          <ws:itemTemplate>
     *             <ws:partial template="Controls/list:ItemTemplate" displayProperty="city"/>
     *          </ws:itemTemplate>
     *       </Controls.list:View>
-    *    </Controls.Container.Suggest.List>
+    *    </Controls.suggestPopup:ListContainer>
     * </pre>
     *
     * suggestTemplate.css
@@ -55,11 +55,11 @@ define('Controls/Input/interface/ISuggest', [
     *
     * component with Input/Suggest:
     * <pre>
-    *    <Controls.Input.Suggest>
+    *    <Controls.suggest:Input>
     *       <ws:suggestTemplate templateName="wml!SuggestTemplate">
     *          <ws:templateOptions />
     *       </ws:suggestTemplate>
-    *    </Controls.Input.Suggest>
+    *    </Controls.suggest:Input>
     * </pre>
     */
    
@@ -74,11 +74,11 @@ define('Controls/Input/interface/ISuggest', [
     * </pre>
     *
     * MySuggest.wml:
-    * <Controls.Input.Suggest>
+    * <Controls.suggest:Input>
     *    <ws:emptyTemplate templateName="wml!emptyTemplate">
     *       <ws:templateOptions showImage={{_showImage}}/>
     *    </ws:emptyTemplate>
-    * </Controls.Input.Suggest>
+    * </Controls.suggest:Input>
     */
    
    /**
@@ -103,9 +103,9 @@ define('Controls/Input/interface/ISuggest', [
     *
     * mySuggest.wml
     * <pre>
-    *    <Controls.Input.Suggest>
+    *    <Controls.suggest:Input>
     *       <ws:suggestFooterTemplate templateName="myFooter">
-    *    </Controls.Input.Suggest>
+    *    </Controls.suggest:Input>
     * </pre>
     */
 
@@ -115,7 +115,7 @@ define('Controls/Input/interface/ISuggest', [
     * @remark If items were previously selected, suggest with this items will be displayed after input get focused.
     * @example
     * <pre>
-    *    <Controls.Input.Suggest historyId="myHistoryId"/>
+    *    <Controls.suggest:Input historyId="myHistoryId"/>
     * </pre>
     */
 
@@ -125,7 +125,7 @@ define('Controls/Input/interface/ISuggest', [
     * @example
     * In this example suggest will shown after input get focused.
     * <pre>
-    *    <Controls.Input.Suggest autoSuggest={{true}}/>
+    *    <Controls.suggest:Input autoSuggest={{true}}/>
     * </pre>
     */
    
@@ -161,7 +161,7 @@ define('Controls/Input/interface/ISuggest', [
     * myModule.wml
     * <pre>
     *    <div>
-    *       <Controls.Input.Suggest displayProperty="city" on:choose="_choose()"/>
+    *       <Controls.suggest:Input displayProperty="city" on:choose="_choose()"/>
     *    </div>
     *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
     * </pre>
@@ -198,7 +198,7 @@ define('Controls/Input/interface/ISuggest', [
     * myModule.wml
     * <pre>
     *    <div>
-    *       <Controls.Input.Suggest displayProperty='city' on:choose="_choose()"/>
+    *       <Controls.suggest:Input displayProperty='city' on:choose="_choose()"/>
     *    </div>
     *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
     * </pre>

@@ -4,7 +4,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
    'Types/source',
    'Types/entity',
    'Controls/Constants',
-   'Controls/Validate/Validators/IsRequired'
+   'Controls/validate'
 ], function(Control,
             template,
             source,

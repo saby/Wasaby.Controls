@@ -2,12 +2,12 @@
     <div class="testBlock">
         <div class="exampleBlock">
             <h2>Back button</h2>
-            <Controls.Heading.Back attr:class="ControlsDemo__header" on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
+            <Controls._heading:Back attr:class="ControlsDemo__header" on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.input:Label name="myLabel1" caption="style:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     attr:class="ControlsDemo__style"
                     source="{{_backStyleSource}}"
                     keyProperty="title"
@@ -18,7 +18,7 @@
                     on:selectedKeyChanged="backChangeStyle()"
             />
             <Controls.input:Label name="myLabel1" caption="size:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     attr:class="ControlsDemo__size"
                     source="{{_backSizeSource}}"
                     keyProperty="title"
