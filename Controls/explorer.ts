@@ -10,4 +10,4 @@ import View = require('Controls/_explorer/View');
 
 export {
    View
-}
+};
