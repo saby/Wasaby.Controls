@@ -179,6 +179,34 @@ define(
             assert.equal(item.position.maxHeight, 960);
          });
 
+         it('calc coordinates _fixCompatiblePosition', () => {
+            let item = {
+                  popupOptions: {
+                     width: 730,
+                     left: 785
+                  },
+                  position: {}
+               },
+               windowData = {
+                  width: 1920,
+                  height: 960,
+               };
+
+            DialogController._private.getWindowSize = () => windowData;
+            DialogController._private.fixCompatiblePosition(item);
+            assert.equal(item.position.left, 785);
+
+            windowData = {
+               width: 1080,
+               height: 960,
+            };
+            DialogController._private.getWindowSize = () => windowData;
+            DialogController._private.fixCompatiblePosition(item);
+
+            let calculateLeft = item.popupOptions.left - ((item.popupOptions.left + item.popupOptions.width) - windowData.width);
+            assert.equal(item.position.left, calculateLeft);
+         });
+
          it('dialog drag start', function() {
             let item = {
                position: {
