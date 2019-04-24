@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate on:selectedKeysChanged="_selectedKeysChanged()">
+<Controls.popupTemplate:Stack on:selectedKeysChanged="_selectedKeysChanged()">
     <ws:headerContentTemplate>
         <div attr:class="ControlsDemo-FlatListSelector-header">
             <ws:if data="{{_options.multiSelect && _selectionChanged}}">
@@ -7,20 +7,20 @@
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-        <Controls.Selector.Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
+        <Controls.lookupPopup:Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
             <Controls.list:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_options.filter}}">
-                <Controls.Selector.Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
+                <Controls.lookupPopup:Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
                     <Controls.operations:Controller>
                         <Controls.list:Container>
                             <Controls.operations:Container>
-                                <Controls.Selector.List.Container multiSelect="{{_options.multiSelect ? 'visible'}}">
+                                <Controls.lookupPopup:ListContainer multiSelect="{{_options.multiSelect ? 'visible'}}">
                                     <Controls.list:View displayProperty="title" idProperty="{{_keyProperty}}" multiSelectVisibility="{{_options.multiSelect ? 'visible'}}"/>
-                                </Controls.Selector.List.Container>
+                                </Controls.lookupPopup:ListContainer>
                             </Controls.operations:Container>
                         </Controls.list:Container>
                     </Controls.operations:Controller>
-                </Controls.Selector.Container>
+                </Controls.lookupPopup:Container>
             </Controls.list:DataContainer>
-        </Controls.Selector.Controller>
+        </Controls.lookupPopup:Controller>
     </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

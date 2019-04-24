@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
+<Controls.popupTemplate:Stack headingCaption="PopupManager">
    <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
@@ -49,4 +49,4 @@
 
       </div>
    </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

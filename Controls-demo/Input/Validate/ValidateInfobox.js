@@ -3,9 +3,7 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
    'wml!Controls-demo/Input/Validate/ValidateInfobox',
    'css!Controls-demo/Input/Validate/ValidateInfobox',
    'css!Controls-demo/Input/resources/VdomInputs',
-   'Controls/Validate/Validators/IsINN',
-   'Controls/Validate/Validators/IsRequired',
-   'Controls/Validate/Validators/IsEmail',
+   'Controls/validate',
    'Controls-demo/Input/Validate/Validator'
 ], function(Control, template) {
    'use strict';

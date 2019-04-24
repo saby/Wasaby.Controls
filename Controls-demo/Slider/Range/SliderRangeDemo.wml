@@ -40,7 +40,7 @@
          <Controls.Label caption="precision:"/>
          <Controls.Input.Number precision="{{0}}" on:valueChanged="changePrecision()" bind:value="_precision" />
          <Controls.Label caption="size:"/>
-         <Controls.Input.ComboBox
+         <Controls.dropdown:Combobox
             source="{{_sizeSource}}"
             keyProperty="title"
             placeholder="s"

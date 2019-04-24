@@ -1,5 +1,5 @@
 define([
-   'Controls/Container/LoadingIndicator'
+   'Controls/LoadingIndicator'
 ], (LoadingIndicator) => {
    'use strict';
 

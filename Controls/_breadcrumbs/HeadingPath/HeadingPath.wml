@@ -29,7 +29,7 @@
                                        on:itemClick="_notifyHandler('itemClick')"/>
         </ws:if>
 
-        <Controls.Event.Listener event="controlResize"
+        <Controls.event:Listener event="controlResize"
                                 on:controlResize="_onResize()"/>
     </div>
 </div>

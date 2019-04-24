@@ -67,7 +67,7 @@
                             on:onArrowClick="_arrowClickHandler()"/>
    </ws:if>
 
-   <Controls.Event.Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
 </ws:template>
 

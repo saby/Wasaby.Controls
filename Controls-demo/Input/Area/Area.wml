@@ -41,7 +41,7 @@
       <Controls.input:Label caption="tooltip"/>
       <Controls.input:Text attr:id="tooltip" bind:value="_tooltip" attr:class="ControlsDemo-Area__tooltip"/>
       <Controls.input:Label name="myLabel1" caption="newLineKey:"/>
-      <Controls.Input.ComboBox
+      <Controls.dropdown:Combobox
          attr:class="ControlsDemo-Area__newLineKey"
          source="{{_newLineKeySource}}"
          keyProperty="title"
