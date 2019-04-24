@@ -3,7 +3,7 @@ define('Controls/Input/Date/LinkView', [
    'Env/Env',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
-   'Controls/Input/Date/interface/ILinkView',
+   'Controls/interface/ILinkView',
    'wml!Controls/Input/Date/LinkView/LinkView',
    'css!theme?Controls/Input/Date/LinkView/LinkView'
 ], function(
