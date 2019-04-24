@@ -11,7 +11,7 @@ import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IInputBase
- * @mixes Controls/_input/interface/ITimeInterval
+ * @mixes Controls/interface/ITimeInterval
  *
  * @public
  * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG

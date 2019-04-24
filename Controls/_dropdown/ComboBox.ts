@@ -23,7 +23,7 @@ var _private = {
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISingleSelectable
- * @mixes Controls/Input/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/Input/interface/IInputDropdown
  * @mixes Controls/_input/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
