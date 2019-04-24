@@ -18,7 +18,7 @@
          <ws:partial template="{{_options.emptyTemplate}}"/>
       </ws:if>
       <ws:if data="{{_options.stickyFooter}}">
-         <Controls.StickyHeader position="bottom" >
+         <Controls.StickyHeader position="bottom"  attr:class="controls-ListView__footer__paddingLeft_{{_options.multiselectVisibility === 'onhover' || _options.multiselectVisibility === 'visible' ? 'withCheckboxes' : 'default'}}">
             <ws:content>
                <div>
                   <ws:partial template="{{_options.footerTemplate}}"/>

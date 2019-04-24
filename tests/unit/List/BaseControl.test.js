@@ -2807,5 +2807,23 @@ define([
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
       });
+
+      it('calculation paging state', function(){
+         var pageSize = 5,
+            hasMore = 10,
+            self = {
+               _currentPage: 1,
+               _knownPagesCount: 1
+            };
+         BaseControl._private.calcPaging(self, hasMore, pageSize);
+         assert.equal(self._knownPagesCount, 2);
+         hasMore = true;
+         self = {
+            _currentPage: 2,
+            _knownPagesCount: 2
+         };
+         BaseControl._private.calcPaging(self, hasMore, pageSize);
+         assert.equal(self._knownPagesCount, 3);
+      });
    });
 });

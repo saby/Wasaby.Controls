@@ -259,6 +259,12 @@ define('Controls-demo/List/NoScrollPaging', [
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          }
       ];
+
+   var mySource = source.Memory.extend({
+      query: function(query) {
+         return mySource.superclass.query.apply(this, arguments);
+      }
+   });
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
@@ -271,7 +277,8 @@ define('Controls-demo/List/NoScrollPaging', [
          gridColumns2: null,
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-            this._viewSource = new source.Memory({
+
+            this._viewSource = new mySource({
                idProperty: 'id',
                data: srcData
             });

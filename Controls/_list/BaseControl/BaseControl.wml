@@ -13,9 +13,8 @@
     </ws:if>
     <ws:if data="{{_options.navigation.view === 'pages'}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
-            <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
-                                    showDigits = "{{_footerPagingCfg.showDigits}}"
-                                    pagesCount = "{{_footerPagingCfg.pagesCount}}"
+            <Controls.paging:Paging showDigits = "{{true}}"
+                                    pagesCount = "{{_knownPagesCount}}"
                                     bind:selectedPage="_currentPage"
                                     on:selectedPageChanged="__pagingChangePage()"
             ></Controls.paging:Paging>

@@ -37,6 +37,7 @@ var
 
 var LOAD_TRIGGER_OFFSET = 100;
 
+const CONST_INITIAL_PAGES_COUNT = 1;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -119,6 +120,10 @@ var _private = {
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 self._loadedItems = list;
+                if (cfg.navigation && cfg.navigation.view === 'pages') {
+                    var hasMoreDataDown = list.getMetaData().more;
+                    _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
+                }
                 var
                     isActive,
                     listModel = self._listViewModel;
@@ -888,6 +893,16 @@ var _private = {
             self._forceUpdate();
         }
     },
+
+    calcPaging: function(self, hasMore, pageSize) {
+        if (typeof hasMore === 'number') {
+            self._knownPagesCount = Math.ceil(hasMore / pageSize);
+        }
+        if (typeof hasMore === 'boolean' && hasMore) {
+            if (self._currentPage === self._knownPagesCount)
+                self._knownPagesCount++;
+        }
+    }
 };
 
 /**
@@ -942,9 +957,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _popupOptions: null,
 
-    _footerPagingCfg: null,
-    _knownPages: 2,
-    _currentPage: 1,
+    //Variables for paging navigation
+    _knownPagesCount: CONST_INITIAL_PAGES_COUNT,
+    _currentPage: CONST_INITIAL_PAGES_COUNT,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1003,11 +1018,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                 });
 
-                self._calcPagingOptions(self, newOptions);
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
+                    if (newOptions.navigation && newOptions.navigation.view === 'pages') {
+                        var hasMoreData = self._items.getMetaData().more;
+                        _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
+                    }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
@@ -1090,8 +1108,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
-        if (recreateSource) {
-            this._recreateSourceController(newOptions.source, newOptions.navigation);
+        if (recreateSource || this._currentPageChanged) {
+            if (newOptions.navigation && newOptions.navigation.view === 'pages'){
+                var newNavigation = cClone(newOptions.navigation);
+                newNavigation.sourceConfig.page = this._currentPage - 1;
+            }
+            if (this._sourceController) {
+                this._sourceController.destroy();
+            }
+            this._sourceController = new SourceController({
+                source: newOptions.source,
+                navigation: newNavigation
+            });
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1107,16 +1135,39 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
-        if (filterChanged || recreateSource || sortingChanged) {
+        if (filterChanged || recreateSource || sortingChanged || this._currentPageChanged) {
             //return result here is for unit tests
-            return this._calcDisplayedItem(this, newOptions);
+            return _private.reload(self, newOptions).addCallback(() => {
+
+                /*
+                * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
+                * to first element.
+                */
+
+                //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
+                //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
+                // FIXME self._options.task46390860
+                // In the chat, after reload, need to scroll to the last element, because the last message is from below.
+                // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
+                // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
+                // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
+                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860 || this._currentPageChanged) {
+                    const firstItem = self._listViewModel.getFirstItem();
+
+                    this._currentPageChanged = false;
+                    //the first item may be missing, if, for example, only groups are drawn in the list
+                    if (firstItem) {
+                        self._keyDisplayedItem = firstItem.getId();
+                    }
+                }
+            });
         }
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
         }
 
-        if (this._loadedItems) {
+        if (this._loadedItems || this._currentPageChanged) {
             this._shouldRestoreScrollPosition = true;
         }
     },
@@ -1534,75 +1585,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __pagingChangePage: function (event, page) {
         this._currentPage = page;
-        var newNavigation = cClone(this._options.navigation);
-        newNavigation.sourceConfig.page = page - 1;
-        this._recreateSourceController(this._options.source, newNavigation);
-        this._notify('doScroll', ['top'], { bubbling: true });
-        this._calcDisplayedItem(this, this._options).addCallback(() => {
-            this._calcPagingOptions(this, this._options);
-        });
-
-    },
-
-    _calcDisplayedItem: function(self, opts) {
-        return _private.reload(self, opts).addCallback(() => {
-
-            /*
-            * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
-            * to first element.
-            */
-
-            //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
-            //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
-            // FIXME self._options.task46390860
-            // In the chat, after reload, need to scroll to the last element, because the last message is from below.
-            // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
-            // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
-            // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
-            if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
-                const firstItem = self._listViewModel.getFirstItem();
-
-                //the first item may be missing, if, for example, only groups are drawn in the list
-                if (firstItem) {
-                    self._keyDisplayedItem = firstItem.getId();
-                }
-            }
-        });
-    },
-
-    _recreateSourceController: function(newSource, newNavigation) {
-        if (this._sourceController) {
-            this._sourceController.destroy();
-        }
-        this._sourceController = new SourceController({
-            source: newSource,
-            navigation: newNavigation
-        });
-    },
-
-    _calcPagingOptions: function(self, opts) {
-        if (opts.navigation && opts.navigation.view === 'pages') {
-            if (self._sourceController) {
-                self._sourceController.load().addCallback(() => {
-                    var hasMore = self._sourceController.hasMoreData('down');
-                    if (typeof hasMore === 'number') {
-                        self._knownPages = Math.ceil(hasMore / opts.navigation.sourceConfig.pageSize);
-                    }
-                    if (typeof hasMore === 'boolean') {
-                        if (hasMore) {
-                            if (self._currentPage === self._knownPages)
-                                self._knownPages++;
-                        }
-                    }
-                    self._footerPagingCfg = {
-                        showDigits: true,
-                        pagesCount: self._knownPages,
-                        selectedPage: self._currentPage
-                    };
-                });
-            }
-        }
+        this._currentPageChanged = true;
+        this._forceUpdate();
     }
+
 });
 
 // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
