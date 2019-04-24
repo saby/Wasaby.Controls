@@ -36,11 +36,18 @@ import Env = require('Env/Env');
                'Controls/Popup/Compatible/OldNotification',
                config.template
             ], function(BaseOpenerCompat, InformationPopupManager) {
+               var compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
                if (!self._popup) {
                   self._popup = [];
                }
-               self._popup.push(InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config), true));
+               self._popup.push(InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide));
             });
+         },
+
+         getCompatibleConfig: function(BaseOpenerCompat, config) {
+            var cfg = BaseOpenerCompat.prepareNotificationConfig(config);
+            cfg.notHide = !cfg.autoClose;
+            return cfg;
          },
 
          compatibleClose: function(self) {
@@ -125,8 +132,10 @@ import Env = require('Env/Env');
          };
       };
 
+      Notification._private = _private;
+
       export = Notification;
-   
+
 
 /**
  * @typedef {Object} PopupOptions
