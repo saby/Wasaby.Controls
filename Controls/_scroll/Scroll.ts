@@ -17,9 +17,9 @@ import 'css!theme?Controls/_scroll/Scroll/Scroll';
 
 /**
  * Container with thin scrollbar.
-       * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
+ * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
  *
-       * @class Controls/_scroll/Scroll
+ * @class Controls/_scroll/Scroll
  * @extends Core/Control
  * @control
  * @public
@@ -58,6 +58,7 @@ import 'css!theme?Controls/_scroll/Scroll/Scroll';
  */
 var
    _private = {
+      SHADOW_HEIGHT: 8,
 
       /**
        * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
@@ -68,6 +69,13 @@ var
 
          if (scrollTop > 0) {
             shadowPosition += 'top';
+         }
+
+         // The scrollHeight returned by the browser is more, because of the invisible elements
+         // that climbs outside of the fixed headers (shadow and observation targets).
+         // We take this into account when calculating. 8 pixels is the height of the shadow.
+         if ((Env.detection.firefox || Env.detection.isIE) && stickyHeaderUtils.isStickySupport()) {
+            scrollHeight -= _private.SHADOW_HEIGHT;
          }
 
          // Compare with 1 to prevent rounding errors in the scale do not equal 100%
