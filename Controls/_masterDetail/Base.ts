@@ -23,7 +23,7 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
     * @cfg {Function} Detail content template
     */
 
-   export = Control.extend({
+   var Base = Control.extend({
       _template: template,
       _selected: null,
       _selectedMasterValueChangedHandler: function(event, value) {
@@ -32,3 +32,4 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
       }
    });
 
+   export = Base;
