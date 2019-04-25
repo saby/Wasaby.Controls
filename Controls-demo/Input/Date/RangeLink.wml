@@ -9,8 +9,8 @@
          </div>
          <div class="controlsDemo-RageLink__componentWrap controlsDemo-RangeLink_capture">
             <Controls.Input.Date.RangeLink
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
                showClearButton="{{true}}"
                startValue="{{_startValue}}"
                endValue="{{_endValueHalfYear}}"
