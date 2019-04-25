@@ -125,10 +125,15 @@ var _private = {
       this._notify('_close', []);
    },
 
-   setOpenHandler: function (self, options) {
+   setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
          if (typeof (options.open) === 'function') {
             options.open(args);
+         }
+      };
+      self._onClose = function(event, args) {
+         if (typeof (options.close) === 'function') {
+            options.close(args);
          }
       };
    }
@@ -184,7 +189,7 @@ var _Controller = Control.extend({
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
       this._onClose = _private.closeHandler.bind(this);
-      _private.setOpenHandler(this, options);
+      _private.setHandlers(this, options);
       if (!options.lazyItemsLoad) {
          if (receivedState) {
             this._items = receivedState;
@@ -197,9 +202,6 @@ var _Controller = Control.extend({
    },
 
    _beforeUpdate: function (newOptions) {
-      if (newOptions.open !== this._options.open) {
-         _private.setOpenHandler(this, newOptions);
-      }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
       }
@@ -212,8 +214,10 @@ var _Controller = Control.extend({
             this._items = null;
          } else {
             var self = this;
-            return _private.loadItems(this, newOptions).addCallback(function () {
-               self._forceUpdate();
+            return _private.loadItems(this, newOptions).addCallback(function(items) {
+               if (items && self._children.DropdownOpener.isOpened()) {
+                  self._open();
+               }
             });
          }
       }
