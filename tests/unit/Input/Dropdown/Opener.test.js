@@ -1,10 +1,10 @@
 define(
    [
-      'Controls/Dropdown/Opener',
+      'Controls/dropdown',
       'Controls/Popup/Opener/BaseOpener',
       'Core/polyfill/PromiseAPIDeferred'
    ],
-   (Opener, BaseOpener) => {
+   (dropdown, BaseOpener) => {
       describe('Dropdown/Opener', () => {
          let config = {
             templateOptions: {
@@ -27,7 +27,7 @@ define(
          };
 
          function getOpener(openerConfig) {
-            let opener = new Opener(openerConfig);
+            let opener = new dropdown.Opener(openerConfig);
             opener._beforeMount(openerConfig);
             opener._children.LoadingIndicator = {
                toggleIndicator: () => {}
@@ -81,10 +81,10 @@ define(
                   }
                }
             };
-            Opener._private.setPopupOptions(opener, cfg);
+            dropdown.Opener._private.setPopupOptions(opener, cfg);
             assert.isTrue(cfg.className === 'myClass');
 
-            Opener._private.setTemplateOptions(opener, cfg);
+            dropdown.Opener._private.setTemplateOptions(opener, cfg);
             let isEqual = true;
             for (let key of Object.keys(config)) {
                if (config[key] !== cfg.templateOptions[key] && cfg.templateOptions[key] !== undefined) {
@@ -96,17 +96,17 @@ define(
 
          it('checkIcons', function() {
             let opener = getOpener(config);
-            Opener._private.checkIcons(opener, config);
+            dropdown.Opener._private.checkIcons(opener, config);
             assert.deepEqual(config.templateOptions.iconPadding, { null: [null, 'icon-small'] });
             config.templateOptions.rootKey = 'testKey';
-            Opener._private.checkIcons(opener, config);
+            dropdown.Opener._private.checkIcons(opener, config);
             assert.deepEqual(config.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
          });
 
          it('getIconSize', function() {
-            let reault = Opener._private.getIconSize('icon-add icon-small', 'm');
+            let reault = dropdown.Opener._private.getIconSize('icon-add icon-small', 'm');
             assert.equal(reault, 'icon-medium');
-            reault = Opener._private.getIconSize('icon-add icon-small');
+            reault = dropdown.Opener._private.getIconSize('icon-add icon-small');
             assert.equal(reault, 'icon-small');
          });
       });

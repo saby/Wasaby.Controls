@@ -14,7 +14,7 @@ import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/_popupTemplate/Dialog/DialogTmplStyles
+          * @mixes Controls/_popupTemplate/Dialog/DialogStyles
           * @demo Controls-demo/Popup/Templates/DialogTemplatePG
           */
 

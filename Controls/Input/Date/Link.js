@@ -1,7 +1,7 @@
 define('Controls/Input/Date/Link', [
    'Core/Control',
    'Core/core-merge',
-   'Controls/Input/Date/interface/ILinkView',
+   'Controls/interface/ILinkView',
    'Controls/Date/interface/IRangeSelectable',
    'wml!Controls/Input/Date/Link/Link',
    'css!theme?Controls/Input/Date/Link/Link'

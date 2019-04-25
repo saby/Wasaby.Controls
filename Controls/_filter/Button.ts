@@ -34,9 +34,9 @@ var _private = {
       var result = new Deferred();
       requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
          Layer.load().addCallback(function(res) {
-            requirejs(['Controls/filterPopup'], function(filterPopup) {
+            requirejs(['Controls/filterCompatible'], function(filterCompatible) {
                if (!self._filterCompatible) {
-                  self._filterCompatible = new filterPopup._FilterCompatible({
+                  self._filterCompatible = new filterCompatible._FilterCompatible({
                      filterButton: self,
                      filterButtonOptions: self._options,
                      tabindex: 0

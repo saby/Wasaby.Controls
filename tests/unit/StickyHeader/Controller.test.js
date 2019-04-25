@@ -1,11 +1,11 @@
 define([
    'Env/Env',
-   'Controls/StickyHeader/Controller',
+   'Controls/scroll',
    'Controls/StickyHeader/Utils',
    'Core/core-merge'
 ], function(
    Env,
-   Controller,
+   scroll,
    stickyUtils,
    coreMerge
 ) {
@@ -52,7 +52,7 @@ define([
       let component, result;
 
       beforeEach(function() {
-         component = createComponent(Controller.default, {});
+         component = createComponent(scroll._stickyHeaderController, {});
          component._children.stickyHeaderShadow = {
             start: sinon.fake()
          };

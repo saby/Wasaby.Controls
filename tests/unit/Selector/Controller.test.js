@@ -1,4 +1,4 @@
-define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/collection'], function(Controller, entity, source, collection) {
+define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collection'], function(lookupPopup, entity, source, collection) {
 
    var getSelectedItems = function() {
       var items = new collection.List();
@@ -21,7 +21,7 @@ define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/c
       it('prepareItems', function() {
          var itemList = new collection.List({items: [1, 2]});
 
-         assert.equal(Controller._private.prepareItems()._moduleName, 'Types/collection:List');
+         assert.equal(lookupPopup.Controller._private.prepareItems()._moduleName, 'Types/collection:List');
          assert.deepEqual();
       });
 
@@ -40,11 +40,11 @@ define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/c
          });
          var selectedItems = getSelectedItems();
 
-         Controller._private.addItemToSelected(itemNew, selectedItems, 'id');
+         lookupPopup.Controller._private.addItemToSelected(itemNew, selectedItems, 'id');
          assert.equal(selectedItems.getCount(), 6);
          assert.equal(selectedItems.at(5).get('title'), 'test');
 
-         Controller._private.addItemToSelected(itemToReplace, selectedItems, 'id');
+         lookupPopup.Controller._private.addItemToSelected(itemToReplace, selectedItems, 'id');
          assert.equal(selectedItems.getCount(), 6);
          assert.equal(selectedItems.at(0).get('title'), 'test');
       });
@@ -52,7 +52,7 @@ define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/c
       it('removeFromSelected', function() {
          var selectedItems = getSelectedItems();
 
-        Controller._private.removeFromSelected(0, selectedItems, 'id');
+        lookupPopup.Controller._private.removeFromSelected(0, selectedItems, 'id');
 
          assert.equal(selectedItems.getCount(), 4);
          assert.equal(selectedItems.at(0).get('id'), 1);
@@ -70,7 +70,7 @@ define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/c
             resultSelection: newSelected,
             keyProperty: 'id'
          };
-         Controller._private.processSelectionResult([result], selectedItems);
+         lookupPopup.Controller._private.processSelectionResult([result], selectedItems);
 
          assert.equal(selectedItems.getCount(), 2);
          assert.equal(selectedItems.at(0).get('id'), 2);
@@ -78,8 +78,8 @@ define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/c
       });
 
       it('isSelectionChanged', function() {
-         assert.isTrue(Controller._private.isSelectionChanged([0, 2, 3, 4, 5], getSelectedItems(), 'id'));
-         assert.isTrue(Controller._private.isSelectionChanged([0], getSelectedItems(), 'id'));
+         assert.isTrue(lookupPopup.Controller._private.isSelectionChanged([0, 2, 3, 4, 5], getSelectedItems(), 'id'));
+         assert.isTrue(lookupPopup.Controller._private.isSelectionChanged([0], getSelectedItems(), 'id'));
       });
 
    });

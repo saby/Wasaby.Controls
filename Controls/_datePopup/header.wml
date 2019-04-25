@@ -63,5 +63,5 @@
       on:click="_applyClick()"
    />
 
-   <Controls.Button.Close on:click="_closeClick()"/>
+   <Controls.popupTemplate:CloseButton on:click="_closeClick()"/>
 </div>

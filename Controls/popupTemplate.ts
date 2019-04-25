@@ -8,6 +8,9 @@
  * @includes Confirmation Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
+ * @includes Controls/_popupTemplate/Notification/NotificationStyles
+ * @includes Controls/_popupTemplate/Dialog/DialogStyles
+ * @includes Controls/_popupTemplate/Confirmation/ConfirmationStyles
  * @public
  * @author Kraynov D.
  */

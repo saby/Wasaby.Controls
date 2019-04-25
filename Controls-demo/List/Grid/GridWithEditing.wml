@@ -3,7 +3,7 @@
         <h3>С тулбаром</h3>
         <Controls.list:AddButton caption="Add record" on:click="list.beginAdd()" class="test_add_record_1"/>
         <div class="demo-Grid__container">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                 <Controls.grid:View
                         name="list"
                         attr:class="demo-Grid__control test_grid_1"
@@ -23,13 +23,13 @@
                         <ws:Object editOnClick="{{true}}" autoAdd="{{true}}" toolbarVisibility="{{true}}"/>
                     </ws:editingConfig>
                 </Controls.grid:View>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
         </div>
     </div>
     <div class="demo-Grid">
         <h3>Без тулбара</h3>
         <div class="demo-Grid__container">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                 <Controls.grid:View
                         name="list2"
                         attr:class="demo-Grid__control test_grid_2"
@@ -49,7 +49,7 @@
                         <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
                     </ws:editingConfig>
                 </Controls.grid:View>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
         </div>
     </div>
 </div>

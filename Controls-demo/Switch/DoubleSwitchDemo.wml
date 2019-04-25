@@ -32,7 +32,7 @@
         <Controls.input:Label caption="Tooltip"/>
         <Controls.input:Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <Controls.input:Label caption="Orientation:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 source="{{_orientationSource}}"
                 keyProperty="title"
                 placeholder="select"

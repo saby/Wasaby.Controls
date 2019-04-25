@@ -9,8 +9,7 @@ define('Controls-demo/Filter/Container', [
    'css!Controls-demo/Filter/Container',
    'Controls/Container/List',
    'Controls/search',
-   'Controls/Filter/Button/Container',
-   'Controls/Filter/Fast/Container'
+   'Controls/filter'
 ], function(Control, template, sourceLib, memorySourceData) {
    'use strict';
    var SearchContainer = Control.extend({

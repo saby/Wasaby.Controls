@@ -19,6 +19,6 @@
       <ws:partial attr:class="controls-operationsPanelV__rightTemplate{{ _initialized ? '' : ' ws-invisible' }}"
                   template="{{_options.rightTemplate}}"/>
    </ws:if>
-   <Controls.Event.Listener event="controlResize"
+   <Controls.event:Listener event="controlResize"
                             on:controlResize="_onResize()"/>
 </div>

@@ -1,13 +1,13 @@
 <ws:template name="FIO">
-   <Controls.Filter.Button.Panel.Link  caption="FIO"/>
+   <Controls.filterPopup:Link  caption="FIO"/>
 </ws:template>
 
 <ws:template name="firstName">
-   <Controls.Filter.Button.Panel.Link  caption="firstName"/>
+   <Controls.filterPopup:Link  caption="firstName"/>
 </ws:template>
 
 <ws:template name="Test1">
-   <Controls.Filter.Button.Panel.Select
+   <Controls.filterPopup:Select
            keyProperty="key">
       <ws:items>
          <ws:Array>
@@ -16,15 +16,15 @@
             <ws:Object key="{{4}}" title="UK"/>
          </ws:Array>
       </ws:items>
-   </Controls.Filter.Button.Panel.Select>
+   </Controls.filterPopup:Select>
 </ws:template>
 
 <ws:template name="checked">
-   <Controls.Filter.Button.Panel.Link  caption="checked"/>
+   <Controls.filterPopup:Link  caption="checked"/>
 </ws:template>
 
 <ws:template name="id">
-   <Controls.Filter.Button.Panel.Dropdown
+   <Controls.filterPopup:Dropdown
            source="{{item.source}}"
            displayProperty="title"
            keyProperty="key"
@@ -32,27 +32,27 @@
 </ws:template>
 
 <ws:template name="Test2">
-   <Controls.Filter.Button.Panel.Link  caption="Test2"/>
+   <Controls.filterPopup:Link  caption="Test2"/>
 </ws:template>
 
 <ws:template name="Test3">
-   <Controls.Filter.Button.Panel.Link  caption="Test3"/>
+   <Controls.filterPopup:Link  caption="Test3"/>
 </ws:template>
 
 <ws:template name="Test4">
-   <Controls.Filter.Button.Panel.Link  caption="Test4"/>
+   <Controls.filterPopup:Link  caption="Test4"/>
 </ws:template>
 
 <ws:template name="Test5">
-   <Controls.Filter.Button.Panel.Link  caption="FilterText"/>
+   <Controls.filterPopup:Link  caption="FilterText"/>
 </ws:template>
 
 <ws:template name="Test6">
-   <Controls.Filter.Button.Panel.Link  caption="Test6"/>
+   <Controls.filterPopup:Link  caption="Test6"/>
 </ws:template>
 
 <ws:template name="Test7">
-   <Controls.Filter.Button.Panel.Link  caption="Test7"/>
+   <Controls.filterPopup:Link  caption="Test7"/>
 </ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

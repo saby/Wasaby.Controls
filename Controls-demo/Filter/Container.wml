@@ -1,15 +1,15 @@
 <div class="controls-demo__filter-container">
-    <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_filterData}}" filterButtonSource="{{_filterButtonData}}">
+    <Controls.filter:Controller bind:filter="_filter" fastFilterSource="{{_filterData}}" filterButtonSource="{{_filterButtonData}}">
         <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
             <div>
                 <div class="controls-demo__filter-filtersWrapper">
-                    <Controls.Filter.Fast.Container>
-                        <Controls.Filter.Fast attr:class="controls-demo__fastFilter"/>
-                    </Controls.Filter.Fast.Container>
+                    <Controls.filter:FastContainer>
+                        <Controls.filter:Fast attr:class="controls-demo__fastFilter"/>
+                    </Controls.filter:FastContainer>
 
-                    <Controls.Filter.Button.Container>
-                        <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/Filter/Panel"/>
-                    </Controls.Filter.Button.Container>
+                    <Controls.filter:ButtonContainer>
+                        <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/Filter/Panel"/>
+                    </Controls.filter:ButtonContainer>
                 </div>
                 <Controls.list:Container>
                     <Controls.list:View emptyTemplate="Не найдено">
@@ -28,5 +28,5 @@
                 </Controls.list:Container>
             </div>
         </Controls.list:DataContainer>
-    </Controls.Filter.Controller>
+    </Controls.filter:Controller>
 </div>

@@ -19,8 +19,8 @@
 
          on:requestCustomUpdate="_requestCustomUpdate()"
 >
-   <Controls.Container.PendingRegistrator name="registrator">
-      <Controls.FormController name="formControllerInst" dataSource="{{ _options.dataSource || _dataSource }}" record="{{ _record }}" key="{{ !_record ? _key : undefined }}">
+   <Controls.Pending name="registrator">
+      <Controls.form:Controller name="formControllerInst" dataSource="{{ _options.dataSource || _dataSource }}" record="{{ _record }}" key="{{ !_record ? _key : undefined }}">
          <Controls-demo.FormController.Container name="Container">
          <div attr:class="form-content">
             <div>
@@ -28,25 +28,25 @@
             </div>
             <div attr:class="form-content__name">
                <span>Name: </span>
-               <Controls.Validate.Controller name="nameValidator" attr:class="nameValidator">
+               <Controls.validate:Container name="nameValidator" attr:class="nameValidator">
                   <ws:validators>
-                     <ws:Function value="{{ _record && _record.get('nameText') }}">Controls/Validate/Validators/IsRequired</ws:Function>
+                     <ws:Function value="{{ _record && _record.get('nameText') }}">Controls/validate:isRequired</ws:Function>
                   </ws:validators>
                   <ws:content>
                      <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText"/>
                   </ws:content>
-               </Controls.Validate.Controller>
+               </Controls.validate:Container>
             </div>
             <div attr:class="form-content__email">
                <span>E-mail: </span>
-               <Controls.Validate.Controller name="emailValidator" attr:class="emailValidator">
+               <Controls.validate:Container name="emailValidator" attr:class="emailValidator">
                   <ws:validators>
-                     <ws:Function value="{{ _record && _record.get('emailText') }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                     <ws:Function value="{{ _record && _record.get('emailText') }}">Controls/validate:isEmail</ws:Function>
                   </ws:validators>
                   <ws:content>
                      <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.emailText" placeholder="validator e-mail" name="emailText"/>
                   </ws:content>
-               </Controls.Validate.Controller>
+               </Controls.validate:Container>
             </div>
 
                <div attr:class="form-content__submit">
@@ -64,8 +64,8 @@
             </div>
          </div>
          </Controls-demo.FormController.Container>
-      </Controls.FormController>
-   </Controls.Container.PendingRegistrator>
+      </Controls.form:Controller>
+   </Controls.Pending>
 
    <div class="form-content__create">
       <Controls.buttons:Button caption="{{'create with id = ' + idCount}}" name="createButton" on:click="_clickCreateHandler()"/>
