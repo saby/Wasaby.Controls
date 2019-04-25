@@ -1,16 +1,16 @@
 define('Controls/Container/Data/getPrefetchSource',
    [
-      'Controls/Controllers/SourceController',
+      'Controls/source',
       'Types/source',
       'Core/Deferred'
    ],
    
-   function(SourceController, sourceLib, Deferred) {
+   function(scroll, sourceLib, Deferred) {
       
       'use strict';
       
       return function(sourceOptions, data) {
-         var sourceController = new SourceController({
+         var sourceController = new scroll.Controller({
             source: sourceOptions.source,
             navigation: sourceOptions.navigation,
             idProperty: sourceOptions.keyProperty

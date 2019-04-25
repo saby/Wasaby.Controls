@@ -2,16 +2,15 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Opener/InfoBox/resources/template');
 import Utils = require('View/Executor/Utils');
 import Deferred = require('Core/Deferred');
-      
+import {load} from 'Core/library';
+
 
       export = Control.extend({
          _template: template,
 
          _beforeMount: function(options) {
             if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
-               var def = new Deferred();
-               require([options.template], def.callback.bind(def), def.callback.bind(def));
-               return def;
+               return load(options.template);
             }
          },
 
@@ -28,4 +27,4 @@ import Deferred = require('Core/Deferred');
             this._notify('sendResult', [event], { bubbling: true });
          }
       });
-   
+

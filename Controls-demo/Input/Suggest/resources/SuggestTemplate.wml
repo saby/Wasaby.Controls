@@ -1,9 +1,9 @@
 <div>
-<Controls.Container.Suggest.List>
+<Controls.suggestPopup:ListContainer>
     <Controls.list:View displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass}}"  >
         <ws:itemTemplate>
             <ws:partial template="{{ _options.itemSuggestTemplate==='custom' ? _custom : _def }}" title="{{ _options.title}}" comment="{{ _options.comment}}" />
         </ws:itemTemplate>
     </Controls.list:View>
-</Controls.Container.Suggest.List>
+</Controls.suggestPopup:ListContainer>
 </div>

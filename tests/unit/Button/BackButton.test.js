@@ -1,9 +1,9 @@
-define(['Controls/Heading/Back'], function(BackBtn) {
+define(['Controls/_heading'], function(heading) {
    'use strict';
    var separator;
    describe('Controls/Heading/BackButton', function() {
       it('_beforeMount', function() {
-         var backB = new BackBtn(),
+         var backB = new heading.Back(),
             opt = {
                style: ''
             },
@@ -25,7 +25,7 @@ define(['Controls/Heading/Back'], function(BackBtn) {
          backB.destroy();
       });
       it('_beforeUpdate', function() {
-         var backB = new BackBtn(),
+         var backB = new heading.Back(),
             opt = {
                style: ''
             },

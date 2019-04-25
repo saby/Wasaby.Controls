@@ -4,7 +4,7 @@
             <h3>Options</h3>
             <div class="ControlsDemo-options_wrapper">
                 <Controls.input:Label caption="theme:"/>
-                <Controls.Input.ComboBox
+                <Controls.dropdown:Combobox
 						attr:class="ControlsDemo-scrollStyleSource"
                         source="{{_scrollStyleSource}}"
                         keyProperty="title"
@@ -25,7 +25,7 @@
 
         <div class="ControlsDemo-example_block">
             <h2>Scroll</h2>
-            <Controls.Container.Scroll attr:class="ControlsDemo-scroll_container"
+            <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
                                        scrollbarVisible="{{_scrollbarVisible}}"
                                        shadowVisible="{{_shadowVisible}}"
                                        theme="{{_selectedStyle}}">
@@ -35,7 +35,7 @@
                         <div class="ControlsDemo-record">Record {{index + 1}}</div>
                     </ws:for>
                 </div>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
         </div>
     </div>
 </div>
