@@ -1,8 +1,8 @@
 define('Controls-demo/Popup/resources/MyTextBox',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'wml!Controls-demo/Popup/resources/MyTextBox',
-      'css!Controls-demo/Popup/resources/MyTextBox',
+      'wml!Controls-demo/Popup/resources/MyTextBox/MyTextBox',
+      'css!Controls-demo/Popup/resources/MyTextBox/MyTextBox',
       'SBIS3.CONTROLS/TextBox'
    ], function(CompoundControl, dotTplFn) {
       var moduleClass = CompoundControl.extend({
