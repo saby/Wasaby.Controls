@@ -1,5 +1,5 @@
 <div>
-   <Controls.Container.Scroll attr:class="Demo-ExpandAll__scroll">
+   <Controls.scroll:Container attr:class="Demo-ExpandAll__scroll">
       <Controls.treeGrid:View
               source="{{_viewSource}}"
               displayProperty="title"
@@ -9,5 +9,5 @@
               parentProperty="parent"
               nodeProperty="type"
               columns="{{_columns}}" />
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </div>

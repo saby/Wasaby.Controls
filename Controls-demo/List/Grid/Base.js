@@ -10,7 +10,7 @@ define('Controls-demo/List/Grid/Base', [
    'wml!Controls-demo/List/Grid/DemoName',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
-   'Controls/Container/Scroll',
+   'Controls/scroll',
    'Controls/grid',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/resources/Base/Base'

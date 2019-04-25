@@ -26,6 +26,7 @@
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
+                           on:itemClick="_tmplNotify('itemClick')"
                            on:actionClick="_tmplNotify('actionClick')"/>
             </div>
          </Controls._scroll.StickyHeader.Controller>
@@ -66,7 +67,7 @@
                             on:onArrowClick="_arrowClickHandler()"/>
    </ws:if>
 
-   <Controls.Event.Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
 </ws:template>
 

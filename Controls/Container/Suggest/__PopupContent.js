@@ -45,11 +45,11 @@ define('Controls/Container/Suggest/__PopupContent',
             /* Width of the suggestion popup should setted for template from suggestTemplate option,
                this is needed to make it possible to set own width for suggestions popup by user of control.
                Than user can set own width:
-               <Controls.Input.Suggest>
+               <Controls.suggest:Input>
                   <ws:suggestTemplate>
-                     <Controls.Container.Suggest.List/>     <---- here you can set the width by the class with min-width
+                     <Controls.suggestPopup:ListContainer/>     <---- here you can set the width by the class with min-width
                   </ws:suggestTemplate>
-               <Controls.Input.Suggest/> */
+               <Controls.suggest:Input/> */
             this._suggestWidth = _private.getSuggestWidth(target, container);
             this._forceUpdate();
          }

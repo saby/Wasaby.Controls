@@ -36,17 +36,17 @@ define('Controls/interface/IFilterButton', [
     * The second filter will be displayed in the "Possible selected" block, because the property is set for it visibility = false.
     * TMPL:
     * <pre>
-    *    <Controls.Filter.Button
+    *    <Controls.filter:Selector
     *       items={{_items}}
     *       templateName="wml!MyModule/panelTemplate"/>
     * </pre>
     *
     * MyModule/panelTemplate.wml
     * <pre>
-    *    <Controls.Filter.Button.Panel>
+    *    <Controls.filterPopup:Panel>
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     *
     * JS:
@@ -67,7 +67,7 @@ define('Controls/interface/IFilterButton', [
     * @example
     * Example of inserting a quick period selection
     * <pre>
-    *    <Controls.Filter.Button
+    *    <Controls.filter:Selector
     *       templateName="wml!MyModule/panelTemplate"
     *       items="{{_items}}">
     *       <ws:lineSpaceTemplate>
@@ -75,7 +75,7 @@ define('Controls/interface/IFilterButton', [
     *             startValue="{{_startValue}}"
     *             endValue="{{_endValue}}"/>
     *       </ws:lineSpaceTemplate>
-    *    </Controls.Filter.Button>
+    *    </Controls.filter:Selector>
     * </pre>
     * @see Controls/Input/Date/RangeLinkLite
     */
@@ -84,7 +84,7 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#templateName
     * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
     * @remark
-    * As a template, it is recommended to use the control {@link Controls/Filter/Button/Panel }
+    * As a template, it is recommended to use the control {@link Controls.filter:Selector/Panel }
     * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
     * Important: for lazy loading template in the option give the path to the control
     * @example
@@ -93,17 +93,17 @@ define('Controls/interface/IFilterButton', [
     * Templates for displaying second filter in the additional block are in "MyModule/additionalBlockTemplate.wml"
     * TMPL:
     * <pre>
-    *    <Controls.Filter.Button
+    *    <Controls.filter:Selector
     *       items={{_items}}
     *       templateName="wml!MyModule/panelTemplate"/>
     * </pre>
     *
     * MyModule/panelTemplate.wml
     * <pre>
-    *    <Controls.Filter.Button.Panel>
+    *    <Controls.filterPopup:Panel>
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.Filter.Button.Panel>
+    *    </Controls.filterPopup:Panel>
     * </pre>
     *
     * JS:
@@ -114,7 +114,7 @@ define('Controls/interface/IFilterButton', [
     *    ];
     * </pre>
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
-    * @see Controls/Filter/Button/Panel
+    * @see Controls.filter:Selector/Panel
     */
 
    /**
@@ -128,7 +128,7 @@ define('Controls/interface/IFilterButton', [
     * @example
     * Example of opening the filter panel in the right
     * <pre>
-    *    <Controls.Filter.Button
+    *    <Controls.filter:Selector
     *       templateName="wml!MyModule/panelTemplate"
     *       items="{{_items}}"
     *       alignment="left" />

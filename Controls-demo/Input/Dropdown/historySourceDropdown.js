@@ -1,15 +1,14 @@
 define('Controls-demo/Input/Dropdown//historySourceDropdown',
    [
       'Core/Control',
-      'Controls/History/Service',
+      'Controls/history',
       'Core/Deferred',
       'Types/collection',
       'Types/entity',
-      'Types/source',
-      'Controls/History/Source'
+      'Types/source'
    ],
 
-   function(Control, HistoryService, Deferred, collection, entity, source, HistorySource) {
+   function(Control, history, Deferred, collection, entity, source) {
       'use strict';
 
       var items = [
@@ -61,12 +60,12 @@ define('Controls-demo/Input/Dropdown//historySourceDropdown',
             itemsProperty: '',
             idProperty: 'ObjectId'
          });
-         var hs = new HistorySource({
+         var hs = new history.Source({
             originSource: new source.Memory({
                idProperty: 'id',
                data: items
             }),
-            historySource: new HistoryService({
+            historySource: new history.Service({
                historyId: 'TEST_HISTORY_ID_DROPDOWN',
                pinned: true
             })

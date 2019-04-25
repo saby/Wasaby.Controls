@@ -1,7 +1,8 @@
 /**
  * Paging library
- * @library Controls/Paging
+ * @library Controls/paging
  * @includes Paging Controls/_paging/Paging
+ * @includes PagingStyles Controls/_paging/PagingStyles
  * @public
  * @author Kraynov D.
  */

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');

@@ -5,7 +5,7 @@
             <Controls.search:Input placeholder="Введите"
                                    attr:class="demo-DragNDrop__MasterDetail_master_search_input"/>
          </div>
-         <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_master">
+         <Controls.scroll:Container attr:class="demo-DragNDrop__MasterDetail_master">
             <Controls.list:DataContainer name="dataContainer" source="{{_masterSource}}" keyProperty="id">
                <div>
                   <Controls.list:Mover name="masterMover" parentProperty="Раздел"/>
@@ -36,7 +36,7 @@
                   </Controls.list:Container>
                </div>
             </Controls.list:DataContainer>
-         </Controls.Container.Scroll>
+         </Controls.scroll:Container>
       </div>
    </ws:master>
    <ws:detail>
@@ -44,7 +44,7 @@
          <div class="ws-flexbox ws-flex-shrink-0 demo-DragNDrop__MasterDetail_search">
             <Controls.search:Input placeholder="Введите"/>
          </div>
-         <Controls.Container.Scroll attr:class="demo-DragNDrop__MasterDetail_detail">
+         <Controls.scroll:Container attr:class="demo-DragNDrop__MasterDetail_detail">
             <Controls.list:DataContainer name="dataContainer" source="{{_detailSource}}" keyProperty="id">
                <div>
                   <Controls.list:Mover name="detailMover"/>
@@ -78,7 +78,7 @@
                   </Controls.list:Container>
                </div>
             </Controls.list:DataContainer>
-         </Controls.Container.Scroll>
+         </Controls.scroll:Container>
       </div>
    </ws:detail>
 </Controls.Container.MasterDetail>

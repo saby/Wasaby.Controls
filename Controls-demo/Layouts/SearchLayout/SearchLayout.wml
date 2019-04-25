@@ -1,4 +1,4 @@
-<Controls.Filter.Controller filter="{{_filter}}"
+<Controls.filter:Controller filter="{{_filter}}"
                             filterButtonSource="{{_filterSource}}"
                             fastFilterSource="{{_fastFilterData}}"
                             attr:class="controls-demo__FilterLayout">
@@ -10,13 +10,13 @@
                   <Controls.search:Input bind:value="_searchValue"/>
                </Controls.search:InputContainer>
                <div class="controls-demo__Layouts_filter">
-                  <Controls.Filter.Fast.Container>
+                  <Controls.filter:FastContainer>
                      <Controls.Filter.Fast/>
-                  </Controls.Filter.Fast.Container>
-                  <Controls.Filter.Button.Container>
-                     <Controls.Filter.Button
+                  </Controls.filter:FastContainer>
+                  <Controls.filter:ButtonContainer>
+                     <Controls.filter:Selector
                              templateName="wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate"/>
-                  </Controls.Filter.Button.Container>
+                  </Controls.filter:ButtonContainer>
                </div>
             </div>
             <Controls.list:Container>
@@ -43,4 +43,4 @@
          </div>
       </Controls.search:Controller>
    </Controls.list:DataContainer>
-</Controls.Filter.Controller>
+</Controls.filter:Controller>

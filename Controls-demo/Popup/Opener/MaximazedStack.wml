@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager" maximizeButtonVisibility="{{true}}" >
+<Controls.popupTemplate:Stack headingCaption="PopupManager" maximizeButtonVisibility="{{true}}" >
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть" on:click="_close()" attr:ws-no-focus="true" attr:tabindex="-1"/>
@@ -7,4 +7,4 @@
     <ws:bodyContentTemplate>
         <Controls.input:Text placeholder="maximized" value="{{value}}"/>
     </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>
