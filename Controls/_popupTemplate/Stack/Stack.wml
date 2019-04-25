@@ -1,5 +1,5 @@
 <div class="controls-StackTemplate">
-    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
+    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}" scope="{{_options}}">
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">
                 <ws:if data="{{_options.caption || _options.headingCaption}}">
@@ -41,6 +41,6 @@
         <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options}}"></ws:partial>
     </div>
     <div if="{{_options.bottomArea || _options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea">
-    <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}"></ws:partial>
+    <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}" scope="{{_options}}"></ws:partial>
 </div>
 </div>
