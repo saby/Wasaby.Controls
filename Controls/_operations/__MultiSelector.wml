@@ -3,5 +3,6 @@
                       viewMode="link"
                       style="secondary"
                       caption="{{_menuCaption}}"
+                      size="{{_options.size}}"
                       on:onMenuItemActivate="_onMenuItemActivate()"
                       source="{{_menuSource}}"/>
