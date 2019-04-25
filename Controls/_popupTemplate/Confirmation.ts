@@ -38,7 +38,7 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/_popupTemplate/Confirmation/ConfirmationTmplStyles
+          * @mixes Controls/_popupTemplate/Confirmation/ConfirmationStyles
           * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
           */
 

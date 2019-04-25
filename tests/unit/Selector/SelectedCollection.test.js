@@ -1,8 +1,8 @@
-define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
+define(['Controls/lookup'], function(scroll) {
    describe('Controls/Selector/SelectedCollection', function() {
       if (typeof window === 'undefined') {
          // Кастыль, дабы избежать работы с версткой
-         SelectedCollection._private.getCounterWidth = function(itemsCount, readOnly, itemsLayout) {
+         scroll.Collection._private.getCounterWidth = function(itemsCount, readOnly, itemsLayout) {
             // in mode read only and single line, counter does not affect the collection
             if (readOnly && itemsLayout === 'oneRow') {
                return 0;
@@ -21,7 +21,7 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
                _onResult: function(){}
             };
 
-         self._templateOptions = SelectedCollection._private.getTemplateOptions(self, {
+         self._templateOptions = scroll.Collection._private.getTemplateOptions(self, {
             items: items
          });
          assert.deepEqual(self._templateOptions.items, items);
@@ -33,21 +33,21 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
          // Проверка что items не будут перезаписаны, если не подверглись изменениям(self._options.items === newOptions.items)
          self._options.items = items;
          self._templateOptions.items = items2;
-         self._templateOptions = SelectedCollection._private.getTemplateOptions(self, self._options);
+         self._templateOptions = scroll.Collection._private.getTemplateOptions(self, self._options);
          assert.deepEqual(self._templateOptions.items, items2);
       });
 
       it('isShowCounter', function() {
-         assert.isFalse(SelectedCollection._private.isShowCounter(1, 2));
-         assert.isFalse(SelectedCollection._private.isShowCounter(2, 2));
-         assert.isTrue(SelectedCollection._private.isShowCounter(3, 2));
+         assert.isFalse(scroll.Collection._private.isShowCounter(1, 2));
+         assert.isFalse(scroll.Collection._private.isShowCounter(2, 2));
+         assert.isTrue(scroll.Collection._private.isShowCounter(3, 2));
 
       });
 
       it('_afterMount', function() {
          var
             isUpdate = false,
-            selectedCollection = new SelectedCollection();
+            selectedCollection = new scroll.Collection();
 
          selectedCollection._counterWidth = 0;
          selectedCollection._items = ['test', 7, 2];

@@ -1,8 +1,8 @@
 define(
    [
-      'Controls/StickyHeader/Context'
+      'Controls/scroll'
    ],
-   function(StickyHeader) {
+   function(scroll) {
 
       'use strict';
 
@@ -10,7 +10,7 @@ define(
          var result;
          describe('constructor', function() {
             it('Create a component with a invisible shadow', function() {
-               result = new StickyHeader({
+               result = new scroll._stickyHeaderContext({
                   shadowPosition: ''
                }).shadowPosition;
 
@@ -18,7 +18,7 @@ define(
             });
 
             it('Create a component with a visible shadow', function() {
-               result = new StickyHeader({
+               result = new scroll._stickyHeaderContext({
                   shadowPosition: 'top'
                }).shadowPosition;
 
@@ -28,9 +28,9 @@ define(
 
          it('The value of the properties upon creation', function() {
             result = {
-               top: StickyHeader.prototype.top,
-               bottom: StickyHeader.prototype.bottom,
-               shadowPosition: StickyHeader.prototype.shadowPosition
+               top: scroll._stickyHeaderContext.prototype.top,
+               bottom: scroll._stickyHeaderContext.prototype.bottom,
+               shadowPosition: scroll._stickyHeaderContext.prototype.shadowPosition
             };
 
             assert.deepEqual(result, {

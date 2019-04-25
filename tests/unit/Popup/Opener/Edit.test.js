@@ -4,11 +4,12 @@
 define(
    [
       'Controls/Popup/Opener/Edit',
+      'Controls/popup',
       'Types/collection',
       'Core/Deferred',
       'Types/entity'
    ],
-   (Edit, collection, Deferred) => {
+   (Edit, popup, collection, Deferred) => {
       let dataRS = new collection.RecordSet({
          idProperty: 'id',
          rawData: [
@@ -26,23 +27,23 @@ define(
             }
          ]
       });
-      let editOpener = new Edit();
+      let editOpener = new popup.Edit();
       editOpener._beforeMount({});
       editOpener._options.items = dataRS;
 
       describe('Controls/Popup/Opener/Edit', () => {
          it('mode', () => {
             editOpener._beforeMount({});
-            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Stack');
+            assert.equal(editOpener._openerTemplate, popup.Stack);
 
             editOpener._beforeMount({ mode: 'dialog' });
-            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Dialog');
+            assert.equal(editOpener._openerTemplate, popup.Dialog);
 
             editOpener._beforeMount({ mode: 'sticky' });
-            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Sticky');
+            assert.equal(editOpener._openerTemplate, popup.Sticky);
 
             editOpener._beforeMount({ mode: 'stack' });
-            assert.equal(editOpener._openerTemplate, 'Controls/_popup/Opener/Stack');
+            assert.equal(editOpener._openerTemplate, popup.Stack);
          });
 
          it('get config', () => {
@@ -51,7 +52,7 @@ define(
                record: record,
                key: '123'
             };
-            var config = Edit._private.getConfig(editOpener, meta);
+            var config = popup.Edit._private.getConfig(editOpener, meta);
             assert.equal(editOpener._linkedKey, record.getId());
             assert.notEqual(config.templateOptions.record, record); // by link
             assert.equal(config.templateOptions.key, '123');
@@ -65,22 +66,22 @@ define(
                record: dataRS.at(0),
                additionalData: {}
             };
-            let baseSynchronize = Edit._private.synchronize;
+            let baseSynchronize = popup.Edit._private.synchronize;
 
-            Edit._private.loadSynchronizer = () => (new Deferred()).callback();
+            popup.Edit._private.loadSynchronizer = () => (new Deferred()).callback();
 
-            Edit._private.synchronize = () => {
+            popup.Edit._private.synchronize = () => {
                isProcessingResult = true;
             };
 
-            editOpener._notify = () => Edit.CANCEL;
+            editOpener._notify = () => popup.Edit.CANCEL;
             editOpener._onResult(data);
             assert.equal(isProcessingResult, false);
 
             editOpener._notify = () => true;
             editOpener._onResult(data);
             assert.equal(isProcessingResult, true);
-            Edit._private.synchronize = baseSynchronize;
+            popup.Edit._private.synchronize = baseSynchronize;
          });
 
          it('processing result', () => {
@@ -111,20 +112,20 @@ define(
                additionalData: {}
             };
 
-            Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
+            popup.Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
             assert.equal(action, 'merge');
 
             data.additionalData.isNewRecord = true;
-            Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
+            popup.Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
             assert.equal(action, 'create');
 
             data.formControllerEvent = 'delete';
-            Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
+            popup.Edit._private.processingResult(synchronizer, data, editOpener._options.items, editOpener._linkedKey);
             assert.equal(action, 'delete');
          });
 
          it('synchronize', () => {
-            let baseProcessingResult = Edit._private.processingResult;
+            let baseProcessingResult = popup.Edit._private.processingResult;
             let isProcessingResult = false;
             let synchronizer = 'synchronizer';
             let data = {
@@ -132,19 +133,19 @@ define(
                record: dataRS.at(0),
                additionalData: {}
             };
-            Edit._private.processingResult = (_synchronizer, _data, _items, _editKey) => {
+            popup.Edit._private.processingResult = (_synchronizer, _data, _items, _editKey) => {
                assert.equal(synchronizer, _synchronizer);
                assert.equal(data, _data);
                assert.equal(_items, editOpener._options.items);
                assert.equal(_editKey, editOpener._linkedKey);
                isProcessingResult = true;
             };
-            Edit._private.synchronize(editOpener, '', data, synchronizer);
+            popup.Edit._private.synchronize(editOpener, '', data, synchronizer);
             assert.equal(isProcessingResult, true);
 
             isProcessingResult = false;
             let def = new Deferred();
-            Edit._private.synchronize(editOpener, def, data, synchronizer);
+            popup.Edit._private.synchronize(editOpener, def, data, synchronizer);
             assert.equal(isProcessingResult, false);
             def.callback();
             assert.equal(isProcessingResult, true);

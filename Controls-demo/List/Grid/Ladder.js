@@ -6,7 +6,7 @@ define('Controls-demo/List/Grid/Ladder', [
 
    'css!Controls-demo/List/Grid/resources/Ladder/Ladder',
 
-   'Controls/Container/Scroll',
+   'Controls/scroll',
    'Controls/grid',
    'Controls/Render/Money/Money',
 

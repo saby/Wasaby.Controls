@@ -8,7 +8,7 @@
                     <Controls.operations:Controller
                             bind:selectedKeys="_firstSelectedKeys"
                             name="multiSelector">
-                        <Controls.Container.Scroll attr:class="grid-scroll-container" attr:test_name="default">
+                        <Controls.scroll:Container attr:class="grid-scroll-container" attr:test_name="default">
                             <Controls.list:Container>
                                 <Controls.operations:Container>
                                     <Controls.grid:View
@@ -26,7 +26,7 @@
                                     </Controls.grid:View>
                                 </Controls.operations:Container>
                             </Controls.list:Container>
-                        </Controls.Container.Scroll>
+                        </Controls.scroll:Container>
                     </Controls.operations:Controller>
                 </Controls.list:DataContainer>
             </div>

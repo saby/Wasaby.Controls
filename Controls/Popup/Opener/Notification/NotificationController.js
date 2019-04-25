@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Notification/NotificationController',
-   ['Controls/_popup/Opener/Notification/NotificationController'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.NotificationController;
    });

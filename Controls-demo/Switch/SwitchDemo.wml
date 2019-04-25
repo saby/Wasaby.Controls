@@ -22,7 +22,7 @@
         <Controls.input:Label caption="Tooltip"/>
         <Controls.input:Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <Controls.input:Label caption="Caption position:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 attr:class="ControlsDemo__direction"
                 source="{{_captionPositionSource}}"
                 keyProperty="title"
