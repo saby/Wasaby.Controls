@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
-import 'css!theme?Controls/_filterPopup/Panel/Link/Link';
+import 'css!theme?Controls/filterPopup';
    /**
     * Control filter link
     * @class Controls/_filterPopup/Panel/Link

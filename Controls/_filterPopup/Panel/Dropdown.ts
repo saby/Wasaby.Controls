@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
-import 'css!theme?Controls/_filterPopup/Panel/Dropdown/Dropdown';
+import 'css!theme?Controls/filterPopup';
    /**
     * Input for selection from the list of options with cross.
     *

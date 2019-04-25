@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_heading/Back/Back');
 import entity = require('Types/entity');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_heading/Back/Back';
+import 'css!theme?Controls/heading';
    /**
     * Specialized heading to go to the previous level.
     *

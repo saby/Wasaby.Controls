@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
-import 'css!theme?Controls/_filterPopup/Panel/Text/Text';
+import 'css!theme?Controls/filterPopup';
 
    /**
     * Control text with cross
