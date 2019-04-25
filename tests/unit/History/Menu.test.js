@@ -1,14 +1,12 @@
 define(
    [
-      'Controls/History/Menu',
+      'Controls/history',
       'Types/source',
       'Core/core-clone',
       'Types/entity',
-      'Controls/History/Source',
-      'Controls/History/Service',
       'Core/Deferred'
    ],
-   function(Menu, sourceLib, Clone, entity, HistorySource, HistoryService, Deferred) {
+   function(history, sourceLib, Clone, entity, Deferred) {
       'use strict';
 
       let items = [
@@ -38,7 +36,7 @@ define(
       };
 
       var getHistoryMenu = function(config) {
-         var hMenu = new Menu(config);
+         var hMenu = new history.Menu(config);
          hMenu.saveOptions(config);
          return hMenu;
       };
@@ -51,7 +49,7 @@ define(
                }
             });
 
-            assert.deepEqual(Menu._private.getMetaPinned(item), {
+            assert.deepEqual(history.Menu._private.getMetaPinned(item), {
                $_pinned: true
             });
          });
@@ -76,12 +74,12 @@ define(
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
-            newConfig.source = new HistorySource({
+            newConfig.source = new history.Source({
                originSource: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                }),
-               historySource: new HistoryService({
+               historySource: new history.Service({
                   historyId: 'TEST_HISTORY_ID'
                }),
                parentProperty: 'parent'

@@ -1,0 +1,188 @@
+@keyframes itemActionsSwipeOpen {
+  0% {
+    transform: translate(100%, 0);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes itemActionsSwipeClose {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(100%, 0);
+  }
+}
+
+@keyframes rightSwipe {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(@animation-offset-Swipe-left-to-right);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.controls-itemActionsV_swipe_animationContainer {
+  position:absolute;
+  right: 0;
+  bottom: 0;
+  overflow:hidden;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  z-index: 2;
+}
+
+.controls-Swipe {
+  align-items: center;
+  display: inline-flex;
+  height: 100%;
+
+  /**
+ Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
+  */
+  padding: 0 @spacing-Swipe-between-content-and-borders 0 @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: transparent;
+  background-image: linear-gradient(to right, transparent, @background-color_Swipe-shadow @width_Swipe-shadow, @background-color_Swipe @width_Swipe-shadow, @background-color_Swipe 100%);
+}
+
+.controls-Swipe__action {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.controls-Swipe__action_column {
+  flex-direction: column;
+}
+
+.controls-Swipe_open {
+  animation: itemActionsSwipeOpen 0.35s 0ms ease;
+}
+
+.controls-Swipe_close {
+  animation: itemActionsSwipeClose 0.35s 0ms ease;
+  animation-fill-mode: forwards;
+}
+
+.controls-Swipe__action_padding_size_s {
+  padding-top: @spacing_Swipe-between-actions_top_size_s;
+  padding-bottom: @spacing_Swipe-between-actions_bottom_size_s;
+}
+
+.controls-Swipe__action_padding_size_m {
+  padding-top: @spacing_Swipe-between-actions_top_size_m;
+  padding-bottom: @spacing_Swipe-between-actions_bottom_size_m;
+}
+
+.controls-Swipe__action_padding_size_l {
+  padding-top: @spacing_Swipe-between-actions_top_size_l;
+  padding-bottom: @spacing_Swipe-between-actions_bottom_size_l;
+}
+
+.controls-Swipe__action_icon_size_m {
+  .icon(@font-size_Swipe-icon_size_m, @font-family_Swipe-icon);
+}
+
+.controls-Swipe__action_icon_size_l {
+  .icon(@font-size_Swipe-icon_size_l, @font-family_Swipe-icon);
+}
+
+.controls-Swipe__action_title {
+  color: @color_Swipe-title;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.controls-Swipe__action_title_position_right {
+  padding-left: @spacing-Swipe-between-title-and-icon_position_right;
+  max-width: @max-width_Swipe-title_position_right;
+}
+
+.controls-Swipe__action_title_position_bottom {
+  max-width: @max-width_Swipe-title_position_bottom;
+}
+
+.controls-Swipe__action_title_size_m {
+  font-size: @font-size_Swipe-title_size_m;
+}
+
+.controls-Swipe__action_title_size_l {
+  font-size: @font-size_Swipe-title_size_l;
+}
+
+.controls-Swipe__separator {
+  background: @background-color_Swipe-separator;
+  flex-shrink: 0;
+  display: block;
+}
+
+.controls-Swipe__separator_horizontal {
+  width: @width_Swipe-separator;
+  height: calc(100% ~'-' 2 * @spacing_Swipe-between-vertical-separator-and-border);
+  margin: @spacing_Swipe-between-vertical-separator-and-border @spacing_Swipe-between-vertical-separator-and-icon;
+}
+
+.controls-Swipe__separator_vertical {
+  width: 100%;
+  height: @width_Swipe-separator;
+  padding-left: @spacing_Swipe-between-horizontal-separator-and-border;
+  padding-right: @spacing_Swipe-between-horizontal-separator-and-border;
+  box-sizing: border-box;
+}
+
+.controls-Swipe_horizontal,
+.controls-Swipe_vertical {
+  display: inline-flex;
+  height: 100%;
+}
+
+.controls-Swipe_horizontal {
+  align-items: center;
+}
+
+.controls-Swipe_vertical {
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.controls-Swipe__action_iconStyle_secondary {
+  color: @color_Swipe-icon_style_secondary;
+}
+
+.controls-Swipe__action_iconStyle_danger {
+  color: @color_Swipe-icon_style_danger;
+}
+
+.controls-Swipe__action_iconStyle_success {
+  color: @color_Swipe-icon_style_success;
+}
+
+.controls-Swipe__action_iconStyle_warning {
+  color: @color_Swipe-icon_style_warning;
+}
+
+/**
+TODO: на андроиде дёргается запись в списке если после анимации перестраивается ПМО.
+Нужно или разобраться почему дёргается запись, или откладывать перестраивание ПМО.
+Верну анимацию по задаче:
+https://online.sbis.ru/opendoc.html?guid=a1a72f4f-de87-400c-8cb1-1e32d8b63068
+ */
+body:not(.ws-is-mobile-android) .controls-ListView__item_rightSwipeAnimation {
+  animation: rightSwipe 0.3s;
+}

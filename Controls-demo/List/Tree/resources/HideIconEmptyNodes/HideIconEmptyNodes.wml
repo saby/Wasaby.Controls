@@ -1,4 +1,4 @@
-<Controls.Container.Scroll attr:class="ControlsDemo-TreeHiddenNodes__tree">
+<Controls.scroll:Container attr:class="ControlsDemo-TreeHiddenNodes__tree">
    <Controls.treeGrid:View
            keyProperty="id"
            nodeProperty="type"
@@ -13,4 +13,4 @@
          </ws:Array>
       </ws:columns>
    </Controls.treeGrid:View>
-</Controls.Container.Scroll>
+</Controls.scroll:Container>

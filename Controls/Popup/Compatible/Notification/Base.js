@@ -1,10 +1,10 @@
 define('Controls/Popup/Compatible/Notification/Base',
    [
-      'Controls/Popup/Templates/Notification/Base',
+      'Controls/popupTemplate',
       'wml!Controls/Popup/Compatible/Notification/Base'
    ],
-   function(NotificationBase, template) {
-      var Notification = NotificationBase.extend({
+   function(popupTemplate, template) {
+      var Notification = popupTemplate.Notification.extend({
          _template: template,
 
          _beforeMount: function(options) {

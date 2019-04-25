@@ -48,7 +48,7 @@
       <div>
          <Controls.list:Mover name="listMoverSecond" parentProperty="parent"/>
          <Controls.list:Container>
-            <Controls.Explorer
+            <Controls.explorers:View
                bind:root="_root"
                on:dragStart="_dragStartSecond()"
                on:dragEnd="_dragEndSecond()"
@@ -69,7 +69,7 @@
                               additionalText="{{draggingTemplate.entity._options.additionalText}}">
                   </ws:partial>
                </ws:draggingTemplate>
-            </Controls.Explorer>
+            </Controls.explorers:View>
          </Controls.list:Container>
       </div>
    </Controls.list:DataContainer>
@@ -78,7 +78,7 @@
       <div>
          <Controls.list:Mover name="listMoverThird" parentProperty="parent"/>
          <Controls.list:Container>
-            <Controls.Explorer
+            <Controls.explorers:View
                on:dragStart="_dragStartThird()"
                on:dragEnd="_dragEndThird()"
                itemsDragNDrop="{{true}}"
@@ -100,7 +100,7 @@
                   <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{true}}">
                   </ws:partial>
                </ws:tileItemTemplate>
-            </Controls.Explorer>
+            </Controls.explorers:View>
          </Controls.list:Container>
       </div>
    </Controls.list:DataContainer>-->

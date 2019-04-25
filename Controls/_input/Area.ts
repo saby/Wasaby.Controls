@@ -17,6 +17,7 @@ import 'Controls/decorator';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
+       * @mixes Controls/interface/INewLineKey
        *
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
@@ -39,13 +40,6 @@ import 'Controls/decorator';
        * A value between 1 and 10 is supported.
        */
 
-      /**
-       * @name Controls/_input/Area#newLineKey
-       * @cfg {String} The behavior of creating a new line.
-       * @variant enter When user presses Enter.
-       * @variant ctrlEnter When user presses Ctrl + Enter.
-       * @default enter
-       */
       var _private = {
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');
@@ -132,6 +126,7 @@ import 'Controls/decorator';
                 * So wait until the control redraws.
                 */
                runDelayed(function() {
+                  self._getField().scrollTop = 0;
                   scroll.scrollTo(positionCursor - sizeVisibleArea / 2);
                });
             }
@@ -181,6 +176,12 @@ import 'Controls/decorator';
             if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
                _private.validateLines(newOptions.minLines, newOptions.maxLines);
             }
+         },
+
+         _inputHandler: function() {
+            Area.superclass._inputHandler.apply(this, arguments);
+
+            this._recalculateLocationVisibleArea(this._getField(), this._viewModel.displayValue, this._viewModel.selection);
          },
 
          _keyDownHandler: function(event) {

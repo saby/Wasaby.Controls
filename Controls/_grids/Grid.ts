@@ -3,7 +3,7 @@ import GridViewModel = require('Controls/_grids/GridViewModel');
 import viewName = require('Controls/_grids/GridView');
 import {ListControl as viewTemplate} from 'Controls/list';
 
-   
+
 
    /**
     * Table-looking list. Can load data from data source.
@@ -21,20 +21,20 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/_lists/interface/IList
-    * @mixes Controls/_lists/interface/IGridControl
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_list/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/_lists/interface/IDraggable
+    * @mixes Controls/_list/interface/IDraggable
     *
-    * @mixes Controls/_lists/BaseControlStyles
-    * @mixes Controls/_lists/ListStyles
+    * @mixes Controls/_list/BaseControlStyles
+    * @mixes Controls/_list/ListStyles
     * @mixes Controls/_grids/GridStyles
-    * @mixes Controls/_lists/ItemActions/ItemActionsStyles
-    * @mixes Controls/_lists/Swipe/SwipeStyles
+    * @mixes Controls/_list/ItemActions/ItemActionsStyles
+    * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_lists/Mover/MoveDialog/Styles
-    * @mixes Controls/_lists/PagingStyles
-    * @mixes Controls/_lists/DigitButtonsStyles
+    * @mixes Controls/_list/Mover/MoveDialog/Styles
+    * @mixes Controls/_paging/PagingStyles
+    * @mixes Controls/_list/DigitButtonsStyles
     * @mixes Controls/_grids/SortButtonStyles
     *
     * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end

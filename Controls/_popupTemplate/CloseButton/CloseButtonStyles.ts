@@ -1,6 +1,6 @@
 /**
  * @author Михайловский Д.С.
- * @mixin Controls/Button/CloseStyles
+ * @mixin Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
  *
  * @css @width_CloseButton_toolButton_l Width of close button with options viewMode 'toolButton' and size 'l'.

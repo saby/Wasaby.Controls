@@ -1,21 +1,25 @@
-define(['Controls/Popup/Templates/Stack/StackTemplate'], (StackTemplate) => {
+define(['Controls/popupTemplate'], (popupTemplate) => {
    'use strict';
    describe('Controls/Popup/Templates/Stack/StackTemplate', () => {
       it('maximize button title', () => {
-         let Stack = new StackTemplate();
+         let Stack = new popupTemplate.Stack();
          Stack._beforeMount({
-            maximized: true
+            stackMinWidth: 100,
+            stackWidth: 700,
+            stackMaxWidth: 1000
          });
          assert.equal(Stack._maximizeButtonTitle, 'Свернуть');
          Stack._beforeUpdate({
-            maximized: false
+            stackMinWidth: 100,
+            stackWidth: 300,
+            stackMaxWidth: 1000
          });
          assert.equal(Stack._maximizeButtonTitle, 'Развернуть');
          Stack.destroy();
       });
 
       it('controlResize after update maximized options', () => {
-         let Stack = new StackTemplate();
+         let Stack = new popupTemplate.Stack();
          let controlResizeNotified = false;
          Stack._notify = (event) => {
             controlResizeNotified = event === 'controlResize';

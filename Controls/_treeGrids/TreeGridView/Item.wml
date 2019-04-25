@@ -73,14 +73,14 @@
 </div>
 </ws:template>
 <ws:template name="stickyCell">
-<Controls.StickyHeader position="topbottom"
+<Controls.scroll:StickyHeader position="topbottom"
                        attr:class="{{currentColumn.cellClasses}}
                              {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                              {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
                        attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
    <ws:partial template="columnContentWrapper"/>
-</Controls.StickyHeader>
+</Controls.scroll:StickyHeader>
 </ws:template>
 <ws:template name="oldColTpl">
 <td attr:class="{{currentColumn.cellClasses}}
@@ -116,6 +116,7 @@
 
    <ws:template name="partialGridSupportItem">
       <ws:partial template="colTpl"
+                  attr:data-r="{{ itemData.index }}"
                   currentColumn="{{currentColumn}}"
                   attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
                   controls-Grid__row_{{itemData.style || 'default'}} {{currentColumn.cellClasses}}

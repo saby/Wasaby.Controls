@@ -13,10 +13,10 @@ import 'css!theme?Controls/_dateRange/Input/Input';
  * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
- * @mixes Controls/_input/interface/IInputBase
+ * @mixes Controls/interface/IInputBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
- * @mixes Controls/_input/interface/IDateMask
+ * @mixes Controls/interface/IDateMask
  *
  * @css @width_DateRange-dash Width of dash between input fields.
  * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
@@ -91,7 +91,6 @@ var Component = Control.extend([], {
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
-        this._forceUpdate();
         this._children.startValueField.activate();
         this._notify('inputCompleted', [
             startValue,

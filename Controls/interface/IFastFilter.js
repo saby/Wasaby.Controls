@@ -15,6 +15,8 @@ define('Controls/interface/IFastFilter', [
     * @property {Types/source:Base} source Object that implements ISource interface for data access. If 'items' is specified, 'source' will be ignored.
     * @property {Boolean} multiSelect Determines whether multiple selection is set.
     * @property {Controls/interface/ISelectorDialog} selectorTemplate Items selection panel template.
+    * @property {Function} itemTemplate Template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplate}
+    * @property {String} itemTemplateProperty Name of the item property that contains template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplateProperty}
     * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/interface/IFilter}
     * @property {Object} navigation List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.) {@link Controls/interface/INavigation}
     * @property {Types/collection:IList} items Special structure for the visual representation of the filter. {@link Types/collection:IList}.
@@ -35,7 +37,7 @@ define('Controls/interface/IFastFilter', [
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.Filter.Fast
+    *    <Controls.filter:Fast
     *              bind:selectedKey='_selectedKey'
     *              source="{{_source}}"
     *    />

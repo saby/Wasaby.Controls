@@ -12,7 +12,7 @@ import buttons = require('Controls/buttons');
             self._oldToolbarWidth = toolbarWidth;
             self._toolbarSource = new sourceLib.Memory({
                idProperty: self._options.keyProperty,
-               data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth).getRawData()
+               data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth, self._options.theme).getRawData()
             });
             self._forceUpdate();
          }
@@ -62,7 +62,7 @@ import buttons = require('Controls/buttons');
     * @mixes Controls/List/interface/IHierarchy
     * @control
     * @public
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @demo Controls-demo/OperationsPanel/Panel
     *
     * @css @background-color_OperationsPanel Background color of the panel.
@@ -159,7 +159,7 @@ import buttons = require('Controls/buttons');
          itemTemplate: toolbars.ItemTemplate
       };
    };
-   Panel._theme = ['Controls/operations'];
+   Panel._theme = ['Controls/operations', 'Controls/_toolbars/View'];
 
    export = Panel;
 

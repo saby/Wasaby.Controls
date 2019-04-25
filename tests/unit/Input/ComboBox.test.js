@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Input/ComboBox',
+      'Controls/dropdown',
       'Core/core-clone',
       'Types/source',
       'Types/collection'
    ],
-   (Combobox, Clone, sourceLib, collection) => {
+   (dropdown, Clone, sourceLib, collection) => {
       describe('Input.Combobox', () => {
          let items = [
             {
@@ -41,7 +41,7 @@ define(
 
 
          let getCombobox = function(config) {
-            let combobox = new Combobox(config);
+            let combobox = new dropdown.Combobox(config);
             combobox.saveOptions(config);
             combobox._simpleViewModel = { updateOptions: function() {} };
             return combobox;
@@ -81,10 +81,10 @@ define(
          it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
    
-            Combobox._private.popupVisibilityChanged.call(combobox, true);
+            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
             assert.isTrue(combobox._isOpen);
    
-            Combobox._private.popupVisibilityChanged.call(combobox, false);
+            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
             assert.isFalse(combobox._isOpen);
          });
 

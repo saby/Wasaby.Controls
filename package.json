@@ -1,80 +1,80 @@
 {
-  "name": "sbis3-controls",
-  "version": "19.300.0",
-  "repository": {
-    "type": "git",
-    "url": "git@git.sbis.ru:root/sbis3-controls"
-  },
-  "files": [
-    "Data/*",
-    "Controls/*",
-    "Controls-theme/*",
-    "Controls-demo/*",
-    "SBIS3.CONTROLS/*"
-  ],
-  "scripts": {
-    "build": "npm run build:typescript && npm run build:app",
-    "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
-    "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json -LLLL",
-    "build:app": "npm run builder && node build-app",
-    "compile": "tsc",
-    "start": "node app",
-    "start:units": "node node_modules/saby-units/cli/server",
-    "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-    "test:node": "saby-units --isolated --report",
-    "test:node-coverage": "saby-units --isolated --report --coverage",
-    "test:browser": "saby-units --browser --report",
-    "test:browser-coverage": "saby-units --browser --report --coverage",
-    "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
-    "lintless": "stylelint \"Controls/**/*.less\""
-  },
-  "saby-units": {
-    "moduleType": "amd",
-    "root": "application",
-    "tests": "unit",
-    "patchedRequire": true,
-    "report": "./application/artifacts/xunit-report.xml",
-    "htmlCoverageReport": "./application/artifacts/coverage/index.html",
-    "jsonCoverageReport": "./application/artifacts/coverage.json",
-    "initializer": "testing-init.js",
-    "url": {
-      "port": 1025
-    }
-  },
-  "nyc": {
-    "include": [
-      "application/SBIS3.CONTROLS/**/*.js",
-      "application/Controls/**/*.js"
-    ],
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "cache": false,
-    "eager": true,
-    "report-dir": "./application/artifacts/coverage"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "tslint": "^5.13.1",
-    "@tensor-corp/eslint-config": "^2.0.3",
-    "@types/typedef": "git+https://git.sbis.ru/av.zalyaev/typedef.git#master",
-    "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
-    "eslint": "^5.7.0",
-    "express": "^4.16.3",
-    "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.300",
-    "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300",
-    "Router": "git+https://github.com/saby/Router.git#rc-19.300",
-    "serve-static": "1.11.x",
-    "stylelint": "^9.7.1",
-    "stylelint-config-standard": "^18.2.0",
-    "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
-    "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.300",
-    "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300",
-    "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.300",
-    "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.300",
-    "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.300",
-    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.300"
-  }
+   "name": "sbis3-controls",
+   "version": "19.310.0",
+   "repository": {
+      "type": "git",
+      "url": "git@git.sbis.ru:root/sbis3-controls"
+   },
+   "files": [
+      "Data/*",
+      "Controls/*",
+      "Controls-theme/*",
+      "Controls-demo/*",
+      "SBIS3.CONTROLS/*"
+   ],
+   "scripts": {
+      "build": "npm run build:typescript && npm run build:app",
+      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
+      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json -LLLL",
+      "build:app": "npm run builder && node build-app",
+      "compile": "tsc",
+      "start": "node app",
+      "start:units": "node node_modules/saby-units/cli/server",
+      "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
+      "test:node": "saby-units --isolated --report",
+      "test:node-coverage": "saby-units --isolated --report --coverage",
+      "test:browser": "saby-units --browser --report",
+      "test:browser-coverage": "saby-units --browser --report --coverage",
+      "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
+      "lintless": "stylelint \"Controls/**/*.less\""
+   },
+   "saby-units": {
+      "moduleType": "amd",
+      "root": "application",
+      "tests": "unit",
+      "patchedRequire": true,
+      "report": "./application/artifacts/xunit-report.xml",
+      "htmlCoverageReport": "./application/artifacts/coverage/index.html",
+      "jsonCoverageReport": "./application/artifacts/coverage.json",
+      "initializer": "testing-init.js",
+      "url": {
+         "port": 1025
+      }
+   },
+   "nyc": {
+      "include": [
+         "application/SBIS3.CONTROLS/**/*.js",
+         "application/Controls/**/*.js"
+      ],
+      "reporter": [
+         "text",
+         "html"
+      ],
+      "cache": false,
+      "eager": true,
+      "report-dir": "./application/artifacts/coverage"
+   },
+   "dependencies": {},
+   "devDependencies": {
+      "tslint": "^5.13.1",
+      "@tensor-corp/eslint-config": "^2.0.3",
+      "@types/typedef": "git+https://git.sbis.ru/av.zalyaev/typedef.git#master",
+      "body-parser": "^1.18.3",
+      "cookie-parser": "^1.4.3",
+      "eslint": "^5.7.0",
+      "express": "^4.16.3",
+      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.310",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.310",
+      "Router": "git+https://github.com/saby/Router.git#rc-19.310",
+      "serve-static": "1.11.x",
+      "stylelint": "^9.7.1",
+      "stylelint-config-standard": "^18.2.0",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.310",
+      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.310",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.310",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.310",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.310",
+      "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.310",
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.310"
+   }
 }

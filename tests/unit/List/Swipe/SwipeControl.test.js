@@ -1,8 +1,8 @@
 define([
-   'Controls/_lists/Swipe/SwipeControl',
-   'Controls/_lists/ItemActions/Utils/Actions',
-   'Controls/_lists/Swipe/HorizontalMeasurer',
-   'Controls/_lists/Swipe/VerticalMeasurer'
+   'Controls/_list/Swipe/SwipeControl',
+   'Controls/_list/ItemActions/Utils/Actions',
+   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_list/Swipe/VerticalMeasurer'
 ], function(
    SwipeControl,
    actionsUtil,
@@ -65,9 +65,9 @@ define([
             title: 'Прочитано'
          };
          instance._measurer = {
-            needTitle: function(action, titlePosition) {
+            needTitle: function(action, actionCaptionPosition) {
                assert.equal(testAction, action);
-               assert.equal('right', titlePosition);
+               assert.equal('right', actionCaptionPosition);
             }
          };
          instance._needTitle(testAction, 'right');
@@ -263,22 +263,48 @@ define([
       });
 
       describe('_beforeMount', function() {
-         it('should load HorizontalMeasurer', async function() {
+         it('should load HorizontalMeasurer and log warning about deprecated option', async function() {
+            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
             await instance._beforeMount({
                swipeDirection: 'row',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, HorizontalMeasurer.default);
+            assert.isTrue(consoleSpy.calledOnce);
+            assert.equal(instance._actionAlignment, 'horizontal');
          });
 
-         it('should load VerticalMeasurer', async function() {
+         it('should load HorizontalMeasurer', async function() {
+            await instance._beforeMount({
+               actionAlignment: 'horizontal',
+               listModel: mockListModel({})
+            });
+
+            assert.equal(instance._measurer, HorizontalMeasurer.default);
+            assert.equal(instance._actionAlignment, 'horizontal');
+         });
+
+         it('should load VerticalMeasurer and log warning about deprecated option', async function() {
+            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
             await instance._beforeMount({
                swipeDirection: 'column',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, VerticalMeasurer.default);
+            assert.isTrue(consoleSpy.calledOnce);
+            assert.equal(instance._actionAlignment, 'vertical');
+         });
+
+         it('should load VerticalMeasurer', async function() {
+            await instance._beforeMount({
+               actionAlignment: 'vertical',
+               listModel: mockListModel({})
+            });
+
+            assert.equal(instance._measurer, VerticalMeasurer.default);
+            assert.equal(instance._actionAlignment, 'vertical');
          });
       });
 
@@ -374,16 +400,12 @@ define([
             instance.saveOptions({
                listModel: mockListModel(swipeItem),
                itemActionsPosition: 'inside',
-               titlePosition: 'none'
+               actionCaptionPosition: 'none'
             });
             instance._measurer = {
-               getSwipeConfig: function(itemActions, rowHeight, titlePosition) {
-                  assert.equal(itemActions, itemData.itemActions.all);
-                  assert.equal(rowHeight, 1000);
-                  assert.equal(titlePosition, 'none');
-                  return swipeConfig;
-               }
+               getSwipeConfig: sandbox.stub().withArgs(itemData.itemActions.all, 1000, 'none').returns(swipeConfig)
             };
+
             instance._listSwipe({}, itemData, mockChildEvent('left'));
             assert.equal(instance._options.listModel.swipeItem, itemData);
             assert.equal(instance._options.listModel.activeItem, itemData);
@@ -401,15 +423,11 @@ define([
             instance.saveOptions({
                listModel: mockListModel(swipeItem),
                itemActionsPosition: 'inside',
-               titlePosition: 'none'
+               actionCaptionPosition: 'none'
             });
+
             instance._measurer = {
-               getSwipeConfig: function(itemActions, rowHeight, titlePosition) {
-                  assert.equal(itemActions, itemData.itemActions.all);
-                  assert.equal(rowHeight, 2000);
-                  assert.equal(titlePosition, 'none');
-                  return swipeConfig;
-               }
+               getSwipeConfig: sandbox.stub().withArgs(itemData.itemActions.all, 1000, 'none').returns(swipeConfig)
             };
             instance._listSwipe({}, itemData, mockChildEvent('left', true));
             assert.equal(instance._options.listModel.swipeItem, itemData);
@@ -427,9 +445,7 @@ define([
                itemActionsPosition: 'outside'
             });
             instance._measurer = {
-               getSwipeConfig: function() {
-                  throw new Error('getSwipeConfig shouldn\'t be called if itemActionsPosition === outside');
-               }
+               getSwipeConfig: sandbox.stub().throws('getSwipeConfig shouldn\'t be called if itemActionsPosition === outside')
             };
             instance._listSwipe({}, itemData, mockChildEvent('left'));
             assert.equal(instance._options.listModel.swipeItem, itemData);

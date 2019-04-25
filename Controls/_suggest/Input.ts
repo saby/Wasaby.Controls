@@ -9,17 +9,17 @@ import 'css!theme?Controls/_suggest/Input/Input';
  *
  * Here you can see the <a href="/materials/demo-ws4-input">demo examples</a>.
  *
- * @class Controls/Input/Suggest
+ * @class Controls/_suggest/Input
  * @extends Core/Control
- * @mixes Controls/Input/interface/ISearch
+ * @mixes Controls/interface/ISearch
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/Input/interface/ISuggest
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation
  * @mixes Controls/Input/Suggest/SuggestStyles
  * @mixes Controls/Input/resources/InputRender/InputRenderStyles
- * @mixes Controls/_input/interface/IPaste
- * @mixes Controls/_input/interface/IInputText
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputText
  * @control
  * @public
  * @category Input

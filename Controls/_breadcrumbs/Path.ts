@@ -14,7 +14,7 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
  * @mixes Controls/_breadcrumbs/BreadCrumbsStyles
  * @control
  * @public
- * @author Зайцев А.С.
+ * @author Авраменко А.С.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
  */
 

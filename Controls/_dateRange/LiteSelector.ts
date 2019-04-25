@@ -36,7 +36,7 @@ var Component = BaseControl.extend({
         // when adding control arrows, set the minimum width of the block,
         // so that the arrows are always fixed and not shifted.
         // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
-        if (options.showPrevArrow && options.showNextArrow) {
+        if ((options.prevArrowVisibility && options.prevArrowVisibility) || (options.showPrevArrow && options.showNextArrow)) {
             return this._isMinWidth = true;
         }
     },
@@ -49,9 +49,9 @@ var Component = BaseControl.extend({
         var className;
 
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeLinkLite__picker-years-only';
+            className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
-            className = 'controls-DateRangeLinkLite__picker-normal';
+            className = 'controls-DateRangeSelectorLite__picker-normal';
         }
 
         this._children.opener.open({
@@ -78,7 +78,10 @@ var Component = BaseControl.extend({
     _onResult: function (event, startValue, endValue) {
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
-        this._forceUpdate();
+    },
+
+    _rangeChangedHandler: function(event, startValue, endValue) {
+        this._rangeModel.setRange(startValue, endValue);
     },
 
     _beforeUnmount: function () {

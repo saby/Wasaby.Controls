@@ -1,10 +1,8 @@
-<div style="height: 200px; min-width: 500px; max-width: 700px;">
-<Controls.Popup.Templates.Dialog.ConfirmationTemplate style="success">
+<Controls.popupTemplate:Confirmation style="success">
     <ws:bodyContentTemplate>
         <div  style="text-align: center">  Hello, It is Confirmation Template </div>
     </ws:bodyContentTemplate>
     <ws:footerContentTemplate >
         <div  style="text-align: center">  <Controls.buttons:Button caption="{{_options.value}}" on:click="_closeHandler()"/> </div>
     </ws:footerContentTemplate>
-</Controls.Popup.Templates.Dialog.ConfirmationTemplate>
-</div>
+</Controls.popupTemplate:Confirmation>

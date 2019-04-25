@@ -1,1 +1,1 @@
-<div></div>
+<ws:partial template="wml!Controls/_event/Listener" scope="{{_options}}" />

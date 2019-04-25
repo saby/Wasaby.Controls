@@ -94,6 +94,27 @@ define(
             assert.equal(ctrl._viewModel.selection.start, 0);
             assert.equal(ctrl._viewModel.selection.end, 0);
          });
+         it('Set the inputCallback option.', function() {
+            ctrl._options.inputCallback = function() {
+               return {
+                  position: 0,
+                  displayValue: 'callback'
+               };
+            };
+
+            InputUtility.init(ctrl);
+
+            ctrl._focusInHandler();
+            InputUtility.insert(ctrl, 'test');
+            InputUtility.triggerInput(ctrl);
+
+            assert.deepEqual(calls, [
+               {
+                  name: 'notify',
+                  arguments: ['valueChanged', ['callback', 'callback']]
+               }
+            ]);
+         });
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
                ctrl._options.readOnly = false;
@@ -250,103 +271,13 @@ define(
                ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
-               assert.equal(ctrl._getField().value, '');
-               assert.equal(ctrl._getField().selectionStart, 0);
-               assert.equal(ctrl._getField().selectionEnd, 0);
+               assert.equal(ctrl._getField().value, 'text');
+               assert.equal(ctrl._getField().selectionStart, 4);
+               assert.equal(ctrl._getField().selectionEnd, 4);
                assert.equal(ctrl._viewModel.value, 'text');
                assert.deepEqual(ctrl._viewModel.selection, {
                   start: 4,
                   end: 4
-               });
-            });
-            it('In the value field " 12345". Select the value of "34". Enter "s" and " d " without synchronization cycle.', function() {
-               ctrl._beforeMount({
-                  value: '12345'
-               });
-
-               ctrl._getField().selectionStart = 2;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._selectHandler();
-               ctrl._beforeUpdate({
-                  value: '12345'
-               });
-               ctrl._template(ctrl);
-
-               ctrl._getField().value = '12s5';
-               ctrl._getField().selectionStart = 3;
-               ctrl._getField().selectionEnd = 3;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               ctrl._getField().value = '12d5';
-               ctrl._getField().selectionStart = 3;
-               ctrl._getField().selectionEnd = 3;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.equal(ctrl._viewModel.value, '12sd5');
-               assert.deepEqual(ctrl._viewModel.selection, {
-                  start: 4,
-                  end: 4
-               });
-            });
-         });
-         describe('Synchronize the field with the model.', function() {
-            describe('Scroll left in the field, depending on the cursor position.', function() {
-               beforeEach(function() {
-                  ctrl._getTextWidth = function(value) {
-                     return 10 * value.length;
-                  };
-                  ctrl._isBrowserPlatform = true;
-                  ctrl._getActiveElement = function() {
-                     return ctrl._getField();
-                  };
-                  ctrl._beforeMount({
-
-                     // length = 20, width = 200;
-                     value: '01234567890123456789'
-                  });
-                  ctrl._getField().clientWidth = 100;
-               });
-               it('The cursor is behind the left edge.', function() {
-                  ctrl._getField().scrollLeft = 100;
-
-                  ctrl._getField().selectionStart = 10;
-                  ctrl._getField().selectionEnd = 10;
-                  ctrl._clickHandler();
-                  ctrl._getField().value = '0123456780123456789';
-                  ctrl._getField().selectionStart = 9;
-                  ctrl._getField().selectionEnd = 9;
-                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-                  ctrl._template(ctrl);
-
-                  assert.equal(ctrl._getField().scrollLeft, 41);
-               });
-               it('The cursor between the edges.', function() {
-                  ctrl._getField().scrollLeft = 50;
-
-                  ctrl._getField().selectionStart = 10;
-                  ctrl._getField().selectionEnd = 10;
-                  ctrl._clickHandler();
-                  ctrl._getField().value = '0123456789t0123456789';
-                  ctrl._getField().selectionStart = 11;
-                  ctrl._getField().selectionEnd = 11;
-                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-                  ctrl._template(ctrl);
-
-                  assert.equal(ctrl._getField().scrollLeft, 50);
-               });
-               it('The cursor is behind the right edge.', function() {
-                  ctrl._getField().scrollLeft = 0;
-
-                  ctrl._getField().selectionStart = 10;
-                  ctrl._getField().selectionEnd = 10;
-                  ctrl._clickHandler();
-                  ctrl._getField().value = '0123456789a0123456789';
-                  ctrl._getField().selectionStart = 11;
-                  ctrl._getField().selectionEnd = 11;
-                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-                  ctrl._template(ctrl);
-
-                  assert.equal(ctrl._getField().scrollLeft, 61);
                });
             });
          });
@@ -405,23 +336,6 @@ define(
                      start: 0,
                      end: 10
                   }
-               }]);
-            });
-            it('The selection is not saved to the model after script actions', function() {
-               ctrl._getActiveElement = function() {
-                  return ctrl._getField();
-               };
-               ctrl._isBrowserPlatform = true;
-
-               ctrl._getField().value = '';
-               ctrl._getField().selectionStart = 0;
-               ctrl._getField().selectionEnd = 0;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-               ctrl._selectHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', ['', '']]
                }]);
             });
          });
@@ -727,21 +641,6 @@ define(
                ctrl._getField().selectionStart = 24;
                ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
-               }]);
-            });
-            it('In an browser "Edge".', function() {
-               ctrl._isEdge = true;
-               InputUtility.init(ctrl);
-
-               ctrl._focusInHandler();
-               InputUtility.insert(ctrl, 'test auto-complete value');
-               InputUtility.triggerInput(ctrl);
-               InputUtility.insert(ctrl, 'test auto-complete value');
-               InputUtility.triggerInput(ctrl);
 
                assert.deepEqual(calls, [{
                   name: 'notify',

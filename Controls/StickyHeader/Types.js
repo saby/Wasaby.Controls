@@ -1,7 +1,6 @@
-define('Controls/StickyHeader/Types', [], function() {
-   /**
-    * @typedef {Object} InformationFixationEvent
-    * @property {Number} id The ID of the sticking header.
-    * @property {String} fixedPosition Determines whether the content is fixed.
-    */
-});
+define('Controls/StickyHeader/Types',
+   ['Controls/_scroll/StickyHeader/Types'],
+   function(Control) {
+      'use strict';
+      return Control;
+   });

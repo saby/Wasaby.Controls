@@ -2,7 +2,16 @@ import Control = require('Core/Control');
 import template = require('tmpl!Controls/_lookupPopup/List/Container');
 import Toolbar = require('Controls/Utils/Toolbar');
 
-
+/**
+ *
+ * Control _lookupPopup/List/Container
+ *
+ * @class Controls/_lookupPopup/List/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var ACTION_ID = 'selector.action';
       var ACTION_TITLE = rk('Выбрать');

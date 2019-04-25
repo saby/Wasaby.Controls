@@ -1,5 +1,5 @@
 //colors
-@color_shadow_default:              rgba(0,0,0,0.25);
+@color_shadow_default:              rgba(0,0,0,0.2);
 @color_shadow_popup:                rgba(0,0,0,0.35);
 @color_shadow_secondary:            rgba(0,0,0,0.4);
 @color_shadow_danger:               rgba(239, 70, 58, 0.4);
@@ -56,8 +56,7 @@
 @height_2xl:         44px;
 
 @line-height_default:       18px;
-@size_shadow_default:       0 0 12px 0;
-@size_shadow_secondary:     0 0 6px 0;
+@size_shadow_default:       0 0 6px 0;
 
 @border-radius_size_m:        4px;
 
@@ -90,9 +89,6 @@
 //period dialog
 @color_border_PeriodDialog:       #EAEAEA;
 
-// loadingindicator
-@path_spinner:             url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
-
 // d'n'd
 @color_drop-target:                                #0055BB;
 @border-radius_DraggingTemplate-icon_val:          8px;
@@ -106,11 +102,11 @@
 @background-color_DraggingTemplate-counter_val:    #0055BB;
 
 // stack
-@color_border_lite:                 @color_border_lite_val;
+@color_border_lite:                 #F0F0F0;
 
 // tile
 @color_shadow_light:                rgba(0,0,0,.15);
-@color_shadow_dark:                 rgba(0, 0, 0, 0.5);
+@color_shadow_dark:                 rgba(0, 0, 0, 0.45);
 
 //StateIndicator
 @state-indicator-sector-side-padding_val: 6px;
@@ -281,6 +277,9 @@
 // Selector
 @min-width_DateRangeSelector_val:                                 150px;
 
+// SelectorLite
+@min-width_DateRangeSelectorLite_val:                             150px;
+
 // Lookup
 @spacing_Lookup-between-inputRender-rightBorder_val:              0;
 
@@ -289,7 +288,6 @@
 @min-height_StackTemplate-head_val:                               38px;
 @spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
 @spacing_StackTemplate-between-close-button-border-top_val:       5px;
-@color_border_lite_val:                                           #F0F0F0;
 @font-weight_StackTemplate-caption_secondary_val:                 700;
 @font-weight_StackTemplate-caption_primary_val:                   700;
 @font-weight_StackTemplate-caption_info_val:                      normal;
@@ -297,8 +295,8 @@
 
 
 // Suggest
-@box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 8px;
-@box-shadow-size_Suggest-popup-verticalAlign_bottom_val:          0 4px 8px;
+@box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 6px;
+@box-shadow-size_Suggest-popup-verticalAlign_bottom_val:          0 4px 6px;
 
 // Switch
 @width_Switch_val:                                                46px;
@@ -411,6 +409,15 @@
 // FilterButton
 @shift-top_FilterButton-popup_val:                                        -11px;
 @min-width_FilterButton_text_val:                                         15px;
+@background-color_FilterButton-icon_val:                                  transparent;
+@background-color_FilterButton-icon_hover_val:                            transparent;
+@background-color_FilterButton-icon_active_val:                           transparent;
+@backround-color_FilterButton-icon_readOnly_val:                          transparent;
+@box-shadow-size_FilterButton-icon_val:                                   0 0;
+@box-shadow-color_FilterButton-icon_val:                                  transparent;
+@text-shadow-color_FilterButton-text_val:                                 transparent;
+@text-shadow-size_FilterButton-text_val:                                  0 0;
+@background-color_FilterButton-icon_readOnly_val:                         transparent;
 
 // CloseButton
 @width_CloseButton-icon_toolButton_val:                                   12px;
@@ -454,6 +461,8 @@
 @width_FilterPanel-size_xl_val:                                           800px;
 @background-color_FilterPanel-history_vertical_val:                       #F4F4F4;
 @background-color_FilterPanel_val:                                        #FDFDFD;
+@spacing_FilterPanel-between-topBorder-propertyGrid_val:                  0;
+@spacing_FilterPanel-between-bottomBorder-propertyGrid_val:               0;
 
 // DropdownList
 @height_DropdownList-row-separator_val:                                   0;
@@ -466,7 +475,7 @@
 @max-width_DropdownList_val:                                              700px;
 @box-shadow-offset_DropdownList_m:                                        6px;
 @box-shadow-offset_DropdownList_xs:                                       0;
-@box-shadow-blur_DropdownList:                                            12px;
+@box-shadow-blur_DropdownList:                                            6px;
 @box-shadow-spread_DropdownList:                                          -6px;
 @background_DropdownList-header_val:                                      #F4F4F4;
 @color-marker_dark_val:                                                   #D94700;
@@ -505,6 +514,8 @@
 @background_ToggleButton_pushButton_hovered_val:                          #F0F5FB;
 @border-color_ToggleButton_pushButton_hovered_val:                        #F0F5FB;
 @background_ToggleButton_pushButton_toggled_val:                          #F3F3F3;
+@text-shadow_ToggleButton_pushButton_val:                                  none;
+@padding_Button-wrapper-pushButton_size_s_val:                            0;
 
 //Heading
 @color-Separator__icon_style-secondary_hovered_val:     #313E78;

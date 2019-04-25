@@ -2,7 +2,7 @@
    <ws:contentTemplate>
       <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
          <ws:if data="{{itemData.isEditing}}">
-            <Controls.Selector.Lookup attr:class="controls-EditingTemplateText__editor"
+            <Controls.lookup:Input attr:class="controls-EditingTemplateText__editor"
                                    bind:value="itemData.item.comment"
                                    searchParam="title"
                                    source="{{itemData.item.source}}"
@@ -13,7 +13,7 @@
                                    selectOnClick="{{ false }}">
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-            </Controls.Selector.Lookup>
+            </Controls.lookup:Input>
          </ws:if>
          <ws:else>
             <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">

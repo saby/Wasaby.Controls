@@ -241,6 +241,10 @@ var _private = {
                });
                self._historyLoad.callback(keys);
             }
+         }).addErrback(function() {
+            if (self._historyLoad) {
+               self._historyLoad.callback([]);
+            }
          });
 
          return historyService;
@@ -255,12 +259,13 @@ var _private = {
  *
  * @class Controls/_suggest/_InputController
  * @extends Core/Control
- * @mixes Controls/Input/interface/ISearch
+ * @mixes Controls/interface/ISearch
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/Input/interface/ISuggest
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @public
  */
 var SuggestLayout = Control.extend({
    _template: template,
@@ -487,7 +492,10 @@ var SuggestLayout = Control.extend({
    },
 
    _missSpellClick: function() {
-      this._notify('valueChanged', [this._misspellingCaption]);
+      // Return focus to the input field by changing the keyboard layout
+      this.activate();
+      this._notify('valueChanged', [this._misspellingCaption])
+      this._changeValueHandler(null, this._misspellingCaption);
       _private.setMissSpellingCaption(this, '');
    },
 

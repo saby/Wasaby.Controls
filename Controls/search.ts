@@ -1,11 +1,11 @@
 /**
  * Search library
- * @library Controls/list
+ * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
- * @includes MisspellContainer Controls/_search/Misspell/Container
+ * @includes Container Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
- * @includes Controls/_search/Input/Search
+ * @includes Search Controls/_search/Input/Search
  * @public
  * @author Kraynov D.
  */

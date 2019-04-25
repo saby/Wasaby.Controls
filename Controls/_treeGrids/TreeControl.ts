@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import TreeControlTpl = require('wml!Controls/_treeGrids/TreeControl/TreeControl');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
@@ -238,7 +238,7 @@ var _private = {
  * @class Controls/_treeGrids/TreeControl
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_treeGrids/TreeGridView/Styles
- * @extends Controls/_lists/ListControl
+ * @extends Controls/_list/ListControl
  * @control
  * @public
  * @category List

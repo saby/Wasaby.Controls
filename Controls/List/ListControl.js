@@ -1,4 +1,4 @@
-define('Controls/List/ListControl', ['Controls/_lists/ListControl'], function(Control) {
+define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Control) {
 /**
  * Plain list control with custom item template. Can load data from data source.
  *

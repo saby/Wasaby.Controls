@@ -1,9 +1,9 @@
-define('Controls/List/EditInPlace', ['Controls/_lists/EditInPlace'], function(Control) {
+define('Controls/List/EditInPlace', ['Controls/_list/EditInPlace'], function(Control) {
    /**
     * @class Controls/List/EditInPlace
     * @extends Core/Control
     * @mixes Controls/interface/IEditableList
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @private
     */
    return Control;

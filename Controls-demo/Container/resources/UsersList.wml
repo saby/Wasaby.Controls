@@ -1,4 +1,4 @@
-<Controls.Container.Scroll shadowVisibility="{{showShadow}}" scrollbarVisibility="{{showScrollbar}}">
+<Controls.scroll:Container shadowVisibility="{{showShadow}}" scrollbarVisibility="{{showScrollbar}}">
    <Controls.list:View source="{{usersSource}}" keyProperty="id" markerVisibility="visible">
       <ws:itemTemplate>
          <ws:partial template="Controls/list:ItemTemplate">
@@ -10,4 +10,4 @@
          </ws:partial>
       </ws:itemTemplate>
    </Controls.list:View>
-</Controls.Container.Scroll>
+</Controls.scroll:Container>

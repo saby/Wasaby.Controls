@@ -7,7 +7,7 @@
                                    icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
-         <div>Это всплывающая подсказка.</div>
+         <div>Это всплывающая подсказка по ховеру.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
   </div>
@@ -20,7 +20,7 @@
                                    icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
-         <div>Это всплывающая подсказка.</div>
+         <div>Это всплывающая подсказка по клику.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
    </div>
@@ -33,7 +33,7 @@
                                     icon="icon-EmptyMessage icon-medium"/>
       </ws:content>
       <ws:template>
-         <div>Это всплывающая подсказка, открывая методом open. Закроется через 5 секунд</div>
+         <div>Это всплывающая подсказка, открывающаяся методом open. Закроется через 5 секунд.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
    </div>

@@ -1,13 +1,13 @@
 <div>
    <span>Demo Controls/Explorer</span>
    <Controls.buttons:Button attr:class="demo-Explorer__viewButton" on:click="_changeViewMode()" style="secondary" viewMode="link" icon="icon-medium icon-primary {{_changeViewIcon}}"/>
-   <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
+   <Controls.scroll:Container attr:class="demo-Explorer__scrollContainer">
       <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                            bind:excludedKeys="_excludedKeys">
             <Controls.list:Container>
                <Controls.operations:Container>
-                  <Controls.Explorer
+                  <Controls.explorers:View
                      bind:root="_root"
                      attr:class="demo-Explorer"
                      keyProperty="id"
@@ -33,10 +33,13 @@
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:tileItemTemplate>
-                  </Controls.Explorer>
+                     <ws:footerTemplate>
+                        <Controls.input:Label caption="Footer" underline="hovered"/>
+                     </ws:footerTemplate>
+                  </Controls.explorers:View>
                </Controls.operations:Container>
             </Controls.list:Container>
          </Controls.operations:Controller>
       </Controls.list:DataContainer>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </div>

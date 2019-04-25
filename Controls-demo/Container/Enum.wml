@@ -1,14 +1,14 @@
 <div>
     <Controls.buttons:Button caption="Сменить индекс в перечисляемом на 2" on:click="_changeIndex()"></Controls.buttons:Button>
     <h2>Radio</h2>
-    <Controls.Container.Adapter.Enum enum="{{_enumInst}}">
+    <Controls.source:EnumAdapter enum="{{_enumInst}}">
 
             <Controls.toggle:RadioGroup>
             </Controls.toggle:RadioGroup>
-    </Controls.Container.Adapter.Enum>
+    </Controls.source:EnumAdapter>
     <h2>Dropdown</h2>
-    <Controls.Container.Adapter.Enum enum="{{_enumInst}}">
-            <Controls.Input.Dropdown displayProperty="title">
-            </Controls.Input.Dropdown>
-    </Controls.Container.Adapter.Enum>
+    <Controls.source:EnumAdapter enum="{{_enumInst}}">
+            <Controls.dropdown:Input displayProperty="title">
+            </Controls.dropdown:Input>
+    </Controls.source:EnumAdapter>
 </div>

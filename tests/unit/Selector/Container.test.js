@@ -1,4 +1,4 @@
-define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/collection'], function(Container, entity, sourceLib, collection) {
+define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collection'], function(lookupPopup, entity, sourceLib, collection) {
 
    var getItems = function() {
       var items = [];
@@ -29,19 +29,19 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
             return true;
          };
 
-         assert.deepEqual(Container._private.getFilteredItems(items, retTrue), items);
-         assert.deepEqual(Container._private.getFilteredItems(items, filterFunc), ['toSaveItem', 'toSaveItem']);
+         assert.deepEqual(lookupPopup.Container._private.getFilteredItems(items, retTrue), items);
+         assert.deepEqual(lookupPopup.Container._private.getFilteredItems(items, filterFunc), ['toSaveItem', 'toSaveItem']);
       });
 
       it('getKeysByItems', function() {
-         assert.deepEqual(Container._private.getKeysByItems(getItems(), 'id'), [0, 1, 2, 3, 4]);
+         assert.deepEqual(lookupPopup.Container._private.getKeysByItems(getItems(), 'id'), [0, 1, 2, 3, 4]);
       });
 
       it('getEmptyItems', function() {
          var listWithItems = new collection.List({items: getItems()});
 
-         assert.equal(Container._private.getEmptyItems(listWithItems).getCount(), 0);
-         assert.equal(Container._private.getEmptyItems(listWithItems)._moduleName, 'Types/collection:List');
+         assert.equal(lookupPopup.Container._private.getEmptyItems(listWithItems).getCount(), 0);
+         assert.equal(lookupPopup.Container._private.getEmptyItems(listWithItems)._moduleName, 'Types/collection:List');
       });
 
       it('getFilterFunction', function() {
@@ -49,8 +49,8 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
             return false;
          }
 
-         assert.isTrue(Container._private.getFilterFunction()());
-         assert.isFalse(Container._private.getFilterFunction(retFalse)());
+         assert.isTrue(lookupPopup.Container._private.getFilterFunction()());
+         assert.isFalse(lookupPopup.Container._private.getFilterFunction(retFalse)());
       });
 
       it('getSelectedKeys', function() {
@@ -69,7 +69,7 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
             }
          };
 
-         assert.deepEqual(Container._private.getSelectedKeys(options, context), [0, 2, 4]);
+         assert.deepEqual(lookupPopup.Container._private.getSelectedKeys(options, context), [0, 2, 4]);
       });
 
       it('prepareFilter', function() {
@@ -80,7 +80,7 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
          };
          var source = new sourceLib.Memory();
 
-         var preparedFilter = Container._private.prepareFilter(filter, selection, source);
+         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, source);
 
          assert.deepEqual(filter.selection.get('marked'), ['1', '2']);
          assert.deepEqual(filter.selection.get('excluded'), ['3', '4']);
@@ -91,7 +91,7 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
          var selectedKeys = [];
          var keyProperty = 'id';
 
-         assert.deepEqual(Container._private.prepareResult(result, selectedKeys, keyProperty), {
+         assert.deepEqual(lookupPopup.Container._private.prepareResult(result, selectedKeys, keyProperty), {
             resultSelection: result,
             initialSelection: selectedKeys,
             keyProperty: keyProperty
@@ -101,9 +101,9 @@ define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/co
       it('getSourceController', function() {
          var source = new sourceLib.Memory();
          var navigation = {};
-         var sourceController = Container._private.getSourceController(source, navigation);
+         var sourceController = lookupPopup.Container._private.getSourceController(source, navigation);
 
-         assert.equal(sourceController._moduleName, 'Controls/Controllers/SourceController');
+         assert.equal(sourceController._moduleName, 'Controls/_source/SourceController');
       });
 
    });

@@ -59,15 +59,13 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
             var alignSide = position[1];
             var topOrBottomSide = side === 't' || side === 'b';
 
-            return {
+            var config = {
                verticalAlign: {
-                  side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide],
-                  offset: _private.getVerticalOffset(target, topOrBottomSide, side, alignSide)
+                  side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide]
                },
 
                horizontalAlign: {
-                  side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
-                  offset: _private.getHorizontalOffset(target, topOrBottomSide, side, alignSide)
+                  side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side]
                },
 
                corner: {
@@ -75,16 +73,27 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
                   horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
                }
             };
+
+            var verticalOffset = _private.getVerticalOffset(target, topOrBottomSide, side, alignSide);
+            var horizontalOffset = _private.getHorizontalOffset(target, topOrBottomSide, side, alignSide);
+
+            if (verticalOffset) {
+               config.verticalAlign.offset = verticalOffset;
+            }
+
+            if (horizontalOffset) {
+               config.horizontalAlign.offset = horizontalOffset;
+            }
+
+            return config;
          },
 
          getVerticalOffset: function(target, topOrBottomSide, side, alignSide) {
-            if (topOrBottomSide) {
-               return side === 't' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET;
+            if (!topOrBottomSide) {
+               // svg hasn't offsetHeight property
+               var targetHeight = target.offsetHeight || target.clientHeight;
+               return _private.getOffset(targetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
             }
-
-            // svg hasn't offsetHeight property
-            var targetHeight = target.offsetHeight || target.clientHeight;
-            return _private.getOffset(targetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
          },
 
          getHorizontalOffset: function(target, topOrBottomSide, side, alignSide) {
@@ -93,7 +102,6 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
                var targetWidth = target.offsetWidth || target.clientWidth;
                return _private.getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
             }
-            return side === 'l' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET;
          }
       };
 
@@ -156,13 +164,22 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
 
          getDefaultConfig: function(item) {
             InfoBoxController.superclass.getDefaultConfig.apply(this, arguments);
-
-            // Calculate the width of the infobox before its positioning.
-            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
-            cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
-            var sizes = { width: constants.MAX_WIDTH, height: 1, margins: { left: 0, top: 0 } };
-            var position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
-            item.position.maxWidth = position.width;
+            let defaultPosition = {
+               left: -10000,
+               top: -10000,
+               right: undefined,
+               bottom: undefined,
+            };
+            if (item.popupOptions.target) {
+               // Calculate the width of the infobox before its positioning.
+               // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+               cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
+               var sizes = { width: constants.MAX_WIDTH, height: 1, margins: { left: 0, top: 0 } };
+               var position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+               this.prepareConfig(item, sizes);
+               item.position.maxWidth = position.width;
+            }
+            item.position = {...item.position, ...defaultPosition};
          },
 
          prepareConfig: function(cfg, sizes) {

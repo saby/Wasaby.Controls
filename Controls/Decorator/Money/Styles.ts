@@ -1,5 +1,5 @@
 /**
- * @interface Controls/Decorator/Money/Styles
+ * @interface Controls/_decorator/MoneyStyles
  *
  * @css @color_DecoratorMoney-integer_style_default The color of a integer part in the default style.
  * @css @font-size_DecoratorMoney-integer_style_default The font size of a integer part in the default style.

@@ -32,8 +32,8 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @remark
-    * Base itemTemplate for Controls/Selector/Lookup: "wml!Controls/Selector/Lookup/itemTemplate".
-    * Base itemTemplate for Controls/Selector/Button: "wml!Controls/Selector/Button/itemTemplate".
+    * Base itemTemplate for Controls/lookup:Input: "wml!Controls/Selector/Lookup/itemTemplate".
+    * Base itemTemplate for Controls.lookup:Selector: "wml!Controls.lookup:Selector/itemTemplate".
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function|String} - Template for render item content.</li>
@@ -67,17 +67,17 @@ define('Controls/interface/ISelectedCollection', [
     * @example
     * WML:
     * <pre>
-    *    <Controls.Selector.Button
+    *    <Controls.lookup:Selector
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls/Selector/Button/itemTemplate"
+    *          <ws:partial template="wml!Controls.lookup:Selector/itemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"
     *                      clickable="{{true}}"/>
     *       </ws:itemTemplate>
-    *    </Controls.Selector.Button>
+    *    </Controls.lookup:Selector>
     * </pre>
     */
 
@@ -89,11 +89,11 @@ define('Controls/interface/ISelectedCollection', [
     * The following example creates Selector/Button and shows how to handle the event.
     * WML:
     * <pre>
-    *    <Controls.Selector.Button
+    *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
     *       on:textValueChanged="onTextValueChanged()"
-    *    </Controls.Selector.Button>
+    *    </Controls.lookup:Selector>
     * </pre>
     * JS:
     * <pre>
@@ -111,11 +111,11 @@ define('Controls/interface/ISelectedCollection', [
     * The following example creates Selector/Button and shows how to handle the event.
     * WML:
     * <pre>
-    *    <Controls.Selector.Button
+    *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
     *       on:itemsChanged="onItemsChanged()"
-    *    </Controls.Selector.Button>
+    *    </Controls.lookup:Selector>
     * </pre>
     * JS:
     * <pre>

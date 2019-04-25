@@ -1,5 +1,5 @@
 
-define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection', 'Core/core-clone'], function(DropdownList, collection, Clone) {
+define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], function(dropdownPopup, collection, Clone) {
 
    'use strict';
 
@@ -53,7 +53,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
    };
 
    var getDropDownListWithConfig = function(config) {
-      var dropDownList = new DropdownList(config);
+      var dropDownList = new dropdownPopup.List(config);
       dropDownList.saveOptions(config);
       return dropDownList;
    };
@@ -232,6 +232,14 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             actualConfig.rootKey = null;
             dropDownList._beforeMount(expectedConfig);
             assert.deepEqual(dropDownList._listModel._options, actualConfig);
+            expectedConfig.selectedKeys = undefined;
+            actualConfig.selectedKeys = undefined;
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
+            expectedConfig.selectedKeys = false;
+            actualConfig.selectedKeys = false;
+            dropDownList._beforeMount(expectedConfig);
+            assert.deepEqual(dropDownList._listModel._options, actualConfig);
          });
          it('check popup options', function() {
             var dropDownConfig, dropDownList;
@@ -274,14 +282,14 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
                target: "MyTarget"
             };
 
-            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
+            var inFactConfig = dropdownPopup.List._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
 
             dropDownList._options.rootKey = null;
             expectedConfig.corner.horizontal = 'right';
             expectedConfig.horizontalAlign.side = 'right';
 
-            inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
+            inFactConfig = dropdownPopup.List._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
          });
 
@@ -306,8 +314,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
          });
 
          it('_private::needShowApplyButton', function() {
-            assert.isTrue(DropdownList._private.needShowApplyButton(['1', '2', '3'], ['3']));
-            assert.isFalse(DropdownList._private.needShowApplyButton(['1', '2', '3'], ['1', '2', '3']));
+            assert.isTrue(dropdownPopup.List._private.needShowApplyButton(['1', '2', '3'], ['3']));
+            assert.isFalse(dropdownPopup.List._private.needShowApplyButton(['1', '2', '3'], ['1', '2', '3']));
          });
 
          it('_private::getResult', function() {
@@ -318,7 +326,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
                action: 'itemClick',
                data: []
             };
-            let result = DropdownList._private.getResult(dropdownList, 'itemClick', 'itemClick');
+            let result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
          });
 
@@ -331,30 +339,30 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             // multiSelect = false
             config.multiSelect = false;
             dropdownList._beforeMount(config);
-            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
             // multiSelect = true && has selected items
             config.multiSelect = true;
             config.selectedKeys = [3];
             dropdownList._beforeMount(config);
-            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
             // multiSelect = true && click on checkbox
             isCheckBox = true;
-            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
             config.selectedKeys = [];
             dropdownList._beforeMount(config);
-            assert.isTrue(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
             // multiSelect = true && click on empty item
             isCheckBox = false;
-            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, { get: () => {return null;} }));
+            assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, { get: () => {return null;} }));
 
             // multiSelect = true && selected empty item
             isCheckBox = false;
             config.selectedKeys = [null];
             dropdownList._beforeMount(config);
-            assert.isFalse(DropdownList._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
          });
 
@@ -402,6 +410,13 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection',
             dropdownList._beforeMount(config);
             dropdownList._itemClickHandler(event, items.at(1));
             assert.deepEqual(result, expectedResult);
+
+            config.selectedKeys = undefined;
+            dropdownList._needShowApplyButton = undefined;
+            dropdownList._beforeMount(config);
+            dropdownList._itemClickHandler(event, items.at(1));
+            assert.deepEqual(result, expectedResult);
+            assert.isUndefined(dropdownList._needShowApplyButton);
          });
 
          it('_openSelectorDialog', function() {

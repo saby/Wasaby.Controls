@@ -8,6 +8,7 @@ import coreMerge = require('Core/core-merge');
        * @control
        * @author Красильников А.С.
        * @category Popup
+       * @demo Controls-demo/Popup/Opener/StickyPG
        * @public
        */
       var Sticky = Base.extend({
@@ -36,6 +37,7 @@ import coreMerge = require('Core/core-merge');
 
          /**
           * Open sticky popup.
+          * If you call this method while the window is already opened, it will cause the redrawing of the window.
           * @function Controls/_popup/Opener/Sticky#open
           * @param {PopupOptions[]} popupOptions Sticky popup options.
           * @returns {Undefined}
@@ -81,7 +83,7 @@ import coreMerge = require('Core/core-merge');
          open: function(config) {
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, 'Controls/_popup/Opener/Sticky/StickyController');
+            Base.prototype.open.call(this, config, require('Controls/popup').StickyController);
          },
 
          _setCompatibleConfig: function(config) {
@@ -93,7 +95,7 @@ import coreMerge = require('Core/core-merge');
          return coreMerge(Base.getDefaultOptions(), {});
       };
       export = Sticky;
-   
+
 
 
 /**
@@ -174,6 +176,10 @@ import coreMerge = require('Core/core-merge');
  * @variant close
  * @variant track
  */
+/**
+ * @name Controls/_popup/Opener/Sticky#offset
+ * @cfg {offset} Point positioning of the target relative to sticky.
+ */
 
 /**
  * @name Controls/_popup/Opener/Sticky#targetPoint
@@ -219,4 +225,8 @@ import coreMerge = require('Core/core-merge');
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
  * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
+ * @variant fixed
+ * @variant overflow
+ * @variant adaptive
+ * @default adaptive
  */

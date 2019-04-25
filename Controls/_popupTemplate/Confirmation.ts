@@ -32,18 +32,18 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
 
          /**
           * Base template of confirm dialog.
-          * @class Controls/Popup/Templates/Dialog/ConfirmationTemplate
+          * @class Controls/_popupTemplate/Confirmation
           * @extends Core/Control
           * @control
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/Popup/Templates/Dialog/ConfirmationTmplStyles
+          * @mixes Controls/_popupTemplate/Confirmation/ConfirmationStyles
           * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#size
+          * @name Controls/_popupTemplate/Confirmation#size
           * @cfg {String} Confirmation size
           * @variant m
           * @variant l
@@ -51,7 +51,7 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#style
+          * @name Controls/_popupTemplate/Confirmation#style
           * @cfg {String} Confirmation display style
           * @variant default default
           * @variant success success
@@ -59,12 +59,12 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#bodyContentTemplate
+          * @name Controls/_popupTemplate/Confirmation#bodyContentTemplate
           * @cfg {function|String} Main content.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#footerContentTemplate
+          * @name Controls/_popupTemplate/Confirmation#footerContentTemplate
           * @cfg {function|String} Content at the bottom of the confirm panel.
           */
 
@@ -96,7 +96,7 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
 
          /**
           * Close the dialog
-          * @function Controls/Popup/Templates/Dialog/ConfirmationTemplate#close
+          * @function Controls/_popupTemplate/Confirmation#close
           */
          close: function() {
             this._notify('close', [], { bubbling: true });

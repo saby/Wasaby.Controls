@@ -5,7 +5,7 @@ define('Controls-demo/Input/Lookup/Lookup',
       'Types/source',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls-demo/Input/Lookup/LookupData',
-      'Controls/Selector/Lookup',
+      'Controls/lookup',
       'css!Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/Lookup'
    ],

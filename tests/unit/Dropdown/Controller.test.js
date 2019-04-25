@@ -156,23 +156,71 @@ define(
             assert.isTrue(dataLoadCallbackCalled);
          });
 
-         it('before update source', () => {
-            let dropdownController = getDropdownController(config);
-            items.push({
+         it('_beforeUpdate source', () => {
+            let dropdownController = getDropdownController(config),
+               opened = false;
+            let updatedItems = Clone(items);
+            updatedItems.push({
                id: '9',
                title: 'Запись 9'
             });
             dropdownController._items = itemsRecords;
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: function() {
+                     opened = true;
+                  },
+                  isOpened: function() {
+                     return opened;
+                  }
+               }
+            };
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
                   selectedKeys: '[2]',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
                      idProperty: 'id',
-                     data: items
+                     data: updatedItems
                   })
                }).addCallback(() => {
-                  assert.equal(dropdownController._items.getCount(), items.length);
+                  assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isFalse(opened);
+                  resolve();
+               });
+            });
+         });
+
+         it('_beforeUpdate source dropdown open', () => {
+            let dropdownController = getDropdownController(config),
+               opened = false;
+            let updatedItems = Clone(items);
+            updatedItems.push({
+               id: '9',
+               title: 'Запись 9'
+            });
+            dropdownController._items = itemsRecords;
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: function() {
+                     opened = true;
+                  },
+                  isOpened: function() {
+                     return true;
+                  }
+               }
+            };
+            return new Promise((resolve) => {
+               dropdownController._beforeUpdate({
+                  selectedKeys: '[2]',
+                  keyProperty: 'id',
+                  source: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: updatedItems
+                  })
+               }).addCallback(() => {
+                  assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isTrue(opened);
                   resolve();
                });
             });
@@ -402,21 +450,6 @@ define(
 
             dropdownController._mousedown();
             assert.isFalse(opened);
-         });
-
-         it('_private::closeHandler', function() {
-            let config2 = Clone(config), closed, closeActivated;
-            config2.close = () => {closeActivated = true};
-            let dropdownConroller = getDropdownController(config2);
-            dropdownConroller._notify = function(event) {
-               if (event === '_close') {
-                  closed = true;
-               }
-            };
-            dropdownConroller._beforeMount(config2);
-            dropdownConroller._onClose();
-            assert.isTrue(closeActivated);
-            assert.isTrue(closed);
          });
 
          it('_private::getNewItems', function() {

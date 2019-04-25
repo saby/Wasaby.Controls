@@ -1,5 +1,5 @@
 define([
-   'Controls/_lists/utils/RowIndexUtil',
+   'Controls/_list/utils/RowIndexUtil',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Core/core-instance',
    'Types/collection',
@@ -60,17 +60,17 @@ define([
       it('calcResultsRowIndex for bottom position and no nodeFooters', function () {
 
          var templateCalc = function (hasHeader, hasFooter) {
-            return Util.calcResultsRowIndex(treeGridViewModel._model._display, Util.ResultsPosition.Bottom, hasHeader, hasFooter, hierarchyRelation, {});
+            return Util.calcResultsRowIndex(treeGridViewModel._model._display, Util.ResultsPosition.Bottom, hasHeader, hierarchyRelation, {});
          };
 
          // Bottom results index, list hasn't header and hasn't footer
-         assert.equal(templateCalc(false, false), 2);
+         assert.equal(templateCalc(false, false), 3);
 
          // Bottom results index, list hasn't header and has footer
          assert.equal(templateCalc(false, true), 3);
 
          // Bottom results index, list has header and hasn't footer
-         assert.equal(templateCalc(true, false), 3);
+         assert.equal(templateCalc(true, false), 4);
 
          // Bottom results index, list has header and has footer
          assert.equal(templateCalc(true, true), 4);
@@ -87,19 +87,18 @@ define([
                     treeGridViewModel._model._display,
                     Util.ResultsPosition.Bottom,
                     hasHeader,
-                    hasFooter,
                     hierarchyRelation,
                     hasMoreStorage);
              };
 
          // Bottom results index, list hasn't header and hasn't footer
-         assert.equal(templateCalc(false, false), 3);
+         assert.equal(templateCalc(false, false), 4);
 
          // Bottom results index, list hasn't header and has footer
          assert.equal(templateCalc(false, true), 4);
 
          // Bottom results index, list has header and hasn't footer
-         assert.equal(templateCalc(true, false), 4);
+         assert.equal(templateCalc(true, false), 5);
 
          // Bottom results index, list has header and has footer
          assert.equal(templateCalc(true, true), 5);
@@ -113,16 +112,135 @@ define([
 
 
          // Bottom results index, list hasn't header and hasn't footer
-         assert.equal(templateCalc(false, false), 5);
+         assert.equal(templateCalc(false, false), 6);
 
          // Bottom results index, list hasn't header and has footer
          assert.equal(templateCalc(false, true), 6);
 
          // Bottom results index, list has header and hasn't footer
-         assert.equal(templateCalc(true, false), 6);
+         assert.equal(templateCalc(true, false), 7);
 
          // Bottom results index, list has header and has footer
          assert.equal(templateCalc(true, true), 7);
+
+      });
+
+      it('calcFooterRowIndex in tree grid with nodeFooters', function () {
+         var
+             hasMoreStorage = {
+                5: true
+             },
+             templateCalc = function (hasHeader, hasResults) {
+                return Util.calcFooterRowIndex(
+                    treeGridViewModel._model._display,
+                    hasResults,
+                    hasHeader,
+                    hierarchyRelation,
+                    hasMoreStorage);
+             };
+
+         // Bottom results index, list hasn't header and hasn't footer
+         assert.equal(templateCalc(false, false), 4);
+
+         // Bottom results index, list hasn't header and has footer
+         assert.equal(templateCalc(false, true), 5);
+
+         // Bottom results index, list has header and hasn't footer
+         assert.equal(templateCalc(true, false), 5);
+
+         // Bottom results index, list has header and has footer
+         assert.equal(templateCalc(true, true), 6);
+
+
+         hasMoreStorage = {
+            2: true,
+            3: true,
+            5: true
+         };
+
+
+         // Bottom results index, list hasn't header and hasn't footer
+         assert.equal(templateCalc(false, false), 6);
+
+         // Bottom results index, list hasn't header and has footer
+         assert.equal(templateCalc(false, true), 7);
+
+         // Bottom results index, list has header and hasn't footer
+         assert.equal(templateCalc(true, false), 7);
+
+         // Bottom results index, list has header and has footer
+         assert.equal(templateCalc(true, true), 8);
+
+      });
+
+      it('calcFooterRowIndex in empty tree ', function () {
+         var
+             tgvm = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: []
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             templateCalc = function (hasHeader, hasResults) {
+                return Util.calcFooterRowIndex(
+                    tgvm._model._display,
+                    hasResults,
+                    hasHeader
+                );
+             };
+
+         // Bottom results index, list hasn't header and hasn't footer
+         assert.equal(templateCalc(false, false), 0);
+
+         // Bottom results index, list hasn't header and has footer
+         assert.equal(templateCalc(false, true), 1);
+
+         // Bottom results index, list has header and hasn't footer
+         assert.equal(templateCalc(true, false), 1);
+
+         // Bottom results index, list has header and has footer
+         assert.equal(templateCalc(true, true), 2);
+
+      });
+
+      it('calcFooterRowIndex in tree of only collapsed group(s)', function () {
+         var
+             tgvm = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {
+                         id: 1,
+                         title: 'qwe-title',
+                         group: 'qwe'
+                      }
+                   ]
+                }),
+                groupingKeyCallback: function (item) {
+                   return item.get('group');
+                },
+                collapsedGroups: ['qwe'],
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             templateCalc = function (hasHeader, hasResults) {
+                return Util.calcFooterRowIndex(
+                    tgvm._model._display,
+                    hasResults,
+                    hasHeader
+                );
+             };
+
+         assert.equal(templateCalc(false, false), 1);
+         assert.equal(templateCalc(false, true), 2);
+         assert.equal(templateCalc(true, false), 2);
+         assert.equal(templateCalc(true, true), 3);
 
       });
 

@@ -8,23 +8,23 @@ import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
 
          /**
           * Layout of the dialog template. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart Read more}.
-          * @class Controls/Popup/Templates/Dialog/DialogTemplate
+          * @class Controls/_popupTemplate/Dialog
           * @extends Core/Control
           * @control
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/Popup/Templates/Dialog/DialogTmplStyles
+          * @mixes Controls/_popupTemplate/Dialog/DialogStyles
           * @demo Controls-demo/Popup/Templates/DialogTemplatePG
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#headingCaption
+          * @name Controls/_popupTemplate/Dialog#headingCaption
           * @cfg {String} Header title.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#headingStyle
+          * @name Controls/_popupTemplate/Dialog#headingStyle
           * @cfg {String} Caption display style.
           * @variant secondary
           * @variant primary
@@ -32,26 +32,26 @@ import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#headerContentTemplate
+          * @name Controls/_popupTemplate/Dialog#headerContentTemplate
           * @cfg {function|String} The content between the header and the cross closure.
           */
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#bodyContentTemplate
+          * @name Controls/_popupTemplate/Dialog#bodyContentTemplate
           * @cfg {function|String} Main content.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#footerContentTemplate
+          * @name Controls/_popupTemplate/Dialog#footerContentTemplate
           * @cfg {function|String} Content at the bottom of the stack panel.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#closeButtonVisibility
+          * @name Controls/_popupTemplate/Dialog#closeButtonVisibility
           * @cfg {Boolean} Determines whether display of the close button.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#closeButtonViewMode
+          * @name Controls/_popupTemplate/Dialog#closeButtonViewMode
           * @cfg {String} Close button display style.
           * @variant default
           * @variant lite
@@ -59,7 +59,7 @@ import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#draggable
+          * @name Controls/_popupTemplate/Dialog#draggable
           * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
           * @default false
           */
@@ -91,7 +91,7 @@ import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
 
          /**
           * Close popup.
-          * @function Controls/Popup/Templates/Dialog/DialogTemplate#close
+          * @function Controls/_popupTemplate/Dialog#close
           */
          close: function() {
             this._notify('close', [], { bubbling: true });

@@ -1,10 +1,10 @@
 define(
    [
-      'Controls/Button/Menu',
+      'Controls/dropdown',
       'Types/source',
       'Core/core-clone'
    ],
-   (MenuButton, sourceLib, Clone) => {
+   (dropdown, sourceLib, Clone) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -54,7 +54,7 @@ define(
             })
          };
 
-         let menu = new MenuButton(config);
+         let menu = new dropdown.Button(config);
 
          it('check item click', () => {
             menu._notify = (e) => {

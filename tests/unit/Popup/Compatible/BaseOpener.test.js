@@ -53,7 +53,8 @@ define(
          enabled: true,
          draggable: true,
          closeChildWindows: true,
-         closeOnTargetScroll: true
+         closeOnTargetScroll: true,
+         width: 'auto'
       };
 
       describe('Controls/Popup/Compatible/BaseOpener', function() {
@@ -201,7 +202,8 @@ define(
                minWidth: 30,
                maxWidth: 30,
                minHeight: 30,
-               maxHeight: 30
+               maxHeight: 30,
+               width: 100
             };
             BaseOpener._setSizes(newConfig, newClass);
             assert.isFalse(!!newConfig.autoWidth);
@@ -210,6 +212,15 @@ define(
             assert.equal(newConfig.maxWidth, newClass.dimensions.maxWidth);
             assert.equal(newConfig.minHeight, newClass.dimensions.minHeight);
             assert.equal(newConfig.maxHeight, newClass.dimensions.maxHeight);
+            assert.equal(newConfig.width, newClass.dimensions.width);
+
+            newClass = {};
+            newConfig = {};
+            newClass.dimensions = {
+               width: 350
+            };
+            BaseOpener._setSizes(newConfig, newClass);
+            assert.isNaN(newConfig.minWidth);
          });
 
          it('_prepareConfigForOldTemplate', function() {
@@ -220,6 +231,7 @@ define(
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.fixed, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
+            assert.equal(config.templateOptions.width, undefined);
             assert.equal(config.templateOptions.record, config.record);
             assert.equal(config.templateOptions.__parentFromCfg, config.parent);
             assert.equal(config.templateOptions.__openerFromCfg, config.opener);

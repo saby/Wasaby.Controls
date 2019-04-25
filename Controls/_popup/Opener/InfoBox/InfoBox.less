@@ -7,8 +7,6 @@
    padding-bottom: @spacing_Infobox-between-content-border-bottom;
    padding-left:   @spacing_Infobox-between-content-border-left;
 
-   box-sizing: border-box;
-   max-width: @max-width_Infobox;
    overflow: auto;
 }
 
@@ -20,116 +18,6 @@
 .ws-is-firefox {
    .controls-InfoBox {
       padding-top: @spacing_Infobox-between-content-border-top - 1;
-   }
-}
-
-.controls-InfoBox__popup {
-   border: @border-width_Infobox solid;
-   box-sizing: border-box;
-
-   &:before {
-      width: @size_Infobox-arrow;
-      height: @size_Infobox-arrow;
-      position: absolute;
-      border: @border-width_Infobox solid;
-      background: @background-color_Infobox_default;
-      border-color: @border-color_Infobox_default;
-      border-top: none;
-      border-left: none;
-      content: '';
-      box-sizing: border-box;
-   }
-
-   &.controls-Popup-corner-vertical-top.controls-Popup-align-vertical-top {
-      //tl
-      &.controls-Popup-align-horizontal-right:before {
-         transform: rotate(45deg);
-         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
-      }
-
-      //tr
-      &.controls-Popup-align-horizontal-left:before {
-         transform: rotate(45deg);
-         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
-      }
-
-      //tc
-      &.controls-Popup-align-horizontal-center:before {
-         transform: rotate(45deg);
-         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
-      }
-   }
-
-   &.controls-Popup-corner-vertical-bottom.controls-Popup-align-vertical-bottom {
-      //bl
-      &.controls-Popup-align-horizontal-right:before {
-         transform: rotate(225deg);
-         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
-      }
-
-      //br
-      &.controls-Popup-align-horizontal-left:before {
-         transform: rotate(225deg);
-         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         right: @spacing_Infobox-between-border-arrow + @horizontal-offset_Infobox-arrow;
-      }
-
-      //bc
-      &.controls-Popup-align-horizontal-center:before {
-         transform: rotate(225deg);
-         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow~')';
-      }
-   }
-
-   &.controls-Popup-corner-horizontal-right.controls-Popup-align-horizontal-right {
-      //rt
-      &.controls-Popup-align-vertical-bottom:before {
-         transform: rotate(135deg);
-         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
-      }
-
-      //rb
-      &.controls-Popup-align-vertical-top:before {
-         transform: rotate(135deg);
-         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         bottom: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
-      }
-
-      //rc
-      &.controls-Popup-align-vertical-center:before {
-         transform: rotate(135deg);
-         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
-      }
-   }
-
-   &.controls-Popup-corner-horizontal-left.controls-Popup-align-horizontal-left {
-      //lt
-      &.controls-Popup-align-vertical-bottom:before {
-         transform: rotate(-45deg);
-         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
-      }
-
-      //lb
-      &.controls-Popup-align-vertical-top:before {
-         transform: rotate(-45deg);
-         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         bottom: @spacing_Infobox-between-border-arrow + @vertical-offset_Infobox-arrow;
-      }
-
-      //lc
-      &.controls-Popup-align-vertical-center:before {
-         transform: rotate(-45deg);
-         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
-         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @spacing_Infobox-between-border-arrow ~')';
-      }
    }
 }
 
@@ -159,32 +47,6 @@
    float: right;
 }
 
-.controls-InfoBox_style_outline {
-   @variants: default,  danger;
-   .for(@variants, { &_@{_item} {
-      background: @background-color_Infobox_default;
-      box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
-      border-color: ~"@{border-color_Infobox_@{_item}}";
-
-      &.controls-InfoBox__popup:before {
-         border-color: ~"@{border-color_Infobox_@{_item}}";
-      }
-   } });
-}
-
-.controls-InfoBox_style_marker {
-   @variants: default,  danger, info, secondary, warning, success;
-   .for(@variants, { &_@{_item} {
-      background: @background-color_Infobox_default;
-      box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
-      border-color: @border-color_Infobox_default;
-      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
-
-      &.controls-Popup-corner-vertical-bottom.controls-Popup-align-vertical-bottom:before {
-         border-color: ~"@{border-color_Infobox_@{_item}}";
-      }
-   } });
-}
 
 /*
    Class to access the constant themes from js

@@ -30,13 +30,13 @@
         </div>
         <div class="controls-demo_event-wrapper">
 
-            <Controls.Container.Scroll
+            <Controls.scroll:Container
                     attr:style="height: 100px; border-width:thin"
                     scrollbarVisible="{{true}}"
                     shadowVisible="{{true}}"
                     attr:class="PropertyGrid_events">
                 <div attr:style="width:200px; word-spacing:200px;">{{myEvent}}</div>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
             <Controls.buttons:Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
 
         </div>

@@ -14,7 +14,8 @@ import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
-      
+
+import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
 
@@ -306,41 +307,6 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             }
          },
 
-         /**
-          * @param {Controls/_input/Base/Types/SplitValue.typedef} data
-          * @param {String} displayValue Values in the field before changing it.
-          */
-         adjustDataForFastInput: function(data, inputType, displayValue, selection) {
-            var start, end;
-
-            if (selection.start === selection.end) {
-               var position = selection.end;
-
-               switch (inputType) {
-                  case 'deleteForward':
-                     start = position;
-                     end = position + data.delete.length;
-                     break;
-                  case 'deleteBackward':
-                     start = position - data.delete.length;
-                     end = position;
-                     break;
-                  default:
-                     start = position;
-                     end = position;
-                     break;
-               }
-            } else {
-               start = selection.start;
-               end = selection.end;
-               data.delete = displayValue.substring(selection.start, selection.end);
-            }
-
-            data.delete = displayValue.substring(start, end);
-            data.before = displayValue.substring(0, start);
-            data.after = displayValue.substring(end, displayValue.length);
-         },
-
          getTextWidth: function(element, value) {
             element.innerHTML = value;
             var width = element.scrollWidth;
@@ -368,9 +334,8 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
        * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/interface/IInputBase
        *
-       * @private
        * @demo Controls-demo/Input/Base/Base
        *
        * @author Журавлев М.С.
@@ -589,7 +554,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
          },
 
          _beforeUpdate: function(newOptions) {
-            var newViewModelOptions = this._getViewModelOptions(newOptions);
+            const newViewModelOptions = this._getViewModelOptions(newOptions);
 
             _private.updateViewModel(this, newViewModelOptions, newOptions.value);
          },
@@ -602,6 +567,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             this._field = {
                template: fieldTemplate,
                scope: {
+                  _useStretcher: false,
                   controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
@@ -712,63 +678,16 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             var newValue = field.value;
             var position = field.selectionEnd;
 
-            /**
-             * Auto-completion in the edge browser generates 2 input events in a focused field.
-             * The data during processing of the second event is incorrect from the point of view of user input.
-             * This means that you cannot retrieve such data after user input.
-             * We are able to process only correct data.
-             * Since auto-completion was processed at the first event, then it is possible not to process it again.
-             * Return the field state to the current options.
-             */
-            if (_private.isReAutoCompleteInEdge(this._isEdge, model, newValue)) {
-               _private.updateField(this, value, selection);
-
-               return;
-            }
-
-            var inputType = _private.calculateInputType(
+            const inputType: string = _private.calculateInputType(
                this, value, newValue, position,
                selection, event.nativeEvent.inputType
             );
-            var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
+            const splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
-            /**
-             * The field is displayed according to the control options.
-             * When user enters data,the display changes and does not match the options.
-             * Therefore, return the field to the state before entering.
-             * Otherwise, the text will blink when the user performs a fast input.
-             * Fast input is pressing multiple keys at the same time or pressing a single key.
-             *
-             * On Android such actions cause bugs. For example:
-             * 1. https://online.sbis.ru/opendoc.html?guid=ce9d1d56-8f33-4e26-8284-157773fc08fd
-             * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
-             * 3. https://online.sbis.ru/doc/d7dcf883-1ebc-4408-8a72-3903f08c2c66
-             * Fast input on Android is carried out, if tap together more than one finger.
-             * A normal user does not enter data with multiple fingers at the same time.
-             * Therefore, the best option is to disable support for fast input on Android.
-             */
-            var isSupportFastInput = !this._isMobileAndroid;
-
-            /**
-             * If the user works quickly with a field, the input event fires several times from
-             * the last synchronization cycle to the next. Due to the fact that the field always displays
-             * the value of the option value, after the second time in the field will be incorrect value.
-             * Therefore, the split Value too will be incorrect.
-             * Example: The field displays 1. The user enters 2 and 3 quickly.
-             * field 1 -> entered 2 -> field 12 -> update by option and notify the parent that value 12 ->
-             * field 1 -> entered 3 -> field 13(expected 123) -> update by option and notify the parent that value 13 ->
-             * synchronization cycle -> field 13(the error should be 123).
-             * For such situations to be handled correctly, we need to adjust the data.
-             */
-            if (isSupportFastInput && value !== model.displayValue) {
-               _private.adjustDataForFastInput(splitValue, inputType, model.displayValue, model.selection);
-            }
 
             _private.handleInput(this, splitValue, inputType);
-
-            if (isSupportFastInput) {
-               _private.updateField(this, value, selection);
-            }
+            _private.updateField(this, model.displayValue, model.selection);
+            model.changesHaveBeenApplied();
          },
 
          /**

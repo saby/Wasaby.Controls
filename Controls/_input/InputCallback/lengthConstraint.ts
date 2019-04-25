@@ -1,6 +1,6 @@
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
-import ICallback from 'Controls/_input/InputCallback/ICallback';
+import ICallback from 'Controls/interface/ICallback';
 
 const charOfIntegerPart: RegExp = /[-0-9]/;
 

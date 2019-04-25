@@ -1,4 +1,4 @@
-define('Controls/List/interface/IHierarchy', ['Controls/_lists/interface/IHierarchy'], function(Control) {
+define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarchy'], function(Control) {
 /**
  * Interface for hierarchical lists.
  *

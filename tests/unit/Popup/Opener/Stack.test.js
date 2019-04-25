@@ -4,9 +4,10 @@ define(
       'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Stack',
       'Controls-demo/Popup/TestMaximizedStack',
-      'Controls/Popup/Opener/BaseController'
+      'Controls/Popup/Opener/BaseController',
+      'wml!Controls/_popup/Opener/Stack/StackContent'
    ],
-   (StackStrategy, StackController, StackOpener, TestMaximizedStack, BaseController) => {
+   (StackStrategy, StackController, StackOpener, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Stack', () => {
@@ -39,7 +40,6 @@ define(
          it('stack shadow', () => {
             let baseGetItemPosition = StackController._private.getItemPosition;
             StackController._private.getItemPosition = items => (items.position);
-            StackController._stack.add({ containerWidth: 840, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
             StackController._stack.add({ position: { stackWidth: 600 }, popupOptions: { stackClassName: '' } });
@@ -54,14 +54,13 @@ define(
             StackController._update();
             assert.isTrue(StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(StackController._stack.at(9).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
             StackController._private.getItemPosition = baseGetItemPosition;
          });
@@ -78,9 +77,9 @@ define(
             StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
-            assert.equal(itemConfig.position.stackWidth, undefined);
+            assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
-            assert.equal(itemConfig.popupOptions.content, 'wml!Controls/_popup/Opener/Stack/StackContent');
+            assert.equal(itemConfig.popupOptions.content, StackContent);
          });
 
          it('stack maximized popup position', () => {
@@ -103,23 +102,22 @@ define(
                }
             };
             StackController.getDefaultConfig(itemConfig);
-            assert.equal(itemConfig.popupOptions.minWidth, 800);
-            assert.equal(itemConfig.popupOptions.maxWidth, 1200);
-            assert.equal(itemConfig.popupOptions.minimizedWidth, 500);
+            assert.equal(itemConfig.popupOptions.stackMinWidth, 500);
+            assert.equal(itemConfig.popupOptions.stackMaxWidth, 1000);
+            assert.equal(itemConfig.popupOptions.stackWidth, 800);
 
             itemConfig = {
                popupOptions: {
-                  minWidth: 850,
-                  maxWidth: 1250,
-                  minimizedWidth: 550,
+                  minWidth: 600,
+                  maxWidth: 900,
                   templateOptions: {},
                   template: TestMaximizedStack
                }
             };
             StackController.getDefaultConfig(itemConfig);
-            assert.equal(itemConfig.popupOptions.minWidth, 850);
-            assert.equal(itemConfig.popupOptions.maxWidth, 1250);
-            assert.equal(itemConfig.popupOptions.minimizedWidth, 550);
+            assert.equal(itemConfig.popupOptions.stackMinWidth, 600);
+            assert.equal(itemConfig.popupOptions.stackMaxWidth, 900);
+            assert.equal(itemConfig.popupOptions.stackWidth, 800);
          });
 
          it('stack panel maximized', () => {
@@ -163,6 +161,7 @@ define(
 
             StackController._private.prepareMaximizedState(800, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, false);
+            delete itemConfig.popupOptions.width;
          });
 
          it('stack state', () => {
@@ -289,7 +288,7 @@ define(
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
             assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
-            assert.equal(position.stackWidth, 1200);
+            assert.equal(position.stackWidth, 1000);
          });
 
          it('stack compatible popup', () => {

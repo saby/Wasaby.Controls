@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Filter/Button'
+      'Controls/filter'
    ],
-   function(FilterButton) {
+   function(filterMod) {
       describe('FilterButton', function() {
 
-         var button = new FilterButton();
+         var button = new filterMod.Selector();
 
          var filterItems = [
             {id: 'FIO', value: 'Petrov K.K.', resetValue: '', textValue: 'Petrov K.K.', visibility: true},
@@ -31,12 +31,12 @@ define(
          });
 
          it('get text', function() {
-            var text = FilterButton._private.getText(filterItems);
+            var text = filterMod.Selector._private.getText(filterItems);
             assert.equal(text, 'Petrov K.K., Unread');
          });
 
          it('reset items', function() {
-            FilterButton._private.resetItems(button, filterItems);
+            filterMod.Selector._private.resetItems(button, filterItems);
             assert.deepEqual(filterItems, filterItemsReseted);
          });
 
@@ -56,22 +56,22 @@ define(
             assert.deepEqual(filter, {});
             assert.equal(button._text, '');
          });
-   
+
          it('_private.isItemsChanged', function() {
             var itemsChanged = [{id: 0, value: 'value', resetValue: 'resetValue'}];
             var itemsNotChanged = [{id: 0, value: 'resetValue', resetValue: 'resetValue'}];
             var itemsNotChangedWithoutResetValue = [{id: 0, value: 'value'}];
-   
-            assert.isTrue(FilterButton._private.isItemsChanged(itemsChanged));
-   
-            assert.isFalse(FilterButton._private.isItemsChanged(itemsNotChanged));
-   
-            assert.isFalse(FilterButton._private.isItemsChanged(itemsNotChangedWithoutResetValue));
+
+            assert.isTrue(filterMod.Selector._private.isItemsChanged(itemsChanged));
+
+            assert.isFalse(filterMod.Selector._private.isItemsChanged(itemsNotChanged));
+
+            assert.isFalse(filterMod.Selector._private.isItemsChanged(itemsNotChangedWithoutResetValue));
          });
-   
+
          it('_private.isItemChanged', function() {
-            assert.isTrue(FilterButton._private.isItemChanged({id: 0, value: 'value', resetValue: 'resetValue'}));
-            assert.isFalse(FilterButton._private.isItemChanged({id: 0, value: 'resetValue', resetValue: 'resetValue'}));
+            assert.isTrue(filterMod.Selector._private.isItemChanged({id: 0, value: 'value', resetValue: 'resetValue'}));
+            assert.isFalse(filterMod.Selector._private.isItemChanged({id: 0, value: 'resetValue', resetValue: 'resetValue'}));
          });
 
          it('_private.getPopupConfig', function() {
@@ -82,7 +82,7 @@ define(
                   historyId: 'testHistoryId'
                },
                fittingMode: 'fixed',
-               template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+               template: 'Controls/filterPopup:_FilterPanelWrapper',
                target: 'panelTarget'
             };
             let self = {
@@ -95,7 +95,7 @@ define(
                   panelTarget: 'panelTarget'
                }
             };
-            assert.deepEqual(expectedConfig, FilterButton._private.getPopupConfig(self));
+            assert.deepEqual(expectedConfig, filterMod.Selector._private.getPopupConfig(self));
          });
 
       });

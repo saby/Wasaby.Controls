@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/History/Service', 'Core/Deferred'], function(Suggest, collection, entity, Env, Service, Deferred) {
+define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -42,13 +42,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          };
       };
 
-      Suggest._private.getRecentKeys = function() {
+      let getRecentKeys = suggestMod._InputController._private.getRecentKeys;
+
+      suggestMod._InputController._private.getRecentKeys = function() {
          return Deferred.success(IDENTIFICATORS);
       };
 
-      var getHistorySource = Suggest._private.getHistoryService;
+      var getHistorySource = suggestMod._InputController._private.getHistoryService;
 
-      Suggest._private.getHistoryService = function() {
+      suggestMod._InputController._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
                func({
@@ -69,15 +71,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
       });
 
       it('Suggest::_private.hasMore', function() {
-         assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
-         assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
+         assert.isTrue(suggestMod._InputController._private.hasMore(hasMoreTrue));
+         assert.isFalse(suggestMod._InputController._private.hasMore(hasMoreFalse));
       });
 
       it('Suggest::_private.shouldShowFooter', function () {
          var self = getComponentObject();
          self._options.footerTemplate = 'anyTemplate';
-         assert.isTrue(!!Suggest._private.shouldShowFooter(self, hasMoreTrue));
-         assert.isFalse(!!Suggest._private.shouldShowFooter(self, hasMoreFalse));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, hasMoreTrue));
+         assert.isFalse(!!suggestMod._InputController._private.shouldShowFooter(self, hasMoreFalse));
       });
 
       it('Suggest::_private.suggestStateNotify', function () {
@@ -88,10 +90,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             stateNotifyed = true;
          };
          self._forceUpdate = function () {};
-         Suggest._private.suggestStateNotify(self, true);
+         suggestMod._InputController._private.suggestStateNotify(self, true);
          assert.isFalse(stateNotifyed);
 
-         Suggest._private.suggestStateNotify(self, false);
+         suggestMod._InputController._private.suggestStateNotify(self, false);
          assert.isTrue(stateNotifyed);
       });
 
@@ -102,12 +104,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             state = args[0];
          };
-         Suggest._private.close(self);
+         suggestMod._InputController._private.close(self);
          assert.isFalse(state);
       });
 
       it('Suggest::_close', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
 
@@ -125,20 +127,20 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             state = args[0];
          };
          self._forceUpdate = function () {};
-         Suggest._private.open(self);
+         suggestMod._InputController._private.open(self);
          self._dependenciesDeferred.addCallback(function() {
             assert.isTrue(state);
 
             state = false;
             self._options.suggestState = false;
-            Suggest._private.open(self);
+            suggestMod._InputController._private.open(self);
             self._inputActive = false;
             self._dependenciesDeferred.addCallback(function() {
                assert.isFalse(state);
 
                self._inputActive = true;
                self._stackWithSearchResultsOpened = true;
-               Suggest._private.open(self);
+               suggestMod._InputController._private.open(self);
 
                self._dependenciesDeferred.addCallback(function() {
                   assert.isFalse(state);
@@ -153,12 +155,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.minSearchLength = 3;
 
          self._inputActive = true;
-         assert.isTrue(Suggest._private.shouldSearch(self, 'test'));
-         assert.isFalse(Suggest._private.shouldSearch(self, 't'));
+         assert.isTrue(suggestMod._InputController._private.shouldSearch(self, 'test'));
+         assert.isFalse(suggestMod._InputController._private.shouldSearch(self, 't'));
 
          self._inputActive = false;
-         assert.isFalse(Suggest._private.shouldSearch(self, 'test'));
-         assert.isFalse(Suggest._private.shouldSearch(self, 't'));
+         assert.isFalse(suggestMod._InputController._private.shouldSearch(self, 'test'));
+         assert.isFalse(suggestMod._InputController._private.shouldSearch(self, 't'));
       });
 
       it('Suggest::_private.shouldShowSuggest', function () {
@@ -171,35 +173,35 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          };
 
          //case 1. emptyTemplate - is null/undefined, searchValue - is empty string/null
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
+         assert.isFalse(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
 
          //case 2. emptyTemplate is set, searchValue - is empty string/null
          self._options.emptyTemplate = {};
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
 
          //case 3. emptyTemplate is set, searchValue - is set
          self._searchValue = 'test';
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
 
          //case 4. emptyTemplate is set, search - is empty string, historyId is set
          self._searchValue = '';
          self._options.historyId = '123';
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
+         assert.isFalse(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
 
          //emptyTemplate is set, search - is set, historyId is set
          self._searchValue = '123';
          self._options.historyId = '123';
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
 
          //case 6. emptyTemplate is null/undefined, search - is empty string, historyId is set
          self._options.emptyTemplate = null;
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
+         assert.isFalse(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
       });
 
       it('Suggest::_private.prepareFilter', function() {
@@ -211,7 +213,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             filterTest: 'filterTest'
          };
 
-         var filter = Suggest._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1);
+         var filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1);
          assert.deepEqual(filter, resultFilter);
       });
 
@@ -228,12 +230,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             test: 'test',
             currentTab: 1
          };
-         Suggest._private.setFilter(self, filter);
+         suggestMod._InputController._private.setFilter(self, filter);
          assert.deepEqual(self._filter, resultFilter);
       });
 
       it('Suggest::_searchEnd', function() {
-         var suggest = new Suggest();
+         var suggest = new suggestMod._InputController();
          var errorFired = false;
          var options = {
            searchDelay: 300
@@ -257,11 +259,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._forceUpdate = function() {};
 
          self._loading = null;
-         Suggest._private.searchErrback(self, {canceled: true});
+         suggestMod._InputController._private.searchErrback(self, {canceled: true});
          assert.isTrue(self._loading === null);
 
          self._loading = true;
-         Suggest._private.searchErrback(self, {canceled: false});
+         suggestMod._InputController._private.searchErrback(self, {canceled: false});
          assert.isFalse(self._loading);
 
          self._forceUpdate = function() {
@@ -269,22 +271,22 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             done();
          };
          self._loading = true;
-         Suggest._private.searchErrback(self, {canceled: true});
+         suggestMod._InputController._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
       });
 
       it('Suggest::_private.setSearchValue', function() {
          var self = {};
 
-         Suggest._private.setSearchValue(self, 'test');
+         suggestMod._InputController._private.setSearchValue(self, 'test');
          assert.equal(self._searchValue, 'test');
 
-         Suggest._private.setSearchValue(self, '');
+         suggestMod._InputController._private.setSearchValue(self, '');
          assert.equal(self._searchValue, '');
       });
 
       it('Suggest::_searchErrback', function() {
-         var suggest = new Suggest();
+         var suggest = new suggestMod._InputController();
          suggest._loading = true;
          suggest._searchErrback({canceled: true});
          assert.isFalse(suggest._loading);
@@ -305,7 +307,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
          var self = getComponentObject();
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          var suggestState = false;
 
          self._options.searchParam = 'searchParam';
@@ -317,7 +319,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
          suggestComponent._searchDelay = 300;
          suggestComponent.saveOptions(self._options);
-         Suggest._private.setFilter(suggestComponent, {});
+         suggestMod._InputController._private.setFilter(suggestComponent, {});
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
                suggestState = val[0];
@@ -386,7 +388,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
       it('Suggest::_changeValueHandler', function() {
          var self = getComponentObject();
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
 
          self._options.searchParam = 'searchParam';
          self._options.keyProperty = 'Identificator';
@@ -426,7 +428,7 @@ self._options.historyId = '';
       it('Suggest::_private.loadDependencies', function(done) {
          var self = getComponentObject();
 
-         Suggest._private.loadDependencies(self).addCallback(function() {
+         suggestMod._InputController._private.loadDependencies(self).addCallback(function() {
             assert.isTrue(self._dependenciesDeferred.isReady());
             done();
          });
@@ -448,7 +450,7 @@ self._options.historyId = '';
             })
          });
 
-         Suggest._private.processResultData(self, {data: queryRecordSet});
+         suggestMod._InputController._private.processResultData(self, {data: queryRecordSet});
 
          assert.equal(self._searchResult.data, queryRecordSet);
          assert.equal(self._tabsSelectedKey, 'testId');
@@ -464,7 +466,7 @@ self._options.historyId = '';
             })
          });
          self._suggestMarkedKey = 'test';
-         Suggest._private.processResultData(self, {data: queryRecordSetEmpty});
+         suggestMod._InputController._private.processResultData(self, {data: queryRecordSetEmpty});
 
          assert.equal(self._suggestMarkedKey, null);
          assert.notEqual(self._searchResult.data, queryRecordSet);
@@ -474,7 +476,7 @@ self._options.historyId = '';
       });
 
       it('Suggest::_tabsSelectedKeyChanged', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          var suggestActivated = false;
          var updated = false;
          suggestComponent.activate = function() {
@@ -501,7 +503,7 @@ self._options.historyId = '';
       });
 
       it('Suggest::searchDelay on tabChange', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          suggestComponent.activate = function() {};
 
          suggestComponent._tabsSelectedKeyChanged('test');
@@ -518,8 +520,8 @@ self._options.historyId = '';
             searchParam: 'testSearchParam',
             minSearchLength: 3
          };
-         Suggest._private.loadDependencies = function() {return Deferred.success(true)};
-         var suggestComponent = new Suggest(options);
+         suggestMod._InputController._private.loadDependencies = function() {return Deferred.success(true)};
+         var suggestComponent = new suggestMod._InputController(options);
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
@@ -554,45 +556,52 @@ self._options.historyId = '';
          compObj._options.fitler = {};
          compObj._options.searchParam = 'testSearchParam';
 
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          suggestComponent.saveOptions(compObj._options);
          suggestComponent._searchValue = 'te';
 
          compObj._options.autoDropDown = true;
          compObj._options.suggestState = true;
-         Suggest._private.updateSuggestState(suggestComponent);
+         suggestMod._InputController._private.updateSuggestState(suggestComponent);
          assert.equal(suggestComponent._filter, null);
 
          compObj._options.suggestState = false;
-         Suggest._private.updateSuggestState(suggestComponent);
+         suggestMod._InputController._private.updateSuggestState(suggestComponent);
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te'});
 
          compObj._options.autoDropDown = false;
          suggestComponent._filter = {};
-         Suggest._private.updateSuggestState(suggestComponent);
+         suggestMod._InputController._private.updateSuggestState(suggestComponent);
          assert.deepEqual(suggestComponent._filter, {});
       });
 
       it('Suggest::_missSpellClick', function() {
-         var suggestComponent = new Suggest();
-         var value;
+         var
+            value,
+            suggestComponent = new suggestMod._InputController();
 
+         suggestComponent.activate = function() {
+            suggestComponent._inputActive = true;
+         }
          suggestComponent._notify = function(event, val) {
             if (event === 'valueChanged') {
                value = val[0];
             }
          };
+         suggestComponent._options.minSearchLength = 3;
          suggestComponent._misspellingCaption = 'test';
          suggestComponent._missSpellClick();
 
          assert.equal(value, 'test');
          assert.equal(suggestComponent._misspellingCaption, '');
+         assert.equal(suggestComponent._searchValue, 'test');
+         assert.isTrue(suggestComponent._inputActive);
       });
 
       it('Suggest::_private.setMissSpellingCaption', function() {
          var self = {};
 
-         Suggest._private.setMissSpellingCaption(self, 'test');
+         suggestMod._InputController._private.setMissSpellingCaption(self, 'test');
          assert.equal(self._misspellingCaption, 'test');
       });
 
@@ -601,7 +610,7 @@ self._options.historyId = '';
             item = {
                _isUpdateHistory: false
             },
-            suggestComponent = new Suggest();
+            suggestComponent = new suggestMod._InputController();
 
          suggestComponent._inputActive = true;
          suggestComponent._notify = function(eventName) {
@@ -619,7 +628,7 @@ self._options.historyId = '';
       });
 
       it('Suggest::_markedKeyChangedHandler', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          suggestComponent._markedKeyChangedHandler(null, 'test');
          assert.equal(suggestComponent._suggestMarkedKey, 'test');
 
@@ -628,7 +637,7 @@ self._options.historyId = '';
       });
 
       it('Suggest::_stackWithSearchResultsClosed', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          suggestComponent._stackWithSearchResultsOpened = true;
          suggestComponent._stackWithSearchResultsClosed();
          assert.isFalse(suggestComponent._stackWithSearchResultsOpened);
@@ -636,7 +645,7 @@ self._options.historyId = '';
 
 
       it('Suggest::_keyDown', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
          var eventPreventDefault = false;
          var eventStopPropagation = false;
          var suggestStateChanged = false;
@@ -704,58 +713,72 @@ self._options.historyId = '';
       it('Suggest::_private.openWithHistory', function () {
          var
             isCallOpenPopup = false,
-            suggestComponent = new Suggest(),
-            getRecentKeys = Suggest._private.getRecentKeys,
-            _privateOpen = Suggest._private.open;
+            suggestComponent = new suggestMod._InputController(),
+            getRecentKeys = suggestMod._InputController._private.getRecentKeys,
+            _privateOpen = suggestMod._InputController._private.open;
 
-         Suggest._private.open = function() {
+         suggestMod._InputController._private.open = function() {
             isCallOpenPopup = true;
          };
 
          suggestComponent._filter = {};
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isTrue(isCallOpenPopup);
 
          isCallOpenPopup = false;
          suggestComponent._filter = {};
          suggestComponent._options.suggestState = true;
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isTrue(isCallOpenPopup);
 
          isCallOpenPopup = false;
          suggestComponent._filter = {};
-         Suggest._private.getRecentKeys = function() {
+         suggestMod._InputController._private.getRecentKeys = function() {
             return Deferred.success([]);
          };
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isFalse(isCallOpenPopup);
 
          suggestComponent._options.suggestState = false;
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isTrue(isCallOpenPopup);
 
          isCallOpenPopup = false;
          suggestComponent._filter.historyKeys = [7, 8];
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isTrue(isCallOpenPopup);
 
          isCallOpenPopup = false;
          suggestComponent._filter.historyKeys = [7, 8];
          suggestComponent._options.suggestState = true;
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isFalse(isCallOpenPopup);
 
          isCallOpenPopup = false;
          suggestComponent._filter.historyKeys = [7, 8];
-         Suggest._private.getRecentKeys = getRecentKeys;
-         Suggest._private.openWithHistory(suggestComponent);
+         suggestMod._InputController._private.getRecentKeys = getRecentKeys;
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isFalse(isCallOpenPopup);
 
-         Suggest._private.open = _privateOpen;
+         suggestMod._InputController._private.open = _privateOpen;
+      });
+
+      it('Suggest::_private.getRecentKeys', function() {
+         let self = {};
+         suggestMod._InputController._private.getHistoryService = function() {
+            let hService = { query: () => { return new Deferred.fail(new Error('History Service')); } };
+            return new Deferred.success(hService);
+         };
+         return new Promise(function(resolve) {
+            getRecentKeys(self).addCallback(function(keys) {
+               assert.deepEqual([], keys);
+               resolve();
+            });
+         });
       });
 
       it('Suggest::_inputClicked', function() {
-         var suggestComponent = new Suggest();
+         var suggestComponent = new suggestMod._InputController();
 
          suggestComponent._inputClicked();
          assert.isTrue(suggestComponent._inputActive);

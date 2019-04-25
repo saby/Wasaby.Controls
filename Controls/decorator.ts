@@ -4,6 +4,7 @@
  * @includes Highlight Controls/_decorator/Highlight
  * @includes Markup Controls/_decorator/Markup
  * @includes Money Controls/_decorator/Money
+ * @includes MoneyStyles Controls/_decorator/MoneyStyles
  * @includes Number Controls/_decorator/Number
  * @includes PhoneNumber Controls/_decorator/PhoneNumber
  * @includes WrapURLs Controls/_decorator/WrapURLs

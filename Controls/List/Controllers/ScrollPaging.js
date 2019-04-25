@@ -1,4 +1,4 @@
-define('Controls/List/Controllers/ScrollPaging', ['Controls/_lists/Controllers/ScrollPaging'], function(Control) {
+define('Controls/List/Controllers/ScrollPaging', ['Controls/_list/Controllers/ScrollPaging'], function(Control) {
 /**
  * Created by kraynovdo on 13.11.2017.
  */

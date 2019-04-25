@@ -3,6 +3,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
       'Core/Control',
       'Core/Deferred',
       'Core/core-merge',
+      'Core/library',
       'wml!Controls-demo/Popup/Opener/OpenersPGWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'wml!Controls-demo/PropertyGrid/Types/booleanOrNull',
@@ -23,7 +24,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cMerge, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
@@ -65,7 +66,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
             var def = new Deferred();
             this.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
-               require([opts.content], function() {
+               libHelper.load(opts.content).then(function() {
                   def.callback();
                });
                return def;
@@ -91,8 +92,9 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
                };
             });
          },
-         _openHandler: function() {
+         _openHandler: function(event) {
             var self = this;
+            this._exampleControlOptions.target = event.target;
             var res = this._children[this._nameOpener].open(this._exampleControlOptions);
             if(this._dialogRes) {
                res.addCallback(function (result) {

@@ -1,4 +1,4 @@
-<Controls.Button.Menu name="myMenuButton2"
+<Controls.dropdown:Button name="myMenuButton2"
                       keyProperty="id"
                       viewMode="link"
                       style="secondary"
