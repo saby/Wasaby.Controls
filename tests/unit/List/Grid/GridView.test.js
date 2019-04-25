@@ -61,5 +61,30 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
          GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
+
+      it('should update columns widths only after mount', function () {
+         var
+             called = false,
+             cells = [],
+             gv = {
+                _listModel: {
+                   setCurrentColumnsWidth: function () {
+                      called = true;
+                   }
+                }
+             },
+             container = {
+                getElementsByClassName: function () {
+                   return cells
+                }
+             };
+         GridView._private.setCurrentColumnsWidth(gv, container);
+         assert.isFalse(called);
+
+         cells = [1,2];
+         GridView._private.setCurrentColumnsWidth(gv, container);
+         assert.isTrue(called);
+
+      });
    });
 });
