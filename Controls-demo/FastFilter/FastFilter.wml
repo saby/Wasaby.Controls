@@ -2,14 +2,14 @@
    <div>From source:</div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
-      <Controls.Filter.Fast bind:selectedKeys="_selectedKeys"
+      <Controls.filter:Fast bind:selectedKeys="_selectedKeys"
                                 source="{{dataSourceDemoSource}}"/>
    </div>
    <hr/><br/>
    <div>From items: </div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
-      <Controls.Filter.Fast bind:selectedKeys="_selectedKeysItems"
+      <Controls.filter:Fast bind:selectedKeys="_selectedKeysItems"
                                 items="{{dataSourceDemoItems}}"/>
    </div>
 </div>

@@ -77,3 +77,11 @@
 .controls-Search__nativeField_theme_@{themeName}_caretFilled {
    caret-color: @caret-color_InputBase;
 }
+
+//ios doesn't support dynamic color change of caret
+//demo https://jsfiddle.net/gersasha/ew03jha4/2/
+.ws-is-mobile-safari {
+   .controls-Search__nativeField_theme_@{themeName}_caretEmpty {
+      caret-color: @caret-color_InputBase;
+   }
+}

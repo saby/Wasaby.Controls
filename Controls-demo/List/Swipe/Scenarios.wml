@@ -1,20 +1,20 @@
 <div class="demo-Swipe">
-   <Controls.Heading size="xl" caption="По вертикали в одну колонку" />
+   <Controls._heading:Title size="xl" caption="По вертикали в одну колонку" />
    <div class="demo-Swipe__item">
-      <Controls.Heading size="l" caption="С подписью под иконкой" />
+      <Controls._heading:Title size="l" caption="С подписью под иконкой" />
       <Controls-demo.List.Swipe.Scenarios.News.News />
    </div>
    <div class="demo-Swipe__item">
-      <Controls.Heading size="l" caption="С подписью cправа от иконки" />
+      <Controls._heading:Title size="l" caption="С подписью cправа от иконки" />
       <Controls-demo.List.Swipe.Scenarios.Shipments.Shipments />
    </div>
    <div class="demo-Swipe__item">
-      <Controls.Heading size="l" caption="Без подписи" />
+      <Controls._heading:Title size="l" caption="Без подписи" />
       <Controls-demo.List.Swipe.Scenarios.Tile.Tile />
    </div>
-   <Controls.Heading size="xl" caption="По горизонтали в одну строку" />
+   <Controls._heading:Title size="xl" caption="По горизонтали в одну строку" />
    <div class="demo-Swipe__item">
-      <Controls.Heading size="l" caption="Без подписи" />
+      <Controls._heading:Title size="l" caption="Без подписи" />
       <Controls-demo.List.Swipe.Scenarios.SmallRow.SmallRow />
    </div>
 </div>

@@ -33,7 +33,7 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
          },
          _chooseHandler: function(event, value) {
             this._notify('choose', [value]);
-            this._viewValue = value.title;
+            this._viewValue = value.get('title');
          }
       });
 

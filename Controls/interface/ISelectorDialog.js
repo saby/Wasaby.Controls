@@ -15,12 +15,12 @@ define('Controls/interface/ISelectorDialog', [
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
     * WML:
     * <pre>
-    *    <Controls.Selector.Lookup
+    *    <Controls.lookup:Input
     *       source="{{_source}}"
     *       searchParam="title"
     *       keyProperty="id"
     *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}"/>
-    *    </Controls.Selector.Lookup>
+    *    </Controls.lookup:Input>
     * </pre>
     * JS:
     * <pre>

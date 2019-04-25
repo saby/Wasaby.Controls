@@ -2,9 +2,9 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggestPopup/Dialog');
 import SearchContextField = require('Controls/Container/Search/SearchContextField');
 import FilterContextField = require('Controls/Container/Filter/FilterContextField');
-import ScrollData = require('Controls/Container/Scroll/Context');
+import {_scrollContext as ScrollData} from 'Controls/scroll';
 import 'css!theme?Controls/_suggestPopup/Dialog';
-import 'Controls/Container/Scroll';
+
 import 'Controls/popupTemplate';
 
       /**

@@ -15,11 +15,11 @@
          </ws:if>
       </div>
    </ws:for>
-   <Controls.Dropdown.Opener name="DropdownOpener"
+   <Controls.dropdown:Opener name="DropdownOpener"
                              on:result="_onResult()"
                              className="controls-FastFilter-popup">
       <ws:templateOptions
               showClose="{{true}}">
       </ws:templateOptions>
-   </Controls.Dropdown.Opener>
+   </Controls.dropdown:Opener>
 </div>

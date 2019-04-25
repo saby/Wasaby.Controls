@@ -1,12 +1,12 @@
 <ws:template name="filtersContent">
-   <Controls.Validate.FormController name="formController">
+   <Controls.validate:Controller name="formController">
 
    <Controls._filterPopup.Panel.PropertyGrid items="{{_items}}"
                                               itemTemplate="{{_options.itemTemplate}}"
                                               itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                               on:itemsChanged="_itemsChangedHandler()"
                                               attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount())) ? 'controls-FilterPanel_lastBlock'}}"/>
-   </Controls.Validate.FormController>
+   </Controls.validate:Controller>
    <ws:if data="{{_hasAdditionalParams}}">
       <Controls._filterPopup.Panel.AdditionalParams
               items="{{_items}}"
@@ -30,7 +30,7 @@
 </ws:template>
 
 <Controls.Controllers.PrimaryAction on:triggered="_applyFilter()">
-    <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="{{_options.headingCaption}}"
+    <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
                                                     headingStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
                                                     {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
@@ -55,7 +55,7 @@
           </div>
        </ws:headerContentTemplate>
        <ws:bodyContentTemplate>
-          <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
+          <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
                 <div class="controls-FilterPanel__content-horizontal">
                    <div class="controls-FilterPanel__filtersWrapper">
@@ -68,7 +68,7 @@
                 <ws:partial template="filtersContent"/>
                 <ws:partial template="history"/>
              </ws:else>
-          </Controls.Container.Scroll>
+          </Controls.scroll:Container>
        </ws:bodyContentTemplate>
-    </Controls.Popup.Templates.Dialog.DialogTemplate>
+    </Controls.popupTemplate:Dialog>
 </Controls.Controllers.PrimaryAction>

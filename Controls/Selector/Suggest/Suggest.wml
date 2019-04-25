@@ -1,4 +1,4 @@
-<Controls.Container.Suggest.Layout
+<Controls.suggest:_InputController
         attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
         on:choose="_choose()"
         on:deactivated="_deactivated()"
@@ -36,4 +36,4 @@
          <Controls.toggle:Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
       </ws:afterFieldWrapper>
    </Controls.Input.Suggest.InputRender>
-</Controls.Container.Suggest.Layout>
+</Controls.suggest:_InputController>

@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager"
+<Controls.popupTemplate:Stack headingCaption="PopupManager"
                                               maximizeButtonVisibility="{{true}}"
                                               stackWidth="{{_options.stackWidth}}"
                                               stackMinWidth="{{_options.stackMinWidth}}"
@@ -11,4 +11,4 @@
     <ws:bodyContentTemplate>
         <Controls.input:Text value="width: {{_options.stackWidth}} | minWidth: {{_options.stackMinWidth}} | maxWidth: {{_options.stackMaxWidth}}" />
     </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

@@ -2,16 +2,15 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
    [
       'Core/Control',
       'Types/di',
-      'Controls/History/Service',
+      'Controls/history',
       'Core/Deferred',
       'Types/collection',
       'Types/entity',
       'Core/Serializer',
-      'Types/source',
-      'Controls/History/Source'
+      'Types/source'
    ],
 
-   function(Control, Di, HistoryService, Deferred, collection, entity, Serializer, source, HistorySource) {
+   function(Control, Di, history, Deferred, collection, entity, Serializer, source) {
 
       'use strict';
 
@@ -109,12 +108,12 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             itemsProperty: '',
             idProperty: 'ObjectId'
          });
-         var hs = new HistorySource({
+         var hs = new history.Source({
             originSource: new source.Memory({
                idProperty: 'id',
                data: prepareItems()
             }),
-            historySource: new HistoryService({
+            historySource: new history.Service({
                historyIds: ['TEST_HISTORY_ID'],
                pinned: true
             }),

@@ -1,7 +1,7 @@
 /**
  * Callback function interface.
  *
- * @interface Controls/_input/InputCallback/ICallback
+ * @interface Controls/interface/ICallback
  *
  * @public
  * @author Журавлев М.С.
@@ -18,7 +18,7 @@
  */
 
 /**
- * @name Controls/_input/InputCallback/ICallback#InputCallback
+ * @name Controls/interface/ICallback#InputCallback
  * @function
  * @description The callback function is called after the main input processing process.
  * @param {IFieldData & IValue} data

@@ -13,5 +13,5 @@
     </ws:if>
     <Controls.Container.List scope="{{_suggestListOptions}}" name="list" navigation="{{_navigation}}" content="{{_options.content}}" on:markedKeyChanged="_notifyHandler('markedKeyChanged')"/>
 
-    <Controls.Event.Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
+    <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
 </div>

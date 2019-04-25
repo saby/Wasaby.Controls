@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Add template" attr:style="width: 500px;">
+<Controls.popupTemplate:Stack headingCaption="Add template" attr:style="width: 500px;">
    <ws:headerContentTemplate>
       <div class="ControlsDemo-InputDropdown__stackTopArea">
          <Controls.buttons:Button caption="Save" style="secondary" viewMode="link" attr:class="ControlsDemo-InputDropdown__Button"/>
@@ -13,4 +13,4 @@
                               attr:class="ControlsDemo-InputDropdown__textBox"/>
       </div>
    </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>
