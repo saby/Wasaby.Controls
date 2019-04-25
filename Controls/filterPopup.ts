@@ -6,6 +6,11 @@
  * @includes Select Controls/_filterPopup/Panel/Select
  * @includes Dropdown Controls/_filterPopup/Panel/Dropdown
  * @includes Text Controls/_filterPopup/Panel/Text
+ * @includes HistoryStyles Controls/_filterPopup/Button/History/Styles
+ * @includes LinkStyles Controls/_filter/Button/Panel/Link/Styles
+ * @includes PropertyGridStyles Controls/_filter/Button/Panel/PropertyGrid/Styles
+ * @includes PanelStyles Controls/_filter/Button/Panel/Styles
+ * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
  * @public
  * @author Kraynov D.
  */
