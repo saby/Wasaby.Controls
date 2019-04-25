@@ -1,3 +1,3 @@
-define('Controls/List/TreeGridView/TreeGridViewModel', ['Controls/_treeGrids/TreeGridView/TreeGridViewModel'], function(Control) {
+define('Controls/List/TreeGridView/TreeGridViewModel', ['Controls/_treeGrid/TreeGridView/TreeGridViewModel'], function(Control) {
    return Control;
 });
