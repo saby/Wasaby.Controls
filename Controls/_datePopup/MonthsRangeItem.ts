@@ -9,15 +9,12 @@ import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 
 /**
- * A link button that displays the period. Supports the change of periods to adjacent.
+ * Item for the period selection component of multiple months.
  *
- * @class Controls/Date/PeriodDialog
+ * @class Controls/_datePopup/MonthsRangeItem
  * @extends Core/Control
- * @mixes Controls/Date/interface/IPeriodDialog
  * @control
- * @public
  * @author Миронов А.Ю.
- * @demo Controls-demo/Date/PeriodLiteDialog
  *
  */
 
