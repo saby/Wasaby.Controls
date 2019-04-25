@@ -202,7 +202,8 @@ define(
                minWidth: 30,
                maxWidth: 30,
                minHeight: 30,
-               maxHeight: 30
+               maxHeight: 30,
+               width: 100
             };
             BaseOpener._setSizes(newConfig, newClass);
             assert.isFalse(!!newConfig.autoWidth);
@@ -211,6 +212,7 @@ define(
             assert.equal(newConfig.maxWidth, newClass.dimensions.maxWidth);
             assert.equal(newConfig.minHeight, newClass.dimensions.minHeight);
             assert.equal(newConfig.maxHeight, newClass.dimensions.maxHeight);
+            assert.equal(newConfig.width, newClass.dimensions.width);
 
             newClass = {};
             newConfig = {};

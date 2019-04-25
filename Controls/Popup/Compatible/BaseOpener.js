@@ -572,12 +572,17 @@ function(cMerge,
          var dimensions = templateClass ? this._getDimensions(templateClass) : {};
          var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
          var minWidth = dimensions.minWidth || templateOptions.minWidth;
+         var maxWidth = dimensions.maxWidth || templateOptions.maxWidth;
+         var width = dimensions.width || templateOptions.width;
 
+         if (!cfg.width) {
+            cfg.width = width ? parseInt(width, 10) : null;
+         }
          if (!cfg.minWidth) {
             cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || undefined;
+            cfg.maxWidth = parseInt(maxWidth, 10) || undefined;
          }
 
          cfg.minWidth = parseInt(cfg.minWidth, 10);

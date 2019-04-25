@@ -1,8 +1,9 @@
 <div class="controls-DateRangeSelector">
       <Controls.Input.Date.LinkView
          scope="{{_options}}"
-         bind:startValue="_rangeModel.startValue"
-         bind:endValue="_rangeModel.endValue"
+         startValue="{{ _rangeModel.startValue }}"
+         endValue="{{ _rangeModel.endValue }}"
+         on:rangeChanged="_rangeChangedHandler()"
          on:linkClick="_openDialog()"
          attr:class="controls-DateRangeSelector__view {{_isMinWidth ? 'controls-DateRangeSelector__view_minWidth'}}"
       />

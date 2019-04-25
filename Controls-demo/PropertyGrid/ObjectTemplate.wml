@@ -1,0 +1,15 @@
+<div attr:style="margin-left: 15px">
+<ws:for data="item,index in _options.baseObject">
+    <Controls.input:Label caption="{{item}}" attr:class="demo-TextBox"/>
+       <ws:if data="{{_options.flag !== 'Number'}}">
+    <Controls.input:Text value="{{_config[item]}}"
+                             attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{item}}"
+                         on:valueChanged="_valueChangedHandler(item)"/></ws:if>
+    <ws:else>
+        <Controls.input:Number value="{{_config[item]}}"
+                             attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{item}}"
+                             on:valueChanged="_valueChangedHandler(item)"/>
+    </ws:else>
+
+</ws:for>
+</div>
