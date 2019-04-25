@@ -81,6 +81,10 @@ var Component = BaseControl.extend({
         this._forceUpdate();
     },
 
+    _rangeChangedHandler: function(event, startValue, endValue) {
+        this._rangeModel.setRange(startValue, endValue);
+    },
+
     _beforeUnmount: function () {
         this._rangeModel.destroy();
     }
