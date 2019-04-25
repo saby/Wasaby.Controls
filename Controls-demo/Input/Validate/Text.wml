@@ -1,10 +1,10 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="PopupManager">
+<Controls.popupTemplate:Stack headingCaption="PopupManager">
     <ws:bodyContentTemplate>
         <div>
-            <Controls.Validate.Input   name="InputValidate3" attr:style="margin: 30px" >
+            <Controls.validate:InputContainer   name="InputValidate3" attr:style="margin: 30px" >
                 <ws:validators>
-                    <ws:Function value="{{_value4 }}">Controls/Validate/Validators/IsINN</ws:Function>
-                    <ws:Function value="{{_value4 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                    <ws:Function value="{{_value4 }}">Controls/validate:isInn</ws:Function>
+                    <ws:Function value="{{_value4 }}">Controls/validate:isEmail</ws:Function>
                 </ws:validators>
                 <ws:content>
                     <Controls.input:Text
@@ -14,7 +14,7 @@
                             tagStyle="success"
                     />
                 </ws:content>
-            </Controls.Validate.Input>
+            </Controls.validate:InputContainer>
         </div>
     </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

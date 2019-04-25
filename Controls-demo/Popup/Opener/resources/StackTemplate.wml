@@ -1,16 +1,16 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Задача в разработку" maximized="{{_options.maximized}}" maximizeButtonVisibility="{{_options.showMaximizedButton}}">
+<Controls.popupTemplate:Stack headingCaption="Задача в разработку" maximized="{{_options.maximized}}" maximizeButtonVisibility="{{_options.showMaximizedButton}}">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-            <div class="demo-Grid__container">
+            <div class="demo-Grid__container" attr:style="height:100%">
                 <Controls.list:DataContainer source="{{_viewSource}}"
                                          keyProperty="id"
-                                         attr:class="ControlsDemo-Grid__Container">
+                                         attr:class="ControlsDemo-Grid__Container" attr:style="height:100%">
                     <Controls.operations:Controller>
-                        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                        <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                             <Controls.list:Container>
                                 <Controls.operations:Container>
                                     <Controls.treeGrid:View
@@ -30,9 +30,9 @@
                                     </Controls.treeGrid:View>
                                 </Controls.operations:Container>
                             </Controls.list:Container>
-                        </Controls.Container.Scroll>
+                        </Controls.scroll:Container>
                     </Controls.operations:Controller>
                 </Controls.list:DataContainer>
             </div>
     </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

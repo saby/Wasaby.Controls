@@ -5,7 +5,7 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import {historyUtils} from 'Controls/filterPopup';
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');

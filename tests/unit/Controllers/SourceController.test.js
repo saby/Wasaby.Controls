@@ -2,10 +2,10 @@
  * Created by kraynovdo on 07.02.2018.
  */
 define([
-   'Controls/Controllers/SourceController',
+   'Controls/source',
    'Types/source',
    'Core/core-instance'
-], function(SourceController, sourceLib, cInstance){
+], function(scroll, sourceLib, cInstance){
    describe('Controls.Controllers.SourceController', function () {
       var data, source;
       beforeEach(function() {
@@ -34,7 +34,7 @@ define([
       });
 
       it('load', function (done) {
-         var controller = new SourceController({
+         var controller = new scroll.Controller({
             source: source
          });
 
@@ -52,7 +52,7 @@ define([
       });
 
       it('load + navigation', function (done) {
-         var controller = new SourceController({
+         var controller = new scroll.Controller({
             source: source,
             navigation: {
                source: 'page',
@@ -75,7 +75,7 @@ define([
       });
 
       it('modifyQueryParamsWithNavigation', function () {
-         var controller = new SourceController({
+         var controller = new scroll.Controller({
             source: source,
             navigation: {
                source: 'page',
@@ -85,10 +85,10 @@ define([
                }
             }
          });
-         var resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         var resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
          assert.deepEqual({filter:{}, limit: 10, offset: 0, meta:{hasMore: false}}, resParams, 'Wrong query params in page navigation');
 
-         controller = new SourceController({
+         controller = new scroll.Controller({
             source: source,
             navigation: {
                source: 'position',
@@ -100,16 +100,16 @@ define([
                }
             }
          });
-         resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
          assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}}, resParams, 'Wrong query params in position navigation');
 
          var originalFilter = {};
-         resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
          assert.notEqual(originalFilter, resParams.filter, 'Modified filter should be a new object instance');
       });
 
       it('filters', function (done) {
-         var controller = new SourceController({
+         var controller = new scroll.Controller({
             source: source
          });
          controller.load({id: 2}).addCallback(function(rs){
@@ -120,7 +120,7 @@ define([
       });
 
       it('sorting', function (done) {
-         var controller = new SourceController({
+         var controller = new scroll.Controller({
             source: source
          });
          controller.load({}, [{id: 'DESC'}]).addCallback(function(rs){

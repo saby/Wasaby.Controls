@@ -1,17 +1,17 @@
 define([
-   'Controls/FormController',
+   'Controls/form',
    'Core/Deferred',
    'Types/entity',
    'Core/polyfill/PromiseAPIDeferred'
-], (FormController, Deferred, entity) => {
+], (form, Deferred, entity) => {
    'use strict';
 
    describe('FormController', () => {
       it('initializingWay', (done) => {
-         let FC = new FormController();
+         let FC = new form.Controller();
 
-         let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = FormController._private.createRecordBeforeMount;
+         let baseReadRecordBeforeMount = form.Controller._private.readRecordBeforeMount;
+         let baseCreateRecordBeforeMount = form.Controller._private.createRecordBeforeMount;
          let cfg = {
             record: new entity.Record(),
          };
@@ -19,12 +19,12 @@ define([
          let isReading = false;
          let isCreating = false;
 
-         FormController._private.readRecordBeforeMount = () => {
+         form.Controller._private.readRecordBeforeMount = () => {
             isReading = true;
             return Promise.resolve({ data: true });
          };
 
-         FormController._private.createRecordBeforeMount = () => {
+         form.Controller._private.createRecordBeforeMount = () => {
             isCreating = true;
             return Promise.resolve({ data: true });
          };
@@ -84,15 +84,15 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
-            FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
-            FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
+            form.Controller._private.readRecordBeforeMount = baseReadRecordBeforeMount;
+            form.Controller._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
             done();
          });
       });
 
       it('beforeUpdate', () => {
-         let FC = new FormController();
+         let FC = new form.Controller();
          let setRecordCalled = false;
          let readCalled = false;
          let createCalled = false;
@@ -195,7 +195,7 @@ define([
                isDestroyCall = true;
             }
          };
-         let FC = new FormController();
+         let FC = new form.Controller();
          FC.saveOptions({dataSource});
          FC._source = dataSource;
          FC._record = {
@@ -211,7 +211,7 @@ define([
       });
 
       it('delete new record', () => {
-         let FC = new FormController();
+         let FC = new form.Controller();
          let isDestroyCalled = false;
          FC._source = {
             destroy: () => {

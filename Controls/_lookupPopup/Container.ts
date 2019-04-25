@@ -4,7 +4,7 @@ import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
 import Deferred = require('Core/Deferred');
 

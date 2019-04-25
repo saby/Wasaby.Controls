@@ -26,10 +26,12 @@
     * @css @color_DropdownList-emptyItem Color empty item.
     * @css @spacing_DropdownList-header-between-icon-text Spacing between icon and text in header.
     * @css @spacing_DropdownList-item-between-icon-text Spacing between icon and text in row.
+    * @css @color_DropdownList-icon-iconStyle_primary Primary icon color.
     * @css @color_DropdownList-icon-iconStyle_secondary Secondary icon color.
     * @css @color_DropdownList-icon-iconStyle_warning Warning icon color.
     * @css @color_DropdownList-icon-iconStyle_danger Danger icon color.
     * @css @color_DropdownList-icon-iconStyle_success Success icon color.
+    * @css @color_DropdownList-icon-iconStyle_info Info icon color.
     * @css @background_DropdownList-marker Color of marker selected item.
     * @css @width_DropdownList-marker Width marker selected item.
     * @css @height_DropdownList-marker Height marker selected item.

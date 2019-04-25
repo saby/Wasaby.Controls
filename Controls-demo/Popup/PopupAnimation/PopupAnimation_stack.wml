@@ -1,13 +1,13 @@
 <div class="ControlsDemo-PopupAnimation_template">
    <div class="ControlsDemo-PopupAnimation_template-task-1">
    </div>
-   <Controls.Container.LoadingIndicator name="loadingIndicator" isGlobal="{{false}}" delay="{{1}}" message="Загрузка...">
+   <Controls.LoadingIndicator name="loadingIndicator" isGlobal="{{false}}" delay="{{1}}" message="Загрузка...">
       <div></div>
-   </Controls.Container.LoadingIndicator>
+   </Controls.LoadingIndicator>
    <ws:if data="{{_showTaskImg}}">
       <div class="ControlsDemo-PopupAnimation_template-task-2">
       </div>
    </ws:if>
 
-   <Controls.Button.Close name="closeButton" attr:class="ControlsDemo-PopupAnimation_close" on:click="close()"/>
+   <Controls.popupTemplate:CloseButton name="closeButton" attr:class="ControlsDemo-PopupAnimation_close" on:click="close()"/>
 </div>

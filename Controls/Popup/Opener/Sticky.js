@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Sticky',
-   ['Controls/_popup/Opener/Sticky'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Sticky;
    });

@@ -3,7 +3,7 @@
         <div class="controls-FilterButton__demo-row">
             <Controls.buttons:Button readOnly="{{false}}" caption="Тест базовой линии" style="secondary" viewMode="link"/>
             Тест базовой линии
-            <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
+            <Controls.filter:Selector attr:style="max-width: 200px;" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
                 <ws:items>
                     <ws:Array>
                         <ws:Object id="genreKey" caption="genreTxt"/>
@@ -13,12 +13,12 @@
                         <ws:Object id="countryPlusName" caption="countryPlusVisible"/>
                     </ws:Array>
                 </ws:items>
-            </Controls.Filter.Button>
+            </Controls.filter:Selector>
         </div>
         <div class="controls-FilterButton__demo-row">
             <Controls.buttons:Button readOnly="{{true}}" caption="Тест базовой линии"/>
             Тест базовой линии
-            <Controls.Filter.Button attr:style="max-width: 200px;" readOnly="{{true}}" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
+            <Controls.filter:Selector attr:style="max-width: 200px;" readOnly="{{true}}" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
                 <ws:items>
                     <ws:Array>
                         <ws:Object id="genreKey" caption="genreTxt"/>
@@ -28,12 +28,12 @@
                         <ws:Object id="countryPlusName" caption="countryPlusVisible"/>
                     </ws:Array>
                 </ws:items>
-            </Controls.Filter.Button>
+            </Controls.filter:Selector>
         </div>
     </div>
     <div class="controls-FilterButton__demo-row_left">
     <div class="controls-FilterButton__demo-row">
-        <Controls.Filter.Button attr:style="max-width: 200px;" filterAlign="left" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
+        <Controls.filter:Selector attr:style="max-width: 200px;" filterAlign="left" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
             <ws:items>
                 <ws:Array>
                     <ws:Object id="genreKey" caption="genreTxt"/>
@@ -43,12 +43,12 @@
                     <ws:Object id="countryPlusName" caption="countryPlusVisible"/>
                 </ws:Array>
             </ws:items>
-        </Controls.Filter.Button>
+        </Controls.filter:Selector>
         Тест базовой линии
         <Controls.buttons:Button readOnly="{{false}}" caption="Тест базовой линии" style="secondary" viewMode="link"/>
     </div>
     <div class="controls-FilterButton__demo-row">
-        <Controls.Filter.Button attr:style="max-width: 200px;" filterAlign="left" readOnly="{{true}}" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
+        <Controls.filter:Selector attr:style="max-width: 200px;" filterAlign="left" readOnly="{{true}}" filterTemplate="Controls-demo/FilterButton/Panel/resources/FBPanel">
             <ws:items>
                 <ws:Array>
                     <ws:Object id="genreKey" caption="genreTxt"/>
@@ -58,7 +58,7 @@
                     <ws:Object id="countryPlusName" caption="countryPlusVisible"/>
                 </ws:Array>
             </ws:items>
-        </Controls.Filter.Button>
+        </Controls.filter:Selector>
         Тест базовой линии
         <Controls.buttons:Button readOnly="{{true}}" caption="Тест базовой линии"/>
     </div>

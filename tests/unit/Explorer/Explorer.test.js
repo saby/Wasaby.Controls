@@ -1,12 +1,12 @@
 define([
-   'Controls/Explorer',
+   'Controls/explorers',
    'Core/Deferred',
    'Types/collection',
    'Types/chain',
    'Controls/dragnDrop',
    'Types/entity'
 ], function(
-   Explorer,
+   explorerMod,
    Deferred,
    collection,
    chain,
@@ -63,7 +63,7 @@ define([
                   };
                }
             };
-         Explorer._private.setRoot(self, testRoot);
+         explorerMod.View._private.setRoot(self, testRoot);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
@@ -74,7 +74,7 @@ define([
             }
          }, self, 'Incorrect self data after "setRoot(self, testRoot)".');
          assert.isTrue(itemOpenHandlerCalled);
-         Explorer._private.dataLoadCallback(self, testData1);
+         explorerMod.View._private.dataLoadCallback(self, testData1);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
@@ -86,7 +86,7 @@ define([
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
          assert.deepEqual(dataLoadCallbackArgument, testData1, 'Incorrect "dataLoadCallback" arguments.');
-         Explorer._private.dataLoadCallback(self, testData2);
+         explorerMod.View._private.dataLoadCallback(self, testData2);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
@@ -97,7 +97,7 @@ define([
                itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData2)".');
-         Explorer._private.dataLoadCallback(self, testData1);
+         explorerMod.View._private.dataLoadCallback(self, testData1);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
@@ -108,7 +108,7 @@ define([
                itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
-         Explorer._private.dataLoadCallback(self, testData3);
+         explorerMod.View._private.dataLoadCallback(self, testData3);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
@@ -126,15 +126,15 @@ define([
             cfg = {
                root: 'rootFromOptions'
             },
-            explorer = new Explorer(cfg);
+            explorer = new explorerMod.View(cfg);
 
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(Explorer._private.getRoot(explorer), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getRoot(explorer), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
-         assert.equal(Explorer._private.getRoot(explorer), 'rootFromState');
+         assert.equal(explorerMod.View._private.getRoot(explorer), 'rootFromState');
       });
 
       it('_private.getDataRoot', function() {
@@ -143,15 +143,15 @@ define([
                parentProperty: 'parent',
                root: 'rootFromOptions'
             },
-            explorer = new Explorer(cfg);
+            explorer = new explorerMod.View(cfg);
 
          explorer.saveOptions(cfg);
-         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromState');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromState');
 
          explorer._breadCrumbsItems = [new entityLib.Model({
             rawData: {
@@ -159,11 +159,11 @@ define([
             },
             idProperty: 'id'
          })];
-         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
 
          cfg.root = 'rootFromOptions';
          explorer.saveOptions(cfg);
-         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
       });
 
       it('itemsReadyCallback', function() {
@@ -176,10 +176,10 @@ define([
             cfg = {
                itemsReadyCallback: itemsReadyCallback
             },
-            explorer = new Explorer(cfg);
+            explorer = new explorerMod.View(cfg);
          explorer.saveOptions(cfg);
 
-         Explorer._private.itemsReadyCallback(explorer, items);
+         explorerMod.View._private.itemsReadyCallback(explorer, items);
          assert.equal(itemsReadyCallbackArgs, items);
          assert.equal(explorer._items, items);
       });
@@ -194,7 +194,7 @@ define([
             viewMode: 'search',
             root: 'rootNode'
          };
-         var instance = new Explorer(cfg);
+         var instance = new explorerMod.View(cfg);
          var rootChanged = false;
 
          instance.saveOptions(cfg);
@@ -206,14 +206,14 @@ define([
          };
 
          assert.equal(instance._viewMode, 'tree');
-         assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.tree);
-         assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.tree);
+         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
+         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
          assert.isFalse(rootChanged);
 
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
-         assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
-         assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
+         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
+         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.isFalse(rootChanged);
       });
 
@@ -227,7 +227,7 @@ define([
                ],
                idProperty: 'id'
             }),
-            instance = new Explorer();
+            instance = new explorerMod.View();
 
          instance.saveOptions({
             parentProperty: 'parent',
@@ -241,7 +241,7 @@ define([
 
       it('_notifyHandler', function() {
          var
-            instance = new Explorer(),
+            instance = new explorerMod.View(),
             events = [],
             result;
 
@@ -289,7 +289,7 @@ define([
             isNotified = false;
 
             var
-               explorer = new Explorer({});
+               explorer = new explorerMod.View({});
 
             explorer._notify = _notify;
             explorer.saveOptions({
@@ -303,7 +303,7 @@ define([
                idProperty: 'id'
             })];
 
-            Explorer._private.backByPath(explorer);
+            explorerMod.View._private.backByPath(explorer);
 
             assert.isTrue(isNotified);
             assert.equal(root, 1);
@@ -317,7 +317,7 @@ define([
                idProperty: 'id'
             }));
 
-            Explorer._private.backByPath(explorer);
+            explorerMod.View._private.backByPath(explorer);
 
             assert.isTrue(isNotified);
             assert.equal(root, 2);
@@ -325,7 +325,7 @@ define([
 
             explorer._breadCrumbsItems = [];
 
-            Explorer._private.backByPath(explorer);
+            explorerMod.View._private.backByPath(explorer);
 
             assert.isFalse(isNotified);
          });
@@ -334,7 +334,7 @@ define([
             isNotified = false;
 
             var
-               explorer = new Explorer({});
+               explorer = new explorerMod.View({});
             explorer.saveOptions({});
             explorer._notify = _notify;
             explorer._beforeUpdate({
@@ -352,7 +352,7 @@ define([
             isWeNotified = false;
 
             var
-               explorer = new Explorer({}),
+               explorer = new explorerMod.View({}),
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -388,7 +388,7 @@ define([
             isNotified = false;
 
             var
-               explorer = new Explorer({});
+               explorer = new explorerMod.View({});
             explorer.saveOptions({});
             explorer._notify = _notify;
 
@@ -406,7 +406,7 @@ define([
                test: '123'
             };
             var
-               instance = new Explorer({});
+               instance = new explorerMod.View({});
             instance._children = {
                treeControl: {
                   beginEdit: function(options) {
@@ -425,7 +425,7 @@ define([
                test: '123'
             };
             var
-               instance = new Explorer({});
+               instance = new explorerMod.View({});
             instance._children = {
                treeControl: {
                   beginAdd: function(options) {
@@ -441,7 +441,7 @@ define([
 
          it('cancelEdit', function() {
             var
-               instance = new Explorer({});
+               instance = new explorerMod.View({});
             instance._children = {
                treeControl: {
                   cancelEdit: function() {
@@ -456,7 +456,7 @@ define([
 
          it('commitEdit', function() {
             var
-               instance = new Explorer({});
+               instance = new explorerMod.View({});
             instance._children = {
                treeControl: {
                   commitEdit: function() {
@@ -490,7 +490,7 @@ define([
                   idProperty: 'id'
                })
 
-            explorer = new Explorer(explorerCfg);
+            explorer = new explorerMod.View(explorerCfg);
 
             explorer.saveOptions(explorerCfg);
             explorer._beforeMount(explorerCfg);
@@ -504,7 +504,7 @@ define([
                   },
                   idProperty: 'id'
                }),
-                explorer = new Explorer({});
+                explorer = new explorerMod.View({});
 
             explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
             assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb.get('id'));
@@ -512,16 +512,16 @@ define([
          it('dragItemsFromRoot', function() {
 
             //item from the root
-            assert.isTrue(Explorer._private.dragItemsFromRoot(explorer, [1]));
+            assert.isTrue(explorerMod.View._private.dragItemsFromRoot(explorer, [1]));
 
             //item is not from the root
-            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [2]));
+            assert.isFalse(explorerMod.View._private.dragItemsFromRoot(explorer, [2]));
 
             //item is not from the root and from the root
-            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [1, 2]));
+            assert.isFalse(explorerMod.View._private.dragItemsFromRoot(explorer, [1, 2]));
 
             //an item that is not in the list.
-            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [4]));
+            assert.isFalse(explorerMod.View._private.dragItemsFromRoot(explorer, [4]));
          });
          it('_dragHighlighter', function() {
             explorer._hoveredBreadCrumb = 2;

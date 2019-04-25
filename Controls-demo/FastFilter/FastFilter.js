@@ -3,7 +3,7 @@ define('Controls-demo/FastFilter/FastFilter',
       'Core/Control',
       'wml!Controls-demo/FastFilter/FastFilter',
       'Types/source',
-      'Controls/Filter/Fast',
+      'Controls/filter',
       'css!Controls-demo/FastFilter/FastFilter'
    ],
 

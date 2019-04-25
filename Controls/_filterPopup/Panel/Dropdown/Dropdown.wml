@@ -1,5 +1,5 @@
 <div class="controls-FilterDropdown">
-   <Controls.Input.Dropdown
+   <Controls.dropdown:Input
            scope="{{_options}}"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()">
@@ -15,7 +15,7 @@
                </ws:contentTemplate>
          </ws:partial>
       </ws:contentTemplate>
-   </Controls.Input.Dropdown>
+   </Controls.dropdown:Input>
    <ws:if data="{{_options.showCross}}">
       <span class="controls-FilterDropdown__reset icon-Close icon-disabled" on:click="_resetHandler()"></span>
    </ws:if>

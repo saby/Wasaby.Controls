@@ -12,7 +12,7 @@ import 'css!theme?Controls/_input/resources/InputRender/InputRender';
       /**
        * @class Controls/_input/resources/InputRender/InputRender
        * @extends Core/Control
-       * @includes InputRenderStyles Controls/_input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        * @control
        * @private
        * @category Input
