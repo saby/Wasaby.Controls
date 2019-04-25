@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_buttons/Button');
-import classesUtil from './classesUtil'
+import classesUtil from './classesUtil';
 import iconsUtil from './iconsUtil';
 // @ts-ignore
 import { IoC } from 'Env/Env';
@@ -13,14 +13,14 @@ import { IoC } from 'Env/Env';
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/Button/interface/IHref
+ * @mixes Controls/interface/IHref
  * @mixes Controls/interface/ICaption
- * @mixes Controls/Button/interface/IClick
- * @mixes Controls/Button/interface/IIcon
- * @mixes Controls/Button/interface/IIconStyle
+ * @mixes Controls/interface/IClick
+ * @mixes Controls/interface/IIcon
+ * @mixes Controls/interface/IIconStyle
  * @mixes Controls/interface/ITooltip
  * @mixes Controls/interface/IButton
- * @mixes Controls/Button/ButtonStyles
+ * @mixes Controls/_button/ButtonStyles
  * @control
  * @public
  * @author Михайловский Д.С.
