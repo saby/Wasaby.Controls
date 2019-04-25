@@ -1,4 +1,4 @@
-define('Controls/List/TreeControl', ['Controls/_treeGrids/TreeControl'], function(Control) {
+define('Controls/List/TreeControl', ['Controls/_treeGrid/TreeControl'], function(Control) {
    /**
     * Hierarchical list control with custom item template. Can load data from data source.
     *
