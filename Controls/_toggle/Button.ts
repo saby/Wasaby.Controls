@@ -18,7 +18,7 @@ import buttons = require('Controls/buttons');
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/_toggle/ToggleButtonPG
+    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
     */
 
    /**
