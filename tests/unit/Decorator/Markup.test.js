@@ -114,7 +114,7 @@ define([
          'smb://ya.ru'
       ],
       decoratedLinkService,
-      currentVersion = '1.0',
+      currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
