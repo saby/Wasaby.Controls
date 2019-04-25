@@ -8,8 +8,8 @@
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
             <Controls.dateRange:LiteSelector
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
                startValue="{{_startValue}}"
                endValue="{{_endValueHalfYear}}"
 			   attr:test_name="show_arrow_range"
