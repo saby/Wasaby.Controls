@@ -344,6 +344,13 @@
             StateIndicator
          </a>
       </div>
+
+      <h1>CompoundContainer</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FCompound%252FCompoundDemo">
+            CompoundDemo
+         </a>
+      </div>
    </div>
    <ws:if data="{{_successfullyMounted}}">
       <div class="test-mount"></div>
