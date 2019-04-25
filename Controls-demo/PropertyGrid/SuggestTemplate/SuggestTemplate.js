@@ -27,13 +27,27 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
             });
 
             if (options.value) {
-               this.selectedKey = options.items.find(function(item) {
-                  return item.title === options.value;
-               }).id;
+               this.selectedKey = this._getSelectedKeyByValue(options.value, options.items);
             }
          },
          selectedKeyChanged: function(event, key) {
             this._notify('choose', [this.rs.getRecordById(key)]);
+         },
+         _beforeUpdate: function(options) {
+            var newKey = this._getSelectedKeyByValue(options.value, options.items);
+
+            if (this.selectedKey !== newKey) {
+               this.selectedKey = newKey;
+            }
+         },
+         _getSelectedKeyByValue(value, items) {
+            if (value) {
+               return items.find(function(item) {
+                  return item.title === value;
+               }).id;
+            } else {
+               return null;
+            }
          }
       });
 
