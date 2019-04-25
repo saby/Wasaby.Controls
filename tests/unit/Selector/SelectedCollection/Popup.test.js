@@ -1,7 +1,7 @@
-define(['Controls/Selector/SelectedCollection/Popup',
+define(['Controls/lookupPopup',
    'Types/entity',
    'Types/collection'
-], function(SelectedCollectionPopup, entity, collection) {
+], function(lookupPopup, entity, collection) {
 
    describe('Controls/Selector/SelectedCollection/Popup', function() {
       it('_crossClick', function() {
@@ -14,7 +14,7 @@ define(['Controls/Selector/SelectedCollection/Popup',
                rawData: {id: 2},
                idProperty: 'id'
             }),
-            scPopup = new SelectedCollectionPopup();
+            scPopup = new lookupPopup.Collection();
 
          scPopup._options.clickCallback = function(){};
          scPopup._items = new collection.List({
@@ -32,7 +32,7 @@ define(['Controls/Selector/SelectedCollection/Popup',
       it('_itemClick', function() {
          var
             callCloseInfoBox = false,
-            scPopup = new SelectedCollectionPopup();
+            scPopup = new lookupPopup.Collection();
 
          scPopup._options.clickCallback = function(){};
          scPopup._notify = function(eventType) {

@@ -1,7 +1,7 @@
 <div class="ControlsDemo-ComboboxVDOM">
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>Simple</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsRegions)}}"
                                keyProperty="id"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey"
@@ -9,7 +9,7 @@
    </div>
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With the option of selecting an empty value</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsRegions)}}"
                                keyProperty="id"
                                emptyText="{{true}}"
                                displayProperty="title"
@@ -18,7 +18,7 @@
    </div>
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With scroll</h4>
-      <Controls.Input.ComboBox source="{{_getMultiData()}}"
+      <Controls.dropdown:Combobox source="{{_getMultiData()}}"
                                keyProperty="id"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey2"
@@ -28,7 +28,7 @@
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With application styles and comment</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsCode)}}"
                                keyProperty="id"
                                displayProperty="text"
                                itemTemplate="wml!Controls-demo/Combobox/itemTemplateCombobox"
@@ -38,7 +38,7 @@
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With application styles and a comment and a null value</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsCode)}}"
                                keyProperty="id"
                                emptyText="{{true}}"
                                displayProperty="text"
@@ -49,7 +49,7 @@
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With multi-line items</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsWorkers)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsWorkers)}}"
                                keyProperty="id"
                                popupClassName="ControlsDemo-ComboboxVDOM__popup"
                                displayProperty="title"
@@ -60,7 +60,7 @@
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>History combobox</h4>
-      <Controls.Input.ComboBox source="{{_historySource}}"
+      <Controls.dropdown:Combobox source="{{_historySource}}"
                                  keyProperty="id"
                                  displayProperty="title"
                                  bind:selectedKey="_selectedKeyHistory"
@@ -69,7 +69,7 @@
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>ReadOnly</h4>
-      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+      <Controls.dropdown:Combobox source="{{_createMemory(_itemsRegions)}}"
                                displayProperty="title"
                                keyProperty="id"
                                bind:selectedKey="_selectedKeyReadOnly"

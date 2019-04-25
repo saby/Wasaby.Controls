@@ -1,4 +1,4 @@
-<Controls.Container.Suggest.Layout
+<Controls.suggest:_InputController
       name="layout"
       on:choose="_choose()"
       on:deactivated="_deactivated()"
@@ -73,5 +73,5 @@
          </ws:if>
       </ws:afterFieldWrapper>
    </Controls._lookup.Lookup.InputRender>
-   <Controls.Event.Listener event="controlResize" on:controlResize="_resize()"/>
-</Controls.Container.Suggest.Layout>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resize()"/>
+</Controls.suggest:_InputController>

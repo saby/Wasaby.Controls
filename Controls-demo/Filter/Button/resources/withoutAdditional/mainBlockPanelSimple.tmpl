@@ -1,5 +1,5 @@
 <ws:template name="period">
-   <Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+   <Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
                                           bind:textValue="item.textValue"
                                           keyProperty="key"
                                           displayProperty="title"
@@ -7,7 +7,7 @@
 </ws:template>
 
 <ws:template name="state">
-<Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
                                        bind:textValue="item.textValue"
                                        displayProperty="title"
                                        keyProperty="key"
@@ -15,7 +15,7 @@
 </ws:template>
 
 <ws:template name="limit">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
@@ -48,7 +48,7 @@
 </ws:template>
 
 <ws:template name="group">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
@@ -56,15 +56,15 @@
 </ws:template>
 
 <ws:template name="unread">
-<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="Unread"/>
+<Controls.filterPopup:Text bind:value="item.value" caption="Unread"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="Loose"/>
+<Controls.filterPopup:Text bind:value="item.value" caption="Loose"/>
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"

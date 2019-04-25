@@ -2,7 +2,7 @@
    <ws:contentTemplate>
       <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
          <ws:if data="{{itemData.isEditing}}">
-            <Controls.Selector.Lookup attr:class="controls-EditingTemplateText__editor"
+            <Controls.lookup:Input attr:class="controls-EditingTemplateText__editor"
                                    bind:value="itemData.item[itemData.column.displayProperty]"
                                    searchParam="title"
                                    source="{{itemData.item.source}}"
@@ -13,15 +13,15 @@
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                <ws:itemTemplate>
-                  <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate">
+                  <ws:partial template="Controls/lookup:ItemTemplate">
                      <ws:contentTemplate>
                         <span class="ControlsDemo-EipScenarios__categoryNumber">{{itemTemplate.item.categoryNumber}}</span>
                         <span>{{itemTemplate.item.category}}</span>
                      </ws:contentTemplate>
                   </ws:partial>
                </ws:itemTemplate>
-            </Controls.Selector.Lookup>
-            <Controls.Selector.Lookup attr:class="controls-EditingTemplateText__editor"
+            </Controls.lookup:Input>
+            <Controls.lookup:Input attr:class="controls-EditingTemplateText__editor"
                                    bind:value="itemData.item.subdivision"
                                    searchParam="title"
                                    source="{{itemData.item.source}}"
@@ -30,9 +30,9 @@
                                    selectOnClick="{{ false }}">
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-            </Controls.Selector.Lookup>
+            </Controls.lookup:Input>
             <ws:if data="{{ itemData.item.subdivision2 }}">
-               <Controls.Selector.Lookup attr:class="controls-EditingTemplateText__editor"
+               <Controls.lookup:Input attr:class="controls-EditingTemplateText__editor"
                                       bind:value="itemData.item.subdivision2"
                                       searchParam="title"
                                       source="{{itemData.item.source}}"
@@ -41,7 +41,7 @@
                                       selectOnClick="{{ false }}">
                   <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                   <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-               </Controls.Selector.Lookup>
+               </Controls.lookup:Input>
             </ws:if>
          </ws:if>
          <ws:else>

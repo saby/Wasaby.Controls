@@ -10,8 +10,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    'css!Controls-demo/FilterSearch/FilterSearch',
    'Controls/Container/List',
    'Controls/search',
-   'Controls/Filter/Button/Container',
-   'Controls/Filter/Fast/Container'
+   'Controls/filter'
 ], function(Control, template, sourceLib, memorySourceData, memorySourceFilter) {
    'use strict';
    var SearchContainer = Control.extend({

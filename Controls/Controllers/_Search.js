@@ -2,9 +2,9 @@ define('Controls/Controllers/_Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'Controls/Controllers/SourceController'
+      'Controls/source'
    ],
-   function(extend, Deferred, SourceController) {
+   function(extend, Deferred, scroll) {
       
       'use strict';
    
@@ -17,7 +17,7 @@ define('Controls/Controllers/_Search',
          },
    
          initSourceController: function(self, options) {
-            self._sourceController = new SourceController({
+            self._sourceController = new scroll.Controller({
                source: options.source,
                navigation: options.navigation
             });

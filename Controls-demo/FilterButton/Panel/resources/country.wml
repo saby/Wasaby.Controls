@@ -1,4 +1,4 @@
-<Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
                          displayProperty="title"
                          keyProperty="key"
                          source="{{item.source}}"/>

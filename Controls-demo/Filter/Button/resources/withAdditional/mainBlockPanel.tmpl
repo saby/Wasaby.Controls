@@ -1,5 +1,5 @@
 <ws:template name="period">
-   <Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+   <Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
                             bind:textValue="item.textValue"
                             displayProperty="title"
                             source="{{item.source}}"
@@ -7,7 +7,7 @@
 </ws:template>
 
 <ws:template name="state">
-<Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
                          displayProperty="title"
                          source="{{item.source}}"
@@ -15,7 +15,7 @@
 </ws:template>
 
 <ws:template name="limit">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         source="{{item.source}}"
         bind:selectedKeys="item.value"/>
@@ -46,7 +46,7 @@
 </ws:template>
 
 <ws:template name="group">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         showCross="{{true}}"
         source="{{item.source}}"
@@ -55,16 +55,16 @@
 </ws:template>
 
 <ws:template name="unread">
-<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="own">
 <Controls.Container.Adapter.SelectedKey bind:selectedKey="item.value">
-   <Controls.Filter.Button.Panel.Dropdown
+   <Controls.filterPopup:Dropdown
            emptyText="Not selected"
            keyProperty="key"
            source="{{item.source}}"
@@ -84,7 +84,7 @@
 </ws:template>
 
 <ws:template name="activity">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         source="{{item.source}}"
         showCross="{{true}}"
@@ -93,7 +93,7 @@
 </ws:template>
 
 <ws:template name="detailingPeriod">
-<Controls.Filter.Button.Panel.Dropdown displayProperty="title"
+<Controls.filterPopup:Dropdown displayProperty="title"
                                        bind:selectedKeys="item.value"
                                        keyProperty="key"
                                        parentProperty="parent"
@@ -102,7 +102,7 @@
    <ws:contentTemplate>
       <div>{{contentTemplate.item.get('text') || contentTemplate.item.get('title')}}</div>
    </ws:contentTemplate>
-</Controls.Filter.Button.Panel.Dropdown>
+</Controls.filterPopup:Dropdown>
 </ws:template>
 
 
