@@ -25,6 +25,12 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
                idProperty: 'id',
                rawData: options.items
             });
+
+            if (options.value) {
+               this.selectedKey = options.items.find(function(item) {
+                  return item.title === options.value;
+               }).id;
+            }
          },
          selectedKeyChanged: function(event, key) {
             this._notify('choose', [this.rs.getRecordById(key)]);
