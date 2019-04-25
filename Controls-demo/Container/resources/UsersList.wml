@@ -1,8 +1,7 @@
 <Controls.Container.Scroll shadowVisibility="{{showShadow}}" scrollbarVisibility="{{showScrollbar}}">
-   <Controls.list:View source="{{usersSource}}" keyProperty="id">
+   <Controls.list:View source="{{usersSource}}" keyProperty="id" markerVisibility="visible">
       <ws:itemTemplate>
-         <ws:partial marker="{{true}}"
-                     template="Controls/list:ItemTemplate">
+         <ws:partial template="Controls/list:ItemTemplate">
             <ws:contentTemplate>
                <ws:partial showStatus="{{true}}"
                            user="{{itemTemplate.itemData.item}}"

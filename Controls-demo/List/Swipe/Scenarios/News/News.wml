@@ -1,8 +1,8 @@
 <Controls.list:View attr:class="demo-News"
                itemActions="{{_itemActions}}"
                source="{{_source}}"
-               swipeDirection="column"
-               titlePosition="bottom"
+               actionAlignment="column"
+               actionCaptionPosition="bottom"
                markerVisibility="hidden"
                itemActionVisibilityCallback="{{_visibilityCallback}}"
                keyProperty="id">
