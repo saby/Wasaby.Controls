@@ -1,6 +1,7 @@
-import {MaskInputProcessor as InputProcessor, MaskFormatBuilder as FormatBuilder, BaseViewModel} from 'Controls/input';
-
-import Formatter = require('Controls/Input/Mask/Formatter');
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
+import InputProcessor = require('Controls/_input/Mask/InputProcessor');
+import Formatter = require('Controls/_input/Mask/Formatter');
 
 
 

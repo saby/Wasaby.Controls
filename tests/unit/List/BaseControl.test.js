@@ -2,7 +2,6 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   
    'Types/source',
    'Types/collection',
    'Controls/list',
@@ -14,7 +13,7 @@ define([
    'Core/core-clone',
    'Types/entity',
    'Core/polyfill/PromiseAPIDeferred'
-], function(, sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, clone, entity) {
+], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {

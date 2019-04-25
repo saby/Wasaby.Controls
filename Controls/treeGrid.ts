@@ -15,7 +15,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
 import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
 import SearchGridViewModel = require('Controls/_treeGrids/SearchView/SearchGridViewModel');
 import SearchView = require('Controls/_treeGrids/SearchView');
-import {TreeGridView} from 'Controls/treeGrid';
+import TreeGridView = require('Controls/_treeGrids/TreeGridView/TreeGridView');
 
 
 

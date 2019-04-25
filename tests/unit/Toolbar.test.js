@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/toolbars'
+      'Controls/toolbars',
       'Types/entity',
       'Types/collection',
       'Types/source'
    ],
-   (toolbarsentity, collection, sourceLib) => {
+   (toolbars, entity, collection, sourceLib) => {
    describe('Toolbar', () => {
    let defaultItems = [
       {
