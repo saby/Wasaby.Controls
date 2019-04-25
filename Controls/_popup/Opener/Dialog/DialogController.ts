@@ -14,7 +14,14 @@ import DialogStrategy = require('Controls/_popup/Opener/Dialog/DialogStrategy');
                cfg.position.top = cfg.popupOptions.top;
             }
             if (cfg.popupOptions.left) {
-               cfg.position.left = cfg.popupOptions.left;
+               // Calculating the left position when reducing the size of the browser window
+               const differenceWindowWidth =
+                   (cfg.popupOptions.left + cfg.popupOptions.width) - _private.getWindowSize().width;
+               if (differenceWindowWidth > 0) {
+                  cfg.position.left = cfg.popupOptions.left - differenceWindowWidth;
+               } else {
+                  cfg.position.left = cfg.popupOptions.left;
+               }
             }
          },
          getWindowSize: function() {

@@ -1,11 +1,11 @@
 define([
    'Env/Env',
-   'Controls/StickyHeader/Controller',
+   'Controls/scroll',
    'Controls/StickyHeader/Utils',
    'Core/core-merge'
 ], function(
    Env,
-   Controller,
+   scroll,
    stickyUtils,
    coreMerge
 ) {
@@ -52,7 +52,7 @@ define([
       let component, result;
 
       beforeEach(function() {
-         component = createComponent(Controller.default, {});
+         component = createComponent(scroll._stickyHeaderController, {});
          component._children.stickyHeaderShadow = {
             start: sinon.fake()
          };
@@ -140,6 +140,12 @@ define([
                      }
                   },
                   sticky2: {
+                     mode: 'stackable',
+                     inst: {
+                        height: 10
+                     }
+                  },
+                  sticky3: {
                      mode: 'stackable',
                      inst: {
                         height: 10
@@ -232,6 +238,33 @@ define([
                   height: 10
                });
                assert.equal(component._headersHeight.top, 0);
+            });
+            it('Shadow Optimization Check', function() {
+               component._fixedHeadersStack.top = [];
+               component._fixedHandler(event, {
+                  id: 'sticky1',
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  mode: 'stackable',
+                  height: 10
+               });
+               sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+               component._fixedHandler(event, {
+                  id: 'sticky2',
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  mode: 'stackable',
+                  height: 10
+               });
+               sinon.assert.called(component._children.stickyHeaderShadow.start);
+               component._fixedHandler(event, {
+                  id: 'sticky3',
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  mode: 'stackable',
+                  height: 10
+               });
+               sinon.assert.called(component._children.stickyHeaderShadow.start);
             });
             it('Should not change headers height if replaceable header is fixed', function() {
                component._fixedHandler(event, {

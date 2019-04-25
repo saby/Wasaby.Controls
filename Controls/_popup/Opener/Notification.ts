@@ -1,6 +1,7 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
+import NotificationController = require('Controls/_popup/Opener/Notification/NotificationController');
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
@@ -94,7 +95,7 @@ import Env = require('Env/Env');
           */
          open: function(popupOptions) {
             if (isNewEnvironment()) {
-               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/_popup/Opener/Notification/NotificationController');
+               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), NotificationController);
             } else {
                _private.compatibleOpen(this, popupOptions);
             }
@@ -126,7 +127,7 @@ import Env = require('Env/Env');
       };
 
       export = Notification;
-   
+
 
 /**
  * @typedef {Object} PopupOptions

@@ -1,4 +1,4 @@
-define('Controls/List/ItemsView', ['Controls/_lists/ItemsView'], function(Control) {
+define('Controls/List/ItemsView', ['Controls/_list/ItemsView'], function(Control) {
 /**
  * Created by kraynovdo on 22.09.2017.
  */

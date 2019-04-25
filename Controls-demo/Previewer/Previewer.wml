@@ -1,6 +1,6 @@
 <div class="ControlsDemo-Previewer">
    <h2 id="info">Previewer</h2>
-	<Controls.Input.ComboBox
+	<Controls.dropdown:Combobox
 		source="{{_triggerSource}}"
 		keyProperty="title"
 		placeholder="select"
@@ -18,13 +18,13 @@
                <img id="target_{{image}}" src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
          <ws:template>
-            <Controls.Popup.Templates.Dialog.DialogTemplate>
+            <Controls.popupTemplate:Dialog>
                <ws:bodyContentTemplate>
                   <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
                      <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
                   </div>
                </ws:bodyContentTemplate>
-            </Controls.Popup.Templates.Dialog.DialogTemplate>
+            </Controls.popupTemplate:Dialog>
          </ws:template>
       </Controls.Popup.Previewer>
    </ws:for>

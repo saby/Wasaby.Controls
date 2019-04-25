@@ -1,5 +1,5 @@
 define([
-   'Controls/_lists/utils/RowIndexUtil',
+   'Controls/_list/utils/RowIndexUtil',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Core/core-instance',
    'Types/collection',
@@ -170,6 +170,77 @@ define([
 
          // Bottom results index, list has header and has footer
          assert.equal(templateCalc(true, true), 8);
+
+      });
+
+      it('calcFooterRowIndex in empty tree ', function () {
+         var
+             tgvm = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: []
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             templateCalc = function (hasHeader, hasResults) {
+                return Util.calcFooterRowIndex(
+                    tgvm._model._display,
+                    hasResults,
+                    hasHeader
+                );
+             };
+
+         // Bottom results index, list hasn't header and hasn't footer
+         assert.equal(templateCalc(false, false), 0);
+
+         // Bottom results index, list hasn't header and has footer
+         assert.equal(templateCalc(false, true), 1);
+
+         // Bottom results index, list has header and hasn't footer
+         assert.equal(templateCalc(true, false), 1);
+
+         // Bottom results index, list has header and has footer
+         assert.equal(templateCalc(true, true), 2);
+
+      });
+
+      it('calcFooterRowIndex in tree of only collapsed group(s)', function () {
+         var
+             tgvm = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {
+                         id: 1,
+                         title: 'qwe-title',
+                         group: 'qwe'
+                      }
+                   ]
+                }),
+                groupingKeyCallback: function (item) {
+                   return item.get('group');
+                },
+                collapsedGroups: ['qwe'],
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             templateCalc = function (hasHeader, hasResults) {
+                return Util.calcFooterRowIndex(
+                    tgvm._model._display,
+                    hasResults,
+                    hasHeader
+                );
+             };
+
+         assert.equal(templateCalc(false, false), 1);
+         assert.equal(templateCalc(false, true), 2);
+         assert.equal(templateCalc(true, false), 2);
+         assert.equal(templateCalc(true, true), 3);
 
       });
 

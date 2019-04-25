@@ -10,7 +10,7 @@
                     attr:id="Back" caption="Назад"
                     viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
 
-   <Controls.Container.Scroll attr:class="ControlsDemo-Page_scrollContainer">
+   <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">
          <ws:if data="{{content.app}}">
             <Controls.Container.Async templateName="{{content.app}}"
@@ -24,5 +24,5 @@
             </div>
          </ws:else>
       </Router.router:Route>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </div>

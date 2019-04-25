@@ -43,7 +43,7 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/Input/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/Input/interface/IInputDropdown
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
@@ -102,7 +102,7 @@ var _private = {
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
- *       multiSelect={{true}}>
+ *       multiSelect="{{true}}">
  * </Controls.dropdown:Input>
  * </pre>
  * JS:

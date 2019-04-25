@@ -2,13 +2,14 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/SelectedCollection/Controller');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import isEqual = require('Core/helpers/Object/isEqual');
 import collection = require('Types/collection');
 import merge = require('Core/core-merge');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import LoadService = require('Controls/History/LoadService');
+
 
 
    var _private = {
@@ -140,6 +141,15 @@ import LoadService = require('Controls/History/LoadService');
          return self._historyServiceLoad;
       }
    };
+
+   /**
+    * SelectedCollection Controller
+    * @class Controls/_lookup/SelectedCollection/Controller
+    * @extends Core/Control
+    * @control
+    * @private
+    * @author Kraynov D.
+    */
 
    var CollectionController = Control.extend({
       _template: template,

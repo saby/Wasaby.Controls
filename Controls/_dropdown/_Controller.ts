@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -146,7 +146,7 @@ var _private = {
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IMenu
- * @mixes Controls/Input/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/ICaption
  * @mixes Controls/Button/interface/IIcon
  * @mixes Controls/Button/interface/IIconStyle

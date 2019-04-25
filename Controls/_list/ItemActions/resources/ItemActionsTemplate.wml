@@ -1,0 +1,24 @@
+<div attr:class="controls-itemActionsV
+            {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + style }}
+            {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
+            controls-itemActionsV_{{itemActionsPosition}}
+            {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
+            {{itemData.isEditing && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
+            {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
+            {{itemData.isSwiped ? 'controls-itemActionsV_swiped'}}">
+    <div attr:class="controls-itemActionsV__wrapper">
+        <ws:partial
+                template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
+                itemData="{{itemData}}"
+                size="{{size}}"
+                showedActions="{{itemData.itemActions.showed}}"/>
+        <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
+            <div class="controls-itemActionsV__applyButton controls-itemActionsV__action_padding" on:click="_applyEdit()">
+                <div class="controls-itemActionsV__applyButton-icon icon-Yes"></div>
+            </div>
+            <div class="controls-itemActionsV__closeButton" on:click="_cancelEdit()">
+                <div class="controls-itemActionsV__closeButton-icon"></div>
+            </div>
+        </ws:if>
+    </div>
+</div>

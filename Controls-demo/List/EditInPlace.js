@@ -5,7 +5,7 @@ define('Controls-demo/List/EditInPlace', [
    'Types/entity',
    'Core/Deferred',
    'Controls/Constants',
-   'Controls/Validate/Validators/IsRequired',
+   'Controls/validate',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
              template,

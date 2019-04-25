@@ -3,8 +3,8 @@ import template = require('wml!Controls/_popup/Manager/Popup');
 import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import Env = require('Env/Env');
-import 'wml!Controls/_popup/Manager/PopupContent';
-      
+import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
+
 
       var _private = {
          keyUp: function(event) {
@@ -152,17 +152,8 @@ import 'wml!Controls/_popup/Manager/PopupContent';
             this._notify('popupResult', [this._options.id].concat(args), { bubbling: true });
          },
 
-         _touchStartHandler: function(e) {
-            var event = e.nativeEvent;
-            this._touchStartX = event.changedTouches[0].pageX;
-         },
-
-         _touchEndHandler: function(e) {
-            var event = e.nativeEvent;
-            var touchEndX = event.changedTouches[0].pageX;
-
-            // if swipe more then 100px from left to right, then close popup
-            if (touchEndX - this._touchStartX > 100) {
+         _swipeHandler: function(event) {
+            if (event.nativeEvent.direction === 'right') {
                this._close();
             }
          },
@@ -183,10 +174,10 @@ import 'wml!Controls/_popup/Manager/PopupContent';
 
       Popup.getDefaultOptions = function() {
          return {
-            content: 'wml!Controls/_popup/Manager/PopupContent',
+            content: PopupContent,
             autofocus: true
          };
       };
 
       export = Popup;
-   
+
