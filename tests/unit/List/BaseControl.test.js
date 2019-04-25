@@ -1391,6 +1391,47 @@ define([
          });
       });
 
+      it('mouseMove handler', function () {
+         var
+             stopImmediateCalled = false,
+             preventDefaultCalled = false,
+
+             lnSource = new sourceLib.Memory({
+                idProperty: 'id',
+                data: data
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                itemActions: [
+                   {
+                      id: 1,
+                      title: '123'
+                   }
+                ],
+                viewModelConstructor: lists.ListViewModel
+             },
+             lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         assert.isFalse(lnBaseControl._shouldUpdateItemsActions);
+         assert.isFalse(lnBaseControl._itemsActionsUpdated);
+
+         lnBaseControl._itemMouseMove();
+
+         assert.isTrue(lnBaseControl._shouldUpdateItemsActions);
+         assert.isTrue(lnBaseControl._itemsActionsUpdated);
+
+         lnBaseControl._afterUpdate(lnCfg);
+
+         assert.isFalse(lnBaseControl._shouldUpdateItemsActions);
+         assert.isTrue(lnBaseControl._itemsActionsUpdated);
+
+      });
+
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {};

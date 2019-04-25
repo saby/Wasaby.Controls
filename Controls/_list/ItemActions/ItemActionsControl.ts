@@ -133,10 +133,6 @@ var ItemActionsControl = Control.extend({
             this.serverSide = true;
             return;
         }
-
-        if (newOptions.listModel) {
-            _private.updateModel(this, newOptions);
-        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -147,7 +143,8 @@ var ItemActionsControl = Control.extend({
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
-            this._options.itemActionsPosition !== newOptions.itemActionsPosition
+            this._options.itemActionsPosition !== newOptions.itemActionsPosition ||
+            newOptions.shouldUpdateItemsActions
         ) {
             this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
             _private.updateModel.apply(null, args);
@@ -200,7 +197,9 @@ var ItemActionsControl = Control.extend({
             *
             * So, we should calculate actions for every item everytime.
             */
-           _private.updateActions(this, this._options, type === 'collectionChanged');
+           if(this._options.shouldUpdateItemsActions) {
+               _private.updateActions(this, this._options, type === 'collectionChanged');
+           }
         }
     },
 

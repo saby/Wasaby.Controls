@@ -123,6 +123,10 @@ var _private = {
                     isActive,
                     listModel = self._listViewModel;
 
+                if (self._options.itemActions) {
+                    self._itemsActionsUpdated = false;
+                }
+
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
@@ -409,10 +413,20 @@ var _private = {
                 _private.loadToDirectionIfNeed(self, direction);
             }
         } else {
-
+            let
+                oldIndexes = self._virtualScroll.ItemsIndexes,
+                newIndexes;
             // Иначе пересчитываем скролл
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
+
+            newIndexes = self._virtualScroll.ItemsIndexes;
+
+            // If displayed records has been changed need to update itemActions
+            if (self._options.itemActions && (oldIndexes.start !== newIndexes.start || oldIndexes.stop || newIndexes.stop)) {
+                self._itemsActionsUpdated = false;
+            }
+
         }
     },
 
@@ -631,6 +645,9 @@ var _private = {
                     }
                     if (action === collection.IObservable.ACTION_RESET) {
                         self._virtualScroll.resetItemsIndexes();
+                    }
+                    if (self._options.itemActions) {
+                        self._itemsActionsUpdated = false;
                     }
                     _private.applyVirtualScroll(self);
                 }
@@ -942,6 +959,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _popupOptions: null,
 
+    _shouldUpdateItemsActions: false,
+    _itemsActionsUpdated: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1208,6 +1228,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        if (this._options.itemActions) {
+            this._shouldUpdateItemsActions = false;
+        }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
@@ -1548,6 +1571,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+    },
+
+    _itemMouseMove(event, itemData, nativeEvent){
+        if (this._options.itemActions && !this._itemsActionsUpdated) {
+            this._shouldUpdateItemsActions = true;
+            this._itemsActionsUpdated = true;
+        }
+        this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
     _sortingChanged: function(event, propName, sortingType) {
