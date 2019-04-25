@@ -37,7 +37,7 @@ var
 
 var LOAD_TRIGGER_OFFSET = 100;
 
-const CONST_INITIAL_PAGES_COUNT = 1;
+const INITIAL_PAGES_COUNT = 1;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -120,9 +120,9 @@ var _private = {
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 self._loadedItems = list;
-                if (cfg.navigation && cfg.navigation.view === 'pages') {
+                if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
-                    _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
+                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
                 }
                 var
                     isActive,
@@ -896,11 +896,12 @@ var _private = {
 
     calcPaging: function(self, hasMore, pageSize) {
         if (typeof hasMore === 'number') {
-            self._knownPagesCount = Math.ceil(hasMore / pageSize);
+            return Math.ceil(hasMore / pageSize);
         }
+        else
         if (typeof hasMore === 'boolean' && hasMore) {
             if (self._currentPage === self._knownPagesCount)
-                self._knownPagesCount++;
+                return self._knownPagesCount + 1;
         }
     }
 };
@@ -958,9 +959,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _popupOptions: null,
 
     //Variables for paging navigation
-    _knownPagesCount: CONST_INITIAL_PAGES_COUNT,
-    _currentPage: CONST_INITIAL_PAGES_COUNT,
-
+    _knownPagesCount: INITIAL_PAGES_COUNT,
+    _currentPage: INITIAL_PAGES_COUNT,
+    _pagingNavigation: false,
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -985,6 +986,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.bindHandlers(this);
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
+        this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
         if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
@@ -1022,9 +1024,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
-                    if (newOptions.navigation && newOptions.navigation.view === 'pages') {
+                    if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
-                        _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
@@ -1077,6 +1079,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = newOptions.sorting !== this._options.sorting;
         var self = this;
+        if (this._pagingNavigation && this._sourceController) {
+            var currentPageChanged = this._currentPage !== (this._sourceController._options.navigation.sourceConfig.page + 1);
+        }
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1108,8 +1113,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
-        if (recreateSource || this._currentPageChanged) {
-            if (newOptions.navigation && newOptions.navigation.view === 'pages'){
+        if (recreateSource || currentPageChanged) {
+            if (self._pagingNavigation){
                 var newNavigation = cClone(newOptions.navigation);
                 newNavigation.sourceConfig.page = this._currentPage - 1;
             }
@@ -1135,7 +1140,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
-        if (filterChanged || recreateSource || sortingChanged || this._currentPageChanged) {
+        if (filterChanged || recreateSource || sortingChanged || currentPageChanged) {
             //return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
 
@@ -1151,10 +1156,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
                 // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
                 // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
-                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860 || this._currentPageChanged) {
+                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860 || currentPageChanged) {
                     const firstItem = self._listViewModel.getFirstItem();
 
-                    this._currentPageChanged = false;
                     //the first item may be missing, if, for example, only groups are drawn in the list
                     if (firstItem) {
                         self._keyDisplayedItem = firstItem.getId();
@@ -1167,7 +1171,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldNotifyOnDrawItems = true;
         }
 
-        if (this._loadedItems || this._currentPageChanged) {
+        if (this._loadedItems || currentPageChanged) {
             this._shouldRestoreScrollPosition = true;
         }
     },
@@ -1581,12 +1585,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
-    },
-
-    __pagingChangePage: function (event, page) {
-        this._currentPage = page;
-        this._currentPageChanged = true;
-        this._forceUpdate();
     }
 
 });

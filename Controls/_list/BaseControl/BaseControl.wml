@@ -11,12 +11,11 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
-    <ws:if data="{{_options.navigation.view === 'pages'}}">
+    <ws:if data="{{_pagingNavigation}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <Controls.paging:Paging showDigits = "{{true}}"
                                     pagesCount = "{{_knownPagesCount}}"
                                     bind:selectedPage="_currentPage"
-                                    on:selectedPageChanged="__pagingChangePage()"
             ></Controls.paging:Paging>
 
         </div>
