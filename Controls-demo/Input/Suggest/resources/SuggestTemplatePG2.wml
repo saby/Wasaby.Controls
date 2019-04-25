@@ -1,5 +1,5 @@
 <div>
-    <Controls.Container.Suggest.List>
+    <Controls.suggestPopup:ListContainer>
         <Controls.list:View keyProperty="id">
             <ws:itemTemplate>
                 <ws:partial template="Controls/list:ItemTemplate">
@@ -9,6 +9,6 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls.list:View>
-    </Controls.Container.Suggest.List>
+    </Controls.suggestPopup:ListContainer>
 </div>
 

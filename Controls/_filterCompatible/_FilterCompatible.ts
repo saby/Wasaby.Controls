@@ -3,7 +3,7 @@
  */
 import extend = require('Core/core-extend');
 import stringTransformer = require('SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil');
-import OldPanelOpener = require('Controls/_filterPopup/OldPanelOpener');
+import OldPanelOpener = require('Controls/_filterCompatible/OldPanelOpener');
 import converterFilterStructure = require('Controls/_filterPopup/converterFilterStructure');
 
 

@@ -2,7 +2,7 @@
 
    Шаблон для блока "Отбирается" задается через опцию itemTemplate
    <div style="margin: 20px">
-      <Controls.Filter.Button attr:style="max-width: 200px;"
+      <Controls.filter:Selector attr:style="max-width: 200px;"
                               attr:id="filter1"
                               alignment="left"
                               on:filterChanged="_filterChangedHandler()"
@@ -25,12 +25,12 @@
                <ws:Object id="Test8" value="{{true}}" resetValue="{{false}}" textValue="Test 8"/>
             </ws:Array>
          </ws:items>
-      </Controls.Filter.Button>
+      </Controls.filter:Selector>
    </div>
 
    Шаблон для блока "Отбирается" задается через опцию template для каждого фильтра
    <div style="margin: 20px">
-      <Controls.Filter.Button attr:style="max-width: 200px;"
+      <Controls.filter:Selector attr:style="max-width: 200px;"
                               attr:id="filter2"
                               alignment="left"
                               on:filterChanged="_filterChangedHandler()"
@@ -47,7 +47,7 @@
                           template="wml!Controls-demo/FilterButton/Panel/resources/FIO"/>
             </ws:Array>
          </ws:items>
-      </Controls.Filter.Button>
+      </Controls.filter:Selector>
    </div>
 
    <div>

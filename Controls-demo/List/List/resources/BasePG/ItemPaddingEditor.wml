@@ -1,7 +1,7 @@
 <div style="padding-left: 12px;">
     <div>
         <Controls.input:Label caption="left" attr:class="demo-TextBox"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_left"
@@ -10,7 +10,7 @@
     </div>
     <div>
         <Controls.input:Label caption="right" attr:class="demo-TextBox"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_right"
@@ -19,7 +19,7 @@
     </div>
     <div>
         <Controls.input:Label caption="top" attr:class="demo-TextBox"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_top"
@@ -28,7 +28,7 @@
     </div>
     <div>
         <Controls.input:Label caption="bottom" attr:class="demo-TextBox"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_bottom"

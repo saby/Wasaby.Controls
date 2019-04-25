@@ -2,16 +2,15 @@ define('unit/Filter/Button/History/testHistorySource',
    [
       'Core/Control',
       'Types/di',
-      'Controls/History/Service',
+      'Controls/history',
       'Core/Deferred',
       'Types/source',
       'Types/collection',
       'Types/entity',
-      'Core/Serializer',
-      'Controls/History/Source'
+      'Core/Serializer'
    ],
 
-   function(Control, Di, HistoryService, Deferred, source, collection, entity, Serializer, HistorySource) {
+   function(Control, Di, history, Deferred, source, collection, entity, Serializer) {
 
       'use strict';
 
@@ -74,7 +73,7 @@ define('unit/Filter/Button/History/testHistorySource',
             idProperty: 'id',
             data: items
          }),
-         historySource: new HistoryService({
+         historySource: new history.Service({
             historyId: 'DEMO_HISTORY_ID'
          }),
          parentProperty: 'parent'

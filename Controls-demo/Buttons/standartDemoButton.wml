@@ -149,7 +149,7 @@
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
-                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
+                    <Controls.popupTemplate:CloseButton attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
                 </div>
             </div>
             <div>
@@ -158,7 +158,7 @@
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{false}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{false}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{false}}" size="m"/>
-                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.popupTemplate:CloseButton attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton" transparent="{{false}}"/>
                 </div>
             </div>
         </div>
@@ -315,7 +315,7 @@
                 <div class="demo-Button__Label">Folders on the left</div>
             </div>
             <div attr:class="test_element">
-                <Controls.Button.Close viewMode="link"/>
+                <Controls.popupTemplate:CloseButton viewMode="link"/>
                 <div class="demo-Button__Label">Light close button</div>
             </div>
             <div attr:class="test_element">
@@ -338,7 +338,7 @@
                 <div class="demo-Button__Label">Delete</div>
             </div>
             <div attr:class="test_element">
-                <Controls.Button.Close size="m"/>
+                <Controls.popupTemplate:CloseButton size="m"/>
                 <div class="demo-Button__Label">Editing close button</div>
             </div>
         </div>

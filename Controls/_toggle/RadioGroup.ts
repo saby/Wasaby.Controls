@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 

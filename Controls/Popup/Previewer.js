@@ -1,6 +1,6 @@
 define('Controls/Popup/Previewer',
-   ['Controls/_popup/Previewer'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.PreviewerTarget;
    });

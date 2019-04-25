@@ -17,7 +17,7 @@ define('Controls/interface/IMenu', [], function() {
     * Example menu with scrolling.
     * TMPL:
     * <pre>
-    *    <Controls.Button.Menu
+    *    <Controls.dropdown:Button
     *        keyProperty="id"
     *        icon="icon-small icon-Check"
     *        dropdownClassName="demo_menu"

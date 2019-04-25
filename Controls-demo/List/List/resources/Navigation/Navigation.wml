@@ -1,11 +1,11 @@
 <div class="demo-wrapper">
     <div class="list__demo">
         <div class="properties_wrapper__demo">
-            <Controls.Input.ComboBox readOnly="{{false}}" bind:selectedKey="_navigationViewType" source="{{_navigationViewTypeSource}}" displayProperty="title" keyProperty="title"/>
+            <Controls.dropdown:Combobox readOnly="{{false}}" bind:selectedKey="_navigationViewType" source="{{_navigationViewTypeSource}}" displayProperty="title" keyProperty="title"/>
         </div>
         <div class="control_wrapper__demo">
             <div class="control__demo">
-                <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+                <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
                     <ws:content>
                         <Controls.list:View
                                 source = "{{_viewSource}}"
@@ -21,7 +21,7 @@
                             </ws:navigation>
                         </Controls.list:View>
                     </ws:content>
-                </Controls.Container.Scroll>
+                </Controls.scroll:Container>
             </div>
             <div class="events__demo">
                 <Controls.input:Area readOnly="{{true}}" minLines="{{3}}" maxLines="{{3}}" value="{{_eventsList}}"/>

@@ -2,7 +2,7 @@
     <div class="testBlock" test_name="BackButtonCapture">
         <div class="exampleBlock">
             <h2>Close button</h2>
-            <Controls.Button.Close on:click="clickHandler()" style="{{_closeSelectedStyle}}"/>
+            <Controls.popupTemplate:CloseButton on:click="clickHandler()" style="{{_closeSelectedStyle}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>

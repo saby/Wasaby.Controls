@@ -2,7 +2,7 @@
                       headJson="{{ headJson }}"
                       appRoot="/materials/">
    <ws:content>
-      <Controls.Container.Scroll attr:style="height: 100%">
+      <Controls.scroll:Container attr:style="height: 100%">
          <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
             <Controls-demo.Example.Input.Text/>
             <Controls-demo.Example.Input.Number/>
@@ -16,6 +16,6 @@
             <Controls-demo.Example.Input.Font/>
             <Controls-demo.Example.Input.PositionLabels/>
          </div>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </ws:content>
 </Controls.Application>

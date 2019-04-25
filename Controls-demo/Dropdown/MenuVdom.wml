@@ -2,7 +2,7 @@
    <Controls.input:Text name='fakeText' bind:value="_stateText" attr:test_name="Information"/>
    <h2>Dropdown</h2>
    <div style="padding: 5px;">Простой
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
          bind:selectedKeys="_selectedKeys0"
 			displayProperty="title"
@@ -14,7 +14,7 @@
    </div>
 
    <div style="padding: 5px;">С выбором пустого значения
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
               name="myDropdownList1"
               bind:selectedKeys="_selectedKeysEmpty"
               emptyText="{{true}}"
@@ -28,7 +28,7 @@
 
 
    <div style="padding: 5px;">С кастомными шаблонами записи
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          name="myDropdownList1"
          bind:selectedKeys="_selectedKeys1"
 			displayProperty="title"
@@ -40,7 +40,7 @@
    </div>
 
    <div style="padding: 5px;">С кастомными шаблонами
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          name="myDropdownList2"
          bind:selectedKeys="_selectedKeys2"
 			displayProperty="title"
@@ -52,7 +52,7 @@
    </div>
 
    <div style="padding: 5px;">С иконками
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          name="myDropdownList3"
          bind:selectedKeys="_selectedKeys3"
 			displayProperty="title"
@@ -63,7 +63,7 @@
    </div>
 
    <div style="padding: 5px;">С иерархией
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          name="myDropdownList4"
          bind:selectedKeys="_selectedKeys4"
 			displayProperty="title"
@@ -76,7 +76,7 @@
    </div>
 
    <div style="padding: 5px;">Со скроллом, шапкой и футером
-      <Controls.Input.Dropdown
+      <Controls.dropdown:Input
          name="myDropdownList5"
          attr:test_name="hier_dropdown"
          on:footerClick="footerClickHandler()"
@@ -92,7 +92,7 @@
 	</div>
 
 	<div style="padding: 5px;">readOnly
-		<Controls.Input.Dropdown
+		<Controls.dropdown:Input
 				on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
 				bind:selectedKeys="_selectedKeys0"
 				name="myDropdownList0"

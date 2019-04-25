@@ -1,16 +1,14 @@
 define(
    [
-      'Controls/History/Source',
-      'Controls/History/Service', // for otladka
+      'Controls/history', // for otladka
       'Types/collection',
       'Types/entity',
       'Core/Deferred',
       'Types/source',
-      'Controls/History/Constants',
       'Types/util',
       'Core/core-clone'
    ],
-   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util, clone) => {
+   (historyMod, collection, entity, Deferred, sourceLib, util, clone) => {
       describe('History Source', () => {
          let items = [
             {
@@ -153,12 +151,12 @@ define(
                idProperty: 'id',
                data: items
             }),
-            historySource: new historyService({
+            historySource: new historyMod.Service({
                historyId: 'TEST_HISTORY_ID'
             }),
             parentProperty: 'parent'
          };
-         let hSource = new historySource(config);
+         let hSource = new historyMod.Source(config);
          let testId, meta, hS, historyItems, pinItem;
 
          // overload history source method query, it must return items to test
@@ -178,26 +176,26 @@ define(
                meta = {
                   '$_pinned': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('$_favorite', function() {
                meta = {
                   '$_favorite': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('$_history', function() {
                meta = {
                   '$_history': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('originalSource', function() {
                meta = {};
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(!!hS._historyId, false);
             });
          });
@@ -205,7 +203,7 @@ define(
          describe('serialize tests', function() {
             it('clone', function() {
                var sourceClone = util.object.clone(hSource);
-               assert.isTrue(sourceClone instanceof historySource);
+               assert.isTrue(sourceClone instanceof historyMod.Source);
             });
          });
 
@@ -275,14 +273,14 @@ define(
             it('checkPinnedAmount', function() {
                let list = new collection.RecordSet();
 
-               for (var i = 0; i < Constants.MAX_HISTORY; i++) {
+               for (var i = 0; i < historyMod.Constants.MAX_HISTORY; i++) {
                   list.add(new entity.Model());
                }
 
-               assert.isFalse(historySource._private.checkPinnedAmount(list));
+               assert.isFalse(historyMod.Source._private.checkPinnedAmount(list));
 
                list.remove(list.at(9));
-               assert.isTrue(historySource._private.checkPinnedAmount(list));
+               assert.isTrue(historyMod.Source._private.checkPinnedAmount(list));
             });
             it('updateRecent', function() {
                let meta = {
@@ -309,7 +307,7 @@ define(
                config2.historySource.update = function(data) {
                   updatedData = data;
                };
-               let hSource2 = new historySource(config2);
+               let hSource2 = new historyMod.Source(config2);
                hSource2.update(myItem, meta);
                assert.deepEqual(myItem, updatedData);
 
@@ -330,7 +328,7 @@ define(
                });
                memorySource.query().addCallback(function(res) {
                   let sourceItems = res.getAll();
-                  let preparedHistory = historySource._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
+                  let preparedHistory = historyMod.Source._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
                   assert.equal(preparedHistory.get('frequent').getCount(), 2);
                   preparedHistory.get('frequent').forEach(function(historyItem) {
                      assert.isFalse(historyItem.getId() === '9');
@@ -362,7 +360,7 @@ define(
                      }
                   };
                   let sourceItems = res.getAll();
-                  historySource._private.initHistory(self, newData, sourceItems);
+                  historyMod.Source._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
                   assert.equal(self._recentCount, 2);
                   self._history.pinned.forEach(function(pinnedItem) {
@@ -397,7 +395,7 @@ define(
                      }
                   };
                   let sourceItems = res.getAll();
-                  historySource._private.initHistory(self, newData, sourceItems);
+                  historyMod.Source._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
                   self._history.pinned.forEach(function(pinnedItem) {
                      assert.isFalse(pinnedItem.getId() == '1');
@@ -408,17 +406,17 @@ define(
             });
 
             it('_private:getPinnedIds', function() {
-               let pinnedIds = historySource._private.getPinnedIds(hSource._history.pinned);
+               let pinnedIds = historyMod.Source._private.getPinnedIds(hSource._history.pinned);
                assert.deepEqual(pinnedIds, ['5']);
             });
 
             it('_private:getFrequentIds', function() {
-               let frequentIds = historySource._private.getFrequentIds(hSource, hSource._history.frequent, hSource._history.pinned);
+               let frequentIds = historyMod.Source._private.getFrequentIds(hSource, hSource._history.frequent, hSource._history.pinned);
                assert.deepEqual(frequentIds, ['6', '4']);
             });
 
             it('_private:getRecentIds', function() {
-               let recentIds = historySource._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
+               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
                assert.deepEqual(recentIds, ['7', '8']);
             });
 
@@ -428,7 +426,7 @@ define(
                   frequent: ['6', '4'],
                   recent: ['7', '8']
                };
-               let actualResult = historySource._private.getFilterHistory(hSource, hSource._history);
+               let actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
 
 
@@ -456,7 +454,7 @@ define(
                   ]
                };
                hSource._history.recent = createRecordSet(recentFilteredData);
-               actualResult = historySource._private.getFilterHistory(hSource, hSource._history);
+               actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
             });
          });

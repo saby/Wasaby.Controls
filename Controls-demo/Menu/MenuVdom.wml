@@ -1,7 +1,7 @@
 <div>
    <div class="controls-VDomMenu" style="padding: 50px;">
       Меню с историей и разделителями
-      <Controls.History.Menu
+      <Controls.history:Menu
               attr:class="demo-Menu_width"
               name="myMenuButton1"
               keyProperty="id"
@@ -15,7 +15,7 @@
    </div>
    <div class="controls-VDomMenu" style="padding: 50px;">
       Меню с историей и группировкой с текстом
-      <Controls.History.Menu
+      <Controls.history:Menu
               name="myMenuButton2"
               keyProperty="id"
               style="buttonDefault"

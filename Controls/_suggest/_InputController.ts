@@ -259,10 +259,10 @@ var _private = {
  *
  * @class Controls/_suggest/_InputController
  * @extends Core/Control
- * @mixes Controls/Input/interface/ISearch
+ * @mixes Controls/interface/ISearch
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/Input/interface/ISuggest
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
  * @public

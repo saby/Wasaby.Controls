@@ -1,9 +1,9 @@
 define([
-   'Controls/Selector/SelectedCollection/Controller',
+   'Controls/lookup',
    'Types/entity',
    'Types/collection',
    'Types/source'
-], function(SelectedCollection, entity, collection, sourceLib) {
+], function(scroll, entity, collection, sourceLib) {
 
    function getBaseSelectedCollection() {
       return {
@@ -23,10 +23,10 @@ define([
    describe('Controls/Selector/SelectedCollection/Controller', function() {
       // Убираем работу с вертской
       if (typeof window === 'undefined') {
-         SelectedCollection._private.getCounterWidth = function() {};
+         scroll._CollectionController._private.getCounterWidth = function() {};
       }
 
-      SelectedCollection._private.getHistoryService = function() {
+      scroll._CollectionController._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
                func({
@@ -41,7 +41,7 @@ define([
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 
-         SelectedCollection._private.setSelectedKeys(self, [1]);
+         scroll._CollectionController._private.setSelectedKeys(self, [1]);
 
          assert.deepEqual(self._selectedKeys, [1]);
       });
@@ -67,7 +67,7 @@ define([
                keyProperty: 'id'
             }
          };
-         SelectedCollection._private.loadItems(self, null, self._options.keyProperty, self._options.selectedKeys, self._options.source).addCallback(function(result) {
+         scroll._CollectionController._private.loadItems(self, null, self._options.keyProperty, self._options.selectedKeys, self._options.source).addCallback(function(result) {
             assert.equal(selectedItems, result);
             assert.equal(result.at(0).getId(), 1);
             assert.equal(result.at(1).getId(), 2);
@@ -79,7 +79,7 @@ define([
       it('getItems', function() {
          var self = {};
 
-         var items = SelectedCollection._private.getItems(self);
+         var items = scroll._CollectionController._private.getItems(self);
 
          assert.isTrue(items['[Types/_collection/List]']);
          assert.isTrue(self._items['[Types/_collection/List]']);
@@ -112,21 +112,21 @@ define([
             }
          };
 
-         SelectedCollection._private.addItem(self, item);
+         scroll._CollectionController._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
          assert.equal(textValue, 'Roman');
 
          keysChanged = false;
-         SelectedCollection._private.addItem(self, item);
+         scroll._CollectionController._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.at(0), item);
 
          selectedItems = self._items;
          self._options.multiSelect = true;
-         SelectedCollection._private.addItem(self, item2);
+         scroll._CollectionController._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
@@ -163,14 +163,14 @@ define([
             }
          };
 
-         SelectedCollection._private.addItem(self, item);
+         scroll._CollectionController._private.addItem(self, item);
 
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.getCount(), 1);
 
          keysChanged = false;
-         SelectedCollection._private.removeItem(self, fakeItem);
+         scroll._CollectionController._private.removeItem(self, fakeItem);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.getCount(), 1);
@@ -178,7 +178,7 @@ define([
 
 
          selectedItems = self._items;
-         SelectedCollection._private.removeItem(self, item.clone());
+         scroll._CollectionController._private.removeItem(self, item.clone());
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
          assert.notEqual(selectedItems, self._items);
@@ -187,7 +187,7 @@ define([
       });
 
       it('_beforeMount', function() {
-         var selectedCollection = new SelectedCollection();
+         var selectedCollection = new scroll._CollectionController();
          var selectedKeys = [1];
 
          selectedCollection._beforeMount({
@@ -201,7 +201,7 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, selectedKeys);
          assert.notEqual(selectedCollection._selectedKeys, selectedKeys);
 
-         var collectionWithReceivedState = new SelectedCollection();
+         var collectionWithReceivedState = new scroll._CollectionController();
          collectionWithReceivedState._beforeMount({
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
@@ -219,7 +219,7 @@ define([
       });
 
       it('_beforeUpdate', function(done) {
-         var selectedCollection = new SelectedCollection();
+         var selectedCollection = new scroll._CollectionController();
          var selectedKeysLink;
          var selectedKeys = [];
          var textValue = '';
@@ -323,7 +323,7 @@ define([
       it('_setItems', function() {
          var
             selectedItems,
-            selectedCollection = new SelectedCollection(),
+            selectedCollection = new scroll._CollectionController(),
             items = [
                new entity.Model({
                   rawData: {id: 1}
@@ -352,7 +352,7 @@ define([
 
       it('_selectCallback', function() {
          var
-            selectedCollection = new SelectedCollection(),
+            selectedCollection = new scroll._CollectionController(),
             item = new entity.Model({
                rawData: {id: 1}
             });
@@ -371,7 +371,7 @@ define([
          var
             templateOptions,
             isShowSelector = false,
-            selectedCollection = new SelectedCollection(),
+            selectedCollection = new scroll._CollectionController(),
             items = new collection.List(),
             selectedItems,
             opener;

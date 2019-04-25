@@ -1,4 +1,4 @@
-<Controls.Input.Suggest
+<Controls.suggest:Input
         value="{{_viewValue}}"
         displayProperty="title"
         searchParam="title"
@@ -17,4 +17,4 @@
                           title="{{_options.config.value}}"
                           comment="{{_options.config.comment}}"/>
    </ws:suggestTemplate>
-</Controls.Input.Suggest>
+</Controls.suggest:Input>
