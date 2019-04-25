@@ -71,13 +71,13 @@ define('Controls/interface/IFilterButton', [
     *       templateName="wml!MyModule/panelTemplate"
     *       items="{{_items}}">
     *       <ws:lineSpaceTemplate>
-    *          <Controls.Input.Date.RangeLinkLite
+    *          <Controls.dateRange:LiteSelector
     *             startValue="{{_startValue}}"
     *             endValue="{{_endValue}}"/>
     *       </ws:lineSpaceTemplate>
     *    </Controls.filter:Selector>
     * </pre>
-    * @see Controls/Input/Date/RangeLinkLite
+    * @see Controls.dateRange:LiteSelector
     */
 
    /**

@@ -1,9 +1,9 @@
-define(['Controls/List/TreeGridView/TreeGridViewModel',
-   'Core/core-instance', 'Types/collection'], function(TreeGridViewModel, cInstance, collection) {
+define(['Controls/treeGrid',
+   'Core/core-instance', 'Types/collection'], function(treeGrid, cInstance, collection) {
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var
-         treeGridViewModel = new TreeGridViewModel({columns:[]});
+         treeGridViewModel = new treeGrid.ViewModel({columns:[]});
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
@@ -34,7 +34,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                2: { date: { } },
                3: { date: { } }
             },
-            ladderViewModel = new TreeGridViewModel({
+            ladderViewModel = new treeGrid.ViewModel({
                items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
@@ -90,8 +90,8 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
       it('getItemDataByItem', function() {
          var
             itemData,
-            originFn = TreeGridViewModel.superclass.getItemDataByItem;
-         TreeGridViewModel.superclass.getItemDataByItem = function() {
+            originFn = treeGrid.ViewModel.superclass.getItemDataByItem;
+         treeGrid.ViewModel.superclass.getItemDataByItem = function() {
             return {
                item: {},
                getCurrentColumn: function() {
@@ -107,7 +107,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
          var
             currentColumn = itemData.getCurrentColumn();
          assert.equal(currentColumn.cellClasses, ' controls-TreeGrid__row-cell controls-TreeGrid__row-cell__item');
-         TreeGridViewModel.superclass.getItemDataByItem = originFn;
+         treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
 
       it('getCurrent', function () {
@@ -142,7 +142,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -176,7 +176,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -219,7 +219,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -235,7 +235,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
              }),
              current = model.getCurrent();
 
-         assert.equal(TreeGridViewModel._private.calcGroupRowIndex(model, current), 0);
+         assert.equal(treeGrid.ViewModel._private.calcGroupRowIndex(model, current), 0);
 
       });
 
@@ -245,7 +245,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -265,13 +265,13 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 }
              };
 
-         assert.equal(TreeGridViewModel._private.getFooterStyles(self, 1, 2),
+         assert.equal(treeGrid.ViewModel._private.getFooterStyles(self, 1, 2),
              'grid-row: 2; -ms-grid-row: 2; grid-column: 1 / 2; -ms-grid-column: 1; -ms-grid-column-span: 1;'
          );
 
          self._options.multiSelectVisibility = 'visible';
 
-         assert.equal(TreeGridViewModel._private.getFooterStyles(self, 1, 2),
+         assert.equal(treeGrid.ViewModel._private.getFooterStyles(self, 1, 2),
              'grid-row: 2; -ms-grid-row: 2; grid-column: 2 / 2; -ms-grid-column: 2; -ms-grid-column-span: 1;'
          );
       });
@@ -282,7 +282,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -298,7 +298,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
              }),
              current = model.getCurrent();
 
-         assert.equal(TreeGridViewModel._private.calcRowIndex(model, current), 0);
+         assert.equal(treeGrid.ViewModel._private.calcRowIndex(model, current), 0);
 
       });
 
@@ -308,7 +308,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                 width: '1fr',
                 displayProperty: 'title'
              }],
-             model = new TreeGridViewModel({
+             model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [
@@ -324,17 +324,17 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
              }),
              current = model.getCurrent();
 
-         var safeFunc = TreeGridViewModel.calcGroupRowIndex;
+         var safeFunc = treeGrid.ViewModel.calcGroupRowIndex;
 
-         TreeGridViewModel._private.calcGroupRowIndex = function () {
+         treeGrid.ViewModel._private.calcGroupRowIndex = function () {
             return 1;
          };
 
-         TreeGridViewModel._private.prepareGroupGridStyles(model, current);
+         treeGrid.ViewModel._private.prepareGroupGridStyles(model, current);
 
          assert.equal(current.gridGroupStyles, 'grid-row: 2; -ms-grid-row: 2;');
 
-         TreeGridViewModel._private.calcGroupRowIndex = safeFunc;
+         treeGrid.ViewModel._private.calcGroupRowIndex = safeFunc;
       });
 
       it('setExpandedItems', function() {

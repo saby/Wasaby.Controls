@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="Suggest">
     <ws:componentClass>
-        <Controls.Popup.Opener.InfoBox name="infoBoxSuggest"/>
+        <Controls.popup:Infobox name="infoBoxSuggest"/>
         <Controls.suggest:Input
                 attr:test_name="Suggest"
                 name="suggest"

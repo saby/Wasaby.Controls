@@ -1,5 +1,5 @@
 <div class="controls-SelectedCollection__infobox_content">
-   <Controls._heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
+   <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
    <Controls.scroll:Container>
       <Controls.lookup:Collection
             items="{{_items}}"

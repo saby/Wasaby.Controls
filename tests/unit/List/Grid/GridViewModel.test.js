@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone'], function(GridViewModel, cMerge, collection, entity, clone) {
+define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone'], function(gridMod, cMerge, collection, entity, clone) {
    var
       gridData = [
          {
@@ -96,7 +96,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
    describe('Controls.List.Grid.GridViewModel', function() {
       describe('DragNDrop methods', function() {
-         var gridViewModel = new GridViewModel(cfg);
+         var gridViewModel = new gridMod.GridViewModel(cfg);
 
          it('setDragTargetPosition', function() {
             var dragTargetPosition = {};
@@ -119,19 +119,19 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
       describe('"_private" block', function() {
          it('calcItemColumnVersion', function() {
-            assert.equal(GridViewModel._private.calcItemColumnVersion({
+            assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
                _options: {
                   multiSelectVisibility: 'hidden'
                }
             }, 1, 0), '1_1_0');
-            assert.equal(GridViewModel._private.calcItemColumnVersion({
+            assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
                _options: {
                   multiSelectVisibility: 'visible'
                }
             }, 1, 0), '1_1_-1');
-            assert.equal(GridViewModel._private.calcItemColumnVersion({
+            assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
                _options: {
                   multiSelectVisibility: 'visible'
@@ -146,9 +146,9 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                },
                idProperty: 'id'
             });
-            assert.isFalse(!!GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
-            assert.isFalse(!!GridViewModel._private.isNeedToHighlight(item, 'title', ''));
-            assert.isTrue(!!GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
+            assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
+            assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
+            assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
          it('isDrawActions', function() {
             var
@@ -236,7 +236,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                ];
             testCases.forEach(function(testCase, idx) {
                assert.equal(testCase.resultData,
-                  GridViewModel._private.isDrawActions(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan),
+                  gridMod.GridViewModel._private.isDrawActions(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan),
                   'Invalid result data in test #' + idx);
             });
          });
@@ -305,7 +305,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                ];
             testCases.forEach(function(testCase, idx) {
                assert.equal(testCase.resultData,
-                  GridViewModel._private.getCellStyle(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
+                  gridMod.GridViewModel._private.getCellStyle(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
                   'Invalid result data in test #' + idx);
             });
          });
@@ -343,33 +343,33 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ];
             assert.equal(expectedResultWithoutMultiselect[0],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[1],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[2],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
             assert.equal(expectedResultWithMultiselect[0],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[1],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[2],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[3],
-               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
+               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
          });
          it('getSortingDirectionByProp', function() {
-            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
-            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
-            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
-            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+            assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
+            assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
+            assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+            assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
          });
          it('prepareRowSeparatorClasses', function() {
             var
@@ -385,7 +385,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                ],
                expectedResultForFirstItemInGroup = ' controls-Grid__row-cell_first-row-in-group';
 
-            assert.equal(expectedResultWithRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithRowSeparator[0], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: true,
                isFirstInGroup: false,
                index: 0,
@@ -399,7 +399,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   }
                }
             }));
-            assert.equal(expectedResultWithRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithRowSeparator[1], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: true,
                isFirstInGroup: false,
                index: 1,
@@ -413,7 +413,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   }
                }
             }));
-            assert.equal(expectedResultWithRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithRowSeparator[2], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: true,
                isFirstInGroup: false,
                index: 2,
@@ -428,7 +428,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                }
             }));
 
-            assert.equal(expectedResultWithoutRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithoutRowSeparator[0], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: false,
                isFirstInGroup: false,
                index: 0,
@@ -442,7 +442,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   }
                }
             }));
-            assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithoutRowSeparator[1], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: false,
                isFirstInGroup: false,
                index: 1,
@@ -456,7 +456,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   }
                }
             }));
-            assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultWithoutRowSeparator[2], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: false,
                isFirstInGroup: false,
                index: 2,
@@ -471,7 +471,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                }
             }));
 
-            assert.equal(expectedResultForFirstItemInGroup, GridViewModel._private.prepareRowSeparatorClasses({
+            assert.equal(expectedResultForFirstItemInGroup, gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: true,
                isFirstInGroup: true,
                index: 0,
@@ -488,7 +488,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
          it('getItemColumnCellClasses for old browsers', function() {
             var
-               gridViewModel = new GridViewModel(cfg),
+               gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
                expected = {
                   withMarker: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
@@ -501,21 +501,21 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             current.isNotFullGridSupport = true;
 
             assert.equal(expected.withMarker,
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
             current.markerVisibility = 'hidden';
             current.resetColumnIndex();
 
             assert.equal(expected.withoutMarker,
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
 
          });
          it('should update last item after append items', function () {
             var
-                gridViewModel = new GridViewModel(cfg),
+                gridViewModel = new gridMod.GridViewModel(cfg),
                 oldLastIndex = gridViewModel.getCount()-1,
                 firstItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(0)),
                 lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex)),
@@ -546,7 +546,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
          it('getItemColumnCellClasses', function() {
             var
-               gridViewModel = new GridViewModel(cfg),
+               gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
@@ -566,30 +566,30 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' +
                   ' controls-Grid__row-cell__last controls-Grid__row-cell__last-default'];
             assert.equal(expectedResult[0],
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[1],
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[2],
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[3],
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
             current.isSelected = false;
             assert.equal(expectedResult[4],
-               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               gridMod.GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
       });
       describe('getCurrent', function() {
          var
-            gridViewModel = new GridViewModel(cfg),
+            gridViewModel = new gridMod.GridViewModel(cfg),
             current = gridViewModel.getCurrent();
 
          it('configuration', function() {
@@ -735,7 +735,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
       describe('methods for processing with items', function() {
          var
-            gridViewModel = new GridViewModel(cfg);
+            gridViewModel = new gridMod.GridViewModel(cfg);
          it('getColumns', function() {
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()".');
          });
@@ -748,7 +748,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
          it('methods throwing a call into the model', function() {
             var
-               gridViewModel = new GridViewModel(cfg),
+               gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
@@ -809,7 +809,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                8: { ladderLength: 1 },
                9: { ladderLength: 1 }
             },
-            ladderViewModel = new GridViewModel({
+            ladderViewModel = new gridMod.GridViewModel({
                items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
@@ -859,7 +859,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
          // check ladder and grouping
          var
-            groupingLadderViewModel = new GridViewModel({
+            groupingLadderViewModel = new gridMod.GridViewModel({
                items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
@@ -914,7 +914,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
       describe('other methods of the class', function() {
          var
-            gridViewModel = new GridViewModel(cfg),
+            gridViewModel = new gridMod.GridViewModel(cfg),
             imitateTemplate = function() {};
          it('setColumnTemplate', function() {
             assert.equal(null, gridViewModel._columnTemplate, 'Incorrect value "_columnTemplate" before "setColumnTemplate(imitateTemplate)".');
@@ -996,7 +996,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
          it('getEditingRowStyles', function () {
             var
-                gridViewModel = new GridViewModel(cfg);
+                gridViewModel = new gridMod.GridViewModel(cfg);
 
             gridViewModel._options.multiSelectVisibility = 'hidden';
 
@@ -1013,12 +1013,12 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                }
             ];
 
-            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+            assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
                 'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 4;');
 
             gridViewModel._options.multiSelectVisibility = 'onhover';
 
-            assert.equal(GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
+            assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
                 'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 5;');
 
          });

@@ -30,7 +30,7 @@ define('Controls/List/interface/IExplorer', ['Controls/_list/interface/IExplorer
  * @name Controls/List/interface/IExplorer#backButtonStyle
  * @cfg {String} Back heading display style.
  * @default secondary
- * @see Controls/_heading:Back#style
+ * @see Controls/heading:Back#style
  */
    /**
  * @name Controls/List/interface/IExplorer#showActionButton

@@ -6,10 +6,10 @@ define('Controls/Popup/Compatible/ManagerWrapper',
       'Core/Control',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
-      'Controls/Popup/Manager/ManagerController',
+      'Controls/popup',
       'Vdom/Vdom'
    ],
-   function(Control, Controller, template, ManagerController, Vdom) {
+   function(Control, Controller, template, popup, Vdom) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
@@ -55,7 +55,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
 
          _mouseDownHandler: function(event) {
             this._eventRegistratorHandler('mousedownDetect', event);
-            var Manager = ManagerController.getManager();
+            var Manager = popup.Controller.getManager();
             if (Manager) {
                Manager._mouseDownHandler(event);
             }

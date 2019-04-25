@@ -112,7 +112,7 @@ define('Controls/interface/IMovable', [
     * The following example shows how to display the error dialog after a failed move of items.
     * <pre>
     *    <Controls.list:View.Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
-    *    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+    *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
     * <pre>
@@ -206,7 +206,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
-    *    <Controls.Button caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
     *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *
@@ -233,7 +233,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move the selected items to the root by clicking the button.
     * <pre>
-    *    <Controls.Button caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
     *    <Controls.list:View.Mover name="listMover"/>
     * </pre>
     *

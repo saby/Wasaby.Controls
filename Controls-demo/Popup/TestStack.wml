@@ -6,14 +6,14 @@
    </ws:headerContentTemplate>
    <ws:bodyContentTemplate>
       <div style="width: {{ _options.width || '700px'}}">
-         <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack">
+         <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack">
             <ws:componentOptions type="stack"/>
-         </Controls.Popup.Opener.Stack>
-         <Controls.Popup.Opener.Stack name="formControllerOpener" template="Controls-demo/Popup/Edit/MyFormController" type="stack" width="650">
-         </Controls.Popup.Opener.Stack>
-         <Controls.Popup.Opener.Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog">
+         </Controls.popup:Stack>
+         <Controls.popup:Stack name="formControllerOpener" template="Controls-demo/Popup/Edit/MyFormController" type="stack" width="650">
+         </Controls.popup:Stack>
+         <Controls.popup:Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog">
             <ws:templateOptions type="dialog"/>
-         </Controls.Popup.Opener.Dialog>
+         </Controls.popup:Dialog>
          <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
          <br/>
          <Controls.buttons:Button caption="Открыть через OpenEditDialog (TestStack, dialog)"

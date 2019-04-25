@@ -1,5 +1,5 @@
 <div>
-   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
+   <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
    <div class="event-example__wrapper">
       <div class="exampleBlock">
          <h3>Example</h3>

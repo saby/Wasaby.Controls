@@ -18,7 +18,7 @@
                </ws:if>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
                   <Controls.list:Container>
-                     <Controls.explorers:View
+                     <Controls.explorer:View
                         name="explorer"
                         itemActions="{{_itemActions}}"
                         itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
