@@ -1,1 +1,4 @@
-<Controls.input:Text value="Мой текст в инпуте" tagStyle="danger" on:click="_clickHandler()"/>
+<div>
+    <Controls.input:Text bind:value="_value" tagStyle="danger" attr:style="margin-right:15px"/>
+<Controls.buttons:Button name="sendResult" caption="SendResult" on:click="_clickHandler()"/>
+</div>

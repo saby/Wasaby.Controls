@@ -1,4 +1,3 @@
-<div style="height: 200px; width:550px">
     <Controls.popupTemplate:Dialog headingCaption="Создание категории" closeButtonVisibility="true">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;" ws-no-focus="true">
@@ -12,5 +11,3 @@
             </div>
         </ws:bodyContentTemplate>
     </Controls.popupTemplate:Dialog>
-
-</div>

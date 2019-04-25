@@ -1,4 +1,4 @@
-define('Controls-demo/Popup/Opener/DialogPG',
+define('Controls-demo/Popup/Opener/StickyPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/Popup/Opener/OpenerDemoPG',
@@ -18,8 +18,8 @@ define('Controls-demo/Popup/Opener/DialogPG',
          _template: template,
          _metaData: null,
          _dataOptions: null,
-         _content: 'Controls/Popup/Opener/Dialog',
-         _nameOpener: 'dialogOpener',
+         _content: 'Controls/_popup/Opener/Sticky',
+         _nameOpener: 'stickyOpener',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -43,25 +43,54 @@ define('Controls-demo/Popup/Opener/DialogPG',
                   value: 'Dialog template'
                },
                templateOptions: {
-                     items: [
-                        { id: '1', title: '{ value: \'My text\' }', items: { value: 'My text' }},
-                        { id: '2', title: '{ value: \'Сustom text\' }' , items: { value: 'Сustom text' } }
-                     ],
-                     value:  '{ value: \'My text\' }'
+                  baseObject: {
+                     value: 'MyText'
+                  }
+               },
+               direction: {
+                  baseObject: {
+                     vertical : 'bottom',
+                     horizontal: 'right'
+                  }
+               },
+               targetPoint: {
+                  baseObject: {
+                     vertical : 'bottom',
+                     horizontal: 'right'
+                  }
+               },
+              offset: {
+                  flag: 'Number',
+                  baseObject: {
+                     vertical : 20,
+                     horizontal: 20
+                  }
                }
-
             };
             this._componentOptions = {
                autofocus: true,
-               name: 'Dialog',
+               direction:{
+                  vertical : 'bottom',
+                  horizontal: 'right'
+               },
+               targetPoint:{
+                  vertical : 'bottom',
+                  horizontal: 'right'
+               },
+               actionOnScroll: 'close',
+               fittingMode: 'fixed',
+               name: 'StickyOpener',
                modal: false,
-               className: 'controls_Dialog-Opener',
+               className: 'controls_StickyOpener',
                closeOnOutsideClick: true,
                template:  'wml!Controls-demo/Popup/Opener/DialogTpl',
                templateOptions:  { value: 'My text' },
                width: 550,
-               height: 200,
-               maxHeight: 200,
+               height: 300,
+               maxHeight: 500,
+               maxWidth: 600,
+               minWidth: 550,
+               minHeight: 300,
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
