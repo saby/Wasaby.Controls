@@ -1,3 +1,5 @@
+import DataContext = require('Core/DataContext');
+
 /**
  * Context for {@link Controls/_scroll/Scroll}.
  * Used to control the visibility of paginated navigation.
@@ -29,11 +31,11 @@
  * @category Container
  *
  */
-import DataContext = require('Core/DataContext');
-      export = DataContext.extend({
-         _moduleName: 'Controls/_scroll/Scroll/Context',
-         constructor: function(cfg) {
-            this.pagingVisible = cfg.pagingVisible;
-         }
-      });
+
+export = DataContext.extend({
+    _moduleName: 'Controls/_scroll/Scroll/Context',
+    constructor: function(cfg) {
+        this.pagingVisible = cfg.pagingVisible;
+    }
+});
 
