@@ -37,12 +37,12 @@
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__top"
-                              attr:style="position: absolute"
+                              attr:style="position: absolute; top: 0px;right:50%"
                               on:mouseenter="_open(_cfgTop)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__bottom"
-                              attr:style="position: absolute; bottom: 0px"
+                              attr:style="position: absolute; bottom: 0px;right:50%"
                               on:mouseenter="_open(_cfgBottom)"/>
 
 
