@@ -4,7 +4,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import IDateTimeMask = require('Controls/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Date/Picker/Picker');
-import 'css!theme?Controls/_input/Date/Picker/Picker';
+import 'css!theme?Controls/input';
 
    /**
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
