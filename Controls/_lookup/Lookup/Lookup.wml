@@ -1,4 +1,4 @@
-<Controls._lookup.SelectedCollection.Controller
+<Controls._lookup.Controller
       name="controller"
       source="{{_options.source}}"
       selectedKeys="{{_options.selectedKeys}}"
@@ -11,5 +11,5 @@
       historyId="{{_options.historyId}}"
       dataLoadCallback="{{_options.dataLoadCallback}}"
       attr:class="controls-Lookup">
-   <Controls._lookup.Lookup._Lookup scope="{{_options}}"/>
-</Controls._lookup.SelectedCollection.Controller>
+   <Controls._lookup.Lookup.LookupView scope="{{_options}}"/>
+</Controls._lookup.Controller>

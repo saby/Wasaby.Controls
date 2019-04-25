@@ -1,5 +1,5 @@
 import input = require('Controls/input');
-import template = require('wml!Controls/_lookup/Lookup/InputRender/InputRender');
+import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/InputRender');
 
 
    var InputRenderLookup = input.Text.extend({

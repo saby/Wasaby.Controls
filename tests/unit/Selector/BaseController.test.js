@@ -20,7 +20,7 @@ define([
       }
    }
 
-   describe('Controls/Selector/SelectedCollection/Controller', function() {
+   describe('Controls/_lookup/BaseController', function() {
       // Убираем работу с вертской
       if (typeof window === 'undefined') {
          scroll._CollectionController._private.getCounterWidth = function() {};
@@ -366,36 +366,6 @@ define([
          );
 
          assert.isTrue(item._isUpdateHistory);
-      });
-
-      it('showSelector', function() {
-         var
-            templateOptions,
-            isShowSelector = false,
-            selectedCollection = new scroll._CollectionController(),
-            items = new collection.List(),
-            selectedItems,
-            opener;
-
-         selectedCollection._options.selectorTemplate = {};
-         selectedCollection._items = items;
-         selectedCollection._children.selectorOpener = {
-            open: function(config) {
-               isShowSelector = true;
-               templateOptions = config.templateOptions;
-               opener = config.opener;
-               selectedItems = config.selectedItem;
-            }
-         };
-
-         selectedCollection.showSelector({
-            selectedTab: 'Employees'
-         });
-
-         assert.isTrue(isShowSelector);
-         assert.isTrue(items !== selectedItems);
-         assert.equal(templateOptions.selectedTab, 'Employees');
-         assert.equal(opener, selectedCollection);
       });
    });
 });

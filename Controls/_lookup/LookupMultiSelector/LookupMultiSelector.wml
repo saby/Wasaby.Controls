@@ -1,0 +1,16 @@
+<Controls._lookup.ControllerMultiSelector
+        name="controller"
+        source="{{_options.source}}"
+        selectedKeys="{{_options.selectedKeys}}"
+        keyProperty="{{_options.keyProperty}}"
+        displayProperty="{{_options.displayProperty}}"
+        filter="{{_options.filter}}"
+        selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
+        isCompoundTemplate="{{_options.isCompoundTemplate}}"
+        multiSelect="{{true}}"
+        historyId="{{_options.historyId}}"
+        dataLoadCallback="{{_options.dataLoadCallback}}"
+        selectorCallback="{{_options.selectorCallback}}"
+        attr:class="controls-Lookup controls-LookupMultiDirectory">
+    <Controls._lookup.LookupMultiSelector.LookupView scope="{{_options}}"/>
+</Controls._lookup.ControllerMultiSelector>
