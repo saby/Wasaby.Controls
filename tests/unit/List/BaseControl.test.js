@@ -145,7 +145,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrids/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel'));
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {

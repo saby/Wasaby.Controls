@@ -1,4 +1,4 @@
-define('Controls/List/TreeGrid/Styles', ['Controls/_treeGrids/TreeGrid/Styles'], function(Control) {
+define('Controls/List/TreeGrid/Styles', ['Controls/_treeGrid/TreeGrid/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/TreeGrid/Styles
