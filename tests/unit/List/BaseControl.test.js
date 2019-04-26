@@ -252,20 +252,27 @@ define([
 
       it('errback to callback', function(done) {
          var source = new sourceLib.Memory({
-            idProperty: 'id',
-            data: data
+            data: [{
+               id: 11,
+               key: 1,
+               val: 'first'
+            }, {
+               id: 22,
+               key: 2,
+               val: 'second'
+            }]
          });
 
-
          var cfg = {
+            keyProperty: 'key',
             viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               keyProperty: 'id'
+               keyProperty: 'key'
             },
             viewModelConfig: {
                items: [],
-               keyProperty: 'id'
+               keyProperty: 'key'
             },
             viewModelConstructor: lists.ListViewModel
          };
@@ -278,6 +285,8 @@ define([
 
          // waiting for first load
          setTimeout(function() {
+            assert.equal(ctrl._items.getIdProperty(), cfg.keyProperty);
+
             // emulate loading error
             ctrl._sourceController.load = function() {
                var def = new cDeferred();
