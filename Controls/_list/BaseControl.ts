@@ -1080,7 +1080,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var sortingChanged = newOptions.sorting !== this._options.sorting;
         var self = this;
         if (this._pagingNavigation && this._sourceController) {
-            var currentPageChanged = this._currentPage !== (this._sourceController._options.navigation.sourceConfig.page + 1);
+            var currentPageChanged = this._currentPage !== (this._sourceController.getNavigation().sourceConfig.page + 1);
         }
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
