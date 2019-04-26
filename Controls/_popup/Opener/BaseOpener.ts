@@ -65,7 +65,7 @@ import {parse as parserLib, load} from 'Core/library';
          },
 
          open: function(popupOptions, controller) {
-            var cfg = this._getConfig(popupOptions);
+            var cfg = this._getConfig(popupOptions || {});
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             this._toggleIndicator(true);
@@ -188,7 +188,10 @@ import {parse as parserLib, load} from 'Core/library';
                }
             }
 
-            let baseCfg = { ...baseConfig, ...popupOptions };
+            let templateOptions = {};
+            CoreMerge(templateOptions, baseConfig.templateOptions || {});
+            CoreMerge(templateOptions, popupOptions.templateOptions || {});
+            let baseCfg = { ...baseConfig, ...popupOptions, templateOptions };
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
