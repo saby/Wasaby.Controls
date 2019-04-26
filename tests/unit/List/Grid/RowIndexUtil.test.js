@@ -6,7 +6,7 @@ define([
    'Types/entity'
 ], function (Util, treeGrid, cInstance, collection, _entity) {
 
-   describe('Controls/_grids/RowIndexUtil', function () {
+   describe('Controls/_grid/RowIndexUtil', function () {
 
       var
           initialColumns = [{
