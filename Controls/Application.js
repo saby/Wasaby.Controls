@@ -234,8 +234,8 @@ define('Controls/Application',
             } else {
                this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
             }
-            
-            // We have to call forceUpdate, because template doesn't use 
+
+            // We have to call forceUpdate, because template doesn't use
             // '_scrollingClass' from state, but template uses method
             // calculateBodyClasses which uses _scrollingClass.
             // We should trigger manually template's update
@@ -273,6 +273,7 @@ define('Controls/Application',
             // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
             // Т.к. это должно храниться в отдельном сторе
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (appData.RUMEnabled || '');
+            self.pageName = cfg.pageName || appData.pageName || '';
             self.product = appData.product || cfg.product || Env.constants.product;
             self.lite = cfg.lite || false;
 
