@@ -1,7 +1,8 @@
 <body>
-    <Controls.Popup.Opener.Dialog name="dialogOpener" />
+    <Controls.popup:Dialog name="dialogOpener" />
     <ws:partial
         template="{{ _options.content }}"
+        scope="{{ _options }}"
         on:serviceError="_openDialog()"
     />
 </body>
