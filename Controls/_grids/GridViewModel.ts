@@ -333,7 +333,7 @@ var
             let colspan = self._columns.length + (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0);
 
             // grid-row and grid-column with prefixes
-            styles += GridLayoutUtil.getCellStyles(rowIndex+1, 0, null, colspan);
+            styles += GridLayoutUtil.getCellStyles(rowIndex, 0, null, colspan);
 
             return styles;
         },
