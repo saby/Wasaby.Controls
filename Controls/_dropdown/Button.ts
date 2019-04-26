@@ -21,8 +21,8 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IButton
- * @mixes Controls/Button/interface/IIcon
- * @mixes Controls/Button/interface/IIconStyle
+ * @mixes Controls/interface/IIcon
+ * @mixes Controls/interface/IIconStyle
  * @control
  * @public
  * @author Михайловский Д.С.
