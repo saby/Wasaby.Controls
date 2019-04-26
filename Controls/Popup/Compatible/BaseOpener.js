@@ -600,16 +600,10 @@ function(cMerge,
          cfg.minWidth = parseInt(cfg.minWidth, 10);
          cfg.maxWidth = parseInt(cfg.maxWidth, 10);
 
-         cfg.minWidth = cfg.minWidth || cfg.maxWidth;
-         cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
-
          if (!cfg.minHeight && dimensions.height) {
             // дименшены задают высоту шаблона. если есть шапка, то нужно учесть и ее высоту
             cfg.minHeight = parseInt(dimensions.height, 10) + (cfg.templateOptions.caption ? 40 : 0);
          }
-
-         cfg.minHeight = cfg.minHeight || cfg.maxHeight;
-         cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
 
          if (!cfg.minHeight) { // нет размеров - строимся по контенту
             cfg.autoHeight = true;
