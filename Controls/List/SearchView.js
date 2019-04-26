@@ -1,3 +1,3 @@
-define('Controls/List/SearchView', ['Controls/_treeGrids/SearchView'], function(Control) {
+define('Controls/List/SearchView', ['Controls/_treeGrid/SearchView'], function(Control) {
    return Control;
 });

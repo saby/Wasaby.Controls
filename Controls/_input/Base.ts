@@ -6,7 +6,6 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import isEqual = require('Core/helpers/Object/isEqual');
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
-import InputUtil = require('Controls/_input/Base/InputUtil');
 import ViewModel = require('Controls/_input/Base/ViewModel');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
@@ -15,6 +14,7 @@ import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
+import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
 import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
@@ -24,6 +24,10 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @private
           */
          WIDTH_CURSOR: 1,
+
+         HYPHEN: '–',
+
+         DASH: '—',
 
          /**
           * @param {Controls/_input/Base} self Control instance.
@@ -183,7 +187,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @param splitValue Parsed value after user input.
           * @param inputType Type of user input.
           */
-         handleInput: function(self, splitValue, inputType) {
+         handleInput: function(self, splitValue: ISplitValue, inputType) {
             const displayValue: string = self._viewModel.displayValue;
 
             if (self._viewModel.handleInput(splitValue, inputType)) {
@@ -215,9 +219,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           * The value of the type property in the handle of the native input event.
           * @return {Controls/_input/Base/Types/InputType.typedef}
           */
-         calculateInputType: function(self, oldValue, newValue, position, selection, nativeInputType) {
-            var inputType;
-
+         calculateInputType: function(self, oldValue, newValue, position, selection, nativeInputType): IInputType {
             /**
              * On Android if you have enabled spell check and there is a deletion of the last character
              * then the type of event equal insertCompositionText.
@@ -225,14 +227,12 @@ import 'wml!Controls/_input/Base/Stretcher';
              * Therefore, we will calculate the event type.
              */
             if (self._isMobileAndroid && nativeInputType === 'insertCompositionText') {
-               inputType = InputUtil.getInputType(oldValue, newValue, position, selection);
-            } else {
-               inputType = nativeInputType
-                  ? InputUtil.getAdaptiveInputType(nativeInputType, selection)
-                  : InputUtil.getInputType(oldValue, newValue, position, selection);
+               return getInputType(oldValue, newValue, position, selection);
             }
 
-            return inputType;
+            return nativeInputType
+                ? getAdaptiveInputType(nativeInputType, selection)
+                : getInputType(oldValue, newValue, position, selection);
          },
 
          /**
@@ -241,7 +241,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @param {Controls/_input/Base/Types/Selection.typedef} selection
           * @return {Controls/_input/Base/Types/SplitValue.typedef}
           */
-         calculateSplitValueToPaste: function(pastedText, displayedText, selection) {
+         calculateSplitValueToPaste: function(pastedText, displayedText, selection): ISplitValue {
             return {
                before: displayedText.substring(0, selection.start),
                insert: pastedText,
@@ -678,12 +678,27 @@ import 'wml!Controls/_input/Base/Stretcher';
             var newValue = field.value;
             var position = field.selectionEnd;
 
-            const inputType: string = _private.calculateInputType(
+            const inputType: IInputType = _private.calculateInputType(
                this, value, newValue, position,
                selection, event.nativeEvent.inputType
             );
-            const splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
+            const splitValue: ISplitValue = split(value, newValue, position, selection, inputType);
 
+            /**
+             * The iPad has a feature to replace the twice-entered "-" with hyphen or dash.
+             * After the second input, the previous character is deleted and, the hyphen or dash is entered.
+             * An error occurs if the previous character is not "-". For example, during the previous processing "-"
+             * could not be entered because of the logic of the control. The previous character must not be deleted in this case.
+             * It is necessary to restore it and consider that entered "-".
+             */
+            if (this._isMobileIOS) {
+               if (this._remoteChar && (splitValue.insert === _private.HYPHEN || splitValue.insert === _private.DASH)) {
+                  splitValue.before += this._remoteChar;
+                  splitValue.insert = '-';
+               }
+
+               this._remoteChar = inputType === 'deleteBackward' && splitValue.delete !== '-' ? splitValue.delete : '';
+            }
 
             _private.handleInput(this, splitValue, inputType);
             _private.updateField(this, model.displayValue, model.selection);

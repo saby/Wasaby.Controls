@@ -16,7 +16,7 @@ import 'css!theme?Controls/filterPopup';
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @control
-    * @public
+    * @private
     * @author Золотова Э.Е.
     *
     * @css @height_PropertyGrid-item Height of item in the block.

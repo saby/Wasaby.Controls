@@ -9,4 +9,7 @@
  * @css @icon-size_ListAddButton size of icon in button "Add" in List
  * @css @font-size_listAddButton capture font-size of button "Add" in List
  *
+ * @css @thickness_listAddButton thickness of button "Add"
+ * @css @spacing_ListAddButton-between-icon-and-text spacing between icon and button "Add"
+ *
  */

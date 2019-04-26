@@ -1,15 +1,15 @@
-define('Controls/Button/interface/IIconStyle', [
+define('Controls/interface/IIconStyle', [
 ], function() {
 
    /**
     * Interface for button icon.
     *
-    * @interface Controls/Button/interface/IIconStyle
+    * @interface Controls/interface/IIconStyle
     * @public
     */
 
    /**
-    * @name Controls/Button/interface/IIconStyle#iconStyle
+    * @name Controls/interface/IIconStyle#iconStyle
     * @cfg {Enum} Icon display style.
     * @variant primary
     * @variant secondary

@@ -90,7 +90,6 @@ var Component = Control.extend([], {
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
-        this._forceUpdate();
         this._children.startValueField.activate();
         this._notify('inputCompleted', [
             startValue,

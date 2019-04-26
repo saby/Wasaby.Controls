@@ -10,7 +10,7 @@ import 'css!theme?Controls/filterPopup';
     * @class Controls/_filterPopup/Panel/AdditionalParams
     * @extends Core/Control
     * @control
-    * @public
+    * @private
     * @author Герасимов А.М.
     *
     * @css @max-height_FilterPanel-items Maximum height of the folded block.
