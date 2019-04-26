@@ -9,8 +9,8 @@
          </div>
          <div class="controlsDemo-Link__componentWrap">
             <Controls.Input.Date.Link
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
                bind:value="_value"
 			   attr:test_name="show_arrow_range"
             />
@@ -20,7 +20,8 @@
                bind:value="_value"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               style="secondary" viewMode="link"
+               viewMode="link"
+               styleMode="secondary"
 			   attr:test_name="months_range"
             />
          </div>
@@ -29,7 +30,8 @@
                bind:value="_value"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
-               style="linkMain2"
+               viewMode="link"
+               styleMode="info"
 			   attr:test_name="quarters_range"
             />
 
@@ -37,6 +39,7 @@
          <div class="controlsDemo-Link__componentWrap">
             <Controls.Input.Date.Link
                style="linkAdditional"
+               viewMode="label"
                emptyCaption="не задан"
 			   attr:test_name="range_not_value"
             />

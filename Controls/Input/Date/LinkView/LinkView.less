@@ -1,10 +1,6 @@
 .controls-DateLinkView {
    display: inline-block;
-
    .user-select();
-
-   font-size: @font-size_DateLinkView;
-
    white-space: nowrap;
 }
 
@@ -13,12 +9,6 @@
    display: inline-flex;
    align-items: baseline;
    justify-content: center;
-}
-
-.controls-DateLinkView__prev,
-.controls-DateLinkView__next,
-.controls-DateLinkView__value-wrapper {
-   color: @color_link;
 }
 
 .controls-DateLinkView__prev:before {
@@ -35,16 +25,20 @@
    font-size: @font-size_DateLinkView-prev-next-buttons;
    font-weight: normal;
    text-align: center;
-   color: @color_link;
    width: @width_DateLinkView-prev-next-buttons;
 }
 
-.controls-DateLinkView__prevNextButtons-enabled,
-.controls-DateLinkView__value-enabled {
+.controls-DateLinkView__style-secondary {
+   color: @color_DateLinkView-secondaryStyle;
    cursor: pointer;
    &:hover {
-      color: @color_link-hover;
+      color: @color_DateLinkView-secondaryStyle_hover;
    }
+}
+
+.controls-DateLinkView__style-info {
+   color: @color_DateLinkView-infoStyle;
+   cursor: pointer;
 }
 
 .controls-DateLinkView__value-enabled {
@@ -53,9 +47,9 @@
    }
 }
 
-.controls-DateLinkView__prevNextButtons-disabled,
-.controls-DateLinkView__value-disabled {
-   color: @color_text_readonly;
+.controls-DateLinkView__style-secondary_readOnly,
+.controls-DateLinkView__style-info_readOnly {
+   color: @color_DateLinkView_readOnly;
 }
 
 .controls-DateLinkView__value-wrapper {
@@ -74,6 +68,7 @@
 }
 
 .controls-DateLinkView__value {
+   font-size: @font-size_DateLinkView;
    font-weight: @font-weight_DateLinkView-value;
    padding-top: @padding_DateLinkView-value;
 }

@@ -3,8 +3,8 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; align-items: baseline">
          <Controls.Input.Date.LinkView
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
@@ -23,18 +23,27 @@
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
-               style="secondary" viewMode="link"
+               viewMode="link" styleMode="secondary"
                clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
-               style="linkMain2"
+               viewMode="link" styleMode="info"
          />
          <Controls.Input.Date.LinkView
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
-               style="linkAdditional"
+               viewMode="label"
+         />
+      </div>
+      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; align-items: baseline; padding-top: 30px;">
+         <Controls.Input.Date.LinkView
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               styleMode="info"
          />
       </div>
    </div>

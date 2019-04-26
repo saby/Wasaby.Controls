@@ -4,7 +4,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/StackDemo',
       'css!Controls-demo/Popup/PopupPageOld'
    ],
-   function (Control, template, OpenEditDialog) {
+   function (Control, template) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -12,33 +12,40 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openStack: function () {
             this._children.stack.open({
                opener: this._children.button1,
-               closeOnOutsideClick: true
+               closeOnOutsideClick: true,
+               width: 600
             });
          },
          openModalStack: function () {
             this._children.stack.open({
                opener: this._children.button4,
-               isModal: true
+               isModal: true,
+               width: 600
             });
          },
          openDialog: function () {
             this._children.dialog.open({
                opener: this._children.button3,
-               closeOnOutsideClick: true
+               closeOnOutsideClick: true,
+               height: 500,
+               maxHeight: 700
             });
          },
          openModalDialog: function () {
             this._children.dialog.open({
                opener: this._children.button5,
-               isModal: true
+               isModal: true,
+               height: 500,
+               maxHeight: 700
             });
          },
          openMaximizedStack: function () {
             this._children.stack.open({
                opener: this._children.button2,
-               minimizedWidth: 500,
-               minWidth: 800,
-               maxWidth: 1000,
+               minimizedWidth: 600,
+               minWidth: 600,
+               width: 600,
+               maxWidth: 800,
                templateOptions: {
                   maximized: true,
                   maximizedButtonVisibility: true

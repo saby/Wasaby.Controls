@@ -13,6 +13,13 @@
  * @includes Date Controls/_input/Date/Picker
  * @includes Time Controls/_input/Time/Picker
  * @includes DateTimeModel Controls/_input/DateTime/Model
+ * @includes Render Controls/_input/Render
+ *
+ * @includes Controls/_input/Base/Styles
+ * @includes Controls/_input/Render/Styles
+ * @includes Controls/_input/Password/PasswordStyles
+ * @includes Controls/_input/resources/InputRender/InputRenderStyles
+ *
  * @public
  * @author Kraynov D.
  */
@@ -27,6 +34,7 @@ import Phone = require('Controls/_input/Phone');
 import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
+import Render = require('Controls/_input/Render');
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
@@ -57,5 +65,6 @@ export {
     MaskFormatBuilder,
     MaskInputProcessor,
     InputCallback,
-    INewLineKey
+    INewLineKey,
+    Render
 };

@@ -8,8 +8,8 @@
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
             <Controls.Input.Date.RangeLinkLite
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
                startValue="{{_startValue}}"
                endValue="{{_endValueHalfYear}}"
 			   attr:test_name="show_arrow_range"
@@ -21,7 +21,7 @@
                bind:endValue="_endValueBind"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
-               style="secondary" viewMode="link"
+               styleMode="secondary" viewMode="link"
 			   attr:test_name="months_range"
             />
          </div>

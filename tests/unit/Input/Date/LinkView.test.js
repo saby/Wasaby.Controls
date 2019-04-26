@@ -22,6 +22,35 @@ define([
             assert.equal(component._rangeModel.endValue, config.endValue);
          });
 
+         describe('Styles', function() {
+            [{
+               viewMode: 'selector',
+               styleMode: 'secondary',
+               styleClass: 'controls-DateLinkView__style-secondary'
+            }, {
+               viewMode: 'selector',
+               styleMode: 'info',
+               styleClass: 'controls-DateLinkView__style-info'
+            }, {
+               viewMode: 'link',
+               styleMode: 'secondary',
+               styleClass: 'controls-DateLinkView__style-secondary'
+            }, {
+               viewMode: 'link',
+               styleMode: 'info',
+               styleClass: 'controls-DateLinkView__style-info'
+            }, {
+               viewMode: 'label',
+               styleMode: '',
+               styleClass: null
+            }].forEach(function(test, testNumber) {
+               const component = calendarTestUtils.createComponent(
+                  LinkView, {});
+               component._beforeUpdate({ viewMode: test.viewMode, styleMode: test.styleMode})
+               assert.equal(component._styleClass, test.styleClass);
+            })
+         });
+
       });
 
       describe('shiftBack', function() {

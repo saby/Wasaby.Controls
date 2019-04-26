@@ -1,15 +1,15 @@
-define('Controls/Button/interface/IIcon', [
+define('Controls/interface/IIcon', [
 ], function() {
 
    /**
     * Interface for button icon.
     *
-    * @interface Controls/Button/interface/IIcon
+    * @interface Controls/interface/IIcon
     * @public
     */
 
    /**
-    * @name Controls/Button/interface/IIcon#icon
+    * @name Controls/interface/IIcon#icon
     * @cfg {String} Button icon.
     * @default Undefined
     * @remark Icon is given by size and icon classes. Icons have three size: icon-small, icon-medium, icon-large. Sizes are set by CSS rules.

@@ -1,7 +1,6 @@
 import Sticky = require('Controls/Popup/Opener/Sticky');
 import Merge = require('Core/core-merge');
 import getZIndex = require('Controls/Utils/getZIndex');
-import Env = require('Env/Env');
 
 var _private = {
 
