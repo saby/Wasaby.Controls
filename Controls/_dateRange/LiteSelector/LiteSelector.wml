@@ -8,12 +8,12 @@
       attr:class="controls-DateRangeSelectorLite__view {{_isMinWidth ? 'controls-DateRangeSelectorLite__view_minWidth'}}"
    />
 
-   <Controls.Popup.Opener.Sticky name="opener"
+   <Controls.popup:Sticky name="opener"
                                  template="Controls/dateLitePopup"
                                  closeOnOutsideClick="{{true}}"
                                  _vdomOnOldPage="{{true}}"
                                  on:result="_onResult()">
       <ws:direction vertical="bottom" horizontal="center"/>
       <ws:targetPoint vertical="top" horizontal="center"/>
-   </Controls.Popup.Opener.Sticky>
+   </Controls.popup:Sticky>
 </div>

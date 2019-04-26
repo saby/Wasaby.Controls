@@ -1,7 +1,7 @@
 /* global define, describe, it, assert */
 define([
    'Core/core-merge',
-   'Controls/Date/PeriodLiteDialog',
+   'Controls/dateLitePopup',
    'Controls/Utils/Date',
    'unit/Calendar/Utils',
    'wml!Controls/_dateLitePopup/ItemFull',

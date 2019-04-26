@@ -7,7 +7,7 @@ define('Controls/Toolbar', [
     * Graphical control element on which buttons, menu and other input or output elements are placed.
     * <a href="/materials/demo-ws4-toolbar">Demo-example</a>.
     *
-    * @class Controls/Toolbar
+    * @class Controls/toolbars:View
     * @extends Core/Control
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
@@ -21,7 +21,7 @@ define('Controls/Toolbar', [
     */
 
    /**
-    * @name Controls/Toolbar#source
+    * @name Controls.toolbars:View#source
     * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @default undefined
     * @remark
@@ -30,7 +30,7 @@ define('Controls/Toolbar', [
     * @example
     * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
     * <pre>
-    *    <Controls.Toolbar
+    *    <Controls.toolbars:View
     *              keyProperty="key"
     *              source="{{_source}}"
     *    />
@@ -64,13 +64,13 @@ define('Controls/Toolbar', [
     */
 
    /**
-    * @name Controls/Toolbar#itemsSpacing
+    * @name Controls.toolbars:View#itemsSpacing
     * @cfg {Types/source:Base} Type of spacing between items
     * @default medium
     * @example
     * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
     * <pre>
-    *    <Controls.Toolbar
+    *    <Controls.toolbars:View
     *              keyProperty="key"
     *              source="{{_source}}"
     *              itemsSpacing="big"
@@ -79,13 +79,13 @@ define('Controls/Toolbar', [
     */
 
    /**
-    * @event Controls/Toolbar#itemClick Occurs when item was clicked.
+    * @event Controls.toolbars:View#itemClick Occurs when item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Clicked item.
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.Toolbar on:itemClick="onToolbarItemClick()" />
+    *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
     * </pre>
     * JS:
     * <pre>
@@ -103,10 +103,10 @@ define('Controls/Toolbar', [
     */
 
    /**
-    * @name Controls/Toolbar#itemTemplate
+    * @name Controls.toolbars:View#itemTemplate
     * @cfg {Function} Template for item render.
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/Toolbar/ToolbarItemTemplate'.
+    * To determine the template, you should call the base template 'wml!Controls.toolbars:View/ToolbarItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
     * You can change the display of records by setting button options values:
     * <ul>
@@ -119,13 +119,13 @@ define('Controls/Toolbar', [
     * <ul>
     * @example
     * <pre>
-    *    <Controls.Toolbar
+    *    <Controls.toolbars:View
     *       source="{{_source}}"
     *       on:itemClick="_itemClick()"
     *    >
     *       <ws:itemTemplate>
     *          <ws:partial
-    *             template="wml!Controls/Toolbar/ToolbarItemTemplate"
+    *             template="wml!Controls.toolbars:View/ToolbarItemTemplate"
     *             buttonStyle="{{myStyle}}"
     *             buttonReadOnly="{{readOnlyButton}}"
     *             buttonTransparent="{{myButtonTransparent}}"

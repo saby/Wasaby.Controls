@@ -1,8 +1,8 @@
 define(
    [
-      'Controls/Input/Mask/FormatBuilder'
+      'Controls/input'
    ],
-   function(FormatBuilder) {
+   function(input) {
 
       'use strict';
 
@@ -11,17 +11,17 @@ define(
 
          describe('_private.getMaskKeysString', function() {
             it('Test_01', function() {
-               result = FormatBuilder._private.getMaskKeysString({});
+               result = input.MaskFormatBuilder._private.getMaskKeysString({});
                assert.equal(result, '');
             });
             it('Test_02', function() {
-               result = FormatBuilder._private.getMaskKeysString({
+               result = input.MaskFormatBuilder._private.getMaskKeysString({
                   'd': '[0-9]'
                });
                assert.equal(result, 'd');
             });
             it('Test_03', function() {
-               result = FormatBuilder._private.getMaskKeysString({
+               result = input.MaskFormatBuilder._private.getMaskKeysString({
                   'L': '[А-ЯA-ZЁ]',
                   'l': '[а-яa-zё]',
                   'd': '[0-9]',
@@ -33,7 +33,7 @@ define(
 
          describe('_private.getReplacingKeyAsValue', function() {
             it('Test_01', function() {
-               result = FormatBuilder._private.getReplacingKeyAsValue({
+               result = input.MaskFormatBuilder._private.getReplacingKeyAsValue({
                   'L': '[А-ЯA-ZЁ]',
                   'l': '[а-яa-zё]',
                   'd': '[0-9]',
@@ -45,7 +45,7 @@ define(
 
          describe('_private.getReplacingKeyFn', function() {
             it('Test_01', function() {
-               result = FormatBuilder._private.getReplacingKeyFn({
+               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
                   'L': '[А-ЯA-ZЁ]',
                   'l': '[а-яa-zё]',
                   'd': '[0-9]',
@@ -57,7 +57,7 @@ define(
                assert.equal(result('d', '*'), '(?:[0-9]*)?');
             });
             it('Test_02', function() {
-               result = FormatBuilder._private.getReplacingKeyFn({
+               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
                   'L': '[А-ЯA-ZЁ]',
                   'l': '[а-яa-zё]',
                   'd': '[0-9]',
@@ -69,7 +69,7 @@ define(
                assert.equal(result('d', '*'), '(?:[0-9]| )*');
             });
             it('Test_03', function() {
-               result = FormatBuilder._private.getReplacingKeyFn({
+               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
                   'L': '[А-ЯA-ZЁ]',
                   'l': '[а-яa-zё]',
                   'd': '[0-9]',
@@ -84,30 +84,30 @@ define(
 
          describe('_private.getRegExpSearchingMaskChar', function() {
             it('Test_01', function() {
-               result = FormatBuilder._private.getRegExpSearchingMaskChar('', '', '');
+               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('', '', '');
                assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
             });
             it('Test_02', function() {
-               result = FormatBuilder._private.getRegExpSearchingMaskChar('d', '(', ')');
+               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('d', '(', ')');
                assert.deepEqual(result, /(;$)|([d])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
             });
             it('Test_03', function() {
-               result = FormatBuilder._private.getRegExpSearchingMaskChar('Lldx', '', '');
+               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('Lldx', '', '');
                assert.deepEqual(result, /(;$)|([Lldx])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
             });
             it('Test_04', function() {
-               result = FormatBuilder._private.getRegExpSearchingMaskChar('', '(', ')');
+               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('', '(', ')');
                assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
             });
          });
 
          describe('getMaskCharData', function() {
             var
-               regExp = FormatBuilder._private.getRegExpSearchingMaskChar('dl', '(', ')'),
+               regExp = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('dl', '(', ')'),
                mask = 'dl\\*().';
 
             beforeEach(function() {
-               result = FormatBuilder._private.getMaskCharData(regExp.exec(mask));
+               result = input.MaskFormatBuilder._private.getMaskCharData(regExp.exec(mask));
             });
             it('Test_key', function() {
                assert.deepEqual(result, {
@@ -159,7 +159,7 @@ define(
                   ' '
                ];
             it('Test_01', function() {
-               result = FormatBuilder.getFormat(masks[0], formatMaskChars, replacers[0]);
+               result = input.MaskFormatBuilder.getFormat(masks[0], formatMaskChars, replacers[0]);
                assert.deepEqual(result, {
                   searchingGroups: '([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)',
                   delimiterGroups: {
@@ -175,7 +175,7 @@ define(
                });
             });
             it('Test_02', function() {
-               result = FormatBuilder.getFormat(masks[0], formatMaskChars, replacers[1]);
+               result = input.MaskFormatBuilder.getFormat(masks[0], formatMaskChars, replacers[1]);
                assert.deepEqual(result, {
                   searchingGroups: '((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))',
                   delimiterGroups: {
@@ -191,7 +191,7 @@ define(
                });
             });
             it('Test_03', function() {
-               result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[0]);
+               result = input.MaskFormatBuilder.getFormat(masks[1], formatMaskChars, replacers[0]);
                assert.deepEqual(result, {
                   searchingGroups: '(\\+)?(7)?(\\()?([0-9]?)([0-9]?)([0-9]?)(\\))?([0-9]?[0-9]?[0-9]?)(-)?([0-9]?[0-9]?)(-)?([0-9]?[0-9]?)',
                   delimiterGroups: {
@@ -227,7 +227,7 @@ define(
                });
             });
             it('Test_04', function() {
-               result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[1]);
+               result = input.MaskFormatBuilder.getFormat(masks[1], formatMaskChars, replacers[1]);
                assert.deepEqual(result, {
                   searchingGroups: '(\\+)?(7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| )(?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))',
                   delimiterGroups: {

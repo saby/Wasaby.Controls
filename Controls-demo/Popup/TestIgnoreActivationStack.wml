@@ -7,11 +7,11 @@
          <Controls.buttons:Button name="stackOpenerButton" caption="Открыть стековое окно" on:click="_openStack()" attr:class="ControlsDemo-PopupPage__ignoreActivation_stackButton"/>
       </div>
 
-      <Controls.Popup.Opener.Confirmation name="confirmDialog" />
-      <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
-      </Controls.Popup.Opener.Stack>
+      <Controls.popup:Confirmation name="confirmDialog" />
+      <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
+      </Controls.popup:Stack>
 
-      <Controls.Popup.Opener.Notification name="notification" template="wml!Controls-demo/Popup/TestNotification">
-      </Controls.Popup.Opener.Notification>
+      <Controls.popup:Notification name="notification" template="wml!Controls-demo/Popup/TestNotification">
+      </Controls.popup:Notification>
    </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>
