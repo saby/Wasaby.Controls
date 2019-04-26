@@ -191,13 +191,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          LookupView.superclass._afterMount.apply(this, arguments);
       },
 
-      _isNeedUpdate: function() {
-         var options = this._options;
-
-         return options.multiSelect &&
-            (options.multiLine || !options.readOnly || options.items.getCount() > this._maxVisibleItems);
-      },
-
       _isNeedCalculatingSizes: function(options) {
          // not calculating sizes in a single choice or with records no more than 1 in read mode, because calculations will be on css styles
          return !this._isEmpty(options) && options.multiSelect && (!options.readOnly || options.items.getCount() > 1);

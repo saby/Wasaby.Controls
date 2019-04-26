@@ -11,6 +11,6 @@
         historyId="{{_options.historyId}}"
         dataLoadCallback="{{_options.dataLoadCallback}}"
         selectorCallback="{{_options.selectorCallback}}"
-        attr:class="controls-Lookup controls-LookupMultiDirectory">
+        attr:class="controls-Lookup controls-LookupMultiSelector">
     <Controls._lookup.LookupMultiSelector.LookupView scope="{{_options}}"/>
 </Controls._lookup.ControllerMultiSelector>

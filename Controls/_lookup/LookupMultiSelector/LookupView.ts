@@ -46,8 +46,6 @@ var _private = {
 };
 
 var LookupMultiSelectorView = BaseLookupView.extend({
-    _showClearButton: false,
-
     _beforeMount: function () {
         LookupMultiSelectorView.superclass._beforeMount.apply(this, arguments);
         this._listOfDependentOptions = LIST_OF_DEPENDENT_OPTIONS;
@@ -67,14 +65,17 @@ var LookupMultiSelectorView = BaseLookupView.extend({
         return !options.readOnly && options.items.getCount() < options.maxVisibleItems;
     },
 
-    _isNeedUpdate: function() {
-        return !this._options.readOnly;
-    },
-
     _isNeedCalculatingSizes: function(options) {
         return !options.readOnly && !this._isEmpty(options);
     }
 });
+
+LookupMultiSelectorView.getDefaultOptions = function() {
+    return {
+        showClearButton: false
+    };
+};
+
 
 LookupMultiSelectorView._private = _private;
 export = LookupMultiSelectorView;

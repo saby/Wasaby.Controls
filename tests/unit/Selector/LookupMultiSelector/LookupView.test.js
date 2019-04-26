@@ -71,15 +71,6 @@ define([
          assert.isFalse(lookupView._isInputVisible(lookupView._options));
       });
 
-      it('_isNeedUpdate', function() {
-         var lookupView = new LookupView();
-
-         assert.isTrue(lookupView._isNeedUpdate());
-
-         lookupView._options.readOnly = true;
-         assert.isFalse(lookupView._isNeedUpdate());
-      });
-
       it('_isNeedCalculatingSizes', function() {
          var lookupView = new LookupView();
 

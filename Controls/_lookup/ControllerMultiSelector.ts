@@ -1,9 +1,9 @@
 import BaseController = require('Controls/_lookup/BaseController');
-import ContollerHelper = require('Controls/_lookup/ContollerHelper');
+import showSelector = require('Controls/_lookup/showSelector');
 
 var ControllerMultiSelector = BaseController.extend({
     showSelector: function(config) {
-        ContollerHelper.showSelector(this, config, false);
+        showSelector(this, config, false);
     }
 });
 

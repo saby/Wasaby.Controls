@@ -91,34 +91,6 @@ define([
          assert.isTrue(Lookup._private.getMultiLineState(200, 300, false));
       });
 
-      it('_isNeedUpdate', function() {
-         var lookup = new Lookup();
-
-         lookup._maxVisibleItems = 10;
-         lookup._options = {
-            multiSelect: true,
-            items: getItems(5),
-            multiLine: false,
-            readOnly: true
-         };
-
-         assert.isFalse(lookup._isNeedUpdate());
-
-         lookup._options.multiLine = true;
-         assert.isTrue(lookup._isNeedUpdate());
-
-         lookup._options.multiLine = false;
-         lookup._options.readOnly = false;
-         assert.isTrue(lookup._isNeedUpdate());
-
-         lookup._options.readOnly = true;
-         lookup._maxVisibleItems = 3;
-         assert.isTrue(lookup._isNeedUpdate());
-
-         lookup._options.multiSelect = false;
-         assert.isFalse(lookup._isNeedUpdate());
-      });
-
       it('_isNeedCalculatingSizes', function() {
          var lookup = new Lookup();
 

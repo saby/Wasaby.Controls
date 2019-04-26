@@ -36,7 +36,6 @@ var BaseLookupView = Control.extend({
     _infoboxOpened: false,
     _fieldWrapperWidth: null,
     _maxVisibleItems: null,
-    _showClearButton: true,
     _clearRecordsTemplate: clearRecordsTemplate,
     _showSelectorTemplate: showSelectorTemplate,
 
@@ -61,16 +60,10 @@ var BaseLookupView = Control.extend({
     },
 
     _afterMount: function () {
-        var itemsCount = this._options.items.getCount();
-
         _private.initializeContainers(this);
 
-        if (itemsCount) {
+        if (!this._isEmpty(this._options)) {
             this._calculatingSizes(this._options);
-
-            if (this._isNeedUpdate()) {
-                this._forceUpdate();
-            }
         }
     },
 
@@ -155,10 +148,6 @@ var BaseLookupView = Control.extend({
 
     },
 
-    _isNeedUpdate: function () {
-
-    },
-
     _resize: function () {
         var
             oldFieldWrapperWidth = this._getFieldWrapperWidth(),
@@ -166,7 +155,6 @@ var BaseLookupView = Control.extend({
 
         if (this._isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
             this._calculatingSizes(this._options);
-            this._forceUpdate();
         }
     },
 
