@@ -564,18 +564,29 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @protected
           */
          _initProperties: function() {
+            /**
+             * Init the name of the control and to pass it to the templates.
+             * Depending on it, classes will be generated. An example of class is controls-{{controlsName}}...
+             * With the override in the heirs, you can change the display of the control. To do this,
+             * define styles for the class generated in the template.
+             * This approach avoids creating new templates with static classes if the current one is not suitable.
+             */
+            const CONTROL_NAME: string = 'InputBase';
+
             this._field = {
                template: fieldTemplate,
                scope: {
                   _useStretcher: false,
-                  controlName: 'InputBase',
+                  controlName: CONTROL_NAME,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
                template: readOnlyFieldTemplate,
-               scope: {}
+               scope: {
+                  controlName: CONTROL_NAME
+               }
             };
             this._beforeFieldWrapper = {
                template: null,
