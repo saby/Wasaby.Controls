@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Suggest placeholder="FIO"
+                  <Controls.suggest:Input placeholder="FIO"
                                           searchParam="title"
                                           displayProperty="title"
                                           source="{{_source}}"
@@ -16,7 +16,7 @@
                      <ws:navigation source="page" view="page">
                         <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
                      </ws:navigation>
-                  </Controls.Input.Suggest>
+                  </Controls.suggest:Input>
                </ws:template>
             </ws:Object>
          </ws:Array>

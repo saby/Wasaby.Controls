@@ -11,8 +11,9 @@ define('Controls-demo/Confirmation/resources/detailsComponent',
 
       var TestDialog = Control.extend({
          _template: template,
+         _value: 'Text',
          _clickHandler: function() {
-            this._notify('sendResult', ['click by TextBox'], {bubbling: true});
+            this._notify('sendResult', [this._value], {bubbling: true});
          }
       });
 

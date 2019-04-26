@@ -189,7 +189,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, this._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, self._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);

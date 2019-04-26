@@ -68,7 +68,8 @@ export default {
                 'default',
                 'linkMain',
                 'linkMain2',
-                'linkAdditional'
+                'linkAdditional',
+                'secondary'
             ]),
             showNextArrow: descriptor(Boolean),
             showPrevArrow: descriptor(Boolean),

@@ -1,7 +1,8 @@
-<Controls.Button.Menu name="myMenuButton2"
+<Controls.dropdown:Button name="myMenuButton2"
                       keyProperty="id"
                       viewMode="link"
                       style="secondary"
                       caption="{{_menuCaption}}"
+                      size="{{_options.size}}"
                       on:onMenuItemActivate="_onMenuItemActivate()"
                       source="{{_menuSource}}"/>

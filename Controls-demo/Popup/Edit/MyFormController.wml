@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Stack.StackTemplate headingCaption="Диалог редактирования" attr:style="width:{{_options.width || 900}}px">
+<Controls.popupTemplate:Stack headingCaption="Диалог редактирования" attr:style="width:{{_options.width || 900}}px">
    <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.buttons:Button icon="icon-medium icon-Erase icon-error" on:click="_delete()" style="secondary" viewMode="link"
@@ -8,7 +8,7 @@
    </ws:headerContentTemplate>
    <ws:bodyContentTemplate>
       <div>
-         <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}"
+         <Controls.form:Controller name="formControllerInst" dataSource="{{ _dataSource }}"
                                         record="{{ _record }}" key="{{ _options.key }}"
                                         on:updateFailed="_errorHandler()"
                                         on:createFailed="_errorHandler()"
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-         </Controls.FormController>
+         </Controls.form:Controller>
 
          <br />
          <Controls.buttons:Button caption="Отправить данные" on:click="_sendResult()" class="demo-PopupEditOpener__sendResult"/>
@@ -63,4 +63,4 @@
          </Controls.Popup.Opener.Stack>
       </div>
    </ws:bodyContentTemplate>
-</Controls.Popup.Templates.Stack.StackTemplate>
+</Controls.popupTemplate:Stack>

@@ -1,6 +1,6 @@
 import cClone = require('Core/core-clone');
 import Base = require('Controls/_popup/Opener/BaseOpener');
-      
+
 
       var _private = {
          displayDuration: 1000,
@@ -28,7 +28,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 
             myCfg.closeOnOutsideClick = true;
             myCfg.className = 'controls-PreviewerController';
-            Previewer.superclass.open.call(self, myCfg, 'Controls/_popup/Opener/Previewer/PreviewerController');
+            Previewer.superclass.open.call(self, myCfg, require('Controls/popup').PreviewerController);
          }
       };
 
@@ -98,4 +98,4 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
       };
 
       export = Previewer;
-   
+

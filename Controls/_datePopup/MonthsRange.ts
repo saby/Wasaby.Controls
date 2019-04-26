@@ -9,15 +9,12 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
 
 
 /**
- * A link button that displays the period. Supports the change of periods to adjacent.
+ * Component that allows you to select a period of multiple months.
  *
- * @class Controls/Date/PeriodDialog
+ * @class Controls/_datePopup/MonthsRange
  * @extends Core/Control
- * @mixes Controls/Date/interface/IPeriodDialog
  * @control
- * @public
  * @author Миронов А.Ю.
- * @demo Controls-demo/Date/PeriodLiteDialog
  *
  */
 

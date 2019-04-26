@@ -9,7 +9,7 @@
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.input:Label name="myLabel1" caption="style:"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     attr:class="ControlsDemo__style"
                     source="{{_separatorStyleSource}}"
                     keyProperty="title"

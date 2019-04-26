@@ -186,7 +186,11 @@ function handleInsignificantZero({precision}: INumberLength, data: IText, negati
         carriagePosition: carriagePosition - negative
     }, 0, firstSignificantDigitPosition);
 
-    if (precision !== 0 && formattedValue === '') {
+    /**
+     * If the field provides input of fractional numbers, when you enter the character "-" zero is not hidden.
+     * In the fields intended for entering only integers zero is hidden.
+     */
+    if ((precision !== 0 || !negative) && formattedValue === '') {
         formattedValue = '0';
         formattedPosition++;
     }

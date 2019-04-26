@@ -18,21 +18,26 @@
 
 .controls-FilterButton__icon_state_default {
 	color: @color_FilterButton_icon;
+	background-color: @background-color_FilterButton-icon;
+	box-shadow: @box-shadow-size_FilterButton-icon @box-shadow-color_FilterButton-icon;
 	cursor: pointer;
 }
 
 .ws-is-no-touch {
 	.controls-FilterButton__icon_state_default:hover {
 		color: @color_FilterButton_icon_hover;
+		background-color: @background-color_FilterButton-icon_hover;
 	}
 }
 
 .controls-FilterButton__icon_state_default:active {
 	color: @color_FilterButton_icon_active;
+	background-color: @background-color_FilterButton-icon_active;
 }
 
 .controls-FilterButton__icon_state_disabled {
 	color: @color_FilterButton_icon_readOnly;
+	background-color: @background-color_FilterButton-icon_readOnly;
 }
 
 .controls-FilterButton__spaceTemplate_left {
@@ -100,6 +105,7 @@
 	.text-overflow();
 	flex-shrink: 1;
 	font-size: @font-size_FilterButton_text;
+	text-shadow: @text-shadow-size_FilterButton-text @text-shadow-color_FilterButton-text;
 }
 
 .controls-FilterButton__text_state_default {
@@ -124,7 +130,12 @@
 }
 
 .controls-FilterButton__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	.icon-size-without-important(@font-size_FilterButton_icon, @font-family_FilterButton_icon);
+	width: @width_FilterButton_icon;
+	height: @height_FilterButton_icon;
 }
 
 .controls-FilterButton__clear, .controls-FilterButton__arrow {

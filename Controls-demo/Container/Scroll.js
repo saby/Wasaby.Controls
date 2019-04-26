@@ -2,11 +2,11 @@ define('Controls-demo/Container/Scroll',
    [
       'Core/Control',
       'Types/source',
-      'Controls/Container/Scroll/Context',
+      'Controls/scroll',
       'wml!Controls-demo/Container/Scroll',
       'css!Controls-demo/Container/Scroll'
    ],
-   function(Control, source, ScrollData, template) {
+   function(Control, source, scroll, template) {
       return Control.extend({
          _template: template,
          _pagingVisible: true,
@@ -29,7 +29,7 @@ define('Controls-demo/Container/Scroll',
 
          _getChildContext: function() {
             return {
-               ScrollData: new ScrollData({
+               ScrollData: new scroll._scrollContext({
                   pagingVisible: this._pagingVisible
                })
             };

@@ -42,14 +42,14 @@
             </div>
          </div>
       </div>
-      <Controls.Container.Scroll class="ControlsDemo-Scroll__news ws-Block ws-Block_style_3">
+      <Controls.scroll:Container class="ControlsDemo-Scroll__news ws-Block ws-Block_style_3">
          <div>
-            <Controls.Container.Scroll attr:style="height: 200px;">
+            <Controls.scroll:Container attr:style="height: 200px;">
                <div attr:style="height: 10000px; background: red;"></div>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
             <div attr:style="height: 10000px; background: blue;"></div>
          </div>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
       <Controls.Popup.Opener.Dialog name="usersDialog">
          <ws:templateOptions usersSource="{{_usersSource}}"/>
          <ws:template>

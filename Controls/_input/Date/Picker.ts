@@ -78,7 +78,6 @@ import 'css!theme?Controls/_input/Date/Picker/Picker';
             textValue = stringValueConverter.getStringByValue(startValue);
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
-         this._forceUpdate();
          this._children.input.activate();
          this._notify('inputCompleted', [startValue, textValue]);
       },
