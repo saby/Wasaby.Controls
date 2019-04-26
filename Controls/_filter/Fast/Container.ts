@@ -5,14 +5,14 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Container');
 
 /**
- * Special container for {@link Controls/Filter/Fast}.
+ * Special container for {@link Controls/_filter/Fast}.
  * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
- * Receives props from context and pass to {@link Controls/Filter/Fast}.
- * NOTE: Must be located inside Controls/Filter/Controller.
+ * Receives props from context and pass to {@link Controls/_filter/Fast}.
+ * NOTE: Must be located inside Controls/_filter/Controller.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
- * @class Controls/Filter/Fast/Container
+ * @class Controls/_filter/Fast/Container
  * @extends Core/Control
  * @author Герасимов А.М.
  * @control
@@ -21,7 +21,7 @@ import template = require('wml!Controls/_filter/Fast/Container');
 
 
 
-var Container = Control.extend(/** @lends Controls/Filter/Fast/Container.prototype */{
+var Container = Control.extend(/** @lends Controls/_filter/Fast/Container.prototype */{
 
    _template: template,
 
