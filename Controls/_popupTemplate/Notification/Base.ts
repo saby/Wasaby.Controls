@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_popupTemplate/Notification/Base/Base');
-import 'css!theme?Controls/_popupTemplate/Notification/Base/Base';
+import 'css!theme?Controls/popupTemplate';
       var _private = {
          prepareDisplayStyle: function(color) {
             var resColor = color;
