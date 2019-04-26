@@ -5,7 +5,7 @@
          <div>_month: {{_month1}}</div>
          <div>_startValue: {{_startValue1}}</div>
          <div>_endValue: {{_endValue1}}</div>
-         <Controls.Calendar.MonthSlider
+         <Controls.calendar:MonthSlider
             bind:month="_month1"
             bind:startValue="_startValue1"
             bind:endValue="_endValue1"
@@ -17,7 +17,7 @@
          <div>_month: {{_month2}}</div>
          <div>_startValue: {{_startValue2}}</div>
          <div>_endValue: {{_endValue2}}</div>
-         <Controls.Calendar.MonthSlider
+         <Controls.calendar:MonthSlider
             bind:month="_month2"
             bind:startValue="_startValue2"
             bind:endValue="_endValue2"
@@ -30,7 +30,7 @@
          <div>_month: {{_month3}}</div>
          <div>_startValue: {{_startValue3}}</div>
          <div>_endValue: {{_endValue3}}</div>
-         <Controls.Calendar.MonthSlider
+         <Controls.calendar:MonthSlider
             bind:month="_month3"
             bind:startValue="_startValue3"
             bind:endValue="_endValue3"
@@ -43,13 +43,13 @@
          <div>_month: {{_month}}</div>
          <div>_startValue: {{_startValue}}</div>
          <div>_endValue: {{_endValue}}</div>
-         <Controls.Calendar.MonthSlider
+         <Controls.calendar:MonthSlider
             bind:month="_month"
             bind:startValue="_startValue"
             bind:endValue="_endValue"
          />
 
-         <Controls.Calendar.MonthSlider
+         <Controls.calendar:MonthSlider
             bind:month="_month"
             bind:startValue="_startValue"
             bind:endValue="_endValue"

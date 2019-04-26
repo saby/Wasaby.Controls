@@ -4,10 +4,10 @@ define(
       'Types/collection',
       'Controls/Constants',
       'Types/entity',
-      'Controls/List/resources/utils/ItemsUtil',
+      'Controls/list',
       'Core/core-clone'
    ],
-   (DropdownViewModel, collectionLib, ControlsConstants, entity, ItemsUtil, clone) => {
+   (DropdownViewModel, collectionLib, ControlsConstants, entity, list, clone) => {
       describe('DropdownViewModel', () => {
          let rs = new collectionLib.RecordSet({
             idProperty: 'id',

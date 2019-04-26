@@ -41,6 +41,6 @@
       icon="icon-Calendar2 icon-primary controls-Input-DateRange__icon-size"
       on:click="_openDialog()"
    />
-   <Controls.Popup.Opener.Sticky name="opener" template="SBIS3.CONTROLS/Date/RangeBigChoose" closeOnOutsideClick="{{true}}">
-   </Controls.Popup.Opener.Sticky>
+   <Controls.popup:Sticky name="opener" template="SBIS3.CONTROLS/Date/RangeBigChoose" closeOnOutsideClick="{{true}}">
+   </Controls.popup:Sticky>
 </div>
