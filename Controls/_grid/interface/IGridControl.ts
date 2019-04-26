@@ -21,7 +21,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grids/Column">
+ *                      <ws:partial template="wml!Controls/_grid/Column">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">

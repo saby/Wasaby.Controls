@@ -1,6 +1,6 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
 
-import LadderWrapper = require('wml!Controls/_grids/LadderWrapper');
+import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');

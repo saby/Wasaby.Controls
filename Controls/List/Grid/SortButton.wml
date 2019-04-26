@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_grids/SortButton" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_grid/SortButton" scope="{{_options}}" />
