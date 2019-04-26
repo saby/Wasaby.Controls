@@ -179,5 +179,7 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
          };
       };
 
+      Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
+
       export = Popup;
 
