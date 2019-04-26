@@ -78,11 +78,11 @@ define(['Controls/grid'], function(gridMod) {
                    return cells
                 }
              };
-         GridView._private.setCurrentColumnsWidth(gv, container);
+         gridMod.GridView._private.setCurrentColumnsWidth(gv, container);
          assert.isFalse(called);
 
          cells = [1,2];
-         GridView._private.setCurrentColumnsWidth(gv, container);
+         gridMod.GridView._private.setCurrentColumnsWidth(gv, container);
          assert.isTrue(called);
 
       });
