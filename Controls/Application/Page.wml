@@ -29,7 +29,7 @@
                      <Controls.Popup.Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <body
+                              <Controls.dataSource:error.DialogOpener
                                  class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
@@ -126,7 +126,7 @@
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
-                              </body>
+                              </Controls.dataSource:error.DialogOpener>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.Popup.Manager>

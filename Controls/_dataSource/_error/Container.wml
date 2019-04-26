@@ -5,12 +5,5 @@
     />
 </ws:if>
 <ws:else>
-    <ws:partial
-        template="{{ _options.content }}"
-        scope="{{ _options }}" />
-    <!--
-        scope="{{  _options }}" нужен для того чтобы не ломать цепочку биндингов
-        убрать после исправления ошибки:
-        https://online.sbis.ru/doc/8dbda473-c716-4a9e-9cbb-1aadfdc96e66
-    -->
+    <ws:partial template="{{ _options.content }}"/>
 </ws:else>
