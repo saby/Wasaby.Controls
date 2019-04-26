@@ -115,8 +115,11 @@ function(cMerge,
             cfg.catchFocus = true;
          }
 
-         if (cfg.width == 'auto') {
+         if (cfg.width === 'auto') {
             cfg.width = undefined;
+         }
+         if (cfg.height === 'auto') {
+            cfg.height = undefined;
          }
 
          cfg.autofocus = cfg.catchFocus;
