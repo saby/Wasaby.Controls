@@ -1,7 +1,7 @@
 <ws:template name="block">
    <div class="ws-Block ws-Block_style_2">
       <Controls.scroll:StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
-         <Controls._heading:Title caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
+         <Controls.heading:Title caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
       </Controls.scroll:StickyHeader>
       <Controls.list:View source="{{dataSource}}"
                      idProperty="{{dataSource.getIdProperty()}}">
@@ -19,7 +19,7 @@
       <div>
          <ws:if data="{{_titleVisible}}">
             <div class="ws-Block ws-Block_style_6 ws-flexbox ws-justify-content-center">
-               <Controls._heading:Title caption="Notification center" size="xl"/>
+               <Controls.heading:Title caption="Notification center" size="xl"/>
             </div>
          </ws:if>
          <ws:for data="index in _dataset.length">
@@ -31,7 +31,7 @@
       </div>
    </Controls.scroll:Container>
    <div class="example-NotificationCenter__settings ws-flexbox ws-flex-column ws-justify-content-between">
-      <Controls._heading:Title caption="Settings" size="xl" attr:class="ws-align-self-center"/>
+      <Controls.heading:Title caption="Settings" size="xl" attr:class="ws-align-self-center"/>
       <Controls.toggle:Switch caption="Заголовок" bind:value="_titleVisible"/>
       <Controls.toggle:Switch caption="Тень" bind:value="_shadowVisible"/>
    </div>

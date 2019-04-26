@@ -8,9 +8,9 @@
         <ws:bodyContentTemplate>
             <div style="margin-left: 8px; margin-top: 8px;">
                 <Controls.input:Text />
-                <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestDialog">
+                <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestDialog">
                     <ws:templateOptions type="stack"/>
-                </Controls.Popup.Opener.Stack>
+                </Controls.popup:Stack>
                 <Controls.toggle:Checkbox bind:value="_draggable" caption="Включить d'n'd" on:valueChanged="_draggableChanged()"/>
                 <br />
                 <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>

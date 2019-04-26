@@ -1,5 +1,5 @@
 <div class="controls-InfoBoxDemo">
-   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
+   <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
 
    <ws:for data="block in _blocks">
       <div class="controls-InfoBoxDemo-block">

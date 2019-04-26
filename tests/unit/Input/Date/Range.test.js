@@ -1,10 +1,10 @@
 define([
    'Core/core-merge',
-   'Controls/Input/Date/Range',
+   'Controls/dateRange',
    'unit/Calendar/Utils'
 ], function(
    cMerge,
-   DateRange,
+   dateRange,
    calendarTestUtils
 ) {
    'use strict';
@@ -19,7 +19,7 @@ define([
 
       describe('_openDialog', function() {
          it('should open opener', function() {
-            const component = calendarTestUtils.createComponent(DateRange, options);
+            const component = calendarTestUtils.createComponent(dateRange.Input, options);
             component._children.opener = {
                open: sinon.fake()
             };
@@ -32,7 +32,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateRange, options),
+               component = calendarTestUtils.createComponent(dateRange.Input, options),
                startValue = new Date(2017, 11, 1),
                endValue = new Date(2017, 11, 2);
 
@@ -60,7 +60,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateRange, options),
+               component = calendarTestUtils.createComponent(dateRange.Input, options),
                startValue = new Date(2017, 11, 1),
                endValue = new Date(2017, 11, 2);
 
@@ -98,7 +98,7 @@ define([
             it('should generate events and close opener', function() {
                const
                   sandbox = sinon.sandbox.create(),
-                  component = calendarTestUtils.createComponent(DateRange, options);
+                  component = calendarTestUtils.createComponent(dateRange.Input, options);
 
                sandbox.stub(component, '_focusChanger');
 

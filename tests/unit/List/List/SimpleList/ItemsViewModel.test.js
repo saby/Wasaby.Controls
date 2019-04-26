@@ -3,10 +3,10 @@
  */
 define([
    'Controls/List/ItemsViewModel',
-   'Controls/List/resources/utils/ItemsUtil',
+   'Controls/list',
    'Types/collection',
    'Controls/Constants'
-], function(ItemsViewModel, ItemsUtil, collection, ControlsConstants){
+], function(ItemsViewModel, list, collection, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, data3, display;
       beforeEach(function() {
