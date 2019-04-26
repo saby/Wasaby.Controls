@@ -1,8 +1,8 @@
 import {View as Grid} from 'Controls/grid';
-import TreeGridViewModel = require('Controls/_treeGrids/TreeGridView/TreeGridViewModel');
+import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import entity = require('Types/entity');
-import TreeGridView = require('Controls/_treeGrids/TreeGridView/TreeGridView');
-import TreeControl = require('Controls/_treeGrids/TreeControl');
+import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
+import TreeControl = require('Controls/_treeGrid/TreeControl');
 
 
    /**
@@ -12,7 +12,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
     * </ul>
     *
-    * @class Controls/TreeGrid
+    * @class Controls/_treeGrid/View
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
@@ -30,7 +30,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
     * @mixes Controls/_grids/GridStyles
-    * @mixes Controls/_treeGrids/Styles
+    * @mixes Controls/_treeGrid/Styles
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
