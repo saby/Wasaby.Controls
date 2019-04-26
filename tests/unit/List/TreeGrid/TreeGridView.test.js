@@ -1,9 +1,9 @@
-define(['Controls/List/TreeGridView/TreeGridView'], function(TreeGridView) {
+define(['Controls/treeGrid'], function(treeGrid) {
    describe('Controls.List.TreeGridView.TreeGridView', function() {
       it('TreeGridView._onExpanderClick', function() {
          var
             stopImmediatePropagationCalled = true,
-            treeGridView = new TreeGridView(),
+            treeGridView = new treeGrid.TreeGridView(),
             event = {
                stopImmediatePropagation: function() {
                   stopImmediatePropagationCalled = true;
@@ -19,7 +19,7 @@ define(['Controls/List/TreeGridView/TreeGridView'], function(TreeGridView) {
       });
       it('TreeGridView._onLoadMoreClick', function() {
          var
-            treeGridView = new TreeGridView(),
+            treeGridView = new treeGrid.TreeGridView(),
             notifyLoadMoreClickCalled = false;
          treeGridView._notify = function(eventName) {
             if (eventName === 'loadMoreClick') {

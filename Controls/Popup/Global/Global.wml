@@ -1,4 +1,4 @@
 <div>
-   <Controls.Popup.Opener.Previewer name="previewerOpener"/>
-   <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+   <Controls.popup:Previewer name="previewerOpener"/>
+   <Controls.popup:Infobox name="infoBoxOpener"/>
 </div>

@@ -3,13 +3,13 @@
  */
 define(
    [
-      'Controls/Popup/Opener/Edit',
+      
       'Controls/popup',
       'Types/collection',
       'Core/Deferred',
       'Types/entity'
    ],
-   (Edit, popup, collection, Deferred) => {
+   (popup, collection, Deferred) => {
       let dataRS = new collection.RecordSet({
          idProperty: 'id',
          rawData: [

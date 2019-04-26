@@ -1,8 +1,9 @@
-import BaseViewModel = require('Controls/Input/Base/ViewModel');
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
+import InputProcessor = require('Controls/_input/Mask/InputProcessor');
+import Formatter = require('Controls/_input/Mask/Formatter');
 
-import Formatter = require('Controls/Input/Mask/Formatter');
-import FormatBuilder = require('Controls/Input/Mask/FormatBuilder');
-import InputProcessor = require('Controls/Input/Mask/InputProcessor');
+
 
 import {TimeInterval} from 'Types/entity';
 

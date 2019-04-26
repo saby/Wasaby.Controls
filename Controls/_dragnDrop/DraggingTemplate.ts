@@ -189,7 +189,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     */
 
-   export = Control.extend({
+   var DraggingTemplate = Control.extend({
       _theme: ['Controls/dragnDrop'],
       _template: template,
 
@@ -198,3 +198,4 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
       }
    });
 
+   export = DraggingTemplate;

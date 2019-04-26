@@ -44,9 +44,9 @@
                                          on:click="_openPanel()"
                                          caption="Открыть StackPanel"
                                          attr:class="ControlsDemo-ValidateInfobox_panel"/>
-                <Controls.Popup.Opener.Stack name="opener"
+                <Controls.popup:Stack name="opener"
                                              template="Controls-demo/Input/Validate/Text">
-                </Controls.Popup.Opener.Stack>
+                </Controls.popup:Stack>
     </div>
     <Controls.validate:Controller name="formController">
         <ws:content>
@@ -73,7 +73,7 @@
                         <ws:Function value="{{_value1}}">Controls/validate:isEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 name="textBox5"
                                 bind:value="_value1"
                                 placeholder="Email"/>
@@ -97,7 +97,7 @@
                         <ws:Function value="{{_valueReadOnly }}">Controls/validate:isRequired</ws:Function>
                     </ws:validators>
                     <ws:content>
-                        <Controls.Input.Text
+                        <Controls.input:Text
                                 attr:style="width:163px"
                                 name="textBox5"
                                 bind:value="_valueReadOnly"/>

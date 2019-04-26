@@ -12,7 +12,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @public
  * @category Input
  * @author Mironov A.U.
- * @demo Controls-demo/dateRange/RelationWrapper
+ * @demo Controls-demo/dateRange/RelationController
  *
  */
 

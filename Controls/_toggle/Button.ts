@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import Classes = require('Controls/_toggle/Button/Classes');
-import template = require('wml!Controls/Button/Button');
+import {buttonTemplate as template} from 'Controls/buttons';
 import buttons = require('Controls/buttons');
    /**
     * Button that switches between two states: on-state and off-state.
@@ -18,7 +18,7 @@ import buttons = require('Controls/buttons');
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/_toggle/ToggleButtonPG
+    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
     */
 
    /**

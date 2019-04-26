@@ -1,17 +1,17 @@
 define(
    [
-      'Controls/Popup/Manager/Container',
+      'Controls/popup',
       'Types/collection',
       'Core/helpers/Number/randomId'
    ],
 
-   function (Container, collection, randomId) {
+   function (popupMod, collection, randomId) {
       'use strict';
       describe('Controls/Popup/Manager/Container', function () {
          var
             id,
             items = new collection.List(),
-            popupContainer = new Container();
+            popupContainer = new popupMod.Container();
 
          it('set null items', function(){
             popupContainer._beforeMount();

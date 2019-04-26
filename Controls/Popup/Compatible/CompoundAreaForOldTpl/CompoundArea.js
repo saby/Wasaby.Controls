@@ -12,7 +12,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Env/Event',
-      'Controls/Popup/Manager/ManagerController',
+      'Controls/popup',
       'Types/entity',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
@@ -32,7 +32,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       doAutofocus,
       DialogRecord,
       EnvEvent,
-      ManagerController,
+      popupMod,
       entity,
       callNext,
       cInstance,
@@ -644,7 +644,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                if (popupCfg && this._popupOptions.minWidth && this._popupOptions.maxWidth) {
                   popupCfg.popupOptions.minWidth = this._popupOptions.minWidth;
                   popupCfg.popupOptions.maxWidth = this._popupOptions.maxWidth;
-                  ManagerController.update(popupCfg.id, popupCfg.popupOptions);
+                  popupMod.Controller.update(popupCfg.id, popupCfg.popupOptions);
                }
             }
             this._removeCustomHeader();
@@ -939,8 +939,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   popupConfig.modal = visible;
 
                   // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-                  ManagerController.reindex();
-                  ManagerController.update(id, popupConfig.popupOptions);
+                  popupMod.Controller.reindex();
+                  popupMod.Controller.update(id, popupConfig.popupOptions);
                }
 
                if (visible && !prevVisible) {
@@ -1005,12 +1005,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
                popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
 
-               ManagerController.update(this._getPopupId(), popupConfig.popupOptions);
+               popupMod.Controller.update(this._getPopupId(), popupConfig.popupOptions);
             }
          },
          _getManagerConfig: function() {
             var id = this._getPopupId();
-            return id ? ManagerController.find(id) : undefined;
+            return id ? popupMod.Controller.find(id) : undefined;
          },
          _getPopupId: function() {
             var popupContainer = this.getContainer().closest('.controls-Popup')[0];

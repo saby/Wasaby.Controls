@@ -1,6 +1,6 @@
 import {View as List} from 'Controls/list';
-import GridViewModel = require('Controls/_grids/GridViewModel');
-import viewName = require('Controls/_grids/GridView');
+import GridViewModel = require('Controls/_grid/GridViewModel');
+import viewName = require('Controls/_grid/GridView');
 import {ListControl as viewTemplate} from 'Controls/list';
 
 
@@ -13,7 +13,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     *    <li><a href="/materials/demo-ws4-edit-in-place-row-editor">How to configure editing in your list with row editor template.</a>.</li>
     * </ul>
     *
-    * @class Controls/_grids/Grid
+    * @class Controls/_grid/Grid
     * @extends Controls/list:View
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
@@ -28,14 +28,14 @@ import {ListControl as viewTemplate} from 'Controls/list';
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
-    * @mixes Controls/_grids/GridStyles
+    * @mixes Controls/_grid/GridStyles
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_list/DigitButtonsStyles
-    * @mixes Controls/_grids/SortButtonStyles
+    * @mixes Controls/_grid/SortButtonStyles
     *
     * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
     * @cssModifier controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields

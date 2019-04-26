@@ -1,24 +1,24 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_grids/SortButton');
+import template = require('wml!Controls/_grid/SortButton');
 import 'css!theme?Controls/grid';
 
 /**
  * Graphical control element that used for changing sorting in Grid control
  *
- * @class Controls/_grids/SortButton
+ * @class Controls/_grid/SortButton
  * @extends Core/Control
- * @mixes Controls/_grids/SortButton/Styles
+ * @mixes Controls/_grid/SortButton/Styles
  */
 
 /**
- * @name Controls/_grids/SortButton#type
+ * @name Controls/_grid/SortButton#type
  * @cfg {String} Type of sorting.
  * @variant single Sorting by single field.
  * @variant multi Allows you to sort by multiple fields.
  */
 
 /**
- * @name Controls/_grids/SortButton#property
+ * @name Controls/_grid/SortButton#property
  * @cfg {String} Sorting property.
  */
 export = Control.extend({

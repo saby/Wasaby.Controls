@@ -4,7 +4,7 @@
       <div class="PageBlock__componentWrap">
          <div>_startValue: {{_startValue}}</div>
          <div>_endValue: {{_endValue}}</div>
-         <Controls.Date.Month
+         <Controls.calendar:Month
                            month="{{_month1}}"
                            bind:startValue="_startValue"
                            bind:endValue="_endValue"
@@ -13,7 +13,7 @@
                            bind:selectionHoveredValue="_selectionHoveredValue"
                            selectionType="range"
          />
-         <Controls.Date.Month
+         <Controls.calendar:Month
                            month="{{_month2}}"
                            bind:startValue="_startValue"
                            bind:endValue="_endValue"

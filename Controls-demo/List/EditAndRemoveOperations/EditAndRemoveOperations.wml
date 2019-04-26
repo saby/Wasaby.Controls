@@ -51,6 +51,6 @@
             </ws:content>
         </Controls.list:DataContainer>
         <Controls.list:AddButton caption="Добавить запись" on:click="list.addItem()"/>
-        <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+        <Controls.popup:Confirmation name="popupOpener"/>
     </div>
 </div>
