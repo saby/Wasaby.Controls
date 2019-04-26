@@ -12,7 +12,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'Controls/_scroll/Scroll/Watcher';
 import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
-import 'css!theme?Controls/_scroll/Scroll/Scroll';
+import 'css!theme?Controls/scroll';
 
 
 /**

@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar');
 import 'Controls/event';
-import 'css!theme?Controls/_scroll/Scroll/Scrollbar/Scrollbar';
+import 'css!theme?Controls/scroll';
 
 
 
