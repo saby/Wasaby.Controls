@@ -11,7 +11,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
 
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
-   'Controls/Container/Scroll',
+   'Controls/scroll',
    'Controls/grid',
    'Controls/Render/Money/Money'
 ], function(BaseControl, GridData, template, source) {

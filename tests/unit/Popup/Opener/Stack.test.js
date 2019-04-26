@@ -4,9 +4,10 @@ define(
       'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Stack',
       'Controls-demo/Popup/TestMaximizedStack',
-      'Controls/Popup/Opener/BaseController'
+      'Controls/Popup/Opener/BaseController',
+      'wml!Controls/_popup/Opener/Stack/StackContent'
    ],
-   (StackStrategy, StackController, StackOpener, TestMaximizedStack, BaseController) => {
+   (StackStrategy, StackController, StackOpener, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Stack', () => {
@@ -80,7 +81,7 @@ define(
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
-            assert.equal(itemConfig.popupOptions.content, 'wml!Controls/_popup/Opener/Stack/StackContent');
+            assert.equal(itemConfig.popupOptions.content, StackContent);
          });
 
          it('stack maximized popup position', () => {

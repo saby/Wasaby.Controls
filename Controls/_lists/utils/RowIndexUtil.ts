@@ -46,13 +46,27 @@ function calcResultsRowIndex(
     hasMoreStorage?
 ): number {
 
-    if (resultsPosition === ResultsPosition.Top) {
+    if (resultsPosition === ResultsPosition.Top || display.getCollectionCount() === 0) {
         return hasHeader ? 1 : 0;
     }
 
+
     let
-        lastItemId = ItemsUtil.getLastItem(display).getId(),
+        lastItem = ItemsUtil.getLastItem(display),
+        lastItemId: string,
+        lastRowIndex: number;
+
+    /*
+    * If ItemsUtil gives undefined as last item, it means that there are no displayed records in list,
+    * but groups may be displayed and collapsed. So as last item should take last group.
+    * */
+    if (lastItem) {
+        lastItemId = lastItem.getId();
         lastRowIndex = calcRowIndexByKey(lastItemId, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
+    } else {
+        lastItem = display.at(display.getCount() - 1);
+        lastRowIndex = calcGroupRowIndex(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
+    }
 
     // If after last item exists node footer
     if (hierarchyRelation && hasMoreStorage) {

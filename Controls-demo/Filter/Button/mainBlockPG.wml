@@ -1,5 +1,5 @@
 <ws:template name="kind">
-   <Controls.Filter.Button.Panel.Dropdown
+   <Controls.filterPopup:Dropdown
            keyProperty="key"
            displayProperty="title"
            bind:textValue="item.textValue"
@@ -8,7 +8,7 @@
 </ws:template>
 
 <ws:template name="type">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         displayProperty="title"
         bind:textValue="item.textValue"
@@ -17,7 +17,7 @@
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         displayProperty="title"
         bind:textValue="item.textValue"
@@ -26,7 +26,7 @@
 </ws:template>
 
 <ws:template name="used">
-<Controls.Filter.Button.Panel.Dropdown
+<Controls.filterPopup:Dropdown
         keyProperty="key"
         displayProperty="title"
         bind:textValue="item.textValue"

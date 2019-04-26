@@ -1,11 +1,11 @@
 define([
-   'Controls/FormController',
+   'Controls/form',
    'Types/entity',
    'Core/helpers/Function/runDelayed',
    'Core/Deferred',
    'Types/source',
    'require'
-], function(FormController, entity, runDelayed, Deferred, source, require) {
+], function(form, entity, runDelayed, Deferred, source, require) {
    'use strict';
    
    //TODO: Удалить эти тесты из юнитов, написать задачу на интеграционное тестирование по этим сценариям

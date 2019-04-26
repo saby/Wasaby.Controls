@@ -1,8 +1,8 @@
 <ws:template name="block">
    <div class="ws-Block ws-Block_style_2">
-      <Controls.StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
-         <Controls.Heading caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
-      </Controls.StickyHeader>
+      <Controls.scroll:StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
+         <Controls._heading:Title caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
+      </Controls.scroll:StickyHeader>
       <Controls.list:View source="{{dataSource}}"
                      idProperty="{{dataSource.getIdProperty()}}">
          <ws:itemTemplate>
@@ -15,11 +15,11 @@
 </ws:template>
 
 <div class="example-NotificationCenter ws-flexbox">
-   <Controls.Container.Scroll attr:class="example-NotificationCenter__scroll ws-BlockLayout" shadowVisible="{{_shadowVisible}}">
+   <Controls.scroll:Container attr:class="example-NotificationCenter__scroll ws-BlockLayout" shadowVisible="{{_shadowVisible}}">
       <div>
          <ws:if data="{{_titleVisible}}">
             <div class="ws-Block ws-Block_style_6 ws-flexbox ws-justify-content-center">
-               <Controls.Heading caption="Notification center" size="xl"/>
+               <Controls._heading:Title caption="Notification center" size="xl"/>
             </div>
          </ws:if>
          <ws:for data="index in _dataset.length">
@@ -29,9 +29,9 @@
             <ws:partial template="block" dataSource="{{_dataset[_dataset.length - index - 1]}}"/>
          </ws:for>
       </div>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
    <div class="example-NotificationCenter__settings ws-flexbox ws-flex-column ws-justify-content-between">
-      <Controls.Heading caption="Settings" size="xl" attr:class="ws-align-self-center"/>
+      <Controls._heading:Title caption="Settings" size="xl" attr:class="ws-align-self-center"/>
       <Controls.toggle:Switch caption="Заголовок" bind:value="_titleVisible"/>
       <Controls.toggle:Switch caption="Тень" bind:value="_shadowVisible"/>
    </div>

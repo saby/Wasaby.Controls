@@ -4,7 +4,7 @@ import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popup/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
-import 'wml!Controls/_popup/Opener/Stack/StackContent';
+import StackContent = require('wml!Controls/_popup/Opener/Stack/StackContent');
 import 'css!theme?Controls/_popup/Opener/Stack/Stack';
 
       var STACK_CLASS = 'controls-Stack';
@@ -123,7 +123,7 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             };
          },
          setStackContent: function(item) {
-            item.popupOptions.content = 'wml!Controls/_popup/Opener/Stack/StackContent';
+            item.popupOptions.content = StackContent;
          },
 
          getDefaultOptions: function(item) {

@@ -1,6 +1,6 @@
-<Controls.Filter.Button.Panel
+<Controls.filterPopup:Panel
         itemTemplateProperty="template"
         items="{{items}}"
         attr:class="controls-FilterPanel__width-m">
    <ws:additionalTemplate templateName="wml!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2"/>
-</Controls.Filter.Button.Panel>
+</Controls.filterPopup:Panel>

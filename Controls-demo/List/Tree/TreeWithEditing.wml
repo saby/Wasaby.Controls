@@ -1,7 +1,7 @@
 <div class="demo-Grid">
     <Controls.list:AddButton caption="Add record" on:click="list.beginAdd()" class="test_add_record_1"/>
     <div class="demo-Grid__container">
-        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+        <Controls.scroll:Container attr:class="demo-Grid__wrapper">
             <Controls.treeGrid:View
                     name="list"
                     attr:class="demo-Grid__control"
@@ -16,6 +16,6 @@
                     <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
                 </ws:editingConfig>
             </Controls.treeGrid:View>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </div>
 </div>

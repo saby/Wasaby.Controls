@@ -3,7 +3,7 @@ define('Controls-demo/Explorer/Search', [
    'wml!Controls-demo/Explorer/Search',
    'Controls-demo/Explorer/ExplorerMemory',
    'css!Controls-demo/Explorer/Search',
-   'Controls/Explorer'
+   'Controls/explorers'
 ], function(BaseControl, template, MemorySource) {
    'use strict';
    var

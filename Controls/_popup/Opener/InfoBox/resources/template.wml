@@ -1,6 +1,6 @@
 <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}">
    <div class="controls-InfoBox controls-InfoBox_style_{{_options.styleType}}_{{_options.style}}" on:mouseenter="_sendResult()" on:mouseleave="_sendResult()">
-      <Controls.Button.Close attr:class="controls-InfoBox__closeButton" on:click="_close()" style="light"/>
+      <Controls.popupTemplate:CloseButton attr:class="controls-InfoBox__closeButton" on:click="_close()" style="light"/>
       <ws:if data="{{_options.floatCloseButton}}">
          <div class="controls-InfoBox_floatElement"></div>
       </ws:if>

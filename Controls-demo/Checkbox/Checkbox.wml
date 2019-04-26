@@ -20,7 +20,7 @@
         <br/>
         <Controls.toggle:Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:class="ControlsDemo-Checkbox__state"/>
         <Controls.input:Label name="myLabel1" caption="value:"/>
-        <Controls.Input.ComboBox
+        <Controls.dropdown:Combobox
                 source="{{_source}}"
                 keyProperty="title"
                 placeholder="select"

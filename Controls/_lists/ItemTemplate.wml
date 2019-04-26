@@ -50,9 +50,9 @@
 </ws:template>
 <ws:if data="{{itemData.isSticky}}">
    <ws:partial template="itemOutputTpl">
-      <Controls.StickyHeader position="topbottom">
+      <Controls.scroll:StickyHeader position="topbottom">
          <ws:partial template="itemContentTpl"/>
-      </Controls.StickyHeader>
+      </Controls.scroll:StickyHeader>
    </ws:partial>
 </ws:if>
 <ws:else>

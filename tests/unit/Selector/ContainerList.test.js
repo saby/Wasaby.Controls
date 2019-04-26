@@ -1,4 +1,4 @@
-define(['Controls/Selector/List/Container', 'Types/entity'], function(Container, entity) {
+define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
    
    
    describe('Controls.Selector.Container.List', function() {
@@ -8,22 +8,22 @@ define(['Controls/Selector/List/Container', 'Types/entity'], function(Container,
          var selectedKeys = [1, 2, 3];
          
          itemKey = 4;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, true), [[1, 2, 3, 4], [4], []]);
+         assert.deepEqual(lookupPopup.ListContainer._private.getItemClickResult(itemKey, selectedKeys, true), [[1, 2, 3, 4], [4], []]);
    
          itemKey = 1;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, true), [[2, 3], [], [1]]);
+         assert.deepEqual(lookupPopup.ListContainer._private.getItemClickResult(itemKey, selectedKeys, true), [[2, 3], [], [1]]);
    
          selectedKeys = [];
          itemKey = 1;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, false), [[1], [1], []]);
+         assert.deepEqual(lookupPopup.ListContainer._private.getItemClickResult(itemKey, selectedKeys, false), [[1], [1], []]);
    
          selectedKeys = [1];
          itemKey = 2;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [2], [1]]);
+         assert.deepEqual(lookupPopup.ListContainer._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [2], [1]]);
 
          selectedKeys = [2];
          itemKey = 2;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [], []]);
+         assert.deepEqual(lookupPopup.ListContainer._private.getItemClickResult(itemKey, selectedKeys, false), [[2], [], []]);
       });
    
       it('getItemActions', function() {
@@ -33,17 +33,17 @@ define(['Controls/Selector/List/Container', 'Types/entity'], function(Container,
          var itemActions = [{id: 'test'}];
    
          options.itemActions = itemActionsEmpty;
-         assert.equal(Container._private.getItemActions(options)[0].id, 'selector.action');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[0].id, 'selector.action');
    
          options.itemActions = itemActions;
-         assert.equal(Container._private.getItemActions(options)[0].id, 'test');
-         assert.equal(Container._private.getItemActions(options)[1].id, 'selector.action');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[0].id, 'test');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[1].id, 'selector.action');
    
          options.selectionType = 'leaf';
          options.itemActions = itemActionsEmpty;
-         assert.isFalse(!!Container._private.getItemActions(options)[0]);
+         assert.isFalse(!!lookupPopup.ListContainer._private.getItemActions(options)[0]);
          options.itemActions = itemActions;
-         assert.equal(Container._private.getItemActions(options).length, 1);
+         assert.equal(lookupPopup.ListContainer._private.getItemActions(options).length, 1);
       });
    
       it('getItemActionVisibilityCallback', function() {
@@ -69,41 +69,41 @@ define(['Controls/Selector/List/Container', 'Types/entity'], function(Container,
    
    
          //Without user callback
-         assert.isTrue(Container._private.getItemActionVisibilityCallback({})({id: 'test'}));
+         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({})({id: 'test'}));
          
          //With user callback
-         assert.isTrue(Container._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
+         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
          actionVisibility = false;
-         assert.isFalse(Container._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
+         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}));
          
          //With user callback and selector action
          actionVisibility = true;
-         assert.isTrue(Container._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemNode));
+         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemNode));
          actionVisibility = false;
-         assert.isFalse(Container._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemLeaf));
+         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({itemActionVisibilityCallback: visibilityCallback})({id: 'test'}, itemLeaf));
          actionVisibility = true;
          
-         assert.isTrue(Container._private.getItemActionVisibilityCallback({
+         assert.isTrue(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({
             itemActionVisibilityCallback: visibilityCallback,
             multiSelect: true,
             selectedKeys: [],
             selectionType: 'node'
          })({id: 'selector.action'}, itemNode));
-         assert.isFalse(Container._private.getItemActionVisibilityCallback({
+         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({
             itemActionVisibilityCallback: visibilityCallback,
             multiSelect: true,
             selectedKeys: ['test'],
             selectionType: 'node'
          })({id: 'selector.action'}, itemNode));
    
-         assert.isFalse(Container._private.getItemActionVisibilityCallback({
+         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({
             itemActionVisibilityCallback: visibilityCallback,
             multiSelect: true,
             selectedKeys: [],
             nodeProperty: 'Раздел@',
             selectionType: 'all'
          })({id: 'selector.action'}, itemLeaf));
-         assert.isFalse(Container._private.getItemActionVisibilityCallback({
+         assert.isFalse(lookupPopup.ListContainer._private.getItemActionVisibilityCallback({
             itemActionVisibilityCallback: visibilityCallback,
             multiSelect: true,
             selectedKeys: ['test'],
@@ -126,25 +126,25 @@ define(['Controls/Selector/List/Container', 'Types/entity'], function(Container,
             }
          };
    
-         Container._private.itemClick(self, 'test', false, []);
+         lookupPopup.ListContainer._private.itemClick(self, 'test', false, []);
          assert.isTrue(selectCompleted);
          assert.isTrue(clickSelection);
    
          selectCompleted = false;
          clickSelection = false;
-         Container._private.itemClick(self, 'test', true, []);
+         lookupPopup.ListContainer._private.itemClick(self, 'test', true, []);
          assert.isTrue(selectCompleted);
          assert.isTrue(clickSelection);
    
          selectCompleted = false;
          clickSelection = false;
-         Container._private.itemClick(self, 'test', true, [1]);
+         lookupPopup.ListContainer._private.itemClick(self, 'test', true, [1]);
          assert.isTrue(clickSelection);
          assert.isFalse(selectCompleted);
       });
    
       it('_itemClick handler', function() {
-         var listContainer = new Container();
+         var listContainer = new lookupPopup.ListContainer();
          var selectedKeys = [];
          var options = {
             keyProperty: 'id',

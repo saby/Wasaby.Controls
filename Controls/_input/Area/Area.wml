@@ -11,7 +11,7 @@
                        on:mouseenter="_mouseEnterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
-   <Controls.Container.Scroll name="scroll"
+   <Controls.scroll:Container name="scroll"
                               attr:class="controls-Area__scroll controls-InputBase__field
                                           controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_options.size}}_indented
                                           {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _options.size + '_indented'}}">
@@ -33,5 +33,5 @@
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                      isEdge="{{_isEdge}}" />
       </ws:else>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </Controls._input.Render>

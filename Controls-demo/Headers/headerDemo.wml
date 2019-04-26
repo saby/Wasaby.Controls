@@ -2,12 +2,12 @@
     <div class="testBlock">
         <div class="exampleBlock">
             <h2>Header</h2>
-            <Controls.Heading attr:class="ControlsDemo__header" readOnly="{{_readOnly}}" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_headerSelectedSize}}"/>
+            <Controls._heading:Title attr:class="ControlsDemo__header" readOnly="{{_readOnly}}" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_headerSelectedSize}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.input:Label name="myLabel1" caption="size:" attr:class="ControlsDemo__label"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     attr:class="ControlsDemo__size"
                     source="{{_headerSizeSource}}"
                     keyProperty="title"
@@ -20,7 +20,7 @@
             <Controls.input:Label name="myLabel1" caption="caption" attr:class="ControlsDemo__label"/>
             <Controls.input:Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
             <Controls.input:Label name="myLabel1" caption="style:" attr:class="ControlsDemo__label"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                     attr:class="ControlsDemo__style"
                     source="{{_headerStyleSource}}"
                     keyProperty="title"
