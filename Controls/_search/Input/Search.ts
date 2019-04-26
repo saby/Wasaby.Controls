@@ -125,7 +125,7 @@ var Search = inputMod.Base.extend({
    }
 });
 
-Search._theme.push('Controls/_search/Input/Search');
+Search._theme.push('Controls/search');
 
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = inputMod.Base.getOptionTypes();
