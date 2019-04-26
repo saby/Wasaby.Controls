@@ -81,6 +81,7 @@ var _private = {
                     listViewModel.appendItems(list);
                 }
                 _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                self._options.dataLoadCallback(list);
             });
         } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);

@@ -120,13 +120,18 @@ define([
 
 
       it('TreeControl._private.toggleExpanded', function() {
-         var treeControl = correctCreateTreeControl({
-            columns: [],
-            source: new sourceLib.Memory({
-               data: [],
-               idProperty: 'id'
-            })
-         });
+         var
+            dataLoadCallbackCalled = false,
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               }),
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               }
+            });
          var isSourceControllerUsed = false;
 
          //viewmodel moch
@@ -186,6 +191,7 @@ define([
                   }
                });
                assert.isFalse(isSourceControllerUsed);
+               assert.isTrue(dataLoadCallbackCalled);
                resolve();
             }, 10);
          });
