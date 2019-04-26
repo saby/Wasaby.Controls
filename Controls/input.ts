@@ -13,6 +13,12 @@
  * @includes Date Controls/_input/Date/Picker
  * @includes Time Controls/_input/Time/Picker
  * @includes DateTimeModel Controls/_input/DateTime/Model
+ *
+ * @includes Controls/_input/Base/Styles
+ * @includes Controls/_input/Render/Styles
+ * @includes Controls/_input/Password/PasswordStyles
+ * @includes Controls/_input/resources/InputRender/InputRenderStyles
+ *
  * @public
  * @author Kraynov D.
  */

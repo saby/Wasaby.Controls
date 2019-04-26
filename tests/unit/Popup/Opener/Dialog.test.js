@@ -185,7 +185,8 @@ define(
                      width: 730,
                      left: 785
                   },
-                  position: {}
+                  position: {},
+                  dragged: false
                },
                windowData = {
                   width: 1920,
