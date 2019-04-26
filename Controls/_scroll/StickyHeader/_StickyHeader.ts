@@ -238,7 +238,11 @@ var StickyHeader = Control.extend({
    },
 
    _updateStickyShadow: function(e, ids) {
-      this._shadowVisible = ids.indexOf(this._index) !== -1;
+      const shadowVisible = ids.indexOf(this._index) !== -1;
+      if (this._shadowVisible !== shadowVisible) {
+         this._shadowVisible = shadowVisible;
+         this._forceUpdate();
+      }
    },
 
    _isShadowVisible: function(shadowPosition) {
