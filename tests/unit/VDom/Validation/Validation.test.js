@@ -47,6 +47,15 @@ define([
          validCtrl._valueChangedHandler();
          assert.deepEqual(validCtrl._validationResult, undefined);
       });
+      it('closeInfoBox', () => {
+         validCtrl._isOpened = false;
+         validCtrl._validationResult = 'error';
+         validCtrl._private.openInfoBox(validCtrl);
+         validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
+         assert.deepEqual(validCtrl._isOpened, true);
+         validCtrl._mouseInfoboxHandler({type: 'close'});
+         assert.deepEqual(validCtrl._isOpened, false);
+      });
    });
    describe('Validate/Input', () => {
       it('cleanValidInput', () => {

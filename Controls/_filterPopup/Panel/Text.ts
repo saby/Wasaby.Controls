@@ -4,7 +4,7 @@ import 'css!theme?Controls/_filterPopup/Panel/Text/Text';
 
    /**
     * Control text with cross
-    * @class Controls/_filterPopup/Panel/FilterText
+    * @class Controls/_filterPopup/Panel/Text
     * @extends Controls/Control
     * @control
     * @public
@@ -12,13 +12,13 @@ import 'css!theme?Controls/_filterPopup/Panel/Text/Text';
     */
 
    /**
-    * @name Controls/_filterPopup/Panel/FilterText#caption
+    * @name Controls/_filterPopup/Panel/Text#caption
     * @cfg {Object} Caption
     */
 
 
 
-   var FilterText = Control.extend({
+   var Text = Control.extend({
       _template: template,
 
       _afterMount: function() {
@@ -31,12 +31,12 @@ import 'css!theme?Controls/_filterPopup/Panel/Text/Text';
 
    });
 
-   FilterText.getDefaultOptions = function() {
+   Text.getDefaultOptions = function() {
       return {
          value: true
       };
    };
 
-   export = FilterText;
+   export = Text;
 
 

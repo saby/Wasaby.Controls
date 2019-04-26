@@ -1,4 +1,4 @@
-<div class="controls-StackTemplate">
+<div class="controls-StackTemplate" ws-tab-cycling="true">
     <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">

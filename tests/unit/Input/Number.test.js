@@ -3,9 +3,10 @@ define(
       'Core/core-instance',
       'Controls/input',
       'unit/resources/ProxyCall',
+      'unit/Input/Base/InputUtility',
       'Vdom/Vdom'
    ],
-   function(instance, inputMod, ProxyCall, Vdom) {
+   function(instance, inputMod, ProxyCall, InputUtility, Vdom) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
@@ -125,6 +126,51 @@ define(
                   name: 'notify',
                   arguments: ['valueChanged', [123456, '123456.0']]
                }]);
+            });
+            it('On iPad, enter twice "-"', function() {
+               ctrl._isMobileIOS = true;
+               ctrl._beforeMount({
+                  value: null
+               });
+
+               ctrl._getField().value = '123';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '123-.0';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '-12.0';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '-12—.0';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [123, '123.0']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [-123, '-123.0']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [-12, '-12.0']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [-123, '-123.0']]
+                  }
+               ]);
             });
          });
          describe('Focus in event.', function() {

@@ -5,7 +5,6 @@ define('Controls-demo/Popup/TestFormController/FormController', [
    'SBIS3.CONTROLS/TextBox',
    'SBIS3.CONTROLS/NumberTextBox',
    'SBIS3.CONTROLS/Button',
-   'css!Controls-demo/Popup/TestFormController/FormController',
    'SBIS3.CONTROLS/FieldLink',
    'SBIS3.CONTROLS/DataGridView'
 ], function(

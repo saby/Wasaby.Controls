@@ -11,6 +11,7 @@
    <Controls.Popup.Opener.Sticky name="opener"
                                  template="Controls/dateLitePopup"
                                  closeOnOutsideClick="{{true}}"
+                                 _vdomOnOldPage="{{true}}"
                                  on:result="_onResult()">
       <ws:direction vertical="bottom" horizontal="center"/>
       <ws:targetPoint vertical="top" horizontal="center"/>

@@ -10,17 +10,19 @@ import DialogStrategy = require('Controls/_popup/Opener/Dialog/DialogStrategy');
          },
          fixCompatiblePosition: function(cfg) {
             // COMPATIBLE: for old windows user can set the coordinates relative to the body
-            if (cfg.popupOptions.top) {
-               cfg.position.top = cfg.popupOptions.top;
-            }
-            if (cfg.popupOptions.left) {
-               // Calculating the left position when reducing the size of the browser window
-               const differenceWindowWidth =
-                   (cfg.popupOptions.left + cfg.popupOptions.width) - _private.getWindowSize().width;
-               if (differenceWindowWidth > 0) {
-                  cfg.position.left = cfg.popupOptions.left - differenceWindowWidth;
-               } else {
-                  cfg.position.left = cfg.popupOptions.left;
+            if (!cfg.dragged) {
+               if (cfg.popupOptions.top) {
+                  cfg.position.top = cfg.popupOptions.top;
+               }
+               if (cfg.popupOptions.left) {
+                  // Calculating the left position when reducing the size of the browser window
+                  const differenceWindowWidth =
+                      (cfg.popupOptions.left + cfg.popupOptions.width) - _private.getWindowSize().width;
+                  if (differenceWindowWidth > 0) {
+                     cfg.position.left = cfg.popupOptions.left - differenceWindowWidth;
+                  } else {
+                     cfg.position.left = cfg.popupOptions.left;
+                  }
                }
             }
          },
