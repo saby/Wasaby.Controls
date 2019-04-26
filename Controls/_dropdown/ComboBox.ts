@@ -77,7 +77,7 @@ var ComboBox = Control.extend({
          this._value = '';
          this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
       } else {
-         this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+         this._value = getPropValue(selectedItems[0], this._options.displayProperty) || '';
          this._placeholder = this._options.placeholder;
       }
    }
