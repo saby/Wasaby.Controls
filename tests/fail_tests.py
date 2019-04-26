@@ -1,7 +1,6 @@
 import sqlite3
 import argparse
 import os
-import sys
 
 
 def main(path_to_db):
@@ -15,9 +14,6 @@ def main(path_to_db):
             if tests.fetchone():
                 result = 'true'
         conn.close()
-    else:
-        print('{} - файла result.db по указанному пути не существует'.format(path_to_db))
-        sys.exit(1)
     print(result)
 
 if __name__ == '__main__':

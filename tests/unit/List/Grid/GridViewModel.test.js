@@ -1014,12 +1014,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ];
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 4;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 4;');
 
             gridViewModel._options.multiSelectVisibility = 'onhover';
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 3; grid-column-end: 5;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 5;');
 
          });
 
