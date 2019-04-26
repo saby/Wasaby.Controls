@@ -40,7 +40,7 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
                this.selectedKey = newKey;
             }
          },
-         _getSelectedKeyByValue(value, items) {
+         _getSelectedKeyByValue: function(value, items) {
             if (value) {
                return items.find(function(item) {
                   return item.title === value;
