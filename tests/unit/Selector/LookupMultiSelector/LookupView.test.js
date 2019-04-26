@@ -42,14 +42,19 @@ define([
       });
 
       it('_calculatingSizes', function() {
-         var lookupView = new LookupView();
+         var
+            availableWidthCollection = 200,
+            lookupView = new LookupView();
 
+         LookupView._private.getAvailableWidthCollection = function() {
+            return availableWidthCollection
+         };
          lookupView._calculatingSizes({
             maxVisibleItems: 5,
             items: getItems(2)
          });
          assert.equal(lookupView._maxVisibleItems, 2);
-         // Остальная часть проверяется в getAvailableWidthCollection
+         assert.equal(lookupView._availableWidthCollection, availableWidthCollection);
       });
 
       it('_isInputVisible', function() {
