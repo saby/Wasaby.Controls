@@ -1204,7 +1204,8 @@ var
 
         // Only for browsers with partial grid support. Explicit grid styles for footer with grid row and grid column
         getFooterStyles: function (): string {
-            return _private.getFooterStyles(this)
+            // Can't calc grid-row classes for old browser without display
+            return this.getDisplay() ? _private.getFooterStyles(this) : '';
         },
 
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
