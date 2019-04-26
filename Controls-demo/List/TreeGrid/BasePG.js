@@ -13,7 +13,7 @@ define('Controls-demo/List/TreeGrid/BasePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/_treeGrids/TreeGrid',
+         _content: 'Controls/_treeGrid/TreeGrid',
          _dataObject: null,
          _componentOptions: null,
 

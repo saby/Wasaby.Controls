@@ -130,6 +130,36 @@ define([
          });
       });
 
+      describe('_updateStickyShadow', function() {
+         it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
+            const component = createComponent(StickyHeader, {});
+            component._shadowVisible = false;
+            sinon.stub(component, '_forceUpdate');
+            component._updateStickyShadow(null, [component._index]);
+            assert.isTrue(component._shadowVisible);
+            sinon.assert.called(component._forceUpdate);
+            sinon.restore();
+         });
+         it('should turn off a shadow and generate force update if the corresponding identifier is not passed.', function() {
+            const component = createComponent(StickyHeader, {});
+            component._shadowVisible = true;
+            sinon.stub(component, '_forceUpdate');
+            component._updateStickyShadow(null, ['someId']);
+            assert.isFalse(component._shadowVisible);
+            sinon.assert.called(component._forceUpdate);
+            sinon.restore();
+         });
+         it('should not apply force update if the shadow has not changed.', function() {
+            const component = createComponent(StickyHeader, {});
+            component._shadowVisible = true;
+            sinon.stub(component, '_forceUpdate');
+            component._updateStickyShadow(null, [component._index]);
+            assert.isTrue(component._shadowVisible);
+            sinon.assert.notCalled(component._forceUpdate);
+            sinon.restore();
+         });
+      });
+
       describe('_fixationStateChangeHandler', function() {
          it('should notify fixed event', function() {
             const component = createComponent(StickyHeader, {});

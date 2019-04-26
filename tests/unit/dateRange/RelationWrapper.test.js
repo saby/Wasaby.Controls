@@ -24,7 +24,7 @@ define([
          component._onRangeChanged(null, startDate, endDate);
 
          sinon.assert.calledWith(
-            component._notify, 'relationWrapperRangeChanged', [startDate, endDate, 0], { bubbling: true });
+            component._notify, 'relationWrapperRangeChanged', [startDate, endDate, 0, undefined], { bubbling: true });
 
          sandbox.restore();
       });

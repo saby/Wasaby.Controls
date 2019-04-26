@@ -1,6 +1,6 @@
 import {GridViewModel} from 'Controls/grid';
 import {GridLayoutUtil, RowIndexUtil} from 'Controls/list';
-import TreeViewModel = require('Controls/_treeGrids/Tree/TreeViewModel');
+import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 
 function isLastColumn(
    itemData: object,
