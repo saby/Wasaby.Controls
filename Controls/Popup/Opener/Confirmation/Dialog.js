@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Confirmation/Dialog',
-   ['Controls/_popup/Opener/Confirmation/Dialog'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.ConfirmationDialog;
    });

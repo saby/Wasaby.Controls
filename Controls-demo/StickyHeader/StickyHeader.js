@@ -4,7 +4,7 @@ define('Controls-demo/StickyHeader/StickyHeader',
       'wml!Controls-demo/StickyHeader/StickyHeader',
 
       'css!Controls-demo/StickyHeader/StickyHeader',
-      'Controls/Container/Scroll'
+      'Controls/scroll'
    ],
    function(Control, template) {
 

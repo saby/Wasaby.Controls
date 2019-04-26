@@ -1,5 +1,5 @@
 <div class="ControlsDemo-FilterButton__FilterInput">
-   <Controls.Filter.Button.Panel.Link caption="{{_options.caption}}" attr:class="ControlsDemo-FilterButton__FilterInput-text"/>
+   <Controls.filterPopup:Link caption="{{_options.caption}}" attr:class="ControlsDemo-FilterButton__FilterInput-text"/>
    <Controls.input:Text value="{{_options.value}}"
                         on:valueChanged="_valueChanged()"
                         attr:class="ControlsDemo-FilterButton__FilterInput-input"/>

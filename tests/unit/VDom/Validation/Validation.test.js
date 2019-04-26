@@ -1,10 +1,8 @@
 define([
-   'Controls/Validate/FormController',
-   'Controls/Validate/Controller',
-   'Controls/Validate/Input',
+   'Controls/validate',
    'Core/Deferred',
    'unit/resources/ProxyCall',
-], function(ValidateFC, Controller, Input, Deferred, ProxyCall) {
+], function(validateMod, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult, readOnly) {
@@ -36,7 +34,7 @@ define([
 
    describe('Validate/Controller', () => {
       var calls = [];
-      var validCtrl = new Controller();
+      var validCtrl = new validateMod.Container();
       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
       it('valueChangedNotify', () => {
          validCtrl._valueChangedHandler(null, 'test');
@@ -49,10 +47,19 @@ define([
          validCtrl._valueChangedHandler();
          assert.deepEqual(validCtrl._validationResult, undefined);
       });
+      it('closeInfoBox', () => {
+         validCtrl._isOpened = false;
+         validCtrl._validationResult = 'error';
+         validCtrl._private.openInfoBox(validCtrl);
+         validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
+         assert.deepEqual(validCtrl._isOpened, true);
+         validCtrl._mouseInfoboxHandler({type: 'close'});
+         assert.deepEqual(validCtrl._isOpened, false);
+      });
    });
    describe('Validate/Input', () => {
       it('cleanValidInput', () => {
-         var inputCtrl = new Input();
+         var inputCtrl = new validateMod.InputContainer();
          inputCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(inputCtrl._validationResult, undefined);
          inputCtrl._validationResult = 'Error';
@@ -62,7 +69,7 @@ define([
    });
    describe('Validate/FormController', () => {
       it('add/remove validator', () => {
-         let FC = new ValidateFC();
+         let FC = new validateMod.Controller();
          let validator1 = getValidator();
          let validator2 = getValidator();
 
@@ -80,7 +87,7 @@ define([
       });
 
       it('isValid', () => {
-         let FC = new ValidateFC();
+         let FC = new validateMod.Controller();
          let validator1 = getValidator();
          let validator2 = getValidator();
          FC.onValidateCreated({}, validator1);
@@ -93,7 +100,7 @@ define([
          FC.destroy();
       });
       it('activateFirstValidField', () => {
-         let FC = new ValidateFC();
+         let FC = new validateMod.Controller();
          let validator1 = getValidator();
          let validator2 = getValidator(null, true);
          let validator3 = getValidator('Error');
@@ -107,7 +114,7 @@ define([
       });
 
       it('setValidationResult', () => {
-         let FC = new ValidateFC();
+         let FC = new validateMod.Controller();
          let validator1 = getValidator();
          let validator2 = getValidator();
          FC.onValidateCreated({}, validator1);
@@ -121,7 +128,7 @@ define([
       });
 
       it('submit', () => {
-         let FC = new ValidateFC();
+         let FC = new validateMod.Controller();
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
          FC.onValidateCreated({}, validator1);

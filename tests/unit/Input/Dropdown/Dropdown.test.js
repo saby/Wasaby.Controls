@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Input/Dropdown',
+      'Controls/dropdown',
       'Core/core-clone',
       'Types/source',
       'Types/collection'
    ],
-   (Dropdown, Clone, sourceLib, collection) => {
+   (dropdown, Clone, sourceLib, collection) => {
       describe('Input/Dropdown', () => {
          let items = [
             {
@@ -60,11 +60,11 @@ define(
 
 
          let getDropdown = function(config) {
-            let dropdownList = new Dropdown(config);
+            let dropdownList = new dropdown.Input(config);
             dropdownList.saveOptions(config);
             return dropdownList;
          };
-         let dropdownList = new Dropdown(config);
+         let dropdownList = new dropdown.Input(config);
 
          it('_afterUpdate', () => {
             let ddl = getDropdown(config),

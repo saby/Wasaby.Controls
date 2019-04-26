@@ -164,14 +164,22 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
 
          getDefaultConfig: function(item) {
             InfoBoxController.superclass.getDefaultConfig.apply(this, arguments);
-
-            // Calculate the width of the infobox before its positioning.
-            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
-            cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
-            var sizes = { width: constants.MAX_WIDTH, height: 1, margins: { left: 0, top: 0 } };
-            var position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
-            this.prepareConfig(item, sizes);
-            item.position.maxWidth = position.width;
+            let defaultPosition = {
+               left: -10000,
+               top: -10000,
+               right: undefined,
+               bottom: undefined,
+            };
+            if (item.popupOptions.target) {
+               // Calculate the width of the infobox before its positioning.
+               // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+               cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
+               var sizes = { width: constants.MAX_WIDTH, height: 1, margins: { left: 0, top: 0 } };
+               var position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+               this.prepareConfig(item, sizes);
+               item.position.maxWidth = position.width;
+            }
+            item.position = {...item.position, ...defaultPosition};
          },
 
          prepareConfig: function(cfg, sizes) {

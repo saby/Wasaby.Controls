@@ -4,7 +4,7 @@ define('Controls-demo/Explorer/Explorer', [
    'Controls-demo/Explorer/ExplorerMemory',
    'Controls-demo/Explorer/ExplorerImages',
    'css!Controls-demo/Explorer/Explorer',
-   'Controls/Explorer'
+   'Controls/explorers'
 ], function(BaseControl, template, MemorySource, explorerImages) {
    'use strict';
    var

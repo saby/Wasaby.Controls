@@ -173,6 +173,34 @@ define(
                assert.equal(model.displayValue, '423');
                assert.deepEqual(model.selection, getSelection(1));
             });
+            it('Enter "0". No fractional part.', function() {
+               model.options = cMerge(model.options, {
+                  precision: 0
+               });
+               model.handleInput({
+                  after: '',
+                  before: '',
+                  insert: '0',
+                  delete: ''
+               }, 'insert');
+
+               assert.equal(model.displayValue, '0');
+               assert.deepEqual(model.selection, getSelection(1));
+            });
+            it('Enter "-" before is "0". No fractional part.', function() {
+               model.options = cMerge(model.options, {
+                  precision: 0
+               });
+               model.handleInput({
+                  after: '0',
+                  before: '',
+                  insert: '-',
+                  delete: ''
+               }, 'insert');
+
+               assert.equal(model.displayValue, '-');
+               assert.deepEqual(model.selection, getSelection(1));
+            });
          });
       });
    }

@@ -1,7 +1,7 @@
 <div class="demo-wrapper-virt">
     <div class="demo-control_block">
         <h2>Controls/list:View</h2>
-        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
             <ws:content>
                 <Controls.list:View
                         source="{{_viewSource}}"
@@ -16,11 +16,11 @@
                     </ws:navigation>
                 </Controls.list:View>
             </ws:content>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </div>
     <div class="demo-control_block">
         <h2>Controls/grid:View</h2>
-        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
             <ws:content>
                 <Controls.grid:View
                         source="{{_viewSource}}"
@@ -37,6 +37,6 @@
                     </ws:navigation>
                 </Controls.grid:View>
             </ws:content>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </div>
 </div>

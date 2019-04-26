@@ -1,4 +1,4 @@
-<Controls.Validate.FormController name="validation" >
+<Controls.validate:Controller name="validation" >
    <Controls._form.Crud
          on:updateSuccessed="_crudHandler()"
          on:updateFailed="_crudHandler()"
@@ -29,5 +29,5 @@
          </Controls.dataSource:error.Container>
       </div>
    </Controls._form.Crud>
-</Controls.Validate.FormController>
+</Controls.validate:Controller>
 

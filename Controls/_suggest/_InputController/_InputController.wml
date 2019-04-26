@@ -30,11 +30,11 @@
             </ws:partial>
         </ws:if>
 
-        <Controls.Container.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" overlay="dark" name="indicator">
+        <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" overlay="dark" name="indicator">
             <Controls.Event.Registrator name="inputKeydown" register="inputKeydown">
                 <ws:partial template="suggestTpl" attr:style="width:{{content.suggestWidth}}px"/>
             </Controls.Event.Registrator>
-        </Controls.Container.LoadingIndicator>
+        </Controls.LoadingIndicator>
 
         <ws:if data="{{_isFooterShown}}">
             <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}">

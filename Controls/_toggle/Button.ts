@@ -11,14 +11,14 @@ import buttons = require('Controls/buttons');
     * @mixes Controls/_toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
-    * @mixes Controls/Button/interface/IIconStyle
+    * @mixes Controls/interface/IIconStyle
     * @mixes Controls/_toggle/Button/Styles
     * @control
     * @public
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/_toggle/ToggleButtonPG
+    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
     */
 
    /**

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import TreeControlTpl = require('wml!Controls/_treeGrids/TreeControl/TreeControl');
-import SourceController = require('Controls/Controllers/SourceController');
+import TreeControlTpl = require('wml!Controls/_treeGrid/TreeControl/TreeControl');
+import {Controller as SourceController} from 'Controls/source';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
@@ -235,16 +235,16 @@ var _private = {
 /**
  * Hierarchical list control with custom item template. Can load data from data source.
  *
- * @class Controls/_treeGrids/TreeControl
+ * @class Controls/_treeGrid/TreeControl
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/_treeGrids/TreeGridView/Styles
+ * @mixes Controls/_treeGrid/TreeGridView/Styles
  * @extends Controls/_list/ListControl
  * @control
- * @public
+ * @private
  * @category List
  */
 
-var TreeControl = Control.extend(/** @lends Controls/_treeGrids/TreeControl.prototype */{
+var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.prototype */{
     _onNodeRemovedFn: null,
     _template: TreeControlTpl,
     _root: null,

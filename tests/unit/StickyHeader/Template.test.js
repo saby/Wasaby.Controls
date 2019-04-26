@@ -1,11 +1,10 @@
 define(
    [
-      'Controls/StickyHeader',
-      'Controls/StickyHeader/Context',
+      'Controls/scroll',
       'unit/resources/TemplateUtil',
       'Controls/StickyHeader/_StickyHeader'
    ],
-   function(StickyHeader, Context, TemplateUtil, _StickyHeader) {
+   function(scroll, TemplateUtil, _StickyHeader) {
 
       'use strict';
 
@@ -19,7 +18,7 @@ define(
                   bottom: 0
                },
                _context: {
-                  stickyHeader: new Context({shadowPosition: ''})
+                  stickyHeader: new scroll._stickyHeaderContext({shadowPosition: ''})
                },
                _options: {
                   fixedZIndex: 2,
@@ -31,7 +30,7 @@ define(
 
          describe('StickyHeader', function() {
             beforeEach(function() {
-               ctrl = new StickyHeader({});
+               ctrl = new scroll.StickyHeader({});
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 

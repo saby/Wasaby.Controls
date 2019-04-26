@@ -3,8 +3,7 @@ define('Controls-demo/Menu/MenuVdom', [
    'wml!Controls-demo/Menu/MenuVdom',
    'Core/core-clone',
    'Types/collection',
-   'Controls/History/Source',
-   'Controls/History/Service',
+   'Controls/history',
    'Controls/Constants',
    'Types/source',
    'Core/Deferred',
@@ -13,7 +12,7 @@ define('Controls-demo/Menu/MenuVdom', [
    'wml!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom',
    'css!Controls-demo/Menu/MenuVdom'
-], function(Control, template, cClone, collection, historySource, historyService, ControlsConstants, source, Deferred, entity) {
+], function(Control, template, cClone, collection, history, ControlsConstants, source, Deferred, entity) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -167,7 +166,7 @@ define('Controls-demo/Menu/MenuVdom', [
             });
 
             // возвращаем historySource
-            var hs = new historySource({
+            var hs = new history.Source({
                originSource: new source.Memory({
                   idProperty: 'id',
                   data: items
@@ -175,7 +174,7 @@ define('Controls-demo/Menu/MenuVdom', [
 
                // TEST_HISTORY_ID
                // TEST_HISTORY_ID_V1
-               historySource: new historyService({
+               historySource: new history.Service({
                   historyId: 'TEST_HISTORY_ID',
                   pinned: true,
                }),

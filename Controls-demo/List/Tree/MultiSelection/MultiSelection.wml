@@ -2,7 +2,7 @@
     <div class="demo-Grid__container">
         <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
             <Controls.operations:Controller>
-                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                     <Controls.list:Container>
                         <Controls.operations:Container>
                             <Controls.treeGrid:View
@@ -16,7 +16,7 @@
                             </Controls.treeGrid:View>
                         </Controls.operations:Container>
                     </Controls.list:Container>
-                </Controls.Container.Scroll>
+                </Controls.scroll:Container>
             </Controls.operations:Controller>
         </Controls.list:DataContainer>
     </div>

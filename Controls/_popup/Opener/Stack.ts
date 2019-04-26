@@ -34,6 +34,7 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 
          /**
           * Open stack popup.
+          * If you call this method while the window is already opened, it will cause the redrawing of the window.
           * @function Controls/_popup/Opener/Stack#open
           * @returns {Undefined}
           * @param {PopupOptions[]} popupOptions Stack popup options.
@@ -71,7 +72,7 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
          open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
-            return BaseOpener.prototype.open.call(this, config, 'Controls/_popup/Opener/Stack/StackController');
+            return BaseOpener.prototype.open.call(this, config, require('Controls/popup').StackController);
          },
 
          _setCompatibleConfig: function(config) {
@@ -98,7 +99,7 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 
        */
 
-   
+
 
 
 /**
