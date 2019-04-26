@@ -28,24 +28,54 @@ function calcRowIndexByKey(
     return rowTopOffset + itemIndex + _calcHasMoreButtonsBefore(itemIndex, display, hasMoreStorage, hierarchyRelation);
 }
 
+function calcFooterRowIndex(
+    display,
+    hasResults: boolean = false,
+    hasHeader: boolean = false,
+    hierarchyRelation?,
+    hasMoreStorage?
+): number {
+    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
+}
+
 function calcResultsRowIndex(
     display,
     resultsPosition: ResultsPosition|null = null,
     hasHeader: boolean = false,
-    hasFooterTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
 
-    if (resultsPosition === ResultsPosition.Top) {
+    if (resultsPosition === ResultsPosition.Top || display.getCollectionCount() === 0) {
         return hasHeader ? 1 : 0;
     }
 
+
     let
         lastItem = ItemsUtil.getLastItem(display),
-        lastRowIndex = calcRowIndexByKey(lastItem.getId(), display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
+        lastItemId: string,
+        lastRowIndex: number;
 
-    return lastRowIndex + (hasFooterTemplate ? 1 : 0);
+    /*
+    * If ItemsUtil gives undefined as last item, it means that there are no displayed records in list,
+    * but groups may be displayed and collapsed. So as last item should take last group.
+    * */
+    if (lastItem) {
+        lastItemId = lastItem.getId();
+        lastRowIndex = calcRowIndexByKey(lastItemId, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
+    } else {
+        lastItem = display.at(display.getCount() - 1);
+        lastRowIndex = calcGroupRowIndex(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
+    }
+
+    // If after last item exists node footer
+    if (hierarchyRelation && hasMoreStorage) {
+        if (hasMoreStorage[lastItemId]){
+            lastRowIndex++;
+        }
+    }
+
+    return lastRowIndex + 1;
 }
 
 function calcGroupRowIndex(groupItem, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
@@ -111,7 +141,8 @@ export {
     calcRowIndexByKey,
     calcResultsRowIndex,
     calcGroupRowIndex,
-    calcTopOffset
+    calcTopOffset,
+    calcFooterRowIndex
 }
 
 

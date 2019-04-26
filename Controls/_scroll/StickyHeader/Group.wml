@@ -1,0 +1,10 @@
+<ws:if data="{{ _isStickySupport }}">
+   <Controls.Event.Registrator name="stickyHeaderShadow" register="updateStickyShadow">
+      <ws:partial template="{{_options.content}}"
+                  on:fixed="_fixedHandler()"
+                  on:stickyRegister="_stickyRegisterHandler()"/>
+   </Controls.Event.Registrator>
+</ws:if>
+<ws:else>
+   <ws:partial template="{{_options.content}}"/>
+</ws:else>

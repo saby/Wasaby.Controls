@@ -1,7 +1,7 @@
 <Controls-demo.Wrapper.Wrapper title="ComboBox">
       <ws:componentClass>
             <Controls.Popup.Opener.InfoBox name="infoBoxComboBox"/>
-            <Controls.Input.ComboBox
+            <Controls.dropdown:Combobox
                bind:value="_text1"
                name="comboBox"
                itemTemplate="{{_flag==='custom' ? _myTmpl}}"
@@ -20,15 +20,15 @@
                attr:class="demo-TextBox"
                on:tagHover="_tagStyleHandler()"
                on:tagClick="_tagStyleClickHandler()">
-            </Controls.Input.ComboBox>
+            </Controls.dropdown:Combobox>
           <br/>
           <h4>Events</h4>
-          <Controls.Container.Scroll
+          <Controls.scroll:Container
                   attr:style="height: 60px; border-width:thin"
                   scrollbarVisible="{{true}}"
                   shadowVisible="{{true}}">
               <pre>{{ _events }}</pre>
-          </Controls.Container.Scroll>
+          </Controls.scroll:Container>
       </ws:componentClass>
       <ws:componentProperty>
           <Controls.input:Label name="myLabel1" caption="value"/>
@@ -42,7 +42,7 @@
           <Controls.input:Label name="myLabel1" caption="tagStyle"/>
           <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
           <Controls.input:Label name="myLabel1" caption="itemTemplate"/>
-          <Controls.Input.Suggest
+          <Controls.suggest:Input
                   bind:value="_flag"
                   displayProperty="title"
                   attr:class="demo-TextBox"
@@ -56,9 +56,9 @@
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
-          </Controls.Input.Suggest>
+          </Controls.suggest:Input>
           <Controls.input:Label name="myLabel1" caption="source"/>
-          <Controls.Input.Suggest
+          <Controls.suggest:Input
                   bind:value="_resources"
                   displayProperty="title"
                   attr:class="demo-TextBox"
@@ -72,9 +72,9 @@
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
-          </Controls.Input.Suggest>
+          </Controls.suggest:Input>
           <Controls.input:Label name="myLabel1" caption="keyProperty"/>
-          <Controls.Input.Suggest
+          <Controls.suggest:Input
                   bind:value="_keyProperty"
                   displayProperty="title"
                   attr:class="demo-TextBox"
@@ -88,9 +88,9 @@
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
-          </Controls.Input.Suggest>
+          </Controls.suggest:Input>
           <Controls.input:Label name="myLabel1" caption="displayProperty"/>
-          <Controls.Input.Suggest
+          <Controls.suggest:Input
                   bind:value="_displayProperty"
                   displayProperty="title"
                   searchParam="title"
@@ -104,7 +104,7 @@
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
               </ws:suggestTemplate>
-          </Controls.Input.Suggest>
+          </Controls.suggest:Input>
             <Controls.toggle:Checkbox attr:id="readOnly" bind:value="_readOnly" caption="readOnly" attr:class="demo-TextBox"/>
              <Controls.toggle:Checkbox attr:id="validationErrors" on:valueChanged="_validationChangedHandler()"
                                     bind:value="_validationErrorsValue" caption="validationErrors"/>

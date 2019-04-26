@@ -1,5 +1,5 @@
 <div class="123">
-   <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+   <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
       <ws:content>
          <Controls.list:View
                source = "{{_viewSource}}"
@@ -15,5 +15,5 @@
             </ws:navigation>
          </Controls.list:View>
       </ws:content>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
 </div>

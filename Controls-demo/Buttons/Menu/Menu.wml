@@ -1,20 +1,20 @@
 <div class="ControlsDemo-ButtonsMenu" style="padding: 50px;">
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
-      <h4>One item</h4>
-      <Controls.Button.Menu
+      <h4 id="oneItemLabel">One item</h4>
+      <Controls.dropdown:Button
               keyProperty="id"
               iconStyle="secondary"
               style="primary"
               viewMode="button"
               caption="+ Add"
               source="{{_createMemory(_oneItem)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo-ButtonsMenu__oneItem"
               tooltip="Create"/>
    </div>
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Simple</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               iconStyle="secondary"
               style="primary"
@@ -27,7 +27,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>With icons</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="primary"
               viewMode="button"
@@ -39,7 +39,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>With subparagraphs</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="primary"
               viewMode="button"
@@ -52,7 +52,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>With comments</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
               iconStyle="primary"
@@ -63,12 +63,12 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__comments"
               tooltip="Add">
          <ws:headConfig caption="Add" menuStyle="titleHead"/>
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Simple menu without icons</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               caption="Topic +"
               itemTemplate="wml!Controls-demo/Buttons/Menu/itemTemplateComment"
@@ -82,7 +82,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Icon replaced by the text "Add"</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
               style="secondary"
@@ -91,12 +91,12 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
               tooltip="Add">
          <ws:headConfig caption="Add" menuStyle="titleHead"/>
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Icon with text displayed in the header</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               size="s"
               icon="icon-small icon-AddButtonNew"
@@ -106,23 +106,23 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeader"
               tooltip="Add">
          <ws:headConfig caption="Add"/>
-      </Controls.Button.Menu>
-      <Controls.Button.Menu
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
               viewMode="toolButton"
               style="secondary"
               size="m"
               source="{{_createMemory(_iconAddMedium)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
               tooltip="Add">
          <ws:headConfig caption="Add"/>
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Menu with history</h4>
-      <Controls.History.Menu
+      <Controls.history:Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
               iconStyle="primary"
@@ -135,12 +135,12 @@
               attr:class="ControlsDemo__history"
               tooltip="Add">
          <ws:headConfig caption="Add"/>
-      </Controls.History.Menu>
+      </Controls.history:Menu>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Menu with icon button</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -149,22 +149,22 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButton"
               tooltip="All documents to disk" >
          <ws:headConfig menuStyle="duplicateHead"/>
-      </Controls.Button.Menu>
-      <Controls.Button.Menu
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
               icon="icon-Save icon-medium icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButtonBig"
               tooltip="All documents to disk">
          <ws:headConfig menuStyle="duplicateHead"/>
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Menu with multiple levels</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -174,12 +174,12 @@
               source="{{_createMemory(_hierarchyMultiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__levels"
               tooltip="Document">
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Multiple level menu with comments</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="primary"
               viewMode="button"
@@ -188,14 +188,14 @@
               nodeProperty="@parent"
               itemTemplateProperty="myTemplate"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
-      </Controls.Button.Menu>
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__levelsComments">
+      </Controls.dropdown:Button>
    </div>
 
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Grouping in the menu</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="primary"
               iconStyle="primary"
@@ -207,24 +207,24 @@
               groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
-      </Controls.Button.Menu>
-      <Controls.Button.Menu
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
               keyProperty="id"
               viewMode="link"
               icon="icon-medium icon-Linked"
               source="{{_createMemory(_groupTextItems)}}"
               groupingKeyCallback="{{_groupingKeyCallback}}"
-              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups2"
               tooltip="Add">
          <ws:groupTemplate>
             <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
          </ws:groupTemplate>
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Scrolling in the menu</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -234,8 +234,8 @@
               source="{{_createMemory(_scrollItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scroll"
               tooltip="Subtask">
-      </Controls.Button.Menu>
-      <Controls.Button.Menu
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -243,14 +243,14 @@
               icon="icon-medium icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
               source="{{_createMemory(_scrollItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scrollBig"
               tooltip="Subtask">
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 
 
    <div class="ControlsDemo-ButtonsMenu__wrapper ControlsDemo-ButtonsMenu-bottom-right">
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -260,13 +260,13 @@
               source="{{_createMemory(_hierarchyMultiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__bottom-right"
               tooltip="Document">
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
       <h4>The menu opens up and left</h4>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper ControlsDemo-ButtonsMenu-top-right">
       <h4>The menu opens down and left</h4>
-      <Controls.Button.Menu
+      <Controls.dropdown:Button
               keyProperty="id"
               style="secondary"
               viewMode="link"
@@ -276,6 +276,6 @@
               source="{{_createMemory(_hierarchyMultiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__top-right"
               tooltip="Document">
-      </Controls.Button.Menu>
+      </Controls.dropdown:Button>
    </div>
 </div>

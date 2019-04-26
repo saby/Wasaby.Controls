@@ -32,7 +32,7 @@
 
             <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__2">
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List</h3>
-                <Controls.Filter.Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                <Controls.filter:Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
                         <Controls.search:Controller searchParam="department">
                             <div>
@@ -42,13 +42,13 @@
                                             <Controls.search:Input bind:value="_searchValueWithFilters" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
                                         </Controls.search:InputContainer>
                                         <div class="controls-demo__filterSearch-filters">
-                                            <Controls.Filter.Fast.Container>
-                                                <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
-                                            </Controls.Filter.Fast.Container>
+                                            <Controls.filter:FastContainer>
+                                                <Controls.filter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                            </Controls.filter:FastContainer>
 
-                                            <Controls.Filter.Button.Container>
-                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
-                                            </Controls.Filter.Button.Container>
+                                            <Controls.filter:ButtonContainer>
+                                                <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
+                                            </Controls.filter:ButtonContainer>
                                         </div>
                                     </div>
                                 </div>
@@ -69,24 +69,24 @@
                             </div>
                         </Controls.search:Controller>
                     </Controls.list:DataContainer>
-                </Controls.Filter.Controller>
+                </Controls.filter:Controller>
             </div>
         </div>
         <div class="demo-filterSearch__secondCol">
             <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__3">
                 <h3>Custom layout with Filter/Button, Filter/Fast and List</h3>
-                <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                <Controls.filter:Controller bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
                         <div>
                             <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
                                 <div class="controls-demo__filterSearch-filters">
-                                    <Controls.Filter.Fast.Container>
-                                        <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
-                                    </Controls.Filter.Fast.Container>
+                                    <Controls.filter:FastContainer>
+                                        <Controls.filter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                    </Controls.filter:FastContainer>
 
-                                    <Controls.Filter.Button.Container>
-                                        <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
-                                    </Controls.Filter.Button.Container>
+                                    <Controls.filter:ButtonContainer>
+                                        <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
+                                    </Controls.filter:ButtonContainer>
                                 </div>
                             </div>
                             <Controls.list:Container>
@@ -105,13 +105,13 @@
                             </Controls.list:Container>
                         </div>
                     </Controls.list:DataContainer>
-                </Controls.Filter.Controller>
+                </Controls.filter:Controller>
             </div>
 
             <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__4">
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List.</h3>
                 <h3>Filters are located in the tabs.</h3>
-                <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                <Controls.filter:Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
                         <Controls.search:Controller searchParam="department">
                             <div>
@@ -122,13 +122,13 @@
                                         attr:class="demo__filterSearch-tabs">
                                     <ws:tabSpaceTemplate>
                                         <div class="controls-demo__filterSearch-filters">
-                                            <Controls.Filter.Button.Container>
-                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" alignment="left"/>
-                                            </Controls.Filter.Button.Container>
+                                            <Controls.filter:ButtonContainer>
+                                                <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" alignment="left"/>
+                                            </Controls.filter:ButtonContainer>
 
-                                            <Controls.Filter.Fast.Container>
-                                                <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
-                                            </Controls.Filter.Fast.Container>
+                                            <Controls.filter:FastContainer>
+                                                <Controls.filter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                            </Controls.filter:FastContainer>
                                         </div>
                                     </ws:tabSpaceTemplate>
                                 </Controls.tabs:Buttons>
@@ -154,7 +154,7 @@
                             </div>
                         </Controls.search:Controller>
                     </Controls.list:DataContainer>
-                </Controls.Filter.Controller>
+                </Controls.filter:Controller>
             </div>
         </div>
     </div>

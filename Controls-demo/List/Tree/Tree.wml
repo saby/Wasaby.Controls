@@ -9,7 +9,7 @@
                                   keyProperty="id"
                                   attr:class="ControlsDemo-Grid__Container">
             <Controls.operations:Controller>
-               <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+               <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                   <Controls.list:Container>
                      <Controls.operations:Container>
                         <Controls.treeGrid:View
@@ -21,7 +21,7 @@
                                 multiSelectVisibility="visible"
                                 itemActions="{{_itemActions}}"
                                 itemActionsPosition="outside"
-                                on:itemActionsClick="_onActionClick()"
+                                on:actionClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}">
                            <ws:nodeFooterTemplate>
                               <Controls.list:AddButton caption="Новая запись"/>
@@ -29,7 +29,7 @@
                         </Controls.treeGrid:View>
                      </Controls.operations:Container>
                   </Controls.list:Container>
-               </Controls.Container.Scroll>
+               </Controls.scroll:Container>
             </Controls.operations:Controller>
          </Controls.list:DataContainer>
       </div>
@@ -45,7 +45,7 @@
             </ws:navigation>
             <ws:content>
                <Controls.operations:Controller>
-               <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+               <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                   <Controls.list:Container>
                      <Controls.operations:Container>
                         <Controls.treeGrid:View
@@ -57,7 +57,7 @@
                                 itemActions="{{_itemActions}}"
                                 itemActionsPosition="inside"
                                 groupingKeyCallback="{{_groupingKeyCallback}}"
-                                on:itemActionsClick="_onActionClick()"
+                                on:actionClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}">
 
                            <ws:nodeFooterTemplate>
@@ -66,7 +66,7 @@
                         </Controls.treeGrid:View>
                      </Controls.operations:Container>
                   </Controls.list:Container>
-               </Controls.Container.Scroll>
+               </Controls.scroll:Container>
             </Controls.operations:Controller>
             </ws:content>
          </Controls.list:DataContainer>

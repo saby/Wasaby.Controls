@@ -156,8 +156,8 @@
     "Controls/_lists/Mover",
     "Controls/_lists/Mover/*",
     "Controls/_lists/Remover",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging",
+    "Controls/_paging/Paging/*",
+    "Controls/_paging/Paging",
     "css!Controls/_lists/AddButton/AddButton"
   ],
   "output": "controls-list.package.js"
@@ -165,8 +165,8 @@
   "include": [
     "Controls/List/Paging/*",
     "Controls/List/Paging",
-    "Controls/_lists/Paging/*",
-    "Controls/_lists/Paging"
+    "Controls/_paging/Paging/*",
+    "Controls/_paging/Paging"
   ],
   "output": "controls-paging.package.js"
 }, {

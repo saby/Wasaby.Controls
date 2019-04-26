@@ -1,16 +1,14 @@
 define(
    [
-      'Controls/History/Source',
-      'Controls/History/Service', // for otladka
+      'Controls/history', // for otladka
       'Types/collection',
       'Types/entity',
       'Core/Deferred',
       'Types/source',
-      'Controls/History/Constants',
       'Types/util',
       'Core/core-clone'
    ],
-   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util, clone) => {
+   (historyMod, collection, entity, Deferred, sourceLib, util, clone) => {
       describe('History Source', () => {
          let items = [
             {
@@ -72,9 +70,9 @@ define(
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
          let frequentData = {
@@ -84,16 +82,16 @@ define(
                   '6', null, 'TEST_HISTORY_ID_V1'
                ],
                [
-                  '4',  null, 'TEST_HISTORY_ID_V1'
+                  '4', null, 'TEST_HISTORY_ID_V1'
                ],
                [
-                  '9',  null, 'TEST_HISTORY_ID_V1'
+                  '9', null, 'TEST_HISTORY_ID_V1'
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
          let recentData = {
@@ -104,9 +102,9 @@ define(
                ]
             ],
             s: [
-               {n: 'ObjectId', t: 'Строка'},
-               {n: 'ObjectData', t: 'Строка'},
-               {n: 'HistoryId', t: 'Строка'}
+               { n: 'ObjectId', t: 'Строка' },
+               { n: 'ObjectData', t: 'Строка' },
+               { n: 'HistoryId', t: 'Строка' }
             ]
          };
 
@@ -133,19 +131,19 @@ define(
                _type: 'record',
                d: ['7', 'Запись 7', '3', null],
                s: [
-                  {n: 'id', t: 'Строка'},
-                  {n: 'title', t: 'Строка'},
-                  {n: 'parent', t: 'Строка'},
-                  {n: 'pinned', t: 'Строка'}
+                  { n: 'id', t: 'Строка' },
+                  { n: 'title', t: 'Строка' },
+                  { n: 'parent', t: 'Строка' },
+                  { n: 'pinned', t: 'Строка' }
                ]
             },
             adapter: new entity.adapter.Sbis(),
             idProperty: 'id',
             format: [
-               {name: 'id', type: 'string'},
-               {name: 'title', type: 'string'},
-               {name: 'Parent', type: 'string'},
-               {name: 'pinned', type: 'string'}
+               { name: 'id', type: 'string' },
+               { name: 'title', type: 'string' },
+               { name: 'Parent', type: 'string' },
+               { name: 'pinned', type: 'string' }
             ]
          });
          let config = {
@@ -153,12 +151,12 @@ define(
                idProperty: 'id',
                data: items
             }),
-            historySource: new historyService({
+            historySource: new historyMod.Service({
                historyId: 'TEST_HISTORY_ID'
             }),
             parentProperty: 'parent'
          };
-         let hSource = new historySource(config);
+         let hSource = new historyMod.Source(config);
          let testId, meta, hS, historyItems, pinItem;
 
          // overload history source method query, it must return items to test
@@ -178,37 +176,37 @@ define(
                meta = {
                   '$_pinned': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('$_favorite', function() {
                meta = {
                   '$_favorite': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('$_history', function() {
                meta = {
                   '$_history': true
                };
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(hS._historyId, config.historySource._historyId);
             });
             it('originalSource', function() {
                meta = {};
-               hS = historySource._private.getSourceByMeta(hSource, meta);
+               hS = historyMod.Source._private.getSourceByMeta(hSource, meta);
                assert.equal(!!hS._historyId, false);
             });
          });
-   
+
          describe('serialize tests', function() {
             it('clone', function() {
                var sourceClone = util.object.clone(hSource);
-               assert.isTrue(sourceClone instanceof historySource);
+               assert.isTrue(sourceClone instanceof historyMod.Source);
             });
          });
-         
+
          describe('checkHistory', function() {
             it('query', function(done) {
                let query = new sourceLib.Query().where();
@@ -223,7 +221,7 @@ define(
                historyDef.addCallback(function(data) {
                   let records = data.getAll();
                   assert.isFalse(records.at(0).has('pinned'));
-   
+
                   query = new sourceLib.Query().where({
                      $_history: true
                   });
@@ -231,10 +229,10 @@ define(
                   historyDef.addCallback(function(data) {
                      let records = data.getAll();
                      assert.isTrue(records.at(0).get('pinned'));
-   
+
                      hSource.historySource = errorSource;
                      historyDef = hSource.query(query);
-   
+
                      historyDef.addCallback(function(data) {
                         let records = data.getAll();
                         assert.isFalse(records.at(0).has('pinned'));
@@ -275,14 +273,14 @@ define(
             it('checkPinnedAmount', function() {
                let list = new collection.RecordSet();
 
-               for (var i = 0; i < Constants.MAX_HISTORY; i++) {
+               for (var i = 0; i < historyMod.Constants.MAX_HISTORY; i++) {
                   list.add(new entity.Model());
                }
 
-               assert.isFalse(historySource._private.checkPinnedAmount(list));
+               assert.isFalse(historyMod.Source._private.checkPinnedAmount(list));
 
                list.remove(list.at(9));
-               assert.isTrue(historySource._private.checkPinnedAmount(list));
+               assert.isTrue(historyMod.Source._private.checkPinnedAmount(list));
             });
             it('updateRecent', function() {
                let meta = {
@@ -309,12 +307,12 @@ define(
                config2.historySource.update = function(data) {
                   updatedData = data;
                };
-               let hSource2 = new historySource(config2);
+               let hSource2 = new historyMod.Source(config2);
                hSource2.update(myItem, meta);
                assert.deepEqual(myItem, updatedData);
 
             });
-            it('prepareHistoryBySourceItems', function(done){
+            it('prepareHistoryBySourceItems', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
                      frequent: createRecordSet(frequentData),
@@ -330,15 +328,15 @@ define(
                });
                memorySource.query().addCallback(function(res) {
                   let sourceItems = res.getAll();
-                  let preparedHistory = historySource._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
+                  let preparedHistory = historyMod.Source._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
                   assert.equal(preparedHistory.get('frequent').getCount(), 2);
-                  preparedHistory.get('frequent').forEach(function(historyItem){
-                     assert.isFalse(historyItem.getId()=='9');
+                  preparedHistory.get('frequent').forEach(function(historyItem) {
+                     assert.isFalse(historyItem.getId() === '9');
                   });
                   done();
-               })
+               });
             });
-            it('initHistory', function(done){
+            it('initHistory', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
                      frequent: createRecordSet(frequentData),
@@ -353,13 +351,20 @@ define(
                   data: items
                });
                memorySource.query().addCallback(function(res) {
-                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let self = {
+                     _pinned: ['1', '2'],
+                     historySource: {
+                        getHistoryId: () => {
+                           'TEST_ID';
+                        }
+                     }
+                  };
                   let sourceItems = res.getAll();
-                  historySource._private.initHistory(self, newData, sourceItems);
+                  historyMod.Source._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
                   assert.equal(self._recentCount, 2);
-                  self._history.pinned.forEach(function(pinnedItem){
-                     assert.isFalse(pinnedItem.getId()=='9');
+                  self._history.pinned.forEach(function(pinnedItem) {
+                     assert.isFalse(pinnedItem.getId() === '9');
                   });
                   done();
                });
@@ -381,16 +386,76 @@ define(
                   data: itemsWithoutId
                });
                memorySource.query().addCallback(function(res) {
-                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let self = {
+                     _pinned: ['1', '2'],
+                     historySource: {
+                        getHistoryId: () => {
+                           'TEST_ID';
+                        }
+                     }
+                  };
                   let sourceItems = res.getAll();
-                  historySource._private.initHistory(self, newData, sourceItems);
+                  historyMod.Source._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
-                  self._history.pinned.forEach(function(pinnedItem){
-                     assert.isFalse(pinnedItem.getId()=='1');
-                     assert.isFalse(pinnedItem.getId()=='9');
+                  self._history.pinned.forEach(function(pinnedItem) {
+                     assert.isFalse(pinnedItem.getId() == '1');
+                     assert.isFalse(pinnedItem.getId() == '9');
                   });
                   done();
                });
+            });
+
+            it('_private:getPinnedIds', function() {
+               let pinnedIds = historyMod.Source._private.getPinnedIds(hSource._history.pinned);
+               assert.deepEqual(pinnedIds, ['5']);
+            });
+
+            it('_private:getFrequentIds', function() {
+               let frequentIds = historyMod.Source._private.getFrequentIds(hSource, hSource._history.frequent, hSource._history.pinned);
+               assert.deepEqual(frequentIds, ['6', '4']);
+            });
+
+            it('_private:getRecentIds', function() {
+               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
+               assert.deepEqual(recentIds, ['7', '8']);
+            });
+
+            it('_private:getFilterHistory', function() {
+               let expectedResult = {
+                  pinned: ['5'],
+                  frequent: ['6', '4'],
+                  recent: ['7', '8']
+               };
+               let actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
+
+
+               expectedResult = {
+                  pinned: ['5'],
+                  frequent: ['6', '4'],
+                  recent: ['8', '1', '2', '3', '7']
+               };
+               let recentFilteredData = {
+                  _type: 'recordset',
+                  d: [
+                     ['8', null, 'TEST_HISTORY_ID_V1'],
+                     ['1', null, 'TEST_HISTORY_ID_V1'],
+                     ['2', null, 'TEST_HISTORY_ID_V1'],
+                     ['3', null, 'TEST_HISTORY_ID_V1'],
+                     ['4', null, 'TEST_HISTORY_ID_V1'],
+                     ['5', null, 'TEST_HISTORY_ID_V1'],
+                     ['6', null, 'TEST_HISTORY_ID_V1'],
+                     ['7', null, 'TEST_HISTORY_ID_V1']
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               };
+               hSource._history.recent = createRecordSet(recentFilteredData);
+               actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
             });
          });
          describe('check source original methods', function() {
@@ -418,8 +483,9 @@ define(
                });
             });
             it('getOptions', function() {
-               assert.deepEqual(hSource.getOptions(), {debug: false});
+               assert.deepEqual(hSource.getOptions(), { debug: false });
             });
          });
       });
-   });
+   }
+);

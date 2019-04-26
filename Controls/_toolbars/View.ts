@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';

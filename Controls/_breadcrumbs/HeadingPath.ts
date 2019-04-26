@@ -7,9 +7,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
 import backButtonTemplate = require('wml!Controls/_breadcrumbs/HeadingPath/Back');
-import {Model} from 'Types/entity';
 import Common from './HeadingPath/Common';
-import 'Controls/Heading/Back';
+import 'Controls/_heading';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {
@@ -27,6 +26,15 @@ var _private = {
             self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long';
         }
     },
+
+   getBackButtonMinWidth(): number {
+       return getWidthUtil.getWidth(backButtonTemplate({
+          _options: {
+             backButtonCaption: '1',
+             backButtonClass: 'controls-BreadCrumbsPath__backButton_short controls-BreadCrumbsPath__backButton_zeroWidth'
+          }
+       }));
+   },
 
     calculateItems: function (self, options, containerWidth) {
         var
@@ -47,7 +55,11 @@ var _private = {
               }));
               _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty), backButtonWidth, containerWidth - homeWidth);
 
-              availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
+              if (self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half') {
+                  availableWidth = containerWidth / 2;
+              } else {
+                  availableWidth = containerWidth - self._backButtonMinWidth;
+              }
               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
            } else {
               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth);
@@ -107,12 +119,14 @@ var BreadCrumbsPath = Control.extend({
     _breadCrumbsClass: '',
     _oldWidth: 0,
     _viewUpdated: false,
+    _backButtonMinWidth: 0,
 
     _afterMount: function () {
         this._oldWidth = this._container.clientWidth;
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
+                    this._backButtonMinWidth = _private.getBackButtonMinWidth();
                     _private.calculateItems(this, this._options, this._oldWidth);
                     this._forceUpdate();
                 }.bind(this));
@@ -121,6 +135,9 @@ var BreadCrumbsPath = Control.extend({
     },
 
     _beforeUpdate: function (newOptions) {
+        if (this._options.theme !== newOptions.theme) {
+           this._backButtonMinWidth = _private.getBackButtonMinWidth();
+        }
         var containerWidth = this._container.clientWidth;
         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;

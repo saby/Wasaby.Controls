@@ -11,7 +11,7 @@
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
-   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll theme_{{_options.theme}}"
+   <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll theme_{{_options.theme}}"
                               shadowVisible="{{false}}">
       <div>
          <ws:partial template="wml!Controls/_dropdownPopup/For"
@@ -33,9 +33,9 @@
             </div>
          </ws:if>
       </div>
-   </Controls.Container.Scroll>
+   </Controls.scroll:Container>
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
-      <Controls.Button.Close class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
+      <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
    </ws:if>
    <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
       <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
@@ -48,9 +48,9 @@
                                         caption="{{_options.moreButtonCaption}}"
                                         on:click="_openSelectorDialog()"/>
             </div>
-            <Controls.Selector.Opener name="selectorDialog" on:result="_selectorDialogResult()">
-               <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog" />
-            </Controls.Selector.Opener>
+            <Controls.lookup:Opener name="selectorDialog" on:result="_selectorDialogResult()">
+               <ws:popupOptions template="Controls/suggestPopup:Dialog" />
+            </Controls.lookup:Opener>
          </ws:if>
          <ws:if data="{{_needShowApplyButton}}">
             <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
@@ -63,10 +63,10 @@
       </div>
    </ws:if>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
-   <Controls.Event.Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
-   <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
+   <Controls.event:Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
+   <Controls.dropdown:Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"
                              scope="{{_popupOptions}}">
-   </Controls.Dropdown.Opener>
+   </Controls.dropdown:Opener>
 </div>

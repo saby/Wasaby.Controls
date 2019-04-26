@@ -6,8 +6,7 @@ define('Controls-demo/FormController/FormController', [
    'Types/entity',
    'Env/Env',
    'css!Controls-demo/FormController/FormController',
-   'Controls/Validate/Validators/IsRequired',
-   'Controls/Validate/Validators/IsEmail'
+   'Controls/validate'
 ], function(Control, tmpl, source, Deferred, entity, Env) {
    'use strict';
 

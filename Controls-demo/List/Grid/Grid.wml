@@ -5,7 +5,7 @@
          <Controls.operations:Controller
                  bind:selectedKeys="_firstSelectedKeys"
                  name="multiSelector">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="default">
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.grid:View
@@ -19,7 +19,7 @@
                              header="{{gridHeader}}"
                              itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                              itemActions="{{_itemActions}}"
-                             on:itemActionsClick="_onActionClick()"
+                             on:actionClick="_onActionClick()"
                              itemActionVisibilityCallback="{{_showAction}}"
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}"
@@ -27,10 +27,10 @@
                      </Controls.grid:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </Controls.operations:Controller>
       </Controls.list:DataContainer>
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
+      <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
             <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_2"
@@ -46,19 +46,19 @@
                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                     source = "{{_viewSource}}"
                     itemActions="{{_itemActions}}"
-                    on:itemActionsClick="_onActionClick()"
+                    on:actionClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
             </Controls.grid:View>
          </ws:content>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </div>
    <div class="demo-Grid__container">
       <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
          <Controls.operations:Controller
                  bind:selectedKeys="_secondSelectedKeys"
                  name="multiSelector">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.grid:View
@@ -71,17 +71,17 @@
                              multiSelectVisibility="visible"
                              itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                              itemActions="{{_itemActions}}"
-                             on:itemActionsClick="_onActionClick()"
+                             on:actionClick="_onActionClick()"
                              itemActionVisibilityCallback="{{_showAction}}"
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}">
                      </Controls.grid:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
-            </Controls.Container.Scroll>
+            </Controls.scroll:Container>
          </Controls.operations:Controller>
       </Controls.list:DataContainer>
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
+      <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>
             <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_4"
@@ -95,19 +95,19 @@
                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                     source = "{{_viewSource}}"
                     itemActions="{{_itemActions}}"
-                    on:itemActionsClick="_onActionClick()"
+                    on:actionClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
             </Controls.grid:View>
          </ws:content>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </div>
    <div>
       <h3>Кликнули на </h3>
       <span class="action__last_clicked">{{_actionClicked}}</span>
    </div>
    <div class="demo-Grid__container test_container_3">
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+      <Controls.scroll:Container attr:class="demo-Grid__wrapper">
          <ws:content>
             <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_5"
@@ -124,7 +124,7 @@
                      <ws:Object title=""/>
                      <ws:Object>
                         <ws:template name="infoColumn">
-                           <Controls.Input.Dropdown
+                           <Controls.dropdown:Input
                               keyProperty="key"
                               displayProperty="title"
                               multiselect="{{ false }}"
@@ -138,6 +138,6 @@
                </ws:header>
             </Controls.grid:View>
          </ws:content>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </div>
 </div>

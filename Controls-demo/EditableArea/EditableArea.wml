@@ -20,7 +20,7 @@
       </div>
    </Controls.EditableArea>
    <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
-   <ws:partial template="Controls/Popup/Templates/Stack/StackTemplate"
+   <ws:partial template="Controls/popupTemplate:Stack"
                showMaximizedButton="{{true}}"
                attr:class="ControlsDemo-EditableArea__secondExample">
       <ws:topArea>
@@ -53,7 +53,7 @@
       </ws:contentArea>
    </ws:partial>
    <div class="ControlsDemo-EditableArea__title">Пример 3 - редактирование во вкладке</div>
-   <ws:partial template="Controls/Popup/Templates/Stack/StackTemplate"
+   <ws:partial template="Controls/popupTemplate:Stack"
                showMaximizedButton="{{true}}"
                attr:class="ControlsDemo-EditableArea__thirdExample">
       <ws:topArea>

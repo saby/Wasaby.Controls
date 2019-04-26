@@ -10,6 +10,7 @@ import entity = require('Types/entity');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import clone = require('Core/core-clone');
+
 /**
  * Source
  * Proxy source adding history data to the original source
@@ -40,8 +41,6 @@ import clone = require('Core/core-clone');
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
-
-
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 
@@ -103,64 +102,61 @@ var _private = {
    },
 
    getFilterHistory: function (self, rawHistoryData) {
-      var pinned = this.getPinnedIds(rawHistoryData);
-      var countAll = pinned.length;
-      var filteredFrequent = this.filterFrequent(self, rawHistoryData, countAll);
-      var filteredRecent = this.filterRecent(self, rawHistoryData, countAll, filteredFrequent);
+      var pinnedIds = this.getPinnedIds(rawHistoryData.pinned);
+      var frequentIds = this.getFrequentIds(self, rawHistoryData.frequent, rawHistoryData.pinned);
+      var recentIds = this.getRecentIds(self, rawHistoryData.recent, rawHistoryData.frequent, rawHistoryData.pinned);
 
       return {
-         pinned: pinned,
-         frequent: filteredFrequent,
-         recent: filteredRecent
+         pinned: pinnedIds,
+         frequent: frequentIds,
+         recent: recentIds
       };
    },
 
-   getPinnedIds: function (rawHistoryData) {
+   getPinnedIds: function (pinned) {
       var pinnedIds = [];
 
-      rawHistoryData.pinned.forEach(function (element) {
+      pinned.forEach(function (element) {
          pinnedIds.push(element.getId());
       });
 
       return pinnedIds;
    },
 
-   filterFrequent: function (self, rawHistoryData, countAll) {
-      var filteredFrequent = [];
+   getFrequentIds: function(self, frequent, pinned) {
+      var frequentIds = [];
 
       // рассчитываем количество популярных пунктов
-      var frequentLength = (Constants.MAX_HISTORY - rawHistoryData.pinned.getCount() - (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT));
+      var maxCountFrequent = (Constants.MAX_HISTORY - pinned.getCount() - (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT));
       var countFrequent = 0;
       var item;
 
-      rawHistoryData.frequent.forEach(function (element) {
+      frequent.forEach(function(element) {
          var id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countAll < Constants.MAX_HISTORY && countFrequent < frequentLength && !rawHistoryData.pinned.getRecordById(id) && !item.get(self._nodeProperty)) {
-            filteredFrequent.push(id);
+         if (countFrequent < maxCountFrequent && !pinned.getRecordById(id) && !item.get(self._nodeProperty)) {
+            frequentIds.push(id);
             countFrequent++;
-            countAll++;
          }
       });
-      return filteredFrequent;
+      return frequentIds;
    },
 
-   filterRecent: function (self, rawHistoryData, countAll, filteredFrequent) {
-      var filteredRecent = [];
+   getRecentIds: function(self, recent, frequent, pinned) {
+      var recentIds = [];
       var countRecent = 0;
-      var maxCountRecent = (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT);
+      var maxCountRecent = Constants.MAX_HISTORY - (pinned.getCount() + frequent.getCount());
       var item, id;
 
-      rawHistoryData.recent.forEach(function (element) {
+      recent.forEach(function (element) {
          id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countAll < Constants.MAX_HISTORY && !rawHistoryData.pinned.getRecordById(id) && filteredFrequent.indexOf(id) === -1 && countRecent < maxCountRecent && !item.get(self._nodeProperty)) {
-            filteredRecent.push(id);
+         if (countRecent < maxCountRecent && !pinned.getRecordById(id) && !frequent.getRecordById(id) && !item.get(self._nodeProperty)) {
+            recentIds.push(id);
             countRecent++;
-            countAll++;
          }
       });
-      return filteredRecent;
+      return recentIds;
    },
 
    getItemsWithHistory: function (self, history, oldItems) {
@@ -390,9 +386,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    query: function (query) {
       var self = this;
-      var pd = new ParallelDeferred({
-         stopOnFirstError: false
-      });
+      var pd = new ParallelDeferred({ stopOnFirstError: false });
       var where = query.getWhere();
       var newItems;
 

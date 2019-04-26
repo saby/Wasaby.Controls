@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Confirmation',
-   ['Controls/_popup/Opener/Confirmation'],
+   ['Controls/popup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Confirmation;
    });

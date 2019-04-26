@@ -1,6 +1,6 @@
 /**
  * Search library
- * @library Controls/list
+ * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container

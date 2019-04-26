@@ -5,7 +5,7 @@ import cMerge = require('Core/core-merge');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popup/TargetCoords');
-import 'wml!Controls/_popup/Opener/Sticky/StickyContent';
+import StickyContent = require('wml!Controls/_popup/Opener/Sticky/StickyContent');
 import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
@@ -57,10 +57,10 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
                   };
                }
                if ('horizontal' in config.targetPoint) {
-                  newCfg.corner = {
-                     horizontal: config.targetPoint.horizontal
-                  };
+                  newCfg.corner = newCfg.corner || {};
+                  newCfg.corner.horizontal = config.targetPoint.horizontal;
                }
+
             }
             return newCfg;
          },
@@ -175,7 +175,7 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
             return window.innerWidth;
          },
          setStickyContent: function(item) {
-            item.popupOptions.content = 'wml!Controls/_popup/Opener/Sticky/StickyContent';
+            item.popupOptions.content = StickyContent;
          }
       };
 
@@ -285,4 +285,4 @@ import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
       });
 
       export = new StickyController();
-   
+

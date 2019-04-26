@@ -1,8 +1,8 @@
 define(
    [
-      'Controls/Validate/Validators/IsEmail'
+      'Controls/validate'
    ],
-   function (isEmail) {
+   function (validate) {
 
       'use strict';
 
@@ -53,14 +53,14 @@ define(
          describe('IsEmail', function () {
             validEmails.forEach(function(item) {
                it('Valid "' + item + '"', function () {
-                  assert.equal(isEmail({
+                  assert.equal(validate.isEmail({
                      value: item
                   }), true);
                });
             });
             invalidEmails.forEach(function(item) {
                it('Invalid "' + item + '"', function () {
-                  assert.notEqual(isEmail({
+                  assert.notEqual(validate.isEmail({
                      value: item
                   }), true);
                });

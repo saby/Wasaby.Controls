@@ -1,4 +1,4 @@
-<Controls.Validate.FormController
+<Controls.validate:Controller
    name="formController"
    on:deactivated="_onDeactivatedHandler()"
 >
@@ -25,7 +25,7 @@
                icon="icon-small icon-Yes"
                style="secondary"
             />
-            <Controls.Button.Close
+            <Controls.popupTemplate:CloseButton
                on:click="cancelEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                viewMode="toolButton"
@@ -34,4 +34,4 @@
          </div>
       </ws:if>
    </div>
-</Controls.Validate.FormController>
+</Controls.validate:Controller>

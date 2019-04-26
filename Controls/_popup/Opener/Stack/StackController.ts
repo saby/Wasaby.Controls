@@ -4,7 +4,7 @@ import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popup/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
-import 'wml!Controls/_popup/Opener/Stack/StackContent';
+import StackContent = require('wml!Controls/_popup/Opener/Stack/StackContent');
 import 'css!theme?Controls/_popup/Opener/Stack/Stack';
 
       var STACK_CLASS = 'controls-Stack';
@@ -59,6 +59,9 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             item.popupOptions.stackWidth = item.position.stackWidth;
             item.popupOptions.stackMinWidth = item.position.stackMinWidth;
             item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+
+            //todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
             _private.updatePopupOptions(item);
             return item.position;
          },
@@ -120,7 +123,7 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
             };
          },
          setStackContent: function(item) {
-            item.popupOptions.content = 'wml!Controls/_popup/Opener/Stack/StackContent';
+            item.popupOptions.content = StackContent;
          },
 
          getDefaultOptions: function(item) {
@@ -175,6 +178,9 @@ import 'css!theme?Controls/_popup/Opener/Stack/Stack';
 
          elementMaximized: function(item, container, state) {
             _private.setMaximizedState(item, state);
+
+            //todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.width = state ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
             _private.prepareSizes(item, container);
             this._update();
          },

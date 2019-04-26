@@ -1,6 +1,6 @@
 define('Controls/Popup/Templates/Notification/Simple',
-   ['Controls/_popupTemplate/Notification/Simple'],
-   function(Control) {
+   ['Controls/popupTemplate'],
+   function(popupTemplate) {
       'use strict';
-      return Control;
+      return popupTemplate.NotificationSimple;
    });

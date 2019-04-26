@@ -1,26 +1,29 @@
-<Controls.Popup.Templates.Dialog.ConfirmationTemplate
-        on:keydown="_keyDown()"
-        on:keyup="_keyPressed()" ws-tab-cycling="true"
-        ws-delegates-tabfocus="true" style="{{_options.style}}"
-        closeButtonVisibility="{{false}}" size="{{_getSize()}}">
-   <ws:bodyContentTemplate>
-      <ws:partial
-              template="{{_contentTemplate}}"
-              message="{{_getMessage()}}"
-              hasMarkup="{{_hasMarkup()}}"
-              messageTemplate="{{_messageTemplate}}"
-              details="{{_options.details}}"
-              detailsTemplate="{{_detailsTemplate}}">
-      </ws:partial>
-   </ws:bodyContentTemplate>
-   <ws:footerContentTemplate>
-      <ws:partial
-              template="{{_footerTemplate}}"
-              type="{{_options.type}}"
-              yesCaption="{{_options.yesCaption}}"
-              noCaption="{{_options.noCaption}}"
-              cancelCaption="{{_options.cancelCaption}}"
-              okCaption="{{_options.okCaption}}">
-      </ws:partial>
-   </ws:footerContentTemplate>
-</Controls.Popup.Templates.Dialog.ConfirmationTemplate>
+<Controls.Controllers.PrimaryAction on:triggered="_onTriggerHandler()">
+   <Controls.popupTemplate:Confirmation
+      on:keydown="_keyDown()"
+      on:keyup="_keyPressed()" ws-tab-cycling="true"
+      ws-delegates-tabfocus="true" style="{{_options.style}}"
+      closeButtonVisibility="{{false}}" size="{{_getSize()}}">
+      <ws:bodyContentTemplate>
+         <ws:partial
+            template="{{_contentTemplate}}"
+            message="{{_getMessage()}}"
+            hasMarkup="{{_hasMarkup()}}"
+            messageTemplate="{{_messageTemplate}}"
+            details="{{_options.details}}"
+            detailsTemplate="{{_detailsTemplate}}">
+         </ws:partial>
+      </ws:bodyContentTemplate>
+      <ws:footerContentTemplate>
+         <ws:partial
+            template="{{_footerTemplate}}"
+            type="{{_options.type}}"
+            yesCaption="{{_options.yesCaption}}"
+            noCaption="{{_options.noCaption}}"
+            cancelCaption="{{_options.cancelCaption}}"
+            okCaption="{{_options.okCaption}}"
+            primaryAction="{{_options.primaryAction}}">
+         </ws:partial>
+      </ws:footerContentTemplate>
+   </Controls.popupTemplate:Confirmation>
+</Controls.Controllers.PrimaryAction>

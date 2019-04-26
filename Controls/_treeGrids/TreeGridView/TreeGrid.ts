@@ -35,7 +35,7 @@ import TreeControl = require('Controls/_treeGrids/TreeControl');
     * @mixes Controls/_lists/Swipe/SwipeStyles
     *
     * @mixes Controls/_lists/Mover/MoveDialog/Styles
-    * @mixes Controls/_lists/PagingStyles
+    * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_lists/DigitButtonsStyles
     * @mixes Controls/_lists/Grid/SortButtonStyles
     *

@@ -1,7 +1,16 @@
-import Menu = require('Controls/Button/Menu');
+import {Button as Menu} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
 import MenuUtils = require('Controls/Button/Menu/MenuUtils');
 import 'css!theme?Controls/_history/Menu';
+
+var _private = {
+   getMetaPinned: function (item) {
+      return {
+         $_pinned: !item.get('pinned')
+      };
+   }
+};
+
 /**
  * Button menu with history by clicking on which a drop-down list opens.
  *
@@ -20,16 +29,6 @@ import 'css!theme?Controls/_history/Menu';
  * @css @spacing_HistoryMenu-between-itemCaption-rightBorder Spacing between item caption and right border.
  * @css @spacing_HistoryMenu-between-pin-rightBorder Spacing between pin icon and right border.
  */
-
-
-
-var _private = {
-   getMetaPinned: function (item) {
-      return {
-         $_pinned: !item.get('pinned')
-      };
-   }
-};
 
 var HistoryMenu = Menu.extend({
    _itemTemplate: itemTemplate,

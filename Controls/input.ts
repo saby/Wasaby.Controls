@@ -11,6 +11,8 @@
  * @includes Password Controls/_input/Password
  * @includes DateBase Controls/_input/DateTime
  * @includes Date Controls/_input/Date/Picker
+ * @includes Time Controls/_input/Time/Picker
+ * @includes DateTimeModel Controls/_input/DateTime/Model
  * @public
  * @author Kraynov D.
  */
@@ -30,9 +32,10 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
+import TimeInterval from 'Controls/_input/TimeInterval';
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
-import INewLineKey from 'Controls/_input/interface/INewLineKey';
+import INewLineKey from 'Controls/interface/INewLineKey';
 
 const InputCallback = {
     lengthConstraint
@@ -49,6 +52,7 @@ export {
     Password,
     DateBase,
     Date,
+    TimeInterval,
     BaseViewModel,
     MaskFormatBuilder,
     MaskInputProcessor,

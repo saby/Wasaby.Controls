@@ -3,7 +3,7 @@ import Env = require('Env/Env');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import Model = require('Controls/_input/DateTime/Model');
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask = require('Controls/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
    
@@ -20,11 +20,11 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  *
  * @class Controls/_input/DateTime
  * @extends Core/Control
- * @mixes Controls/_input/interface/IInputDateTime
- * @mixes Controls/_input/interface/IDateTimeMask
- * @mixes Controls/_input/interface/IInputTag
- * @mixes Controls/_input/interface/IInputBase
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/interface/IDateTimeMask
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IInputPlaceholder
  *
  * @control
  * @public

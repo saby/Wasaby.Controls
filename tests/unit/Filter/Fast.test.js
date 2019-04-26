@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Filter/Fast',
+      'Controls/filter',
       'Types/source',
       'Core/core-clone',
       'Types/collection',
-      'Controls/History/Source'
+      'Controls/history'
    ],
-   function(FastData, sourceLib, Clone, collection, HistorySource) {
+   function(filterMod, sourceLib, Clone, collection, history) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -106,13 +106,13 @@ define(
          };
 
          var getFastFilter = function(configFastFilter) {
-            var fastFilter = new FastData(configFastFilter);
+            var fastFilter = new filterMod.Fast(configFastFilter);
             fastFilter.saveOptions(configFastFilter);
             return fastFilter;
          };
 
          var getFastFilterWithItems = function(config) {
-            var fastFilter = new FastData(config);
+            var fastFilter = new filterMod.Fast(config);
             fastFilter._beforeMount(config);
             fastFilter._configs[0]._items = new collection.RecordSet({
                rawData: Clone(items[0]),
@@ -126,12 +126,12 @@ define(
             return fastFilter;
          };
 
-         var fastData = new FastData(config);
+         var fastData = new filterMod.Fast(config);
          var isFilterChanged;
 
          var configWithItems = {};
          configWithItems.items = source;
-         var fastDataItems = new FastData(configWithItems);
+         var fastDataItems = new filterMod.Fast(configWithItems);
          fastDataItems._beforeMount(configWithItems);
 
          fastData._notify = (e, args) => {
@@ -188,8 +188,8 @@ define(
          });
 
          it('load config', function(done) {
-            FastData._private.reload(fastData).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastData).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -197,10 +197,10 @@ define(
          });
 
          it('load config from items', function(done) {
-            FastData._private.reload(fastDataItems).addCallback(function(result) {
+            filterMod.Fast._private.reload(fastDataItems).addCallback(function(result) {
                assert.isTrue(!!result.configs);
                assert.equal(Object.keys(result.configs).length, Object.keys(fastData._configs).length);
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -208,8 +208,8 @@ define(
          });
 
          it('load config from items with filter', function(done) {
-            FastData._private.reload(fastDataItems).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(2), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastDataItems).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(2), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), [{ key: 0, title: 'все страны' }]);
                   done();
                });
@@ -217,8 +217,8 @@ define(
          });
 
          it('load config from items with navigation', function(done) {
-            FastData._private.reload(fastDataItems).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(3), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastDataItems).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(3), 0).addCallback(function() {
                   assert.equal(fastData._configs[0]._items.getCount(), 2);
                   done();
                });
@@ -226,9 +226,9 @@ define(
          });
 
          it('get filter', function(done) {
-            FastData._private.reload(fastData).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
-                  var result = FastData._private.getFilter(fastData._items);
+            filterMod.Fast._private.reload(fastData).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+                  var result = filterMod.Fast._private.getFilter(fastData._items);
                   assert.deepEqual(result, { 'first': fastData._items.at(0).get('value') });
                   done();
                });
@@ -245,18 +245,27 @@ define(
                   assert.deepEqual(data[0], [itemsChanges]);
                }
             };
-            FastData._private.notifyChanges(fastFilter, [itemsChanges]);
+            filterMod.Fast._private.notifyChanges(fastFilter, [itemsChanges]);
          });
 
          it('setValue', function() {
             let fastData2 = getFastFilterWithItems(configItems);
-            FastData._private.setValue(fastData2, ['Россия', 'Великобритания']);
+            filterMod.Fast._private.setValue(fastData2, ['Россия', 'Великобритания']);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
          });
 
+         it('onResult footerClick', function() {
+            let closed = false;
+            let fastFilter = getFastFilter(configWithItems);
+            fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
+            fastFilter._beforeMount(configWithItems);
+            fastFilter._onResult(null, { action: 'footerClick' });
+            assert.isTrue(closed);
+         });
+
          it('onResult itemClick', function(done) {
-            FastData._private.reload(fastData).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastData).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
                   fastData._onResult(null, { data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
@@ -300,7 +309,7 @@ define(
             let fastData2 = getFastFilterWithItems(configMultiSelect);
 
             // multi selection
-            FastData._private.selectItems.call(fastData2, [
+            filterMod.Fast._private.selectItems.call(fastData2, [
                { key: 1, title: 'Россия' },
                { key: 2, title: 'США' },
                { key: 3, title: 'Великобритания' }]);
@@ -309,18 +318,18 @@ define(
             // single selection
             configMultiSelect.items[0].properties.multiSelect = false;
             fastData2 = getFastFilterWithItems(configMultiSelect);
-            FastData._private.selectItems.call(fastData2, [{ key: 3, title: 'Великобритания' }]);
+            filterMod.Fast._private.selectItems.call(fastData2, [{ key: 3, title: 'Великобритания' }]);
             assert.deepEqual(fastData2._items.at(0).value, 'Великобритания');
 
             // empty selection
             fastData2 = getFastFilterWithItems(configMultiSelect);
-            FastData._private.selectItems.call(fastData2, []);
+            filterMod.Fast._private.selectItems.call(fastData2, []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
          it('setText', function(done) {
-            FastData._private.reload(fastData).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function(items) {
+            filterMod.Fast._private.reload(fastData).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function(items) {
                   fastData._setText();
                   assert.equal(fastData._configs[0].text, 'США');
                   assert.equal(fastData._configs[1].text, 'фэнтези');
@@ -347,7 +356,7 @@ define(
                   })
                }
             }];
-            let fastDataMultiSelect = new FastData(configMultiSelect);
+            let fastDataMultiSelect = new filterMod.Fast(configMultiSelect);
             fastDataMultiSelect._beforeMount(configMultiSelect);
             fastDataMultiSelect._configs[0]._items = items[0];
             fastDataMultiSelect._setText();
@@ -365,8 +374,8 @@ define(
          });
 
          it('reset', function(done) {
-            FastData._private.reload(fastData).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastData).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   fastData._container = { children: [] };
                   fastData._reset(null, fastData._items.at(0), 0);
@@ -377,8 +386,8 @@ define(
          });
 
          it('open dropdown', function() {
-            FastData._private.reload(fastData, fastData.sourceController).addCallback(function() {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+            filterMod.Fast._private.reload(fastData, fastData.sourceController).addCallback(function() {
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData._open('itemClick', fastData._items.at(0), 0);
                });
             });
@@ -392,14 +401,14 @@ define(
             let result;
             
             newItems[0].properties.navigation = {page: 2};
-            result = FastData._private.isNeedReload(oldItems, newItems);
+            result = filterMod.Fast._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
             
-            result = FastData._private.isNeedReload(oldItems, newItems2);
+            result = filterMod.Fast._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
    
             newItems3.splice(0, 1);
-            result = FastData._private.isNeedReload(oldItems, newItems3);
+            result = filterMod.Fast._private.isNeedReload(oldItems, newItems3);
             assert.isTrue(result);
          });
 
@@ -415,15 +424,15 @@ define(
                multiSelect: false,
                selectorTemplate: 'selectorTemplate'
             };
-            var result = FastData._private.getItemPopupConfig(properties);
+            var result = filterMod.Fast._private.getItemPopupConfig(properties);
             assert.deepEqual(properties, result);
          });
 
          it('_private::prepareItems', function() {
             var self = {};
-            var items = [{ properties: { source: new HistorySource({}) } }];
-            FastData._private.prepareItems(self, items);
-            assert.isTrue(self._items.at(0).properties.source instanceof HistorySource);
+            var items = [{ properties: { source: new history.Source({}) } }];
+            filterMod.Fast._private.prepareItems(self, items);
+            assert.isTrue(self._items.at(0).properties.source instanceof history.Source);
          });
 
          it('_private::getNewItems', function() {
@@ -436,7 +445,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
-            let result = FastData._private.getNewItems(fastData2, selectedItems);
+            let result = filterMod.Fast._private.getNewItems(fastData2, selectedItems);
             assert.deepEqual(result[0], selectedItems.at(2));
          });
 

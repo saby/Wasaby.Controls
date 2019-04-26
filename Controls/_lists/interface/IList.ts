@@ -111,12 +111,30 @@
  */
 
 /**
- * @event Controls/_lists/interface/IList#itemActionsClick
+ * @event Controls/_lists/interface/IList#actionClick
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
  */
+
+/**
+ * @name Controls/_lists/interface/IList#actionAlignment
+ * @cfg {String} Determines how item actions will be aligned on swipe.
+ * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * @variant horizontal Actions will be displayed in a line.
+ * @variant vertical Actions will be displayed in a line.
+ */
+
+/**
+ * @name Controls/_lists/interface/IList#actionCaptionPosition
+ * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
+ * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * @variant right Title will be displayed to the right of the action's icon.
+ * @variant bottom Title will be displayed under the action's icon.
+ * @variant none Title will not be displayed.
+ */
+
 
 /**
  * @name Controls/_lists/interface/IList#itemActionVisibilityCallback

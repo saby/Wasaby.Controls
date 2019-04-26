@@ -4,7 +4,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 /**
  * Container for list components.
  *
- * @class Controls/_lists/MultiSelector
+ * @class Controls/_operations/Container
  * @extends Core/Control
  * @control
  * @author Авраменко А.С.
@@ -12,7 +12,7 @@ import template = require('wml!Controls/_operations/Container/Container');
  */
 
 /**
- * @event Controls/_lists/MultiSelector#listSelectedKeysChanged Occurs when selected keys were changed.
+ * @event Controls/_operations/Container#listSelectedKeysChanged Occurs when selected keys were changed.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
  * @param {Array} added Array of added keys in selection.
@@ -20,7 +20,7 @@ import template = require('wml!Controls/_operations/Container/Container');
  */
 
 /**
- * @event Controls/_lists/MultiSelector#listExcludedKeysChanged Occurs when excluded keys were changed.
+ * @event Controls/_operations/Container#listExcludedKeysChanged Occurs when excluded keys were changed.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
  * @param {Array} added Array of added keys in selection.

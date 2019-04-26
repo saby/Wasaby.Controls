@@ -2,7 +2,7 @@
  * Created by kraynovdo on 25.01.2018.
  */
 import Control = require('Core/Control');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');

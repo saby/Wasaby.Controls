@@ -1,0 +1,25 @@
+<div class="controls-FastFilter" name="fastFilter">
+   <ws:for data="index, item in _items">
+      <div class="controls-FastFilter__wrapper controls-FastFilter__wrapper_state{{_options.readOnly ? 'readOnly' : 'enabled'}}">
+         <div class="controls-FastFilter__block" on:click="_open(item, index)">
+            <div class="controls-FastFilter__iconArrow icon-DayForward controls-FastFilter__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"></div>
+            <div class="controls-FastFilter__text-wrapper controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"
+                 title="{{_configs[index].title}}">
+               <div class="controls-FastFilter__text">{{_configs[index].text}}</div>
+               <span class="controls-Dropdown__hasMoreText theme_{{_options.theme}}">{{_configs[index].hasMoreText}}</span>
+            </div>
+         </div>
+         <ws:if data="{{_needShowCross(item)}}">
+            <!-- reset button should not take focus, otherwise IE will notify 'blur' event on control after click, because reset button will hidden, and focus will moved on body -->
+            <span class="controls-FastFilter__iconReset icon-Close" ws-no-focus="{{true}}" on:click="_reset(item, index)"></span>
+         </ws:if>
+      </div>
+   </ws:for>
+   <Controls.dropdown:Opener name="DropdownOpener"
+                             on:result="_onResult()"
+                             className="controls-FastFilter-popup">
+      <ws:templateOptions
+              showClose="{{true}}">
+      </ws:templateOptions>
+   </Controls.dropdown:Opener>
+</div>

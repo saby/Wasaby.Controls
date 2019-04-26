@@ -1,4 +1,4 @@
-import historySource = require('Controls/_history/Source');
+import coreInstance = require('Core/core-instance');
 import Merge = require('Core/core-merge');
 
 
@@ -9,7 +9,7 @@ function getMetaHistory() {
 }
 
 function isHistorySource(source) {
-   return source instanceof historySource;
+   return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
 function getFilter(filter, source) {

@@ -4,7 +4,7 @@ define('Controls-demo/Explorer/Demo', [
    'Types/source',
    'Controls-demo/Explorer/ExplorerImages',
    'css!Controls-demo/Explorer/Demo/Demo',
-   'Controls/Explorer'
+   'Controls/explorers'
 ], function(BaseControl, template, source, explorerImages) {
    'use strict';
    var
