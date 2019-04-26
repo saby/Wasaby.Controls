@@ -12,12 +12,13 @@
 
 /**
  * Edge bug: If <input> height equal to the content, that the text is shifted up by 1px when selected.
+ * IE bug: If <input> height equal to the content, that the text is shifted up by 2px when selected right to left.
  * Solution: We need to maximize the height.
  * Remark: Use only in edge and not empty <input>. In an empty <input>, this solution will break the alignment of the placeholder.
  * Because the placeholder is positioned absolutely and because of this has no alignment with other inner elements.
  * The alignment is due to the <input> with a height to the content.
  */
-.controls-InputBase__field_edge {
+.controls-InputBase__field_ie {
    height: 100%;
 }
 
