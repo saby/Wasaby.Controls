@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="Number">
    <ws:componentClass>
-      <Controls.Popup.Opener.InfoBox name="infoBoxNumber"/>
+      <Controls.popup:Infobox name="infoBoxNumber"/>
       <Controls.input:Number
          attr:id="main_field"
          name="textNumber"

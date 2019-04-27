@@ -1,5 +1,5 @@
 <div class="ControlsDemo-InfoboxTemplate" attr:style="display:flex;width: 100%; height: 100%; align-items: center;justify-content: center;">
-   <Controls.Popup.Opener.Sticky name="sticky"
+   <Controls.popup:Sticky name="sticky"
                                  onResult="{{_onResult}}"
                                  template="Controls-demo/Popup/TestInfoBox"
                                  autoHide="{{true}}"
@@ -7,7 +7,7 @@
       <ws:templateOptions closeButtonVisibility="{{false}}"/>
       <ws:direction vertical="{{_verticalDirection ? 'bottom' : 'top'}}" horizontal="{{_horizontalDirection ? 'left' : 'right'}}"/>
       <ws:targetPoint vertical="{{_verticalPoint ? 'bottom' : 'top'}}" horizontal="{{_horizontalPoint ? 'left' : 'right'}}"/>
-   </Controls.Popup.Opener.Sticky>
+   </Controls.popup:Sticky>
 
    <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-InfoboxTemplate__stickyButton"/>
    <div style="margin-left: 20px;">

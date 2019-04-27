@@ -4,7 +4,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
       'Types/source',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter',
 
-      'Controls/_heading',
+      'Controls/heading',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/News',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Employees',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Violations',

@@ -48,7 +48,8 @@ define('Controls-demo/Confirmation/Confirmation',
                      primaryAction: 'no'
                   }
                }]
-            }, {
+            },
+            {
                caption: 'Style',
                items: [{
                   caption: 'DEFAULT',
@@ -78,7 +79,8 @@ define('Controls-demo/Confirmation/Confirmation',
                      style: 'error'
                   }
                }]
-            }, {
+            },
+            {
                caption: 'Button caption',
                items: [{
                   caption: 'ONE BUTTON',
@@ -101,6 +103,48 @@ define('Controls-demo/Confirmation/Confirmation',
                      noCaption: 'My no',
                      cancelCaption: 'My cancel',
                      type: 'yesnocancel'
+                  }
+               }]
+            },
+            {
+               caption: 'Size 350px',
+               items: [{
+                  caption: 'Heading < 100, Comment < 160',
+                  background: BG,
+                  cfg: {
+                     message: 'Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising',
+                     details: 'If advertisements are to he learned, there is a need for lots of repetition.',
+                     type: 'yesnocancel'
+                  }
+               },
+               {
+                  caption: 'Heading < 100, No Comment',
+                  background: BG,
+                  cfg: {
+                     message: 'Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising',
+                     type: 'yesno'
+                  },
+               }
+               ]
+            },
+            {
+               caption: 'Size 400px',
+               items: [{
+                  caption: 'Heading > 100, No Comment',
+                  background: BG,
+                  cfg: {
+                     message: 'Advertisers study how people learn so that they can ‘teach’ them to respond to' +
+                           ' their advertising. They want us to be interested, to try something, and then to do it again.',
+                     type: 'ok'
+                  }
+               }, {
+                  caption: 'Heading < 100, Comment > 160',
+                  background: BG,
+                  cfg: {
+                     message: 'Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising',
+                     details: ' For example, the highly successful ‘Weston Tea Country’ advertising for different tea has led to' +
+                           ' ‘DAEWOO Country’ for automobile dealers and ‘Cadbury Country’ for chocolate bars.',
+                     type: 'yesno'
                   }
                }]
             }];

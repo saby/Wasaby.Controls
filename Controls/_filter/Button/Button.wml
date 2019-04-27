@@ -27,10 +27,10 @@
       <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.alignment}}"></div>
    </ws:if>
 
-   <Controls.Popup.Opener.Sticky
+   <Controls.popup:Sticky
            name="filterStickyOpener"
            scope="{{_popupOptions}}"
            autofocus="{{true}}"
    >
-   </Controls.Popup.Opener.Sticky>
+   </Controls.popup:Sticky>
 </div>

@@ -9,7 +9,7 @@ define('Controls/Input/Date/Range', [
 
 
    /*IoC.resolve('ILogger').error(
-      'Controls/Input/Date/Range' +
+      'Controls/dateRange:Input' +
       'This control is deprecated. Use \'Controls/dateRange:Input\' instead'
    );*/
 

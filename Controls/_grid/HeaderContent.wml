@@ -1,6 +1,6 @@
 <div class="controls-Grid__header-cell__content controls-Grid__header-cell_baseline_XL">
     <ws:if data="{{colData.column.sortingProperty}}">
-        <Controls._grids.SortButton
+        <Controls._grid.SortButton
                 caption="{{colData.column.caption || colData.column.title}}"
                 property="{{colData.column.sortingProperty}}"
                 type="{{colData.column.sortingType}}"

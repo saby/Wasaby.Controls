@@ -17,8 +17,8 @@ import 'css!theme?Controls/_filterPopup/Panel/Lookup/Lookup';
     * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/_input/interface/IInputPlaceholder
-    * @mixes Controls/_input/interface/IInputText
+    * @mixes Controls/interface/IInputPlaceholder
+    * @mixes Controls/interface/IInputText
     * @mixes Controls/Selector/Lookup/LookupStyles
     * @control
     * @public

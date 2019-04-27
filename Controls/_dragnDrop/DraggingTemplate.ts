@@ -190,7 +190,7 @@ import 'css!theme?Controls/_dragnDrop/DraggingTemplate/DraggingTemplate';
     * </pre>
     */
 
-   export = Control.extend({
+   var DraggingTemplate = Control.extend({
       _template: template,
 
       _beforeMount: function(options) {
@@ -198,3 +198,4 @@ import 'css!theme?Controls/_dragnDrop/DraggingTemplate/DraggingTemplate';
       }
    });
 
+   export = DraggingTemplate;

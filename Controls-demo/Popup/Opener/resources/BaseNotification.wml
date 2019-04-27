@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Notification.Simple
+<Controls.popupTemplate:NotificationSimple
     text="{{value}}"
     style="success">
-</Controls.Popup.Templates.Notification.Simple>
+</Controls.popupTemplate:NotificationSimple>

@@ -1,4 +1,4 @@
-define('Controls/List/interface/IGridControl', ['Controls/_grids/interface/IGridControl'], function(Control) {
+define('Controls/List/interface/IGridControl', ['Controls/_grid/interface/IGridControl'], function(Control) {
 /**
  * Interface for Grid (table view).
  *
@@ -21,7 +21,7 @@ define('Controls/List/interface/IGridControl', ['Controls/_grids/interface/IGrid
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grids/Column">
+ *                      <ws:partial template="wml!Controls/_grid/Column">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
