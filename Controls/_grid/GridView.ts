@@ -118,9 +118,7 @@ var
         setCurrentColumnsWidth: function (self, container: HTMLElement) {
             //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             let cells = (container[0] || container).getElementsByClassName('controls-Grid__row-cell');
-            if (cells.length > 0) {
-                self._listModel.setCurrentColumnsWidth(cells);
-            }
+            self._listModel.setCurrentColumnsWidth(cells);
         }
     },
     GridView = ListView.extend({
