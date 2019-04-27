@@ -37,11 +37,18 @@ import NotificationController = require('Controls/_popup/Opener/Notification/Not
                'Controls/Popup/Compatible/OldNotification',
                config.template
             ], function(BaseOpenerCompat, InformationPopupManager) {
+               var compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
                if (!self._popup) {
                   self._popup = [];
                }
-               self._popup.push(InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config), true));
+               self._popup.push(InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide));
             });
+         },
+
+         getCompatibleConfig: function(BaseOpenerCompat, config) {
+            var cfg = BaseOpenerCompat.prepareNotificationConfig(config);
+            cfg.notHide = !cfg.autoClose;
+            return cfg;
          },
 
          compatibleClose: function(self) {
@@ -125,6 +132,8 @@ import NotificationController = require('Controls/_popup/Opener/Notification/Not
             autoClose: true
          };
       };
+
+      Notification._private = _private;
 
       export = Notification;
 
