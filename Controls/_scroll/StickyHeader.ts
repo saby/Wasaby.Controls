@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
-import 'Controls/scroll';
+import 'Controls/_scroll/StickyHeader/_StickyHeader';
 
 
 
