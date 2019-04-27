@@ -19,7 +19,7 @@
       <div class="eventBlock">
          <div class="reset-header__wrapper">
              <span>Event that surfaced: {{_event}}</span>
-             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+             <Controls.buttons:Path attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
          </div>
          <br/>
          <span>{{_eventName}}</span>
@@ -27,19 +27,19 @@
    </div>
    <div class="optionsBlock">
       <h3>Options</h3>
-      <Controls.Label caption="minValue:"/>
-         <Controls.Input.Number precision="{{_precision}}" on:valueChanged="changeMinValue()" value="{{_minValue}}" />
-         <Controls.Label caption="maxValue:"/>
-         <Controls.Input.Number precision="{{_precision}}" on:valueChanged="changeMaxValue()" value="{{_maxValue}}" />
-         <Controls.Label caption="startValue:"/>
-         <Controls.Input.Number precision="{{_precision}}" on:valueChanged="changeStartValue()" bind:value="_startValue" />
-         <Controls.Label caption="endValue:"/>
-         <Controls.Input.Number precision="{{_precision}}" on:valueChanged="changeEndValue()" bind:value="_endValue" />
-         <Controls.Label caption="scaleStep:"/>
-         <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScaleStep()" bind:value="_scaleStep" />
-         <Controls.Label caption="precision:"/>
-         <Controls.Input.Number precision="{{0}}" on:valueChanged="changePrecision()" bind:value="_precision" />
-         <Controls.Label caption="size:"/>
+      <Controls.input:Label caption="minValue:"/>
+         <Controls.input:Number precision="{{_precision}}" on:valueChanged="changeMinValue()" value="{{_minValue}}" />
+         <Controls.input:Label caption="maxValue:"/>
+         <Controls.input:Number precision="{{_precision}}" on:valueChanged="changeMaxValue()" value="{{_maxValue}}" />
+         <Controls.input:Label caption="startValue:"/>
+         <Controls.input:Number precision="{{_precision}}" on:valueChanged="changeStartValue()" bind:value="_startValue" />
+         <Controls.input:Label caption="endValue:"/>
+         <Controls.input:Number precision="{{_precision}}" on:valueChanged="changeEndValue()" bind:value="_endValue" />
+         <Controls.input:Label caption="scaleStep:"/>
+         <Controls.input:Number precision="{{0}}" on:valueChanged="changeScaleStep()" bind:value="_scaleStep" />
+         <Controls.input:Label caption="precision:"/>
+         <Controls.input:Number precision="{{0}}" on:valueChanged="changePrecision()" bind:value="_precision" />
+         <Controls.input:Label caption="size:"/>
          <Controls.dropdown:Combobox
             source="{{_sizeSource}}"
             keyProperty="title"

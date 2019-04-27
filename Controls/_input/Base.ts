@@ -336,6 +336,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        *
        * @mixes Controls/interface/IInputBase
        *
+       * @public
        * @demo Controls-demo/Input/Base/Base
        *
        * @author Журавлев М.С.

@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="Mask">
    <ws:componentClass>
-      <Controls.Popup.Opener.InfoBox name="infoBoxMask"/>
+      <Controls.popup:Infobox name="infoBoxMask"/>
       <Controls.input:Mask name="textMask"
                            placeholder="{{_placeholder}}"
                            mask="{{_mask}}"

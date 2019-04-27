@@ -1,32 +1,32 @@
 <div>
-    <Controls.Popup.Opener.Stack name="eventStackOpener"
+    <Controls.popup:Stack name="eventStackOpener"
                                  template="Controls-demo/Popup/Compatible/TestStack"
                                  isCompoundTemplate="{{true}}"
                                  autoCloseOnHide="{{false}}">
-    </Controls.Popup.Opener.Stack>
-    <Controls.Popup.Opener.Stack name="reviveStackOpener"
+    </Controls.popup:Stack>
+    <Controls.popup:Stack name="reviveStackOpener"
                                  template="Controls-demo/Popup/Compatible/TestRevive"
                                  isCompoundTemplate="{{true}}">
-    </Controls.Popup.Opener.Stack>
-    <Controls.Popup.Opener.Stack name="inputStackOpener"
+    </Controls.popup:Stack>
+    <Controls.popup:Stack name="inputStackOpener"
                                  template="Controls-demo/Popup/Compatible/TestInput"
                                  isCompoundTemplate="{{true}}">
-    </Controls.Popup.Opener.Stack>
-    <Controls.Popup.Opener.Stack name="validateStackOpener"
+    </Controls.popup:Stack>
+    <Controls.popup:Stack name="validateStackOpener"
                                  template="Controls-demo/Popup/Compatible/TestValidate"
                                  isCompoundTemplate="{{true}}">
-    </Controls.Popup.Opener.Stack>
-    <Controls.Popup.Opener.Dialog name="dialogOpener"
+    </Controls.popup:Stack>
+    <Controls.popup:Dialog name="dialogOpener"
                                   template="Controls-demo/Popup/Compatible/TestStack"
                                   isCompoundTemplate="{{true}}"
                                   autoCloseOnHide="{{false}}"
                                   closeOnOutsideClick="{{false}}"
                                   modal="{{true}}">
-    </Controls.Popup.Opener.Dialog>
-    <Controls.Popup.Opener.Stack name="openerStackOpener"
+    </Controls.popup:Dialog>
+    <Controls.popup:Stack name="openerStackOpener"
                                  template="Controls-demo/Popup/Compatible/TestOpener"
                                  isCompoundTemplate="{{true}}">
-    </Controls.Popup.Opener.Stack>
+    </Controls.popup:Stack>
     <div>
         <Controls.buttons:Button attr:class="openStackButton" caption="Open Stack" on:click="openTestStack()"/>
         <Controls.buttons:Button attr:class="openReviveButton" caption="Revive Test" on:click="openReviveStack()"/>
