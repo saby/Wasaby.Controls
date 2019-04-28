@@ -74,7 +74,8 @@ function getOptionTypes() {
             'default',
             'linkMain',
             'linkMain2',
-            'linkAdditional'
+            'linkAdditional',
+            'secondary'
         ]),
         linkClickable: descriptor(Boolean),
         showNextArrow: descriptor(Boolean),

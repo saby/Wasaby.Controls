@@ -39,9 +39,6 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.input = {
-               activate: sinon.fake()
-            };
             sandbox.stub(component, '_notify');
 
             component._onResult(value);
@@ -49,7 +46,6 @@ define([
             sinon.assert.calledWith(component._notify, 'valueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
             sinon.assert.called(component._children.opener.close);
-            sinon.assert.called(component._children.input.activate);
             sandbox.restore();
          });
       });
@@ -65,9 +61,6 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.input = {
-               activate: sinon.fake()
-            };
             sandbox.stub(component, '_notify');
 
             component._onResultWS3(null, value);
@@ -75,7 +68,6 @@ define([
             sinon.assert.calledWith(component._notify, 'valueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
             sinon.assert.called(component._children.opener.close);
-            sinon.assert.called(component._children.input.activate);
             sandbox.restore();
          });
       });

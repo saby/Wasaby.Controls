@@ -339,6 +339,23 @@ define(
             StickyStrategy._private.fixPosition = baseFixPosition;
          });
 
+         it('Sticky protect from wrong config', () => {
+            let popupCfg = { ...getPositionConfig() };
+            popupCfg.align.horizontal.offset = -50;
+            let targetC = {
+               top: 200,
+               left: 0,
+               bottom: 400,
+               right: 200,
+               width: 200,
+               height: 200,
+               leftScroll: 0,
+               topScroll: 0
+            };
+            let position = StickyStrategy.getPosition(popupCfg, targetC);
+            assert.equal(position.left, 0);
+         });
+
          it('Centered sticky', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1920,
