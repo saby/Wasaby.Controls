@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/toolbar'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
@@ -722,7 +722,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
-          require(['css!Controls/Input/Dropdown/Dropdown'], () => {
+          require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
                 target: childEvent.target,
