@@ -4,11 +4,11 @@ define('Controls/List/Mover/MoveDialog', ['Controls/MoveDialog'], function(Contr
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
     * @class Controls/MoveDialog
     * @extends Core/Control
-    * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/ISource
     *
-    * @mixes Controls/List/Mover/MoveDialog/Styles
+    * @mixes Controls/_MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.

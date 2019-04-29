@@ -2,12 +2,12 @@ define('Controls/List/interface/IGridControl', ['Controls/_grid/interface/IGridC
 /**
  * Interface for Grid (table view).
  *
- * @interface Controls/List/interface/IGridControl
- * @public
+ * @interface Controls/_grid/interface/IGridControl
+ * @private
  * @author Авраменко А.С.
  */
    /**
- * @name Controls/List/interface/IGridControl#ladderProperties
+ * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Array of fields that should be sticky.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @example
@@ -59,7 +59,7 @@ define('Controls/List/interface/IGridControl', ['Controls/_grid/interface/IGridC
  * @property {String} [sortingProperty] Property by which doing sorting.
  */
    /**
- * @name Controls/List/interface/IGridControl#header
+ * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  */
@@ -74,19 +74,19 @@ define('Controls/List/interface/IGridControl', ['Controls/_grid/interface/IGridC
  * @property {String} [stickyProperty] The name of the field used to sticking the column data.
  */
    /**
- * @name Controls/List/interface/IGridControl#columns
+ * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {Array.<Column>} Describes grid's columns.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
- * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/List/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/List/interface/IGridControl#columns columns} option, if necessary.
+ * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  */
    /**
- * @name Controls/List/interface/IGridControl#stickyHeader
+ * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Fix the table header.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @default true
  */
    /**
- * @name Controls/List/interface/IGridControl#rowSeparatorVisibility
+ * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Allows to visible or hide row separator.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @default false

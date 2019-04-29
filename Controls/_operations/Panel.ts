@@ -59,7 +59,7 @@ import buttons = require('Controls/buttons');
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/_list/interface/IHierarchy
     * @control
     * @public
     * @author Авраменко А.С.

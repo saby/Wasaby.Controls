@@ -15,7 +15,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @mixes Controls/interface/ITooltip
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/List/interface/IHierarchy
+ * @mixes Controls/_list/interface/IHierarchy
  * @control
  * @public
  * @category Toolbar

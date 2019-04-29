@@ -1,8 +1,8 @@
 define('Controls/List/AddButton/Styles', ['Controls/_list/AddButton/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/AddButton/Styles
- * @public
+ * @mixin Controls/_list/AddButton/Styles
+ * @private
  *
  *
  * @css @color_listAddButton_enabled text color of button "Add" in List
