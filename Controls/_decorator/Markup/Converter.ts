@@ -4,7 +4,7 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
-   
+
 
    // Convert node to jsonML array.
    function nodeToJson(node) {
@@ -130,7 +130,7 @@ import objectMerge = require('Core/core-merge');
             rootNode.unshift(rootNodeAttributes);
             rootNode.unshift(rootNodeTagName);
          }
-         rootNodeAttributes.version = '1.0';
+         rootNodeAttributes.version = '2';
       }
 
       return result;

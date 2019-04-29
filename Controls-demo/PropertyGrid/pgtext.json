@@ -661,7 +661,7 @@
               "title": "Filter configuration - object with field names and their values."
           },
           "placeholder": {
-            "type": "String|function",
+            "type": "function|String",
             "title": "Field placeholder."
           },
           "emptyText": {
