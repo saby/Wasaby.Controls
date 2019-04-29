@@ -24,6 +24,7 @@ define(
             assert.deepEqual(selectionRec.get('excluded'), ['1', '2']);
             assert.deepEqual(selectionRec.get('marked'), ['1', '2']);
             assert.equal(selectionRec.get('type'), 'leaf');
+            assert.equal(selectionRec.getFormat().at(0).getKind(), 'string');
 
             selection = {
                selected: ['2'],
