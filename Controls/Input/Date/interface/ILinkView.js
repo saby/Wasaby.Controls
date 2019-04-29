@@ -74,7 +74,8 @@ define('Controls/Input/Date/interface/ILinkView', [
                'default',
                'linkMain',
                'linkMain2',
-               'linkAdditional'
+               'linkAdditional',
+               'secondary'
             ]),
             showNextArrow: entity.descriptor(Boolean),
             showPrevArrow: entity.descriptor(Boolean),
