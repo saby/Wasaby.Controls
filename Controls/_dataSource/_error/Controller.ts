@@ -42,7 +42,7 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
     // @ts-ignore
     let details = config.error.details;
     return {
-        mode: config.mode || Mode.dialog,
+        mode: Mode.dialog,
         template: "Controls/dataSource:error.DefaultTemplate",
         options: {
             message,
@@ -135,6 +135,8 @@ export default class ErrorController {
             if (!handlerResult) {
                 return getDefault(_config);
             }
+            // @ts-ignore
+            _config.error.processed = true;
             return {
                 mode: handlerResult.mode || _config.mode,
                 template: handlerResult.template,
