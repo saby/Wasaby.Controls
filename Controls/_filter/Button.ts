@@ -7,7 +7,7 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
-import 'css!theme?Controls/_filter/Button/Button';
+import 'css!theme?Controls/filter';
 /**
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
  * Clicking on a icon-button or a string opens the panel. {@link Controls/_filter/Button/Panel}

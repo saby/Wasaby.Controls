@@ -10,7 +10,7 @@ import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import 'wml!Controls/_list/resources/ItemOutput';
-import 'css!theme?Controls/_list/ListView/ListView';
+import 'css!theme?Controls/list';
 
 var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;

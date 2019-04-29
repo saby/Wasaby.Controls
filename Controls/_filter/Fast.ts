@@ -11,8 +11,8 @@ import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Merge = require('Core/core-merge');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
-import 'css!theme?Controls/_filter/Fast/Fast';
-import 'css!theme?Controls/Input/Dropdown/Dropdown';
+import 'css!theme?Controls/filter';
+import 'css!theme?Controls/dropdown';
 
 
       /**

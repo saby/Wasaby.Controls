@@ -3,8 +3,8 @@ import template = require('wml!Controls/_popup/Previewer/Previewer');
 import debounce = require('Core/helpers/Function/debounce');
 import PreviewerOpener = require('Controls/_popup/Opener/Previewer');
 import Env = require('Env/Env');
-import 'css!Controls/_popup/Previewer/Previewer';
-      
+import 'css!Controls/popup';
+
 
       /**
        * @class Controls/_popup/Previewer
@@ -245,5 +245,5 @@ import 'css!Controls/_popup/Previewer/Previewer';
       };
 
       export = Previewer;
-   
+
 
