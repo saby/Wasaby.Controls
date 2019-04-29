@@ -1,0 +1,51 @@
+.controls-AddButton-wrapper{
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-AddButton_state-enable{
+   color: @color_listAddButton;
+   stroke: @color_listAddButton;
+   cursor: pointer;
+}
+
+.controls-AddButton_state-enable:active{
+   .controls-AddButtonText {
+      text-decoration: underline;
+   }
+}
+
+
+.ws-is-desktop-platform {
+   .controls-AddButton_state-enable:hover {
+      .controls-AddButtonText {
+         text-decoration: underline;
+      }
+   }
+}
+
+.controls-AddButton_state-disable{
+   color: @color_listAddButton_readOnly;
+   stroke: @color_listAddButton_readOnly;
+}
+
+.controls-AddButton__icon {
+   height: @icon-size_ListAddButton / 2;
+   width: @icon-size_ListAddButton / 2;
+}
+
+.controls-AddButton__svgWrapper {
+   width: @icon-size_ListAddButton;
+   display: inline-flex;
+   justify-content: center;
+}
+.controls-AddButtonText {
+   margin-left: @spacing_ListAddButton-between-icon-and-text;
+}
+.controls-AddButton{
+   font-size: @font-size_listAddButton;
+}
+
+.controls-AddButton__line {
+   stroke-width: @thickness_listAddButton;
+}

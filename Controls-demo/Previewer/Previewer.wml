@@ -10,7 +10,7 @@
 		attr:class="ControlsDemo-Previewer__trigger"
 	/>
    <ws:for data="image in _images">
-      <Controls.Popup.Previewer attr:class="ControlsDemo-Previewer__previewer"
+      <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
                                 on:dblClick="_clickHandler(image)"
                                 name="{{image}}"
                                 trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
@@ -26,6 +26,6 @@
                </ws:bodyContentTemplate>
             </Controls.popupTemplate:Dialog>
          </ws:template>
-      </Controls.Popup.Previewer>
+      </Controls.popup:PreviewerTarget>
    </ws:for>
 </div>

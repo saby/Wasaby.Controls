@@ -3,7 +3,7 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
-import 'css!theme?Controls/_lookup/Lookup/Link/LookUp_Link';
+import 'css!theme?Controls/lookup';
 
 
    /**

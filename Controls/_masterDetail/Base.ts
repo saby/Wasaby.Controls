@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/Base/Base');
-import 'css!theme?Controls/_masterDetail/Base/Base';
+import 'css!theme?Controls/masterDetail';
 
    /**
     * Control that allows to implement the Master-Detail interface
@@ -23,7 +23,7 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
     * @cfg {Function} Detail content template
     */
 
-   export = Control.extend({
+   var Base = Control.extend({
       _template: template,
       _selected: null,
       _selectedMasterValueChangedHandler: function(event, value) {
@@ -32,3 +32,4 @@ import 'css!theme?Controls/_masterDetail/Base/Base';
       }
    });
 
+   export = Base;

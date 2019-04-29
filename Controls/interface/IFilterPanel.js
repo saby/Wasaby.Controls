@@ -55,7 +55,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
     *    </Controls.filterPopup:Panel>
     * </pre>
-    * @see Controls/_heading:Title#caption
+    * @see Controls/heading:Title#caption
     */
 
    /**
@@ -74,7 +74,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
     *    </Controls.filterPopup:Panel>
     * </pre>
-    * @see Controls/_heading:Title#style
+    * @see Controls/heading:Title#style
     */
 
    /**

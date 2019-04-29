@@ -6,6 +6,7 @@
             on:valueChanged="_onCheckBoxClick()"/>
     <Controls._operations.__MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                          excludedKeys="{{ _options.excludedKeys }}"
-                                         selectedKeysCount="{{ _options.selectedKeysCount }}" />
+                                         selectedKeysCount="{{ _options.selectedKeysCount }}"
+                                          size = "{{_options.size}}"/>
     <div class="controls-operationsPanelV__multiSelector_separator"></div>
 </div>

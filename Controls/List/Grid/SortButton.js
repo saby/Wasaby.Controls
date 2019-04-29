@@ -1,4 +1,4 @@
-define('Controls/List/Grid/SortButton', ['Controls/_grids/SortButton'], function(Control) {
+define('Controls/List/Grid/SortButton', ['Controls/_grid/SortButton'], function(Control) {
 /**
  * Graphical control element that used for changing sorting in Grid control
  *

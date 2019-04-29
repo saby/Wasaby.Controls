@@ -50,13 +50,13 @@
             <div attr:style="height: 10000px; background: blue;"></div>
          </div>
       </Controls.scroll:Container>
-      <Controls.Popup.Opener.Dialog name="usersDialog">
+      <Controls.popup:Dialog name="usersDialog">
          <ws:templateOptions usersSource="{{_usersSource}}"/>
          <ws:template>
             <ws:partial template="wml!Controls-demo/Container/resources/UsersList" on:itemClick="_selectUser()"
                         attr:class="ControlsDemo-Scroll__usersList" showShadow="{{_showShadow}}"
                         showScrollbar="{{_showScrollbar}}"/>
          </ws:template>
-      </Controls.Popup.Opener.Dialog>
+      </Controls.popup:Dialog>
    </div>
 </div>

@@ -3,14 +3,14 @@
       <div class="controlsDemo-RageLink__PageBlock__title"></div>
       <div class="controlsDemo-RageLink__content">
          <div class="controlsDemo-RageLink__componentWrap">
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                minRange="month"
 			   attr:test_name="default_range"/>
          </div>
          <div class="controlsDemo-RageLink__componentWrap controlsDemo-RangeLink_capture">
-            <Controls.Input.Date.RangeLink
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+            <Controls.dateRange:Selector
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
                showClearButton="{{true}}"
                startValue="{{_startValue}}"
                endValue="{{_endValueHalfYear}}"
@@ -19,7 +19,7 @@
             />
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                bind:startValue="_startValueBind"
                bind:endValue="_endValueBind"
                chooseHalfyears="{{false}}"
@@ -29,7 +29,7 @@
             />
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                startValue="{{_startValue}}"
                endValue="{{_endValueQuarter}}"
                chooseHalfyears="{{false}}"
@@ -40,14 +40,14 @@
 
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                style="linkAdditional"
                emptyCaption="не задан"
 			   attr:test_name="range_not_value"
             />
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                startValue="{{_startValue}}"
                endValue="{{_endValueYear}}"
                chooseHalfyears="{{false}}"

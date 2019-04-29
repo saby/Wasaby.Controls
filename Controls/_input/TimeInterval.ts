@@ -3,6 +3,8 @@ import Base = require('Controls/_input/Base');
 import {descriptor} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
 
+type IOptions = IModelOptions;
+
 /**
  * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
  * <a href="/materials/demo-ws4-input-timeinterval">Demo examples.</a>.
@@ -10,7 +12,7 @@ import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/_input/interface/IInputBase
+ * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public
@@ -18,8 +20,6 @@ import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval
  *
  * @author Миронов А.Ю.
  */
-
-type IOptions = IModelOptions;
 
 class TimeInterval extends Base {
     protected _getViewModelOptions(options: IOptions): IModelOptions {

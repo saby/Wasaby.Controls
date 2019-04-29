@@ -1,0 +1,5 @@
+<div on:keydown="_keyDownHandler()"
+     on:keypress="_keyPressHandler()"
+     on:keyup="_keyUpHandler()">
+   <Controls.input:Area bind:value="_value" class="controlsDemo-BubblingEvents__area"/>
+</div>

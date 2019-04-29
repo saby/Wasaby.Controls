@@ -18,9 +18,10 @@ import Entity = require('Controls/_dragnDrop/Entity');
     * @see Controls/List/interface/IDraggable#dragStart
     */
 
-   export = Entity.extend({
+    var Items = Entity.extend({
       getItems: function() {
          return this._options.items;
       }
    });
 
+   export = Items;

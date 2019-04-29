@@ -1,5 +1,5 @@
 <div class="controlsDemo-Input-DateRange">
-   <h1>Controls.Input.Date.Range</h1>
+   <h1>Controls.dateRange:Input</h1>
    <div class="controlsDemo-Input-DatePicker__content">
       <ws:for data="mask in _masks">
          <div class="controlsDemo-Input-DateRange__row">
@@ -7,11 +7,11 @@
                {{mask}}
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">
-               <Controls.Input.Date.Range
+               <Controls.dateRange:Input
                        mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">
-               <Controls.Input.Date.Range
+               <Controls.dateRange:Input
                        bind:startValue="_startDate"
                        bind:endValue="_endDate"
                        mask="{{mask}}"/>
@@ -22,7 +22,7 @@
       <h3>Baseline with inline blocks</h3>
       <div>
          Text:
-         <Controls.Input.Date.Range
+         <Controls.dateRange:Input
                  bind:startValue="_startDate"
                  bind:endValue="_endDate"
                  mask="{{mask}}"/>
@@ -30,21 +30,21 @@
       <h3>Demo with tagStyle</h3>
       <div class="controlsDemo-Input-DateRange__row">
          <div class="controlsDemo-Input-DateRange__row-item">
-            <Controls.Input.Date.Range
+            <Controls.dateRange:Input
                     bind:startValue="_startDate"
                     bind:endValue="_endDate"
                     mask="{{mask}}"
                     startTagStyle="{{'info'}}"/>
          </div>
          <div class="controlsDemo-Input-DateRange__row-item">
-            <Controls.Input.Date.Range
+            <Controls.dateRange:Input
                     bind:startValue="_startDate"
                     bind:endValue="_endDate"
                     mask="{{mask}}"
                     endTagStyle="{{'primary'}}"/>
          </div>
          <div class="controlsDemo-Input-DateRange__row-item">
-            <Controls.Input.Date.Range
+            <Controls.dateRange:Input
                     bind:startValue="_startDate"
                     bind:endValue="_endDate"
                     mask="{{mask}}"

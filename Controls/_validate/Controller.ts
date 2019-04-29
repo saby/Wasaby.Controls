@@ -6,8 +6,8 @@ import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import getZIndex = require('Controls/Utils/getZIndex');
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
-import 'css!theme?Controls/_validate/ErrorMessage';
-      
+import 'css!theme?Controls/validate';
+
 
       var _private = {
 
@@ -222,8 +222,10 @@ import 'css!theme?Controls/_validate/ErrorMessage';
          _mouseInfoboxHandler: function(event) {
             if (event.type === 'mouseenter') {
                this._hoverInfoboxHandler(this);
-            } else {
+            } else if (event.type === 'mouseleave'){
                this._mouseLeaveHandler(this);
+            } else if (event.type === 'close') {
+               this._isOpened = false;
             }
          },
          _mouseLeaveHandler: function() {
@@ -260,4 +262,4 @@ import 'css!theme?Controls/_validate/ErrorMessage';
          _private: _private
       });
       export = Validate;
-   
+

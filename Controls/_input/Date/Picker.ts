@@ -4,7 +4,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import IDateTimeMask = require('Controls/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Date/Picker/Picker');
-import 'css!theme?Controls/_input/Date/Picker/Picker';
+import 'css!theme?Controls/input';
 
    /**
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
@@ -78,8 +78,6 @@ import 'css!theme?Controls/_input/Date/Picker/Picker';
             textValue = stringValueConverter.getStringByValue(startValue);
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
-         this._forceUpdate();
-         this._children.input.activate();
          this._notify('inputCompleted', [startValue, textValue]);
       },
    });

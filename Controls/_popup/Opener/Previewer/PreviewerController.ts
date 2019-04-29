@@ -1,8 +1,8 @@
 import Deferred = require('Core/Deferred');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
-import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
-      
+import 'css!theme?Controls/popup';
+
 
       var PreviewerController = StickyController.constructor.extend({
          _openedPopupId: null,
@@ -45,4 +45,4 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
       });
 
       export = new PreviewerController();
-   
+

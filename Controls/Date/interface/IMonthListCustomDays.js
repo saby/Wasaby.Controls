@@ -4,7 +4,7 @@ define('Controls/Date/interface/IMonthListCustomDays', [
    'use strict';
 
    /**
-    * An interface for controls based on Controls/Date/MonthList and allowing you to draw your data
+    * An interface for controls based on Controls/calendar:MonthList and allowing you to draw your data
     * on the cells of the month.
     * @interface Controls/Date/interface/IMonthListCustomDays
     * @public

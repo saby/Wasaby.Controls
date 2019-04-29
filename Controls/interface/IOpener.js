@@ -58,7 +58,7 @@ define('Controls/interface/IOpener', [], function() {
     * @example
     * In this example, we subscribe to close event and remove item at list
     * <pre>
-    *    <Controls.Popup.Opener.Stack on:close="_popupCloseHandler()" />
+    *    <Controls.popup:Stack on:close="_popupCloseHandler()" />
     * </pre>
     *
     * <pre>
@@ -78,7 +78,7 @@ define('Controls/interface/IOpener', [], function() {
     * In this example, we subscribe to result event and save user data.
     * <pre>
     *    // MainControl.wml
-    *    <Controls.Popup.Opener.Stack on:result="_popupResultHandler()" />
+    *    <Controls.popup:Stack on:result="_popupResultHandler()" />
     * </pre>
     *
     * <pre>
@@ -109,7 +109,7 @@ define('Controls/interface/IOpener', [], function() {
     * @example
     * In this example, we subscribe to open event and change text at input control
     * <pre>
-    *    <Controls.Popup.Opener.Stack on:open="_popupOpenHandler()" />
+    *    <Controls.popup:Stack on:open="_popupOpenHandler()" />
     * </pre>
     *
     * <pre>

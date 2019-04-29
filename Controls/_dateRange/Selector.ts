@@ -5,7 +5,6 @@ import IInputSelectable from './interfaces/IInputSelectable';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
-import 'css!theme?Controls/_dateRange/Selector/Selector';
 
 /**
  * Controls that allows user to select date with start and end values in calendar.
@@ -77,7 +76,6 @@ var Component = BaseControl.extend({
     _onResult: function (startValue, endValue) {
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
-        this._forceUpdate();
     },
 
     _rangeChangedHandler: function(event, startValue, endValue) {
@@ -98,5 +96,5 @@ Component.getDefaultOptions = function () {
 Component.getOptionTypes = function () {
     return coreMerge(coreMerge({}, IInputSelectable.getOptionTypes()), ILinkView.getOptionTypes());
 };
-
+Component._theme = ['Controls/dateRange'];
 export default Component;

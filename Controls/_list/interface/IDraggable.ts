@@ -36,7 +36,7 @@
 /**
  * @name Controls/_list/interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
- * @default Controls/DragNDrop/DraggingTemplate
+ * @default Controls/dragnDrop:DraggingTemplate
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
  * @example
  * The following example shows how to use a standard dragging template.
@@ -46,7 +46,7 @@
  *                   on:dragStart="_onDragStart()"
  *                   itemsDragNDrop="allow">
  *       <ws:draggingTemplate>
- *          <ws:partial template="Controls/DragNDrop/DraggingTemplate"
+ *          <ws:partial template="Controls/dragnDrop:DraggingTemplate"
  *                      mainText="{{draggingTemplate.entity._options.mainText}}"
  *                      image="{{draggingTemplate.entity._options.image}}"
  *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
@@ -79,7 +79,7 @@
  * @event Controls/_list/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
- * @returns {Controls/DragNDrop/Entity/Items)
+ * @returns {Controls/_dragnDrop/Entity/Items)
  * @remark To start a drag'n'drop move from an event, you must return the move entity.
  * @example
  * The following example shows how to start moving items using drag'n'drop if all items are of the same type.
@@ -123,7 +123,7 @@
 /**
  * @event Controls/_list/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
  * @param {MovePosition} position Position to move.
  * @example
@@ -161,7 +161,7 @@
 /**
  * @event Controls/_list/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
  * @remark You can use the event to allow dragging items to the current list from another list.
  * @example
@@ -206,7 +206,7 @@
 /**
  * @event Controls/_list/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
  * @param {MovePosition} position Position to move.
  * @returns {Boolean}

@@ -1,0 +1,5 @@
+<ws:partial
+   template="wml!Controls/_grid/Item"
+   scope="{{_options}}"
+   colspanTemplate="{{itemData.isEditing ? content}}"
+   colspan="{{itemData.isEditing}}"/>

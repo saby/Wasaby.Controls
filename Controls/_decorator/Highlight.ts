@@ -3,8 +3,7 @@ import Control = require('Core/Control');
 import RegExpUtil = require('Controls/Utils/RegExp');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_decorator/Highlight/Highlight');
-import 'css!theme?Controls/_decorator/Highlight/Highlight';
-      
+
 
       /**
        * Highlighting the searched phrase.
@@ -240,6 +239,6 @@ import 'css!theme?Controls/_decorator/Highlight/Highlight';
             class: 'controls-Highlight_highlight'
          };
       };
-
+Highlight._theme = ['Controls/decorator'];
       export = Highlight;
-   
+

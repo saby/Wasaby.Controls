@@ -5,7 +5,7 @@
    <div>selectionProcessing: {{_selectionProcessing}}</div>
    <div>selectionBaseValue: {{_selectionBaseValue}}</div>
    <div>selectionHoveredValue: {{_selectionHoveredValue}}</div>
-   <Controls.Date.MonthList
+   <Controls.calendar:MonthList
       attr:style="margin: 10px; border: red;"
       calendarSource="{{_source}}"
       bind:startValue="_startValue"
@@ -24,7 +24,7 @@
             </ws:contentTemplate>
          </ws:partial>
       </ws:dayTemplate>
-   </Controls.Date.MonthList>
+   </Controls.calendar:MonthList>
    <Controls.buttons:Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
    <Controls.buttons:Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>
    <Controls.buttons:Button caption="_setSelection" style="buttonAdd" on:click="_setSelection()"/>
