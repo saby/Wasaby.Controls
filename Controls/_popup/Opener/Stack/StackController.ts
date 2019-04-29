@@ -5,7 +5,7 @@ import TargetCoords = require('Controls/_popup/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('wml!Controls/_popup/Opener/Stack/StackContent');
-import 'css!theme?Controls/_popup/Opener/Stack/Stack';
+import 'css!theme?Controls/popup';
 
       var STACK_CLASS = 'controls-Stack';
       var _private = {

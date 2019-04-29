@@ -6,7 +6,7 @@ import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
-import 'css!theme?Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader';
+import 'css!theme?Controls/scroll';
 
 
 
