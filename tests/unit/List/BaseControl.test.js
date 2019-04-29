@@ -248,48 +248,65 @@ define([
       });
 
 
-      it('errback to callback', function(done) {
-         var source = new sourceLib.Memory({
-            idProperty: 'id',
-            data: data
-         });
+      it('errback to callback', function() {
+         return new Promise(function(resolve, reject) {
+            var source = new sourceLib.Memory({
+               data: [{
+                  id: 11,
+                  key: 1,
+                  val: 'first'
+               }, {
+                  id: 22,
+                  key: 2,
+                  val: 'second'
+               }]
+            });
 
-
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel
-         };
-
-         var ctrl = new lists.BaseControl(cfg);
-
-
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-
-         // waiting for first load
-         setTimeout(function() {
-            // emulate loading error
-            ctrl._sourceController.load = function() {
-               var def = new cDeferred();
-               def.errback();
-               return def;
+            var cfg = {
+               keyProperty: 'key',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'key'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'key'
+               },
+               viewModelConstructor: lists.ListViewModel
             };
 
+            var ctrl = new lists.BaseControl(cfg);
+
+
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+
+            // waiting for first load
+            setTimeout(function () {
+               try {
+                  assert.equal(ctrl._items.getIdProperty(), cfg.keyProperty);
+               } catch (e) {
+                  reject(e);
+               }
+
+               // emulate loading error
+               ctrl._sourceController.load = function () {
+                  var def = new cDeferred();
+                  def.errback();
+                  return def;
+               };
+
             lists.BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
-               done();
+               resolve();
             }).addErrback(function() {
-               assert.isTrue(false, 'reload() returns errback');
-               done();
+               try {assert.isTrue(false, 'reload() returns errback');
+               } catch(e) {
+                     reject(e);
+                  }
+                  resolve();
             });
-         }, 100);
+         }, 100);});
       });
 
 

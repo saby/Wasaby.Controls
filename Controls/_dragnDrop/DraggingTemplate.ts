@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemplate');
-import 'css!theme?Controls/_dragnDrop/DraggingTemplate/DraggingTemplate';
 
    var MAX_ITEMS_COUNT = 999;
 
@@ -191,6 +190,7 @@ import 'css!theme?Controls/_dragnDrop/DraggingTemplate/DraggingTemplate';
     */
 
    var DraggingTemplate = Control.extend({
+      _theme: ['Controls/dragnDrop'],
       _template: template,
 
       _beforeMount: function(options) {

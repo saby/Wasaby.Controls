@@ -17,7 +17,7 @@ import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_Conte
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
 
-import 'css!theme?Controls/_lookup/Lookup/Lookup';
+import 'css!theme?Controls/lookup';
 
 
    var

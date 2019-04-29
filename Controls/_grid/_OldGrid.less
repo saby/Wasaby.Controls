@@ -1,9 +1,9 @@
 .ws-is-not-full-grid-support {
-  .controls-Grid_layout_fixed {
-    table-layout: fixed;
-  }
   .controls-Grid_master {
     padding-right: 0;
+  }
+  .controls-Grid__header {
+    display: inline-flex;
   }
   .controls-itemActionsV_style_master {
     //because of selected item border in Grid is realized by box-shadow, itemAction overlaps bottom shadow by z-index
@@ -40,6 +40,10 @@
     }
     .controls-Grid__row-cell_selected__last-master:after {
       display: none;
+    }
+
+    .controls-Grid_layout_fixed {
+      table-layout: fixed;
     }
     .controls-Grid__colgroup-columnMultiselect {
       width: @width_Grid-cell-checkbox;
