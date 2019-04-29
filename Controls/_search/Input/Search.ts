@@ -71,7 +71,9 @@ var Search = inputMod.Base.extend({
    _initProperties: function() {
       Search.superclass._initProperties.apply(this, arguments);
 
-      this._field.scope.controlName = 'Search';
+      var CONTROL_NAME = 'Search';
+      this._field.scope.controlName = CONTROL_NAME;
+      this._readOnlyField.scope.controlName = CONTROL_NAME;
 
       this._afterFieldWrapper.template = buttonsTemplate;
       this._afterFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
