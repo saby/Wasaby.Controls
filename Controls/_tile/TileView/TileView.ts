@@ -7,45 +7,51 @@ import { IoC } from 'Env/Env';
 import 'css!theme?Controls/_tile/TileView/TileView';
 
 var _private = {
-    getFixedPosition: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
+    getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
         var
             result,
             additionalWidth = (itemNewSize.width - itemRect.width) / 2,
             additionalHeightBottom = (itemNewSize.height - itemRect.height * zoomCoefficient),
             additionalHeight = (itemNewSize.height - itemRect.height - additionalHeightBottom) / 2,
-            leftOffset = itemRect.left - additionalWidth,
-            topOffset = itemRect.top - additionalHeight,
-            rightOffset = containerRect.width - (itemRect.right + additionalWidth),
-            bottomOffset = containerRect.height - (itemRect.bottom + additionalHeight + additionalHeightBottom);
+            leftOffset = itemRect.left - (containerRect.left + additionalWidth),
+            topOffset = itemRect.top - (containerRect.top + additionalHeight),
+            rightOffset = containerRect.right - (itemRect.right + additionalWidth),
+            bottomOffset = containerRect.bottom - (itemRect.bottom + additionalHeight + additionalHeightBottom);
 
-        if (leftOffset < 0) {
-            rightOffset += leftOffset;
-            leftOffset = 0;
-        } else if (rightOffset < 0) {
-            leftOffset += rightOffset;
-            rightOffset = 0;
-        }
-        if (topOffset < 0) {
-            bottomOffset += topOffset;
-            topOffset = 0;
-        } else if (bottomOffset < 0) {
-            topOffset += bottomOffset;
-            bottomOffset = 0;
-        }
-
-        if (leftOffset < 0 || rightOffset < 0 || topOffset < 0 || bottomOffset < 0) {
-            result = null;
-        } else {
-            result = {
-                left: leftOffset,
-                right: rightOffset,
-                top: topOffset,
-                bottom: bottomOffset
-            };
-        }
-        return result;
+        return _private.getCorrectPosition(topOffset, rightOffset, bottomOffset, leftOffset);
     },
-    getItemPosition: function (itemContainerRect, containerRect) {
+    getPositionInDocument: function(position, containerRect, documentRect) {
+        var
+            left = position.left + containerRect.left,
+            right = position.right + (documentRect.width - containerRect.right),
+            top = position.top + containerRect.top,
+            bottom = position.bottom + (documentRect.height - containerRect.bottom);
+
+        return _private.getCorrectPosition(top, right, bottom, left);
+    },
+    getCorrectPosition: function(top, right, bottom, left) {
+        if (left < 0) {
+            right += left;
+            left = 0;
+        } else if (right < 0) {
+            left += right;
+            right = 0;
+        }
+        if (top < 0) {
+            bottom += top;
+            top = 0;
+        } else if (bottom < 0) {
+            top += bottom;
+            bottom = 0;
+        }
+
+        if (left < 0 || right < 0 || top < 0 || bottom < 0) {
+            return null;
+        } else {
+            return {left, right, top, bottom};
+        }
+    },
+    getItemStartPosition: function (itemContainerRect, containerRect) {
         return {
             top: itemContainerRect.top,
             left: itemContainerRect.left,
@@ -168,6 +174,7 @@ var TileView = ListView.extend({
     _calculateHoveredItemPosition: function (event, itemData) {
         var
             itemSize,
+            container,
             itemContainer,
             containerRect,
             itemContainerRect;
@@ -176,7 +183,8 @@ var TileView = ListView.extend({
         if (!event.target.closest('.js-controls-TileView__withoutZoom')) {
             itemContainer = event.target.closest('.controls-TileView__item');
             itemContainerRect = itemContainer.getBoundingClientRect();
-            containerRect = document.documentElement.getBoundingClientRect();
+            container = this._options.tileScalingMode === TILE_SCALING_MODE.INSIDE ? this._children.tileContainer : document.documentElement;
+            containerRect = container.getBoundingClientRect();
             itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
             this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
@@ -185,11 +193,15 @@ var TileView = ListView.extend({
     _prepareHoveredItem: function (itemData, itemContainerRect, itemSize, containerRect) {
         var
             self = this,
-            position = _private.getFixedPosition(itemSize, itemContainerRect, containerRect, this._getZoomCoefficient());
+            documentRect,
+            itemStartPosition,
+            position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, this._getZoomCoefficient());
 
         if (position) {
+            documentRect = document.documentElement.getBoundingClientRect();
+            itemStartPosition = this._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemStartPosition(itemContainerRect, documentRect) : null;
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, self._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
