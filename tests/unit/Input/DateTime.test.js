@@ -118,23 +118,6 @@ define([
             sandbox.restore();
          });
 
-         it('should generate "inputCompleted" event after  insert key pressed and focus out.', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(input.DateBase, options),
-               event = {
-                  nativeEvent: {
-                     keyCode: constants.key.insert
-                  },
-                  stopImmediatePropagation: sinon.fake()
-               };
-            sandbox.stub(component, '_notify');
-            component._onKeyDown(event);
-            sinon.assert.neverCalledWith(component._notify, 'inputCompleted');
-            component._onDeactivated();
-            sinon.assert.calledWith(component._notify, 'inputCompleted');
-            sandbox.restore();
-         });
-
          it('should increase current date on one day by plus key press', function() {
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(input.DateBase, options),
