@@ -1,5 +1,5 @@
 <div class="controls-StackTemplate">
-    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
+    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}" scope="{{_options}}">
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">
                 <ws:if data="{{_options.caption || _options.headingCaption}}">
