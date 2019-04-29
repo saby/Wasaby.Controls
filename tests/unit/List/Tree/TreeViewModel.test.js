@@ -449,7 +449,7 @@ define([
                   idProperty: 'id'
                })
             };
-            var SETVM = new TreeViewModel(singleExpangConfig);
+            var SETVM = new treeGrid.TreeViewModel(singleExpangConfig);
             SETVM.toggleExpanded(treeViewModel.getItemById('1', cfg.keyProperty), true);
             assert.deepEqual({'1': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 1.');
             SETVM.toggleExpanded(treeViewModel.getItemById('2', cfg.keyProperty), true);
