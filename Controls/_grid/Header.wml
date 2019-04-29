@@ -61,7 +61,7 @@
       </thead>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-         <ws:partial template="headContent" />
+         <ws:partial attr:class="controls-Grid__header" template="headContent" />
    </ws:else>
    <ws:else>
       <div class="controls-Grid__header">
