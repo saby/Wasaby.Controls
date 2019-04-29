@@ -3,7 +3,7 @@
         <div class="exampleBlock">
             <h2>Counter</h2>
             <div class="wrapper">
-                <Controls._heading:Counter attr:class="ControlsDemo__header" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_counterCaption}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}"/>
+                <Controls.heading:Counter attr:class="ControlsDemo__header" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_counterCaption}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}"/>
             </div>
         </div>
         <div class="optionsBlock">

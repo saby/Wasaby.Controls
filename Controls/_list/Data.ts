@@ -5,6 +5,7 @@ import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
 import source = require('Types/source');
+import clone = require('Core/core-clone');
 
 import {RecordSet} from 'Types/collection'
 import {ICrud} from 'Types/source';
@@ -93,11 +94,18 @@ type GetSourceResult = {
          },
 
          resolveOptions: function(self, options) {
-            self._filter = options.filter;
             self._navigation = options.navigation;
             self._source = options.source;
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
+
+            if (self._filter !== options.filter) {
+               self._filter = clone(options.filter);
+
+               if (options.parentProperty && options.root) {
+                  self._filter[options.parentProperty] = options.root;
+               }
+            }
          },
          
          resolvePrefetchSourceResult: function(self, result) {

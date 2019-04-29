@@ -5,7 +5,7 @@ define([
    'Core/Deferred',
    'Types/source',
    'Controls/list',
-   'Controls/List/Tree/TreeViewModel',
+   'Controls/treeGrid',
    'Controls/Constants'
 ], function(
    EditInPlace,
@@ -14,7 +14,7 @@ define([
    Deferred,
    sourceLib,
    lists,
-   TreeViewModel,
+   treeGrid,
    Constants
 ) {
    describe('Controls.List.EditInPlace', function() {
@@ -113,7 +113,7 @@ define([
             keyProperty: 'id',
             displayProperty: 'title'
          });
-         treeModel = new TreeViewModel({
+         treeModel = new treeGrid.TreeViewModel({
             items: new collection.RecordSet({
                rawData: treeData,
                idProperty: 'id'

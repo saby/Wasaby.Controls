@@ -6,6 +6,8 @@
  * @includes ButtonContainer Controls/_filter/Button/Container
  * @includes FastContainer Controls/_filter/Fast/Container
  * @includes Controller Controls/_filter/Controller
+ * @includes ButtonStyles Controls/_filter/Button/Styles
+ * @inculdes FastStyles Controls/_filter/Fast/FastStyles
  * @public
  * @author Kraynov D.
  */

@@ -1,6 +1,6 @@
 /**
  * @author Золотова Элина
- * @mixin Controls/Filter/Button/Panel/Styles
+ * @mixin Controls/_filter/Button/Panel/Styles
  * @public
  *
  * @css @background-color_FilterPanel Background color of filter panel.

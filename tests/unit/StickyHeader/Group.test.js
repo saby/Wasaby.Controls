@@ -185,8 +185,8 @@ define([
          });
       });
 
-      describe('set bottom', function() {
-         it('should update bottom on internal headers', function () {
+      describe('set top', function() {
+         it('should update top on internal headers', function () {
             const component = createComponent(StickyHeader, {});
             component._headers[0] = {
                inst: {
@@ -211,6 +211,28 @@ define([
          });
       });
 
+      describe('get height', function() {
+         it('should return the height of one of the headers', function () {
+            const
+               component = createComponent(StickyHeader, {}),
+               height = 10;
+            component._headers = {
+               'header1': {
+                  inst: {
+                     height: height
+                  }
+               }
+            };
+            assert.strictEqual(component.height, height);
+         });
+         it('should return 0 if there are no fixed headers', function () {
+            const
+               component = createComponent(StickyHeader, {});
+            component._headers = {};
+            assert.strictEqual(component.height, 0);
+         });
+      });
+
       describe('_stickyRegisterHandler', function() {
          it('should stopImmediatePropagation event', function() {
             const
@@ -231,20 +253,20 @@ define([
                   stopImmediatePropagation: sinon.fake()
                },
                param = { id: 2 };
-            component._stickyRegisterHandler(event, { id: 2 }, true);
+            component._stickyRegisterHandler(event, param, true);
             assert.deepEqual(component._headers, { 2: param });
          });
          it('should unregister deleted header', function() {
             const
                component = createComponent(StickyHeader, options);
             let event = {
-               blockUpdate: false,
-               stopImmediatePropagation: sinon.fake()
-            },
-            id = 2;
-            component._headers[id] = { id: 2 };
-            component._stickyRegisterHandler(event, { id: 2 }, false);
-            assert.isUndefined(component._headers[2]);
+                  blockUpdate: false,
+                  stopImmediatePropagation: sinon.fake()
+               },
+               id = 2;
+            component._headers[id] = { id: id };
+            component._stickyRegisterHandler(event, { id: id }, false);
+            assert.isUndefined(component._headers[id]);
          });
       });
    });

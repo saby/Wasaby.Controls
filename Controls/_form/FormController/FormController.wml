@@ -12,7 +12,7 @@
          name="crud"
          dataSource="{{ _source }}">
       <div>
-         <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+         <Controls.popup:Confirmation name="popupOpener"/>
          <Controls.dataSource:error.Container
             name="errorContainer"
             viewConfig="{{ __error }}"

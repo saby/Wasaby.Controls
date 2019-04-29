@@ -48,14 +48,14 @@ define('Controls/interface/IInfoboxOptions', [
     * @example
     * userControl.wml
     * <pre>
-    *     <Controls.Popup.Opener.Stack name="stack">
+    *     <Controls.popup:Stack name="stack">
     *         <ws:popupOptions template="Controls-demo/Popup/TestStack" modal="{{true}}" autofocus="{{false}}">
     *            <ws:templateOptions key="111"/>
     *            <ws:eventHandlers onResult="{{_onResultHandler}}" onClose="{{_onCloseHandler}}" />
     *         </ws:popupOptions>
-    *      </Controls.Popup.Opener.Stack>
+    *      </Controls.popup:Stack>
     *
-    *      <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
+    *      <Controls.buttons:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
     * </pre>
     * userControl.js
     * <pre>
@@ -91,7 +91,7 @@ define('Controls/interface/IInfoboxOptions', [
     * TestStack.wml
     * <pre>
     *     ...
-    *     <Controls.Button name="sendDataButton" caption="sendData" on:click="_sendData()"/>
+    *     <Controls.buttons:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
     *     ...
     * </pre>
     * TestStack.js

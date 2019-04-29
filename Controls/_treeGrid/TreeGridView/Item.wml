@@ -141,9 +141,19 @@
       <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
-      <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-         <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
-      </ws:for>
+      <ws:if data="{{itemData.isEditing}}">
+         <div attr:style="{{itemData.editingRowStyles}}">
+            <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
+               <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            </ws:for>
+         </div>
+      </ws:if>
+      <ws:else>
+         <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
+            <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         </ws:for>
+      </ws:else>
+
    </ws:else>
 
 </ws:else>
