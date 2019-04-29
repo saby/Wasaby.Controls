@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="Area">
    <ws:componentClass>
-      <Controls.Popup.Opener.InfoBox name="infoBoxArea"/>
+      <Controls.popup:Infobox name="infoBoxArea"/>
       <Controls.input:Area
          attr:id="main_field"
          attr:class="demo-TextBox ControlsDemo-Area__demo"

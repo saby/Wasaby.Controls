@@ -1,9 +1,9 @@
 define(
    [
       'Controls/Input/Mask/Formatter',
-      'Controls/Input/Mask/FormatBuilder'
+      'Controls/input'
    ],
-   function(Formatter, FormatBuilder) {
+   function(Formatter, input) {
 
       'use strict';
 
@@ -14,12 +14,12 @@ define(
                'l': '[а-яa-zё]'
             },
             format = [
-               FormatBuilder.getFormat('dd.dd', formatMaskChars, ' '),
-               FormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ''),
-               FormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ' '),
-               FormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ''),
-               FormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ' '),
-               FormatBuilder.getFormat('(d\\*l\\{0,3})(d\\{0,3}l\\*)', formatMaskChars, '')
+               input.MaskFormatBuilder.getFormat('dd.dd', formatMaskChars, ' '),
+               input.MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ''),
+               input.MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ' '),
+               input.MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ''),
+               input.MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ' '),
+               input.MaskFormatBuilder.getFormat('(d\\*l\\{0,3})(d\\{0,3}l\\*)', formatMaskChars, '')
             ],
             result;
          describe('_private.getValueGroups', function() {

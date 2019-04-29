@@ -6,6 +6,7 @@
  * @includes DraggingTemplate Controls/_dragnDrop/DraggingTemplate
  * @includes Entity Controls/_dragnDrop/Entity
  * @includes ItemsEntity Controls/_dragnDrop/Entity/Items
+ * @includes DraggingTemplateStyles Controls/_dragnDrop/DraggingTemplate/Styles
  * @public
  * @author Авраменко А. С.
  */

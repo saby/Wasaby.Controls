@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_popupTemplate/Dialog/Dialog';
+import 'css!theme?Controls/popupTemplate';
 
 
       var DialogTemplate = Control.extend({

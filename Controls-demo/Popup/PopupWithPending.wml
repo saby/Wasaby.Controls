@@ -8,7 +8,7 @@
       </ws:headerContentTemplate>
       <ws:bodyContentTemplate>
          <div style="margin-left: 8px; margin-top: 8px;">
-            <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+            <Controls.popup:Confirmation name="popupOpener"/>
             <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="_record.nameText" placeholder="validator isRequired" name="nameText" attr:class="ControlsDemo-PopupPage__withPendingInput"/>
          </div>
       </ws:bodyContentTemplate>

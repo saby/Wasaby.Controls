@@ -8,7 +8,7 @@ define('Controls/Input/Date/RangeLink', [
    'use strict';
 
    /*IoC.resolve('ILogger').error(
-      'Controls/Input/Date/Range' +
+      'Controls/dateRange:Input' +
       'This control is deprecated. Use \'Controls/dateRange:Selector\' instead'
    );*/
 

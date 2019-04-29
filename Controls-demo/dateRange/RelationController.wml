@@ -55,13 +55,13 @@
          <Controls.dateRange:RelationWrapper
                number="{{0}}"
                ranges="{{content.ranges}}">
-            <Controls.Input.Date.RangeLinkLite attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.dateRange:RelationButton bind:value="_bindType2"/>
          <Controls.dateRange:RelationWrapper
                number="{{1}}"
                ranges="{{content.ranges}}">
-            <Controls.Input.Date.RangeLinkLite attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.buttons:Button
             icon="icon-medium icon-MarkRightBold icon-primary"

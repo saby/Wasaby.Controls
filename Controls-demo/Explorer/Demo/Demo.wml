@@ -1,7 +1,7 @@
 <div class="demo-Tile">
    <h1>Плитка</h1>
    <h2>Плитка с одинаковой шириной</h2>
-   <Controls.explorers:View
+   <Controls.explorer:View
       attr:class="demo-Tile__static"
       parentProperty="parent"
       nodeProperty="type"
@@ -26,7 +26,7 @@
             </ws:contentTemplate>
          </ws:partial>
       </ws:emptyTemplate>
-   </Controls.explorers:View>
+   </Controls.explorer:View>
    <h2>Плитка с разной шириной (без увеличения)</h2>
    <Controls.tile:View
       attr:class="demo-Tile__dynamic"

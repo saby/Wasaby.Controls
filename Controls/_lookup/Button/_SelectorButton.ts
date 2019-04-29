@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Button/_SelectorButton');
 import itemTemplate = require('wml!Controls/_lookup/Button/itemTemplate');
-import 'css!theme?Controls/_lookup/Button/SelectorButton';
+import 'css!theme?Controls/lookup';
 
 
    var SelectorButton = Control.extend({

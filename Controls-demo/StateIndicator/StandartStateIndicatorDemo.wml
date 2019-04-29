@@ -1,5 +1,5 @@
 <div class="demo__wrapper">
-   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
+   <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
    <div >
       <h1>StateIndicator</h1>
 	   <div class="ControlsDemo__stateIndicator">

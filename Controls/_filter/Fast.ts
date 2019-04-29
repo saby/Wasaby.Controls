@@ -11,8 +11,8 @@ import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Merge = require('Core/core-merge');
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
-import 'css!theme?Controls/_filter/Fast/Fast';
-import 'css!theme?Controls/Input/Dropdown/Dropdown';
+import 'css!theme?Controls/filter';
+import 'css!theme?Controls/dropdown';
 
 
       /**
@@ -21,10 +21,10 @@ import 'css!theme?Controls/Input/Dropdown/Dropdown';
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
-       * @class Controls/Filter/Fast
+       * @class Controls/_filter/Fast
        * @extends Core/Control
        * @mixes Controls/interface/IFastFilter
-       * @mixes Controls/Filter/Fast/FastStyles
+       * @mixes Controls/_filter/Fast/FastStyles
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
@@ -214,7 +214,7 @@ import 'css!theme?Controls/Input/Dropdown/Dropdown';
          }
       };
 
-      var Fast = Control.extend(/** @lends Controls/Filter/Fast.prototype */{
+      var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
          _template: template,
          _configs: null,
          _items: null,

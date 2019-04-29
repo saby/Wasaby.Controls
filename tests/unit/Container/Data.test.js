@@ -180,5 +180,19 @@ define(
                done();
             });
          });
+
+         it('_private.resolveOptions', function() {
+            var self = {};
+            var options = {
+               filter: {},
+               root: 'test',
+               parentProperty: 'testParentProperty'
+            };
+
+            lists.DataContainer._private.resolveOptions(self, options);
+
+            assert.deepEqual(self._filter, {testParentProperty: 'test'});
+            assert.isTrue(self._filter !== options.filter);
+         });
       });
    });
