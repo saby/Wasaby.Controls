@@ -996,7 +996,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (newOptions.source) {
                 self._sourceController = new SourceController({
                     source: newOptions.source,
-                    navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    keyProperty: newOptions.keyProperty
                 });
 
                 if (receivedData) {
@@ -1090,7 +1091,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             this._sourceController = new SourceController({
                 source: newOptions.source,
-                navigation: newOptions.navigation
+                navigation: newOptions.navigation,
+                keyProperty: newOptions.keyProperty
             });
         }
 
