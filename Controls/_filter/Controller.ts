@@ -343,7 +343,7 @@ import 'Controls/Container/Data/ContextOptions';
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
        *
-       * @class Controls/Filter/Controller
+       * @class Controls/_filter/Controller
        * @extends Core/Control
        * @mixes Controls/interface/IFilter
        * @control
@@ -352,7 +352,7 @@ import 'Controls/Container/Data/ContextOptions';
        */
 
       /**
-       * @name Controls/Filter/Controller#filterButtonSource
+       * @name Controls/_filter/Controller#filterButtonSource
        * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @example
@@ -383,11 +383,11 @@ import 'Controls/Container/Data/ContextOptions';
        *       return filterButtonItems;
        *    }
        * </pre>
-       * @see Controls/Filter/Button#items
+       * @see Controls/_filter/Button#items
        */
 
       /**
-       * @name Controls/Filter/Controller#fastFilterSource
+       * @name Controls/_filter/Controller#fastFilterSource
        * @cfg {Array|Function|Types/collection:IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @example
@@ -429,21 +429,21 @@ import 'Controls/Container/Data/ContextOptions';
        *        }
        *    }
        * </pre>
-       * @see Controls/Filter/Fast#items
+       * @see Controls/_filter/Fast#items
        */
 
       /**
-       * @name Controls/Filter/Controller#historyId
+       * @name Controls/_filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
 
       /**
-       * Controls/Filter/Controller#historyItems
+       * Controls/_filter/Controller#historyItems
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
        */
 
-      var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
+      var Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
 
          _template: template,
          _historySource: null,

@@ -65,47 +65,45 @@ import cMerge = require('Core/core-merge');
 
       calculateFixedModePosition: function(popupCfg, property, targetCoords, position, positionOverflow) {
          _private.restrictContainer(position, property, popupCfg, positionOverflow);
-         _private.fixPosition(position, targetCoords);
          return position;
       },
 
       calculateOverflowModePosition: function(popupCfg, property, targetCoords, position, positionOverflow) {
          _private.moveContainer(popupCfg, position, property, positionOverflow);
-         _private.fixPosition(position, targetCoords);
          return position;
       },
 
       calculatePosition: function(popupCfg, targetCoords, direction) {
          var property = direction === 'horizontal' ? 'width' : 'height';
          var position = _private.getPosition(popupCfg, targetCoords, direction);
+         var resultPosition = position;
          var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+
          if (positionOverflow > 0) {
             if (popupCfg.fittingMode === 'fixed') {
-               return _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            }
-            if (popupCfg.fittingMode === 'overflow') {
-               return _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            }
-            _private.invertPosition(popupCfg, direction);
-
-            var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
-            var revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-            if (revertPositionOverflow > 0) {
-               if (positionOverflow < revertPositionOverflow) {
-                  _private.invertPosition(popupCfg, direction);
-                  _private.fixPosition(position, targetCoords);
-                  _private.restrictContainer(position, property, popupCfg, positionOverflow);
-                  return position;
+               resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+            } else if (popupCfg.fittingMode === 'overflow') {
+               resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+            } else {
+               _private.invertPosition(popupCfg, direction);
+               var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+               var revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+               if (revertPositionOverflow > 0) {
+                  if (positionOverflow < revertPositionOverflow) {
+                     _private.invertPosition(popupCfg, direction);
+                     _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                     resultPosition = position;
+                  } else {
+                     _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                     resultPosition = revertPosition;
+                  }
+               } else {
+                  resultPosition = revertPosition;
                }
-               _private.fixPosition(revertPosition, targetCoords);
-               _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
-               return revertPosition;
             }
-            _private.fixPosition(revertPosition, targetCoords);
-            return revertPosition;
          }
-         _private.fixPosition(position, targetCoords);
-         return position;
+         _private.fixPosition(resultPosition, targetCoords);
+         return resultPosition;
       },
 
       restrictContainer: function(position, property, popupCfg, overflow) {
@@ -120,6 +118,19 @@ import cMerge = require('Core/core-merge');
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
             // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
             position.bottom += _private.getTopScroll(targetCoords);
+         }
+
+         if (position.bottom) {
+            position.bottom = Math.max(position.bottom, 0);
+         }
+         if (position.top) {
+            position.top = Math.max(position.top, 0);
+         }
+         if (position.left) {
+            position.left = Math.max(position.left, 0);
+         }
+         if (position.right) {
+            position.right = Math.max(position.right, 0);
          }
       },
 

@@ -1017,7 +1017,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (newOptions.source) {
                 self._sourceController = new SourceController({
                     source: newOptions.source,
-                    navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    keyProperty: newOptions.keyProperty
                 });
 
 
@@ -1120,10 +1121,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
             if (this._sourceController) {
                 this._sourceController.destroy();
-            }
+            } 
             this._sourceController = new SourceController({
                 source: newOptions.source,
-                navigation: newNavigation
+                navigation: newNavigation,
+                keyProperty: newOptions.keyProperty
             });
         }
 

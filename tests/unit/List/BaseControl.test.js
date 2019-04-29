@@ -2,12 +2,10 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/BaseControl',
-   'Controls/List/resources/utils/ItemsUtil',
    'Types/source',
    'Types/collection',
    'Controls/list',
-   'Controls/List/Tree/TreeViewModel',
+   'Controls/treeGrid',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
@@ -15,7 +13,7 @@ define([
    'Core/core-clone',
    'Types/entity',
    'Core/polyfill/PromiseAPIDeferred'
-], function(BaseControl, ItemsUtil, sourceLib, collection, lists, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone, entity) {
+], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -94,7 +92,7 @@ define([
             source: source,
             filter: filter
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          var mountResult = ctrl._beforeMount(cfg);
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
@@ -124,7 +122,7 @@ define([
             dataLoadCallback: function() {
                dataLoadFired = true;
             },
-            viewModelConstructor: TreeViewModel,
+            viewModelConstructor: treeGrid.TreeViewModel,
             viewModelConfig: {
                items: [],
                keyProperty: 'id'
@@ -144,7 +142,7 @@ define([
             assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
-            assert.equal(ctrl._viewModelConstructor, TreeViewModel);
+            assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
             assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel'));
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
@@ -182,7 +180,7 @@ define([
          var itemsContainer = {
             qwe: 123
          },
-             ctrl = new BaseControl(cfg);
+             ctrl = new lists.BaseControl(cfg);
 
          assert.isUndefined(ctrl._virtualScroll);
          ctrl._beforeMount(cfg);
@@ -217,7 +215,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             source: source
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          return new Promise(function (resolve, reject) {
             ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
@@ -243,55 +241,72 @@ define([
             return [{test: 'DESC'}, {test2: 'DESC'}];
          };
 
-         assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
-         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
-         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
-         assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
       });
 
 
-      it('errback to callback', function(done) {
-         var source = new sourceLib.Memory({
-            idProperty: 'id',
-            data: data
-         });
+      it('errback to callback', function() {
+         return new Promise(function(resolve, reject) {
+            var source = new sourceLib.Memory({
+               data: [{
+                  id: 11,
+                  key: 1,
+                  val: 'first'
+               }, {
+                  id: 22,
+                  key: 2,
+                  val: 'second'
+               }]
+            });
 
-
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel
-         };
-
-         var ctrl = new BaseControl(cfg);
-
-
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-
-         // waiting for first load
-         setTimeout(function() {
-            // emulate loading error
-            ctrl._sourceController.load = function() {
-               var def = new cDeferred();
-               def.errback();
-               return def;
+            var cfg = {
+               keyProperty: 'key',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'key'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'key'
+               },
+               viewModelConstructor: lists.ListViewModel
             };
 
-            BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
-               done();
+            var ctrl = new lists.BaseControl(cfg);
+
+
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+
+            // waiting for first load
+            setTimeout(function () {
+               try {
+                  assert.equal(ctrl._items.getIdProperty(), cfg.keyProperty);
+               } catch (e) {
+                  reject(e);
+               }
+
+               // emulate loading error
+               ctrl._sourceController.load = function () {
+                  var def = new cDeferred();
+                  def.errback();
+                  return def;
+               };
+
+            lists.BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
+               resolve();
             }).addErrback(function() {
-               assert.isTrue(false, 'reload() returns errback');
-               done();
+               try {assert.isTrue(false, 'reload() returns errback');
+               } catch(e) {
+                     reject(e);
+                  }
+                  resolve();
             });
-         }, 100);
+         }, 100);});
       });
 
 
@@ -320,7 +335,7 @@ define([
             navigation: {}
          };
 
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          assert.isFalse(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
@@ -349,7 +364,7 @@ define([
             done();
          }, 1);
 
-         ctrl = new BaseControl(cfg);
+         ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
@@ -392,16 +407,16 @@ define([
             }
          };
 
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
 
 
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          setTimeout(function() {
-            BaseControl._private.loadToDirection(ctrl, 'down');
+            lists.BaseControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function() {
-               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
                done();
@@ -442,7 +457,7 @@ define([
             }
          };
 
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
 
 
          ctrl.saveOptions(cfg);
@@ -452,11 +467,11 @@ define([
             assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
             assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
-            BaseControl._private.loadToDirection(ctrl, 'down');
+            lists.BaseControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function() {
                assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
 
-               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                done();
             }, 100);
@@ -510,7 +525,7 @@ define([
                   }
                };
 
-            ctrl = new BaseControl(cfg);
+            ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             ctrl._beforeMount(cfg);
          });
@@ -627,7 +642,7 @@ define([
                }
             ];
          tests.forEach(function(test, index) {
-            BaseControl._private.prepareFooter.apply(null, test.data);
+            lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.deepEqual(test.data[0], test.result, 'Invalid prepare footer on step #' + index);
          });
       });
@@ -651,7 +666,7 @@ define([
                    view: 'infinity'
                 }
              },
-             instance = new BaseControl(cfg),
+             instance = new lists.BaseControl(cfg),
              itemData = {
                 key: 1
              };
@@ -691,7 +706,7 @@ define([
         var notified = false;
 
          // Without marker
-         BaseControl._private.enterHandler({
+         lists.BaseControl._private.enterHandler({
             getViewModel: function () {
                return {
                   getMarkedItem: function () {
@@ -707,7 +722,7 @@ define([
 
          var myMarkedItem = {qwe: 123};
          // With marker
-         BaseControl._private.enterHandler({
+         lists.BaseControl._private.enterHandler({
             getViewModel: function () {
                return {
                   getMarkedItem: function () {
@@ -755,14 +770,14 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          setTimeout(function() {
-            BaseControl._private.loadToDirection(ctrl, 'up');
+            lists.BaseControl._private.loadToDirection(ctrl, 'up');
             setTimeout(function() {
-               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                done();
             }, 100);
          }, 100);
@@ -800,7 +815,7 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -812,7 +827,7 @@ define([
              */
             ctrl._loadedItems = null;
 
-            BaseControl._private.onScrollLoadEdge(ctrl, 'down');
+            lists.BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items weren\\\'t loaded');
                done();
@@ -852,7 +867,7 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -864,14 +879,14 @@ define([
              */
             ctrl._loadedItems = null;
 
-            BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
-            BaseControl._private.checkLoadToDirectionCapability(ctrl);
+            lists.BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
+            lists.BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
                //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
                try {
                   assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
-                  BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-                  BaseControl._private.checkLoadToDirectionCapability(ctrl);
+                  lists.BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+                  lists.BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
                   setTimeout(function() {
                      try {
@@ -909,9 +924,9 @@ define([
 
       it('indicator', function() {
          var cfg = {};
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
 
-         BaseControl._private.showIndicator(ctrl);
+         lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
@@ -922,11 +937,11 @@ define([
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
 
-         BaseControl._private.showIndicator(ctrl);
+         lists.BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
          // и вызовем скрытие
-         BaseControl._private.hideIndicator(ctrl);
+         lists.BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
@@ -964,14 +979,14 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            BaseControl._private.scrollToEdge(ctrl, 'down');
+            lists.BaseControl._private.scrollToEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(3, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
@@ -1014,12 +1029,12 @@ define([
                }
             },
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          // эмулируем появление скролла
-         BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1027,7 +1042,7 @@ define([
 
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            BaseControl._private.handleListScroll(ctrl, 300, 'down');
+            lists.BaseControl._private.handleListScroll(ctrl, 300, 'down');
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1035,7 +1050,7 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            BaseControl._private.handleListScroll(ctrl, 200, 'middle');
+            lists.BaseControl._private.handleListScroll(ctrl, 200, 'middle');
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1043,11 +1058,11 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
-            BaseControl._private.onScrollHide(ctrl);
+            lists.BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
-            BaseControl._private.handleListScroll(ctrl, 200, 'middle');
+            lists.BaseControl._private.handleListScroll(ctrl, 200, 'middle');
 
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
@@ -1072,14 +1087,14 @@ define([
                }
             }
          };
-         var baseControl = new BaseControl(cfg);
+         var baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
 
-         BaseControl._private.onScrollHide(baseControl);
+         lists.BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
          assert.isFalse(baseControl._isScrollShown);
 
-         BaseControl._private.onScrollShow(baseControl);
+         lists.BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
          assert.isTrue(baseControl._isScrollShown);
       });
@@ -1119,7 +1134,7 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -1131,10 +1146,10 @@ define([
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            BaseControl._private.scrollToEdge(ctrl, 'down');
+            lists.BaseControl._private.scrollToEdge(ctrl, 'down');
             assert.equal(result, 'bottom', 'List wasn\'t scrolled to bottom');
 
-            BaseControl._private.scrollToEdge(ctrl, 'up');
+            lists.BaseControl._private.scrollToEdge(ctrl, 'up');
             assert.equal(result, 'top', 'List wasn\'t scrolled to top');
 
             done();
@@ -1176,12 +1191,12 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          // эмулируем появление скролла
-         BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1244,12 +1259,12 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          // эмулируем появление скролла
-         BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1287,7 +1302,7 @@ define([
             emptyTemplate: null
          };
 
-         let baseControl = new BaseControl(baseControlOptions);
+         let baseControl = new lists.BaseControl(baseControlOptions);
          baseControl.saveOptions(baseControlOptions);
 
          return new Promise(function(resolve) {
@@ -1344,7 +1359,7 @@ define([
                 markedKey: 3,
                 viewModelConstructor: lists.ListViewModel
              },
-             lnBaseControl = new BaseControl(lnCfg);
+             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -1353,7 +1368,7 @@ define([
 
          return new Promise(function (resolve) {
             setTimeout(function () {
-               BaseControl._private.reload(lnBaseControl, lnCfg);
+               lists.BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function () {
                   assert.equal(lnBaseControl._keyDisplayedItem, null);
                   lnCfg = clone(lnCfg);
@@ -1378,7 +1393,7 @@ define([
 
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
-         BaseControl._private.scrollToItem = function() {};
+         lists.BaseControl._private.scrollToItem = function() {};
 
          var
             stopImmediateCalled = false,
@@ -1408,7 +1423,7 @@ define([
                markedKey: 1,
                viewModelConstructor: lists.ListViewModel
             },
-            lnBaseControl = new BaseControl(lnCfg);
+            lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -1509,7 +1524,7 @@ define([
                }
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._notify = function(e, args) {
@@ -1566,7 +1581,7 @@ define([
                stopPropagationCalled = true;
             }
          };
-         var ctrl = new BaseControl(cfg);
+         var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._onItemClick(event, rs.at(2), originalEvent);
@@ -1604,7 +1619,7 @@ define([
                   }
                }
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   beginEdit: function(options) {
@@ -1647,7 +1662,7 @@ define([
                   }
                }
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   beginAdd: function(options) {
@@ -1687,7 +1702,7 @@ define([
                   }
                }
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   cancelEdit: function() {
@@ -1727,7 +1742,7 @@ define([
                },
                readOnly: true
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             var result = ctrl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -1760,7 +1775,7 @@ define([
                   }
                }
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   commitEdit: function() {
@@ -1800,7 +1815,7 @@ define([
                },
                readOnly: true
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             var result = ctrl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -1837,7 +1852,7 @@ define([
                },
                readOnly: true
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             var result = ctrl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -1874,7 +1889,7 @@ define([
                },
                readOnly: true
             };
-            var ctrl = new BaseControl(cfg);
+            var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             var result = ctrl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
@@ -1884,7 +1899,7 @@ define([
 
       it('_onAnimationEnd', function() {
          var setRightSwipedItemCalled = false;
-         var ctrl = new BaseControl();
+         var ctrl = new lists.BaseControl();
          ctrl._listViewModel = {
             setRightSwipedItem: function() {
                setRightSwipedItemCalled = true;
@@ -1907,7 +1922,7 @@ define([
       it('_documentDragEnd', function() {
          var
             dragEnded,
-            ctrl = new BaseControl();
+            ctrl = new lists.BaseControl();
 
          //dragend without deferred
          dragEnded = false;
@@ -1932,23 +1947,23 @@ define([
       it('getSelectionForDragNDrop', function() {
          var selection;
 
-         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 4);
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 4);
          assert.deepEqual(selection.selected, [4, 1, 2, 3]);
          assert.deepEqual(selection.excluded, []);
 
-         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 2);
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 2);
          assert.deepEqual(selection.selected, [2, 1, 3]);
          assert.deepEqual(selection.excluded, []);
 
-         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 3);
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 3);
          assert.deepEqual(selection.selected, [3, 1, 2]);
          assert.deepEqual(selection.excluded, [4]);
 
-         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 5);
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 5);
          assert.deepEqual(selection.selected, [5, 1, 2, 3]);
          assert.deepEqual(selection.excluded, [4]);
 
-         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
          assert.deepEqual(selection.selected, [4, 1, 2, 3]);
          assert.deepEqual(selection.excluded, []);
       });
@@ -2024,7 +2039,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                fakeEvent = {
                   type: 'itemcontextmenu'
 
@@ -2085,7 +2100,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                fakeEvent = {
                   type: 'itemcontextmenu'
                },
@@ -2134,7 +2149,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                fakeEvent = {
                   type: 'itemcontextmenu'
                },
@@ -2177,7 +2192,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                fakeEvent = {
                   type: 'itemcontextmenu'
                },
@@ -2213,7 +2228,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                target = {
                   getBoundingClientRect: function() {
                      return {
@@ -2279,7 +2294,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                target = '123',
                fakeEvent = {
                   target: target,
@@ -2343,7 +2358,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg);
+               instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._listViewModel._activeItem = {
@@ -2406,7 +2421,7 @@ define([
                      multiSelectVisibility: multiSelectVisibility,
                      selectedKeysCount: 1
                   };
-               instance = new BaseControl(cfg);
+               instance = new lists.BaseControl(cfg);
                instance._children = {
                   itemActionsOpener: {
                      close: function() {}
@@ -2461,7 +2476,7 @@ define([
                      source: source,
                      itemActions: []
                   },
-                  instance = new BaseControl(cfg);
+                  instance = new lists.BaseControl(cfg);
                instance._children = {
                   itemActionsOpener: {
                      close: function() {}
@@ -2492,7 +2507,7 @@ define([
                      source: source,
                      selectedKeysCount: 1
                   },
-                  instance = new BaseControl(cfg);
+                  instance = new lists.BaseControl(cfg);
                instance._children = {
                   itemActionsOpener: {
                      close: function() {}
@@ -2522,7 +2537,7 @@ define([
                      viewModelConstructor: lists.ListViewModel,
                      source: source
                   },
-                  instance = new BaseControl(cfg),
+                  instance = new lists.BaseControl(cfg),
                   notifyCalled = false;
                instance._children = {
                   itemActionsOpener: {
@@ -2556,7 +2571,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                itemData,
                childEvent = {
                   nativeEvent: {
@@ -2613,7 +2628,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                itemData,
                childEvent = {
                   nativeEvent: {
@@ -2661,7 +2676,7 @@ define([
                   viewModelConstructor: lists.ListViewModel,
                   source: source
                },
-               instance = new BaseControl(cfg),
+               instance = new lists.BaseControl(cfg),
                itemData,
                childEvent = {
                   nativeEvent: {
@@ -2709,10 +2724,10 @@ define([
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
 
-         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
          assert.equal(baseControlMock._loadingState, 'down');
 
-         BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
          assert.isNull(baseControlMock._loadingState);
 
       });
@@ -2733,7 +2748,7 @@ define([
             source: source,
             filter: filter
          };
-         var baseCtrl = new BaseControl(cfg);
+         var baseCtrl = new lists.BaseControl(cfg);
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
@@ -2765,7 +2780,7 @@ define([
                keyProperty: 'id',
                source: source
             },
-            instance = new BaseControl(cfg);
+            instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
@@ -2793,7 +2808,7 @@ define([
                keyProperty: 'id',
                source: source
             },
-            instance = new BaseControl(cfg);
+            instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);

@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="ComboBox">
       <ws:componentClass>
-            <Controls.Popup.Opener.InfoBox name="infoBoxComboBox"/>
+            <Controls.popup:Infobox name="infoBoxComboBox"/>
             <Controls.dropdown:Combobox
                bind:value="_text1"
                name="comboBox"

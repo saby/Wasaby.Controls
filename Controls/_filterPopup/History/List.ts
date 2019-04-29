@@ -7,7 +7,7 @@ import chain = require('Types/chain');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Utils = require('Types/util');
 import historyUtils = require('Controls/_filterPopup/History/resources/historyUtils');
-import 'css!theme?Controls/_filterPopup/History/List';
+import 'css!theme?Controls/filterPopup';
 
 
    var MAX_NUMBER_ITEMS = 5;

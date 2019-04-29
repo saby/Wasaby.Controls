@@ -50,15 +50,15 @@
          <br />
          <Controls.buttons:Button caption="Отправить данные" on:click="_sendResult()" class="demo-PopupEditOpener__sendResult"/>
 
-         <Controls.Popup.Opener.Confirmation name="popupOpener" />
+         <Controls.popup:Confirmation name="popupOpener" />
 
          <div>
             <Controls.buttons:Button name="testStack" caption="testStack" on:click="openTestStack()" attr:class="ControlsDemo-PopupPage__testStackFC"/>
          </div>
 
-         <Controls.Popup.Opener.Stack name="stack" closeByExternalClick="{{false}}" template="Controls-demo/Popup/TestStack">
+         <Controls.popup:Stack name="stack" closeByExternalClick="{{false}}" template="Controls-demo/Popup/TestStack">
             <ws:templateOptions type="stack" width="600px"/>
-         </Controls.Popup.Opener.Stack>
+         </Controls.popup:Stack>
       </div>
    </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>

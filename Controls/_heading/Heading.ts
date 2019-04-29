@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_heading/Heading/Heading');
 import entity = require('Types/entity');
-import 'css!theme?Controls/_heading/Heading/Heading';
-   
+import 'css!theme?Controls/heading';
+
 
    /**
     * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.

@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/source', 'Core/core-instance'],
-   function (ItemsUtil, collection, source, cInstance) {
+define(['Controls/list', 'Types/collection', 'Types/source', 'Core/core-instance'],
+   function (list, collection, source, cInstance) {
 
       'use strict';
 
@@ -40,7 +40,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/so
          describe('ItemsUtil', function () {
             var proj;
             it('Flat display Array', function () {
-               proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1, [cfg1.itemsFilterMethod]);
+               proj = list.ItemsUtil.getDefaultDisplayFlat(data, cfg1, [cfg1.itemsFilterMethod]);
 
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
                assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
@@ -51,7 +51,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/so
                   rawData: data,
                   idProperty : 'id'
                });
-               proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1, [cfg1.itemsFilterMethod]);
+               proj = list.ItemsUtil.getDefaultDisplayFlat(rs, cfg1, [cfg1.itemsFilterMethod]);
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
                assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
 
@@ -63,13 +63,13 @@ define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/so
                   idProperty : 'id'
                });
 
-               var value = ItemsUtil.getPropertyValue(rs.at(0), 'title');
+               var value = list.ItemsUtil.getPropertyValue(rs.at(0), 'title');
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the record field');
 
-               value = ItemsUtil.getPropertyValue(data[0], 'title');
+               value = list.ItemsUtil.getPropertyValue(data[0], 'title');
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the native object field');
 
-               value = ItemsUtil.getPropertyValue('Первый', 'title');
+               value = list.ItemsUtil.getPropertyValue('Первый', 'title');
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
             });
 
@@ -82,17 +82,17 @@ define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/so
                   dictionary: ['Первый', 'Второй', 'Третий']
                });
 
-               var displayRs = ItemsUtil.getDefaultDisplayFlat(rs, {}),
-               displayArray = ItemsUtil.getDefaultDisplayFlat(data, {}),
-               displayEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
+               var displayRs = list.ItemsUtil.getDefaultDisplayFlat(rs, {}),
+               displayArray = list.ItemsUtil.getDefaultDisplayFlat(data, {}),
+               displayEnum = list.ItemsUtil.getDefaultDisplayFlat(myEnum, {});
 
-               var value = ItemsUtil.getDisplayItemById(displayRs, 2);
+               var value = list.ItemsUtil.getDisplayItemById(displayRs, 2);
                assert.equal(rs.getRecordById(2), value.getContents(), 'getItemById doesn\'t return record from recordset');
 
-               value = ItemsUtil.getDisplayItemById(displayArray, 2, 'id');
+               value = list.ItemsUtil.getDisplayItemById(displayArray, 2, 'id');
                assert.equal(data[1], value.getContents(), 'getItemById doesn\'t return object from array');
 
-               value = ItemsUtil.getDisplayItemById(displayEnum, 'Второй');
+               value = list.ItemsUtil.getDisplayItemById(displayEnum, 'Второй');
                assert.equal('Второй', value.getContents(), 'getPropertyValue doesn\'t return value of Enum');
             });
 

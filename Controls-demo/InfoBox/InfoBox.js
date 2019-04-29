@@ -4,7 +4,7 @@ define('Controls-demo/InfoBox/InfoBox',
       'wml!Controls-demo/InfoBox/InfoBox',
       'css!Controls-demo/InfoBox/resources/Infobox',
 
-      'Controls/Popup/InfoBox'
+      'Controls/popup'
    ],
    function(Control, template) {
 

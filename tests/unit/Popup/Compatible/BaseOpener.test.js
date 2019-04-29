@@ -251,6 +251,9 @@ define(
             newConfig.maximized = false;
             newConfig.canMaximize = true;
             newConfig.maxWidth = 150;
+            newConfig.minHeight = '150';
+            newConfig.maxHeight = '300';
+            newConfig.height = '320';
             newConfig.trackTarget = false;
             newConfig.closeOnTargetScroll = true;
             newConfig.closeOnTargetHide = true;

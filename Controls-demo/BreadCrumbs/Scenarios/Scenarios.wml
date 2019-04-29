@@ -1,23 +1,23 @@
 <div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Реестр без заголовков"
+      <Controls.heading:Title caption="Реестр без заголовков"
                         size="xl"/>
-      <Controls.explorers:View
+      <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="department"
          columns="{{_columns}}"
          source="{{_viewSource}}">
-      </Controls.explorers:View>
+      </Controls.explorer:View>
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Реестр с однострочными заголовками"
+      <Controls.heading:Title caption="Реестр с однострочными заголовками"
                         size="xl"/>
       <div>
          <Controls.input:Label caption='Без строки "Итого"' />
       </div>
-      <Controls.explorers:View
+      <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
@@ -26,13 +26,13 @@
          header="{{_header1}}"
          showRowSeparator="{{true}}"
          source="{{_viewSource1}}">
-      </Controls.explorers:View>
+      </Controls.explorer:View>
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
          <Controls.input:Label caption='Со строкой "Итого"' />
       </div>
-      <Controls.explorers:View
+      <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
@@ -41,7 +41,7 @@
          header="{{_header2}}"
          source="{{_viewSource2}}">
          <ws:results position="top" />
-      </Controls.explorers:View>
+      </Controls.explorer:View>
    </div>
    <div class="demo-BreadCrumbs__example">
       <div>
@@ -59,7 +59,7 @@
                </div>
             </ws:headerContentTemplate>
             <ws:bodyContentTemplate>
-               <Controls.explorers:View
+               <Controls.explorer:View
                   keyProperty="id"
                   parentProperty="parent"
                   nodeProperty="parent@"
@@ -68,15 +68,15 @@
                   header="{{_header3}}"
                   source="{{_viewSource3}}">
                   <ws:results position="top" />
-               </Controls.explorers:View>
+               </Controls.explorer:View>
             </ws:bodyContentTemplate>
          </Controls.popupTemplate:Stack>
       </div>
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Реестр с многострочными заголовками"
+      <Controls.heading:Title caption="Реестр с многострочными заголовками"
                         size="xl"/>
-      <Controls.explorers:View
+      <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
@@ -85,17 +85,17 @@
          header="{{_header4}}"
          source="{{_viewSource4}}">
          <ws:results position="top" />
-      </Controls.explorers:View>
+      </Controls.explorer:View>
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Хлебные крошки вынесены в сервисный блок"
+      <Controls.heading:Title caption="Хлебные крошки вынесены в сервисный блок"
                         size="xl"/>
       <Controls.breadcrumbs:HeadingPath items="{{_breadCrumbs6}}"
                                  backButtonStyle="primary"
                                  keyProperty="id" />
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Хлебные крошки в шапке выезжающей панели"
+      <Controls.heading:Title caption="Хлебные крошки в шапке выезжающей панели"
                         size="xl"/>
       <div>
          <Controls.popupTemplate:Stack
@@ -105,7 +105,7 @@
                <div class="demo-SeventhExample__headerWrapper">
                   <div class="demo-SeventhExample__firstRow">
                      <span class="demo-SeventhExample__header">Комиссионный товар НДС 18%</span>
-                     <Controls.Toolbar
+                     <Controls.toolbars:View
                         attr:class="demo-SeventhExample__toolbar"
                         parentProperty="parent"
                         nodeProperty="@parent"
@@ -125,7 +125,7 @@
       </div>
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Хлебные крошки в результатах поиска"
+      <Controls.heading:Title caption="Хлебные крошки в результатах поиска"
                         size="xl"/>
       <Controls.list:DataContainer source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
          <Controls.search:Controller searchParam="name" minSearchLength="{{3}}">
@@ -134,21 +134,21 @@
                   <Controls.Input.Search/>
                </Controls.search:InputContainer>
                <Controls.list:Container>
-                  <Controls.explorers:View
+                  <Controls.explorer:View
                      displayProperty="department"
                      parentProperty="parent"
                      nodeProperty="@parent"
                      columns="{{_columns}}">
-                  </Controls.explorers:View>
+                  </Controls.explorer:View>
                </Controls.list:Container>
             </div>
          </Controls.search:Controller>
       </Controls.list:DataContainer>
    </div>
    <div class="demo-BreadCrumbs__example">
-      <Controls._heading:Title caption="Заголовки занимают всю доступную ширину"
+      <Controls.heading:Title caption="Заголовки занимают всю доступную ширину"
                         size="xl"/>
-      <Controls.explorers:View
+      <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
@@ -157,7 +157,7 @@
          header="{{_header5}}"
          showRowSeparator="{{true}}"
          source="{{_viewSource1}}">
-      </Controls.explorers:View>
+      </Controls.explorer:View>
    </div>
    <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
       <Controls.breadcrumbs:Path items="{{_breadCrumbs7}}"

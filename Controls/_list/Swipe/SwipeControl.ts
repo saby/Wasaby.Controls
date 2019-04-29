@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import TouchContextField = require('Controls/Context/TouchContextField');
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
-import 'css!theme?Controls/_list/Swipe/Swipe';
+import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';

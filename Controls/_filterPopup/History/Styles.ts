@@ -1,6 +1,6 @@
 /**
  * @author Золотова Элина
- * @mixin Controls/Filter/Button/History/Styles
+ * @mixin Controls/_filterPopup/Button/History/Styles
  * @public
  *
  * @css @height_HistoryList-item Height of history row.

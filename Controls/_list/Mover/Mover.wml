@@ -1,5 +1,5 @@
-<Controls.Popup.Opener.Dialog name="dialogOpener"
+<Controls.popup:Dialog name="dialogOpener"
                               on:result="_onDialogResult()"
                               closeOnOutsideClick="{{true}}"
                               template="{{_options.moveDialogTemplate}}">
-</Controls.Popup.Opener.Dialog>
+</Controls.popup:Dialog>
