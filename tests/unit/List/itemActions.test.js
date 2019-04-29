@@ -7,7 +7,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Types/display',
-   'Controls/List/ItemActions/Utils/Actions',
+   'Controls/_list/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
 ], function(lists, source, entity, collection, display, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {

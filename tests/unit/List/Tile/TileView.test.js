@@ -1,5 +1,5 @@
-define(['Controls/List/TileView/TileView',
-   'Controls/List/TreeTileView/TreeTileViewModel',
+define(['Controls/_tile/TileView/TileView',
+   'Controls/_tile/TreeTileView/TreeTileViewModel',
    'Types/collection'
 ], function(TileView, TreeTileViewModel, collection) {
    'use strict';
