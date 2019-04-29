@@ -4,17 +4,17 @@ const SELECTION_FORMAT = [
    {
       name: 'marked',
       type: 'array',
-      kink: 'string'
+      kind: 'string'
    },
    {
       name: 'excluded',
       type: 'array',
-      kink: 'string'
+      kind: 'string'
    },
    {
       name: 'type',
       type: 'string',
-      kink: 'string'
+      kind: 'string'
    },
 ];
 
