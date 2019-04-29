@@ -1096,6 +1096,35 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._prepareResultsColumns(gridColumns, true);
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" with multiselect.');
          });
+         it('getFooterStyles without display', function() {
+            var
+                called = false,
+                savedFunc = GridViewModel._private.getFooterStyles,
+                model = new GridViewModel({
+                   columns: gridColumns
+                });
+
+            GridViewModel._private.getFooterStyles = function() {
+               called = true;
+            };
+
+            model.getDisplay = function() {
+               return 123;
+            };
+
+            model.getFooterStyles();
+            assert.isTrue(called);
+
+            called = false;
+            model.getDisplay = function() {
+               return null;
+            };
+
+            model.getFooterStyles();
+            assert.isFalse(called);
+
+            GridViewModel._private.getFooterStyles = savedFunc;
+         });
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             assert.deepEqual({
                column: {},
