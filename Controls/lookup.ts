@@ -23,6 +23,7 @@ import _CollectionController = require("Controls/_lookup/BaseController");
 import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/ItemTemplate");
 import ButtonItemTemplate = require("wml!Controls/_lookup/Button/itemTemplate");
 import Opener = require("Controls/_lookup/Opener");
+import PlaceholderChooser = require("Controls/_lookup/PlaceholderChooser");
 
 export {
    Selector,
@@ -32,5 +33,6 @@ export {
    _CollectionController,
    ItemTemplate,
    Opener,
-   ButtonItemTemplate
+   ButtonItemTemplate,
+   PlaceholderChooser
 }
