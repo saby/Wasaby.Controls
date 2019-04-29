@@ -454,9 +454,9 @@ define([
                   ['a',
                      {
                         rel: 'noreferrer',
-                        href: 'https:\\\\ya.ru'
+                        href: 'https:\\\\ya.ru\\som"e'
                      },
-                     'https:\\\\ya.ru'
+                     'https:\\\\ya.ru\\som"e'
                   ]
                ],
                ['p', ['a', { href: longLink }, longLink]],
@@ -472,7 +472,7 @@ define([
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
-               '<p>' + decoratedLinkHtml + '</p>' +
+               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>' +
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
