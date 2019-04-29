@@ -412,6 +412,49 @@ define([
             assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
          });
 
+         it('singleExpand toggleExpanded', function() {
+            var singleExpangConfig = {
+               singleExpand: true,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               parentProperty: 'parent',
+               nodeProperty: 'parent@',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        'id': 1,
+                        'parent': null,
+                        'parent@': true,
+                        'title': '1'
+                     },
+                     {
+                        'id': 2,
+                        'parent': null,
+                        'parent@': true,
+                        'title': '2'
+                     },
+                     {
+                        'id': 11,
+                        'parent': 1,
+                        'parent@': true,
+                        'title': '11'
+                     },
+                     {
+                        'id': 21,
+                        'parent': 2,
+                        'parent@': true,
+                        'title': '21'
+                     },
+                  ],
+                  idProperty: 'id'
+               })
+            };
+            var SETVM = new TreeViewModel(singleExpangConfig);
+            SETVM.toggleExpanded(treeViewModel.getItemById('1', cfg.keyProperty), true);
+            assert.deepEqual({'1': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 1.');
+            SETVM.toggleExpanded(treeViewModel.getItemById('2', cfg.keyProperty), true);
+            assert.deepEqual({'2': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
+         });
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
