@@ -4,12 +4,11 @@
 import base64 = require('Core/base64');
 import Env = require('Env/Env');
 import objectMerge = require('Core/core-merge');
-   
 
    var hrefMaxLength = 1499,
       onlySpacesRegExp = /^[ \u00a0]+$/,
       paragraphTagNameRegExp = /^(p(re)?|div)$/,
-      backSlashRegExp = /\\/g,
+      charsToScreenRegExp = /([\\"])/g,
       classes = {
          wrap: 'LinkDecorator__wrap',
          link: 'LinkDecorator__linkWrap',
@@ -184,12 +183,10 @@ import objectMerge = require('Core/core-merge');
          decoratedLinkClasses.link).trim();
       newLinkAttributes.target = '_blank';
 
-      // '\' is a screen character, link decorate service can't decode the link with it.
-      newLinkAttributes.href = newLinkAttributes.href.replace(backSlashRegExp, '/');
-
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
-         getService() + '?method=LinkDecorator.DecorateAsSvg&params=' +
-         encodeURIComponent(base64.encode('{"SourceLink":"' + newLinkAttributes.href + '"}')) + '&id=0&srv=1';
+         getService() + '?method=LinkDecorator.DecorateAsSvg&params=' + encodeURIComponent(
+            base64.encode('{"SourceLink":"' + newLinkAttributes.href.replace(charsToScreenRegExp, '\\$1') + '"}')
+         ) + '&id=0&srv=1';
 
       return ['span',
          { 'class': decoratedLinkClasses.wrap },

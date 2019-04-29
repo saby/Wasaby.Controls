@@ -6,8 +6,8 @@ import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import getZIndex = require('Controls/Utils/getZIndex');
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
-import 'css!theme?Controls/_validate/ErrorMessage';
-      
+import 'css!theme?Controls/validate';
+
 
       var _private = {
 
@@ -262,4 +262,4 @@ import 'css!theme?Controls/_validate/ErrorMessage';
          _private: _private
       });
       export = Validate;
-   
+

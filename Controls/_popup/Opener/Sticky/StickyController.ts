@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popup/TargetCoords');
 import StickyContent = require('wml!Controls/_popup/Opener/Sticky/StickyContent');
-import 'css!theme?Controls/_popup/Opener/Sticky/Sticky';
+import 'css!theme?Controls/popup';
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',

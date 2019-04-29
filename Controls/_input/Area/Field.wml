@@ -21,6 +21,7 @@
       on:select="_selectHandler()"
       on:keydown="_keyDownHandler()"
       on:focusin="_focusInHandler()"
+      on:keypress="_keyPressHandler()"
       on:focusout="_focusOutHandler()"
       on:mousedown="_mouseDownHandler()"
    ></textarea>

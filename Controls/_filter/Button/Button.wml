@@ -30,6 +30,7 @@
    <Controls.popup:Sticky
            name="filterStickyOpener"
            scope="{{_popupOptions}}"
+           _vdomOnOldPage="{{true}}"
            autofocus="{{true}}"
    >
    </Controls.popup:Sticky>

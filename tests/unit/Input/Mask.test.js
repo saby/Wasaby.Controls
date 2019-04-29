@@ -1,12 +1,24 @@
 define(
    [
+      'Core/core-merge',
       'Env/Env',
       'Controls/input',
       'unit/Calendar/Utils'
    ],
-   function(Env, input, testUtils) {
+   function(coreMerge, Env, input, testUtils) {
 
       'use strict';
+
+      let createComponent = function(Component, cfg) {
+         let cmp;
+         if (Component.getDefaultOptions) {
+            cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+         }
+         cmp = new Component(cfg);
+         cmp.saveOptions(cfg);
+         cmp._beforeMount(cfg);
+         return cmp;
+      };
 
       describe('Controls.Input.Mask', function() {
          it('findLastUserEnteredCharPosition', function() {
@@ -46,6 +58,32 @@ define(
             assert.equal(calcReplacer(' ', 'd\\*'), '');
          });
 
+         describe('_focusInHandler', function() {
+            it('should set default selection position', function(done) {
+               var component = createComponent(input.Mask, {mask: 'dd.dd', replacer: ' '});
+               component._viewModel.selection = {
+                    start: 3,
+                    end: 3
+               }
+               component._getField = function() {
+                  return {
+                     setSelectionRange: function(start, end) {
+                        assert.equal(start, 0);
+                        assert.equal(end, 0);
+                        done();
+                     }
+                  }
+               }
+               component._focusInHandler();
+               assert.deepEqual(
+                  component._viewModel.selection,
+                  {
+                    start: 0,
+                    end: 0
+                  }
+               );
+            });
+         });
       });
    }
 );

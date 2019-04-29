@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/Base/Base');
-import 'css!theme?Controls/_masterDetail/Base/Base';
+import 'css!theme?Controls/masterDetail';
 
    /**
     * Control that allows to implement the Master-Detail interface
