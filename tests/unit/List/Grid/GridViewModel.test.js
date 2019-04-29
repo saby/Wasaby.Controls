@@ -1099,12 +1099,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getFooterStyles without display', function() {
             var
                 called = false,
-                savedFunc = GridViewModel._private.getFooterStyles,
-                model = new GridViewModel({
+                savedFunc = gridMod.GridViewModel._private.getFooterStyles,
+                model = new gridMod.GridViewModel({
                    columns: gridColumns
                 });
 
-            GridViewModel._private.getFooterStyles = function() {
+            gridMod.GridViewModel._private.getFooterStyles = function() {
                called = true;
             };
 
@@ -1123,7 +1123,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model.getFooterStyles();
             assert.isFalse(called);
 
-            GridViewModel._private.getFooterStyles = savedFunc;
+            gridMod.GridViewModel._private.getFooterStyles = savedFunc;
          });
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             assert.deepEqual({
