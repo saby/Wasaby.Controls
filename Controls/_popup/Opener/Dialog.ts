@@ -1,6 +1,6 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
       /**
-       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
+       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
        * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
        * @class Controls/_popup/Opener/Dialog
        * @extends Controls/_popup/Opener/BaseOpener

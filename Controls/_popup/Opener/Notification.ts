@@ -3,7 +3,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
 import NotificationController = require('Controls/_popup/Opener/Notification/NotificationController');
       /**
-       * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
+       * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
        *
        * <a href="/materials/demo-ws4-notification">Demo-example</a>.
        * @class Controls/_popup/Opener/Notification

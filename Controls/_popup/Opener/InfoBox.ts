@@ -6,7 +6,7 @@ import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/templ
 
 
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
        * @remark
        * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
        * @class Controls/_popup/Opener/InfoBox
