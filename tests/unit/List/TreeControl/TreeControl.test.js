@@ -119,15 +119,15 @@ define([
 
       it('TreeControl._private.toggleExpanded', function() {
          var
-            dataLoadCallbackCalled = false,
+            nodeLoadCallbackCalled = false,
             treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
                   idProperty: 'id'
                }),
-               dataLoadCallback: function() {
-                  dataLoadCallbackCalled = true;
+               nodeLoadCallback: function() {
+                  nodeLoadCallbackCalled = true;
                }
             });
          var isSourceControllerUsed = false;
@@ -177,7 +177,7 @@ define([
          };
 
          // Test
-         return new Promise(function(resolve) {
+         return new Promise(function(resolve, reject) {
             setTimeout(function() {
                treeGrid.TreeControl._private.toggleExpanded(treeControl, {
                   getContents: function() {
@@ -188,9 +188,15 @@ define([
                      };
                   }
                });
-               assert.isFalse(isSourceControllerUsed);
-               assert.isTrue(dataLoadCallbackCalled);
-               resolve();
+               setTimeout(function() {
+                  try {
+                     assert.isFalse(isSourceControllerUsed);
+                     assert.isTrue(nodeLoadCallbackCalled);
+                     resolve();
+                  } catch(e) {
+                     reject(e);
+                  }
+               }, 10);
             }, 10);
          });
       });
