@@ -8,7 +8,7 @@ import inputWml = require('wml!Controls/Input/resources/input');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 
-import 'css!theme?Controls/_lookup/BaseLookupView/Lookup';
+import 'css!theme?Controls/lookup';
 
 
 var KEY_KODE_F2 = 113;

@@ -10,6 +10,7 @@
       multiSelect="{{_options.multiSelect}}"
       historyId="{{_options.historyId}}"
       dataLoadCallback="{{_options.dataLoadCallback}}"
+      selectorCallback="{{_options.selectorCallback}}"
       attr:class="controls-Lookup">
    <Controls._lookup.Lookup.LookupView scope="{{_options}}"/>
 </Controls._lookup.Controller>
