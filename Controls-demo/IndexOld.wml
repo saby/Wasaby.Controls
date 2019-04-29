@@ -97,6 +97,11 @@
          <a href="/Controls-demo/app/Controls-demo%252FList%252FTree%252FTree">List/Tree</a>
       </div>
       <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/Tree/SingleExpand' }}">
+            <a href="{{content.href}}">Tree/SingleExpand</a>
+         </Router.router:Reference>
+      </div>
+      <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FTree%252FTreeWithPhoto">List/TreeWithPhoto</a>
       </div>
       <div>
