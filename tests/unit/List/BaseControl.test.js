@@ -2830,14 +2830,14 @@ define([
                _currentPage: 1,
                _knownPagesCount: 1
             };
-         var newKnownPagesCount = BaseControl._private.calcPaging(self, hasMore, pageSize);
+         var newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
          assert.equal(newKnownPagesCount, 2);
          hasMore = true;
          self = {
             _currentPage: 2,
             _knownPagesCount: 2
          };
-         newKnownPagesCount = BaseControl._private.calcPaging(self, hasMore, pageSize);
+         newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
          assert.equal(newKnownPagesCount, 3);
       });
    });
