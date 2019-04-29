@@ -53,7 +53,7 @@ var _private = {
  * @public
  * @author Золотова Э.Е.
  * @category Input
- * @demo Controls-demo/Input/_dropdown/DropdownPG
+ * @demo Controls-demo/Input/dropdown/DropdownPG
  */
 
 /**

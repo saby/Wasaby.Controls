@@ -7,7 +7,7 @@ import Env = require('Env/Env');
       
 
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
        *
        * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
        * @class Controls/_popup/InfoBox

@@ -65,7 +65,7 @@ import {parse as parserLib, load} from 'Core/library';
          },
 
          open: function(popupOptions, controller) {
-            var cfg = this._getConfig(popupOptions);
+            var cfg = this._getConfig(popupOptions || {});
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             this._toggleIndicator(true);
@@ -134,20 +134,11 @@ import {parse as parserLib, load} from 'Core/library';
             return typeof module === 'string' ? load(module) : Promise.resolve(module);
          },
 
-         _getConfig: function(popupOptions) {
-            var baseConfig = coreClone(this._options.popupOptions || {});
-
-            // TODO: CoreClone copies objects and arrays recursively and templates are represented
-            // as arrays. Templates have 2 fields (`isDataArray` and `toString()`) which are not
-            // enumerable and are not copied by coreClone, so the template can break.
-            //
-            // BaseOpener needs to have its own clone method, which does not recursively clone
-            // templates.
-            // https://online.sbis.ru/opendoc.html?guid=a3311385-0488-4558-8e96-b52984b2651a
-            baseConfig.template = (popupOptions || {}).template || (this._options.popupOptions || {}).template;
+         _getConfig(popupOptions:Object): Object {
+            let baseConfig = { ...this._options.popupOptions };
 
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
-            var options = [
+            let options = [
                'closeByExternalClick',
                'isCompoundTemplate',
                'eventHandlers',
@@ -190,15 +181,17 @@ import {parse as parserLib, load} from 'Core/library';
             ];
 
             // merge _options to popupOptions
-            for (var i = 0; i < options.length; i++) {
-               var option = options[i];
+            for (let i = 0; i < options.length; i++) {
+               let option = options[i];
                if (this._options[option] !== undefined) {
                   baseConfig[option] = this._options[option];
                }
             }
 
-            var baseCfg = coreClone(baseConfig);
-            CoreMerge(baseCfg, coreClone(popupOptions || {}));
+            let templateOptions = {};
+            CoreMerge(templateOptions, baseConfig.templateOptions || {});
+            CoreMerge(templateOptions, popupOptions.templateOptions || {});
+            let baseCfg = { ...baseConfig, ...popupOptions, templateOptions };
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
