@@ -479,7 +479,7 @@ define([
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
-         return new Promise(function(resolve) {
+         return new Promise(function(resolve, reject) {
             treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
@@ -490,15 +490,23 @@ define([
                      parent: null
                   };
                   treeControl._beforeUpdate({root: 'testRoot'});
-                  assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-                  assert.deepEqual(filterOnOptionChange, newFilter);
+                  try {
+                     assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
+                     assert.deepEqual(filterOnOptionChange, newFilter);
+                  } catch (e) {
+                     reject(e);
+                  }
 
                   treeControl._afterUpdate({root: null});
                   treeControl._children.baseControl._sourceController._loader.addCallback(function() {
-                     assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-                     assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-                     assert.isTrue(isSourceControllerDestroyed);
-                     resolve();
+                     try {
+                        assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                        assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                        assert.isTrue(isSourceControllerDestroyed);
+                        resolve();
+                     } catch (e) {
+                        reject(e);
+                     }
                   });
                   return res;
                });
