@@ -27,6 +27,26 @@
          </ws:partial>
       </ws:emptyTemplate>
    </Controls.explorer:View>
+   <h2>Плитка с одинаковой шириной(увеличение внутри контейнера)</h2>
+   <Controls.tile:View
+      attr:class="demo-Tile__static"
+      parentProperty="parent"
+      nodeProperty="type"
+      displayProperty="title"
+      imageProperty="image"
+      viewMode="tile"
+      keyProperty="id"
+      source="{{_viewSource}}"
+      tileScalingMode="inside"
+      multiSelectVisibility="visible"
+      itemActions="{{_itemActions}}"
+      bind:selectedKeys="_selectedKeys"
+      bind:excludedKeys="_excludedKeys"
+      itemsReadyCallback="{{_itemsReadyCallbackThird}}">
+      <ws:tileItemTemplate>
+         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+      </ws:tileItemTemplate>
+   </Controls.tile:View>
    <h2>Плитка с разной шириной (без увеличения)</h2>
    <Controls.tile:View
       attr:class="demo-Tile__dynamic"
