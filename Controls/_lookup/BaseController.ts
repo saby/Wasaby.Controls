@@ -233,14 +233,9 @@ import LoadService = require('Controls/History/LoadService');
       _selectCallback: function(event, result) {
          var prepareItems;
 
-         if (this._options.selectorCallback instanceof Function) {
-            this._setItems(this._options.selectorCallback(_private.getItems(this), result));
-         } else {
-            this._setItems(result);
-         }
-
-         // give the record in the correct format
-         prepareItems = _private.getItems(this);
+         result = this._notify('selectorCallback', [_private.getItems(this), result]) || result;
+         this._setItems(result);
+         prepareItems = _private.getItems(this); // give the record in the correct format
 
          if (prepareItems && prepareItems.getCount() && this._options.historyId) {
             _private.getHistoryService(this).addCallback(function(historyService) {

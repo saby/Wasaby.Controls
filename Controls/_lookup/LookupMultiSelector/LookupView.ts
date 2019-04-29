@@ -36,9 +36,15 @@ var _private = {
         return availableWidthCollection;
     },
 
-    getPlaceholderWidth: function (placeholder) {
-        if (placeholder && placeholder.func instanceof Function) {
-            placeholder = placeholder.func();
+    getPlaceholderWidth: function(placeholder) {
+        if (placeholder) {
+            if (placeholder.isDataArray) {
+                placeholder = placeholder.reduce(function(currentPlaceholder, template) {
+                    return currentPlaceholder + template.func();
+                }, '');
+            } else if (placeholder.func instanceof Function) {
+                placeholder = placeholder.func();
+            }
         }
 
         return placeholder ? getWidthUtil.getWidth(placeholder) : 0;
