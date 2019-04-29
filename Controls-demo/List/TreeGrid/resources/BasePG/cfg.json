@@ -1,12 +1,9 @@
 {
-  "Controls/_treeGrids/TreeGrid": {
+  "Controls/treeGrid:View": {
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "singleExpand": {
-            "type": "Boolean"
-          },
           "expandedItems": {
             "type": "Array",
             "readOnly": "true"
