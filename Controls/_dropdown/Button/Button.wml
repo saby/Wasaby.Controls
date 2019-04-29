@@ -37,5 +37,5 @@
                     size="{{_options.size}}"
                     tooltip="{{_options.tooltip}}"/>
    </Controls._dropdown._Controller>
-   <Controls.Popup.Opener.Notification name="notificationOpener"/>
+   <Controls.popup:Notification name="notificationOpener"/>
 </div>

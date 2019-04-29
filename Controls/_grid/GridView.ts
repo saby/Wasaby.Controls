@@ -1,20 +1,19 @@
 import cDeferred = require('Core/Deferred');
 import {ListView, GridLayoutUtil} from 'Controls/list';
-import GridViewTemplateChooser = require('wml!Controls/_grids/GridViewTemplateChooser');
-import DefaultItemTpl = require('wml!Controls/_grids/Item');
-import ColumnTpl = require('wml!Controls/_grids/Column');
-import HeaderContentTpl = require('wml!Controls/_grids/HeaderContent');
+import GridViewTemplateChooser = require('wml!Controls/_grid/GridViewTemplateChooser');
+import DefaultItemTpl = require('wml!Controls/_grid/Item');
+import ColumnTpl = require('wml!Controls/_grid/Column');
+import HeaderContentTpl = require('wml!Controls/_grid/HeaderContent');
 import Env = require('Env/Env');
-import GroupTemplate = require('wml!Controls/_grids/GroupTemplate');
-import FullGridSupportLayout = require('wml!Controls/_grids/layouts/FullGridSupport');
-import PartialGridSupportLayout = require('wml!Controls/_grids/layouts/PartialGridSupport');
-import NoGridSupportLayout = require('wml!Controls/_grids/layouts/NoGridSupport');
-import 'wml!Controls/_grids/Header';
-import DefaultResultsTemplate = require('wml!Controls/_grids/Results');
-import 'wml!Controls/_grids/Results';
-import 'wml!Controls/_grids/ColGroup';
-import 'css!theme?Controls/_grids/Grid';
-import 'css!theme?Controls/_grids/OldGrid';
+import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
+import FullGridSupportLayout = require('wml!Controls/_grid/layouts/FullGridSupport');
+import PartialGridSupportLayout = require('wml!Controls/_grid/layouts/PartialGridSupport');
+import NoGridSupportLayout = require('wml!Controls/_grid/layouts/NoGridSupport');
+import 'wml!Controls/_grid/Header';
+import DefaultResultsTemplate = require('wml!Controls/_grid/Results');
+import 'wml!Controls/_grid/Results';
+import 'wml!Controls/_grid/ColGroup';
+import 'css!theme?Controls/grid';
 import 'Controls/List/BaseControl/Scroll/Emitter';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced

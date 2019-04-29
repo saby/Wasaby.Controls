@@ -202,7 +202,7 @@
       <h3>Can't open up</h3>
    </div>
 
-   <Controls.Popup.Opener.Stack name="stack" template="wml!Controls-demo/Input/Dropdown/StackTemplateDdl" closeOnOutsideClick="{{true}}">
+   <Controls.popup:Stack name="stack" template="wml!Controls-demo/Input/Dropdown/StackTemplateDdl" closeOnOutsideClick="{{true}}">
       <ws:templateOptions type="stack"/>
-   </Controls.Popup.Opener.Stack>
+   </Controls.popup:Stack>
 </div>

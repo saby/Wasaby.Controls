@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
 import {descriptor} from 'Types/entity';
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import 'css!theme?Controls/_suggest/Input/Input';
+import 'css!theme?Controls/suggest';
 
 /**
  * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.

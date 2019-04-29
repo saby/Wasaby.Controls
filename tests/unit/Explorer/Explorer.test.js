@@ -1,5 +1,5 @@
 define([
-   'Controls/explorers',
+   'Controls/explorer',
    'Core/Deferred',
    'Types/collection',
    'Types/chain',

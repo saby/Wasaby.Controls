@@ -1,6 +1,6 @@
 /**
  * @author Золотова Э.Е.
- * @mixin Controls/Filter/Button/Styles
+ * @mixin Controls/_filter/Button/Styles
  * @public
  *
  * @css @height_FilterButton Filter/Button height.

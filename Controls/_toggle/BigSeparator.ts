@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import entity = require('Types/entity');
-import 'css!theme?Controls/_toggle/BigSeparator/BigSeparator';
+import 'css!theme?Controls/toggle';
 
 
    /**

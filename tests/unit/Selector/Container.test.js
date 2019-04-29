@@ -80,10 +80,11 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          };
          var source = new sourceLib.Memory();
 
-         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, source);
+         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, source, 'leaf');
 
          assert.deepEqual(filter.selection.get('marked'), ['1', '2']);
          assert.deepEqual(filter.selection.get('excluded'), ['3', '4']);
+         assert.equal(filter.selection.get('type'), 'leaf');
       });
 
       it('prepareResult', function() {

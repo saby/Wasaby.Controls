@@ -2,8 +2,7 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
    [
       'Core/Control',
       'wml!Controls-demo/LoadingIndicator/LoadingIndicatorPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
-      'css!Controls-demo/LoadingIndicator/LoadingIndicatorPG'
+      'json!Controls-demo/PropertyGrid/pgtext'
    ],
 
    function(Control, template, config) {

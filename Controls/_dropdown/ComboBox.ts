@@ -24,8 +24,8 @@ var _private = {
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/Input/interface/IInputDropdown
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputDropdown
+ * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IInputDropdown
  * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
@@ -92,6 +92,6 @@ ComboBox.getDefaultOptions = function () {
 
 ComboBox._private = _private;
 
-ComboBox._theme = ['Controls/_dropdown/ComboBox/ComboBox'];
+ComboBox._theme = ['Controls/dropdown'];
 
 export = ComboBox;
