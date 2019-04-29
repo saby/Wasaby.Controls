@@ -7,10 +7,10 @@
  * @includes _CollectionController Controls/_lookup/SelectedCollection/Controller
  * @includes ItemTemplate wml!Controls/_lookup/Lookup/itemTemplate
  * @includes Opener Controls/_lookup/Opener
- * @includes Controls/_lookup/Lookup/LookupStyles
- * @includes Controls/_lookup/Button/SelectorButtonStyles
- * @includes Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @includes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
+ * @includes LookupStyles Controls/_lookup/Lookup/LookupStyles
+ * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
+ * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
+ * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @public
  * @author Kraynov D.
  */
