@@ -15,7 +15,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
+                     <Controls.input:Text fontStyle="secondary"
                                           placeholder="Tooltip"
                                           bind:value="_value2"/>
                   </div>
@@ -24,7 +24,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
+                     <Controls.input:Text fontStyle="primary"
                                           placeholder="Tooltip"
                                           bind:value="_value3"/>
                   </div>
@@ -49,7 +49,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="secondary"
+                     <Controls.input:Text fontStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_filledValue2"/>
                   </div>
@@ -58,7 +58,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="primary"
+                     <Controls.input:Text fontStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_filledValue3"/>
                   </div>
