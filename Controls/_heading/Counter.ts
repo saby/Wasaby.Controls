@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_heading/Counter/Counter');
 import entity = require('Types/entity');
-import 'css!theme?Controls/_heading/Counter/Counter';
-   
+import 'css!theme?Controls/heading';
+
 
    /**
     * Counter with support different display styles and sizes. Used as part of complex headers(you can see it in Demo-example)
