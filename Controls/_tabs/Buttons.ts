@@ -6,7 +6,7 @@ import {Controller as SourceController} from 'Controls/source';
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_tabs/Buttons/Buttons';
+import 'css!theme?Controls/tabs';
 
 
    var _private = {

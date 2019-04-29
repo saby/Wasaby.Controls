@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_popupTemplate/Stack/Stack';
+import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 

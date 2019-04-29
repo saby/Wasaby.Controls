@@ -92,6 +92,6 @@ ComboBox.getDefaultOptions = function () {
 
 ComboBox._private = _private;
 
-ComboBox._theme = ['Controls/_dropdown/ComboBox/ComboBox'];
+ComboBox._theme = ['Controls/dropdown'];
 
 export = ComboBox;
