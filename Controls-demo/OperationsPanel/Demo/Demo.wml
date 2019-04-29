@@ -94,7 +94,7 @@
             </ws:Array>
         </ws:items>
     </Layout.Browser.Tabs>
-    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-    <Controls.Popup.Opener.Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/operationsPopup:ReportDialog">
-    </Controls.Popup.Opener.Dialog>
+    <Controls.popup:Confirmation name="popupOpener"/>
+    <Controls.popup:Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/operationsPopup:ReportDialog">
+    </Controls.popup:Dialog>
 </div>

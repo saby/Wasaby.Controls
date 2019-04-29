@@ -10,7 +10,7 @@
                </Controls.search:InputContainer>
                <Controls.list:Container>
                   <Controls.operations:Container>
-                     <Controls.explorers:View
+                     <Controls.explorer:View
                         attr:class="demo-Explorer"
                         multiSelectVisibility="visible"
                         displayProperty="title"
@@ -18,7 +18,7 @@
                         parentProperty="parent"
                         nodeProperty="parent@"
                         columns="{{_viewColumns}}">
-                     </Controls.explorers:View>
+                     </Controls.explorer:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
             </div>

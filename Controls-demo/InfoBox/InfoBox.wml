@@ -1,7 +1,7 @@
 <div>
   <div class="controls-InfoBoxDemo-rows">
      <div class="controls-InfoBoxDemo-heading">Наведите на иконку</div>
-   <Controls.Popup.InfoBox trigger="hover" attr:style="display:inline-block; vertical-align:bottom;" attr:class="ControlsDemo-InfoBox__hover">
+   <Controls.popup:InfoboxTarget trigger="hover" attr:style="display:inline-block; vertical-align:bottom;" attr:class="ControlsDemo-InfoBox__hover">
       <ws:content>
          <Controls._buttons.Button viewMode ='link'
                                    icon="icon-EmptyMessage icon-medium"/>
@@ -9,12 +9,12 @@
       <ws:template>
          <div>Это всплывающая подсказка по ховеру.</div>
       </ws:template>
-   </Controls.Popup.InfoBox>
+   </Controls.popup:InfoboxTarget>
   </div>
 
    <div class="controls-InfoBoxDemo-rows">
       <div class="controls-InfoBoxDemo-heading">Нажмите на иконку</div>
-   <Controls.Popup.InfoBox trigger="click" attr:class="ControlsDemo-InfoBox__click">
+   <Controls.popup:InfoboxTarget trigger="click" attr:class="ControlsDemo-InfoBox__click">
       <ws:content>
          <Controls._buttons.Button viewMode ='link'
                                    icon="icon-EmptyMessage icon-medium"/>
@@ -22,12 +22,12 @@
       <ws:template>
          <div>Это всплывающая подсказка по клику.</div>
       </ws:template>
-   </Controls.Popup.InfoBox>
+   </Controls.popup:InfoboxTarget>
    </div>
 
    <div class="controls-InfoBoxDemo-rows">
       <div class="controls-InfoBoxDemo-heading">Нажмите два раза на иконку</div>
-   <Controls.Popup.InfoBox trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox" attr:class="ControlsDemo-InfoBox__doubleClick">
+   <Controls.popup:InfoboxTarget trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox" attr:class="ControlsDemo-InfoBox__doubleClick">
       <ws:content>
           <Controls._buttons.Button viewMode ='link'
                                     icon="icon-EmptyMessage icon-medium"/>
@@ -35,6 +35,6 @@
       <ws:template>
          <div>Это всплывающая подсказка, открывающаяся методом open. Закроется через 5 секунд.</div>
       </ws:template>
-   </Controls.Popup.InfoBox>
+   </Controls.popup:InfoboxTarget>
    </div>
 </div>

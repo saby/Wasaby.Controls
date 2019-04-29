@@ -1,10 +1,10 @@
 define(
    [
       'Controls/dropdown',
-      'Controls/Popup/Opener/BaseOpener',
+      'Controls/popup',
       'Core/polyfill/PromiseAPIDeferred'
    ],
-   (dropdown, BaseOpener) => {
+   (dropdown, popup) => {
       describe('Dropdown/Opener', () => {
          let config = {
             templateOptions: {
@@ -36,7 +36,7 @@ define(
             return opener;
          }
 
-         BaseOpener.isNewEnvironment = function() {
+         popup.BaseOpener.isNewEnvironment = function() {
             return true;
          };
 

@@ -1,5 +1,5 @@
 <div>
-   <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+   <Controls.input:Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
    <Controls.input:TimeInterval value="{{_options.value}}"
                                 mask="HH:MM"
                                 readOnly="{{_options.readOnly}}"

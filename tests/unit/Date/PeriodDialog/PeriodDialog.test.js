@@ -1,6 +1,6 @@
 define([
    'Core/core-merge',
-   'Controls/Date/PeriodDialog',
+   'Controls/datePopup',
    'Controls/Utils/Date',
    'unit/Calendar/Utils'
 ], function(

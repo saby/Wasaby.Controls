@@ -27,5 +27,5 @@
             </div>
         </ws:content>
     </Controls.list:DataContainer>
-    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+    <Controls.popup:Confirmation name="popupOpener"/>
 </div>

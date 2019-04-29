@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Popup/Previewer',
+      'Controls/popup',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   (Previewer, SyntheticEvent) => {
+   (popup, SyntheticEvent) => {
       'use strict';
       describe('Controls/Popup/Previewer', () => {
          it('contentMousedownHandler', () => {
-            let PWInstance = new Previewer();
+            let PWInstance = new popup.PreviewerTarget();
             var result;
             PWInstance._isPopupOpened = function() {
                return false;
@@ -32,7 +32,7 @@ define(
 
       describe('Controls/Popup/Previewer', () => {
          it('getConfig', () => {
-            let PWInstance = new Previewer();
+            let PWInstance = new popup.PreviewerTarget();
             let corner = {
                vertical: 'top'
             };

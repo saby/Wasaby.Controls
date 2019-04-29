@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/popup'
    ],
-   (BaseOpener) => {
+   (popup) => {
       'use strict';
 
       describe('Controls/Popup/Opener/BaseOpener', () => {
          it('clearPopupIds', () => {
-            let clearPopupIds = BaseOpener._private.clearPopupIds;
+            let clearPopupIds = popup.BaseOpener._private.clearPopupIds;
             let popupIds = [1, 2, 3];
 
             clearPopupIds(popupIds, true, 'multiple');
@@ -24,7 +24,7 @@ define(
          });
 
          it('registerOpenerUpdateCallback', () => {
-            let opener = new BaseOpener();
+            let opener = new popup.BaseOpener();
             opener._notify = (eventName, args) => {
                assert.equal(eventName, 'registerOpenerUpdateCallback');
                assert.equal(typeof args[0], 'function');
@@ -35,7 +35,7 @@ define(
          });
 
          it('_getConfig', () => {
-            let opener = new BaseOpener();
+            let opener = new popup.BaseOpener();
             opener._options.templateOptions = {
                type: 'dialog',
                name: 'options'
@@ -60,7 +60,7 @@ define(
          });
 
          it('_beforeUnmount', () => {
-            let opener = new BaseOpener();
+            let opener = new popup.BaseOpener();
             let isHideIndicatorCall = false;
             opener._indicatorId = '123';
 

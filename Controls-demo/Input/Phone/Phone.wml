@@ -1,6 +1,6 @@
 <Controls-demo.Wrapper.Wrapper title="Phone">
    <ws:componentClass>
-      <Controls.Popup.Opener.InfoBox name="infoBoxPhone"/>
+      <Controls.popup:Infobox name="infoBoxPhone"/>
       <Controls.input:Phone
          name="textPhone"
          placeholder="{{_placeholder}}"

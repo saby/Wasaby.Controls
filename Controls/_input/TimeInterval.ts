@@ -10,7 +10,7 @@ import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/_input/interface/IInputBase
+ * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public

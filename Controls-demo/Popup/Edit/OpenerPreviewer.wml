@@ -1,7 +1,7 @@
 <div attr:style="margin: 30px 30px">
-   <Controls.Popup.Previewer trigger="hoverAndClick" template="Controls-demo/Popup/Edit/MyFormController">
+   <Controls.popup:PreviewerTarget trigger="hoverAndClick" template="Controls-demo/Popup/Edit/MyFormController">
       <ws:content>
          <div>Таргет</div>
       </ws:content>
-   </Controls.Popup.Previewer>
+   </Controls.popup:PreviewerTarget>
 </div>

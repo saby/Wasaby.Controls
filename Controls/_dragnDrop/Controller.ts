@@ -15,7 +15,7 @@ import 'Controls/_dragnDrop/DraggingTemplate';
        * @category DragNDrop
        */
 
-      export = Control.extend({
+       var Controller =  Control.extend({
          _template: template,
          _draggingTemplateOptions: undefined,
          _draggingTemplate: undefined,
@@ -36,3 +36,4 @@ import 'Controls/_dragnDrop/DraggingTemplate';
          }
       });
 
+      export = Controller;

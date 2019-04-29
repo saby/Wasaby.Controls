@@ -22,11 +22,11 @@ define('Controls/interface/IButton', [
     * @example
     * Primary link button with 'primary' style.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+    *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
     * Toolbar button with 'danger' style.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
+    *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * @see Size
     */
@@ -41,15 +41,15 @@ define('Controls/interface/IButton', [
     * @example
     * Button with 'link' viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+    *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
     * Button with 'toolButton' viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
+    *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * Button with 'button' viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="success" viewMode="button"/>
+    *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
     * </pre>
     * @see Size
     */
@@ -65,15 +65,15 @@ define('Controls/interface/IButton', [
     * @example
     * 'L' size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="l"/>
+    *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="l"/>
     * </pre>
     * Default size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="button"/>
+    *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button"/>
     * </pre>
     * Uncorrect size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="xl"/>
+    *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="xl"/>
     * </pre>
     * @see style
     */

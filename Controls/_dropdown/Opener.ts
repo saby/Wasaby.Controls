@@ -1,4 +1,4 @@
-import Sticky = require('Controls/Popup/Opener/Sticky');
+import {Sticky} from 'Controls/popup';
 import Merge = require('Core/core-merge');
 import getZIndex = require('Controls/Utils/getZIndex');
 
