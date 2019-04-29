@@ -210,31 +210,6 @@ var
         // Using util for calculating real rows' index on display considering footers, headers, results
         calcNodeFooterIndex: function(self, parentKey) {
             return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
-        },
-
-        collapseNode: function (self, nodeId) {
-            delete self._expandedItems[nodeId];
-            _private.collapseChildNodes(self, nodeId);
-        },
-
-        toggleSingleExpanded: function (self, itemId, parentId): void {
-            let
-                hasNoExpanded = Object.keys(self._expandedItems).length === 0,
-                isCollapsed = !self._expandedItems[itemId],
-                isParentExpanded = parentId !== null && self._expandedItems[parentId];
-
-            if (hasNoExpanded || isParentExpanded && isCollapsed) {
-                self._expandedItems[itemId] = true;
-                return;
-            }
-
-            if (self._expandedItems[itemId]) {
-                _private.collapseNode(self, itemId);
-            } else {
-                self.setExpandedItems([]);
-                self._expandedItems[itemId] = true;
-            }
-
         }
     },
 
@@ -292,7 +267,6 @@ var
         toggleExpanded: function(dispItem, expanded) {
             var
                 itemId = dispItem.getContents().getId(),
-                parentId = dispItem.getContents().get(this._options.parentProperty),
                 currentExpanded = this.isExpanded(dispItem);
 
             if (expanded !== currentExpanded || expanded === undefined) {
@@ -302,11 +276,10 @@ var
                     } else {
                         this._collapsedItems[itemId] = true;
                     }
-                } else if (this._options.singleExpand) {
-                    _private.toggleSingleExpanded(this, itemId, parentId);
                 } else {
                     if (this._expandedItems[itemId]) {
-                        _private.collapseNode(this, itemId);
+                        delete this._expandedItems[itemId];
+                        _private.collapseChildNodes(this, itemId);
                     } else {
                         this._expandedItems[itemId] = true;
                     }
