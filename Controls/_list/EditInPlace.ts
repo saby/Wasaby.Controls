@@ -70,14 +70,22 @@ var
 
             var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
 
-            if (result === Constants.editing.CANCEL) {
-                return Deferred.success({cancelled: true});
-            }
+
             if (result && result.addCallback) {
                 // Если мы попали сюда, то прикладники сами сохраняют запись
-                return result.addCallback(function () {
-                    _private.afterEndEdit(self);
+                return result.addCallback(function (res) {
+                    if (res === Constants.editing.CANCEL) {
+                        return {cancelled: true};
+                    }
+
+                    return _private.updateModel(self, commit).addCallback(function () {
+                        _private.afterEndEdit(self);
+                    });
                 });
+            }
+
+            if (result === Constants.editing.CANCEL) {
+                return Deferred.success({cancelled: true});
             }
 
             return _private.updateModel(self, commit).addCallback(function () {
