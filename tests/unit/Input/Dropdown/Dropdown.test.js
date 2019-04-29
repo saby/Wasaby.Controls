@@ -79,6 +79,11 @@ define(
             ddl._text = 'Запись 8';
             ddl._afterUpdate(newConfig);
             assert.equal(text, 'Запись 8');
+
+            ddl._setText([itemsRecords.at(1), itemsRecords.at(3), itemsRecords.at(5)]);
+            newConfig.selectedKeys = ['2', '4', '6'];
+            ddl._afterUpdate(newConfig);
+            assert.strictEqual(text, 'Запись 2, еще 2');
          });
 
          it('data load callback', () => {

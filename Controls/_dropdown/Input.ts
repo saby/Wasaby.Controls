@@ -123,6 +123,7 @@ var Input = Control.extend({
    _template: template,
    _defaultContentTemplate: defaultContentTemplate,
    _text: '',
+   _hasMoreText: '',
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
@@ -138,7 +139,7 @@ var Input = Control.extend({
 
    _afterUpdate: function (newOptions) {
       if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-         this._notify('textValueChanged', [this._text]);
+         this._notify('textValueChanged', [this._text + this._hasMoreText]);
       }
    },
 
