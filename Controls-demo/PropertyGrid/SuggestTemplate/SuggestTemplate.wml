@@ -1,6 +1,6 @@
 <Controls.dropdown:Combobox
         displayProperty="title"
-        keyProperty="id"
+        keyProperty="title"
         source="{{_source}}"
         bind:selectedKey="selectedKey"
         on:selectedKeyChanged="selectedKeyChanged()"

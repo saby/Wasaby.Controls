@@ -18,36 +18,18 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
 
          _beforeMount: function(options) {
             this._source = new source.Memory({
-               idProperty: 'id',
+               idProperty: 'title',
                data: options.items
             });
             this.rs = new collection.RecordSet({
-               idProperty: 'id',
+               idProperty: 'title',
                rawData: options.items
             });
 
-            if (options.value) {
-               this.selectedKey = this._getSelectedKeyByValue(options.value, options.items);
-            }
+            this.selectedKey = options.value;
          },
          selectedKeyChanged: function(event, key) {
             this._notify('choose', [this.rs.getRecordById(key)]);
-         },
-         _beforeUpdate: function(options) {
-            var newKey = this._getSelectedKeyByValue(options.value, options.items);
-
-            if (this.selectedKey !== newKey) {
-               this.selectedKey = newKey;
-            }
-         },
-         _getSelectedKeyByValue: function(value, items) {
-            if (value) {
-               return items.find(function(item) {
-                  return item.title === value || item.template === value;
-               }).id;
-            } else {
-               return null;
-            }
          }
       });
 
