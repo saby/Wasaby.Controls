@@ -27,7 +27,7 @@
             <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.Popup.Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
+                     <Controls.popup:Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
                               <body
@@ -78,7 +78,7 @@
                                              draggingTemplate="{{content.draggingTemplate}}"/>
                               </ws:if>
 
-                              <Controls.Popup.Manager.Container attr:id="popup"
+                              <Controls.popup:Container attr:id="popup"
                                                                 eventHandler="{{content._managerEventHandler}}"/>
 
                               <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
@@ -130,7 +130,7 @@
                               </body>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
-                     </Controls.Popup.Manager>
+                     </Controls.popup:Manager>
                   </Controls.Event.Registrator>
                </Controls.Event.Registrator>
             </Controls.Event.Registrator>

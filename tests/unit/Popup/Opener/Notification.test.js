@@ -1,9 +1,10 @@
 define(
    [
       'Controls/popup',
-      'Controls/_popup/Opener/Notification/NotificationContent'
+      'Controls/_popup/Opener/Notification/NotificationContent',
+      'Controls/_popup/Opener/Notification'
    ],
-   (popup, NotificationContent) => {
+   (popup, NotificationContent, Notification) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Notification', () => {
@@ -88,6 +89,18 @@ define(
 
             popup.NotificationController.getDefaultConfig(item);
             assert.equal(item.popupOptions.content, NotificationContent);
+         });
+
+         it('getCompatibleConfig', function() {
+            const cfg = {
+               autoClose: true
+            };
+
+            Notification._private.getCompatibleConfig({ prepareNotificationConfig: function(config) {return config;} }, cfg);
+            assert.equal(cfg.notHide, false);
+            cfg.autoClose = false;
+            Notification._private.getCompatibleConfig({ prepareNotificationConfig: function(config) {return config;} }, cfg);
+            assert.equal(cfg.notHide, true);
          });
 
       });

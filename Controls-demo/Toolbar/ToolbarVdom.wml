@@ -1,6 +1,6 @@
 <div class="controls-ToolbarVdom" style="padding: 50px;">
    <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons):
-      <Controls.Toolbar
+      <Controls.toolbars:View
          name="myToolbar"
          parentProperty="parent"
          nodeProperty="@parent"
@@ -12,7 +12,7 @@
       />
    </div>
    <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons, toolButtons):
-      <Controls.Toolbar
+      <Controls.toolbars:View
               name="myToolbar"
               attr:id="Toolbar_1"
               parentProperty="parent"
@@ -25,7 +25,7 @@
       />
    </div>
    <div style="padding: 5px;">Пример тулбара из toolButtons:
-      <Controls.Toolbar
+      <Controls.toolbars:View
          name="myFlatToolbar"
          attr:id="Toolbar_2"
          keyProperty="id"

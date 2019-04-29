@@ -28,11 +28,11 @@
                 Two time fields
             </div>
             <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-                <Controls.Input.DateTime
+                <Controls.input:DateBase
                         bind:value="_startTime"
                         mask="HH:mm"/>
                 -
-                <Controls.Input.DateTime
+                <Controls.input:DateBase
                         bind:value="_endTime"
                         mask="HH:mm"/>
             </div>

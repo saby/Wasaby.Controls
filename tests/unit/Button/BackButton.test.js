@@ -1,4 +1,4 @@
-define(['Controls/_heading'], function(heading) {
+define(['Controls/heading'], function(heading) {
    'use strict';
    var separator;
    describe('Controls/Heading/BackButton', function() {

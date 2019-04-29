@@ -2,7 +2,7 @@
     <div class="testBlock">
         <div class="exampleBlock">
             <h2>Header-separator</h2>
-            <Controls._heading:Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()"  style="{{_iconSelectedStyle}}"/>
+            <Controls.heading:Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()"  style="{{_iconSelectedStyle}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>

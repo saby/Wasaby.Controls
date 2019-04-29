@@ -334,7 +334,7 @@ Toolbar.getDefaultOptions = function() {
 };
 //TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю ToolbarPopup статически.
 //TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
-Toolbar._theme = ['Controls/_toolbars/View', 'Controls/_toolbars/ToolbarPopup'];
+Toolbar._theme = ['Controls/toolbars'];
 Toolbar._private = _private;
 
 export default Toolbar;

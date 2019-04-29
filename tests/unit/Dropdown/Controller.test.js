@@ -1,14 +1,13 @@
 define(
    [
-      'Controls/Dropdown/Controller',
+      'Controls/dropdown',
       'Types/source',
       'Core/core-clone',
       'Types/collection',
-      'Controls/History/Source',
-      'Controls/History/Service',
+      'Controls/history',
       'Core/Deferred'
    ],
-   (Dropdown, sourceLib, Clone, collection, HistorySource, HistoryService, Deferred) => {
+   (dropdown, sourceLib, Clone, collection, history, Deferred) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -74,7 +73,7 @@ define(
          };
 
          let getDropdownController = function(config) {
-            let dropdownCntroller = new Dropdown(config);
+            let dropdownCntroller = new dropdown._Controller(config);
             dropdownCntroller.saveOptions(config);
             return dropdownCntroller;
          };
@@ -364,10 +363,10 @@ define(
             let dataLoadCallback = function(items) {
                selectedItems = items;
             };
-            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id', dataLoadCallback);
+            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [null], 'id', dataLoadCallback);
             assert.deepEqual(selectedItems, [null]);
 
-            Dropdown._private.updateSelectedItems(dropdownController, '123', [], 'id');
+            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id');
             assert.deepEqual(selectedItems, [null]);
          });
 
@@ -431,7 +430,7 @@ define(
                rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
             });
             dropdownController._items = items2;
-            Dropdown._private.getSourceController(dropdownController, configLazyLoad);
+            dropdown._Controller._private.getSourceController(dropdownController, configLazyLoad);
             dropdownController._children.DropdownOpener = {
                close: function() {
                   opened = false;
@@ -480,7 +479,7 @@ define(
                   }]
                });
             let newItems = [selectedItems.at(1), selectedItems.at(2)];
-            let result = Dropdown._private.getNewItems(curItems, selectedItems, 'id');
+            let result = dropdown._Controller._private.getNewItems(curItems, selectedItems, 'id');
 
             assert.deepEqual(newItems, result);
          });
@@ -538,7 +537,7 @@ define(
             }
             ];
 
-            Dropdown._private.onSelectorResult(dropdownController, selectedItems);
+            dropdown._Controller._private.onSelectorResult(dropdownController, selectedItems);
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
@@ -555,12 +554,12 @@ define(
             dropdownController;
          describe('history', ()=> {
             beforeEach(function() {
-               historySource = new HistorySource({
+               historySource = new history.Source({
                   originSource: new sourceLib.Memory({
                      idProperty: 'id',
                      data: items
                   }),
-                  historySource: new HistoryService({
+                  historySource: new history.Service({
                      historyId: 'TEST_HISTORY_ID_DDL_CONTROLLER'
                   })
                });

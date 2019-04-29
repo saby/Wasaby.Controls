@@ -26,7 +26,7 @@
       <ws:topArea>
          <div class="ControlsDemo-EditableArea__topAreaWrapper">
             <div class="ControlsDemo-EditableArea__row">
-               <Controls.Toolbar
+               <Controls.toolbars:View
                   parentProperty="parent"
                   nodeProperty="@parent"
                   keyProperty="id"

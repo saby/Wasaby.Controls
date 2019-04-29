@@ -24,7 +24,7 @@ define('Controls/interface/IRemovable', [], function() {
     * The following example shows how to display a dialog with a question before deleting items.
     * <pre>
     *    <Controls.list:View.Remover name="listRemover" on:beforeItemsRemove="_beforeItemsRemove()"/>
-    *    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+    *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
     * <pre>
@@ -52,7 +52,7 @@ define('Controls/interface/IRemovable', [], function() {
     * The following example shows how to remove items from list after click on the button.
     * <pre>
     *    <Controls.list:View.Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()"/>
-    *    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+    *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
     * <pre>
@@ -80,7 +80,7 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * The following example shows how to remove items from list after click on the button.
     * <pre>
-    *    <Controls.Button caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
+    *    <Controls.buttons:Path caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
     *    <Controls.list:View.Remover name="listRemover"/>
     * </pre>
     *

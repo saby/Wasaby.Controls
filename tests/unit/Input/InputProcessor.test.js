@@ -1,20 +1,19 @@
 define(
    [
       'Controls/Input/Mask/Formatter',
-      'Controls/Input/Mask/FormatBuilder',
-      'Controls/Input/Mask/InputProcessor'
+      'Controls/input'
    ],
-   function(Formatter, FormatBuilder, InputProcessor) {
+   function(Formatter, inputMod) {
 
       'use strict';
 
       describe('Controls.Input.Mask.InputProcessor', function() {
          var
             replacer = ' ',
-            format = FormatBuilder.getFormat('dd.dd', {
+            format = inputMod.MaskFormatBuilder.getFormat('dd.dd', {
                d: '[0-9]'
             }, replacer),
-            telepfoneFormat = FormatBuilder.getFormat('+7 (ddd)ddd-dd-dd', {
+            telepfoneFormat = inputMod.MaskFormatBuilder.getFormat('+7 (ddd)ddd-dd-dd', {
                d: '[0-9]'
             }, ''),
             clearData = Formatter.getClearData(format, '1 . 4'),
@@ -22,7 +21,7 @@ define(
 
          describe('getClearSplitValue', function() {
             it('Test_01', function() {
-               result = InputProcessor.getClearSplitValue({
+               result = inputMod.MaskInputProcessor.getClearSplitValue({
                   before: '1',
                   after: '. 4',
                   delete: ' ',
@@ -39,7 +38,7 @@ define(
          describe('input', function() {
             describe('insert', function() {
                it('Test_01', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '1',
                      after: '.3 ',
                      delete: ' ',
@@ -52,7 +51,7 @@ define(
                   });
                });
                it('Test_02', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '1 . ',
                      after: '4',
                      delete: '',
@@ -65,10 +64,10 @@ define(
                   });
                });
                it('Test_03', function() {
-                  var format = FormatBuilder.getFormat('dd.dd', {
+                  var format = inputMod.MaskFormatBuilder.getFormat('dd.dd', {
                      d: '[0-9]'
                   }, '');
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '1',
                      after: '3',
                      delete: '',
@@ -81,13 +80,13 @@ define(
                   });
                });
                it('Test_04', function() {
-                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                  var newFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd', {
                      d: '[0-9]'
                   }, '');
-                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                  var oldFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd-dd', {
                      d: '[0-9]'
                   }, '');
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '',
                      after: '',
                      delete: '12-34-56',
@@ -100,13 +99,13 @@ define(
                   });
                });
                it('Test_05', function() {
-                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                  var newFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd', {
                      d: '[0-9]'
                   }, '');
-                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                  var oldFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd-dd', {
                      d: '[0-9]'
                   }, '');
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '',
                      after: '',
                      delete: '12-34-56',
@@ -120,25 +119,25 @@ define(
                   });
                });
                it('Test_06', function() {
-                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                  var newFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd', {
                      d: '[0-9]'
                   }, ' ');
-                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                  var oldFormat = inputMod.MaskFormatBuilder.getFormat('dd-dd-dd', {
                      d: '[0-9]'
                   }, ' ');
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      after: '',
                      before: '111111',
                      delete: '',
                      insert: ''
                   }, 'insert', '', oldFormat, newFormat);
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      after: replacer + replacer + replacer + replacer + replacer + replacer,
                      before: '',
                      delete: '',
                      insert: ''
                   }, 'delete', '', oldFormat, newFormat);
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      after: replacer + replacer + replacer + replacer,
                      before: '11',
                      delete: '',
@@ -163,7 +162,7 @@ define(
                   result: { value: '+7(123) 323-02-32', position: 18 }
                }].forEach(function(test, testNumber) {
                   it(`Test_${testNumber}`, function() {
-                     result = InputProcessor.input(test.splitValue, 'insert', '', test.format, test.format);
+                     result = inputMod.MaskInputProcessor.input(test.splitValue, 'insert', '', test.format, test.format);
                      assert.equal(result.value, result.value);
                      assert.equal(result.position, result.position);
                   });
@@ -171,7 +170,7 @@ define(
             });
             describe('delete', function() {
                it('Test_01', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '',
                      after: '',
                      delete: '1 . 4',
@@ -186,7 +185,7 @@ define(
             });
             describe('deleteForward', function() {
                it('Test_01', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '1',
                      after: '. 4',
                      delete: '2',
@@ -199,7 +198,7 @@ define(
                   });
                });
                it('Test_02', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '12',
                      after: '34',
                      delete: '.',
@@ -214,7 +213,7 @@ define(
             });
             describe('deleteBackward', function() {
                it('Test_01', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '1',
                      after: '.34',
                      delete: '2',
@@ -227,7 +226,7 @@ define(
                   });
                });
                it('Test_02', function() {
-                  result = InputProcessor.input({
+                  result = inputMod.MaskInputProcessor.input({
                      before: '12',
                      after: '34',
                      delete: '.',
