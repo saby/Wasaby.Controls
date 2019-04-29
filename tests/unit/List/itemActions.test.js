@@ -256,6 +256,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
@@ -270,7 +271,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
-                  shouldUpdateItemsActions: true,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
@@ -286,7 +287,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
-                  shouldUpdateItemsActions: true,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),

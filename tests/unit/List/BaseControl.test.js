@@ -1412,23 +1412,16 @@ define([
                 ],
                 viewModelConstructor: lists.ListViewModel
              },
-             lnBaseControl = new BaseControl(lnCfg);
+             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
-         assert.isFalse(lnBaseControl._shouldUpdateItemsActions);
-         assert.isFalse(lnBaseControl._itemsActionsUpdated);
-
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._itemMouseMove();
-
-         assert.isTrue(lnBaseControl._shouldUpdateItemsActions);
-         assert.isTrue(lnBaseControl._itemsActionsUpdated);
-
+         assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
-
-         assert.isFalse(lnBaseControl._shouldUpdateItemsActions);
-         assert.isTrue(lnBaseControl._itemsActionsUpdated);
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
       });
 

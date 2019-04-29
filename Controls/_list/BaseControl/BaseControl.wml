@@ -127,7 +127,7 @@
                 name="itemActions"
                 style="{{_options.style}}"
                 listModel="{{_listViewModel}}"
-                shouldUpdateItemsActions="{{_shouldUpdateItemsActions}}"
+                canUpdateItemsActions="{{_canUpdateItemsActions}}"
                 menuIsShown="{{_menuIsShown}}"
                 actionMenuIsShown="{{_actionMenuIsShown}}"
                 itemActions="{{_options.itemActions}}"
