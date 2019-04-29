@@ -7,7 +7,7 @@ import 'css!theme?Controls/popupTemplate';
       var DialogTemplate = Control.extend({
 
          /**
-          * Layout of the dialog template. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart Read more}.
+          * Layout of the dialog template. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template Read more}.
           * @class Controls/_popupTemplate/Dialog
           * @extends Core/Control
           * @control
