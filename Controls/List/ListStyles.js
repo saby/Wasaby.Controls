@@ -1,8 +1,8 @@
 define('Controls/List/ListStyles', ['Controls/_list/ListStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/ListStyles
- * @public
+ * @mixin Controls/_list/ListStyles
+ * @private
  *
  *
  * @css @color_ListView-empty text color of empty ListView

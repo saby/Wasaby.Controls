@@ -1,8 +1,8 @@
 define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_MoveDialog/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/Mover/MoveDialog/Styles
- * @public
+ * @mixin Controls/_MoveDialog/Styles
+ * @private
  *
  * @css @width_MoveDialog width of the move dialog.
  * @css @height_MoveDialog weight of the move dialog.

@@ -31,7 +31,7 @@
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List
+ *    </Controls.List>
  * </pre>
  */
 
