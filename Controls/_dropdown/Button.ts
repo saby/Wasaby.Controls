@@ -52,6 +52,7 @@ var Button = Control.extend({
    },
 
    _onItemClickHandler: function (event, result) {
+      //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
       return this._notify('menuItemActivate', [result[0]]) || this._notify('onMenuItemActivate', [result[0]]);
    }
 
