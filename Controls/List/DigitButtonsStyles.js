@@ -1,8 +1,8 @@
 define('Controls/List/DigitButtonsStyles', ['Controls/_list/DigitButtonsStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/DigitButtonsStyles
- * @public
+ * @mixin Controls/_list/DigitButtonsStyles
+ * @private
  *
  *
  * @css @width_Paging-digitButton-ellipsis width of button '...', which appears when there are many pages in the list

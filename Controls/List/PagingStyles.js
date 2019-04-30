@@ -1,8 +1,8 @@
 define('Controls/List/PagingStyles', ['Controls/_paging/PagingStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/PagingStyles
- * @public
+ * @mixin Controls/_paging/PagingStyles
+ * @private
  *
  *
  * @css @height_Paging-buttons height of paging buttons
