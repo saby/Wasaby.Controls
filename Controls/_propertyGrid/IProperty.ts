@@ -32,6 +32,11 @@ export default interface IProperty {
      */
     editorOptions?: object;
     /**
+     * @name Controls/_propertyGrid/IProperty#editorClass
+     * @cfg {Object} Class name for the editor
+     */
+    editorClass?: string;
+    /**
      * @name Controls/_propertyGrid/IProperty#type
      * @cfg {String} type of property, the available values are:
      * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’,if left unset, type will detected by value.
