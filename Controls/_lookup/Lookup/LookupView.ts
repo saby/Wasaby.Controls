@@ -58,14 +58,28 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          return maxVisibleItems;
       },
 
-      getAvailableCollectionWidth: function(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, readOnly, multiSelect) {
-         var additionalWidth = afterFieldWrapperWidth;
+      getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect) {
+         var
+             additionalWidth = afterFieldWrapperWidth,
+             fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
+             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
 
          if (!readOnly && multiSelect) {
-            additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapperWidth);
+            additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
          }
 
          return fieldWrapperWidth - additionalWidth;
+      },
+
+      getFieldWrapperMinHeight: function(self) {
+         var fieldWrapperStyles;
+
+         if (self._fieldWrapperMinHeight === null) {
+            fieldWrapperStyles = getComputedStyle(self._fieldWrapper);
+            self._fieldWrapperMinHeight = parseInt(fieldWrapperStyles['min-height'], 10) || parseInt(fieldWrapperStyles['height'], 10);
+         }
+
+         return self._fieldWrapperMinHeight;
       },
 
       getAfterFieldWrapperWidth: function(itemsCount, multiLine, readOnly) {
@@ -82,11 +96,11 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          return afterFieldWrapperWidth;
       },
 
-      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
-         /* By the standard, the minimum input field width is 33%, but not more than 100 */
-         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
+      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth, fieldWrapperMinHeight) {
+         /* By the standard, the minimum input field width is 33%, but not more than 4 field wrapper min height */
+         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 3;
 
-         return Math.min(minWidthFieldWrapper, 100);
+         return Math.min(minWidthFieldWrapper, 4 * fieldWrapperMinHeight);
       },
 
       getItemsSizesLastRow: function(fieldWrapperWidth, items, newOptions, counterWidth) {
@@ -179,6 +193,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
    var LookupView = BaseLookupView.extend({
       _availableWidthCollection: null,
       _fieldWrapperWidth: null,
+      _fieldWrapperMinHeight: null,
       _maxVisibleItems: null,
 
       _beforeMount: function() {
@@ -220,7 +235,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
             itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(this._fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+            availableWidth = _private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
