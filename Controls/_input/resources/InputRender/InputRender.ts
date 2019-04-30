@@ -6,8 +6,8 @@ import RenderHelper = require('Controls/_input/resources/RenderHelper');
 import Env = require('Env/Env');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import EnvEvent = require('Env/Event');
-import 'css!theme?Controls/_input/resources/InputRender/InputRender';
-      
+import 'css!theme?Controls/input';
+
 
       /**
        * @class Controls/_input/resources/InputRender/InputRender
@@ -352,4 +352,4 @@ import 'css!theme?Controls/_input/resources/InputRender/InputRender';
       InputRender._private = _private;
 
       export = InputRender;
-   
+
