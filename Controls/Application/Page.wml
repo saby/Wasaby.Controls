@@ -36,7 +36,7 @@
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
                               <body
-                                 class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
+                                 class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
                                  on:scroll="_scrollPage()"
