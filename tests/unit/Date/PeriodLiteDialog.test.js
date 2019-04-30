@@ -265,7 +265,7 @@ define([
          }].forEach(function(test) {
             it(`should set year to ${test.year} if options and wheelDelta is equals ${test.options} and ${test.wheelDelta}`, function() {
                const component = calendarTestUtils.createComponent(PeriodLiteDialog, test.options);
-               component._onWheel(coreMerge({ nativeEvent: { wheelDelta: test.wheelDelta } }, event));
+               component._onWheel(coreMerge({ nativeEvent: { deltaY: test.wheelDelta } }, event));
                assert.equal(component._year, test.year);
             });
          });
