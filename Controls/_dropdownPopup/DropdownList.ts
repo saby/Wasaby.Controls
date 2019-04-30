@@ -336,7 +336,9 @@ import chain = require('Types/chain');
             var selectedItems = [],
                self = this;
             chain.factory(this._listModel.getSelectedKeys()).each(function(key) {
-               selectedItems.push(self._options.items.getRecordById(key));
+               if (key !== undefined && key !== null) {
+                  selectedItems.push(self._options.items.getRecordById(key));
+               }
             });
 
             var templateConfig = {

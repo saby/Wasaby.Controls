@@ -1,7 +1,7 @@
 define('Controls/List/TreeTileView/Styles', ['Controls/_tile/TreeTileView/Styles'], function(Control) {
 /**
- * @mixin Controls/List/TreeTileView/Styles
- * @public
+ * @mixin Controls/_tile/TreeTileView/Styles
+ * @private
  *
  * @css @font-size_TreeTileView-title Font size of nodes title.
  * @css @height_TreeTileView-node Nodes height.

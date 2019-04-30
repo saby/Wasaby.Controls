@@ -36,5 +36,10 @@
                 </Controls.list:DataContainer>
             </div>
         </ws:bodyContentTemplate>
+        <ws:footerContentTemplate>
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <Controls.buttons:Button caption="OK" on:click="_close()"/>
+            </div>
+        </ws:footerContentTemplate>
     </Controls.popupTemplate:Dialog>
 </div>

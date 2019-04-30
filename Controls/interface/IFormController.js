@@ -11,7 +11,7 @@ define('Controls/interface/IFormController', [
 
    /**
     * @name Controls/interface/IFormController#record
-    * @cfg {Types/entity:Model} Sets the entry that produced the data initialization dialogue
+    * @cfg {Types/entity:Model} Record that produced the control initialization data.
     */
 
    /**
@@ -27,24 +27,52 @@ define('Controls/interface/IFormController', [
    /**
     * @name Controls/interface/IFormController#isNewRecord
     * @cfg {Boolean} "New record" flag, which means that the record is initialized in the data source, but not saved.
+    * If the record is marked isNewRecord flag, when saving the record, the request for BL will be executed, even if the record is not changed.
+    * Also when control destroying will be called deleting the record.
     */
 
    /**
     * @name Controls/interface/IFormController#createMetaData
-    * @cfg {Object} Initial values what will be argument of create method called when key option and record option are not exist.
+    * @cfg {Object} Initial values what will be argument of create method called when key option and record option are not exist. More {@link Types/source:ICrud#create}
     * Also its default value for create method.
     */
 
    /**
     * @name Controls/interface/IFormController#readMetaData
-    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists. More {@link Types/source:ICrud#read}
     * Also its default value for read method.
     */
 
    /**
     * @name Controls/interface/IFormController#destroyMetaData
-    * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
+    * @cfg {Object} Additional meta data what will be argument of destroying of draft record. More {@link Types/source:ICrud#destroy}
     * Also its default value for destroy method.
+    */
+
+   /**
+    * Updates a record in the data source
+    * @function Controls/interface/IFormController#update
+    */
+
+   /**
+    * Creates an empty record through a data source
+    * @function Controls/interface/IFormController#create
+    */
+
+   /**
+    * Reads an entry from a data source
+    * @function Controls/interface/IFormController#read
+    */
+
+   /**
+    * Removes an record from the data source
+    * @function Controls/interface/IFormController#delete
+    */
+
+   /**
+    * Starts validating process.
+    * @function Controls/interface/IFormController#validate
+    * @returns {Core/Deferred} deferred of result of validation
     */
 
    /**
