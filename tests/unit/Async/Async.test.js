@@ -348,5 +348,9 @@ define([
          async._afterUpdate({ templateName: 'myTemplate', templateOptions: { opt: '123'} });
          assert.equal(async._methodCalled, 0);
       });
+      it('load es module', function() {
+         async._updateOptionsForComponent({__esModule: true, default: true}, {}, 'EsModule');
+         assert.isTrue(async.optionsForComponent.resolvedTemplate);
+      });
    });
 });
