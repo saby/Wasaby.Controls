@@ -1,5 +1,5 @@
 <div class="controls-FilterPanel__Lookup">
-   <Controls.Selector.Lookup.Link
+   <Controls._filterPopup.Panel.Link
            caption="{{_options.caption}}"
            on:click="showSelector()"/>
    <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
