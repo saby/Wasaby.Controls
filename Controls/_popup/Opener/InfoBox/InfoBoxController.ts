@@ -18,7 +18,7 @@ function getConstants() {
 }
 
 //todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
-var constants;
+var constants = {};
 if (document) {
     if (document.body) {
         constants = getConstants();
