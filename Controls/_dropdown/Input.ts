@@ -35,7 +35,7 @@ var _private = {
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/interface/ISource
- * @mixes Controls/List/interface/IHierarchy
+ * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/Input/interface/IValidation
@@ -123,6 +123,7 @@ var Input = Control.extend({
    _template: template,
    _defaultContentTemplate: defaultContentTemplate,
    _text: '',
+   _hasMoreText: '',
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
@@ -138,7 +139,7 @@ var Input = Control.extend({
 
    _afterUpdate: function (newOptions) {
       if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-         this._notify('textValueChanged', [this._text]);
+         this._notify('textValueChanged', [this._text + this._hasMoreText]);
       }
    },
 
