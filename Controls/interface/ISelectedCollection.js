@@ -24,7 +24,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/List/interface/IList#dataLoadCallback
+    * @name Controls/_list/interface/IList#dataLoadCallback
     * @cfg {Function} Callback function that will be called when list data loaded by source
     */
 

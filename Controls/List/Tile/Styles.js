@@ -1,7 +1,7 @@
 define('Controls/List/Tile/Styles', ['Controls/_tile/Tile/Styles'], function(Control) {
 /**
- * @mixin Controls/List/Tile/Styles
- * @public
+ * @mixin Controls/_tile/Tile/Styles
+ * @private
  *
  * @css @spacing_TileView-between-items Spacing between items.
  * @css @border-width_TileView-item Thickness of the border around items.
