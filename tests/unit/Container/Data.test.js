@@ -171,12 +171,17 @@ define(
                _mixins: [],
                "[Types/_source/ICrud]": true
             };
-            var config = {source: source, keyProperty: 'id'};
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            }
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var data = getDataWithConfig(config);
 
             data._beforeMount(config).addCallback(function() {
                assert.isFalse(!!data._dataOptionsContext.prefetchSource);
                assert.equal(data._dataOptionsContext.source, source);
+               assert.isTrue(dataLoadErrbackCalled);
                done();
             });
          });
