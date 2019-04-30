@@ -14,17 +14,17 @@ define('Controls/List/List', ['Controls/_list/List'], function(Control) {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IList
+ * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/List/interface/IDraggable
+ * @mixes Controls/_list/interface/IDraggable
  *
- * @mixes Controls/List/BaseControlStyles
- * @mixes Controls/List/ListStyles
- * @mixes Controls/List/ItemActions/ItemActionsStyles
+ * @mixes Controls/_list/BaseControlStyles
+ * @mixes Controls/_list/ListStyles
+ * @mixes Controls/_list/ItemActions/ItemActionsStyles
  *
- * @mixes Controls/List/Mover/MoveDialog/Styles
- * @mixes Controls/List/PagingStyles
- * @mixes Controls/List/DigitButtonsStyles
+ * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/_paging/PagingStyles
+ * @mixes Controls/_list/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.

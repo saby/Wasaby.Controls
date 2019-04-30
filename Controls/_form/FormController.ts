@@ -7,7 +7,7 @@ import dataSource = require('Controls/dataSource');
    
 
    /**
-    * Record editing controller
+    * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
     * @category FormController
     * @class Controls/_form/FormController
     * @mixes Controls/interface/ISource
@@ -478,10 +478,6 @@ import dataSource = require('Controls/dataSource');
          return resultDef;
       },
 
-      /**
-       * Starts validating process.
-       * @returns {Core/Deferred} deferred of result of validation
-       */
       validate: function() {
          return this._children.validation.submit();
       },

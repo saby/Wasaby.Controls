@@ -106,7 +106,7 @@ import 'css!theme?Controls/popupTemplate';
       }
    });
 
-   CloseButton._theme = ['Controls/Button/Close'];
+   CloseButton._theme = ['Controls/popupTemplate'];
 
    CloseButton.getDefaultOptions = function() {
       return {

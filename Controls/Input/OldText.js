@@ -7,7 +7,7 @@ define('Controls/Input/OldText',
       'Controls/Input/OldText/OldViewModel',
       'Controls/Input/resources/InputHelper',
 
-      'css!theme?Controls/Input/resources/InputRender/InputRender',
+      'css!theme?Controls/input',
       'wml!Controls/Input/resources/input'
    ],
    function(Control, tmplNotify, template, entity, TextViewModel, inputHelper) {

@@ -8,10 +8,10 @@
  * @includes Confirmation Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
- * @includes Controls/_popupTemplate/Notification/NotificationStyles
- * @includes Controls/_popupTemplate/Dialog/DialogStyles
- * @includes Controls/_popupTemplate/Confirmation/ConfirmationStyles
- * @includes Controls/_popupTemplate/CloseButton/CloseButtonStyles
+ * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
+ * @includes DialogStyles Controls/_popupTemplate/Dialog/DialogStyles
+ * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
+ * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
  * @author Kraynov D.
  */

@@ -170,7 +170,11 @@ define('Controls/Container/Async',
                   this.optionsForComponent[key] = opts[key];
                }
             }
-            this.optionsForComponent.resolvedTemplate = tpl;
+            if (tpl &&  tpl.__esModule) {
+               this.optionsForComponent.resolvedTemplate = tpl.default;   
+            } else {
+               this.optionsForComponent.resolvedTemplate = tpl;
+            }
          },
 
          _checkLoadedError: function(loaded) {

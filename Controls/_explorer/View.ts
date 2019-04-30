@@ -128,11 +128,11 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IList
-    * @mixes Controls/List/interface/IHierarchy
-    * @mixes Controls/List/interface/ITreeControl
-    * @mixes Controls/List/interface/IExplorer
-    * @mixes Controls/List/interface/IDraggable
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_list/interface/IHierarchy
+    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_list/interface/IExplorer
+    * @mixes Controls/_list/interface/IDraggable
     * @mixes Controls/List/interface/ITile
     * @control
     * @public

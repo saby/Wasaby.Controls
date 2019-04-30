@@ -78,7 +78,7 @@ var _private = {
       this.checkIcons(self, config);
    },
    setPopupOptions: function (self, popupOptions) {
-      popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
+      popupOptions.className = popupOptions.className || self._options.className;
       popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
       popupOptions.closeOnOutsideClick = true;
    }

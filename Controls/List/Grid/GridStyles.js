@@ -1,8 +1,8 @@
 define('Controls/List/Grid/GridStyles', ['Controls/_grid/GridStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/Grid/GridStyles
- * @public
+ * @mixin Controls/_grid/GridStyles
+ * @private
  *
  *
  * @css @color_Grid-header color of header text
