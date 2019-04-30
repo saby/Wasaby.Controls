@@ -57,6 +57,17 @@ import 'css!theme?Controls/lookup';
          return self._fieldWrapperWidth;
       },
 
+      getFieldWrapperMinHeight: function(self, recount) {
+         var fieldWrapperStyles;
+
+         if (self._fieldWrapperMinHeight === null || recount) {
+            fieldWrapperStyles = getComputedStyle(self._fieldWrapper);
+            self._fieldWrapperMinHeight = parseInt(fieldWrapperStyles['min-height'], 10) || parseInt(fieldWrapperStyles['height'], 10);
+         }
+
+         return self._fieldWrapperMinHeight;
+      },
+
       isNeedCalculatingSizes: function(options) {
          var itemsCount = options.items.getCount();
 
@@ -92,7 +103,7 @@ import 'css!theme?Controls/lookup';
             itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+            availableWidth = _private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
@@ -142,11 +153,14 @@ import 'css!theme?Controls/lookup';
          return maxVisibleItems;
       },
 
-      getAvailableCollectionWidth: function(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, readOnly, multiSelect) {
-         var additionalWidth = afterFieldWrapperWidth;
+      getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect) {
+         var
+             additionalWidth = afterFieldWrapperWidth,
+             fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
+             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
 
          if (!readOnly && multiSelect) {
-            additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapperWidth);
+            additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
          }
 
          return fieldWrapperWidth - additionalWidth;
@@ -166,11 +180,11 @@ import 'css!theme?Controls/lookup';
          return afterFieldWrapperWidth;
       },
 
-      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
-         /* By the standard, the minimum input field width is 33%, but not more than 100 */
-         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
+      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth, fieldWrapperMinHeight) {
+         /* By the standard, the minimum input field width is 33%, but not more than 4 field wrapper min height */
+         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 3;
 
-         return Math.min(minWidthFieldWrapper, 100);
+         return Math.min(minWidthFieldWrapper, 4 * fieldWrapperMinHeight);
       },
 
       getItemsSizesLastRow: function(fieldWrapperWidth, items, newOptions, counterWidth) {
@@ -272,6 +286,7 @@ import 'css!theme?Controls/lookup';
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
+      _fieldWrapperMinHeight: null,
       _maxVisibleItems: null,
       _clearRecordsTemplate: clearRecordsTemplate,
       _showSelectorTemplate: showSelectorTemplate,
@@ -383,9 +398,12 @@ import 'css!theme?Controls/lookup';
       _resize: function() {
          var
             oldFieldWrapperWidth = _private.getFieldWrapperWidth(this),
-            newFieldWrapperWidth = _private.getFieldWrapperWidth(this, true);
+            newFieldWrapperWidth = _private.getFieldWrapperWidth(this, true),
+            oldFieldWrapperMinHeight = _private.getFieldWrapperMinHeight(this),
+            newFieldWrapperMinHeight = _private.getFieldWrapperMinHeight(this, true);
 
-         if (_private.isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
+         if (_private.isNeedCalculatingSizes(this._options) &&
+            (newFieldWrapperWidth !== oldFieldWrapperWidth || oldFieldWrapperMinHeight !== newFieldWrapperMinHeight)) {
             _private.calculatingSizes(this, this._options);
             this._forceUpdate();
          }

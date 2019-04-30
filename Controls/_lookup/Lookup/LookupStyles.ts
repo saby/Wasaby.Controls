@@ -5,6 +5,7 @@
     * @author Капустин И.А.
     *
     * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Spacing between input render wrapper and right border in multiple selection mode.
+    * @css @min-height_Lookup-input-render_multiLine Minimum height input render in multiline mode.
     * @css @line-height_Lookup-input-wrapper Input wrapper line height.
     * @css @font-size_Lookup-showSelector The size of the button that opens the directory.
     * @css @spacing_Lookup-between-showSelector-border Spacing between directory opening button and borders.
