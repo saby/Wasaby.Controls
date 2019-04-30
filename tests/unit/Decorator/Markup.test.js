@@ -114,7 +114,7 @@ define([
          'smb://ya.ru'
       ],
       decoratedLinkService,
-      currentVersion = '1.0',
+      currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
@@ -454,9 +454,9 @@ define([
                   ['a',
                      {
                         rel: 'noreferrer',
-                        href: 'https:\\\\ya.ru'
+                        href: 'https:\\\\ya.ru\\som"e'
                      },
-                     'https:\\\\ya.ru'
+                     'https:\\\\ya.ru\\som"e'
                   ]
                ],
                ['p', ['a', { href: longLink }, longLink]],
@@ -472,7 +472,7 @@ define([
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
-               '<p>' + decoratedLinkHtml + '</p>' +
+               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>' +
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';

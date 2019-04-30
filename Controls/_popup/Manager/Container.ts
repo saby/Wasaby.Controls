@@ -2,8 +2,8 @@ import Control = require('Core/Control');
 import collection = require('Types/collection');
 import template = require('wml!Controls/_popup/Manager/Container');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import 'css!theme?Controls/_popup/Manager/Container';
-      
+import 'css!theme?Controls/popup';
+
 
       // step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
       var POPUP_ZINDEX_STEP = 10;
@@ -86,4 +86,4 @@ import 'css!theme?Controls/_popup/Manager/Container';
       // To calculate the zIndex in a compatible notification Manager
       Container.POPUP_ZINDEX_STEP = POPUP_ZINDEX_STEP;
       export = Container;
-   
+

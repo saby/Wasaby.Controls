@@ -5,8 +5,7 @@ import cMerge = require('Core/core-merge');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import TargetCoords = require('Controls/_popup/TargetCoords');
 import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
-import 'css!theme?Controls/_popup/Opener/InfoBox/InfoBox';
-import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
+import 'css!theme?Controls/popup';
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
@@ -189,4 +188,4 @@ import 'css!theme?Controls/_popup/Opener/Previewer/PreviewerController';
       });
       InfoBoxController.prototype._private = _private;
       export = new InfoBoxController();
-   
+

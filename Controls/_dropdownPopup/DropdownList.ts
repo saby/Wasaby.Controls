@@ -11,7 +11,7 @@ import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
-   
+
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
       //Popup/Opener method "open" is called on every "mouseenter" event on item with hierarchy.
@@ -231,7 +231,7 @@ import chain = require('Types/chain');
                this._openSubDropdown(event, item);
             }
          },
-         
+
          _openSubDropdown: function(event, item) {
             var config;
 
@@ -242,7 +242,7 @@ import chain = require('Types/chain');
                this._children.subDropdownOpener.open(config, this);
             }
          },
-         
+
          _subDropdownClose: function() {
             this._subDropdownOpened = false;
          },
@@ -383,7 +383,7 @@ import chain = require('Types/chain');
          };
       };
 
-      DropdownList._theme = ['Controls/_dropdownPopup/DropdownList'];
+      DropdownList._theme = ['Controls/dropdownPopup'];
 
       export = DropdownList;
-   
+

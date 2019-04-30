@@ -6,7 +6,7 @@
                <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.Popup.Manager name="Manager"
+                        <Controls.popup:Manager name="Manager"
                                                 on:openInfoBox="PopupGlobal._openInfoBoxHandler()"
                                                 on:closeInfoBox="PopupGlobal._closeInfoBoxHandler()"
                                                 on:forceCloseInfoBox="PopupGlobal._forceCloseInfoBoxHandler()"
@@ -18,11 +18,11 @@
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
-                                    <Controls.Popup.Manager.Container name="PopupContainer" attr:id="popup"/>
+                                    <Controls.popup:Container name="PopupContainer" attr:id="popup"/>
                                  </div>
                               </Controls.dragnDrop:Controller>
                            </Controls.Application.TouchDetector>
-                        </Controls.Popup.Manager>
+                        </Controls.popup:Manager>
                      </Controls.Event.Registrator>
                   </Controls.Event.Registrator>
                </Controls.Event.Registrator>

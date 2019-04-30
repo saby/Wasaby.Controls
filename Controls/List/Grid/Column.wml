@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_grids/Column" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_grid/Column" scope="{{_options}}" />

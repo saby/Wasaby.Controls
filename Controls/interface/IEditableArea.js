@@ -169,7 +169,7 @@ define('Controls/interface/IEditableArea', [
     * @name Controls/interface/IEditableArea#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
-    * If you want content to look exactly as {@link Controls.input:Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
+    * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
     * Using Controls.EditableArea.Templates.Editors.Base:
     * <pre>

@@ -1,6 +1,6 @@
 /**
  * @author Золотова Элина
- * @mixin Controls/Filter/Button/Panel/Text/Styles
+ * @mixin Controls/_filter/Button/Panel/Text/Styles
  * @public
  *
  * @css @height_FilterText Control height.

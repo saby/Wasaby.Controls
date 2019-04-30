@@ -26,14 +26,14 @@ var _private = {
       return query;
    },
 
-   callQuery: function(dataSource, idProperty, filter, sorting, offset, limit, meta) {
+   callQuery: function(dataSource, keyProperty, filter, sorting, offset, limit, meta) {
       var queryDef, queryIns;
 
       queryIns = _private.getQueryInstance(filter, sorting, offset, limit, meta);
 
       queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
-         if (idProperty && idProperty !== dataSet.idProperty) {
-            dataSet.setIdProperty(idProperty);
+         if (keyProperty && keyProperty !== dataSet.idProperty) {
+            dataSet.setIdProperty(keyProperty);
          }
          return dataSet.getAll ? dataSet.getAll() : dataSet;
       }));
@@ -132,7 +132,7 @@ var SourceController = cExtend.extend({
       }
 
       self = this;
-      def = _private.callQuery(this._source, this._options.idProperty,
+      def = _private.callQuery(this._source, this._options.keyProperty,
          queryParams.filter,
          queryParams.sorting,
          queryParams.offset,

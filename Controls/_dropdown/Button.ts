@@ -69,6 +69,6 @@ Button.getDefaultOptions = function () {
    };
 };
 
-Button._theme = ['Controls/_dropdown/Button/Button'];
+Button._theme = ['Controls/dropdown'];
 
 export = Button;

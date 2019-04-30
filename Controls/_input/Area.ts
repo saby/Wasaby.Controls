@@ -156,6 +156,27 @@ import 'Controls/decorator';
             }
 
             return validated;
+         },
+
+         newLineHandler: function (self, event, isNewLinePaste) {
+            const nativeEvent = event.nativeEvent;
+
+            /**
+             * If a new line is added, then stop the bubbling of the event.
+             * Because, only we should respond to the addition of a new line.
+             */
+            if (_private.isPressEnter(nativeEvent)) {
+               if (self._options.newLineKey === 'ctrlEnter' && _private.isPressCtrl(nativeEvent)) {
+                  if (isNewLinePaste) {
+                     self.paste('\n');
+                  }
+                  event.stopPropagation();
+               } else if (self._options.newLineKey !== 'enter' || _private.isPressAdditionalKeys(nativeEvent)) {
+                  event.preventDefault();
+               } else {
+                  event.stopPropagation();
+               }
+            }
          }
       };
 
@@ -185,15 +206,17 @@ import 'Controls/decorator';
          },
 
          _keyDownHandler: function(event) {
-            var nativeEvent = event.nativeEvent;
+            _private.newLineHandler(this, event, true);
+         },
 
-            if (_private.isPressEnter(nativeEvent)) {
-               if (this._options.newLineKey === 'ctrlEnter' && _private.isPressCtrl(nativeEvent)) {
-                  this.paste('\n');
-               } else if (this._options.newLineKey !== 'enter' || _private.isPressAdditionalKeys(nativeEvent)) {
-                  event.preventDefault();
-               }
-            }
+         _keyPressHandler: function(event) {
+            _private.newLineHandler(this, event, false);
+         },
+
+         _keyUpHandler: function(event) {
+            Area.superclass._keyUpHandler.apply(this, arguments);
+
+            _private.newLineHandler(this, event, false);
          },
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
