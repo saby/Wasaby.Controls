@@ -1,4 +1,4 @@
-<Controls.filterPopup:Panel attr:class="controls-FilterPanel__width-m">
+<Controls.filterPopup:Panel attr:class="controls-FilterPanel__width-m" items="{{items}}">
    <ws:itemTemplate templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel"/>
    <ws:additionalTemplate templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel"/>
 </Controls.filterPopup:Panel>
