@@ -1,10 +1,22 @@
 define(
    [
-      'Controls/Container/Scroll/Scrollbar'
+      'Controls/Container/Scroll/Scrollbar',
+      'Core/core-merge'
    ],
-   function(Scrollbar) {
+   function(Scrollbar, coreMerge) {
 
       'use strict';
+
+      let createComponent = function(Component, cfg) {
+         let cmp;
+         if (Component.getDefaultOptions) {
+            cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+         }
+         cmp = new Component(cfg);
+         cmp.saveOptions(cfg);
+         cmp._beforeMount(cfg);
+         return cmp;
+      };
 
       describe('Controls.Container.Scrollbar', function() {
          var result;
@@ -57,6 +69,24 @@ define(
             assert.deepEqual(result, {
                position: 0
             });
+         });
+
+         describe('_afterUpdate', function() {
+            it('Should update scroll position', function() {
+               let
+                  sandbox = sinon.sandbox.create(),
+                  component = createComponent(Scrollbar, {contentHeight: 100, position: 0});
+               component._children.scrollbar = {
+                  offsetHeight: 50,
+                  clientHeight: 50
+               };
+               sandbox.stub(component, '_setSizes');
+               sandbox.stub(component, '_setPosition');
+               component._afterUpdate({contentHeight: 200, position: 10});
+               sinon.assert.called(component._setPosition);
+               sandbox.restore();
+            });
+
          });
       });
    }

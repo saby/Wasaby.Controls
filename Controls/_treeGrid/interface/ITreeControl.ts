@@ -50,6 +50,10 @@
  * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
  */
 
+/**
+ * @name Controls/_treeGrid/interface/ITreeControl#nodeLoadCallback
+ * @cfg {Function} Callback function that will be called when node data loaded by source.
+ */
 
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Occurs after node expansion.
