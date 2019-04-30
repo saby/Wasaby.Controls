@@ -1,13 +1,15 @@
 define('unit/Calendar/Utils', [
+   'Core/core-clone',
    'Core/core-merge'
 ], function(
+   coreClone,
    coreMerge
 ) {
    return {
       createComponent: function(Component, cfg) {
          let mv;
          if (Component.getDefaultOptions) {
-            cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+            cfg = coreMerge(coreClone(cfg), Component.getDefaultOptions(), {preferSource: true});
          }
          mv = new Component(cfg);
          mv.saveOptions(cfg);
