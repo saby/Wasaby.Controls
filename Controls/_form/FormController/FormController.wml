@@ -16,10 +16,16 @@
          <Controls.dataSource:error.Container
             name="errorContainer"
             viewConfig="{{ __error }}"
+            on:closeDialog="_onCloseErrorDialog()"
          >
-            <ws:partial
-               template="{{ _options.content }}"
-               record="{{ _record }}"/>
+            <ws:if data="{{ _record }}">
+               <ws:partial
+                    template="{{ _options.content }}"
+                    record="{{ _record }}"/>
+            </ws:if>
+            <ws:else>
+               <invisible-node />
+            </ws:else>
          </Controls.dataSource:error.Container>
       </div>
    </Controls._form.Crud>
