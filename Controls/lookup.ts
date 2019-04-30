@@ -17,7 +17,7 @@
 
 import Selector = require("Controls/_lookup/Button");
 import Input = require("Controls/_lookup/Lookup");
-import LookupMultiSelector = require("Controls/_lookup/LookupMultiSelector");
+import MultipleInput = require("Controls/_lookup/MultipleInput");
 import Collection = require("Controls/_lookup/SelectedCollection");
 import _CollectionController = require("Controls/_lookup/BaseController");
 import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/ItemTemplate");
@@ -28,7 +28,7 @@ import PlaceholderChooser = require("Controls/_lookup/PlaceholderChooser");
 export {
    Selector,
    Input,
-   LookupMultiSelector,
+   MultipleInput,
    Collection,
    _CollectionController,
    ItemTemplate,

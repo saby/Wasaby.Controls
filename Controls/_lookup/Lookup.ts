@@ -28,6 +28,11 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 
+/**
+ * @name Controls/interface/ILookup#multiLine
+ * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
+ */
+
 var Lookup = Control.extend({
    _template: template,
 

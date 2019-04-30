@@ -1,4 +1,4 @@
-<Controls._lookup.ControllerMultiSelector
+<Controls._lookup.ControllerMultipleInput
         name="controller"
         source="{{_options.source}}"
         selectedKeys="{{_options.selectedKeys}}"
@@ -12,5 +12,5 @@
         dataLoadCallback="{{_options.dataLoadCallback}}"
         selectorCallback="{{_options.selectorCallback}}"
         attr:class="controls-Lookup controls-LookupMultiSelector">
-    <Controls._lookup.LookupMultiSelector.LookupView scope="{{_options}}"/>
-</Controls._lookup.ControllerMultiSelector>
+    <Controls._lookup.MultipleInput.LookupView scope="{{_options}}"/>
+</Controls._lookup.ControllerMultipleInput>
