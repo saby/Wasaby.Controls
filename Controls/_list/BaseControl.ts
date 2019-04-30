@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/toolbars'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
@@ -722,7 +722,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
-          require(['css!Controls/Input/Dropdown/Dropdown'], () => {
+          require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
                 target: childEvent.target,
@@ -996,7 +996,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (newOptions.source) {
                 self._sourceController = new SourceController({
                     source: newOptions.source,
-                    navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
+                    keyProperty: newOptions.keyProperty
                 });
 
                 if (receivedData) {
@@ -1090,7 +1091,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             this._sourceController = new SourceController({
                 source: newOptions.source,
-                navigation: newOptions.navigation
+                navigation: newOptions.navigation,
+                keyProperty: newOptions.keyProperty
             });
         }
 

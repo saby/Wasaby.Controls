@@ -20,19 +20,20 @@ define([
 
    describe('Controls/Input/Date/RangeLink', function() {
       describe('_openDialog', function() {
-         it('should open opener', function() {
+         it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(dateRange.Selector, options);
             component._children.opener = {
                open: sinon.fake()
             };
             component._openDialog();
             sinon.assert.called(component._children.opener.open);
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {minQuantum: 'day'} }));
          });
       });
 
       describe('_openDialog with minRange', function() {
-         it('should open opener with parametr month', function() {
-            const component = calendarTestUtils.createComponent(dateRange.Selector, cMerge({ minRange: 'month' }, options));
+         it('should open opener with parameter month', function() {
+            const component = calendarTestUtils.createComponent(dateRange.Selector, cMerge({minRange: 'month'}, options));
             component._children.opener = {
                open: sinon.fake()
             };

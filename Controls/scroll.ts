@@ -8,7 +8,7 @@
  * @author Kraynov D.
  */
 
-import 'css!theme?Controls/_scroll/scroll';
+import 'css!theme?Controls/scroll';
 
 import Container = require('Controls/_scroll/Scroll');
 import Watcher = require('Controls/_scroll/Scroll/Watcher');

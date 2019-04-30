@@ -325,6 +325,21 @@ import 'wml!Controls/_input/Base/Stretcher';
             document.body.removeChild(element);
 
             return width;
+         },
+
+         saveSelection: function(self) {
+            /**
+             * Input processing occurs on the input event. At the time of processing,
+             * the data in the field has already changed. To work properly,
+             * we need to know the selection before the changes. To do this, save it in the model.
+             */
+            self._viewModel.selection = self._getFieldSelection();
+            /**
+             * If the model is changed, we apply all changes and inform the model that the changes are applied.
+             * The selection changes after a user action. Therefore, we do not need to change anything ourselves,
+             * only to inform the model about it.
+             */
+            self._viewModel.changesHaveBeenApplied();
          }
       };
 
@@ -565,18 +580,29 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @protected
           */
          _initProperties: function() {
+            /**
+             * Init the name of the control and to pass it to the templates.
+             * Depending on it, classes will be generated. An example of class is controls-{{controlsName}}...
+             * With the override in the heirs, you can change the display of the control. To do this,
+             * define styles for the class generated in the template.
+             * This approach avoids creating new templates with static classes if the current one is not suitable.
+             */
+            const CONTROL_NAME: string = 'InputBase';
+
             this._field = {
                template: fieldTemplate,
                scope: {
                   _useStretcher: false,
-                  controlName: 'InputBase',
+                  controlName: CONTROL_NAME,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
             };
             this._readOnlyField = {
                template: readOnlyFieldTemplate,
-               scope: {}
+               scope: {
+                  controlName: CONTROL_NAME
+               }
             };
             this._beforeFieldWrapper = {
                template: null,
@@ -622,7 +648,7 @@ import 'wml!Controls/_input/Base/Stretcher';
              * Clicking the arrows and keys home, end moves the cursor.
              */
             if (keyCode >= Env.constants.key.end && keyCode <= Env.constants.key.down) {
-               this._viewModel.selection = this._getFieldSelection();
+               _private.saveSelection(this);
             }
 
             if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
@@ -667,7 +693,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             if (this._numberSkippedSaveSelection > 0) {
                this._numberSkippedSaveSelection--;
             } else {
-               this._viewModel.selection = this._getFieldSelection();
+               _private.saveSelection(this);
             }
          },
 

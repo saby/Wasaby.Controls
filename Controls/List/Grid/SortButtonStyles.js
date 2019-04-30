@@ -1,8 +1,8 @@
 define('Controls/List/Grid/SortButtonStyles', ['Controls/_grid/SortButtonStyles'], function(Control) {
 /**
  * @author Gerasimov A.M.
- * @mixin Controls/List/Grid/SortButtonStyles
- * @public
+ * @mixin Controls/_grid/SortButtonStyles
+ * @private
  *
  * @css @font-size_SortButton-icon Font-size of the button icon.
  * @css @color_SortButton-icon Color of the button icon.

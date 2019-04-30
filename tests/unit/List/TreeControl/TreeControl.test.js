@@ -118,14 +118,32 @@ define([
 
 
       it('TreeControl._private.toggleExpanded', function() {
-         var treeControl = correctCreateTreeControl({
-            columns: [],
-            source: new sourceLib.Memory({
-               data: [],
-               idProperty: 'id'
-            })
-         });
+         var
+            nodeLoadCallbackCalled = false,
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               }),
+               nodeLoadCallback: function() {
+                  nodeLoadCallbackCalled = true;
+               }
+            });
          var isSourceControllerUsed = false;
+
+         var originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
+         treeGrid.TreeControl._private.createSourceController = function() {
+            return {
+               load: function() {
+                  isSourceControllerUsed = true;
+                  return Deferred.success([]);
+               },
+               hasMoreData: function () {
+                  return false;
+               }
+            };
+         };
 
          //viewmodel moch
          treeControl._children.baseControl.getViewModel = function() {
@@ -139,9 +157,7 @@ define([
                isExpandAll: function() {
                   return false;
                },
-               resetExpandedItems: function() {
-
-               },
+               resetExpandedItems: function() {},
                isExpanded: function() {
                   return false;
                },
@@ -151,7 +167,10 @@ define([
                },
                getCount:function(){
                   return 2;
-               }
+               },
+               setHasMoreStorage: function() {},
+               appendItems: function() {},
+               mergeItems: function() {}
             };
          };
 
@@ -164,28 +183,41 @@ define([
          };
 
          treeControl._nodesSourceControllers = {
-            1: {
-               load: function() {
-                  isSourceControllerUsed = true;
-               }
-            }
+            1: treeGrid.TreeControl._private.createSourceController()
          };
 
          // Test
          return new Promise(function(resolve) {
-            setTimeout(function() {
-               treeGrid.TreeControl._private.toggleExpanded(treeControl, {
-                  getContents: function() {
-                     return {
-                        getId: function() {
-                           return 1;
-                        }
-                     };
-                  }
-               });
-               assert.isFalse(isSourceControllerUsed);
-               resolve();
-            }, 10);
+            treeGrid.TreeControl._private.toggleExpanded(treeControl, {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            });
+            assert.isFalse(isSourceControllerUsed);
+            assert.isFalse(nodeLoadCallbackCalled);
+            treeGrid.TreeControl._private.toggleExpanded(treeControl, {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 2;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            });
+            assert.isTrue(isSourceControllerUsed);
+            assert.isTrue(nodeLoadCallbackCalled);
+            treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
+            resolve();
          });
       });
 
@@ -479,7 +511,7 @@ define([
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
-         return new Promise(function(resolve) {
+         return new Promise(function(resolve, reject) {
             treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
@@ -490,15 +522,23 @@ define([
                      parent: null
                   };
                   treeControl._beforeUpdate({root: 'testRoot'});
-                  assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-                  assert.deepEqual(filterOnOptionChange, newFilter);
+                  try {
+                     assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
+                     assert.deepEqual(filterOnOptionChange, newFilter);
+                  } catch (e) {
+                     reject(e);
+                  }
 
                   treeControl._afterUpdate({root: null});
                   treeControl._children.baseControl._sourceController._loader.addCallback(function() {
-                     assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-                     assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-                     assert.isTrue(isSourceControllerDestroyed);
-                     resolve();
+                     try {
+                        assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                        assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                        assert.isTrue(isSourceControllerDestroyed);
+                        resolve();
+                     } catch (e) {
+                        reject(e);
+                     }
                   });
                   return res;
                });

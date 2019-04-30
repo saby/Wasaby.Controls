@@ -1,7 +1,7 @@
 import cExtend = require('Core/core-simpleExtend');
-import formatDate = require('Core/helpers/Date/format');
+import formatter = require('Types/formatter');
 import dateUtils = require('Controls/Utils/Date');
-   
+
 
 var _private = {
    maskMap: {
@@ -350,7 +350,7 @@ var ModuleClass = cExtend.extend({
     */
    getStringByValue: function(value, mask) {
       if (dateUtils.isValidDate(value)) {
-         return formatDate(value, this._mask || mask);
+         return formatter.date(value, this._mask || mask);
       }
       return '';
    },

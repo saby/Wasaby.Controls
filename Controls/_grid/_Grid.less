@@ -1,0 +1,406 @@
+.controls-Grid {
+   display: -ms-grid;
+   display: grid;
+   width: 100%;
+}
+
+.controls-GridView__itemV_marker {
+   position: absolute;
+   width: @width_Grid-selection-marker;
+   background-color: @color_Grid-selection-marker;
+   left: 0;
+}
+
+.controls-GridView-without-rowSeparator_item_marker {
+   height: ~'calc(100% + @{height_Grid-row-separator})';
+   top: -@height_Grid-row-separator;
+}
+
+.controls-GridView-with-rowSeparator_item_marker {
+   top: 0px;
+   height: 100%;
+}
+
+.controls-Grid__header {
+   display: contents;
+   color: @color_Grid-header;
+}
+
+.controls-Grid__header-cell {
+   height: 100%;
+   box-sizing: border-box;
+   min-width: 0;
+   font-size: @font-size_Grid-header;
+   z-index: 1;
+   top: 0;
+   background-color: @background-color_Grid-header;
+   display: inline-flex;
+   flex-direction: column;
+}
+
+.controls-Grid__header-cell_spacing_money:after {
+   content: ".99";
+   visibility: hidden;
+   display: inline-block;
+}
+
+.controls-Grid__header-cell__content {
+   display: inline-block;
+   min-height: @min-height_Grid-header;
+}
+
+.controls-Grid__row-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-header-cell-baseline;
+}
+
+.controls-Grid__header-cell_valign_bottom {
+   justify-content: flex-end;
+}
+
+.controls-Grid__header-cell_valign_top {
+   justify-content: flex-start;
+}
+
+.controls-Grid__header-cell_valign_middle {
+   justify-content: center;
+}
+
+.controls-Grid__results {
+   display: contents;
+}
+
+.controls-Grid__results-cell {
+   background-color: @background-color_Grid-row-sticky;
+   z-index: 1;
+   min-width: 0;
+}
+.controls-GridViewV__itemsContainer {
+   display: contents;
+}
+.controls-Grid__row {
+   display: contents;
+}
+
+.controls-Grid__row-cell {
+   min-height: @min-height_Grid-row;
+   position: relative;
+   border-top: @height_Grid-row-separator solid;
+   // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
+   // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
+   min-width: 0;
+   font-size: @font-size_Grid-cell_m;
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-Grid__cell_ellipsis {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.controls-Grid__header-cell_halign_left {
+   text-align: left;
+}
+
+.controls-Grid__header-cell_halign_right {
+   text-align: right;
+}
+
+.controls-Grid__header-cell_halign_center {
+   text-align: center;
+}
+
+.controls-Grid__row-cell__content_halign_left {
+   justify-content: flex-start;
+   text-align: left;
+}
+
+.controls-Grid__row-cell__content_halign_right {
+   justify-content: flex-end;
+   text-align: right;
+}
+
+.controls-Grid__row-cell__content_halign_center {
+   justify-content: center;
+   text-align: center;
+}
+.controls-Grid__row_editing {
+   display: contents;
+}
+.controls-Grid_partial-support .controls-Grid__row_editing{
+   display: grid;
+   display: -ms-grid;
+}
+.ws-is-no-touch {
+   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
+   .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
+      background-color: @background-color_Grid-row_hover;
+   }
+   .controls-Grid__row:hover,
+   .controls-Grid_row-cell_hovered {
+      .controls-itemActionsV {
+         display: inline-block;
+      }
+   }
+}
+
+.controls-Grid__row-cell-background-editing {
+   background-color: @background-color_Grid-item_editing;
+   > .controls-itemActionsV {
+      display: inline-block;
+   }
+}
+
+.controls-Grid__row-cell_rowSpacingTop_default {
+   padding-top: @spacing_Grid-row-between-content-borderTop_s;
+}
+.controls-Grid__row-cell_rowSpacingBottom_default {
+   padding-bottom: @spacing_Grid-row-between-content-borderBottom_s;
+}
+
+.controls-Grid__row-cell_rowSpacingTop_m {
+   padding-top: @spacing_Grid-row-between-content-borderTop_s;
+}
+.controls-Grid__row-cell_rowSpacingBottom_m {
+   padding-bottom: @spacing_Grid-row-between-content-borderBottom_s;
+}
+
+.controls-Grid__row-cell_rowSpacingTop_l {
+   padding-top: @spacing_Grid-row-between-content-borderTop_l;
+}
+.controls-Grid__row-cell_rowSpacingBottom_l {
+   padding-bottom: @spacing_Grid-row-between-content-borderBottom_l;
+}
+
+.controls-Grid__cell_spacingLeft {
+   padding-left: @spacing_Grid-column-between-content-borderLeft;
+}
+
+.controls-Grid__cell_spacingRight {
+   padding-right: @spacing_Grid-column-between-content-borderRight;
+}
+
+.controls-Grid__row-cell__content_hiddenForLadder {
+   visibility: hidden;
+}
+
+.controls-Grid__row-ladder-cell {
+   pointer-events: none;
+   position: relative;
+   z-index: 2;
+}
+
+.controls-Grid__row-ladder-cell__content {
+   .position-sticky();
+   top: 0;
+}
+
+.controls-Grid__row-cell_withoutRowSeparator {
+   border-top-color: transparent;
+   border-bottom-color: transparent;
+}
+
+.controls-Grid__row-cell_lastRow {
+   border-bottom: @height_Grid-row-separator solid;
+}
+
+.controls-Grid__row-cell_first-row-in-group {
+   border-top-color: transparent;
+}
+
+.controls-Grid__row-cell_withRowSeparator_firstRow {
+   border-top-color: @border-color_Grid-firstRow-separator;
+}
+
+.controls-Grid__row-cell_withRowSeparator_lastRow {
+   border-bottom-color: @border-color_Grid-lastRow-separator;
+}
+
+.controls-Grid__row-cell_withRowSeparator {
+   border-top-color: @border-color_Grid-row-separator;
+}
+
+/* По умолчанию используется большая базова линия (первая строка всегда должна быть с большой базовой линией).
+   Далее, в зависимости от задачи, по месту устанавливаются нужные классы:
+   controls-Grid__row-cell__content_baseline_S
+   controls-Grid__row-cell__content_baseline_M
+   controls-Grid__row-cell__content_baseline_L */
+.controls-Grid__row-cell__content_baseline_L:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_l;
+}
+
+.controls-Grid__row-cell__content_baseline_M:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_m;
+}
+
+.controls-Grid__row-cell__content_baseline_S:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_s;
+}
+
+.controls-Grid__header-cell_baseline_XL:before {
+   content: '\200b';
+   font-size: @font-size_Grid-header_xl;
+}
+
+.controls-Grid__cell_spacingFirstCol_default, .controls-GridView__footer__paddingLeft_default {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_m;
+}
+
+.controls-Grid__cell_spacingFirstCol_null, .controls-GridView__footer__paddingLeft_null {
+   padding-left: 0;
+}
+
+.controls-Grid__cell_spacingFirstCol_xs, .controls-GridView__footer__paddingLeft_xs {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_xs;
+}
+
+.controls-Grid__cell_spacingFirstCol_s, .controls-GridView__footer__paddingLeft_s {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_s;
+}
+
+.controls-Grid__cell_spacingFirstCol_m, .controls-GridView__footer__paddingLeft_m {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_m;
+}
+
+.controls-Grid__cell_spacingFirstCol_l, .controls-GridView__footer__paddingLeft_l {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_l;
+}
+
+.controls-Grid__cell_spacingFirstCol_xl, .controls-GridView__footer__paddingLeft_xl {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_xl;
+}
+
+.controls-Grid__cell_spacingFirstCol_xxl, .controls-GridView__footer__paddingLeft_xxl {
+   padding-left: @spacing_Grid-row-between-content-borderLeft_xxl;
+}
+
+.controls-Grid__cell_spacingLastCol_default {
+   padding-right: @spacing_Grid-row-between-content-borderRight_m;
+}
+
+.controls-Grid__cell_spacingLastCol_null {
+   padding-right: 0;
+}
+
+.controls-Grid__cell_spacingLastCol_xs {
+   padding-right: @spacing_Grid-row-between-content-borderRight_xs;
+}
+
+.controls-Grid__cell_spacingLastCol_s {
+   padding-right: @spacing_Grid-row-between-content-borderRight_s;
+}
+
+.controls-Grid__cell_spacingLastCol_m {
+   padding-right: @spacing_Grid-row-between-content-borderRight_m;
+}
+
+.controls-Grid__cell_spacingLastCol_l {
+   padding-right: @spacing_Grid-row-between-content-borderRight_l;
+}
+
+.controls-Grid__cell_spacingLastCol_xl {
+   padding-right: @spacing_Grid-row-between-content-borderRight_xl;
+}
+
+.controls-Grid__cell_spacingLastCol_xxl {
+   padding-right: @spacing_Grid-row-between-content-borderRight_xxl;
+}
+
+.controls-GridView__item_active {
+   background-color: @background-color_Grid-row_hover;
+}
+
+// Checkbox styles
+.controls-Grid__row-cell-checkbox {
+   min-width: @width_CheckBox__clickArea;
+   max-width: @width_CheckBox__clickArea;
+}
+
+.controls-GridView__footer__paddingLeft_withCheckboxes {
+   padding-left: @spacing_Grid-row-with-checkbox-between-content-borderLeft;
+}
+
+.controls-GridView__checkbox {
+   position: absolute;
+   top: @spacing_Grid-row-between-checkbox-borderTop;
+   left: 0;
+}
+
+.controls-GridView__checkbox.controls-GridView__checkbox-onhover {
+   display: none;
+}
+
+.ws-is-no-touch .controls-Grid__row:hover .controls-GridView__checkbox-onhover,
+.ws-is-no-touch .controls-Grid_row-cell_hovered .controls-GridView__checkbox-onhover {
+   display: inline-block;
+}
+
+.controls-Grid__row-cell__contentWrapper {
+   display: inline-flex;
+   width: 100%;
+}
+
+.controls-Grid__row-cell__content {
+   width: 100%;
+   display: inline-flex;
+   align-items: baseline;
+   min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
+   flex-shrink: 1;
+}
+
+//MasterList styles
+
+.controls-Grid_master {
+   padding-right: @border-width_List-masterList-right;
+   box-sizing: border-box;
+}
+
+.controls-Grid__row-cell_selected-master {
+   background-color: @background-color_List-masterList-item_selected;
+   z-index: 1;
+   /* Пока нет фикс шапок
+   position: sticky;
+   top: 0;
+   bottom: 0; */
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
+      border-style: solid;
+      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
+      box-shadow: @box-shadow_Grid-masterList-item_selected;
+      width: ~'calc(100% + @{border-width_List-masterList-right})';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      //Top border of grid element is 1px;
+      height: ~'calc(100% + 1px)';
+   }
+}
+
+.controls-Grid__row-cell_selected__last-master {
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @border-width_List-masterList-right;
+      position: absolute;
+      right: -@border-width_List-masterList-right;
+      background-color: @background-color_List-masterList-item_selected;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover,
+   .controls-Grid__row_master.controls-Grid_row-cell_hovered {
+      background-color: @background-color_List-masterList-item_hover;
+   }
+}

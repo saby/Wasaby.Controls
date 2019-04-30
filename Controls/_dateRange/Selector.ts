@@ -5,7 +5,6 @@ import IInputSelectable from './interfaces/IInputSelectable';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
-import 'css!theme?Controls/_dateRange/Selector/Selector';
 
 /**
  * Controls that allows user to select date with start and end values in calendar.
@@ -17,7 +16,7 @@ import 'css!theme?Controls/_dateRange/Selector/Selector';
  * @control
  * @public
  * @category Input
- * @author Водолазских А.А.
+ * @author Mironov A.U.
  * @demo Controls-demo/Input/Date/RangeLink
  *
  */
@@ -91,11 +90,11 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge(coreMerge({}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+    return coreMerge(coreMerge({minRange: 'day'}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function () {
     return coreMerge(coreMerge({}, IInputSelectable.getOptionTypes()), ILinkView.getOptionTypes());
 };
-
+Component._theme = ['Controls/dateRange'];
 export default Component;

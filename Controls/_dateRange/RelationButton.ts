@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import {descriptor} from 'Types/entity';
 import template = require('wml!Controls/_dateRange/RelationButton/RelationButton');
-import 'css!theme?Controls/_dateRange/RelationButton/RelationButton';
 
 /**
  * Button for linking periods. The control that can be used with {@link Controls/_dateRange/RelationController RelationController}.
@@ -65,5 +64,5 @@ Component.getDefaultOptions = function () {
         value: 'normal'
     };
 };
-
+Component._theme = ['Controls/dateRange'];
 export default Component;

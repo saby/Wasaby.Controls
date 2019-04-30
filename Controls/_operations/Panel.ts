@@ -59,7 +59,7 @@ import buttons = require('Controls/buttons');
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/_list/interface/IHierarchy
     * @control
     * @public
     * @author Авраменко А.С.
@@ -159,7 +159,7 @@ import buttons = require('Controls/buttons');
          itemTemplate: toolbars.ItemTemplate
       };
    };
-   Panel._theme = ['Controls/operations', 'Controls/_toolbars/View'];
+   Panel._theme = ['Controls/operations', 'Controls/toolbars'];
 
    export = Panel;
 

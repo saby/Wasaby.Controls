@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/InfoBox/InfoBox');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_popupTemplate/InfoBox/InfoBox';
+import 'css!theme?Controls/popupTemplate';
 
 
 var InfoBoxTemplate = Control.extend({

@@ -4,7 +4,7 @@ import defaultItemTpl = require('wml!Controls/_tile/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
 import { IoC } from 'Env/Env';
-import 'css!theme?Controls/_tile/TileView/TileView';
+import 'css!theme?Controls/tile';
 
 var _private = {
     getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {

@@ -8,7 +8,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { RecordSet, IObservable } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
-import 'css!theme?Controls/_list/ItemActions/ItemActionsControl';
+import 'css!theme?Controls/list';
 import { CollectionItem } from 'Types/display';
 
 var

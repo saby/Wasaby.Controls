@@ -67,7 +67,7 @@ define([
          it('should update month and month caption when month changed', function() {
             const mv = calendarTestUtils.createComponent(MonthView, config),
                month = new Date(2018, 4, 1);
-            MonthView._private._updateView(mv, Object.assign({}, config, {month: month}));
+            MonthView._private._updateView(mv, Object.assign({}, mv._options, {month: month}));
             assert.equal(mv._month.getTime(), month.getTime(), 'wrong _month');
             assert.strictEqual(mv._caption, "Май'18", 'wrong _caption');
          });

@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_heading/Separator/Separator');
 import entity = require('Types/entity');
-import 'css!theme?Controls/_heading/Separator/Separator';
-   
+import 'css!theme?Controls/heading';
+
 
    /**
     * Heading separator with support some display styles. Used as part of complex headings(you can see it in Demo-example)

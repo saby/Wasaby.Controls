@@ -3,7 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
-   
+
 
    var markupGenerator,
       defCollection,
@@ -26,7 +26,7 @@ import validHtml = require('Core/validHtml');
          'src': true,
          'usemap': true
       },
-      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):\/\/|mailto:|\/)/,
+      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):(\/\/|\\\\)|mailto:|\/)/,
       dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;

@@ -3,7 +3,7 @@ import Control = require('Core/Control');
 import entity = require('Types/entity');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Render/Render');
-      
+
 
       var Render = Control.extend({
          _template: template,
@@ -42,7 +42,7 @@ import template = require('wml!Controls/_input/Render/Render');
          }
       });
 
-      Render._theme = ['Controls/_input/Render/Render'];
+      Render._theme = ['Controls/input'];
 
       Render.getDefaultTypes = function() {
          return {
@@ -79,4 +79,4 @@ import template = require('wml!Controls/_input/Render/Render');
       };
 
       export = Render;
-   
+
