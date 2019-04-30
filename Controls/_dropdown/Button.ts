@@ -52,7 +52,7 @@ var Button = Control.extend({
    },
 
    _onItemClickHandler: function (event, result) {
-      return this._notify('onMenuItemActivate', [result[0]]);
+      return this._notify('menuItemActivate', [result[0]]) || this._notify('onMenuItemActivate', [result[0]]);
    }
 
 });
