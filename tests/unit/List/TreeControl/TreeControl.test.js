@@ -132,6 +132,19 @@ define([
             });
          var isSourceControllerUsed = false;
 
+         var originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
+         treeGrid.TreeControl._private.createSourceController = function() {
+            return {
+               load: function() {
+                  isSourceControllerUsed = true;
+                  return Deferred.success([]);
+               },
+               hasMoreData: function () {
+                  return false;
+               }
+            };
+         };
+
          //viewmodel moch
          treeControl._children.baseControl.getViewModel = function() {
             return {
@@ -144,9 +157,7 @@ define([
                isExpandAll: function() {
                   return false;
                },
-               resetExpandedItems: function() {
-
-               },
+               resetExpandedItems: function() {},
                isExpanded: function() {
                   return false;
                },
@@ -156,7 +167,10 @@ define([
                },
                getCount:function(){
                   return 2;
-               }
+               },
+               setHasMoreStorage: function() {},
+               appendItems: function() {},
+               mergeItems: function() {}
             };
          };
 
@@ -169,35 +183,41 @@ define([
          };
 
          treeControl._nodesSourceControllers = {
-            1: {
-               load: function() {
-                  isSourceControllerUsed = true;
-               }
-            }
+            1: treeGrid.TreeControl._private.createSourceController()
          };
 
          // Test
-         return new Promise(function(resolve, reject) {
-            setTimeout(function() {
-               treeGrid.TreeControl._private.toggleExpanded(treeControl, {
-                  getContents: function() {
-                     return {
-                        getId: function() {
-                           return 1;
-                        }
-                     };
-                  }
-               });
-               setTimeout(function() {
-                  try {
-                     assert.isFalse(isSourceControllerUsed);
-                     assert.isTrue(nodeLoadCallbackCalled);
-                     resolve();
-                  } catch(e) {
-                     reject(e);
-                  }
-               }, 10);
-            }, 10);
+         return new Promise(function(resolve) {
+            treeGrid.TreeControl._private.toggleExpanded(treeControl, {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            });
+            assert.isFalse(isSourceControllerUsed);
+            assert.isFalse(nodeLoadCallbackCalled);
+            treeGrid.TreeControl._private.toggleExpanded(treeControl, {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 2;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            });
+            assert.isTrue(isSourceControllerUsed);
+            assert.isTrue(nodeLoadCallbackCalled);
+            treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
+            resolve();
          });
       });
 
