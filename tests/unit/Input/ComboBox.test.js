@@ -50,6 +50,9 @@ define(
             let combobox = getCombobox(config);
             combobox._setText([itemsRecords.at(1)]);
             assert.equal('Запись 2', combobox._value);
+            combobox._setText([]);
+            assert.strictEqual('', combobox._value);
+            assert.strictEqual('This is placeholder', combobox._placeholder);
          });
 
          it('_setText empty item', function() {

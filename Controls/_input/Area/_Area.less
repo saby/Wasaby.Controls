@@ -16,6 +16,15 @@
    position: absolute;
 }
 
+/**
+ * In IE <textarea> the height of the content is always 1px larger than the height of the container.
+ * Because of this, after the input occurs under the native scroll to the end. Visually, the text jumps.
+ * The solution is to equalize the height of the container with the height of the content.
+ */
+.ws-is-ie .controls-Area__realField {
+   height: calc(100% + 1px);
+}
+
 .controls-Area__wrapURLs {
    max-width: 100%;
    display: inline-flex;

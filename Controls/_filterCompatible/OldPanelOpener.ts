@@ -16,7 +16,7 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
       /**
        * Класс контрола "Кнопка фильтров".
        *
-       * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
+       * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/ws3/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
        * @class SBIS3.CONTROLS/Filter/Button
        * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Герасимов А.М.
@@ -55,7 +55,7 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
                 * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
                 * @remark
                 * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS/Mixins/PopupMixin#onShow} и {@link SBIS3.CONTROLS/Mixins/PopupMixin#onClose}.
-                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/ws3/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                 * @example
                 * <pre>
                 *   <option name="template" value="SBIS3.EDO.CtxFilter"/>
@@ -68,7 +68,7 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
                /**
                 * @сfg {String} Устанавливает шаблон заголовка всплывающей панели кнопки фильтров.
                 * @remark
-                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/ws3/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                 * @example
                 * <pre>
                 *   <option name="topTemplate" value="SBIS3.EDO.CtxFilter"/>
@@ -79,7 +79,7 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
                /**
                 * @сfg {String} Устанавливает шаблон для блока "Можно отобрать" на всплывающей панели.
                 * @remark
-                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/ws3/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                 * @example
                 * <pre>
                 *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>

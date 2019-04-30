@@ -1,7 +1,7 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import coreMerge = require('Core/core-merge');
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
        * @class Controls/_popup/Opener/Sticky
        * @extends Controls/_popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
