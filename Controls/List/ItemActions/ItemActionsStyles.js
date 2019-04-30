@@ -1,8 +1,8 @@
 define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_list/ItemActions/ItemActionsStyles'], function(Control) {
 /**
  * @author Авраменко А.С.
- * @mixin Controls/List/ItemActions/ItemActionsStyles
- * @public
+ * @mixin Controls/_list/ItemActions/ItemActionsStyles
+ * @private
  *
  * @css @height_ItemActions_inside Height of the item actions when they're positioned inside a row.
  * @css @height_ItemActions_outside Height of the item actions when they're positioned outside a row.
