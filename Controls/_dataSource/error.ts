@@ -20,3 +20,4 @@ export { default as Controller, Config } from 'Controls/_dataSource/_error/Contr
 export { default as Mode } from 'Controls/_dataSource/_error/Mode';
 export { default as DefaultTemplate } from 'Controls/_dataSource/_error/DefaultTemplate';
 export { default as Container } from 'Controls/_dataSource/_error/Container';
+export { default as DialogOpener } from 'Controls/_dataSource/_error/DialogOpener';
