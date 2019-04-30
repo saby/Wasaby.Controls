@@ -4,7 +4,7 @@ import defaultItemTpl = require('wml!Controls/_tile/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
 import { IoC } from 'Env/Env';
-import 'css!theme?Controls/_tile/TileView/TileView';
+import 'css!theme?Controls/tile';
 
 var _private = {
     getFixedPosition: function (itemNewSize, itemRect, containerRect, zoomCoefficient) {
@@ -189,7 +189,7 @@ var TileView = ListView.extend({
 
         if (position) {
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, position, this._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
+                self._setHoveredItem(itemData, position, self._tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemPosition(itemContainerRect, containerRect) : null);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);

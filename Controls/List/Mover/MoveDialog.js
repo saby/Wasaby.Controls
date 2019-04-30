@@ -20,7 +20,7 @@ define('Controls/List/Mover/MoveDialog', ['Controls/MoveDialog'], function(Contr
     * @default null
     */
    /**
-    * @name Controls/Input/interface/ISearch#searchParam
+    * @name Controls/interface/ISearch#searchParam
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
    return Control;

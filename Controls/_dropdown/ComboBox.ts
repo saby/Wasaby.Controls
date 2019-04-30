@@ -23,9 +23,9 @@ var _private = {
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISingleSelectable
- * @mixes Controls/Input/interface/IDropdownEmptyText
- * @mixes Controls/Input/interface/IInputDropdown
- * @mixes Controls/_input/interface/IInputPlaceholder
+ * @mixes Controls/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IInputDropdown
+ * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IInputDropdown
  * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
@@ -77,7 +77,7 @@ var ComboBox = Control.extend({
          this._value = '';
          this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
       } else {
-         this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+         this._value = getPropValue(selectedItems[0], this._options.displayProperty) || '';
          this._placeholder = this._options.placeholder;
       }
    }
@@ -92,6 +92,6 @@ ComboBox.getDefaultOptions = function () {
 
 ComboBox._private = _private;
 
-ComboBox._theme = ['Controls/_dropdown/ComboBox/ComboBox'];
+ComboBox._theme = ['Controls/dropdown'];
 
 export = ComboBox;

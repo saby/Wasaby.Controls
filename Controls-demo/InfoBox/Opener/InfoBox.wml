@@ -1,5 +1,5 @@
 <div class="controls-InfoBoxDemo">
-   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
+   <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
 
    <ws:for data="block in _blocks">
       <div class="controls-InfoBoxDemo-block">
@@ -37,12 +37,12 @@
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__top"
-                              attr:style="position: absolute"
+                              attr:style="position: absolute; top: 0px;left:calc(50% - 12px)"
                               on:mouseenter="_open(_cfgTop)"/>
     <Controls._buttons.Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__bottom"
-                              attr:style="position: absolute; bottom: 0px"
+                              attr:style="position: absolute; bottom: 0px;left:calc(50% - 12px)"
                               on:mouseenter="_open(_cfgBottom)"/>
 
 
@@ -51,7 +51,7 @@
          <div class="controls-InfoBoxDemo-header">{{'ICONS'}}</div>
       </div>
         <ws:for data="item in _icons">
-            <div class="controls-InfoBoxDemo-targets">
+            <div class="controls-InfoBoxDemo-targets controls-InfoBoxDemo__{{item.items[0].cfg.size}}">
             <ws:for data="config in item.items">
                  <div class="controls-InfoBoxDemo-icon">
                 <Controls._buttons.Button viewMode ='link'

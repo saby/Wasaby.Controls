@@ -6,7 +6,6 @@ import stringValueConverter = require('Controls/Input/DateTime/StringValueConver
 import IDateTimeMask from './interfaces/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
-import 'css!theme?Controls/_dateRange/Input/Input';
 
 /**
  * Control for entering date range.
@@ -91,8 +90,6 @@ var Component = Control.extend([], {
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
-        this._forceUpdate();
-        this._children.startValueField.activate();
         this._notify('inputCompleted', [
             startValue,
             endValue,
@@ -130,4 +127,5 @@ Component.getDefaultOptions = function () {
 Component.getOptionTypes = function () {
     return coreMerge({}, IDateTimeMask.getOptionTypes());
 };
+Component._theme = ['Controls/dateRange'];
 export default Component;

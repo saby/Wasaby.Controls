@@ -31,7 +31,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  */
 
 /**
- * @name Controls/Input/Search#searchButtonVisible
+ * @name Controls/_search/Input/Search#searchButtonVisible
  * @cfg {Boolean} Determines whether to show the search icon.
  */
 
@@ -71,7 +71,9 @@ var Search = inputMod.Base.extend({
    _initProperties: function() {
       Search.superclass._initProperties.apply(this, arguments);
 
-      this._field.scope.controlName = 'Search';
+      var CONTROL_NAME = 'Search';
+      this._field.scope.controlName = CONTROL_NAME;
+      this._readOnlyField.scope.controlName = CONTROL_NAME;
 
       this._afterFieldWrapper.template = buttonsTemplate;
       this._afterFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
@@ -125,7 +127,7 @@ var Search = inputMod.Base.extend({
    }
 });
 
-Search._theme.push('Controls/_search/Input/Search');
+Search._theme.push('Controls/search');
 
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = inputMod.Base.getOptionTypes();

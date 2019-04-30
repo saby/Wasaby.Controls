@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Confirmation/Confirmation');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
+import 'css!theme?Controls/popupTemplate';
 
 
       var _private = {
@@ -38,7 +38,7 @@ import 'css!theme?Controls/_popupTemplate/Confirmation/Confirmation';
           * @public
           * @category Popup
           * @author Красильников А.С.
-          * @mixes Controls/_popupTemplate/Confirmation/ConfirmationTmplStyles
+          * @mixes Controls/_popupTemplate/Confirmation/ConfirmationStyles
           * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
           */
 

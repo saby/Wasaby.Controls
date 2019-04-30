@@ -7,17 +7,17 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
-import 'css!theme?Controls/_filter/Button/Button';
+import 'css!theme?Controls/filter';
 /**
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
- * Clicking on a icon-button or a string opens the panel. {@link Controls/Filter/Button/Panel}
+ * Clicking on a icon-button or a string opens the panel. {@link Controls/_filter/Button/Panel}
  * Supports the insertion of a custom template between the button and the filter string.
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
  * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
  *
  * Information on filtering settings in the list using the "Filter Button" control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
- * @class Controls/Filter/Button
+ * @class Controls/_filter/Button
  * @extends Core/Control
  * @mixes Controls/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/ButtonPG
@@ -34,9 +34,9 @@ var _private = {
       var result = new Deferred();
       requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
          Layer.load().addCallback(function(res) {
-            requirejs(['Controls/filterPopup'], function(filterPopup) {
+            requirejs(['Controls/filterCompatible'], function(filterCompatible) {
                if (!self._filterCompatible) {
-                  self._filterCompatible = new filterPopup._FilterCompatible({
+                  self._filterCompatible = new filterCompatible._FilterCompatible({
                      filterButton: self,
                      filterButtonOptions: self._options,
                      tabindex: 0
@@ -146,7 +146,7 @@ var _private = {
    }
 };
 
-var FilterButton = Control.extend(/** @lends Controls/Filter/Button.prototype */{
+var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
 
    _template: template,
    _oldPanelOpener: null,

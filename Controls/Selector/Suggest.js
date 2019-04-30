@@ -18,10 +18,10 @@ define('Controls/Selector/Suggest',
        *
        * @class Controls/Selector/Suggest
        * @extends Controls/input:Text
-       * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
-       * @mixes Controls/Input/interface/ISuggest
+       * @mixes Controls/interface/ISuggest
        * @mixes Controls/interface/INavigation
        * @demo Controls-demo/Input/Search/Suggest/SuggestPG
        * @control

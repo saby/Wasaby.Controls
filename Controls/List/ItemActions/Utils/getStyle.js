@@ -1,3 +1,3 @@
-define('Controls/List/ItemActions/Utils/getStyle', ['Controls/_lists/ItemActions/Utils/getStyle'], function(Control) {
+define('Controls/List/ItemActions/Utils/getStyle', ['Controls/_list/ItemActions/Utils/getStyle'], function(Control) {
    return Control;
 });

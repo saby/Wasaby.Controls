@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_lists/ItemActions/resources/ItemActionsFor" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_list/ItemActions/resources/ItemActionsFor" scope="{{_options}}" />

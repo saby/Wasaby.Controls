@@ -21,7 +21,7 @@ import IInputStyle from "./IInputStyle";
  * @mixes Controls/_input/Base/Styles
  * @mixes Controls/_input/Render/Styles
  *
- * @mixes Controls/_input/InputCallback/ICallback
+ * @mixes Controls/interface/ICallback
  *
  * @public
  * @author Журавлев М.С.

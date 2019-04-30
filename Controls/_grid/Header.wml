@@ -1,0 +1,79 @@
+<ws:template name="headContent">
+      <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+      <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+      {{ listModel.resetHeaderColumns() }}
+      <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
+         <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
+                     defaultHeaderContent="{{defaultHeaderContent}}"
+                     listModel="{{listModel}}"
+                     headerColumn="{{ listModel.getCurrentHeaderColumn() }}"
+                     multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
+      </ws:for>
+</ws:template>
+<ws:template name="cellContent">
+   <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
+      <ws:if data="{{!!headerColumn.column.template}}">
+         <ws:partial attr:class="controls-Grid__row-header__content_baseline"
+                     template="{{headerColumn.column.template}}"
+                     scope="{{ headerColumn.column.templateOptions }}"
+                     colData="{{headerColumn}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial attr:class="controls-Grid__row-header__content_baseline" template="{{defaultHeaderContent}}" colData="{{headerColumn}}"/>
+      </ws:else>
+   </ws:if>
+</ws:template>
+<ws:template name="cell">
+   <ws:if data="{{listModel.isNoGridSupport()}}">
+      <th attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
+         <ws:partial template="cellContent"/>
+      </th>
+   </ws:if>
+   <ws:else data="{{listModel.isPartialGridSupport()}}">
+      <div attr:style="{{headerColumn.gridCellStyles}}" attr:class="{{headerColumn.cellClasses}}">
+         <ws:partial template="cellContent" />
+      </div>
+   </ws:else>
+   <ws:else>
+      <div attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
+         <ws:partial template="cellContent"/>
+      </div>
+   </ws:else>
+</ws:template>
+<ws:template name="stickyCell">
+   <Controls.scroll:StickyHeader attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}" mode="stackable" fixedZIndex="3">
+      <!-- Set the listModel option only in order for the update of the internal templates to update -->
+      <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
+      <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
+      <!-- Most often, the headings are changed simultaneously with updating the table. -->
+      <!-- Remove after complete https://online.sbis.ru/opendoc.html?guid=660b0a02-abbd-433c-9b37-b2468076171c -->
+      <ws:partial template="cellContent"
+                  defaultHeaderContent="{{defaultHeaderContent}}"
+                  headerColumn="{{headerColumn}}"
+                  multiselect="{{multiselect}}"
+                  listModel="{{ listModel }}"/>
+   </Controls.scroll:StickyHeader>
+</ws:template>
+<ws:template name="header">
+   <ws:if data="{{listModel.isNoGridSupport()}}">
+      <thead class="controls-Grid__header">
+         <ws:partial template="headContent" />
+      </thead>
+   </ws:if>
+   <ws:else data="{{listModel.isPartialGridSupport()}}">
+         <ws:partial attr:class="controls-Grid__header" template="headContent" />
+   </ws:else>
+   <ws:else>
+      <div class="controls-Grid__header">
+         <ws:partial template="headContent" />
+      </div>
+   </ws:else>
+</ws:template>
+<ws:if data="{{listModel.isStickyHeader()}}">
+   <Controls.StickyHeader.Group>
+      <ws:partial template="header" listModel="{{ listModel }}" />
+   </Controls.StickyHeader.Group>
+</ws:if>
+<ws:else>
+   <ws:partial template="header"/>
+</ws:else>

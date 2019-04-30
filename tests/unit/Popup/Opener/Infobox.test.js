@@ -1,12 +1,26 @@
 define(
    [
-      'Controls/Popup/InfoBox',
+      'Controls/popup',
       'Controls/Popup/Previewer/OpenerTemplate',
-      'Controls/Popup/Opener/InfoBox/InfoBoxController',
       'Controls/_popupTemplate/InfoBox'
    ],
-   (InfoBox, OpenerTemplate, InfoBoxController, InfoBoxTemplate) => {
+   (popup, OpenerTemplate, InfoBoxTemplate) => {
       'use strict';
+
+      describe('Controls/Popup/InfoBoxController', () => {
+         it('InfoBoxController: getDefaultConfig', () => {
+            let item = {
+               popupOptions: {
+                  position: 'tl'
+               }
+            };
+            popup.InfoBoxController.getDefaultConfig(item);
+            assert.equal(item.position.top, -10000);
+            assert.equal(item.position.left, -10000);
+            assert.equal(item.position.right, undefined);
+            assert.equal(item.position.bottom, undefined);
+         });
+      });
 
       describe('Controls/Popup/InfoBox', () => {
          it('PopupInfoBox: getConfig', () => {
@@ -16,9 +30,9 @@ define(
                position: 'tl',
                template: OpenerTemplate
             };
-            let Infobox = new InfoBox(config);
+            let Infobox = new popup.InfoboxTarget(config);
             Infobox.saveOptions(config);
-            let newConfig = InfoBox._private.getCfg(Infobox);
+            let newConfig = popup.InfoboxTarget._private.getCfg(Infobox);
 
             assert.equal(newConfig.floatCloseButton, true);
             assert.equal(newConfig.style, 'error');
@@ -27,12 +41,12 @@ define(
          });
 
          it('PopupInfoBox: resetTimeOut', () => {
-            let Infobox = new InfoBox();
+            let Infobox = new popup.InfoboxTarget();
             Infobox._openId = 300;
             Infobox._closeId = 500;
             assert.equal(Infobox._closeId, 500);
             assert.equal(Infobox._openId, 300);
-            InfoBox._private.resetTimeOut(Infobox);
+            popup.InfoboxTarget._private.resetTimeOut(Infobox);
             assert.equal(Infobox._closeId, null);
             assert.equal(Infobox._openId, null);
          });
@@ -69,7 +83,7 @@ define(
 
             tests.forEach((test) => {
                it('align: ' + JSON.stringify(test.cfg), () => {
-                  let offset = InfoBoxController._private.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth);
+                  let offset = popup.InfoBoxController._private.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth);
                   assert.equal(offset, test.value);
                });
             });
@@ -77,17 +91,17 @@ define(
 
          it('InfoBoxController: calculate offset target size', () => {
             let offsetHeight;
-            InfoBoxController._private.getOffset = (height) => {
+            popup.InfoBoxController._private.getOffset = (height) => {
                offsetHeight = height;
             };
             let target = {
                offsetHeight: 100,
                offsetWidth: 100
             };
-            InfoBoxController._private.getVerticalOffset(target, false);
+            popup.InfoBoxController._private.getVerticalOffset(target, false);
             assert.equal(offsetHeight, 100);
             offsetHeight = null;
-            InfoBoxController._private.getHorizontalOffset(target, true);
+            popup.InfoBoxController._private.getHorizontalOffset(target, true);
             assert.equal(offsetHeight, 100);
 
             target = {
@@ -95,10 +109,10 @@ define(
                clientWidth: 200
             };
 
-            InfoBoxController._private.getVerticalOffset(target, false);
+            popup.InfoBoxController._private.getVerticalOffset(target, false);
             assert.equal(offsetHeight, 200);
             offsetHeight = null;
-            InfoBoxController._private.getHorizontalOffset(target, true);
+            popup.InfoBoxController._private.getHorizontalOffset(target, true);
             assert.equal(offsetHeight, 200);
          });
       });

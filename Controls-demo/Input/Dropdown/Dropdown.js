@@ -88,15 +88,15 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ];
 
          this._iconItems = [
-            {id: 1, title: 'In the work', icon: 'icon-small icon-Trade icon-primary'},
-            {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock icon-primary'},
-            {id: 3, title: 'Completed', icon: 'icon-small icon-Successful icon-done'},
-            {id: 4, title: 'Not done', icon: 'icon-small icon-Decline icon-error'}
+            {id: 1, title: 'In the work', icon: 'icon-small icon-Trade'},
+            {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock'},
+            {id: 3, title: 'Completed', iconStyle: 'success', icon: 'icon-small icon-Successful'},
+            {id: 4, title: 'Not done', iconStyle: 'danger', icon: 'icon-small icon-Decline'}
          ];
 
          this._myTemplateItems = [
             {id: 1, title: 'Subdivision'},
-            {id: 2, title: 'Separate unit', icon: 'icon-size icon-16 icon-Company icon-primary',
+            {id: 2, title: 'Separate unit', iconStyle: 'secondary', icon: 'icon-size icon-16 icon-Company',
                comment: 'A territorially separated subdivision with its own address. For him, you can specify a legal entity'},
             {id: 3, title: 'Working group', icon: 'icon-size icon-16 icon-Groups icon-primary',
                comment: 'It is not a full-fledged podcasting, it serves for grouping. As a unit, the employees will have a higher department or office'}
@@ -115,8 +115,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ];
 
          this._titleItems = [
-            {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp icon-primary'},
-            {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown icon-primary'}
+            {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+            {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
          ];
 
          this._duplicateItems = [
@@ -184,18 +184,18 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 7, title: 'Computers and components, computing, office equipment' }
          ];
          this._groupItems = [
-            { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
+            { id: 1, title: 'Add', icon: 'icon-small icon-Bell' },
             {
-               id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
+               id: 2, title: 'Vacation', iconStyle: 'success', icon: 'icon-small icon-Vacation', group: '2'
             },
             {
-               id: 3, title: 'Time off', iconStyle: 'purple', icon: 'icon-small icon-SelfVacation', group: '2'
+               id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
             },
             {
                id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
             },
             {
-               id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
+               id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
             }
          ];
          this._groupTextItems = [

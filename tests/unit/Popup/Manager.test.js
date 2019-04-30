@@ -1,18 +1,16 @@
 define(
    [
-      'Controls/Popup/Manager',
-      'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/Manager/Container',
+      'Controls/popup',
       'Controls/Popup/Opener/BaseController',
       'Core/Deferred'
    ],
 
-   function(ManagerConstructor, ManagerController, ManagerContainer, BaseController, Deferred) {
+   function(popupMod, BaseController, Deferred) {
       'use strict';
 
       function getManager() {
-         let Manager = new ManagerConstructor();
-         let Container = new ManagerContainer();
+         let Manager = new popupMod.Manager();
+         let Container = new popupMod.Container();
          Manager._afterMount();
          Container._afterMount();
          return Manager;
@@ -25,8 +23,8 @@ define(
       describe('Controls/Popup/Manager/ManagerController', () => {
          it('initialize', function() {
             // Manager and container doesn't initialized
-            ManagerController._manager = undefined;
-            assert.equal(ManagerController.find(), false);
+            popupMod.Controller._manager = undefined;
+            assert.equal(popupMod.Controller.find(), false);
          });
 
          it('callMethod', () => {
@@ -35,19 +33,19 @@ define(
             let arg1 = '2';
             let methodName;
 
-            let baseMethod = ManagerController._callManager;
+            let baseMethod = popupMod.Controller._callManager;
 
-            ManagerController._callManager = (method, args) => {
+            popupMod.Controller._callManager = (method, args) => {
                assert.equal(methodName, method);
                assert.equal(args[0], arg0);
                assert.equal(args[1], arg1);
             };
 
             for (methodName of ['find', 'remove', 'update', 'show', 'reindex']) {
-               ManagerController[methodName](arg0, arg1);
+               popupMod.Controller[methodName](arg0, arg1);
             }
 
-            ManagerController._callManager = baseMethod;
+            popupMod.Controller._callManager = baseMethod;
          });
       });
 

@@ -5,7 +5,6 @@ import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
-import 'css!theme?Controls/_dateRange/LiteSelector/LiteSelector';
 
 /**
  * A link button that displays the period. Supports the change of periods to adjacent.
@@ -78,7 +77,10 @@ var Component = BaseControl.extend({
     _onResult: function (event, startValue, endValue) {
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
-        this._forceUpdate();
+    },
+
+    _rangeChangedHandler: function(event, startValue, endValue) {
+        this._rangeModel.setRange(startValue, endValue);
     },
 
     _beforeUnmount: function () {
@@ -95,5 +97,5 @@ Component.getDefaultOptions = function () {
 Component.getOptionTypes = function () {
     return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
 };
-
+Component._theme = ['Controls/dateRange'];
 export default Component;

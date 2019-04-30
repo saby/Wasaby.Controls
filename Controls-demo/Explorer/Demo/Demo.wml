@@ -1,7 +1,7 @@
 <div class="demo-Tile">
    <h1>Плитка</h1>
    <h2>Плитка с одинаковой шириной</h2>
-   <Controls.explorers:View
+   <Controls.explorer:View
       attr:class="demo-Tile__static"
       parentProperty="parent"
       nodeProperty="type"
@@ -17,7 +17,7 @@
       bind:excludedKeys="_excludedKeys"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:tileItemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="hidden" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
          <ws:partial template="Controls/list:EmptyTemplate">
@@ -26,7 +26,7 @@
             </ws:contentTemplate>
          </ws:partial>
       </ws:emptyTemplate>
-   </Controls.explorers:View>
+   </Controls.explorer:View>
    <h2>Плитка с разной шириной (без увеличения)</h2>
    <Controls.tile:View
       attr:class="demo-Tile__dynamic"
@@ -47,7 +47,7 @@
    </Controls.tile:View>
    <h2>Плитка с разной шириной (с увеличением)</h2>
    <Controls.tile:View
-      attr:class="demo-Tile__dynamic"
+      attr:class="demo-Tile__dynamic demo-Tile__dynamic_zoom"
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"

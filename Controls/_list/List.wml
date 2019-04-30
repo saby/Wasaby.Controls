@@ -1,0 +1,7 @@
+<ws:partial
+    name="listControl"
+    template="{{_viewTemplate}}"
+    scope="{{_options}}"
+    viewName="{{_viewName}}"
+    viewModelConstructor="{{_viewModelConstructor}}">
+</ws:partial>

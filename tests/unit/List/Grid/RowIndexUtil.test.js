@@ -1,12 +1,12 @@
 define([
-   'Controls/_lists/utils/RowIndexUtil',
-   'Controls/List/TreeGridView/TreeGridViewModel',
+   'Controls/_list/utils/RowIndexUtil',
+   'Controls/treeGrid',
    'Core/core-instance',
    'Types/collection',
    'Types/entity'
-], function (Util, TreeGridViewModel, cInstance, collection, _entity) {
+], function (Util, treeGrid, cInstance, collection, _entity) {
 
-   describe('Controls/_grids/RowIndexUtil', function () {
+   describe('Controls/_grid/RowIndexUtil', function () {
 
       var
           initialColumns = [{
@@ -23,7 +23,7 @@ define([
           *  5
           *  6
           */
-          treeGridViewModel = new TreeGridViewModel({
+          treeGridViewModel = new treeGrid.ViewModel({
              items: new collection.RecordSet({
                 idProperty: 'id',
                 rawData: [
@@ -175,7 +175,7 @@ define([
 
       it('calcFooterRowIndex in empty tree ', function () {
          var
-             tgvm = new TreeGridViewModel({
+             tgvm = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: []
@@ -209,7 +209,7 @@ define([
 
       it('calcFooterRowIndex in tree of only collapsed group(s)', function () {
          var
-             tgvm = new TreeGridViewModel({
+             tgvm = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
                    idProperty: 'id',
                    rawData: [

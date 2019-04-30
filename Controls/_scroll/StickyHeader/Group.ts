@@ -51,7 +51,6 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
 
          _stickyHeadersIds: null,
          _shadowVisible: false,
-         _height: 0,
 
          _headers: null,
 
@@ -67,16 +66,10 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
 
          _afterMount: function() {
             this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
-            this._notify('stickyRegister', [{
-               id: this._index,
-               inst: this,
-               position: 'top',
-            }, true], { bubbling: true });
          },
 
          _beforeUnmount: function() {
             this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
-            this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
          },
 
          getOffset: function(parentElement, position) {
@@ -84,12 +77,9 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
          },
 
          get height() {
-            // If the header is hidden we cannot calculate its current height.
-            // Use the height that it had before it was hidden.
-            if (this._container.offsetParent !== null) {
-               this._height = this._container.offsetHeight;
-            }
-            return this._height;
+            // Group can be with style display: content. Use the height of the first header as the height of the group.
+            const headersIds = Object.keys(this._headers);
+            return headersIds.length ? this._headers[headersIds[0]].inst.height : 0;
          },
 
          set top(value) {
@@ -136,8 +126,23 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
             event.stopImmediatePropagation();
             if (register) {
                this._headers[data.id] = data;
+
+               // Register group after first header is registred
+               if (Object.keys(this._headers).length === 1) {
+                  this._notify('stickyRegister', [{
+                     id: this._index,
+                     inst: this,
+                     position: data.position,
+                     mode: data.mode,
+                  }, true], { bubbling: true });
+               }
             } else {
                delete this._headers[data.id];
+
+               // Unregister group after last header is unregistred
+               if (!Object.keys(this._headers).length) {
+                  this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
+               }
             }
          }
       });

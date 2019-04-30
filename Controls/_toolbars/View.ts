@@ -5,10 +5,6 @@ import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
-import 'css!theme?Controls/_toolbars/View';
-//TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю статически.
-//TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
-import 'css!theme?Controls/_toolbars/ToolbarPopup';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -186,7 +182,7 @@ var _private = {
 
     setPopupOptions: function (self, newOptions) {
         self._popupOptions = {
-            className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list',
+            className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list_theme-' + self._options.theme,
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
@@ -215,7 +211,7 @@ var _private = {
         return {
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
-            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + ' ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme +' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,
                 rootKey: item.get(self._options.keyProperty),
@@ -232,7 +228,7 @@ var _private = {
 
     generateMenuConfig: function (self) {
         return {
-            className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
+            className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
                 items: self._menuItems,
                 itemTemplateProperty: self._options.itemTemplateProperty
@@ -336,7 +332,9 @@ Toolbar.getDefaultOptions = function() {
         itemsSpacing: 'medium'
     };
 };
-
+//TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю ToolbarPopup статически.
+//TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
+Toolbar._theme = ['Controls/toolbars'];
 Toolbar._private = _private;
 
 export default Toolbar;

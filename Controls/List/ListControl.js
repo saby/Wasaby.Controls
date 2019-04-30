@@ -1,9 +1,9 @@
-define('Controls/List/ListControl', ['Controls/_lists/ListControl'], function(Control) {
+define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Control) {
 /**
  * Plain list control with custom item template. Can load data from data source.
  *
  * @class Controls/list:View
- * @extends Controls/List/BaseControl
+ * @extends Controls/list:BaseControl
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable

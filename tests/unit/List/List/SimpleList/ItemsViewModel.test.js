@@ -3,10 +3,10 @@
  */
 define([
    'Controls/List/ItemsViewModel',
-   'Controls/List/resources/utils/ItemsUtil',
+   'Controls/list',
    'Types/collection',
    'Controls/Constants'
-], function(ItemsViewModel, ItemsUtil, collection, ControlsConstants){
+], function(ItemsViewModel, list, collection, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, data3, display;
       beforeEach(function() {
@@ -92,6 +92,28 @@ define([
          assert.isFalse(condResult, 'Incorrect condition value enumeration index after 3x_goToNext');
       });
 
+      it('shouldn\'t  update prefix item version on setIndexes', function () {
+
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         },
+         setted = false;
+
+         var iv = new ItemsViewModel(cfg);
+         iv._startIndex = 10;
+         iv._stopIndex = 20;
+
+         iv._nextModelVersion = function (notUpdatePrefixItemVersion, changesType) {
+            assert.isTrue(notUpdatePrefixItemVersion);
+            assert.equal(changesType, 'indexesChanged');
+            setted = true;
+         };
+
+         var cur = iv.setIndexes(0, 1);
+         assert.isTrue(setted);
+      });
       it('Other', function () {
          var cfg = {
             items: data,

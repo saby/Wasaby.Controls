@@ -26,6 +26,7 @@
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
+                           on:itemClick="_tmplNotify('itemClick')"
                            on:actionClick="_tmplNotify('actionClick')"/>
             </div>
          </Controls._scroll.StickyHeader.Controller>

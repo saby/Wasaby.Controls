@@ -8,7 +8,7 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
 import backButtonTemplate = require('wml!Controls/_breadcrumbs/HeadingPath/Back');
 import Common from './HeadingPath/Common';
-import 'Controls/_heading';
+import 'Controls/heading';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {

@@ -3,8 +3,8 @@ import template = require('wml!Controls/_popup/Previewer/Previewer');
 import debounce = require('Core/helpers/Function/debounce');
 import PreviewerOpener = require('Controls/_popup/Opener/Previewer');
 import Env = require('Env/Env');
-import 'css!Controls/_popup/Previewer/Previewer';
-      
+import 'css!Controls/popup';
+
 
       /**
        * @class Controls/_popup/Previewer
@@ -50,7 +50,8 @@ import 'css!Controls/_popup/Previewer/Previewer';
                },
                isCompoundTemplate: self._options.isCompoundTemplate,
                eventHandlers: {
-                  onResult: self._resultHandler
+                  onResult: self._resultHandler,
+                  onClose: self._closeHandler
                },
                templateOptions: {
                   template: self._options.templateName || self._options.template,
@@ -77,6 +78,7 @@ import 'css!Controls/_popup/Previewer/Previewer';
                } else {
                   self._children.openerPreviewer.open(_private.getCfg(self), type);
                }
+               self._isOpened = true;
             }
          },
          close: function(self, type) {
@@ -90,11 +92,13 @@ import 'css!Controls/_popup/Previewer/Previewer';
 
       var Previewer = Control.extend({
          _template: template,
+         _isOpened: false,
 
          _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
+            this._closeHandler = this._closeHandler.bind(this);
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
             if (options.templateName) {
@@ -138,7 +142,9 @@ import 'css!Controls/_popup/Previewer/Previewer';
             }
             return this._children.openerPreviewer.isOpened();
          },
-
+         _scrollHandler: function(event) {
+            this._close(event);
+         },
          // Pointer action on hover with content and popup are executed sequentially.
          // Collect in package and process the latest challenge
          _debouncedAction: function(method, args) {
@@ -226,6 +232,9 @@ import 'css!Controls/_popup/Previewer/Previewer';
                   break;
             }
          },
+         _closeHandler: function(){
+            this._isOpened = false;
+         },
          _private: _private
       });
 
@@ -236,5 +245,5 @@ import 'css!Controls/_popup/Previewer/Previewer';
       };
 
       export = Previewer;
-   
+
 

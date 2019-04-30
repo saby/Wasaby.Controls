@@ -1,5 +1,5 @@
 <div class="ErrorContainer">
-    <Controls.Popup.Opener.Dialog name="dialogOpener" />
+    <Controls.popup:Dialog name="dialogOpener" />
     <ws:if data="{{ __viewConfig && __viewConfig.mode != 'dialog' }}">
         <ws:partial
             template="{{ __viewConfig.template }}"

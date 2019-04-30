@@ -1,10 +1,10 @@
-<div class="controls-StackTemplate">
+<div class="controls-StackTemplate" ws-tab-cycling="true">
     <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">
                 <ws:if data="{{_options.caption || _options.headingCaption}}">
                     <div class="controls-StackTemplate__caption">
-                        <Controls._heading:Title attr:class="controls-StackTemplate__caption_text"
+                        <Controls.heading:Title attr:class="controls-StackTemplate__caption_text"
                                           caption="{{_options.caption || _options.headingCaption}}"
                                           style="{{_options.headingStyle}}"
                                           size="l"

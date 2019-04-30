@@ -27,15 +27,6 @@ define('Controls-demo/Popup/Opener/DialogPG',
                name: {
                   readOnly: true
                },
-               width: {
-                  readOnly: true
-               },
-               height: {
-                  readOnly: true
-               },
-               maxHeight: {
-                  readOnly: true
-               },
                template: {
                   items: [
                      {

@@ -8,7 +8,16 @@ import {Controller as SourceController} from 'Controls/source';
 import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
 import Deferred = require('Core/Deferred');
 
-
+/**
+ *
+ * Control _lookupPopup/Container
+ *
+ * @class Controls/_lookupPopup/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Kraynov D.
+ */
 
       var _private = {
          getFilteredItems: function(items, filterFunc) {
@@ -47,9 +56,9 @@ import Deferred = require('Core/Deferred');
             return emptyItems;
          },
 
-         prepareFilter: function(filter, selection, source) {
+         prepareFilter: function(filter, selection, source, selectionType) {
             var adapter = source.getAdapter();
-            filter.selection = selectionToRecord(selection, adapter);
+            filter.selection = selectionToRecord(selection, adapter, selectionType);
             return filter;
          },
 
@@ -87,24 +96,27 @@ import Deferred = require('Core/Deferred');
             }
          },
 
-         _selectComplete: function() {
-            var self = this;
-            var loadDef;
-            var dataOptions = this.context.get('dataOptions');
-            var keyProperty = dataOptions.keyProperty;
+         _selectComplete: function():void {
+            const self = this;
+            const dataOptions = this.context.get('dataOptions');
+            const keyProperty = dataOptions.keyProperty;
+
+            let loadDef;
 
             function prepareResult(result) {
                return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
             }
 
             if (this._selectedKeys.length || this._excludedKeys.length) {
-               var source = dataOptions.source;
-               var sourceController = _private.getSourceController(source, dataOptions.navigation);
-               var selection = {
+               const source = dataOptions.source;
+               const sourceController = _private.getSourceController(source, dataOptions.navigation);
+               const selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               loadDef = sourceController.load(_private.prepareFilter(Utils.object.clone(dataOptions.filter), selection, source));
+               const filter = Utils.object.clone(dataOptions.filter);
+
+               loadDef = sourceController.load(_private.prepareFilter(filter, selection, source, this._options.selectionType));
 
                loadDef.addCallback(function(result) {
                   return prepareResult(result);

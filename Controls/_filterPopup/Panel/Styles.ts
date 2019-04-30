@@ -1,6 +1,6 @@
 /**
  * @author Золотова Элина
- * @mixin Controls/Filter/Button/Panel/Styles
+ * @mixin Controls/_filter/Button/Panel/Styles
  * @public
  *
  * @css @background-color_FilterPanel Background color of filter panel.
@@ -22,6 +22,8 @@
  *
  * @css @spacing_FilterPanel-between-leftBorder-propertyGrid Spacing between left border and the property grid block.
  * @css @spacing_FilterPanel-between-rightBorder-propertyGrid Spacing between right border and the property grid block.
+ * @css @spacing_FilterPanel-between-topBorder-propertyGrid Spacing between top border and the property grid block.
+ * @css @spacing_FilterPanel-between-bottomBorder-propertyGrid Spacing between bottom border and the property grid block.
  *
  * @css @spacing_FilterPanel-between-leftBorder-additionalParams Spacing between left border and the additional params block.
  * @css @spacing_FilterPanel-between-rightBorder-additionalParams Spacing between right border and the additional params block.

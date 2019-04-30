@@ -1,4 +1,4 @@
-define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Types/entity'], function(SearchGridViewModel, collection, entity) {
+define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeGrid, collection, entity) {
    
    describe('Controls.List.SearchView.SearchGridViewModel', function() {
    
@@ -9,7 +9,7 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Typ
                rawData: [{id: 1, title: 'test'}],
                idProperty: 'id'
             });
-            var model = new SearchGridViewModel({
+            var model = new treeGrid.SearchGridViewModel({
                items: items,
                searchValue: 'tes',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
@@ -32,7 +32,7 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Typ
                rawData: [{id: 1, title: 'test'}],
                idProperty: 'id'
             });
-            var model = new SearchGridViewModel({
+            var model = new treeGrid.SearchGridViewModel({
                items: items,
                searchValue: 'tes',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],

@@ -1,4 +1,4 @@
-define('Controls/List/List', ['Controls/_lists/List'], function(Control) {
+define('Controls/List/List', ['Controls/_list/List'], function(Control) {
 /**
  * Created by kraynovdo on 31.01.2018.
  */

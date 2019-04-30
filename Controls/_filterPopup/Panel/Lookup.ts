@@ -2,23 +2,23 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
-import 'css!theme?Controls/_filterPopup/Panel/Lookup/Lookup';
+import 'css!theme?Controls/filterPopup';
    /**
     * Control link with lookup
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
     * @class Controls/_filterPopup/Panel/Lookup
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/interface/ISelectorDialog
-    * @mixes Controls/Input/interface/ISearch
+    * @mixes Controls/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
-    * @mixes Controls/Input/interface/ISuggest
+    * @mixes Controls/interface/ISuggest
     * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/_input/interface/IInputPlaceholder
-    * @mixes Controls/_input/interface/IInputText
+    * @mixes Controls/interface/IInputPlaceholder
+    * @mixes Controls/interface/IInputText
     * @mixes Controls/Selector/Lookup/LookupStyles
     * @control
     * @public

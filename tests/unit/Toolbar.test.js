@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Toolbar',
+      'Controls/toolbars',
       'Types/entity',
       'Types/collection',
       'Types/source'
    ],
-   (Toolbar, entity, collection, sourceLib) => {
+   (toolbars, entity, collection, sourceLib) => {
    describe('Toolbar', () => {
    let defaultItems = [
       {
@@ -62,7 +62,7 @@ define(
    let itemWithOutMenu = new entity.Model({
       rawData: defaultItems[5]
    });
-   let toolbar = new Toolbar(config);
+   let toolbar = new toolbars.View(config);
 
    toolbar._notify = (e, data) => {
       assert.equal(data[0].id, 'myTestItem');
@@ -133,7 +133,7 @@ define(
                   caption: 'Запись 2',
                   iconStyle: 'super'
                };
-               let itemConfig = Toolbar._private.generateItemPopupConfig(itemWithMenu, {}, toolbar);
+               let itemConfig = toolbars.View._private.generateItemPopupConfig(itemWithMenu, {}, toolbar);
                if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
                   standart.icon === itemConfig.templateOptions.headConfig.icon &&
                   standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle) {
@@ -203,6 +203,7 @@ define(
                   testSelf = {
                      _options: {
                         size: 'size',
+                        theme: 'default',
                         keyProperty: 'keyProperty'
                      },
                      _items: 'items'
@@ -211,7 +212,7 @@ define(
                      currentTarget: 'target'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup__icon popupClassName',
+                     className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      corner: {
                         horizontal: 'left',
                         vertical: 'top'
@@ -231,12 +232,13 @@ define(
                         showHeader: 'showHeader'
                      }
                   };
-               assert.deepEqual(Toolbar._private.generateItemPopupConfig(testItem, testEvent, testSelf), config);
+               assert.deepEqual(toolbars.View._private.generateItemPopupConfig(testItem, testEvent, testSelf), config);
             });
             it('menu popup config generation', function() {
                var
                   testSelf = {
                      _options: {
+                        theme: 'default',
                         size: 'size',
                         popupClassName: 'popupClassName',
                         itemTemplateProperty: 'itp'
@@ -247,14 +249,14 @@ define(
                      _menuItems: 'menuItems'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup__list popupClassName',
+                     className: 'controls-Toolbar__popup__list_theme-default popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
                         items: 'menuItems',
                         itemTemplateProperty: 'itp'
                      }
                   };
-               assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);
+               assert.deepEqual(toolbars.View._private.generateMenuConfig(testSelf), config);
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;

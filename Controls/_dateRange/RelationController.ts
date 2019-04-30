@@ -10,7 +10,7 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  *
  * @control
  * @public
- * @demo Controls-demo/Input/Date/PickerPG
+ * @demo Controls-demo/dateRange/RelationController
  * @author Миронов А.Ю.
  */
 

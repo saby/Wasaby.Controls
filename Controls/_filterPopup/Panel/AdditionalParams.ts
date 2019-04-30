@@ -4,13 +4,13 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import Clone = require('Core/core-clone');
 import template = require('wml!Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams');
 import chain = require('Types/chain');
-import 'css!theme?Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams';
+import 'css!theme?Controls/filterPopup';
    /**
     * Control "Additional params". Used in the filter panel.
     * @class Controls/_filterPopup/Panel/AdditionalParams
     * @extends Core/Control
     * @control
-    * @public
+    * @private
     * @author Герасимов А.М.
     *
     * @css @max-height_FilterPanel-items Maximum height of the folded block.

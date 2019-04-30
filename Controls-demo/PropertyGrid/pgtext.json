@@ -661,7 +661,7 @@
               "title": "Filter configuration - object with field names and their values."
           },
           "placeholder": {
-            "type": "String|function",
+            "type": "function|String",
             "title": "Field placeholder."
           },
           "emptyText": {
@@ -2509,11 +2509,116 @@
             "title": "The minimum width of popup.",
             "type": "Number"
           },
+          "maxWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "minWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
           "height": {
             "title": "The minimum height of popup.",
             "type": "Number"
           },
           "maxHeight": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "minHeight": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          }
+        }
+      }
+    }
+  },
+  "Controls/_popup/Opener/Sticky": {
+    "name": "Controls/_popup/Opener/Sticky",
+    "className": "Controls/_popup/Opener/Sticky",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/_popup/Opener/Sticky",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          },
+          "autofocus": {
+            "title": "Determines whether focus is set to the template when popup is opened.",
+            "type": "Boolean"
+          },
+          "actionOnScroll": {
+            "type": "enum",
+            "default": "close",
+            "enum": {
+              "close": "close",
+              "track": "track"
+            }
+          },
+          "direction": {
+            "type": "Object"
+          },
+          "offset": {
+            "type": "Object"
+          },
+          "targetPoint": {
+            "type": "Object"
+          },
+          "fittingMode": {
+            "type": "enum",
+            "default": "fixed",
+            "enum": {
+              "fixed": "fixed",
+              "adaptive": "adaptive",
+              "overflow": "overflow"
+            }
+          },
+          "templateOptions": {
+            "title": "Шаблон отображения внутреннего содержимого",
+            "type": "Object"
+          },
+          "modal": {
+            "title": "Determines whether the window is modal.",
+            "type": "Boolean"
+          },
+          "className": {
+            "title": "Class names of popup.",
+            "type": "String"
+          },
+          "closeOnOutsideClick": {
+            "title": "Determines whether possibility of closing the popup when clicking past.",
+            "type": "Boolean"
+          },
+          "template": {
+            "title": "Template inside popup.",
+            "type": "function|String"
+          },
+          "width": {
+            "title": "The minimum width of popup.",
+            "type": "Number"
+          },
+          "maxWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "minWidth": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "height": {
+            "title": "The minimum height of popup.",
+            "type": "Number"
+          },
+          "maxHeight": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "minHeight": {
             "title": "The maximum height of popup.",
             "type": "Number"
           }

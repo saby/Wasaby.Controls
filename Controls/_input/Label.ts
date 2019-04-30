@@ -8,32 +8,31 @@ import template = require('wml!Controls/Label/Label');
        *
        * @class Controls/_input/Label
        * @extends Core/Control
+       *
+       * @mixes Controls/interface/ICaption
+       *
        * @public
        * @demo Controls-demo/Label/Label
-       * @author Журавлев М.С.
+       *
+       * @author Михайловский Д.С.
        */
 
       /**
-       * @name Controls/Label#caption
-       * @cfg {String}
+       * @name Controls/_input/Label#required
+       * @cfg {Boolean} Determines whether the label can be displayed as required.
        */
 
       /**
-       * @name Controls/Label#required
-       * @cfg {Boolean}
-       */
-
-      /**
-       * @name Controls/Label#underline
-       * @cfg {String}
+       * @name Controls/_input/Label#underline
+       * @cfg {String} Display underline style of the label.
        * @variant hovered
        * @variant fixed
        * @variant none
        */
 
       /**
-       * @name Controls/Label#href
-       * @cfg {String}
+       * @name Controls/_input/Label#href
+       * @cfg {String} Contains a URL or a URL fragment that the hyperlink points to.
        */
 
       var _private = {

@@ -6,10 +6,10 @@
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
-            <div class="demo-Grid__container">
+            <div class="demo-Grid__container" attr:style="height:100%">
                 <Controls.list:DataContainer source="{{_viewSource}}"
                                          keyProperty="id"
-                                         attr:class="ControlsDemo-Grid__Container">
+                                         attr:class="ControlsDemo-Grid__Container" attr:style="height:100%">
                     <Controls.operations:Controller>
                         <Controls.scroll:Container attr:class="demo-Grid__wrapper">
                             <Controls.list:Container>
@@ -36,5 +36,10 @@
                 </Controls.list:DataContainer>
             </div>
         </ws:bodyContentTemplate>
+        <ws:footerContentTemplate>
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <Controls.buttons:Button caption="OK" on:click="_close()"/>
+            </div>
+        </ws:footerContentTemplate>
     </Controls.popupTemplate:Dialog>
 </div>

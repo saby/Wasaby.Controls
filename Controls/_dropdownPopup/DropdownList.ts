@@ -11,7 +11,7 @@ import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
-   
+
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
       //Popup/Opener method "open" is called on every "mouseenter" event on item with hierarchy.
@@ -172,7 +172,7 @@ import chain = require('Types/chain');
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
                   rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
-                  selectedKeys: Clone(newOptions.selectedKeys) || [],
+                  selectedKeys: Clone(newOptions.selectedKeys),
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
@@ -231,7 +231,7 @@ import chain = require('Types/chain');
                this._openSubDropdown(event, item);
             }
          },
-         
+
          _openSubDropdown: function(event, item) {
             var config;
 
@@ -242,7 +242,7 @@ import chain = require('Types/chain');
                this._children.subDropdownOpener.open(config, this);
             }
          },
-         
+
          _subDropdownClose: function() {
             this._subDropdownOpened = false;
          },
@@ -283,7 +283,7 @@ import chain = require('Types/chain');
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
-            if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+            if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
                this._listModel.updateSelection(item);
                this._needShowApplyButton = _private.needShowApplyButton(this._listModel.getSelectedKeys(), this._options.selectedKeys);
             } else {
@@ -383,7 +383,7 @@ import chain = require('Types/chain');
          };
       };
 
-      DropdownList._theme = ['Controls/_dropdownPopup/DropdownList'];
+      DropdownList._theme = ['Controls/dropdownPopup'];
 
       export = DropdownList;
-   
+

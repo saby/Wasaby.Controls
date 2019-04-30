@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridView'], function(GridView) {
+define(['Controls/grid'], function(gridMod) {
    var
       gridColumns = [
          {
@@ -22,23 +22,23 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
-         assert.equal(preparedColumnsWithMultiselect, GridView._private.getGridTemplateColumns(gridColumns, 'visible'),
+         assert.equal(preparedColumnsWithMultiselect, gridMod.GridView._private.getGridTemplateColumns(gridColumns, 'visible'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, true)".');
-         assert.equal(preparedColumnsWithoutMiltiselect, GridView._private.getGridTemplateColumns(gridColumns, 'hidden'),
+         assert.equal(preparedColumnsWithoutMiltiselect, gridMod.GridView._private.getGridTemplateColumns(gridColumns, 'hidden'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, false)".');
       });
       it('Footer', function() {
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }),
+            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }),
             'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, itemPadding: left: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }),
+            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }),
             'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, itemPadding: left: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s',
-            GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }),
+            gridMod.GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }),
             'Incorrect result "calcFooterPaddingClass({itemPadding: left: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default',
-            GridView._private.calcFooterPaddingClass({ }),
+            gridMod.GridView._private.calcFooterPaddingClass({ }),
             'Incorrect result "calcFooterPaddingClass({ })".');
       });
       it('beforeUpdate', function() {
@@ -50,16 +50,41 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
                   { displayProperty: 'field2', template: 'column2' }
                ]
             },
-            gridView = new GridView(cfg),
-            superclassBeforeUpdate = GridView.superclass._beforeUpdate;
+            gridView = new gridMod.GridView(cfg),
+            superclassBeforeUpdate = gridMod.GridView.superclass._beforeUpdate;
          gridView.saveOptions(cfg);
-         GridView.superclass._beforeUpdate = function() {
+         gridMod.GridView.superclass._beforeUpdate = function() {
             superclassBeforeUpdateCalled = true;
             superclassBeforeUpdate.apply(this, arguments);
          };
          gridView._beforeUpdate(cfg);
-         GridView.superclass._beforeUpdate = superclassBeforeUpdate;
+         gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
+      it('should update columns widths only after mount', function () {
+         var
+             called = false,
+             cells = [],
+             gv = {
+                _listModel: {
+                   setCurrentColumnsWidth: function () {
+                      called = true;
+                   }
+                }
+             },
+             container = {
+                getElementsByClassName: function () {
+                   return cells
+                }
+             };
+         gridMod.GridView._private.setCurrentColumnsWidth(gv, container);
+         assert.isFalse(called);
+
+         cells = [1,2];
+         gridMod.GridView._private.setCurrentColumnsWidth(gv, container);
+         assert.isTrue(called);
+
+      });
+
    });
 });

@@ -1,8 +1,8 @@
 /**
  * source library
- * @library Controls/slider
- * @includes Base Controls/_slider/Base
- * @includes Range Controls/_slider/Range
+ * @library Controls/source
+ * @includes Base Controls/_source/Adapter/Enum
+ * @includes Range Controls/_source/SourceController
  * @author Kraynov D.
  */
 

@@ -4,7 +4,7 @@ import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
-import 'css!theme?Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid';
+import 'css!theme?Controls/filterPopup';
 
    /**
     * Control PropertyGrid
@@ -16,7 +16,7 @@ import 'css!theme?Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid';
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @control
-    * @public
+    * @private
     * @author Золотова Э.Е.
     *
     * @css @height_PropertyGrid-item Height of item in the block.

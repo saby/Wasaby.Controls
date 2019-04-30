@@ -1,6 +1,6 @@
 /**
  * @author Золотова Э.Е.
- * @mixin Controls/Filter/Button/Styles
+ * @mixin Controls/_filter/Button/Styles
  * @public
  *
  * @css @height_FilterButton Filter/Button height.
@@ -10,8 +10,20 @@
  * @css @color_FilterButton_icon_hover Button icon color when button is hovered.
  * @css @color_FilterButton_icon_active Button icon color when button is active.
  * @css @color_FilterButton_icon_readOnly Button icon color when Filter/Button control is readOnly.
+ *
+ * @css @background-color_FilterButton-icon Background-color of filter button icon.
+ * @css @background-color_FilterButton-icon_hover Background-color of filter button icon, when button is hovered.
+ * @css @background-color_FilterButton-icon_active Background-color of filter button icon, when button is active.
+ * @css @background-color_FilterButton-icon_readOnly Background-color of filter button icon, when button is readOnly.
+ *
+ * @css @box-shadow-size_FilterButton-icon Box-shadow size of filter button icon.
+ * @css @box-shadow-color_FilterButton-icon Box-shadow color of filter button icon.
+ *
  * @css @font-size_FilterButton_icon font-size of button.
  * @css @font-family_FilterButton_icon font-family of button.
+ *
+ * @css @width_FilterButton_icon Width of filter button icon.
+ * @css @height_FilterButton_icon Height of filter button icon.
  *
  * @css @color_FilterButton_text Color of filter text.
  * @css @color_FilterButton_text_hover Color of filter text when hovered.

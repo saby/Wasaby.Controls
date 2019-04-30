@@ -8,8 +8,8 @@ import footerTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/
 import messageTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/message');
 import detailsTemplate = require('wml!Controls/_popup/Opener/Confirmation/Dialog/details');
 import template = require('wml!Controls/_popup/Opener/Confirmation/Dialog/Dialog');
-import 'css!theme?Controls/_popup/Opener/Confirmation/Dialog/Dialog';
-   
+import 'css!theme?Controls/popup';
+
 
    /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".

@@ -1,8 +1,8 @@
 define([
-   'Controls/_lists/Swipe/SwipeControl',
-   'Controls/_lists/ItemActions/Utils/Actions',
-   'Controls/_lists/Swipe/HorizontalMeasurer',
-   'Controls/_lists/Swipe/VerticalMeasurer'
+   'Controls/_list/Swipe/SwipeControl',
+   'Controls/_list/ItemActions/Utils/Actions',
+   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_list/Swipe/VerticalMeasurer'
 ], function(
    SwipeControl,
    actionsUtil,
@@ -264,7 +264,7 @@ define([
 
       describe('_beforeMount', function() {
          it('should load HorizontalMeasurer and log warning about deprecated option', async function() {
-            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
+            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".');
             await instance._beforeMount({
                swipeDirection: 'row',
                listModel: mockListModel({})
@@ -286,7 +286,7 @@ define([
          });
 
          it('should load VerticalMeasurer and log warning about deprecated option', async function() {
-            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".\n');
+            const consoleSpy = sandbox.spy(console, 'warn').withArgs('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".');
             await instance._beforeMount({
                swipeDirection: 'column',
                listModel: mockListModel({})

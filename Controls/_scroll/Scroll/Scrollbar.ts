@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar');
 import 'Controls/event';
-import 'css!theme?Controls/_scroll/Scroll/Scrollbar/Scrollbar';
+import 'css!theme?Controls/scroll';
 
 
 
@@ -136,6 +136,7 @@ import 'css!theme?Controls/_scroll/Scroll/Scrollbar/Scrollbar';
             _afterUpdate: function(oldOptions) {
                var
                   shouldForceUpdate = false,
+                  shouldForceUpdatePosition = false,
                   shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
 
                if (oldOptions.contentHeight !== this._options.contentHeight) {
@@ -143,7 +144,8 @@ import 'css!theme?Controls/_scroll/Scroll/Scrollbar/Scrollbar';
                   shouldUpdatePosition = true;
                }
                if (shouldUpdatePosition) {
-                  shouldForceUpdate = shouldForceUpdate || this._setPosition(this._options.position);
+                  shouldForceUpdatePosition = this._setPosition(this._options.position);
+                  shouldForceUpdate = shouldForceUpdate || shouldForceUpdatePosition;
                }
                if (shouldForceUpdate) {
                   this._forceUpdate();
