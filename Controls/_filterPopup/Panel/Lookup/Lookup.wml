@@ -11,7 +11,7 @@
                      on:inputCompleted="_notifyHandler('inputCompleted')"
                      on:valueChanged="_notifyHandler('valueChanged')"
                      on:itemsChanged="_notifyHandler('itemsChanged')"
-                     on:textValueChanged="_notifyHandler('textValueChanged')"
+                     on:textValueChanged="_textValueChanged()"
                      on:itemClick="_notifyHandler('itemClick')"
                      on:openInfoBox="_notifyHandler('openInfoBox')"
                      scope="{{_options}}">
