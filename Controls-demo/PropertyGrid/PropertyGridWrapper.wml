@@ -24,6 +24,7 @@
                         bind:selectedKeys="_options.componentOpt.selectedKeys"
                         bind:collapsedGroups="_options.componentOpt.collapsedGroups"
                         bind:sorting="_options.componentOpt.sorting"
+                        bind:toolbarVisibility="_options.componentOpt.toolbarVisibility"
                         on:click="_clickHandler()"
                         attr:class="js-Controls_{{_demoName}}_mainField
                         {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>

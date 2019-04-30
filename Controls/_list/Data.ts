@@ -71,7 +71,7 @@ type GetSourceResult = {
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
 
-         createPrefetchSource: function(self, data): Deferred<GetSourceResult> {
+         createPrefetchSource: function(self, data:RecordSet|void, dataLoadErrback: Function|void): Deferred<GetSourceResult|null> {
             var resultDef = new Deferred();
 
             getPrefetchSource({
@@ -86,6 +86,9 @@ type GetSourceResult = {
                   return result;
                })
                .addErrback(function(error) {
+                  if (dataLoadErrback instanceof Function) {
+                     dataLoadErrback(error);
+                  }
                   resultDef.callback(null);
                   return error;
                });
@@ -154,7 +157,7 @@ type GetSourceResult = {
                   source: new source.PrefetchProxy({target: options.source})
                });
             } else if (self._source) {
-               return _private.createPrefetchSource(this).addCallback(function(result) {
+               return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
                   return result ? result.data : null;
                });

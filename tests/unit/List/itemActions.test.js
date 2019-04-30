@@ -116,27 +116,6 @@ define([
          sandbox.restore();
       });
 
-
-      it('fillItemsActions', function() {
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: actions
-         };
-         var ctrl = new lists.ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
-         if (typeof window === 'undefined') {
-            //Это нужно переписать, тест должен тестировать логику внутри _beforeUpdate
-            //под нодой это не тестируем
-            assert.isTrue(true);
-         } else {
-            assert.equal(Object.keys(listViewModel._actions).length, data.length);//число соответствий равно числу айтемов
-            listViewModel._notify('onListChange');
-            assert.equal(Object.keys(listViewModel._actions).length, data.length);//число соответствий равно числу айтемов
-            assert.equal(listViewModel._actions[0].all.length, actions.length);
-            assert.equal(listViewModel._actions[0].showed.length, 4 + 1); // 3-showType.TOOLBAR 1-showType.MENU_TOOLBAR 1 -само menu
-         }
-      });
-
       it('itemActionVisibilityCallback', function() {
          var cfg = {
             listModel: listViewModel,
@@ -277,6 +256,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
@@ -291,6 +271,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),
@@ -306,6 +287,7 @@ define([
             var
                cfg = {
                   listModel: listViewModel,
+                  canUpdateItemsActions: true,
                   itemActions: actions
                },
                ctrl = new lists.ItemActionsControl(cfg),

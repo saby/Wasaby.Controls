@@ -6,8 +6,6 @@ import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controll
 class Component extends Control {
     private _template: Function = template;
 
-    private _headersHeight: object;
-
     // Register of all registered headers. Stores references to instances of headers.
     private _headers: object;
     // Ordered list of headers.
@@ -16,10 +14,6 @@ class Component extends Control {
     private _fixedHeadersStack: object;
 
     _beforeMount(options) {
-        this._headersHeight = {
-            top: 0,
-            bottom: 0
-        };
         this._headersStack = {
             top: [],
             bottom: []
@@ -100,14 +94,8 @@ class Component extends Control {
     private _updateFixationState(data: object) {
         if (!!data.fixedPosition) {
             this._fixedHeadersStack[data.fixedPosition].push(data.id);
-            if (data.mode === 'stackable') {
-                this._headersHeight[data.fixedPosition] += data.height;
-            }
         } else if (!!data.prevPosition && this._fixedHeadersStack[data.prevPosition].indexOf(data.id) !== -1) {
             this._fixedHeadersStack[data.prevPosition].splice(this._fixedHeadersStack[data.prevPosition].indexOf(data.id), 1);
-            if (data.mode === 'stackable') {
-                this._headersHeight[data.prevPosition] -= data.height;
-            }
         }
     }
 

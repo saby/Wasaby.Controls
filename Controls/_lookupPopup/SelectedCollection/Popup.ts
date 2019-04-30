@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
-import 'css!theme?Controls/Popup/Opener/InfoBox/InfoBox';
-import 'css!theme?Controls/Popup/Opener/Previewer/PreviewerController';
+import 'css!theme?Controls/popup';
 
 /**
  *
