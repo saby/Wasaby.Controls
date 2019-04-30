@@ -8,7 +8,7 @@
                 <Controls.buttons:Button readOnly="{{false}}" style="secondary" viewMode="button" caption="small button"/>
             </div>
             <div attr:class="test_element_two_column">
-                <Controls.buttons:Button theme="online" readOnly="{{false}}" style="primary" viewMode="button" caption="small button"/>
+                <Controls.buttons:Button readOnly="{{false}}" style="primary" viewMode="button" caption="small button"/>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
                 <Controls.buttons:Button readOnly="{{false}}" size="l" style="secondary" viewMode="button" caption="big button"/>
             </div>
             <div attr:class="test_element_two_column">
-                <Controls.buttons:Button theme="online" readOnly="{{false}}" size="l" style="primary" viewMode="button" caption="big button"/>
+                <Controls.buttons:Button readOnly="{{false}}" size="l" style="primary" viewMode="button" caption="big button"/>
             </div>
         </div>
     </div>
@@ -96,7 +96,7 @@
         </div>
         <h3>Text toggle-button</h3>
         <div attr:class="demo-Button_margin-10  ControlsDemo__textToggle">
-            <Controls.toggle:Button theme="online" readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
+            <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
         </div>
         <h3>Bordered button-icon with m size</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__borderedIconM">
@@ -149,7 +149,7 @@
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.buttons:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
-                    <Controls.popupTemplate:CloseButton theme="online" attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
+                    <Controls.popupTemplate:CloseButton attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
                 </div>
             </div>
             <div>

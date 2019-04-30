@@ -6,7 +6,8 @@ define('Controls-demo/Index', [
    'Core/LinkResolver/LinkResolver',
    'Env/Env',
    'wml!Controls-demo/Index',
-   'css!Controls-demo/Demo/Page'
+   'css!Controls-demo/Demo/Page',
+   'css!Controls-theme/themes/default/helpers/AreaBlocks'
 ], function (BaseControl,
              LinkResolver,
              Env,
