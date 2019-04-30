@@ -1,3 +1,4 @@
+import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 /**
  * List of helpers for displaying item actions.
  * @class Controls/_list/ItemActions/Helpers
@@ -10,6 +11,46 @@ var MOVE_DIRECTION = {
     'UP': 'up',
     'DOWN': 'down'
 };
+
+var cachedDisplay;
+
+function getDisplay(items, parentProperty, nodeProperty) {
+   //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для кажой записи в списке.
+   if (!cachedDisplay || cachedDisplay.getCollection().getVersion() !== items.getVersion()) {
+      cachedDisplay = TreeItemsUtil.getDefaultDisplayTree(items, {
+         keyProperty: items.getIdProperty(),
+         parentProperty: parentProperty,
+         nodeProperty: nodeProperty
+      }, {});
+   }
+   return cachedDisplay;
+}
+
+function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
+    var
+       result,
+       display,
+       itemIndex,
+       siblingItem,
+       itemFromProjection;
+
+    //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+    //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+    //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+    //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+    //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+    if (parentProperty) {
+        display = getDisplay(items, parentProperty, nodeProperty);
+        itemFromProjection = display.getItemBySourceItem(items.getRecordById(item.getId()));
+        siblingItem = display[direction === MOVE_DIRECTION.UP ? 'getPrevious' : 'getNext'](itemFromProjection);
+        result = siblingItem ? siblingItem.getContents() : null;
+    } else {
+        itemIndex = items.getIndex(item);
+        result = items.at(direction === MOVE_DIRECTION.UP ? --itemIndex : ++itemIndex);
+    }
+
+    return result;
+}
 
 var helpers = {
 
@@ -58,9 +99,7 @@ var helpers = {
      * </pre>
      */
     reorderMoveActionsVisibility: function (direction, item, items, parentProperty, nodeProperty) {
-        var
-            index = items.getIndex(item),
-            siblingItem = items.at(index + (direction === MOVE_DIRECTION.UP ? -1 : 1));
+        var siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty);
 
         return !!siblingItem &&
             (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in one folder
