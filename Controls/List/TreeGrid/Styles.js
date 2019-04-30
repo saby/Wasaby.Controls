@@ -1,8 +1,8 @@
 define('Controls/List/TreeGrid/Styles', ['Controls/_treeGrid/TreeGrid/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/TreeGrid/Styles
- * @public
+ * @mixin Controls/_treeGrid/TreeGrid/Styles
+ * @private
  *
  *
  * @css @spacing_TreeGridView-row-expander-between-content_borderTop_s 's' spacing betwen expander icon and border top

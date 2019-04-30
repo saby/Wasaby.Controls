@@ -11,7 +11,7 @@ define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Con
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IList
+ * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
  * @control
  * @public

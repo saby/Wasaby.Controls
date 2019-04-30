@@ -7,7 +7,7 @@ define('Controls/List/TreeControl', ['Controls/_treeGrid/TreeControl'], function
     * @mixes Controls/List/TreeGridView/Styles
     * @extends Controls/list:ListControl
     * @control
-    * @public
+    * @private
     * @category List
     */
    return Control;
