@@ -6,7 +6,7 @@
    viewMode="tile"
    keyProperty="id"
    source="{{_source}}"
-   actionAlignment="column"
+   actionAlignment="vertical"
    itemActions="{{_itemActions}}">
    <ws:tileItemTemplate>
       <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
