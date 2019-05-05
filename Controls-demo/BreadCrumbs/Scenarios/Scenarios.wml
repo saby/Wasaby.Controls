@@ -24,7 +24,7 @@
          displayProperty="title"
          columns="{{_columns1}}"
          header="{{_header1}}"
-         showRowSeparator="{{true}}"
+         rowSeparatorVisibility="{{true}}"
          source="{{_viewSource1}}">
       </Controls.explorers:View>
    </div>
@@ -155,7 +155,7 @@
          displayProperty="title"
          columns="{{_columns1}}"
          header="{{_header5}}"
-         showRowSeparator="{{true}}"
+         rowSeparatorVisibility="{{true}}"
          source="{{_viewSource1}}">
       </Controls.explorers:View>
    </div>
