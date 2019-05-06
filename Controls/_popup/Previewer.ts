@@ -102,7 +102,7 @@ import 'css!Controls/popup';
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
             if (options.templateName) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 
