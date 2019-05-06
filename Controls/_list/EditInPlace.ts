@@ -5,6 +5,7 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
+import cInstance = require('Core/core-instance');
 import 'css!theme?Controls/_list/EditInPlace/Text';
 
 var
@@ -67,40 +68,29 @@ var
             if (!self._editingItem) {
                 return Deferred.success();
             }
-
-            var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
-
-
-            if (result && result.addCallback) {
-                // Если мы попали сюда, то прикладники сами сохраняют запись
-                return result.addCallback(function (result) {
-                    return _private.processBeforeEndEditResult(self, result, commit);
-                });
-            }
-
-            if (result === Constants.editing.CANCEL) {
-                return Deferred.success({cancelled: true});
-            }
-
-            return _private.updateModel(self, commit).addCallback(function () {
-                _private.afterEndEdit(self);
-            });
+            let result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
+            return _private.processBeforeEndEditResult(self, result, commit);
         },
 
-        processBeforeEndEditResult: function (self, result, commit) {
-            if (result === Constants.editing.CANCEL) {
-                return {cancelled: true};
-            } else if (result === Constants.editing.NOTSAVE){
-                return _private.updateModel(self, false).addCallback(function () {
-                    _private.afterEndEdit(self);
+        processBeforeEndEditResult: function (self, eventResult, commit) {
+            var result;
+
+            if (eventResult === Constants.editing.CANCEL) {
+                result = Deferred.success({cancelled: true});
+            } else if (eventResult && eventResult.addBoth) {
+                let id = self._notify('showIndicator', [{}], {bubbling: true});
+                eventResult.addBoth(function (defResult) {
+                    self._notify('hideIndicator', [id], {bubbling: true});
+                    return defResult;
                 });
-            } else if (result === Constants.editing.CUSTOMLOGIC) {
-                return {};
+                result = eventResult;
             } else {
-                return _private.updateModel(self, commit).addCallback(function () {
+                result = _private.updateModel(self, commit).addCallback(function () {
                     _private.afterEndEdit(self);
-                });
+                })
             }
+
+            return result;
         },
 
         afterEndEdit: function (self) {
