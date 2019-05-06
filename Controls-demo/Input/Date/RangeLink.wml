@@ -53,8 +53,16 @@
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
-			   attr:test_name="range_years_only"
+			      attr:test_name="range_years_only"
             />
+         </div>
+      </div>
+      <div class="controlsDemo-RageLink__content">
+         <div class="controlsDemo-RageLink__componentWrap">
+            <span>With custom formatter: </span>
+            <Controls.Input.Date.RangeLink
+                  captionFormatter="{{_captionFormatter}}"
+                  />
          </div>
       </div>
    </div>
