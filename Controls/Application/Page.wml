@@ -30,12 +30,11 @@
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
                              on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()"
-                             on:serviceError="_proxyServiceError()"
+                             on:serviceError="PopupGlobal._openDialogHandler()"
                              stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <Controls.dataSource:error.DialogOpener
-                                 name="dialogOpener"
+                              <body
                                  class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
@@ -132,7 +131,7 @@
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
-                              </Controls.dataSource:error.DialogOpener>
+                              </body>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>

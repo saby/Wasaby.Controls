@@ -201,17 +201,6 @@ define('Controls/Application',
                   ? 'ws-is-touch'
                   : 'ws-is-no-touch';
          },
-         _proxyServiceError: function(event, template, templateOptions, onclose) {
-            /*
-             * Проксирование событий от popup:Manager в dataSource:error.DialogOpener
-             * т.к. popup:Manager должен находиться над тэгом <body>,
-             * а dataSource:error.DialogOpener содержит в себе опенер, который должен быть внутри <body>
-             * события для открытия диалогового окна с ошибкой от всплывающих панелей DialogOpener сам поймать не может
-             * проксируем для него это событие
-             * TODO после внедрения invisible-node в опенеры убрать этот прокси и выкинуть DialogOpener на уровень выше popup:Manager'a
-             */
-            this._children.dialogOpener.showDialog(template, templateOptions, onclose);
-         },
 
          /**
           * Код должен быть вынесен в отдельных контроллер в виде хока в 610.

@@ -537,7 +537,7 @@ import dataSource = require('Controls/dataSource');
 
       _onCloseErrorDialog: function() {
          if (!this._record) {
-            this._notify('close', []);
+            this._notify('close', [], { bubbling: true });
          }
       },
 

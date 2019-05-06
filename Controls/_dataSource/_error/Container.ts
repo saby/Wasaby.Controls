@@ -75,14 +75,17 @@ export default class Container extends Control {
         }
         config.isShowed = true;
         getTemplate(config.template).then((template) => {
-            this._notify('serviceError', [
+            let result: Promise<void> = this._notify('serviceError', [
                 template,
-                config.options,
-                () => {
-                    this._notify('closeDialog', []);
-                }
+                config.options
             ], { bubbling: true });
+            if (result) {
+                result.then(this.__notifyDialogClosed.bind(this));
+            }
         });
+    }
+    private __notifyDialogClosed() {
+        this._notify('dialogClosed', []);
     }
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;

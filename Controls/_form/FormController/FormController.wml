@@ -16,7 +16,7 @@
          <Controls.dataSource:error.Container
             name="errorContainer"
             viewConfig="{{ __error }}"
-            on:closeDialog="_onCloseErrorDialog()"
+            on:dialogClosed="_onCloseErrorDialog()"
          >
             <ws:if data="{{ _record }}">
                <ws:partial
