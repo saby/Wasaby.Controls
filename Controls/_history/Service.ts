@@ -91,36 +91,48 @@ var _private = {
  *       historyId: 'TEST_HISTORY_ID'
  *    })
  * </pre>
+ */
+
+/**
  * @name Controls/_history/Service#historyId
  * @cfg {String} unique service history identifier
- *
+ */
+
+/**
  * @name Controls/_history/Service#historyIds
  * @cfg {Array of String} unique service history identifiers
- *
+ */
+
+/**
  * @name Controls/_history/Service#pinned
  * @cfg {Boolean} Loads pinned items from BL
  * @remark
  * true - Load items
  * false - No load items
- *
+ */
+
+/**
  * @name Controls/_history/Service#frequent
  * @cfg {Boolean} Loads frequent items from BL
  * @remark
  * true - Load items
  * false - No load items
- *
+ */
+
+/**
  * @name Controls/_history/Service#recent
  * @cfg {Boolean} Loads recent items from BL
  * @remark
  * true - Load items
  * false - No load items
- *
+ */
+
+/**
  * @name Controls/_history/Service#dataLoaded
  * @cfg {Boolean} Items loaded with object data
  * @remark
  * true - BL return items with data
  * false - BL return items without data
- *
  */
 
 var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
