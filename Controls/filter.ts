@@ -17,11 +17,13 @@ import Fast = require('Controls/_filter/Fast');
 import ButtonContainer = require('Controls/_filter/Button/Container');
 import FastContainer = require('Controls/_filter/Fast/Container');
 import Controller = require('Controls/_filter/Controller');
+import HistoryUtils = require('Controls/_filter/HistoryUtils');
 
 export {
    Selector,
    Fast,
    ButtonContainer,
    FastContainer,
-   Controller
+   Controller,
+   HistoryUtils
 }
