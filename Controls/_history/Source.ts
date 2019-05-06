@@ -34,9 +34,14 @@ import clone = require('Core/core-clone');
  *        parentProperty: 'parent'
  *    });
  * </pre>
+ */
+
+/**
  * @name Controls/_history/Source#originSource
  * @cfg {Source} A data source
- *
+ */
+
+/**
  * @name Controls/_history/Source#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
