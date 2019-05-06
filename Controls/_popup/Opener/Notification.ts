@@ -114,11 +114,11 @@ import NotificationController = require('Controls/_popup/Opener/Notification/Not
 
          _preparePopupOptions: function(popupOptions) {
             if (popupOptions && popupOptions.templateOptions && popupOptions.templateOptions.hasOwnProperty('autoClose')) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
                popupOptions.autoClose = popupOptions.templateOptions.autoClose;
             }
             if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The option "autoClose" must be specified on control options');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
                this._options.autoClose = this._options.templateOptions.autoClose;
             }
             return popupOptions;

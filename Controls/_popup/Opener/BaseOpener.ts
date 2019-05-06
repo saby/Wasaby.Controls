@@ -40,7 +40,7 @@ import {parse as parserLib, load} from 'Core/library';
             this._popupIds = [];
 
             if (options.popupOptions) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
             }
          },
 
@@ -194,17 +194,17 @@ import {parse as parserLib, load} from 'Core/library';
             let baseCfg = { ...baseConfig, ...popupOptions, templateOptions };
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
             if (baseCfg.hasOwnProperty('isModal')) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "modal" instead of "isModal"');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "modal" instead of "isModal"');
                baseCfg.modal = baseCfg.isModal;
             }
 
             if (baseCfg.hasOwnProperty('locationStrategy')) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
                baseCfg.fittingMode = baseCfg.locationStrategy;
             }
 
