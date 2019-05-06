@@ -47,7 +47,7 @@ define([
          });
 
          it('should return correct top.', function() {
-            const component = createComponent(StickyHeader, {fixedZIndex: 2});
+            const component = createComponent(StickyHeader, {fixedZIndex: 2, position: 'topbottom'});
             component._context = {
                stickyHeader: { top: 2, bottom: 5 }
             };
