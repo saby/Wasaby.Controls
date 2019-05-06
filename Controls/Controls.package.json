@@ -20,235 +20,64 @@
   "output": "controls-context.package.js"
 }, {
   "include": [
-    "Controls/Button/*",
-    "Controls/Button"
-  ],
-  "output": "controls-button.package.js"
-}, {
-  "include": [
-    "Controls/Operations/*"
-  ],
-  "exclude": [
-    "Controls/Operations/ReportDialog",
-    "Controls/Operations/ReportDialog/*"
-  ],
-  "output": "controls-operations.package.js"
-}, {
-  "include": [
-    "Controls/Container/*"
-  ],
-  "exclude": [
-    "Controls/Container/Scroll/Context",
-    "Controls/Container/Async",
-    "Controls/Container/LoadingIndicator",
-    "Controls/Container/LoadingIndicator/*",
-    "Controls/Container/Async/*",
-    "Controls/Container/Scroll",
-    "Controls/Container/Scroll/*"
+    "Controls/Container/Data/ContextOptions",
+    "wml!Controls/Container/Data/Data",
+    "Controls/Container/Data/getPrefetchSource",
+    "Controls/Container/Filter",
+    "wml!Controls/Container/Filter/Filter",
+    "Controls/Container/Filter/FilterContextField",
+    "Controls/Container/Input/Search",
+    "wml!Controls/Container/Input/Search/Search",
+    "Controls/Container/List",
+    "wml!Controls/Container/List/List",
+    "Controls/Container/MultiSelector/selectionToRecord",
+    "Controls/Container/Search",
+    "wml!Controls/Container/Search/Search",
+    "Controls/Container/Search/SearchContextField",
+    "Controls/Container/Suggest/ContentLayer/Styles",
+    "Controls/Container/Suggest/__BaseLayer",
+    "Controls/Container/Suggest/__ContentLayer",
+    "wml!Controls/Container/Suggest/__ContentLayer",
+    "Controls/Container/Suggest/__PopupContent",
+    "wml!Controls/Container/Suggest/__PopupContent",
+    "Controls/Container/Suggest/__PopupLayer",
+    "wml!Controls/Container/Suggest/__PopupLayer",
+    "Controls/Container/Adapter/SelectedKey",
+    "wml!Controls/Container/Adapter/SelectedKey/SelectedKey"
   ],
   "output": "controls-container.package.js"
 }, {
   "include": [
-    "Controls/Container/LoadingIndicator/*",
-    "Controls/Container/LoadingIndicator"
-  ],
-  "output": "controls-loading-indicator.package.js"
-}, {
-  "include": [
-    "Controls/StickyHeader",
-    "Controls/StickyHeader/*",
-    "Controls/Container/Scroll",
-    "Controls/Container/Scroll/*"
+    "Controls/Controllers/*"
   ],
   "exclude": [
-    "Controls/Container/Scroll/Context"
-  ],
-  "output": "controls-container-scroll.package.js"
-},{
-  "include": [
-    "Controls/Controllers/*"
+    "Controls/Controllers/QueryParamsController/*",
+    "Controls/Controllers/SourceController"
   ],
   "output": "controls-controllers.package.js"
 }, {
   "include": [
-    "Controls/Decorator/Markup",
-    "Controls/Decorator/Markup/*"
-  ],
-  "output": "controls-decorator-markup.package.js"
-}, {
-  "include": [
-    "Controls/Dropdown/*"
-  ],
-  "output": "controls-dropdown.package.js"
-}, {
-  "include": [
-    "Controls/Event/*"
-  ],
-  "output": "controls-event.package.js"
-}, {
-  "include": [
-    "Controls/Filter/*"
-  ],
-  "exclude": [
-    "Controls/Filter/Button/_FilterCompatible",
-    "Controls/Filter/Button/OldPanelOpener",
-    "Controls/Filter/Button/Panel",
-    "Controls/Filter/Button/Panel/*"
-  ],
-  "output": "controls-filter.package.js"
-}, {
-  "include": [
-    "Controls/Filter/Button/Panel",
-    "Controls/Filter/Button/Panel/*"
-  ],
-  "output": "controls-filter-panel.package.js"
-}, {
-  "include": [
-    "Controls/Filter/Button/_FilterCompatible",
-    "Controls/Filter/Button/OldPanelOpener"
-  ],
-  "output": "controls-filter-compatible.package.js"
-}, {
-  "include": [
-    "Controls/Heading/*",
-    "Controls/Heading"
-  ],
-  "output": "controls-header.package.js"
-}, {
-  "include": [
-    "Controls/History/*"
-  ],
-  "output": "controls-history.package.js"
-}, {
-  "include": [
-    "Controls/Input/*"
+    "Controls/Input/Date/Link",
+    "wml!Controls/Input/Date/Link/Link",
+    "Controls/Input/Date/LinkView",
+    "wml!Controls/Input/Date/LinkView/LinkView",
+    "Controls/Input/Date/interface/ILink",
+    "Controls/Input/Money",
+    "wml!Controls/Input/Money/ReadOnly",
+    "Controls/Input/OldText",
+    "wml!Controls/Input/OldText/OldText",
+    "Controls/Input/OldText/OldViewModel",
+    "Controls/Input/Search/Styles",
+    "Controls/Input/Search/Suggest",
+    "wml!Controls/Input/Search/Suggest"
   ],
   "output": "controls-input.package.js"
 }, {
   "include": [
-    "Controls/Label/*",
-    "Controls/Label"
-  ],
-  "output": "controls-label.package.js"
-}, {
-  "include": [
-    "Controls/List/*",
-    "Controls/_list/*",
-    "Controls/_list",
-    "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_list/ItemActions/Utils/Actions"
-  ],
-  "exclude": [
-    "Controls/List/interface/*",
-    "Controls/List/ItemActions/resources/*",
-    "Controls/List/ItemActions/ItemActionsControl",
-    "Controls/List/Swipe/*",
-    "Controls/List/Mover",
-    "Controls/List/Mover/*",
-    "Controls/List/Remover",
-    "Controls/List/Paging/*",
-    "Controls/List/Paging",
-    "css!Controls/List/AddButton/AddButton",
-    "Controls/_list/interface/*",
-    "Controls/_list/ItemActions/resources/*",
-    "Controls/_list/ItemActions/ItemActionsControl",
-    "Controls/_list/Swipe/*",
-    "Controls/_list/Mover",
-    "Controls/_list/Mover/*",
-    "Controls/_list/Remover",
-    "Controls/_paging/Paging/*",
-    "Controls/_paging/Paging",
-    "css!Controls/_list/AddButton/AddButton"
-  ],
-  "output": "controls-list.package.js"
-}, {
-  "include": [
-    "Controls/List/Paging/*",
-    "Controls/List/Paging",
-    "Controls/_paging/Paging/*",
-    "Controls/_paging/Paging"
-  ],
-  "output": "controls-paging.package.js"
-}, {
-  "include": [
-    "Controls/List/ItemActions/*",
-    "Controls/List/Swipe/*",
-    "Controls/_list/ItemActions/*",
-    "Controls/_list/Swipe/*"
-  ],
-  "exclude": [
-    "Controls/List/ItemActions/Utils/Actions",
-    "Controls/_list/ItemActions/Utils/Actions"
-  ],
-  "output": "controls-itemactions.package.js"
-}, {
-  "include": [
-    "Controls/List/Mover/*",
-    "Controls/List/Mover",
-    "Controls/_list/Mover/*",
-    "Controls/_list/Mover"
-  ],
-  "output": "controls-mover.package.js"
-}, {
-  "include": [
-    "Controls/Popup/*"
-  ],
-  "exclude": [
-    "Controls/Popup/Compatible/*",
-    "Controls/Popup/Opener/*",
-    "Controls/Popup/Manager/ManagerController"
+    "Controls/Popup/Global",
+    "wml!Controls/Popup/Global/Global"
   ],
   "output": "controls-popup.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Sticky/*"
-  ],
-  "output": "controls-popup-opener-sticky.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Stack/*"
-  ],
-  "output": "controls-popup-opener-stack.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Previewer/*"
-  ],
-  "output": "controls-popup-opener-previewer.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Notification/*"
-  ],
-  "output": "controls-popup-opener-notification.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Dialog/*"
-  ],
-  "output": "controls-popup-opener-dialog.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/InfoBox/*"
-  ],
-  "output": "controls-popup-opener-infobox.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/Confirmation/*"
-  ],
-  "output": "controls-popup-opener-confirmation.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Opener/*",
-    "Controls/Popup/Manager/ManagerController"
-  ],
-  "exclude": [
-    "Controls/Popup/Opener/Confirmation/*",
-    "Controls/Popup/Opener/Dialog/*",
-    "Controls/Popup/Opener/InfoBox/*",
-    "Controls/Popup/Opener/Notification/*",
-    "Controls/Popup/Opener/Previewer/*",
-    "Controls/Popup/Opener/Stack/*",
-    "Controls/Popup/Opener/Sticky/*"
-  ],
-  "output": "controls-popup-opener.package.js"
 }, {
   "include": [
     "Controls/Popup/Compatible/*"
@@ -266,16 +95,6 @@
   "output": "controls-render.package.js"
 }, {
   "include": [
-    "Controls/Tabs/*"
-  ],
-  "output": "controls-tabs.package.js"
-}, {
-  "include": [
-    "Controls/Toggle/*"
-  ],
-  "output": "controls-toggle.package.js"
-}, {
-  "include": [
     "Controls/Utils/*",
     "Controls/Calendar/Utils"
   ],
@@ -285,85 +104,9 @@
   "output": "controls-utils.package.js"
 }, {
   "include": [
-    "Controls/Validate/*"
+    "Controls/Selector/Suggest",
+    "wml!Controls/Selector/Suggest/Suggest"
   ],
-  "output": "controls-validate.package.js"
-}, {
-  "include": [
-    "Controls/DragNDrop/*"
-  ],
-  "output": "controls-dragndrop.package.js"
-}, {
-  "include": [
-    "Controls/Calendar/*"
-  ],
-  "exclude": [
-    "Controls/Calendar/Utils"
-  ],
-  "output": "controls-calendar.package.js"
-},
-{
-  "include": [
-    "Controls/Search/*"
-  ],
-  "exclude": [
-    "Controls/Search/Misspell",
-    "wml!Controls/Search/Misspell"
-  ],
-  "output": "controls-search.package.js"
-}, {
-  "include": [
-    "Controls/Search/Misspell",
-    "wml!Controls/Search/Misspell"
-  ],
-
-  "output": "controls-search-misspell.package.js"
-},
-{
-  "include": [
-    "Controls/EditableArea",
-    "Controls/EditableArea/*"
-  ],
-  "output": "controls-editablearea.package.js"
-}, {
-  "include": [
-    "Controls/Explorer",
-    "Controls/Explorer/*"
-  ],
-  "output": "controls-explorer.package.js"
-}, {
-  "include": [
-    "Controls/SwitchableArea",
-    "Controls/SwitchableArea/*"
-  ],
-  "output": "controls-switchablearea.package.js"
-},
-  {
-    "include": [
-      "Controls/Selector/*"
-    ],
-    "exclude": [
-      "Controls/Selector/List/*",
-      "Controls/Selector/SelectedCollection/Popup",
-      "Controls/Selector/Container",
-      "Controls/Selector/Controller",
-      "Controls/Selector/__ControllerContext"
-    ],
-    "output": "controls-selector.package.js"
-  },
-  {
-    "include": [
-      "Controls/Selector/SelectedCollection/Popup"
-    ],
-    "output": "controls-selector-lookuppopup.package.js"
-  },
-  {
-    "include": [
-      "Controls/Selector/List/*",
-      "Controls/Selector/Container",
-      "Controls/Selector/Controller",
-      "Controls/Selector/__ControllerContext"
-    ],
-    "output": "controls-selector-stack.package.js"
-  }
+  "output": "controls-selector.package.js"
+}
 ]
