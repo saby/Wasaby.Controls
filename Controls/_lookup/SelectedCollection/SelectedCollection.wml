@@ -5,7 +5,7 @@
               attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
               style="default controls-SelectedCollection__popup"
               trigger="click"
-              templateName="Controls/lookupPopup:Collection"
+              template="Controls/lookupPopup:Collection"
               templateOptions="{{_templateOptions}}"
               targetSide="bottom"
               on:openInfoBox="_openInfoBox()"

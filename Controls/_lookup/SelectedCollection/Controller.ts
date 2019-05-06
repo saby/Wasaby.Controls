@@ -240,7 +240,7 @@ import LoadService = require('Controls/History/LoadService');
                multiSelect: multiSelect,
                handlers: {
                   onSelectComplete: function(event, result) {
-                     self._selectCallback(result);
+                     self._selectCallback(null, result);
                      selectorOpener.close();
                   }
                }
@@ -254,7 +254,7 @@ import LoadService = require('Controls/History/LoadService');
          }
       },
 
-      _selectCallback: function(result) {
+      _selectCallback: function(event, result) {
          var prepareItems;
 
          this._setItems(result);
