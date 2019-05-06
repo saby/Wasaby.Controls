@@ -53,108 +53,108 @@ const _private = {
    }
 };
 
+/**
+ * Slider with two movable points for choosing range.
+ *
+ * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
+ * @public
+ * @extends Core/Control
+ * @class Controls/_slider/Range
+ * @author Колесов В.А.
+ * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ */
+
+/**
+ * @name Controls/_slider/Range#size
+ * @cfg {Boolean} sets the size of slider point
+ * @example
+ * Slider with diameter of point = 12px
+ * <pre class="brush:html">
+ *   <Controls.slider:Base size="s"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Range#borderVisible
+ * @cfg {Boolean} sets the stroke around control
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base borderVisible="{{true}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Range#minValue
+ * @cfg {Number} sets the minimum value of slider
+ * @remark must be less than maxValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{10}}"/>
+ * </pre>
+ * @see maxValue
+ */
+
+/**
+ * @name Controls/_slider/Range#maxValue
+ * @cfg {Number} sets the maximum value of slider
+ * @remark must be greater than minValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base maxValue="{{100}}"/>
+ * </pre>
+ * @see minValue
+ */
+
+/**
+ * @name Controls/_slider/Range#scaleStep
+ * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
+ * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
+ * @example
+ * Slider with scale step of 20
+ * <pre class="brush:html">
+ *   <Controls.slider:Base scaleStep="{{20}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} sets the current start value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the first point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base startValue="{{40}}"/>
+ * </pre>
+ * @see endValue
+ */
+
+/**
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} sets the current end value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the second point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base endValue="{{40}}"/>
+ * </pre>
+ * @see startValue
+ */
+
+/**
+ * @name Controls/_slider/Range#precision
+ * @cfg {Number} Number of characters in decimal part.
+ * @remark Must be non-negative
+ * @example
+ * Slider with integer values;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base precision="{{0}}"/>
+ * </pre>
+ */
 const Range = Control.extend({
 
-   /**
-    * Slider with two movable points for choosing range.
-    *
-    * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
-    * @public
-    * @extends Core/Control
-    * @class Controls/_slider/Range
-    * @author Колесов В.А.
-    * @demo Controls-demo/Slider/Range/SliderRangeDemo
-    */
-
-   /**
-    * @name Controls/_slider/Range#size
-    * @cfg {Boolean} sets the size of slider point
-    * @example
-    * Slider with diameter of point = 12px
-    * <pre class="brush:html">
-    *   <Controls.slider:Base size="s"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Range#borderVisible
-    * @cfg {Boolean} sets the stroke around control
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base borderVisible="{{true}}"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Range#minValue
-    * @cfg {Number} sets the minimum value of slider
-    * @remark must be less than maxValue
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base minValue="{{10}}"/>
-    * </pre>
-    * @see maxValue
-    */
-
-   /**
-    * @name Controls/_slider/Range#maxValue
-    * @cfg {Number} sets the maximum value of slider
-    * @remark must be greater than minValue
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base maxValue="{{100}}"/>
-    * </pre>
-    * @see minValue
-    */
-
-   /**
-    * @name Controls/_slider/Range#scaleStep
-    * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
-    * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
-    * @example
-    * Slider with scale step of 20
-    * <pre class="brush:html">
-    *   <Controls.slider:Base scaleStep="{{20}}"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Range#startValue
-    * @cfg {Number} sets the current start value of slider
-    * @remark Must be in range of [minValue..maxValue]
-    * @example
-    * Slider with the first point placed at position 40;
-    * <pre class="brush:html">
-    *   <Controls.slider:Base startValue="{{40}}"/>
-    * </pre>
-    * @see endValue
-    */
-
-   /**
-    * @name Controls/_slider/Range#endValue
-    * @cfg {Number} sets the current end value of slider
-    * @remark Must be in range of [minValue..maxValue]
-    * @example
-    * Slider with the second point placed at position 40;
-    * <pre class="brush:html">
-    *   <Controls.slider:Base endValue="{{40}}"/>
-    * </pre>
-    * @see startValue
-    */
-
-   /**
-    * @name Controls/_slider/Range#precision
-    * @cfg {Number} Number of characters in decimal part.
-    * @remark Must be non-negative
-    * @example
-    * Slider with integer values;
-    * <pre class="brush:html">
-    *   <Controls.slider:Base precision="{{0}}"/>
-    * </pre>
-    */
    _template: template,
    _value: undefined,
    _lineData: undefined,
@@ -165,11 +165,12 @@ const Range = Control.extend({
    _beforeMount(options) {
       _private._checkOptions(options);
       this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
-      this._endValue = options.endValue || options.maxValue;
-      this._startValue = options.startValue || options.minValue;
+      this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
+      this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
       this._value = undefined;
       this._pointData = [{name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}];
       this._lineData = {position: 0, width: 100};
+      _private._render(this, options.minValue, options.maxValue, this._startValue, this._endValue);
    },
    _beforeUpdate(options) {
       if (_private._needUpdate(this._options, options)) {
@@ -178,7 +179,7 @@ const Range = Control.extend({
       }
       this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
       this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
-      _private._render(this, this._options.minValue, this._options.maxValue, this._startValue, this._endValue);
+      _private._render(this, options.minValue, options.maxValue, this._startValue, this._endValue);
    },
    /**
     * Handler for the mousedown event.

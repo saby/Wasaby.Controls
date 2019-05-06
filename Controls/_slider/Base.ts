@@ -29,96 +29,94 @@ var _private = {
          oldOpts.value !== newOpts.value);
    }
 };
+/**
+ * Basic slider with single movable point for choosing value.
+ *
+ * <a href="/materials/demo-ws4-sliderbase">Demo-example</a>.
+ * @public
+ * @extends Core/Control
+ * @class Controls/_slider/Base
+ * @author Колесов В.А.
+ * @demo Controls-demo/Slider/Base/SliderBaseDemo
+ */
 
+/**
+ * @name Controls/_slider/Base#size
+ * @cfg {Boolean} sets the size of slider point
+ * @example
+ * Slider with diameter of point = 12px
+ * <pre class="brush:html">
+ *   <Controls.slider:Base size="s"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#borderVisible
+ * @cfg {Boolean} sets the stroke around control
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base borderVisible="{{true}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#minValue
+ * @cfg {Number} sets the minimum value of slider
+ * @remark must be less than maxValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{10}}"/>
+ * </pre>
+ * @see maxValue
+ */
+
+/**
+ * @name Controls/_slider/Base#maxValue
+ * @cfg {Number} sets the maximum value of slider
+ * @remark must be greater than minValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base maxValue="{{100}}"/>
+ * </pre>
+ * @see minValue
+ */
+
+/**
+ * @name Controls/_slider/Base#scaleStep
+ * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
+ * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
+ * @example
+ * Slider with scale step of 20
+ * <pre class="brush:html">
+ *   <Controls.slider:Base scaleStep="{{20}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#value
+ * @cfg {Number} sets the current value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base value="{{40}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#precision
+ * @cfg {Number} Number of characters in decimal part.
+ * @remark Must be non-negative
+ * @example
+ * Slider with integer values;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base precision="{{0}}"/>
+ * </pre>
+ */
 var Base = Control.extend({
-   /**
-    * Basic slider with single movable point for choosing value.
-    *
-    * <a href="/materials/demo-ws4-sliderbase">Demo-example</a>.
-    * @public
-    * @extends Core/Control
-    * @class Controls/_slider/Base
-    * @author Колесов В.А.
-    * @demo Controls-demo/Slider/Base/SliderBaseDemo
-    */
-
-   /**
-    * @name Controls/_slider/Base#size
-    * @cfg {Boolean} sets the size of slider point
-    * @example
-    * Slider with diameter of point = 12px
-    * <pre class="brush:html">
-    *   <Controls.slider:Base size="s"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Base#borderVisible
-    * @cfg {Boolean} sets the stroke around control
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base borderVisible="{{true}}"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Base#minValue
-    * @cfg {Number} sets the minimum value of slider
-    * @remark must be less than maxValue
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base minValue="{{10}}"/>
-    * </pre>
-    * @see maxValue
-    */
-
-   /**
-    * @name Controls/_slider/Base#maxValue
-    * @cfg {Number} sets the maximum value of slider
-    * @remark must be greater than minValue
-    * @example
-    * Slider with border
-    * <pre class="brush:html">
-    *   <Controls.slider:Base maxValue="{{100}}"/>
-    * </pre>
-    * @see minValue
-    */
-
-   /**
-    * @name Controls/_slider/Base#scaleStep
-    * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
-    * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
-    * @example
-    * Slider with scale step of 20
-    * <pre class="brush:html">
-    *   <Controls.slider:Base scaleStep="{{20}}"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Base#value
-    * @cfg {Number} sets the current value of slider
-    * @remark Must be in range of [minValue..maxValue]
-    * @example
-    * Slider with the point placed at position 40;
-    * <pre class="brush:html">
-    *   <Controls.slider:Base value="{{40}}"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_slider/Base#precision
-    * @cfg {Number} Number of characters in decimal part.
-    * @remark Must be non-negative
-    * @example
-    * Slider with integer values;
-    * <pre class="brush:html">
-    *   <Controls.slider:Base precision="{{0}}"/>
-    * </pre>
-    */
-
    _template: template,
    _value: undefined,
    _lineData: undefined,
@@ -130,6 +128,7 @@ var Base = Control.extend({
       this._value = options.value || options.maxValue;
       this._pointData = [{name: 'point', position: 100}];
       this._lineData = {position: 0, width: 100};
+      _private._render(this, options.minValue, options.maxValue, this._value);
    },
    _beforeUpdate(options) {
       if (_private._needUpdate(this._options, options)) {
