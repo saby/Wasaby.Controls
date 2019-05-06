@@ -15,6 +15,7 @@ define(
             let config = {
                popupOptions: {
                   maxWidth: 200,
+                  width: 150,
                   maxHeight: 200
                }
             };
@@ -25,8 +26,8 @@ define(
             };
 
             BCInstacne._getPopupSizes(config, container);
-            assert.equal(config.sizes.width, 200);
-            assert.equal(config.sizes.height, 200);
+            assert.equal(config.sizes.width, 150);
+            assert.equal(config.sizes.height, 100);
             assert.equal(config.sizes.margins.top, 0);
             assert.equal(config.sizes.margins.left, 0);
 
