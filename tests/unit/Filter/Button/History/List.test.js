@@ -4,9 +4,9 @@ define(
       'Core/Serializer',
       'Types/chain',
       'unit/Filter/Button/History/testHistorySource',
-      'Controls/filterPopup'
+      'Controls/filter'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filterPopup) {
+   function(List, Serializer, chain, HistorySourceDemo, filter) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -63,7 +63,7 @@ define(
             list.destroy();
          });
 
-         filterPopup.historyUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
+         filter.HistoryUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
             config.items = items;
             config.filterItems = items;
          });
@@ -73,7 +73,7 @@ define(
          it('get text', function() {
             var textArr = [];
             list._beforeMount(config);
-            textArr = list._getText(list._options.items, items, filterPopup.historyUtils.getHistorySource(config.historyId));
+            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource(config.historyId));
             assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
             assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 
