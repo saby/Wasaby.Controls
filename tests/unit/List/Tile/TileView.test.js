@@ -41,10 +41,10 @@ define(['Controls/_tile/TileView/TileView',
       tileView.saveOptions(cfg);
       tileView._beforeMount(cfg);
 
-      describe('getFixedPosition', function() {
+      describe('getPositionInContainer', function() {
 
          it('not fit left and right', function() {
-            var position = TileView._private.getFixedPosition(hoveredSize, {
+            var position = TileView._private.getPositionInContainer(hoveredSize, {
                left: 5,
                right: 45,
                top: 15,
@@ -53,14 +53,18 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 50,
-               height: 70
+               height: 70,
+               left: 0,
+               right: 0,
+               top: 0,
+               bottom: 0
             }, 1.5);
 
             assert.equal(position, null);
          });
 
          it('not fit right and bottom', function() {
-            var position = TileView._private.getFixedPosition(hoveredSize, {
+            var position = TileView._private.getPositionInContainer(hoveredSize, {
                left: 15,
                right: 55,
                top: 5,
@@ -69,14 +73,18 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 50
+               height: 50,
+               left: 0,
+               right: 0,
+               top: 0,
+               bottom: 0
             }, 1.5);
 
             assert.equal(position, null);
          });
 
          it('not fit left and top', function() {
-            var position = TileView._private.getFixedPosition(hoveredSize, {
+            var position = TileView._private.getPositionInContainer(hoveredSize, {
                left: 5,
                right: 45,
                top: 5,
@@ -85,7 +93,11 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 70
+               height: 70,
+               left: 0,
+               top: 0,
+               right: 70,
+               bottom: 70
             }, 1.5);
 
             assert.deepEqual(position, {
@@ -97,7 +109,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          it('not fit right and bottom', function() {
-            var position = TileView._private.getFixedPosition(hoveredSize, {
+            var position = TileView._private.getPositionInContainer(hoveredSize, {
                left: 25,
                right: 65,
                top: 25,
@@ -106,7 +118,11 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 70
+               height: 70,
+               left: 0,
+               top: 0,
+               right: 70,
+               bottom: 70
             }, 1.5);
 
             assert.deepEqual(position, {
@@ -118,7 +134,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          it('all fit', function() {
-            var position = TileView._private.getFixedPosition(hoveredSize, {
+            var position = TileView._private.getPositionInContainer(hoveredSize, {
                left: 15,
                right: 55,
                top: 15,
@@ -127,7 +143,11 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 70
+               height: 70,
+               left: 0,
+               top: 0,
+               right: 70,
+               bottom: 70
             }, 1.5);
 
             assert.deepEqual(position, {
@@ -139,7 +159,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          it('size * zoom < hoverSize', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getPositionInContainer({
                width: 60,
                height: 70
             }, {
@@ -151,7 +171,11 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 80
+               height: 80,
+               left: 0,
+               top: 0,
+               right: 70,
+               bottom: 80
             }, 1.5);
 
             assert.deepEqual(position, {
@@ -161,7 +185,7 @@ define(['Controls/_tile/TileView/TileView',
                bottom: 0
             });
 
-            position = TileView._private.getFixedPosition({
+            position = TileView._private.getPositionInContainer({
                width: 40,
                height: 50
             }, {
@@ -173,7 +197,11 @@ define(['Controls/_tile/TileView/TileView',
                height: 40
             }, {
                width: 70,
-               height: 80
+               height: 80,
+               left: 0,
+               top: 0,
+               right: 70,
+               bottom: 80
             }, 1);
 
             assert.deepEqual(position, {
@@ -182,6 +210,114 @@ define(['Controls/_tile/TileView/TileView',
                top: 20,
                bottom: 10
             });
+         });
+      });
+
+      describe('getCorrectPosition', function() {
+         it('all fit', function() {
+            assert.deepEqual(TileView._private.getCorrectPosition(10, 10, 10, 10), {
+               left: 10,
+               right: 10,
+               top: 10,
+               bottom: 10
+            });
+         });
+
+         it('not fit top', function() {
+            assert.deepEqual(TileView._private.getCorrectPosition(-10, 10, 10, 10), {
+               left: 10,
+               right: 10,
+               top: 0,
+               bottom: 0
+            });
+         });
+
+         it('not fit left', function() {
+            assert.deepEqual(TileView._private.getCorrectPosition(10, 10, 10, -10), {
+               left: 0,
+               right: 0,
+               top: 10,
+               bottom: 10
+            });
+         });
+
+         it('not fit', function() {
+            assert.isNull(TileView._private.getCorrectPosition(10, 0, 10, -10));
+            assert.isNull(TileView._private.getCorrectPosition(-10, 10, 0, 10));
+            assert.isNull(TileView._private.getCorrectPosition(10, -10, 10, 0));
+            assert.isNull(TileView._private.getCorrectPosition(0, 10, -10, 10));
+            assert.isNull(TileView._private.getCorrectPosition(-10, -10, -10, -10));
+            assert.isNull(TileView._private.getCorrectPosition(-10, 0, -10, 0));
+            assert.isNull(TileView._private.getCorrectPosition(0, -10, 0, -10));
+         });
+      });
+
+      describe('getPositionInDocument', function() {
+         it('all fit (container === document)', function() {
+            var position = TileView._private.getPositionInDocument({
+               left: 10,
+               right: 10,
+               top: 10,
+               bottom: 10,
+            }, {
+               left: 0,
+               top: 0,
+               right: 30,
+               bottom: 30
+            }, {
+               width: 30,
+               height: 30
+            });
+
+            assert.deepEqual(position, {
+               left: 10,
+               right: 10,
+               top: 10,
+               bottom: 10
+            });
+         });
+
+         it('all fit', function() {
+            var position = TileView._private.getPositionInDocument({
+               left: 10,
+               right: 10,
+               top: 10,
+               bottom: 10,
+            }, {
+               left: 10,
+               top: 10,
+               right: 40,
+               bottom: 40
+            }, {
+               width: 50,
+               height: 50
+            });
+
+            assert.deepEqual(position, {
+               left: 20,
+               right: 20,
+               top: 20,
+               bottom: 20
+            });
+         });
+
+         it('not fit', function() {
+            var position = TileView._private.getPositionInDocument({
+               left: 0,
+               right: 0,
+               top: 0,
+               bottom: 0,
+            }, {
+               left: 0,
+               top: -20,
+               right: 30,
+               bottom: 10
+            }, {
+               width: 30,
+               height: 10
+            });
+
+            assert.isNull(position);
          });
       });
 

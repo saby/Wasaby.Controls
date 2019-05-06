@@ -653,6 +653,30 @@ define([
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
+         it('link href starts from "file://"', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'file://test-perfleakps/leaks/test/30_03_19/21_06_58.zip',
+                  target: '_blank'
+               },
+               'file://test-perfleakps/leaks/test/30_03_19/21_06_58.zip'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href starts from "smb://"', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'smb://test-perfleakps/leaks/test/30_03_19/21_06_58.zip',
+                  target: '_blank'
+               },
+               'smb://test-perfleakps/leaks/test/30_03_19/21_06_58.zip'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
          it('link is not in the end of paragraph', function() {
             var parentNode = ['p', ['a',
                {
@@ -734,6 +758,18 @@ define([
                   target: '_blank'
                },
                'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 7', function() {
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'http://ya.ru',
+                  target: '_blank'
+               },
+               'http://ya.ru'
             ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });

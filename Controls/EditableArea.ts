@@ -3,7 +3,7 @@ import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
 import template = require('wml!Controls/_EditableArea/EditableArea');
 import 'css!theme?Controls/_EditableArea/EditableArea';
-import 'css!theme?Controls/List/EditInPlace/Text';
+import 'css!theme?Controls/list';
 
 'use strict';
 var

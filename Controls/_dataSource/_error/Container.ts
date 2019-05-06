@@ -5,7 +5,8 @@ import template = require('wml!Controls/_dataSource/_error/Container');
 import { constants } from 'Env/Env';
 import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
-import 'css!Controls/_dataSource/_error/Container';
+// @ts-ignore
+import { load } from 'Core/library';
 
 type Options = {
     /**
@@ -17,6 +18,12 @@ type Options = {
 type Config = ViewConfig & {
     isShowed?: boolean;
 }
+let getTemplate = (template: string | Control): Promise<Control> => {
+    if (typeof template == 'string') {
+        return load(template);
+    }
+    return Promise.resolve(template);
+};
 
 /**
  * Component to display a parking error template
@@ -31,7 +38,6 @@ export default class Container extends Control {
         let mode = this.__viewConfig.mode;
         this.__viewConfig = null;
         if (mode == Mode.dialog) {
-            this.__hideDialog();
             return;
         }
         this._forceUpdate();
@@ -63,29 +69,19 @@ export default class Container extends Control {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
-            constants.isBrowserPlatform && !this._children.dialogOpener
+            constants.isBrowserPlatform
         ) {
             return;
         }
-        this._children.dialogOpener.open({
-            template: config.template,
-            templateOptions: config.options
-        });
         config.isShowed = true;
-    }
-    private __hideDialog() {
-        if (
-            constants.isBrowserPlatform &&
-            this._children.dialogOpener &&
-            this._children.dialogOpener.isOpened()
-        ) {
-            this._children.dialogOpener.close();
-        }
+        getTemplate(config.template).then((template) => {
+            this._notify('serviceError', [template, config.options], { bubbling: true });
+        });
     }
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;
         if (this.__viewConfig) {
-            this.__viewConfig.isShowed = this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
         }
     }
 }

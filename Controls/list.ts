@@ -18,6 +18,7 @@
  * @includes IExplorer Controls/_list/interface/IExplorer
  * @includes IHierarchy Controls/_list/interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
+ * @includes ListStyles Controls/_list/ListStyles
  * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
  * @public

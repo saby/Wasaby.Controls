@@ -25,13 +25,26 @@
       </ws:for>
    </ws:if>
 </ws:template>
+<ws:template name="itemTemplate">
+   <ws:if data="{{currentItem.beforeItemTemplate}}">
+      <ws:partial template="{{currentItem.beforeItemTemplate}}"
+                  itemTemplate="{{itemTemplate}}"
+                  listModel="{{listModel}}"/>
+   </ws:if>
+   <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
+   <ws:if data="{{currentItem.afterItemTemplate}}">
+      <ws:partial template="{{currentItem.afterItemTemplate}}"
+                  itemTemplate="{{itemTemplate}}"
+                  listModel="{{listModel}}"/>
+   </ws:if>
+</ws:template>
 <ws:for data="listModel.reset(); listModel.isEnd();">
    <ws:if data="{{listModel.getCurrent().isGroup}}">
       <ws:partial template="groupOutputLocalTemplate" currentGroup="{{listModel.getCurrent()}}"
                   attr:key="{{listModel.getCurrent().key}}"/>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+      <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
    </ws:else>
 </ws:for>
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">

@@ -1,3 +1,7 @@
+@tensorFontForIE:                         '1.0.3';
+@tensorFontVer:                           '1.0.3';
+@emojiFontVer:                            '1.0.1';
+
 //colors
 @color_shadow_default:              rgba(0,0,0,0.2);
 @color_shadow_popup:                rgba(0,0,0,0.35);
@@ -31,6 +35,7 @@
 @background-color_additional:       #F8F8F8;
 @background-color_item_hovered:     #F0F5FB;
 @background-color_header:           #F4F4F4; // Headers in the period dialogs, dropdown and filter panels
+@background-color-text-highlight:   #FFFECE;
 
 @color_border:                      #CCC;
 @color_border_danger:               @color_danger;
@@ -87,6 +92,9 @@
 
 //period dialog
 @color_border_PeriodDialog:       #EAEAEA;
+
+// loadingindicator
+@path_spinner:             url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
 
 // d'n'd
 @color_drop-target:                                #0055BB;
@@ -173,6 +181,7 @@
 @background_Button_button_primary_hovered_val:                    #FDECD9;
 @background_Button_secondary_active_val:                          #E1ECF6;
 @background_Button_button_primary_active_val:                     #FDD2C0;
+@background_Button:                                               transparent;
 
 // Image
 @border-radius_Image_m_val:                                       8px;
@@ -184,6 +193,7 @@
 @spacing_Infobox-between-target-popup_val:                        11px;
 @size_Infobox-arrow_val:                                          12px;
 @spacing_Infobox-between-arrow-border_val:                        9px;
+@spacing_Infobox-between-top-close-button_val:                    5px;
 @border-color_Infobox_success_val:                                #069922;
 @border-color_Infobox_danger_val:                                 #D04D4D;
 @border-color_Infobox_info_val:                                   #999999;
@@ -198,6 +208,9 @@
 @font-weight_InputRender_style_header_val:                        bold;
 @font-weight_InputRender_style_accentHeader_val:                  bold;
 
+// Mask
+@paddings_Mask-stretcher:                                         0 2px 0 1px;
+
 // ListView
 @opacity_ListView-item_dragging_val:                              0.6;
 @spacing_ListView-item-between-checkbox-borderTop_val:            3px;
@@ -209,6 +222,7 @@
 @spacing_ListView-item-between-content-borderLeft_xs_val:         0;
 @spacing_ListView-between-content-checkbox_val:                   0;
 @spacing_ListView-empty-between-content-borderTop_xs_val:         0;
+
 @box-shadow_List-masterList-item_selected_val:                    4px 0 8px rgba(0, 0, 0, .15);
 @border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
 @background-color_ListView-item_active_val:                       #F0F5FB;
@@ -220,6 +234,7 @@
 @border-color_List-masterList-item_selected-left_val:             transparent;
 @border-color_List-masterList-item_selected-top_val:              #C2D0DE;
 @border-color_List-masterList-item_selected-bottom_val:           #9CB3CA;
+@padding_List-editAtPlace:                                        4px;
 @thickness_listAddButton_val:                                     2;
 @spacing_ListAddButton-between-icon-and-text_val:                 0;
 
@@ -230,6 +245,8 @@
 @shift-top_MenuButton-link_large-popup_val:                       -8px;
 @shift-top_MenuButton-toolButton_medium-popup_val:                -3px;
 @shift-top_MenuButton-link_small-popup_val:                       -8px;
+@width-IconButton_size-m:                                         24px;
+@width-IconButton_size-l:                                         28px;
 
 // MoveDialog
 @width_MoveDialog_val:                                            408px;
@@ -241,18 +258,17 @@
 @font-weight_NotificationBase-message_val:                        normal;
 @spacing_NotificationBase-between-border-top-message_val:         18px;
 
-// PeriodDialog
-@width_PeriodDialog-dateRange-monthPanel_val:                     82px;
-@width_PeriodDialog_val:                                          364px;
-@height_PeriodDialog_val:                                         487px;
-@spacing_PeriodDialog-header-between-borderLeft-content_val:      10px;
-@width_PeriodDialog-years-leftRight_val:                          33px;
-@font-size_PeriodDialog-monthRange-month-date_val:                8px;
-@height_PeriodDialog-monthRange-month-date_val:                   13px;
-@dimentions_PeriodDialog-monthRange-monthWrapper:                 100px;
+// DatePicker
+@spacing_DatePicker-between-input-button:                                 7px;
 
 // DateRangeRelationButton
 @color_DateRangeRelationButton-byCapacity_hovered_val:            #999;
+
+// Previewer
+@animation-duration_Previewer:                                    200ms;
+
+// FilterLink
+@color_FilterLink:                                                #313e78;
 
 // Render
 @size_Render-tagStyle_val:                                        8px;
@@ -311,12 +327,15 @@
 // TabButtons
 @max-width_Tabs_item_val:                                         630px;
 @border-color_Tabs_val:                                           #F0F0F0;
-@background-color_Tabs-separator_val:                             #F0F0F0;
+
+// ComboBox
+@margin-top_ComboBox-popup:                                      -@thickness_border_default;
 
 // Toolbar
 @shift-top_Toolbar-toolButton-popup_val:                          -6px;
 @shift-top_Toolbar-list-popup_val:                                -8px;
 @font-size_Toolbar-item_val:                                      14px;
+@spacing_Toolbar-between-icon-text:                               @spacing_default_s;
 
 // TreeGridView
 @spacing_TreeGridView-row-expander-between-content_borderRight_m_val:     10px;
@@ -332,12 +351,6 @@
 @height_TreeTileView-node_val:                                    40px;
 @color_TreeGridView-expander_val:                                 #313E78;
 @border-color_TreeGridView-item_dragging_val:                     #0055BB;
-
-// DialogTemplate
-@spacing_dialogTemplate-between-head-border-right_val:                    48px;
-@line-height_dialogTemplate_caption_val:                                  42px;
-@height_DialogTemplate-top-area-val:                                      44px;
-@height_dialogTemplate_footer_val:                                        64px;
 
 // TileView
 @spacing_TileView-between-title-topBorder_val:                            3px;
@@ -406,6 +419,8 @@
 @padding-horizontal_CheckBox-caption_val:                                 3px;
 @top_CheckBox__iconSuccessful_val:                                        3px;
 @color_CheckBox__iconBox_val:                                             #999;
+@height_CheckBox:                                                         @height_m;
+@width_CheckBox:                                                          @height_CheckBox;
 
 // FilterButton
 @shift-top_FilterButton-popup_val:                                        -11px;
@@ -493,16 +508,6 @@
 // LoadingIndicator
 @color_LoadingIndicator-overlay-default_val:                              transparent;
 
-// PeriodDialog
-@background-color_PeriodDialog-dateRange-months-button_val:               transparent;
-@background-color_PeriodDialog-dateRange-months-button_hover_val:         transparent;
-@background-color_PeriodDialog-dateRange-monthsWithDates-title_val:       transparent;
-@background-color_PeriodDialog-dateRange-monthsWithDates-title_hover_val: transparent;
-@background-color_PeriodDialog-dateRange-months-nextYearButton_val:       transparent;
-@background-color_PeriodDialog-dateRange-months-nextYearButton_hover_val: transparent;
-@font-weight_PeriodDialog-dateRange-header-year_val:                      bold;
-@height_PeriodDialog-monthRange-month-title_val:                          auto;
-
 // Search
 @border-color_Search_val:                                                 transparent;
 @border-color_Search_readOnly_val:                                        transparent;
@@ -531,6 +536,15 @@
 @color_HeaderSeparator__primary_hovered_val:            #729EE6;
 @color_HeaderSeparator__secondary_hovered_val:          #729EE6;
 @font-weight_Heading-caption_val:                        bold;
+
+//BigSeparator
+@size-BigSeparator__icon:                               26px;
+@color_BigSeparator-icon:                               @color_additional;
+@color_BigSeparator-icon_hovered:                       #313E78;
+
+//Label
+@height_Label:                                          @height_m;
+@padding_Label:                                         0 8px 0 0;
 
 //Popup
 @color_border_Notification_default_val:                 #0055BB;

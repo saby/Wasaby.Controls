@@ -4,7 +4,7 @@ import Deferred = require('Core/Deferred');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
-import {historyUtils} from 'Controls/filterPopup';
+import historyUtils = require('Controls/_filter/HistoryUtils');
 import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');

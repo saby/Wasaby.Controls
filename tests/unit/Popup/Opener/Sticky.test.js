@@ -371,6 +371,27 @@ define(
             assert.equal(position.bottom, 840);
             assert.equal(position.left, 250);
          });
+
+         it('StickyStrategy setMaxSizes', () => {
+            let popupCfg = {
+               config: {
+                  maxWidth: 100,
+                  width: 50,
+                  minWidth: 10,
+                  maxHeight: 200,
+                  height: 150,
+                  minHeight: 110
+               }
+            };
+            let position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, popupCfg.config.maxWidth);
+            assert.equal(position.width, popupCfg.config.width);
+            assert.equal(position.minWidth, popupCfg.config.minWidth);
+            assert.equal(position.maxHeight, popupCfg.config.maxHeight);
+            assert.equal(position.height, popupCfg.config.height);
+            assert.equal(position.minHeight, popupCfg.config.minHeight);
+         });
       });
    }
 );

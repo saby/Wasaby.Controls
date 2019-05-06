@@ -24,6 +24,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_list/interface/IDraggable
  * @mixes Controls/List/interface/ITile
  *
+ * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles
  * @mixes Controls/_list/ListStyles
  * @mixes Controls/List/View/Styles
