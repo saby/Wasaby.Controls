@@ -54,16 +54,6 @@
  */
 
 /**
- * @typedef {Object} VirtualScrollConfig
- * @property {Number} maxVisibleItems Maximum number of rendered items.
- */
-
-/**
- * @name Controls/_list/interface/IList#virtualScrollConfig
- * @cfg {VirtualScrollConfig} Virtual scroll config.
- */
-
-/**
  * @name Controls/_list/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
