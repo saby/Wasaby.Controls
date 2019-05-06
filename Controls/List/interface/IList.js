@@ -15,7 +15,7 @@ define('Controls/List/interface/IList', ['Controls/_list/interface/IList'], func
     */
 
    /**
-    * @name Controls.list:View/interface/IList#emptyTemplate
+    * @name Controls/_list/interface/IList#emptyTemplate
     * @cfg {Function} Template for the empty list.
     * <a href="/materials/demo-ws4-list-base">Example</a>.
     * @remark
