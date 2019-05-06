@@ -70,26 +70,26 @@ import 'css!theme?Controls/popupTemplate';
          _maximizeButtonVisibility: false,
          _beforeMount: function(options) {
             if (options.contentArea) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.caption) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
             if (options.captionStyle) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
             if (options.showMaximizeButton) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
             }
             if (options.topArea) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
 
             if (options.bottomArea) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
             if (options.closeButtonStyle) {
-               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
+               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
             this._updateMaximizeButton(options);
          },

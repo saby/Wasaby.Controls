@@ -83,9 +83,9 @@ import 'css!theme?Controls/popupTemplate';
          } else {
             self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
             if (options.style !== undefined) {
-               Env.IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
+               Env.IoC.resolve('ILogger').error('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
                if (options.style === 'primary') {
-                  Env.IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
+                  Env.IoC.resolve('ILogger').error('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
                   self._transparent = false;
                }
             }
