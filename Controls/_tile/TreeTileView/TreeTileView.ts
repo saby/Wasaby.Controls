@@ -1,12 +1,10 @@
 import TileView = require('Controls/_tile/TileView/TileView');
 import Env = require('Env/Env');
 import defaultItemTpl = require('wml!Controls/_tile/TreeTileView/DefaultItemTpl');
-import itemOutputWrapper = require('wml!Controls/_tile/TreeTileView/resources/ItemOutputWrapper');
 import 'css!theme?Controls/tile';
 
 var TreeTileView = TileView.extend({
     _defaultItemTemplate: defaultItemTpl,
-    _itemOutputWrapper: itemOutputWrapper,
     _onTileViewKeyDown: function (event) {
         // Pressing the left or right key allows you to expand / collapse an element.
         // In tileView mode, expand/collapse is not allowed.
