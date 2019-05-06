@@ -1,5 +1,5 @@
 define([
-   'Controls/_lookup/LookupMultiSelector/LookupView',
+   'Controls/_lookup/MultipleInput/LookupView',
    'Types/entity',
    'Types/collection'
 ], function(LookupView, entity, collection) {
@@ -16,7 +16,7 @@ define([
       });
    }
 
-   describe('Controls/_lookup/LookupMultiSelector/LookupView', function() {
+   describe('Controls/_lookup/MultipleInput/LookupView', function() {
       it('getAvailableWidthCollection', function() {
          var
             placeholderWidth = 35,
