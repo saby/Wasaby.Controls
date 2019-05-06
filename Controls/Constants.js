@@ -6,7 +6,10 @@ define('Controls/Constants', [], function() {
             hiddenGroup: 'CONTROLS_HIDDEN_GROUP'
          },
          editing: {
-            CANCEL: 'Cancel'
+            CANCEL: 'Cancel',
+            SAVE: 'Save',
+            NOTSAVE: 'NotSave',
+            CUSTOMLOGIC: 'CustomLogic'
          }
       };
    return constants;

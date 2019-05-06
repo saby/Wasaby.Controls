@@ -73,14 +73,8 @@ var
 
             if (result && result.addCallback) {
                 // Если мы попали сюда, то прикладники сами сохраняют запись
-                return result.addCallback(function (res) {
-                    if (res === Constants.editing.CANCEL) {
-                        return {cancelled: true};
-                    }
-
-                    return _private.updateModel(self, commit).addCallback(function () {
-                        _private.afterEndEdit(self);
-                    });
+                return result.addCallback(function (result) {
+                    return _private.processBeforeEndEditResult(self, result, commit);
                 });
             }
 
@@ -91,6 +85,22 @@ var
             return _private.updateModel(self, commit).addCallback(function () {
                 _private.afterEndEdit(self);
             });
+        },
+
+        processBeforeEndEditResult: function (self, result, commit) {
+            if (result === Constants.editing.CANCEL) {
+                return {cancelled: true};
+            } else if (result === Constants.editing.NOTSAVE){
+                return _private.updateModel(self, false).addCallback(function () {
+                    _private.afterEndEdit(self);
+                });
+            } else if (result === Constants.editing.CUSTOMLOGIC) {
+                return {};
+            } else {
+                return _private.updateModel(self, commit).addCallback(function () {
+                    _private.afterEndEdit(self);
+                });
+            }
         },
 
         afterEndEdit: function (self) {
