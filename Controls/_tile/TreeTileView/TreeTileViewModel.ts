@@ -1,6 +1,7 @@
 import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
 import {TreeViewModel} from 'Controls/treeGrid';
 import cMerge = require('Core/core-merge');
+import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
@@ -22,8 +23,8 @@ var TreeTileViewModel = TreeViewModel.extend({
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
         prevItem = this._display.at(current.index - 1);
-        if (prevItem) {
-            current.hasSeparator = prevItem.isNode() && !current.dispItem.isNode();
+        if (prevItem && prevItem.isNode() && !current.dispItem.isNode()) {
+            current.beforeItemTemplate = InvisibleFor;
         }
 
         if (hoveredItem && hoveredItem.key === current.key) {

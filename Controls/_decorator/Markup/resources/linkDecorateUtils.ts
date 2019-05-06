@@ -159,6 +159,11 @@ import objectMerge = require('Core/core-merge');
          return false;
       }
 
+      // Decorate link that starts with "http://" or "https://".
+      if (attributes.href.indexOf('http') !== 0) {
+         return false;
+      }
+
       // Decorate link just in the end of paragraph.
       var indexOfNextChild = parentNode.indexOf(jsonNode) + 1;
       if (isTextNode(parentNode[indexOfNextChild]) && onlySpacesRegExp.test(parentNode[indexOfNextChild])) {

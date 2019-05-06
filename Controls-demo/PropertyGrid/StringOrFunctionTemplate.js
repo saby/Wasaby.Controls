@@ -21,11 +21,7 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
             this._valueChangedNotify();
          },
          _valueChangedNotify: function() {
-            if (this.checkBoxFlag === true) {
-               this._notify('valueChanged', [tmplstr.getFunction(this._value)]);
-            } else {
-               this._notify('valueChanged', [this._value]);
-            }
+            this._notify('valueChanged', [tmplstr.getFunction(this._value)]);
          },
          _checkBoxValueChanged: function() {
             this._valueChangedNotify();

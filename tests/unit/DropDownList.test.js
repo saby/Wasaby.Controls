@@ -438,6 +438,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
             assert.deepEqual(resultOptions.templateOptions, expectedTemplateOptions);
             assert.equal(resultOptions.template, 'selectorTemplate');
+
+            config.selectedKeys = [null];
+            dropdownList._openSelectorDialog(config);
+            assert.deepEqual(resultOptions.templateOptions.selectedItems.getCount(), 0);
          });
       });
    });

@@ -31,7 +31,7 @@
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List
+ *    </Controls.List>
  * </pre>
  */
 
@@ -51,16 +51,6 @@
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
- */
-
-/**
- * @typedef {Object} VirtualScrollConfig
- * @property {Number} maxVisibleItems Maximum number of rendered items.
- */
-
-/**
- * @name Controls/_list/interface/IList#virtualScrollConfig
- * @cfg {VirtualScrollConfig} Virtual scroll config.
  */
 
 /**

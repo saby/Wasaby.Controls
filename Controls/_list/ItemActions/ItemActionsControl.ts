@@ -67,7 +67,7 @@ var _private = {
                     _private.updateItemActions(self, item, options);
                 }
             }
-
+            self._isActual = true;
             options.listModel.nextModelVersion(collectionChanged);
         }
     },
@@ -117,6 +117,7 @@ var _private = {
 var ItemActionsControl = Control.extend({
 
     _template: template,
+    _isActual: false,
 
     constructor: function() {
         ItemActionsControl.superclass.constructor.apply(this, arguments);
@@ -133,10 +134,6 @@ var ItemActionsControl = Control.extend({
             this.serverSide = true;
             return;
         }
-
-        if (newOptions.listModel) {
-            _private.updateModel(this, newOptions);
-        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -147,7 +144,8 @@ var ItemActionsControl = Control.extend({
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
-            this._options.itemActionsPosition !== newOptions.itemActionsPosition
+            this._options.itemActionsPosition !== newOptions.itemActionsPosition ||
+            !this._isActual && newOptions.canUpdateItemsActions
         ) {
             this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
             _private.updateModel.apply(null, args);
@@ -181,6 +179,7 @@ var ItemActionsControl = Control.extend({
        type: string
     ): void {
         if (type === 'collectionChanged' || type === 'indexesChanged') {
+           this._isActual = false;
            /**
             * In general, we don't know what we should update.
             * For example, if a user adds an item we can't just calculate actions for the newest item, we should also calculate
@@ -200,7 +199,9 @@ var ItemActionsControl = Control.extend({
             *
             * So, we should calculate actions for every item everytime.
             */
-           _private.updateActions(this, this._options, type === 'collectionChanged');
+            if(this._options.canUpdateItemsActions) {
+               _private.updateActions(this, this._options, type === 'collectionChanged');
+           }
         }
     },
 

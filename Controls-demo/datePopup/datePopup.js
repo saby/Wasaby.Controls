@@ -1,7 +1,6 @@
 define('Controls-demo/datePopup/datePopup', [
    'Core/Control',
-   'wml!Controls-demo/datePopup/datePopup',
-   'css!themes/online/online'
+   'wml!Controls-demo/datePopup/datePopup'
 ], function(
    BaseControl,
    template

@@ -2,12 +2,12 @@ define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarc
 /**
  * Interface for hierarchical lists.
  *
- * @interface Controls/List/interface/IHierarchy
- * @public
+ * @interface Controls/_list/interface/IHierarchy
+ * @private
  * @author Авраменко А.С.
  */
    /**
- * @name Controls/List/interface/IHierarchy#nodeProperty
+ * @name Controls/_list/interface/IHierarchy#nodeProperty
  * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
  * @example
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
@@ -36,7 +36,7 @@ define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarc
  * </pre>
  */
    /**
- * @name Controls/List/interface/IHierarchy#parentProperty
+ * @name Controls/_list/interface/IHierarchy#parentProperty
  * @cfg {String} Name of the field that contains information about parent node.
  * @example
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.

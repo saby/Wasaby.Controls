@@ -182,7 +182,11 @@ import Utils = require('Types/util');
          getDefaultConfig: function(item) {
             item.position = {
                top: -10000,
-               left: -10000
+               left: -10000,
+               maxWidth: item.popupOptions.maxWidth,
+               minWidth: item.popupOptions.minWidth,
+               maxHeight: item.popupOptions.maxHeight,
+               minHeight: item.popupOptions.minHeight
             };
          },
 
@@ -202,8 +206,8 @@ import Utils = require('Types/util');
             var containerSizes = _private.getContentSizes(container);
 
             config.sizes = {
-               width: config.popupOptions.maxWidth || containerSizes.width,
-               height: config.popupOptions.maxHeight || containerSizes.height,
+               width:  config.popupOptions.width || containerSizes.width,
+               height: config.popupOptions.height || containerSizes.height,
 
                // Optimization: to consider the styles on each update is expensive
                margins: _private.getMargins(config, container)

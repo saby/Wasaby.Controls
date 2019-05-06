@@ -23,6 +23,7 @@ interface IPropertyGridItemDefault extends IPropertyGridItem {
     caption: undefined;
     editorTemplateName: undefined;
     editorOptions: undefined;
+    editorClass: undefined;
     type: undefined;
     group: undefined;
     propertyValue: undefined;
@@ -38,6 +39,7 @@ function getPropertyItemDefault(): IPropertyGridItemDefault {
         caption: undefined,
         editorTemplateName: undefined,
         editorOptions: undefined,
+        editorClass: undefined,
         type: undefined,
         group: undefined,
         propertyValue: undefined
