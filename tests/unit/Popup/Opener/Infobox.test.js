@@ -8,6 +8,21 @@ define(
    (InfoBox, OpenerTemplate, InfoBoxController, InfoBoxTemplate) => {
       'use strict';
 
+      describe('Controls/Popup/InfoBoxController', () => {
+         it('InfoBoxController: getDefaultConfig', () => {
+            let item = {
+               popupOptions: {
+                  position: 'tl'
+               }
+            };
+            InfoBoxController.getDefaultConfig(item);
+            assert.equal(item.position.top, -10000);
+            assert.equal(item.position.left, -10000);
+            assert.equal(item.position.right, undefined);
+            assert.equal(item.position.bottom, undefined);
+         });
+      });
+
       describe('Controls/Popup/InfoBox', () => {
          it('PopupInfoBox: getConfig', () => {
             let config = {
