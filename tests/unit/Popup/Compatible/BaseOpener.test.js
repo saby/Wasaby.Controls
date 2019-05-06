@@ -200,18 +200,18 @@ define(
             newConfig = {};
             newClass.dimensions = {
                minWidth: 30,
-               maxWidth: 30,
+               maxWidth: '30',
                minHeight: 30,
-               maxHeight: 30,
+               maxHeight: '30',
                width: 100
             };
             BaseOpener._setSizes(newConfig, newClass);
             assert.isFalse(!!newConfig.autoWidth);
             assert.isFalse(!!newConfig.autoHeight);
             assert.equal(newConfig.minWidth, newClass.dimensions.minWidth);
-            assert.equal(newConfig.maxWidth, newClass.dimensions.maxWidth);
+            assert.equal(newConfig.maxWidth, 30);
             assert.equal(newConfig.minHeight, newClass.dimensions.minHeight);
-            assert.equal(newConfig.maxHeight, newClass.dimensions.maxHeight);
+            assert.equal(newConfig.maxHeight, 30);
             assert.equal(newConfig.width, newClass.dimensions.width);
 
             newClass = {};
@@ -220,7 +220,7 @@ define(
                width: 350
             };
             BaseOpener._setSizes(newConfig, newClass);
-            assert.isNaN(newConfig.minWidth);
+            assert.equal(newConfig.minWidth, null);
          });
 
          it('_prepareConfigForOldTemplate', function() {

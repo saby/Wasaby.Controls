@@ -581,27 +581,12 @@ function(cMerge,
          var minHeight = dimensions.minHeight || templateOptions.minHeight;
          var maxHeight = dimensions.maxHeight || templateOptions.maxHeight;
 
-         if (!cfg.width) {
-            cfg.width = width ? parseInt(width, 10) : null;
-         }
-         if (!cfg.minWidth) {
-            cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
-         }
-         if (!cfg.maxWidth) {
-            cfg.maxWidth = maxWidth ? parseInt(maxWidth, 10) : null;
-         }
-         if (!cfg.height) {
-            cfg.height = height ? parseInt(height, 10) : null;
-         }
-         if (!cfg.minHeight) {
-            cfg.minHeight = minHeight ? parseInt(minHeight, 10) : null;
-         }
-         if (!cfg.maxHeight) {
-            cfg.maxHeight = maxHeight ? parseInt(maxHeight, 10) : null;
-         }
-
-         cfg.minWidth = parseInt(cfg.minWidth, 10);
-         cfg.maxWidth = parseInt(cfg.maxWidth, 10);
+         cfg.width = parseInt(cfg.width || width, 10) || null;
+         cfg.minWidth = parseInt(cfg.minWidth || minWidth, 10) || null;
+         cfg.maxWidth = parseInt(cfg.maxWidth || maxWidth, 10) || null;
+         cfg.height = parseInt(cfg.height || height, 10) || null;
+         cfg.minHeight = parseInt(cfg.minHeight || minHeight, 10) || null;
+         cfg.maxHeight = parseInt(cfg.maxHeight || maxHeight, 10) || null;
 
          if (!cfg.minHeight && dimensions.height) {
             // дименшены задают высоту шаблона. если есть шапка, то нужно учесть и ее высоту
