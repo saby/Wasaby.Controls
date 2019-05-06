@@ -35,7 +35,7 @@
       </div>
    </Controls.scroll:Container>
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
-      <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
+      <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" viewMode="link" on:click="_closeClick()"/>
    </ws:if>
    <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
       <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
