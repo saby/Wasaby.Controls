@@ -55,7 +55,7 @@
         on:itemContextMenu="_onItemContextMenu()"
         on:itemMouseDown="_itemMouseDown()"
         on:itemMouseEnter="_itemMouseEnter()"
-        on:itemMouseMove="_notifyHandler('itemMouseMove')"
+        on:itemMouseMove="_itemMouseMove()"
         on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
         on:itemSwipe="_listSwipe()"
     >
@@ -127,6 +127,7 @@
                 name="itemActions"
                 style="{{_options.style}}"
                 listModel="{{_listViewModel}}"
+                canUpdateItemsActions="{{_canUpdateItemsActions}}"
                 menuIsShown="{{_menuIsShown}}"
                 actionMenuIsShown="{{_actionMenuIsShown}}"
                 itemActions="{{_options.itemActions}}"

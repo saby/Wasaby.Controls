@@ -1,4 +1,5 @@
 <Controls.filterPopup:Panel
+        items="{{items}}"
         attr:class="controls-FilterPanel__width-m">
    <ws:itemTemplate templateName="wml!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
 </Controls.filterPopup:Panel>

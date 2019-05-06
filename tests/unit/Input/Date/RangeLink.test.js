@@ -1,9 +1,11 @@
 define([
+   'Core/core-clone',
    'Core/core-merge',
    'Controls/dateRange',
    'Controls/Date/model/DateRange',
    'unit/Calendar/Utils'
 ], function(
+   cClone,
    cMerge,
    dateRange,
    DateRange,
@@ -29,16 +31,22 @@ define([
             sinon.assert.called(component._children.opener.open);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {minQuantum: 'day'} }));
          });
-      });
 
-      describe('_openDialog with minRange', function() {
-         it('should open opener with parameter month', function() {
-            const component = calendarTestUtils.createComponent(dateRange.Selector, cMerge({minRange: 'month'}, options));
+         it('should open dialog with passed dialog options', function() {
+            const
+               extOptions = {
+                  minRange: 'month',
+                  captionFormatter: function(){}
+               },
+               component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(extOptions), options));
             component._children.opener = {
                open: sinon.fake()
             };
             component._openDialog();
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {minQuantum: 'month'} }));
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {
+                  minQuantum: extOptions.minRange,
+                  captionFormatter: extOptions.captionFormatter
+               }}));
          });
       });
 

@@ -17,6 +17,10 @@ define('Controls-demo/Input/Date/RangeLink', [
       _endValueQuarter: new Date(2018, 2, 31),
       _endValueHalfYear: new Date(2018, 5, 30),
       _endValueYear: new Date(2018, 11, 31),
+
+      _captionFormatter: function() {
+         return 'Custom range format';
+      }
    });
    return ModuleClass;
 });

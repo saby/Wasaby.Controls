@@ -1,8 +1,8 @@
 define('Controls/List/BaseControlStyles', ['Controls/_list/BaseControlStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
- * @mixin Controls/List/BaseControlStyles
- * @public
+ * @mixin Controls/_list/BaseControlStyles
+ * @private
  *
  *
  * @css @height_BaseControl-button-loadMore height of button "load more"

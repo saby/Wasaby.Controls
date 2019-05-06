@@ -10,6 +10,7 @@
  * @includes RowEditor wml!Controls/_grid/RowEditor
  * @includes GridStyles Controls/_grid/GridStyles
  * @includes SortButtonStyles Controls/_grid/SortButtonStyles
+ * @includes IGridControl Controls/_grid/interface/IGridControl
  * @public
  * @author Kraynov D.
  */

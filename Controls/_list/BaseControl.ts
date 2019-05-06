@@ -681,7 +681,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!theme?Controls/Toolbar/ToolbarPopup'], function() {
+            require(['css!theme?Controls/toolbars'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
@@ -722,7 +722,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
-          require(['css!Controls/Input/Dropdown/Dropdown'], () => {
+          require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
                 target: childEvent.target,
@@ -941,6 +941,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _menuIsShown: null,
 
     _popupOptions: null,
+
+    _canUpdateItemsActions: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1208,6 +1210,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = false;
+        }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
@@ -1548,6 +1553,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+    },
+
+    _itemMouseMove(event, itemData, nativeEvent){
+        this._canUpdateItemsActions = true;
+        this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
     _sortingChanged: function(event, propName, sortingType) {

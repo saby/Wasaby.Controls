@@ -3,9 +3,9 @@
 
    <ws:if data="{{!_options.items}}">
       <div style="display: flex; width: 100%;">
-         <Controls.toggle:DoubleSwitch bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()" captions="{{['function','string']}}"
-                                   attr:class="demo-DoubleSwitch js-Controls-PropertyGridEditor__StringOrFunction"/>
-         <Controls.input:Text value="{{_value}}"
+         <Controls.input:Area value="{{_value}}"
+                              minLines="{{3}}"
+                              maxLines="{{3}}"
                               readOnly="{{_options.readOnly}}"
                               on:valueChanged="_valueChangedHandler()"
                               attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"

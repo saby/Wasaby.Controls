@@ -127,12 +127,19 @@ define(
 
             Search._private.getSearch(searchController).addCallback(function(search) {
                var searched = false;
-               search.search = function() {
+               var forced = false;
+
+               search.search = function(value, force) {
                   searched = true;
+
+                  if (force) {
+                     forced = true;
+                  }
                };
 
                searchController.search('1', true);
                assert.isTrue(searched);
+               assert.isTrue(forced);
                done();
                return search;
             });

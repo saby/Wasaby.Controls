@@ -165,6 +165,13 @@ import cMerge = require('Core/core-merge');
          if (popupCfg.config.minHeight) {
             position.minHeight = popupCfg.config.minHeight;
          }
+
+         if (popupCfg.config.width) {
+            position.width = popupCfg.config.width;
+         }
+         if (popupCfg.config.height) {
+            position.height = popupCfg.config.height;
+         }
       }
    };
 

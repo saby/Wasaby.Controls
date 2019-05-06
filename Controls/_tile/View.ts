@@ -18,21 +18,22 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/List/interface/IList
- * @mixes Controls/List/interface/IHierarchy
- * @mixes Controls/List/interface/ITreeControl
- * @mixes Controls/List/interface/IDraggable
+ * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_list/interface/IHierarchy
+ * @mixes Controls/_treeGrid/interface/ITreeControl
+ * @mixes Controls/_list/interface/IDraggable
  * @mixes Controls/List/interface/ITile
  *
- * @mixes Controls/List/BaseControlStyles
- * @mixes Controls/List/ListStyles
+ * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/BaseControlStyles
+ * @mixes Controls/_list/ListStyles
  * @mixes Controls/List/View/Styles
- * @mixes Controls/List/ItemActions/ItemActionsStyles
+ * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/List/Mover/MoveDialog/Styles
- * @mixes Controls/List/PagingStyles
- * @mixes Controls/List/DigitButtonsStyles
+ * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/_paging/PagingStyles
+ * @mixes Controls/_list/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.

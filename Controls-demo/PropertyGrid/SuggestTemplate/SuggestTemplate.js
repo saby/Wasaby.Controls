@@ -3,11 +3,12 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
       'Types/source',
+      'Types/collection',
       'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],
-   function(Control, template, source) {
+   function(Control, template, source, collection) {
       'use strict';
 
       var sugTmpl = Control.extend({
@@ -16,24 +17,19 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
          _source: null,
 
          _beforeMount: function(options) {
-            this._viewValue = options.value;
             this._source = new source.Memory({
                idProperty: 'title',
-               data: options.items,
-               filter: function(record, filter) {
-                  if (record.get('title').indexOf(filter.title) !== -1) {
-                     return true;
-                  }
-               }
+               data: options.items
             });
+            this.rs = new collection.RecordSet({
+               idProperty: 'title',
+               rawData: options.items
+            });
+
+            this.selectedKey = options.value;
          },
-         _valueChangedHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
-            this._viewValue = value;
-         },
-         _chooseHandler: function(event, value) {
-            this._notify('choose', [value]);
-            this._viewValue = value.get('title');
+         selectedKeyChanged: function(event, key) {
+            this._notify('choose', [this.rs.getRecordById(key)]);
          }
       });
 
