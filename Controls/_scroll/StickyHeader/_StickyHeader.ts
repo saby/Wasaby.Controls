@@ -181,52 +181,46 @@ var StickyHeader = Control.extend({
          top,
          bottom,
          offset,
-         position,
+         fixedPosition,
          style = '';
 
-      if (this._model && !!this._model.fixedPosition) {
-         /**
-          * On android and ios there is a gap between child elements.
-          * When the header is fixed, there is a space between the container, relative to which it is fixed,
-          * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
-          * https://jsfiddle.net/tz52xr3k/3/
-          *
-          * As a solution, move the header up and increase its size by an offset, using padding.
-          * In this way, the content of the header does not change visually, and the free space disappears.
-          * The offset must be at least as large as the free space. Take the nearest integer equal to one.
-          */
-         offset = this._isMobilePlatform ? 1 : 0;
-         position = this._stickyHeadersHeight[this._model.fixedPosition];
+      /**
+       * On android and ios there is a gap between child elements.
+       * When the header is fixed, there is a space between the container, relative to which it is fixed,
+       * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
+       * https://jsfiddle.net/tz52xr3k/3/
+       *
+       * As a solution, move the header up and increase its size by an offset, using padding.
+       * In this way, the content of the header does not change visually, and the free space disappears.
+       * The offset must be at least as large as the free space. Take the nearest integer equal to one.
+       */
+      offset = this._isMobilePlatform ? 1 : 0;
 
+      if (this._options.position.indexOf('top') !== -1) {
+         top = this._stickyHeadersHeight.top;
          if (this._context.stickyHeader) {
-            position += this._context.stickyHeader[this._model.fixedPosition];
+            top += this._context.stickyHeader.top;
          }
+         style += 'top: ' + (top - offset)  + 'px;';
+      }
 
-         style = this._model.fixedPosition + ': ' + (position - offset) + 'px;';
+      if (this._options.position.indexOf('bottom') !== -1) {
+         bottom = this._stickyHeadersHeight.bottom;
+         if (this._context.stickyHeader) {
+            bottom += this._context.stickyHeader.bottom;
+         }
+         style += 'bottom: ' + (bottom - offset) + 'px;';
+      }
 
+      fixedPosition = this._model ? this._model.fixedPosition : undefined;
+      if (fixedPosition) {
          if (offset) {
-            style += 'padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
-            style += 'margin-' + this._model.fixedPosition + ': -' + offset + 'px;';
+            style += 'padding-' + fixedPosition + ': ' + offset + 'px;';
+            style += 'margin-' + fixedPosition + ': -' + offset + 'px;';
          }
 
          style += 'z-index: ' + this._options.fixedZIndex + ';';
-      } else {
-         if (this._options.position.indexOf('top') !== -1) {
-            top = this._stickyHeadersHeight.top;
-            if (this._context.stickyHeader) {
-               top += this._context.stickyHeader.top;
-            }
-            style += 'top: ' + top  + 'px;';
-         }
-         if (this._options.position.indexOf('bottom') !== -1) {
-            bottom = this._stickyHeadersHeight.bottom;
-            if (this._context.stickyHeader) {
-               bottom += this._context.stickyHeader.bottom;
-            }
-            style += 'bottom: ' + bottom + 'px;';
-         }
       }
-
       return style;
    },
 
