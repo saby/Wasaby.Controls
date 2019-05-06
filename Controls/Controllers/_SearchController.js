@@ -29,14 +29,14 @@ define('Controls/Controllers/_SearchController',
             });
          },
          
-         search: function(self, value) {
+         search: function(self, value, force) {
             _private.getSearch(self).addCallback(function(search) {
                var filter = self._options.filter;
                
                filter = clone(filter);
                filter[self._options.searchParam] = value;
                
-               search.search(filter)
+               search.search(filter, force)
                   .addCallback(function(result) {
                      if (self._options.searchCallback) {
                         self._options.searchCallback(result, filter);
@@ -96,7 +96,7 @@ define('Controls/Controllers/_SearchController',
          
          search: function(value, force) {
             if (value.length >= this._options.minSearchLength || force && value.length) {
-               _private.search(this, value);
+               _private.search(this, value, force);
             } else {
                _private.abort(this);
             }

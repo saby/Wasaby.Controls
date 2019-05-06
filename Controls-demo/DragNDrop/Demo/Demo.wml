@@ -72,7 +72,7 @@
          </Controls.list:Container>
       </div>
    </Controls.list:DataContainer>
-   <!--<h2>Перемещение в папку (реестр в виде плитки)</h2>
+   <h2>Перемещение в папку (реестр в виде плитки)</h2>
    <Controls.list:DataContainer source="{{_viewSourceThird}}" keyProperty="id" attr:class="demo-DragNDrop__tile">
       <div>
          <Controls.list:Mover name="listMoverThird" parentProperty="parent"/>
@@ -86,6 +86,7 @@
                displayProperty="title"
                imageProperty="image"
                viewMode="tile"
+               tileScalingMode="outside"
                itemsReadyCallback="{{_itemsReadyCallbackThird}}">
                <ws:draggingTemplate>
                   <ws:partial template="Controls/dragnDrop:DraggingTemplate"
@@ -102,5 +103,5 @@
             </Controls.explorer:View>
          </Controls.list:Container>
       </div>
-   </Controls.list:DataContainer>-->
+   </Controls.list:DataContainer>
 </div>

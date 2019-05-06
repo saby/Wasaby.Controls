@@ -60,6 +60,7 @@ var Component = BaseControl.extend({
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
                 headerType: 'link',
+                captionFormatter: this._options.captionFormatter,
                 closeButtonEnabled: true,
                 quantum: this._options.ranges,
                 minQuantum: this._options.minRange,

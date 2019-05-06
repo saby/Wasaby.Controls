@@ -129,8 +129,6 @@ var _private = {
 var InfoBoxController = StickyController.constructor.extend({
     _openedPopupId: null,
 
-    _destroyDeferred: {},
-
     elementCreated: function (cfg, container, id) {
         // Only one popup can be opened
         if (this._openedPopupId) {
@@ -157,19 +155,7 @@ var InfoBoxController = StickyController.constructor.extend({
         if (item.id === this._openedPopupId) {
             this._openedPopupId = null;
         }
-
-        this._destroyDeferred[item.id] = new Deferred();
-
-        item.popupOptions.className += ' controls-PreviewerController_close';
-
-        return this._destroyDeferred[item.id];
-    },
-
-    elementAnimated: function (item) {
-        if (this._destroyDeferred[item.id]) {
-            this._destroyDeferred[item.id].callback();
-            delete this._destroyDeferred[item.id];
-        }
+        return (new Deferred()).callback();
     },
 
     needRestoreFocus: function () {
