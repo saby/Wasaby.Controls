@@ -9,12 +9,19 @@
 }
 
 .cDemo-ScrollContainer {
-  height: 320px;
+  height: 620px;
   box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
 }
 
 .cDemo-ScrollContainer .controls-ListView__itemV {
   min-height: 30px;
   padding: 5px;
+}
+
+.controls-BaseControl__trigger.controls-BaseControl__topLoadTrigger,
+.controls-BaseControl__trigger.controls-BaseControl__bottomListTrigger{
+  background-color: red;
+  height: 1px;
+  z-index: 9999;
 }
 

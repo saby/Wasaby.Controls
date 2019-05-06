@@ -942,6 +942,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _popupOptions: null,
 
+    _canUpdateItemsActions: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1208,6 +1210,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = false;
+        }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
@@ -1548,6 +1553,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+    },
+
+    _itemMouseMove(event, itemData, nativeEvent){
+        this._canUpdateItemsActions = true;
+        this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
     _sortingChanged: function(event, propName, sortingType) {
