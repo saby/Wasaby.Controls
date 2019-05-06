@@ -7,6 +7,7 @@
                      defaultHeaderContent="{{defaultHeaderContent}}"
                      listModel="{{listModel}}"
                      headerColumn="{{ listModel.getCurrentHeaderColumn() }}"
+                     class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
                      multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
       </ws:for>
 </ws:template>
@@ -61,7 +62,7 @@
       </thead>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-         <ws:partial attr:class="controls-Grid__header" template="headContent" />
+         <ws:partial template="headContent" />
    </ws:else>
    <ws:else>
       <div class="controls-Grid__header">
