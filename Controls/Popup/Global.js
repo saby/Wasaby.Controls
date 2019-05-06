@@ -115,7 +115,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             });
 
             //
-            return new Promise(function(resolve, reject){
+            return new Promise(function(resolve, reject) {
                _this._closedDialodResolve = resolve;
             });
          },
