@@ -1083,9 +1083,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = newOptions.sorting !== this._options.sorting;
         var self = this;
-        if (this._pagingNavigation && this._sourceController) {
-            var currentPageChanged = this._currentPage !== (this._sourceController.getNavigation().sourceConfig.page + 1);
-        }
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1117,19 +1114,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
-        if (recreateSource || currentPageChanged) {
-            if (self._pagingNavigation){
-                var newNavigation = cClone(newOptions.navigation);
-                newNavigation.sourceConfig.page = this._currentPage - 1;
-            }
-            if (this._sourceController) {
-                this._sourceController.destroy();
-            } 
-            this._sourceController = new SourceController({
-                source: newOptions.source,
-                navigation: newNavigation,
-                keyProperty: newOptions.keyProperty
-            });
+        if (recreateSource) {
+            this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1145,7 +1131,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
-        if (filterChanged || recreateSource || sortingChanged || currentPageChanged) {
+        if (filterChanged || recreateSource || sortingChanged) {
             //return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
 
@@ -1161,7 +1147,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
                 // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
                 // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
-                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860 || currentPageChanged) {
+                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
                     const firstItem = self._listViewModel.getFirstItem();
 
                     //the first item may be missing, if, for example, only groups are drawn in the list
@@ -1176,7 +1162,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldNotifyOnDrawItems = true;
         }
 
-        if (this._loadedItems || currentPageChanged) {
+        if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
         }
     },
@@ -1598,7 +1584,36 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
+    },
+
+    __pagingChangePage: function (event, page) {
+        this._currentPage = page;
+        var newNavigation = cClone(this._options.navigation);
+        newNavigation.sourceConfig.page = page - 1;
+        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        var self = this;
+        _private.reload(self, self._options).addCallback(() => {
+                const firstItem = self._listViewModel.getFirstItem();
+                if (firstItem) {
+                    self._keyDisplayedItem = firstItem.getId();
+                }
+        });
+        this._shouldRestoreScrollPosition = true;
+    },
+
+    _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
+
+        if (this._sourceController) {
+            this._sourceController.destroy();
+        }
+        this._sourceController = new SourceController({
+            source: newSource,
+            navigation: newNavigation,
+            keyProperty: newKeyProperty
+        });
+
     }
+
 
 });
 
