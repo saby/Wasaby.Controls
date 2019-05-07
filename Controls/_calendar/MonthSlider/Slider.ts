@@ -7,7 +7,7 @@ import tmpl = require('wml!Controls/_calendar/MonthSlider/Slider/Slider');
  * Slider. Renders the element by template. Redraws with animation when changing data.
  * For example, the previous element leaves to the left, and the next one floats to the right.
  *
- * @class Controls/_calendar/MonthSlider/Slider
+ * @class Controls/_calendar/MonthSlider:Base
  * @extends Core/Control
  * @control
  * @public
