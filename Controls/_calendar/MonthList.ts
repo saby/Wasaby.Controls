@@ -5,6 +5,12 @@ import dateUtils = require('Controls/Utils/Date');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import 'wml!Controls/_calendar/MonthList/MonthListItem';
 
+/*
+ Этот компонент можно отдать прикладникам и использовать в разделе календаря на онлайне.
+ Для этого надо предусмотреть api для кастомизации представления года и месяца, а так же возможность
+ подмешивания пользовательских данных при рендеринге годов и месяцев.
+ */
+
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -13,12 +19,6 @@ import 'wml!Controls/_calendar/MonthList/MonthListItem';
  * @extends Core/Control
  * @author Миронов А.Ю.
  * @noShow
- */
-
-/*
- Этот компонент можно отдать прикладникам и использовать в разделе календаря на онлайне.
- Для этого надо предусмотреть api для кастомизации представления года и месяца, а так же возможность
- подмешивания пользовательских данных при рендеринге годов и месяцев.
  */
 var ModuleComponent = BaseControl.extend({
     _viewSource: null,
