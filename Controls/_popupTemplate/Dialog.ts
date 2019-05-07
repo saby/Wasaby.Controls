@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
+import Vdom = require('Vdom/Vdom');
 import 'css!theme?Controls/popupTemplate';
 
 
@@ -98,9 +99,16 @@ import 'css!theme?Controls/popupTemplate';
          },
 
          _onMouseDown: function(event) {
-            if (this._options.draggable) {
+            if (this._needStartDrag(event.target)) {
                this._children.dragNDrop.startDragNDrop(null, event);
             }
+         },
+
+         _needStartDrag: function(target) {
+            var controlsArray = Vdom.DOMEnvironment._goUpByControlTree(target);
+
+            // if click to control then control must handle click
+            return this._options.draggable && controlsArray[0]._container === this._container;
          },
 
          _onDragEnd: function() {

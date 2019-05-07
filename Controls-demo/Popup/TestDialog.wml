@@ -2,6 +2,7 @@
     <Controls.popupTemplate:Dialog headingCaption="PopupManager" bind:draggable="_draggable">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+                <Controls.input:Text attr:style="width: 50px;" bind:value="_headText"/>
                 <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
             </div>
         </ws:headerContentTemplate>

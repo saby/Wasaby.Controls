@@ -238,6 +238,9 @@ var StickyController = BaseController.extend({
 
     getDefaultConfig: function (item) {
         _private.setStickyContent(item);
+        item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
+        let popupCfg = this._getPopupConfig(item);
+        item.popupOptions.stickyPosition = _private.prepareStickyPosition(popupCfg);
         item.position = {
             top: -10000,
             left: -10000,

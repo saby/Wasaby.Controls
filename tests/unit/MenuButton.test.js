@@ -58,7 +58,7 @@ define(
 
          it('check item click', () => {
             menu._notify = (e) => {
-               assert.equal(e, 'onMenuItemActivate');
+               assert.isTrue(e === 'menuItemActivate' || e === 'onMenuItemActivate');
             };
             menu._onItemClickHandler('itemClick', [{
                id: '1',
