@@ -24,6 +24,8 @@ import InfoBox = require('Controls/_popupTemplate/InfoBox');
 import Notification = require('Controls/_popupTemplate/Notification/Base');
 import NotificationSimple = require('Controls/_popupTemplate/Notification/Simple');
 
+import ConfirmationDialog = require('Controls/_popupTemplate/Confirmation/Opener/Dialog');
+
 export {
    CloseButton,
    Stack,
@@ -31,5 +33,7 @@ export {
    Confirmation,
    InfoBox,
    Notification,
-   NotificationSimple
+   NotificationSimple,
+
+   ConfirmationDialog
 };

@@ -163,7 +163,7 @@ import Deferred = require('Core/Deferred');
          _getPopupOptions: function(templateOptions) {
             templateOptions.closeHandler = this._closeHandler;
             return {
-               template: require('Controls/popup').ConfirmationDialog,
+               template: require('Controls/popupTemplate').ConfirmationDialog,
                modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions

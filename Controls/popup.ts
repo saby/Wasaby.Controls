@@ -32,7 +32,6 @@ import Manager = require('Controls/_popup/Manager');
 import Controller = require('Controls/_popup/Manager/ManagerController');
 import Container = require('Controls/_popup/Manager/Container');
 
-import ConfirmationDialog = require('Controls/_popup/Opener/Confirmation/Dialog');
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import StackController = require('Controls/_popup/Opener/Stack/StackController');
 import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
@@ -57,7 +56,6 @@ export {
     Controller,
     Container,
 
-    ConfirmationDialog,
     BaseOpener,
     StackController,
     StickyController,
