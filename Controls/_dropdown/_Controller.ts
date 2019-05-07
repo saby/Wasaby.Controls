@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import {dropdownHistoryUtils as historyUtils} from 'Controls/history';
 import dropdownUtils = require('Controls/_dropdown/Util');
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18

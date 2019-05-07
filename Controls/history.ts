@@ -16,10 +16,14 @@ import Menu = require('Controls/_history/Menu');
 import Service = require('Controls/_history/Service');
 import Source = require('Controls/_history/Source');
 
+import dropdownHistoryUtils = require('Controls/_history/dropdownHistoryUtils');
+
 export {
     Constants,
     FilterSource,
     Menu,
     Service,
-    Source
+    Source,
+
+    dropdownHistoryUtils
 }
