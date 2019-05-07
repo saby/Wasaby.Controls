@@ -104,7 +104,6 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
           */
          _openDialogHandler: function(event, template, templateOptions) {
             var _this = this;
-            _this._activePreviewer = event.target;
 
             // т.к. диалог может быть только один, отработаем колбек закрытия предыдущего, если он есть
             _this._onDialogClosed();
