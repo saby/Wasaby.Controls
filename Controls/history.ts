@@ -17,6 +17,7 @@ import Service = require('Controls/_history/Service');
 import Source = require('Controls/_history/Source');
 
 import dropdownHistoryUtils = require('Controls/_history/dropdownHistoryUtils');
+import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
 
 export {
     Constants,
@@ -25,5 +26,6 @@ export {
     Service,
     Source,
 
-    dropdownHistoryUtils
+    dropdownHistoryUtils,
+    itemTemplate
 }

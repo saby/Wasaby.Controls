@@ -20,6 +20,7 @@ import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 import WrapURLs = require('Controls/_decorator/WrapURLs');
 
 import Converter = require('Controls/_decorator/Markup/Converter');
+import InnerText = require('Controls/_decorator/Markup/resolvers/innerText');
 
 export {
     Highlight,
@@ -29,5 +30,6 @@ export {
     PhoneNumber,
     WrapURLs,
 
-    Converter
+    Converter,
+    InnerText
 }
