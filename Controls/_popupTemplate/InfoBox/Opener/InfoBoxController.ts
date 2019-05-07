@@ -4,7 +4,7 @@ import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/re
 import cMerge = require('Core/core-merge');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
-import 'css!theme?Controls/popupTemaplate';
+import 'css!theme?Controls/popupTemplate';
 
 function getConstants() {
     return themeConstantsGetter('controls-InfoBox__themeConstants', {

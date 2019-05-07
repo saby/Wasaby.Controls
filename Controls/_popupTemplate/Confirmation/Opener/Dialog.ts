@@ -2,13 +2,13 @@ import Control = require('Core/Control');
 import entity = require('Types/entity');
 import Env = require('Env/Env');
 import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
-import MarkupConverter = require('Controls/Decorator/Markup/Converter');
+import {Converter as MarkupConverter} from 'Controls/decorator';
 import contentTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/content');
 import footerTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/footer');
 import messageTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/message');
 import detailsTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/details');
 import template = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/Dialog');
-import 'css!theme?Controls/_popupTemplate';
+import 'css!theme?Controls/popupTemplate';
 
 
    /**

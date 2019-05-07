@@ -19,11 +19,15 @@ import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 import WrapURLs = require('Controls/_decorator/WrapURLs');
 
+import Converter = require('Controls/_decorator/Markup/Converter');
+
 export {
     Highlight,
     Markup,
     Money,
     Number,
     PhoneNumber,
-    WrapURLs
+    WrapURLs,
+
+    Converter
 }
