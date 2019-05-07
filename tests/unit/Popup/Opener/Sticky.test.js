@@ -392,6 +392,27 @@ define(
             assert.equal(position.height, popupCfg.config.height);
             assert.equal(position.minHeight, popupCfg.config.minHeight);
          });
+
+         it('Centered corner sticky', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1920,
+               height: 1040
+            });
+            let popupCfg = { ...getPositionConfig() };
+            popupCfg.corner.horizontal = 'center';
+
+            popupCfg.sizes.width = 100;
+            popupCfg.sizes.height = 100;
+
+            let position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.left, 300);
+
+            popupCfg.corner.horizontal = 'left';
+            popupCfg.corner.vertical = 'center';
+
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.bottom, 740);
+         });
       });
    }
 );
