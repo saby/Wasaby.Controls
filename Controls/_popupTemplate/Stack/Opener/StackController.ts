@@ -148,7 +148,7 @@ import 'css!theme?Controls/popupTemplate';
 
       /**
        * Stack Popup Controller
-       * @class Controls/_popup/Opener/Stack/StackController
+       * @class Controls/_popupTemplate/Stack/Opener/StackController
        * @control
        * @private
        * @category Popup

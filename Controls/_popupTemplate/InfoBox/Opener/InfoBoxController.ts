@@ -120,7 +120,7 @@ var _private = {
 
 /**
  * InfoBox Popup Controller
- * @class Controls/_popup/Opener/InfoBox/InfoBoxController
+ * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
  * @control
  * @private
  * @category Popup

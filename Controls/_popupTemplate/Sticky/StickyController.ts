@@ -174,7 +174,7 @@ var _private = {
 
 /**
  * Sticky Popup Controller
- * @class Controls/_popup/Opener/Sticky/StickyController
+ * @class Controls/_popupTemplate/Sticky/StickyController
  * @control
  * @private
  * @category Popup
