@@ -1,5 +1,5 @@
 /**
- * List library
+ * Decoratror library
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
  * @includes Markup Controls/_decorator/Markup
