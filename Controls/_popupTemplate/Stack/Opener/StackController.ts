@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popup/Opener/BaseController');
+import BaseController = require('Controls/_popupTemplate/BaseController');
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');

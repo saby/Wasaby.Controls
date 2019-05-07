@@ -1,6 +1,6 @@
 import Deferred = require('Core/Deferred');
 import collection = require('Types/collection');
-import BaseController = require('Controls/_popup/Opener/BaseController');
+import BaseController = require('Controls/_popupTemplate/BaseController');
 import NotificationStrategy = require('Controls/_popupTemplate/Notification/Opener/NotificationStrategy');
 import NotificationContent = require('Controls/_popupTemplate/Notification/Opener/NotificationContent');
       var timeAutoClose = 5000;
@@ -13,11 +13,11 @@ import NotificationContent = require('Controls/_popupTemplate/Notification/Opene
 
       /**
        * Notification Popup Controller
-       * @class Controls/_popup/Opener/Notification/NotificationController
+       * @class Controls/_popupTemplate/Notification/Opener/NotificationController
        * @control
        * @private
        * @category Popup
-       * @extends Controls/_popup/Opener/BaseController
+       * @extends Controls/_popupTemplate/BaseController
        */
       var NotificationController = BaseController.extend({
          constructor: function(cfg) {

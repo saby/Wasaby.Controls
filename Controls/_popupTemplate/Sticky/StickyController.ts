@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popup/Opener/BaseController');
+import BaseController = require('Controls/_popupTemplate/BaseController');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import cMerge = require('Core/core-merge');
 import cClone = require('Core/core-clone');

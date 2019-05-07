@@ -60,7 +60,7 @@ import Utils = require('Types/util');
       /**
        * Base Popup Controller
        * @category Popup
-       * @class Controls/_popup/Opener/BaseController
+       * @class Controls/_popupTemplate/BaseController
        * @author Красильников А.С.
        */
       var BaseController = CoreExtend.extend({
@@ -74,7 +74,7 @@ import Utils = require('Types/util');
 
          /**
           * Adding a new popup
-          * @function Controls/_popup/Opener/BaseController#elementCreated
+          * @function Controls/_popupTemplate/BaseController#elementCreated
           * @param element
           * @param container
           */
@@ -95,7 +95,7 @@ import Utils = require('Types/util');
 
          /**
           * Updating popup
-          * @function Controls/_popup/Opener/BaseController#elementUpdated
+          * @function Controls/_popupTemplate/BaseController#elementUpdated
           * @param element
           * @param container
           */
@@ -142,7 +142,7 @@ import Utils = require('Types/util');
 
          /**
           * Removing popup
-          * @function Controls/_popup/Opener/BaseController#elementDestroyed
+          * @function Controls/_popupTemplate/BaseController#elementDestroyed
           * @param element
           */
          elementDestroyed: function(element) {

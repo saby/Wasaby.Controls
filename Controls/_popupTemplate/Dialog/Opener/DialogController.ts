@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popup/Opener/BaseController');
+import BaseController = require('Controls/_popupTemplate/BaseController');
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
       var _private = {
          prepareConfig: function(item, sizes) {
@@ -41,7 +41,7 @@ import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStr
        * @control
        * @private
        * @category Popup
-       * @extends Controls/_popup/Opener/BaseController
+       * @extends Controls/_popupTemplate/BaseController
        */
       var DialogController = BaseController.extend({
          elementCreated: function(cfg, container) {

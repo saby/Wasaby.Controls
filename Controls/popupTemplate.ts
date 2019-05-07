@@ -24,6 +24,7 @@ import InfoBox = require('Controls/_popupTemplate/InfoBox');
 import Notification = require('Controls/_popupTemplate/Notification/Base');
 import NotificationSimple = require('Controls/_popupTemplate/Notification/Simple');
 
+import BaseController = require('Controls/_popupTemplate/BaseController');
 import ConfirmationDialog = require('Controls/_popupTemplate/Confirmation/Opener/Dialog');
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
@@ -41,6 +42,7 @@ export {
    Notification,
    NotificationSimple,
 
+   BaseController,
    ConfirmationDialog,
    DialogController,
    StickyController,
