@@ -19,6 +19,8 @@ import Deferred = require('Core/Deferred');
  * @author Kraynov D.
  */
 
+      var SELECTION_TYPES = ['all', 'leaf', 'node'];
+
       var _private = {
          getFilteredItems: function(items, filterFunc) {
             return chain.factory(items).filter(filterFunc).value();
@@ -54,6 +56,18 @@ import Deferred = require('Core/Deferred');
             var emptyItems = currentItems.clone();
             emptyItems.clear();
             return emptyItems;
+         },
+
+         getValidSelectionType: function(selectionType) {
+            let type;
+
+            if (SELECTION_TYPES.indexOf(selectionType) !== -1) {
+               type = selectionType;
+            } else {
+               type = 'all'
+            }
+
+            return type;
          },
 
          prepareFilter: function(filter, selection, source, selectionType) {
@@ -116,7 +130,7 @@ import Deferred = require('Core/Deferred');
                };
                const filter = Utils.object.clone(dataOptions.filter);
 
-               loadDef = sourceController.load(_private.prepareFilter(filter, selection, source, this._options.selectionType));
+               loadDef = sourceController.load(_private.prepareFilter(filter, selection, source, _private.getValidSelectionType(this._options.selectionType)));
 
                loadDef.addCallback(function(result) {
                   return prepareResult(result);

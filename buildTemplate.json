@@ -101,6 +101,11 @@
       "required": true
     },
     {
+      "name": "SbisEnvUI",
+      "path": "./node_modules/rmi/src/client/SbisEnvUI",
+      "required": true
+    },
+    {
       "name": "Vdom",
       "path": "./node_modules/sbis3-ws/Vdom",
       "required": true

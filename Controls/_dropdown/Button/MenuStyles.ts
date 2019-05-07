@@ -5,6 +5,8 @@
     *
     * @css @shift-top_MenuButton-button-popup Offset on the top for pop-up at the menu with button viewMode.
     * @css @shift-left_MenuButton-button-popup Offset on the left for pop-up at the menu with button viewMode.
+    * @css @shift-top_MenuButton-button_large-popup Offset on the top for pop-up at the menu with button viewMode and large size.
+    * @css @shift-left_MenuButton-button_large-popup Offset on the top for pop-up at the menu with button viewMode and large size.
     * @css @shift-top_MenuButton-button_medium-popup Offset on the top for pop-up at the menu with button viewMode and medium icon size.
     * @css @shift-top_MenuButton-link-popup Offset on the top for pop-up at the menu with link viewMode without icon.
     * @css @shift-left_MenuButton-link-popup Offset on the left for pop-up at the menu with link viewMode without icon.

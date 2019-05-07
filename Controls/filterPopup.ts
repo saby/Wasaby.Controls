@@ -23,7 +23,6 @@ import Dropdown = require('Controls/_filterPopup/Panel/Dropdown');
 import Text = require('Controls/_filterPopup/Panel/Text');
 import Lookup = require('Controls/_filterPopup/Panel/Lookup');
 
-import historyUtils = require('Controls/_filterPopup/History/resources/historyUtils');
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
 
 export {
@@ -34,6 +33,5 @@ export {
    Text,
    Lookup,
 
-   historyUtils,
    _FilterPanelWrapper
 }

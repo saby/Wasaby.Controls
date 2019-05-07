@@ -44,6 +44,14 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.equal(lookupPopup.Container._private.getEmptyItems(listWithItems)._moduleName, 'Types/collection:List');
       });
 
+
+      it('getValidSelectionType', function() {
+         assert.equal(lookupPopup.Container._private.getValidSelectionType('all'), 'all');
+         assert.equal(lookupPopup.Container._private.getValidSelectionType('leaf'), 'leaf');
+         assert.equal(lookupPopup.Container._private.getValidSelectionType('node'), 'node');
+         assert.equal(lookupPopup.Container._private.getValidSelectionType('test'), 'all');
+      });
+
       it('getFilterFunction', function() {
          var retFalse = function() {
             return false;

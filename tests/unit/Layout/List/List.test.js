@@ -213,6 +213,11 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
          assert.equal(searchController._options.searchParam, listSearchParam);
          assert.equal(searchController._options.source, listSource);
+
+         listLayoutWithPrefetch._searchController = undefined;
+         searchController = List._private.getSearchController(listLayoutWithPrefetch);
+
+         assert.isTrue(searchController._options.source instanceof sourceLib.Memory);
       });
 
       it('._beforeUnmount', function(done) {

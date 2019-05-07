@@ -88,7 +88,7 @@ import 'css!theme?Controls/filterPopup';
    Lookup._private = _private;
    Lookup.getDefaultOptions = function() {
       return {
-         lookupTemplateName: 'Controls/Selector/Lookup'
+         lookupTemplateName: 'Controls/_lookup/Lookup'
       };
    };
 

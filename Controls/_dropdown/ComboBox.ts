@@ -10,6 +10,10 @@ var _private = {
    popupVisibilityChanged: function (state) {
       this._isOpen = state;
       this._forceUpdate();
+   },
+   //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+   getContainerNode: function(container:[HTMLElement]|HTMLElement):HTMLElement {
+      return container[0] || container;
    }
 };
 
@@ -53,13 +57,15 @@ var ComboBox = Control.extend({
       this._corner = {
          vertical: 'bottom'
       };
-      this._width = this._container.offsetWidth;
+      this._width = _private.getContainerNode(this._container).offsetWidth;
       this._forceUpdate();
    },
 
    _beforeUpdate: function () {
-      if (this._width !== this._container.offsetWidth) {
-         this._width = this._container.offsetWidth;
+      var containerNode = _private.getContainerNode(this._container);
+
+      if (this._width !== containerNode.offsetWidth) {
+         this._width = containerNode.offsetWidth;
       }
    },
 
