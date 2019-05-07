@@ -141,7 +141,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             if (self._scrollPositionCache !== curPosition) {
                _private.sendByRegistrar(self, 'scrollMove', {
                   scrollTop: self._scrollTopCache,
-                  position: curPosition
+                  position: curPosition,
+                  clientHeight: sizeCache.clientHeight
                });
                if (!withObserver) {
                   _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
@@ -152,7 +153,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
-                        _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+                        _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition, clientHeight: sizeCache.clientHeight});
                         if (!withObserver) {
                            _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
