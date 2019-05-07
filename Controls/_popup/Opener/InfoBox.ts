@@ -192,7 +192,7 @@ import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/templ
                   floatCloseButton: cfg.floatCloseButton
                },
                template: InfoBoxTemplate
-            }, require('Controls/popup').InfoBoxController);
+            }, 'Controls/popupTemplate:InfoBoxController');
          },
 
          /**

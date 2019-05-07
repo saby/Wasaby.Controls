@@ -1,10 +1,11 @@
 define(
    [
       'Controls/popup',
+      'Controls/popupTemplate',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/_popupTemplate/InfoBox'
    ],
-   (popup, OpenerTemplate, InfoBoxTemplate) => {
+   (popup, popupTemplate, OpenerTemplate, InfoBoxTemplate) => {
       'use strict';
 
       describe('Controls/Popup/InfoBoxController', () => {
@@ -14,7 +15,7 @@ define(
                   position: 'tl'
                }
             };
-            popup.InfoBoxController.getDefaultConfig(item);
+            popupTemplate.InfoBoxController.getDefaultConfig(item);
             assert.equal(item.position.top, -10000);
             assert.equal(item.position.left, -10000);
             assert.equal(item.position.right, undefined);
@@ -83,7 +84,7 @@ define(
 
             tests.forEach((test) => {
                it('align: ' + JSON.stringify(test.cfg), () => {
-                  let offset = popup.InfoBoxController._private.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth);
+                  let offset = popupTemplate.InfoBoxController._private.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth);
                   assert.equal(offset, test.value);
                });
             });
@@ -91,17 +92,17 @@ define(
 
          it('InfoBoxController: calculate offset target size', () => {
             let offsetHeight;
-            popup.InfoBoxController._private.getOffset = (height) => {
+            popupTemplate.InfoBoxController._private.getOffset = (height) => {
                offsetHeight = height;
             };
             let target = {
                offsetHeight: 100,
                offsetWidth: 100
             };
-            popup.InfoBoxController._private.getVerticalOffset(target, false);
+            popupTemplate.InfoBoxController._private.getVerticalOffset(target, false);
             assert.equal(offsetHeight, 100);
             offsetHeight = null;
-            popup.InfoBoxController._private.getHorizontalOffset(target, true);
+            popupTemplate.InfoBoxController._private.getHorizontalOffset(target, true);
             assert.equal(offsetHeight, 100);
 
             target = {
@@ -109,10 +110,10 @@ define(
                clientWidth: 200
             };
 
-            popup.InfoBoxController._private.getVerticalOffset(target, false);
+            popupTemplate.InfoBoxController._private.getVerticalOffset(target, false);
             assert.equal(offsetHeight, 200);
             offsetHeight = null;
-            popup.InfoBoxController._private.getHorizontalOffset(target, true);
+            popupTemplate.InfoBoxController._private.getHorizontalOffset(target, true);
             assert.equal(offsetHeight, 200);
          });
       });
