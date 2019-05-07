@@ -1,9 +1,8 @@
 import Deferred = require('Core/Deferred');
 import collection = require('Types/collection');
 import BaseController = require('Controls/_popup/Opener/BaseController');
-import NotificationStrategy = require('Controls/_popup/Opener/Notification/NotificationStrategy');
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import NotificationContent = require('Controls/_popup/Opener/Notification/NotificationContent');
+import NotificationStrategy = require('Controls/_popupTemplate/Notification/Opener/NotificationStrategy');
+import NotificationContent = require('Controls/_popupTemplate/Notification/Opener/NotificationContent');
       var timeAutoClose = 5000;
 
       var _private = {
@@ -65,7 +64,7 @@ import NotificationContent = require('Controls/_popup/Opener/Notification/Notifi
 
          _closeByTimeout: function(item) {
             item.closeId = setTimeout(function() {
-               ManagerController.remove(item.id);
+               require('Controls/popup').Controller.remove(item.id);
             }, timeAutoClose);
          },
 
