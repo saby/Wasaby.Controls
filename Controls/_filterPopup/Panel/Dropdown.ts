@@ -15,22 +15,7 @@ import 'css!theme?Controls/filterPopup';
     * </pre>
     *
     * @class Controls/_filterPopup/Panel/Dropdown
-    * @extends Control/_dropdown/Input
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/_list/interface/IHierarchy
-    * @mixes Controls/interface/IFilter
-    * @mixes Controls/interface/INavigation
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/_dropdown/interface/IFooterTemplate
-    * @mixes Controls/_dropdown/interface/IHeaderTemplate
-    * @mixes Controls/interface/ISelectorDialog
-    * @mixes Controls/interface/IDropdownEmptyText
-    * @mixes Controls/Input/interface/IInputDropdown
-    * @mixes Controls/interface/IDropdown
-    * @mixes Controls/_dropdown/interface/IGrouped
-    * @mixes Controls/interface/IInputDropdown
-    * @mixes Controls/interface/ITextValue
+    * @extends Controls/_dropdown/Input
     * @control
     * @public
     * @author Герасимов А.М.
