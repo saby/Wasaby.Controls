@@ -6,6 +6,14 @@ import 'css!theme?Controls/filterPopup';
     *
     * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
     *
+    * @name Controls/_filterPopup/Panel/Dropdown#showCross
+    * @cfg {Boolean} Show reset button near dropdown. If you click on this button, dropdown will hide.
+    * @default false
+    * @example
+    * <pre>
+    *     <Controls.filterPopup:Panel.Dropdown showCross="{{true}}"/>
+    * </pre>
+    *
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Control/_dropdown/Input
     * @control
