@@ -67,10 +67,10 @@ define(
             newConfig.size = 'm';
             newConfig.icon = '';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
             newConfig.size = 's';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__s_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
