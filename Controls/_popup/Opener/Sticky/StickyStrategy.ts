@@ -31,20 +31,32 @@ import cMerge = require('Core/core-merge');
          } else {
             if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
                position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-                   targetCoords[popupCfg.corner[direction]] - _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
             } else {
-               position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + _private.getMargins(popupCfg, direction);
+               position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
             }
          }
          return position;
       },
 
+      getTargetCoords: function(popupCfg, targetCoords, coord, direction) {
+         if (popupCfg.corner[direction] === 'center') {
+            if (coord === 'right' || coord === 'left') {
+               return targetCoords.left + targetCoords.width / 2;
+            }
+            if (coord === 'top' || coord === 'bottom') {
+               return targetCoords.top + targetCoords.height / 2;
+            }
+         }
+         return targetCoords[popupCfg.corner[direction]];
+      },
+
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
          var isHorizontal = direction === 'horizontal';
          if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
-            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (targetCoords[popupCfg.corner[direction]] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
+            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
-         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
       invertPosition: function(popupCfg, direction) {

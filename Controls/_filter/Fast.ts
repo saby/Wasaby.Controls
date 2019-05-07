@@ -268,6 +268,7 @@ import 'css!theme?Controls/dropdown';
             var templateOptions = {
                items: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
+               isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: _private.getSourceController(this._configs[index],
                   getPropValue(this._items.at(index), 'properties').source,
                   getPropValue(this._items.at(index), 'properties').navigation).hasMoreData('down')
