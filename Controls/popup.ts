@@ -33,7 +33,6 @@ import Controller = require('Controls/_popup/Manager/ManagerController');
 import Container = require('Controls/_popup/Manager/Container');
 
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
-import PreviewerController = require('Controls/_popup/Opener/Previewer/PreviewerController');
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
 export {
@@ -52,6 +51,5 @@ export {
     Container,
 
     BaseOpener,
-    PreviewerController,
     EditContainer
 }

@@ -1,7 +1,6 @@
 import Deferred = require('Core/Deferred');
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
-import 'css!theme?Controls/popup';
+import 'css!theme?Controls/popupTemplate';
 
 
       var PreviewerController = StickyController.constructor.extend({
@@ -14,7 +13,7 @@ import 'css!theme?Controls/popup';
              * Only one window can be opened.
              */
             if (this._openedPopupId) {
-               ManagerController.remove(this._openedPopupId);
+               require('Controls/popup').Controller.remove(this._openedPopupId);
             }
             this._openedPopupId = id;
 

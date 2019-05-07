@@ -30,6 +30,7 @@ import StickyController = require('Controls/_popupTemplate/Sticky/StickyControll
 import InfoBoxController = require('Controls/_popupTemplate/InfoBox/Opener/InfoBoxController');
 import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
+import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
 
 export {
    CloseButton,
@@ -45,5 +46,6 @@ export {
    StickyController,
    InfoBoxController,
    StackController,
-   NotificationController
+   NotificationController,
+   PreviewerController
 };
