@@ -1,6 +1,6 @@
 import Deferred = require('Core/Deferred');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
+import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import 'css!theme?Controls/popup';
 
 

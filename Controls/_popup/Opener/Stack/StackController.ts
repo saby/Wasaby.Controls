@@ -1,7 +1,7 @@
 import BaseController = require('Controls/_popup/Opener/BaseController');
 import StackStrategy = require('Controls/_popup/Opener/Stack/StackStrategy');
 import collection = require('Types/collection');
-import TargetCoords = require('Controls/_popup/TargetCoords');
+import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('wml!Controls/_popup/Opener/Stack/StackContent');

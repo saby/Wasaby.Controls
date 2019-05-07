@@ -1,10 +1,10 @@
 import Deferred = require('Core/Deferred');
-import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
+import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import themeConstantsGetter = require('Controls/_popup/Opener/InfoBox/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import TargetCoords = require('Controls/_popup/TargetCoords');
-import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
+import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
+import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import 'css!theme?Controls/popup';
 
 function getConstants() {

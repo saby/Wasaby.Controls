@@ -83,7 +83,7 @@ import coreMerge = require('Core/core-merge');
          open: function(config) {
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, require('Controls/popup').StickyController);
+            Base.prototype.open.call(this, config, 'Controls/popupTemplate:StickyController');
          },
 
          _setCompatibleConfig: function(config) {
