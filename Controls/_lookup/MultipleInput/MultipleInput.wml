@@ -1,16 +1,11 @@
 <Controls._lookup.ControllerMultipleInput
-        name="controller"
-        source="{{_options.source}}"
-        selectedKeys="{{_options.selectedKeys}}"
-        keyProperty="{{_options.keyProperty}}"
-        displayProperty="{{_options.displayProperty}}"
-        filter="{{_options.filter}}"
-        selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
-        isCompoundTemplate="{{_options.isCompoundTemplate}}"
-        multiSelect="{{true}}"
-        historyId="{{_options.historyId}}"
-        dataLoadCallback="{{_options.dataLoadCallback}}"
-        selectorCallback="{{_options.selectorCallback}}"
-        attr:class="controls-Lookup controls-LookupMultiSelector">
-    <Controls._lookup.MultipleInput.LookupView scope="{{_options}}"/>
+      name="controller"
+      scope="{{_options}}"
+      multiSelect="{{true}}"
+      attr:class="controls-Lookup controls-MultipleInput">
+   <Controls._lookup.MultipleInput.LookupView scope="{{_options}}">
+      <ws:itemTemplate>
+         <ws:partial template="{{_options.itemTemplate}}" attr:class="controls-MultipleInput__SelectedCollection_item"/>
+      </ws:itemTemplate>
+   </Controls._lookup.MultipleInput.LookupView>
 </Controls._lookup.ControllerMultipleInput>

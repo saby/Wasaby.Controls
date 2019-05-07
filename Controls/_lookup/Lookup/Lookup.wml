@@ -1,16 +1,6 @@
 <Controls._lookup.Controller
       name="controller"
-      source="{{_options.source}}"
-      selectedKeys="{{_options.selectedKeys}}"
-      keyProperty="{{_options.keyProperty}}"
-      displayProperty="{{_options.displayProperty}}"
-      filter="{{_options.filter}}"
-      selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
-      isCompoundTemplate="{{_options.isCompoundTemplate}}"
-      multiSelect="{{_options.multiSelect}}"
-      historyId="{{_options.historyId}}"
-      dataLoadCallback="{{_options.dataLoadCallback}}"
-      selectorCallback="{{_options.selectorCallback}}"
+      scope="{{_options}}"
       attr:class="controls-Lookup">
    <Controls._lookup.Lookup.LookupView scope="{{_options}}"/>
 </Controls._lookup.Controller>

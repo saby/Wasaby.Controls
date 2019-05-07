@@ -11,7 +11,7 @@ import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resou
 import 'css!theme?Controls/lookup';
 
 
-var KEY_KODE_F2 = 113;
+var KEY_CODE_F2 = 113;
 
 var _private = {
     initializeContainers: function (self) {
@@ -211,7 +211,7 @@ var BaseLookupView = Control.extend({
             items = this._options.items,
             keyCodeEvent = keyboardEvent.nativeEvent.keyCode;
 
-        if (keyCodeEvent === KEY_KODE_F2) {
+        if (keyCodeEvent === KEY_CODE_F2) {
             this._notify('showSelector');
         } else if (keyCodeEvent === Env.constants.key.backspace &&
             !this._inputValue && !this._isEmpty(this._options)) {

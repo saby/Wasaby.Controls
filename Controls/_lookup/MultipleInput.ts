@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
+import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 
 /**
  * The Lookup control allows you to select a value from a dialogs or suggest containing a list of possible values.
@@ -24,11 +25,19 @@ import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
  * @category Input
  */
 
-export = Control.extend({
+var MultipleInput = Control.extend({
     _template: template,
 
     showSelector: function (templateOptions) {
         this._children.controller.showSelector(templateOptions);
     }
 });
+
+MultipleInput.getDefaultOptions = function() {
+    return {
+        itemTemplate: itemTemplate
+    };
+};
+
+export = MultipleInput
 
