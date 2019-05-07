@@ -100,8 +100,12 @@ import 'css!theme?Controls/popupTemplate';
 
          _onMouseDown: function(event) {
             if (this._needStartDrag(event.target)) {
-               this._children.dragNDrop.startDragNDrop(null, event);
+               this._startDragNDrop(event)
             }
+         },
+
+         _startDragNDrop: function(event) {
+            this._children.dragNDrop.startDragNDrop(null, event);
          },
 
          _needStartDrag: function(target) {
