@@ -98,7 +98,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             items.forEach(function(item) {
                // Если попап не следует за таргетом при скролле - закроем его.
                // Избавимся только когда сделают задачу, описанную комментом выше
-               if (!item.popupOptions.targetTracking) {
+               if (item.popupOptions.closeOnTargetScroll) {
                   self._children.Manager.remove(item.id);
                }
             });
