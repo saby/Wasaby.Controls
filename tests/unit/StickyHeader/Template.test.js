@@ -156,6 +156,7 @@ define(
                inst._shadowVisible = true;
                inst._model.fixedPosition = 'bottom';
                inst._options.fixedZIndex = 2;
+               inst._options.position = 'bottom';
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>' +

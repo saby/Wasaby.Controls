@@ -4,16 +4,18 @@
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()">
       <ws:contentTemplate>
-         <ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate">
-               <ws:contentTemplate>
-                  <ws:if data="{{_options.contentTemplate}}">
-                     <ws:partial template="{{_options.contentTemplate}}" class="controls-FilterDropdown__text"/>
-                  </ws:if>
-                  <ws:else>
-                     <div class="controls-FilterDropdown__text">{{contentTemplate.text}}</div>
-                  </ws:else>
-               </ws:contentTemplate>
-         </ws:partial>
+         <ws:if data="{{_options.contentTemplate}}">
+            <ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate">
+                  <ws:contentTemplate>
+                     <ws:if data="{{_options.contentTemplate}}">
+                        <ws:partial template="{{_options.contentTemplate}}" class="controls-FilterDropdown__text"/>
+                     </ws:if>
+                  </ws:contentTemplate>
+            </ws:partial>
+         </ws:if>
+         <ws:else>
+            <ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate" class="controls-FilterDropdown__text"/>
+         </ws:else>
       </ws:contentTemplate>
    </Controls.dropdown:Input>
    <ws:if data="{{_options.showCross}}">

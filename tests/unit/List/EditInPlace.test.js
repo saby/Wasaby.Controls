@@ -544,6 +544,81 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
+         describe('beforeEndEdit', function() {
+            it('Defered', function(done) {
+               var
+                   source = new sourceLib.Memory({
+                      idProperty: 'id',
+                      data: data
+                   }),
+                   isIndicatorHasBeenShown = false,
+                   isIndicatorHasBeenHiden = false;
+
+               eip._notify = function(e) {
+                  if (e === 'beforeEndEdit') {
+                     return Deferred.success({});
+                  } else if (e === 'showIndicator') {
+                     isIndicatorHasBeenShown = true;
+                  } else if (e === 'hideIndicator') {
+                     isIndicatorHasBeenHiden = true;
+                  }
+               };
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip.cancelEdit().addCallback(function (result) {
+                  assert.deepEqual(result, {});
+                  assert.isTrue(isIndicatorHasBeenShown);
+                  assert.isTrue(isIndicatorHasBeenHiden);
+                  done();
+               });
+
+            });
+
+            it('Cancel', function(done) {
+               var
+                   source = new sourceLib.Memory({
+                      idProperty: 'id',
+                      data: data
+                   }),
+                   isIndicatorHasBeenShown = false,
+                   isIndicatorHasBeenHiden = false;
+
+               eip._notify = function(e) {
+                  if (e === 'beforeEndEdit') {
+                     return Constants.editing.CANCEL;
+                  } else if (e === 'showIndicator') {
+                     isIndicatorHasBeenShown = true;
+                  } else if (e === 'hideIndicator') {
+                     isIndicatorHasBeenHiden = true;
+                  }
+               };
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip.cancelEdit().addCallback(function (result) {
+                  assert.deepEqual(result, {cancelled: true});
+                  assert.isFalse(isIndicatorHasBeenShown);
+                  assert.isFalse(isIndicatorHasBeenHiden);
+                  done();
+               });
+
+            });
+
+         });
+
          describe('afterEndEdit', function() {
             it('add item', function(done) {
                var source = new sourceLib.Memory({
