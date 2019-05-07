@@ -105,7 +105,7 @@ import 'css!theme?Controls/popupTemplate';
          },
 
          _needStartDrag: function(target) {
-            var controlsArray = Vdom.DOMEnvironment._goUpByControlTree(target);
+            var controlsArray = Vdom.goUpByControlTree(target);
 
             // if click to control then control must handle click
             return this._options.draggable && controlsArray[0]._container === this._container;
