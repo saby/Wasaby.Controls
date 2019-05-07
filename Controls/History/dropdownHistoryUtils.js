@@ -1,5 +1,5 @@
 define('Controls/History/dropdownHistoryUtils',
-   ['Controls/history'],
+   ['Controls/dropdown'],
    function(Control) {
       'use strict';
       return Control.dropdownHistoryUtils;

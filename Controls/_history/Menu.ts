@@ -1,6 +1,5 @@
-import {Button as Menu} from 'Controls/dropdown';
+import {Button as Menu, MenuUtils} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
-import {MenuUtils} from 'Controls/dropdown';
 import 'css!theme?Controls/_history/Menu';
 
 var _private = {
