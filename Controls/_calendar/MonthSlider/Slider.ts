@@ -72,7 +72,7 @@ var _private = {
  * @class Controls/_calendar/MonthSlider:Base
  * @extends Core/Control
  * @control
- * @public
+ * @private
  * @author Миронов А.Ю.
  * @noShow
  */
