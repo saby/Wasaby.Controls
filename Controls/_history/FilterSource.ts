@@ -256,9 +256,14 @@ var _private = {
  *           })
  *       });
  * </pre>
+ */
+
+/**
  * @name Controls/_history/FilterSource#originSource
  * @cfg {Source} A data source
- *
+ */
+
+/**
  * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory

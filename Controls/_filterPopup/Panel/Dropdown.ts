@@ -7,7 +7,7 @@ import 'css!theme?Controls/filterPopup';
     * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
     *
     * @class Controls/_filterPopup/Panel/Dropdown
-    * @extends Control/_dropdown/Input
+    * @extends Controls/_dropdown/Input
     * @control
     * @public
     * @author Герасимов А.М.

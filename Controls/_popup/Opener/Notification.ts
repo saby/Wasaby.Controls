@@ -2,6 +2,8 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
 import NotificationController = require('Controls/_popup/Opener/Notification/NotificationController');
+import {parse as load} from 'Core/library';
+
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
        *
@@ -31,18 +33,25 @@ import NotificationController = require('Controls/_popup/Opener/Notification/Not
 
       var _private = {
          compatibleOpen: function(self, popupOptions) {
-            var config = self._getConfig(popupOptions);
-            require(['Controls/Popup/Compatible/BaseOpener',
-               'SBIS3.CONTROLS/Utils/InformationPopupManager',
-               'Controls/Popup/Compatible/OldNotification',
-               config.template
-            ], function(BaseOpenerCompat, InformationPopupManager) {
-               var compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
-               if (!self._popup) {
-                  self._popup = [];
-               }
-               self._popup.push(InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide));
+            const config = self._getConfig(popupOptions);
+            Promise.all([
+                self._requireModule('Controls/Popup/Compatible/BaseOpener'),
+                self._requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
+                self._requireModule('Controls/Popup/Compatible/OldNotification'),
+                self._requireModule(config.template)
+            ]).then(function(results) {
+                const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
+                config.template = results[3];
+                const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
+                if (!self._popup) {
+                    self._popup = [];
+                }
+                self._popup.push(InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide));
             });
+         },
+
+         _requireModule: function(module) {
+            return typeof module === 'string' ? load(module) : Promise.resolve(module);
          },
 
          getCompatibleConfig: function(BaseOpenerCompat, config) {
