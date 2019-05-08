@@ -129,7 +129,7 @@ import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/templ
          _beforeMount: function(options) {
             InfoBox.superclass._beforeMount.apply(this, arguments);
             if (options.float) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
             }
          },
 
@@ -157,10 +157,10 @@ import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/templ
                newCfg.floatCloseButton = cfg.float;
             }
             if (cfg.style === 'error') {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
             }
             if (cfg.position) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
             }
             newCfg.style = _private.prepareDisplayStyle(cfg.style);
 

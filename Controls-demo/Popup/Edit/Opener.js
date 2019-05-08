@@ -91,7 +91,7 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _itemClick: function(event, record) {
             var popupOptions = {
-               closeByExternalClick: false,
+               closeOnOutsideClick: false,
             };
 
             var meta = {

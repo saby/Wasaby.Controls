@@ -161,10 +161,10 @@ import Env = require('Env/Env');
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
             if (options.templateName) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 
@@ -205,7 +205,10 @@ import Env = require('Env/Env');
             } else {
                // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
                this._notify('closeInfoBox');
-               this._children.infoBoxOpener.close();
+               //todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=e6be2dd9-a47f-424c-a86c-bd6b48b98602
+               if(!this._destroyed) {
+                  this._children.infoBoxOpener.close()
+               }
             }
             _private.resetTimeOut(this);
             this._opened = false;
@@ -318,7 +321,6 @@ import Env = require('Env/Env');
 
       InfoBox.getDefaultOptions = function() {
          return {
-            position: 'tl',
             targetSide: 'top',
             alignment: 'start',
             style: 'default',

@@ -9,7 +9,7 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
 
    /**
     * @interface Controls/Date/interface/IPeriodLiteDialog
-    * @public
+    * @private
     */
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
