@@ -32,6 +32,7 @@ import InfoBoxController = require('Controls/_popupTemplate/InfoBox/Opener/InfoB
 import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
+import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resources/template');
 
 export {
    CloseButton,
@@ -49,5 +50,6 @@ export {
    InfoBoxController,
    StackController,
    NotificationController,
-   PreviewerController
+   PreviewerController,
+   templateInfoBox
 };

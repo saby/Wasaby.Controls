@@ -2,7 +2,6 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
-import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/template');
 
 
       /**
@@ -191,7 +190,7 @@ import InfoBoxTemplate = require('Controls/_popup/Opener/InfoBox/resources/templ
                   style: cfg.style || 'default',
                   floatCloseButton: cfg.floatCloseButton
                },
-               template: InfoBoxTemplate
+               template: 'Controls/popupTemplate:templateInfoBox'
             }, 'Controls/popupTemplate:InfoBoxController');
          },
 
