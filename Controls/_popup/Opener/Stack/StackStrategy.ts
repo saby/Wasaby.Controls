@@ -40,6 +40,13 @@
 
       isMaximizedState: function(item) {
          return !!item.popupOptions.maximized;
+      },
+      calculateMaxWidth: function(self, popupMaxWidth, tCoords) {
+         let maxPanelWidth = self.getMaxPanelWidth();
+         if (popupMaxWidth) {
+            return Math.min(popupMaxWidth, maxPanelWidth - tCoords.right);
+         }
+         return maxPanelWidth;
       }
    };
 
@@ -66,11 +73,7 @@
             // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
          }
-         if (item.popupOptions.maxWidth) {
-            position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
-         } else {
-            position.stackMaxWidth = maxPanelWidth;
-         }
+         position.stackMaxWidth = _private.calculateMaxWidth(this, item.popupOptions.maxWidth, tCoords);
 
          return position;
       },
@@ -83,6 +86,8 @@
          return window.innerWidth - MINIMAL_PANEL_DISTANCE;
       },
 
-      isMaximizedPanel: _private.isMaximizedPanel
+      isMaximizedPanel: _private.isMaximizedPanel,
+
+      _private: _private
    };
 
