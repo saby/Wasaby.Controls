@@ -6,6 +6,7 @@
  * @includes MonthSlider Controls/_calendar/MonthSlider
  * @includes MonthSliderBase Controls/_calendar/MonthSlider:Base
  * @includes MonthModel Controls/_calendar/Month/Model
+ * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
  * @public
  * @author Kraynov D.
  */

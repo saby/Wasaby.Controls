@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
-import IDateRangeSelectable = require('Controls/Date/interface/IDateRangeSelectable');
+import IDateRangeSelectable = require('./_dateRange/interfaces/IDateRangeSelectable');
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import MonthsRange from './_datePopup/MonthsRange';
@@ -18,9 +18,9 @@ import 'css!theme?Controls/_datePopup/RangeSelection';
  *
  * @class Controls/datePopup
  * @extends Core/Control
- * @mixes Controls/Date/interface/IDateRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/interface/IDateMask
- * @mixes Controls/_datePopup/interface/IDatePopup
+ * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @control
  * @public
  * @author Миронов А.Ю.
