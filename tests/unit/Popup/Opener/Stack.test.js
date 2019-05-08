@@ -2,11 +2,12 @@ define(
    [
       'Controls/Popup/Opener/Stack/StackStrategy',
       'Controls/popup',
+      'Controls/popupTemplate',
       'Controls-demo/Popup/TestMaximizedStack',
       'Controls/Popup/Opener/BaseController',
-      'wml!Controls/_popup/Opener/Stack/StackContent'
+      'wml!Controls/_popupTemplate/Stack/Opener/StackContent'
    ],
-   (StackStrategy, popupMod, TestMaximizedStack, BaseController, StackContent) => {
+   (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Stack', () => {
@@ -37,43 +38,43 @@ define(
          });
 
          it('stack shadow', () => {
-            let baseGetItemPosition = popupMod.StackController._private.getItemPosition;
-            popupMod.StackController._private.getItemPosition = items => (items.position);
-            popupMod.StackController._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ position: { stackWidth: 600 }, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ position: { stackWidth: 1000 }, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ position: { stackWidth: 840 }, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ containerWidth: 200, popupState: 'destroying', popupOptions: { stackClassName: '' } });
-            popupMod.StackController._stack.add({ containerWidth: 200, popupOptions: { stackClassName: '' } });
-            popupMod.StackController._update();
-            popupMod.StackController._update();
-            popupMod.StackController._update();
-            assert.isTrue(popupMod.StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(popupMod.StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupMod.StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(popupMod.StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            let baseGetItemPosition = popupTemplate.StackController._private.getItemPosition;
+            popupTemplate.StackController._private.getItemPosition = items => (items.position);
+            popupTemplate.StackController._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ position: { stackWidth: 600 }, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ position: { stackWidth: 1000 }, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ position: { stackWidth: 840 }, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 600, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 200, popupState: 'destroying', popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 200, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._update();
+            popupTemplate.StackController._update();
+            popupTemplate.StackController._update();
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
-            popupMod.StackController._private.getItemPosition = baseGetItemPosition;
+            popupTemplate.StackController._private.getItemPosition = baseGetItemPosition;
          });
 
 
          it('stack default position', () => {
-            popupMod.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
-            popupMod.StackController._private.getStackParentCoords = () => ({ top: 0, right: 0 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.getStackParentCoords = () => ({ top: 0, right: 0 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
             let itemConfig = {
                popupOptions: item.popupOptions
             };
             itemConfig.popupOptions.template = TestMaximizedStack;
             itemConfig.popupOptions.minimizedWidth = undefined;
-            popupMod.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.stackWidth, 800);
@@ -100,7 +101,7 @@ define(
                   template: TestMaximizedStack
                }
             };
-            popupMod.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.popupOptions.stackMinWidth, 500);
             assert.equal(itemConfig.popupOptions.stackMaxWidth, 1000);
             assert.equal(itemConfig.popupOptions.stackWidth, 800);
@@ -113,16 +114,16 @@ define(
                   template: TestMaximizedStack
                }
             };
-            popupMod.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.popupOptions.stackMinWidth, 600);
             assert.equal(itemConfig.popupOptions.stackMaxWidth, 900);
             assert.equal(itemConfig.popupOptions.stackWidth, 800);
          });
 
          it('stack panel maximized', () => {
-            popupMod.StackController._update = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
-            popupMod.StackController._private.prepareSizes = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
-            popupMod.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._update = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.prepareSizes = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
 
             let popupOptions = {
                minimizedWidth: 600,
@@ -139,26 +140,26 @@ define(
             assert.equal(StackStrategy.isMaximizedPanel(itemConfig), true);
 
             itemConfig.popupOptions.template = TestMaximizedStack;
-            popupMod.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.popupOptions.maximized, false); // default value
             assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
 
-            popupMod.StackController.elementMaximized(itemConfig, {}, false);
+            popupTemplate.StackController.elementMaximized(itemConfig, {}, false);
             assert.equal(itemConfig.popupOptions.maximized, false);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
             let position = StackStrategy.getPosition({ top: 0, right: 0 }, itemConfig);
             assert.equal(position.stackWidth, popupOptions.minimizedWidth);
 
-            popupMod.StackController.elementMaximized(itemConfig, {}, true);
+            popupTemplate.StackController.elementMaximized(itemConfig, {}, true);
             assert.equal(itemConfig.popupOptions.maximized, true);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
             position = StackStrategy.getPosition({ top: 0, right: 0 }, itemConfig);
             assert.equal(position.stackMaxWidth, popupOptions.maxWidth);
 
-            popupMod.StackController._private.prepareMaximizedState(1600, itemConfig);
+            popupTemplate.StackController._private.prepareMaximizedState(1600, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
 
-            popupMod.StackController._private.prepareMaximizedState(800, itemConfig);
+            popupTemplate.StackController._private.prepareMaximizedState(800, itemConfig);
             assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, false);
             delete itemConfig.popupOptions.width;
          });
@@ -168,38 +169,38 @@ define(
                id: '22',
                popupOptions: item.popupOptions
             };
-            popupMod.StackController._update = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
-            popupMod.StackController._private.prepareSizes = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
-            popupMod.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._update = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.prepareSizes = () => {}; // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            popupTemplate.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
 
-            popupMod.StackController._elementCreated(itemConfig, {});
+            popupTemplate.StackController._elementCreated(itemConfig, {});
 
             // Зависит от того где запускаем тесты, под нодой или в браузере
             assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_CREATED || itemConfig.popupState === BaseController.POPUP_STATE_CREATING);
 
-            popupMod.StackController.elementAnimated(itemConfig);
+            popupTemplate.StackController.elementAnimated(itemConfig);
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_CREATED);
 
             itemConfig.popupOptions.className = '';
-            popupMod.StackController._elementUpdated(itemConfig, {});
-            popupMod.StackController._elementUpdated(itemConfig, {});
-            popupMod.StackController._elementUpdated(itemConfig, {});
+            popupTemplate.StackController._elementUpdated(itemConfig, {});
+            popupTemplate.StackController._elementUpdated(itemConfig, {});
+            popupTemplate.StackController._elementUpdated(itemConfig, {});
 
             // класс обновился, потому что состояние было opened. После множ. update класс не задублировался
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATING);
             assert.equal(itemConfig.popupOptions.className, ' controls-Stack');
 
-            popupMod.StackController._elementAfterUpdated(itemConfig, {});
+            popupTemplate.StackController._elementAfterUpdated(itemConfig, {});
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATED);
 
             itemConfig.popupState = 'notOpened';
             itemConfig.popupOptions.className = '';
-            popupMod.StackController._elementUpdated(itemConfig, {});
+            popupTemplate.StackController._elementUpdated(itemConfig, {});
 
             // класс не обновился, потому что состояние не opened
             assert.equal(itemConfig.popupOptions.className, '');
 
-            popupMod.StackController._elementDestroyed(itemConfig, {});
+            popupTemplate.StackController._elementDestroyed(itemConfig, {});
 
             // Зависит от того где запускаем тесты, под нодой или в браузере
             assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_DESTROYING || itemConfig.popupState === BaseController.POPUP_STATE_DESTROYED);
@@ -207,7 +208,7 @@ define(
             itemConfig._destroyDeferred.addCallback(function() {
                assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_DESTROYED);
             });
-            popupMod.StackController.elementAnimated(itemConfig, {});
+            popupTemplate.StackController.elementAnimated(itemConfig, {});
          });
 
          it('stack from target container', () => {
@@ -315,7 +316,7 @@ define(
                   isCompoundTemplate: true
                }
             };
-            popupMod.StackController.getDefaultConfig(item);
+            popupTemplate.StackController.getDefaultConfig(item);
             assert.equal(item.position.top, -10000);
             assert.equal(item.position.left, -10000);
 
@@ -324,9 +325,9 @@ define(
                right: 0
             };
 
-            popupMod.StackController._private.getStackParentCoords = () => targetPos;
+            popupTemplate.StackController._private.getStackParentCoords = () => targetPos;
 
-            popupMod.StackController.elementCreated(item);
+            popupTemplate.StackController.elementCreated(item);
             assert.equal(item.position.stackWidth, undefined);
          });
       });

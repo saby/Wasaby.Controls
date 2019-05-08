@@ -6,7 +6,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
 import cInstance = require('Core/core-instance');
-import 'css!theme?Controls/_list/EditInPlace/Text';
+import 'css!theme?Controls/list';
 
 var
     typographyStyles = [

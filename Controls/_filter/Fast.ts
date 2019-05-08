@@ -10,7 +10,7 @@ import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Merge = require('Core/core-merge');
-import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import 'css!theme?Controls/filter';
 import 'css!theme?Controls/dropdown';
 
