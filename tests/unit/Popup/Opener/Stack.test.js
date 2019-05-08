@@ -286,8 +286,24 @@ define(
 
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
-            assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
+            assert.equal(position.stackMaxWidth, 600); //В тесте getMaxPanelWidth === 1000
             assert.equal(position.stackWidth, 1000);
+         });
+
+         it('stack max width', () => {
+            StackStrategy.getMaxPanelWidth = () => 1000;
+            let tCoords = {
+               right: 100
+            };
+            let maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, null, tCoords);
+            assert.equal(maxWidth, 1000);
+
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 400, tCoords);
+            assert.equal(maxWidth, 400);
+
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 2000, tCoords);
+            assert.equal(maxWidth, 900);
+
          });
 
          it('stack compatible popup', () => {
