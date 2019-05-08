@@ -35,6 +35,8 @@
                                     on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
                                     on:keyDown="_onExplorerKeyDown()"
                                     on:sortingChanged="_notifyHandler('sortingChanged')"
+                                    on:itemExpanded="_notifyHandler('itemExpanded')"
+                                    on:itemCollapsed="_notifyHandler('itemCollapsed')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
       </Controls._explorer.PathController>
