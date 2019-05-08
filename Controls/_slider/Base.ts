@@ -14,7 +14,7 @@ var _private = {
       }
    },
    _setValue(self, val) {
-      self._notify('valueChanged', [val], true);
+      self._notify('valueChanged', [val]);
    },
    _render(self, minValue, maxValue, value) {
       const rangeLength = maxValue - minValue;
@@ -153,7 +153,7 @@ var Base = Control.extend({
    /**
     * Handler for the dragmove event.
     */
-   _onDragMoveHandler(e, dragObject) {
+   _onDragNDropHandler(e, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const ratio = utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
