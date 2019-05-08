@@ -21,7 +21,9 @@ import Input = require('Controls/_dropdown/Input');
 import _Controller = require('Controls/_dropdown/_Controller');
 import Opener = require('Controls/_dropdown/Opener');
 import Combobox = require('Controls/_dropdown/ComboBox');
+import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
+
 
 export {
     Button,
@@ -29,5 +31,6 @@ export {
     _Controller,
     Opener,
     Combobox,
+    MenuUtils,
     ItemTemplate
 }
