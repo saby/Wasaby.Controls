@@ -471,7 +471,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // d'n'd работает, когда кликнули непосредственно в шапку
             var isClickedInControl = $(event.target).wsControl() !== this;
             if (dialogTemplate && !isClickedInControl) {
-               dialogTemplate._onMouseDown(new Vdom.SyntheticEvent(event));
+               dialogTemplate._startDragNDrop(new Vdom.SyntheticEvent(event));
             }
          },
 

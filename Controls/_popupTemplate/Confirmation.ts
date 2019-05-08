@@ -72,21 +72,21 @@ import 'css!theme?Controls/popupTemplate';
          _size: null,
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
             }
             this._style = _private.prepareStatusStyle(options.style);
             this._size = _private.prepareSize(options.size);
             if (options.contentArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.footerArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
             }
             if (options.size === 'big') {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
             }
             if (options.size === 'default') {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
             }
          },
          _beforeUpdate: function(options) {

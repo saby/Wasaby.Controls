@@ -1,5 +1,5 @@
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
-import SearchItemsUtil = require('Controls/_treeGrid/utils/SearchItemsUtil');
+import {SearchItemsUtil} from 'Controls/list';
 
 var
     SearchViewModel = TreeViewModel.extend({

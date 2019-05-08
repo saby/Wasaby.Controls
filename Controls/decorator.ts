@@ -1,5 +1,5 @@
 /**
- * List library
+ * Decoratror library
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
  * @includes Markup Controls/_decorator/Markup
@@ -19,11 +19,17 @@ import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 import WrapURLs = require('Controls/_decorator/WrapURLs');
 
+import Converter = require('Controls/_decorator/Markup/Converter');
+import InnerText = require('Controls/_decorator/Markup/resolvers/innerText');
+
 export {
     Highlight,
     Markup,
     Money,
     Number,
     PhoneNumber,
-    WrapURLs
+    WrapURLs,
+
+    Converter,
+    InnerText
 }

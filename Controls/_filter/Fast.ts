@@ -10,7 +10,7 @@ import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Merge = require('Core/core-merge');
-import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import 'css!theme?Controls/filter';
 import 'css!theme?Controls/dropdown';
 
@@ -268,6 +268,7 @@ import 'css!theme?Controls/dropdown';
             var templateOptions = {
                items: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
+               isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: _private.getSourceController(this._configs[index],
                   getPropValue(this._items.at(index), 'properties').source,
                   getPropValue(this._items.at(index), 'properties').navigation).hasMoreData('down')

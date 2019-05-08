@@ -7,22 +7,6 @@ import calendarUtils = require('Controls/Calendar/Utils');
 import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 
-/**
- * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
- * Designed to select a date or period within a few months or years.
- *
- * @class Controls/_calendar/MonthSlider
- * @extends Core/Control
- * @mixes Controls/_calendar/interface/IMonth
- * @mixes Controls/Date/interface/IRangeSelectable
- * @mixes Controls/Date/interface/IDateRangeSelectable
- * @control
- * @public
- * @author Миронов А.Ю.
- * @demo Controls-demo/Calendar/MonthSlider
- *
- */
-
 var _private = {
     _setMonth: function (self, month, silent) {
         if (DateUtil.isDatesEqual(month, self._month)) {
@@ -36,6 +20,22 @@ var _private = {
         }
     }
 };
+
+/**
+ * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
+ * Designed to select a date or period within a few months or years.
+ *
+ * @class Controls/_calendar/MonthSlider
+ * @extends Core/Control
+ * @mixes Controls/_calendar/interface/IMonth
+ * @mixes Controls/Date/interface/IRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @control
+ * @public
+ * @author Миронов А.Ю.
+ * @demo Controls-demo/Calendar/MonthSlider
+ *
+ */
 
 var Component = BaseControl.extend({
     _template: monthTmpl,

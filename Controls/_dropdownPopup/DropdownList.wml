@@ -35,29 +35,33 @@
       </div>
    </Controls.scroll:Container>
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
-      <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
+      <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" viewMode="link" on:click="_closeClick()"/>
    </ws:if>
    <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
       <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
          <ws:if data="{{_options.footerTemplate}}">
-            <ws:partial template="{{_options.footerTemplate}}" on:click="_footerClick()"/>
+            <ws:partial template="{{_options.footerTemplate}}" attr:class="controls-DropdownList__footer-content_theme_{{_options.theme}}" on:click="_footerClick()"/>
          </ws:if>
-         <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
-            <div class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton theme_{{_options.theme}}">
-               <Controls.buttons:Button viewMode="link"
-                                        caption="{{_options.moreButtonCaption}}"
-                                        on:click="_openSelectorDialog()"/>
-            </div>
-            <Controls.lookup:Opener name="selectorDialog" on:result="_selectorDialogResult()">
-               <ws:popupOptions template="Controls/suggestPopup:Dialog" />
-            </Controls.lookup:Opener>
-         </ws:if>
-         <ws:if data="{{_needShowApplyButton}}">
-            <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
-               <Controls.buttons:Button viewMode="toolButton"
-                                        icon="icon-Yes icon-medium"
-                                        iconStyle="success"
-                                        on:click="_applySelection()"/>
+         <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate || _needShowApplyButton}}">
+            <div class="controls-DropdownList__footer-content_theme_{{_options.theme}} controls-DropdownList__footer-buttons_theme_{{_options.theme}}">
+               <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
+                  <div class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton theme_{{_options.theme}}">
+                     <Controls.buttons:Button viewMode="link"
+                                              caption="{{_options.moreButtonCaption}}"
+                                              on:click="_openSelectorDialog()"/>
+                  </div>
+                  <Controls.lookup:Opener name="selectorDialog" on:result="_selectorDialogResult()">
+                     <ws:popupOptions template="Controls/suggestPopup:Dialog" />
+                  </Controls.lookup:Opener>
+               </ws:if>
+               <ws:if data="{{_needShowApplyButton}}">
+                  <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
+                     <Controls.buttons:Button viewMode="toolButton"
+                                              icon="icon-Yes icon-medium"
+                                              iconStyle="success"
+                                              on:click="_applySelection()"/>
+                  </div>
+               </ws:if>
             </div>
          </ws:if>
       </div>

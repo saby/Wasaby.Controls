@@ -156,14 +156,14 @@ import Deferred = require('Core/Deferred');
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
             _private.compatibleOptions(this, popupOptions);
-            Confirmation.superclass.open.call(this, popupOptions, require('Controls/popup').DialogController);
+            Confirmation.superclass.open.call(this, popupOptions, 'Controls/popupTemplate:DialogController');
             return this._resultDef;
          },
 
          _getPopupOptions: function(templateOptions) {
             templateOptions.closeHandler = this._closeHandler;
             return {
-               template: require('Controls/popup').ConfirmationDialog,
+               template: 'Controls/popupTemplate:ConfirmationDialog',
                modal: true,
                className: 'controls-Confirmation_popup',
                templateOptions: templateOptions

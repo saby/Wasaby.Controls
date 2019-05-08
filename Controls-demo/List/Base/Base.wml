@@ -26,10 +26,10 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            keyProperty="id">
+            keyProperty="id"
+            markerVisibility="hidden">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate"
-                        marker="{{false}}"
             ></ws:partial>
         </ws:itemTemplate>
     </Controls.list:View>

@@ -359,6 +359,7 @@ define([
 
          selectedCollection._options.historyId = 'historyField';
          selectedCollection._selectCallback(
+            null,
             new collection.List({
                items: [item]
             })

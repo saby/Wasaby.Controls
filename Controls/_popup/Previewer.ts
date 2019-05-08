@@ -3,7 +3,7 @@ import template = require('wml!Controls/_popup/Previewer/Previewer');
 import debounce = require('Core/helpers/Function/debounce');
 import PreviewerOpener = require('Controls/_popup/Opener/Previewer');
 import Env = require('Env/Env');
-import 'css!Controls/popup';
+import 'css!theme?Controls/popup';
 
 
       /**
@@ -102,7 +102,7 @@ import 'css!Controls/popup';
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
             if (options.templateName) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 

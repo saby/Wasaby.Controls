@@ -27,10 +27,15 @@
             <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.popup:Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
+                     <Controls.popup:Manager
+                             on:managerPopupCreated="_popupCreatedHandler()"
+                             on:managerPopupDestroyed="_popupDestroyedHandler()"
+                             on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()"
+                             on:serviceError="PopupGlobal._openDialogHandler()"
+                             stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <Controls.dataSource:error.DialogOpener
+                              <body
                                  class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
@@ -73,7 +78,7 @@
                               </ws:else>
 
                               <ws:if data="{{ content.draggingTemplate }}">
-                                 <ws:partial template="wml!Controls/DragNDrop/DraggingTemplateWrapper"
+                                 <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
                                              draggingTemplateOptions="{{content.draggingTemplateOptions}}"
                                              draggingTemplate="{{content.draggingTemplate}}"/>
                               </ws:if>
@@ -127,7 +132,7 @@
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
-                              </Controls.dataSource:error.DialogOpener>
+                              </body>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>

@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
+import Vdom = require('Vdom/Vdom');
 import 'css!theme?Controls/popupTemplate';
 
 
@@ -70,19 +71,19 @@ import 'css!theme?Controls/popupTemplate';
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
 
             if (options.contentArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.caption) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
             if (options.captionStyle) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
             if (options.topArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
             if (options.hideCross) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
          },
          _beforeUpdate: function(options) {
@@ -98,9 +99,20 @@ import 'css!theme?Controls/popupTemplate';
          },
 
          _onMouseDown: function(event) {
-            if (this._options.draggable) {
-               this._children.dragNDrop.startDragNDrop(null, event);
+            if (this._needStartDrag(event.target)) {
+               this._startDragNDrop(event)
             }
+         },
+
+         _startDragNDrop: function(event) {
+            this._children.dragNDrop.startDragNDrop(null, event);
+         },
+
+         _needStartDrag: function(target) {
+            var controlsArray = Vdom.DOMEnvironment._goUpByControlTree(target);
+
+            // if click to control then control must handle click
+            return this._options.draggable && controlsArray[0]._container === this._container;
          },
 
          _onDragEnd: function() {

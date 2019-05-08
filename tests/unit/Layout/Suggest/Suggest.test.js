@@ -741,6 +741,11 @@ self._options.historyId = '';
 
          suggestComponent._options.suggestState = false;
          suggestMod._InputController._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         suggestComponent._options.suggestState = false;
+         suggestComponent._options.autoDropDown = true;
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.isTrue(isCallOpenPopup);
 
          isCallOpenPopup = false;

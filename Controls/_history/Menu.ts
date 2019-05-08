@@ -1,6 +1,5 @@
-import {Button as Menu} from 'Controls/dropdown';
+import {Button as Menu, MenuUtils} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
-import MenuUtils = require('Controls/Button/Menu/MenuUtils');
 import 'css!theme?Controls/_history/Menu';
 
 var _private = {
@@ -56,7 +55,7 @@ var HistoryMenu = Menu.extend({
             self._children.notificationOpener.open({
                template: 'wml!Controls/Popup/Templates/Notification/Simple',
                templateOptions: {
-                  style: 'error',
+                  style: 'danger',
                   text: 'Невозможно закрепить более 10 пунктов',
                   icon: 'Alert'
                }

@@ -1,6 +1,6 @@
 define('Controls/DragNDrop/Entity/List/Items',
-   ['Controls/_dragnDrop/Entity/List/Items'],
+   ['Controls/dragnDrop'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.ListItems;
    });

@@ -5,7 +5,8 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
-import 'css!theme?Controls/_list/EditInPlace/Text';
+import cInstance = require('Core/core-instance');
+import 'css!theme?Controls/list';
 
 var
     typographyStyles = [
@@ -67,22 +68,29 @@ var
             if (!self._editingItem) {
                 return Deferred.success();
             }
+            let result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
+            return _private.processBeforeEndEditResult(self, result, commit);
+        },
 
-            var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
+        processBeforeEndEditResult: function (self, eventResult, commit) {
+            var result;
 
-            if (result === Constants.editing.CANCEL) {
-                return Deferred.success({cancelled: true});
-            }
-            if (result && result.addCallback) {
-                // Если мы попали сюда, то прикладники сами сохраняют запись
-                return result.addCallback(function () {
-                    _private.afterEndEdit(self);
+            if (eventResult === Constants.editing.CANCEL) {
+                result = Deferred.success({cancelled: true});
+            } else if (eventResult && eventResult.addBoth) {
+                let id = self._notify('showIndicator', [{}], {bubbling: true});
+                eventResult.addBoth(function (defResult) {
+                    self._notify('hideIndicator', [id], {bubbling: true});
+                    return defResult;
                 });
+                result = eventResult;
+            } else {
+                result = _private.updateModel(self, commit).addCallback(function () {
+                    _private.afterEndEdit(self);
+                })
             }
 
-            return _private.updateModel(self, commit).addCallback(function () {
-                _private.afterEndEdit(self);
-            });
+            return result;
         },
 
         afterEndEdit: function (self) {

@@ -441,7 +441,9 @@ import dataSource = require('Controls/dataSource');
                   updateDef.callback({ data: true });
                   return arg;
                });
-               res.addErrback(self._processError.bind(self));
+               res.addErrback((error: Error) => {
+                  return self._processError(error, dataSource.error.Mode.dialog);
+               });
             } else {
                // если были ошибки валидации, уведомим о них
                var validationErrors = self._children.validation.isValid();
@@ -530,6 +532,12 @@ import dataSource = require('Controls/dataSource');
          if (this.__error) {
             this.__error = null;
             this._forceUpdate();
+         }
+      },
+
+      _onCloseErrorDialog: function() {
+         if (!this._record) {
+            this._notify('close', [], { bubbling: true });
          }
       },
 
