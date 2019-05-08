@@ -71,19 +71,19 @@ import 'css!theme?Controls/popupTemplate';
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
 
             if (options.contentArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.caption) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
             if (options.captionStyle) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
             if (options.topArea) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
             if (options.hideCross) {
-               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
+               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
          },
          _beforeUpdate: function(options) {
