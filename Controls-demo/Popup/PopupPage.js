@@ -2,7 +2,10 @@ define('Controls-demo/Popup/PopupPage',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/PopupPage',
-      'Core/helpers/Number/randomId'
+      'Core/helpers/Number/randomId',
+      'Controls-demo/Popup/TestDialog',
+      'css!Controls-demo/Popup/PopupPage'
+
    ],
    function (Control, template, randomId) {
       'use strict';
