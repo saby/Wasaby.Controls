@@ -1,11 +1,11 @@
-import BaseController = require('Controls/_popup/Opener/BaseController');
-import StackStrategy = require('Controls/_popup/Opener/Stack/StackStrategy');
+import BaseController = require('Controls/_popupTemplate/BaseController');
+import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 import collection = require('Types/collection');
-import TargetCoords = require('Controls/_popup/TargetCoords');
+import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
-import StackContent = require('wml!Controls/_popup/Opener/Stack/StackContent');
-import 'css!theme?Controls/popup';
+import StackContent = require('wml!Controls/_popupTemplate/Stack/Opener/StackContent');
+import 'css!theme?Controls/popupTemplate';
 
       var STACK_CLASS = 'controls-Stack';
       var _private = {
@@ -148,7 +148,7 @@ import 'css!theme?Controls/popup';
 
       /**
        * Stack Popup Controller
-       * @class Controls/_popup/Opener/Stack/StackController
+       * @class Controls/_popupTemplate/Stack/Opener/StackController
        * @control
        * @private
        * @category Popup

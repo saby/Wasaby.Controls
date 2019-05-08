@@ -1,4 +1,4 @@
-<Controls.popup:ConfirmationDialog
+<Controls.popupTemplate:ConfirmationDialog
     type="ok"
     style="danger"
     message="{{ _options.message || message }}"

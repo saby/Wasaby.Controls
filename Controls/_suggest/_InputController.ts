@@ -89,7 +89,7 @@ var _private = {
                _private.setSearchValue(self, '');
                _private.setFilter(self, filter);
                _private.open(self);
-            } else if (!self._options.suggestState) {
+            } else if (!self._options.suggestState && self._options.autoDropDown) {
                _private.open(self);
             }
             return keys;

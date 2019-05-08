@@ -4,6 +4,7 @@
       value="{{_options.value}}"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
+      style="{{_options.style}}"
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       placeholder="{{_options.placeholder}}"

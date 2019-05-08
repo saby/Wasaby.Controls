@@ -19,4 +19,4 @@
          div.parentNode.removeChild(div);
          return obj;
       };
-   
+

@@ -207,28 +207,32 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'small',
-                        position: 'lc',
+                        targetSide: 'left',
+                        alignment: 'center',
                         message: 'Small left-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'small',
-                        position: 'tc',
+                        targetSide: 'top',
+                        alignment: 'center',
                         message: 'Small top-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'small',
-                        position: 'bc',
+                        targetSide: 'bottom',
+                        alignment: 'center',
                         message: 'Small bottom-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'small',
-                        position: 'rc',
+                        targetSide: 'right',
+                        alignment: 'center',
                         message: 'Small right-center'
                      }
                   }
@@ -239,28 +243,32 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'medium',
-                        position: 'lc',
+                        targetSide: 'left',
+                        alignment: 'center',
                         message: 'Medium left-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'medium',
-                        position: 'tc',
+                        targetSide: 'top',
+                        alignment: 'center',
                         message: 'Medium top-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'medium',
-                        position: 'bc',
+                        targetSide: 'bottom',
+                        alignment: 'center',
                         message: 'Medium bottom-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'medium',
-                        position: 'rc',
+                        targetSide: 'right',
+                        alignment: 'center',
                         message: 'Medium right-center'
                      }
                   },
@@ -271,28 +279,32 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'large',
-                        position: 'lc',
+                        targetSide: 'left',
+                        alignment: 'center',
                         message: 'Large left-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'large',
-                        position: 'tc',
+                        targetSide: 'top',
+                        alignment: 'center',
                         message: 'Large top-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'large',
-                        position: 'bc',
+                        targetSide: 'bottom',
+                        alignment: 'center',
                         message: 'Large bottom-center'
                      }
                   },
                   {
                      cfg: {
                         size: 'large',
-                        position: 'rc',
+                        targetSide: 'right',
+                        alignment: 'center',
                         message: 'Large right-center'
                      }
                   },

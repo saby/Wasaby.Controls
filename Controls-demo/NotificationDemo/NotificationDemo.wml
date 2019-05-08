@@ -8,7 +8,7 @@
       <Controls.popup:Notification name="myOpener{{index}}"
                                           template="Controls/popupTemplate:NotificationSimple"
                                           autoClose="{{index > 5}}">
-            <ws:templateOptions style="done"
+            <ws:templateOptions style="success"
                                 text="Hello world from the {{index}} opener!!!"
                                 icon="Admin"></ws:templateOptions>
       </Controls.popup:Notification>
