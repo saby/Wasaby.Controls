@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "../_list/utils/RowIndexUtil";
+import {calcFooterRowIndex} from "./utils/RowIndexUtil";
 
 var
     _private = {
@@ -389,7 +389,26 @@ var
             }
 
             return styles;
+        },
+        prepareItemDataForPartialSupport(self, itemData): void {
+            if (!itemData.isGroup) {
+                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+            } else {
+                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
+                itemData.gridGroupStyles = GridLayoutUtil.toCssString([
+                    {name: 'grid-row', value: itemData.rowIndex + 1},
+                    {name: '-ms-grid-row', value: itemData.rowIndex + 1}
+                ]);
+                return;
+            }
+        
+            itemData.handlersForPartialSupport = self.getHandlersForPartialSupport();
+        
+            if (itemData.isEditing) {
+                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.index);
+            }
         }
+        
     },
 
     GridViewModel = BaseViewModel.extend({
@@ -410,6 +429,8 @@ var
 
         _ladder: null,
         _columnsVersion: 0,
+
+        _eventHandlersForPartialSupport: {},
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -854,34 +875,16 @@ var
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                 current.stickyColumnIndex = stickyColumn.index;
             }
-
-            if (GridLayoutUtil.isPartialSupport && !current.isGroup) {
-                current.rowIndex = _private.calcRowIndexByKey(this, current.key);
+    
+            if (GridLayoutUtil.isPartialSupport) {
+                _private.prepareItemDataForPartialSupport(this, current);
             }
-
-            if (this._options.groupingKeyCallback) {
-                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
-                    current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
-
-                    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                    if (GridLayoutUtil.isPartialSupport) {
-                        current.rowIndex = _private.calcGroupRowIndex(this, current);
-                        current.gridGroupStyles = GridLayoutUtil.toCssString([
-                            {
-                                name: 'grid-row',
-                                value: current.rowIndex + 1
-                            },
-                            {
-                                name: '-ms-grid-row',
-                                value: current.rowIndex + 1
-                            }
-                        ]);
-                    }
-
-                    return current;
-                }
+            
+            if (current.isGroup) {
+                current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
+                return current;
             }
-
+            
             current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
 
             if (current.isFirstInGroup) {
@@ -909,10 +912,6 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
-
-            if (current.isEditing && GridLayoutUtil.isPartialSupport) {
-                current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
-            }
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
@@ -1209,8 +1208,16 @@ var
         },
 
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
-        getEmptyTemplateStyles() {
+        getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+
+        setHandlersForPartialSupport: function(handlersList: {[key: string]: Function}): void {
+            this._eventHandlersForPartialSupport = handlersList;
+        },
+
+        getHandlersForPartialSupport: function(): {[key: string]: Function} {
+            return this._eventHandlersForPartialSupport;
         },
 
         destroy: function() {

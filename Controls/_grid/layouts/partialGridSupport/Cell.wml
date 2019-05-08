@@ -1,0 +1,17 @@
+<ws:partial template="{{_options.columnContentTpl}}"
+            itemData="{{_options.itemData}}"
+            currentColumn="{{ _options.currentColumn }}"
+
+            attr:key="{{ _options.currentColumnKey }}"
+            attr:data-r="{{ _options.itemData.index }}"
+            attr:style="{{ _options.currentColumn.gridCellStyles }}"
+            attr:class="{{ getCellClasses() }}"
+
+            on:click="_onClick()"
+            on:mousemove="_onMouseMoveHandler()"
+            on:mouseenter="_onMouseEnter()"
+            on:mouseleave="_onMouseLeave()"
+            on:mousedown="_onMouseDown()"
+            on:wheel="_onWheel()"
+            on:contextmenu="_onContextMenu()"
+            on:swipe="_onSwipe()"/>
