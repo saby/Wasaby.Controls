@@ -1,5 +1,5 @@
 define('Controls/Popup/Opener/Sticky/StickyController',
-   ['Controls/popup'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
       return Control.StickyController;

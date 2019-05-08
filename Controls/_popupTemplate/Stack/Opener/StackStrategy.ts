@@ -54,7 +54,7 @@
 
       /**
        * Returns popup position
-       * @function Controls/_popup/Opener/Stack/StackController#getPosition
+       * @function Controls/_popupTemplate/Stack/Opener/StackController#getPosition
        * @param tCoords Coordinates of the container relative to which the panel is displayed
        * @param item Popup configuration
        */
@@ -80,7 +80,7 @@
 
       /**
        * Returns the maximum possible width of popup
-       * @function Controls/_popup/Opener/Stack/StackController#getMaxPanelWidth
+       * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth
        */
       getMaxPanelWidth: function() {
          return window.innerWidth - MINIMAL_PANEL_DISTANCE;

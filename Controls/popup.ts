@@ -32,14 +32,7 @@ import Manager = require('Controls/_popup/Manager');
 import Controller = require('Controls/_popup/Manager/ManagerController');
 import Container = require('Controls/_popup/Manager/Container');
 
-import ConfirmationDialog = require('Controls/_popup/Opener/Confirmation/Dialog');
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
-import StackController = require('Controls/_popup/Opener/Stack/StackController');
-import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
-import DialogController = require('Controls/_popup/Opener/Dialog/DialogController');
-import NotificationController = require('Controls/_popup/Opener/Notification/NotificationController');
-import PreviewerController = require('Controls/_popup/Opener/Previewer/PreviewerController');
-import InfoBoxController = require('Controls/_popup/Opener/InfoBox/InfoBoxController');
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
 export {
@@ -57,13 +50,6 @@ export {
     Controller,
     Container,
 
-    ConfirmationDialog,
     BaseOpener,
-    StackController,
-    StickyController,
-    DialogController,
-    NotificationController,
-    PreviewerController,
-    InfoBoxController,
     EditContainer
 }
