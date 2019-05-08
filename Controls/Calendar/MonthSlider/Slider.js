@@ -16,7 +16,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
     * @mixes Controls/Date/interface/IRangeSelectable
     * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
     * @control
-    * @public
+    * @private
     * @author Миронов А.Ю.
     * @demo Controls-demo/Calendar/MonthSlider
     *
