@@ -1,6 +1,6 @@
 define('Controls/Button/Menu/MenuUtils',
-   ['Controls/_dropdown/Button/MenuUtils'],
+   ['Controls/dropdown'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.MenuUtils;
    });

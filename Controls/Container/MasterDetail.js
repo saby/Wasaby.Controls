@@ -1,6 +1,6 @@
 define('Controls/Container/MasterDetail',
-   ['Controls/_masterDetail/Base'],
+   ['Controls/masterDetail'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Base;
    });

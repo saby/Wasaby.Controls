@@ -1,12 +1,12 @@
-import BaseController = require('Controls/_popup/Opener/BaseController');
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
+import BaseController = require('Controls/_popupTemplate/BaseController');
+import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import cMerge = require('Core/core-merge');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
-import TargetCoords = require('Controls/_popup/TargetCoords');
-import StickyContent = require('wml!Controls/_popup/Opener/Sticky/StickyContent');
-import 'css!theme?Controls/popup';
+import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
+import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
+import 'css!theme?Controls/popupTemplate';
+
 var DEFAULT_OPTIONS = {
     horizontalAlign: {
         side: 'right',
@@ -174,7 +174,7 @@ var _private = {
 
 /**
  * Sticky Popup Controller
- * @class Controls/_popup/Opener/Sticky/StickyController
+ * @class Controls/_popupTemplate/Sticky/StickyController
  * @control
  * @private
  * @category Popup
@@ -187,7 +187,7 @@ var StickyController = BaseController.extend({
             item.position.position = undefined;
             this.prepareConfig(item, container);
         } else {
-            ManagerController.remove(item.id);
+            require('Controls/popup').Controller.remove(item.id);
         }
     },
 
@@ -213,7 +213,7 @@ var StickyController = BaseController.extend({
                 }
             }
         } else {
-            ManagerController.remove(item.id);
+            require('Controls/popup').Controller.remove(item.id);
         }
     },
 
