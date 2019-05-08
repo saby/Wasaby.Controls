@@ -12,7 +12,7 @@ define('Controls/Date/interface/IMonth', [
    /**
     * Интерфейс контролов отображающих месяц
     * @interface Controls/_calendar/interface/IMonth
-    * @public
+    * @private
     */
 
    return {

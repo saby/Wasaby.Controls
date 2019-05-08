@@ -7,6 +7,20 @@ import calendarUtils = require('Controls/Calendar/Utils');
 import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 
+var _private = {
+    _setMonth: function (self, month, silent) {
+        if (DateUtil.isDatesEqual(month, self._month)) {
+            return;
+        }
+        self._animation = month < self._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
+        self._month = month;
+        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new Date());
+        if (!silent) {
+            self._notify('monthChanged', [month]);
+        }
+    }
+};
+
 /**
  * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
  * Designed to select a date or period within a few months or years.
@@ -22,20 +36,6 @@ import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
  * @demo Controls-demo/Calendar/MonthSlider
  *
  */
-
-var _private = {
-    _setMonth: function (self, month, silent) {
-        if (DateUtil.isDatesEqual(month, self._month)) {
-            return;
-        }
-        self._animation = month < self._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
-        self._month = month;
-        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new Date());
-        if (!silent) {
-            self._notify('monthChanged', [month]);
-        }
-    }
-};
 
 var Component = BaseControl.extend({
     _template: monthTmpl,
