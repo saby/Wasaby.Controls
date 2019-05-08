@@ -13,9 +13,10 @@
                      itemsDragNDrop="{{true}}"
                      multiSelectVisibility="onhover"
                      itemsReadyCallback="{{_itemsReadyCallbackFirst}}"
-                     itemActions="{{_itemActionsFirst}}">
+                     itemActions="{{_itemActionsFirst}}"
+                     markerVisibility="hidden">
                      <ws:itemTemplate>
-                        <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
+                        <ws:partial template="Controls/list:ItemTemplate" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
                            <ws:contentTemplate attr:class="demo-DragNDrop__list_itemContent">
                               <div class="demo-DragNDrop__list_itemContent">
                                  <img class="demo-DragNDrop__list_item_icon" src="{{itemTemplate.itemData.item.get('image')}}" />

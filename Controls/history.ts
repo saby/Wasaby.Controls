@@ -16,10 +16,14 @@ import Menu = require('Controls/_history/Menu');
 import Service = require('Controls/_history/Service');
 import Source = require('Controls/_history/Source');
 
+import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
+
 export {
     Constants,
     FilterSource,
     Menu,
     Service,
-    Source
+    Source,
+
+    itemTemplate
 }

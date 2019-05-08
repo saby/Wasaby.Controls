@@ -3,18 +3,6 @@ import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import tmpl = require('wml!Controls/_calendar/MonthSlider/Slider/Slider');
 
-/**
- * Slider. Renders the element by template. Redraws with animation when changing data.
- * For example, the previous element leaves to the left, and the next one floats to the right.
- *
- * @class Controls/_calendar/MonthSlider/Slider
- * @extends Core/Control
- * @control
- * @public
- * @author Миронов А.Ю.
- * @noShow
- */
-
     // Компонент можно сделать публичным, но надо придумать более подходящее название. Данный компонент не листает
     // переданные ему контейнеры как это делает класический слайдер, а анимирует смену данных используя один и тот же шаблон.
     // Приватные методы и константы, возможно, можно выделить в отдельный слой абстракции для анимаций и
@@ -76,6 +64,18 @@ var _private = {
         return self._items[(self._currentItem + 1) % 2];
     }
 };
+
+/**
+ * Slider. Renders the element by template. Redraws with animation when changing data.
+ * For example, the previous element leaves to the left, and the next one floats to the right.
+ *
+ * @class Controls/_calendar/MonthSlider:Base
+ * @extends Core/Control
+ * @control
+ * @private
+ * @author Миронов А.Ю.
+ * @noShow
+ */
 
 var Component = BaseControl.extend({
     _template: tmpl,

@@ -72,7 +72,7 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
          open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
-            return BaseOpener.prototype.open.call(this, config, require('Controls/popup').StackController);
+            return BaseOpener.prototype.open.call(this, config, 'Controls/popupTemplate:StackController');
          },
 
          _setCompatibleConfig: function(config) {
