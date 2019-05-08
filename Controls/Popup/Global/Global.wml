@@ -1,4 +1,5 @@
 <div>
    <Controls.popup:Previewer name="previewerOpener"/>
    <Controls.popup:Infobox name="infoBoxOpener"/>
+   <Controls.popup:Dialog name="dialogOpener" on:close="_onDialogClosed()" />
 </div>
