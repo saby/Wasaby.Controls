@@ -60,6 +60,7 @@
 <ws:partial template="colTpl"
             currentColumn="{{ itemData.getCurrentColumn() }}"
             attr:data-r="{{ itemData.index }}"
+            attr:key="{{itemData.getCurrentColumnKey()}}"
             on:click="_onItemClick(itemData.dispItem)"
             on:contextmenu="_onItemContextMenu(itemData)"
             on:swipe="_onItemSwipe(itemData)"
