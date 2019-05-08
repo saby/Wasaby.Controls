@@ -28,7 +28,7 @@ var PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/Container/Scroll', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
+var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
 
 var _private = {
    hasMore: function(searchResult) {
