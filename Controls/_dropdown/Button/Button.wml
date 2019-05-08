@@ -4,6 +4,7 @@
         keyProperty="{{_options.keyProperty}}"
         parentProperty="{{_options.parentProperty}}"
         additionalProperty="{{_options.additionalProperty}}"
+        displayProperty="{{_options.displayProperty}}"
         nodeProperty="{{_options.nodeProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
         itemTemplate="{{_options.itemTemplate || _itemTemplate}}"

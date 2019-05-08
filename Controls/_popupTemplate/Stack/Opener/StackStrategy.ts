@@ -13,7 +13,13 @@
          var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
          var availableMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
 
-         if (item.popupOptions.width) {
+         if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            if (!_private.isMaximizedState(item)) {
+               panelWidth = item.popupOptions.minimizedWidth;
+            } else {
+               panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
+            }
+         } else if (item.popupOptions.width) {
             // todo: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
             panelWidth = Math.min(item.popupOptions.width, availableMaxWidth); // less then maxWidth
             panelWidth = Math.max(panelWidth, item.popupOptions.minimizedWidth || minWidth || 0); // more then minWidth
@@ -25,13 +31,7 @@
                tCoords.right = 0;
             }
             panelWidth = minWidth;
-         } else if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
-            if (!_private.isMaximizedState(item)) {
-               panelWidth = item.popupOptions.minimizedWidth;
-            } else {
-               panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
-            }
-         }
+         } 
          return panelWidth;
       },
       isMaximizedPanel: function(item) {
@@ -40,6 +40,13 @@
 
       isMaximizedState: function(item) {
          return !!item.popupOptions.maximized;
+      },
+      calculateMaxWidth: function(self, popupMaxWidth, tCoords) {
+         let maxPanelWidth = self.getMaxPanelWidth();
+         if (popupMaxWidth) {
+            return Math.min(popupMaxWidth, maxPanelWidth - tCoords.right);
+         }
+         return maxPanelWidth;
       }
    };
 
@@ -47,7 +54,7 @@
 
       /**
        * Returns popup position
-       * @function Controls/_popup/Opener/Stack/StackController#getPosition
+       * @function Controls/_popupTemplate/Stack/Opener/StackController#getPosition
        * @param tCoords Coordinates of the container relative to which the panel is displayed
        * @param item Popup configuration
        */
@@ -66,23 +73,21 @@
             // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
          }
-         if (item.popupOptions.maxWidth) {
-            position.stackMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
-         } else {
-            position.stackMaxWidth = maxPanelWidth;
-         }
+         position.stackMaxWidth = _private.calculateMaxWidth(this, item.popupOptions.maxWidth, tCoords);
 
          return position;
       },
 
       /**
        * Returns the maximum possible width of popup
-       * @function Controls/_popup/Opener/Stack/StackController#getMaxPanelWidth
+       * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth
        */
       getMaxPanelWidth: function() {
          return window.innerWidth - MINIMAL_PANEL_DISTANCE;
       },
 
-      isMaximizedPanel: _private.isMaximizedPanel
+      isMaximizedPanel: _private.isMaximizedPanel,
+
+      _private: _private
    };
 

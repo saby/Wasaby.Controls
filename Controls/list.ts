@@ -47,7 +47,7 @@ import ListControl = require('Controls/_list/ListControl');
 import ListView = require('Controls/_list/ListView');
 import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
 import SwipeHorizontalMeasurer = require('Controls/_list/Swipe/HorizontalMeasurer');
-import 'css!Controls/list';
+import 'css!theme?Controls/list';
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
@@ -55,6 +55,7 @@ import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import RowIndexUtil = require('Controls/_list/utils/RowIndexUtil');
 import BaseControl = require('Controls/_list/BaseControl');
+import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 
 import {Paging} from 'Controls/paging';
 
@@ -88,5 +89,6 @@ export {
     ItemsUtil,
     TreeItemsUtil,
     RowIndexUtil,
-    BaseControl
+    BaseControl,
+    SearchItemsUtil
 };

@@ -23,11 +23,17 @@ import Opener = require('Controls/_dropdown/Opener');
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 
+import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
+import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils');
+
 export {
     Button,
     Input,
     _Controller,
     Opener,
     Combobox,
-    ItemTemplate
+    ItemTemplate,
+
+    MenuUtils,
+    dropdownHistoryUtils
 }

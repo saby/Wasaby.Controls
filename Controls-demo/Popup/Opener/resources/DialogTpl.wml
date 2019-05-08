@@ -1,5 +1,5 @@
 <div style="height: 100%; min-width: 550px; max-width: 700px;">
-    <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.draggable}}">
+    <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.draggable}}" footerContentTemplate="{{_options.footerContentTemplate}}">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
                 <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
@@ -36,10 +36,5 @@
                 </Controls.list:DataContainer>
             </div>
         </ws:bodyContentTemplate>
-        <ws:footerContentTemplate>
-            <div style="display: flex;justify-content: center;align-items: center;">
-                <Controls.buttons:Button caption="OK" on:click="_close()"/>
-            </div>
-        </ws:footerContentTemplate>
     </Controls.popupTemplate:Dialog>
 </div>

@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/BaseController',
-   ['Controls/_popup/Opener/BaseController'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.BaseController;
    });

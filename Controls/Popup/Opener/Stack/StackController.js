@@ -1,5 +1,5 @@
 define('Controls/Popup/Opener/Stack/StackController',
-   ['Controls/popup'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
       return Control.StackController;

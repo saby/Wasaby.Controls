@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Previewer/PreviewerController',
-   ['Controls/_popup/Opener/Previewer/PreviewerController'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.PreviewerController;
    });

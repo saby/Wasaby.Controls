@@ -1,8 +1,7 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-import BaseController = require('Controls/_popup/Opener/BaseController');
-      
+
 
       // Модуль, необходимый для работы окон/панелей в слое совместимости
       // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
@@ -79,7 +78,11 @@ import BaseController = require('Controls/_popup/Opener/BaseController');
 
          isPopupCreating: function(id) {
             var item = this.find(id);
-            return item && (item.popupState === BaseController.POPUP_STATE_INITIALIZING || item.popupState === BaseController.POPUP_STATE_CREATING);
+
+            //TODO заюзал константы напрямую, чтобы перенести BaseController в библиотку popupTemplate.
+            // Надо разобраться с наследовниемю.
+            // https://online.sbis.ru/opendoc.html?guid=983e303b-d56e-4072-84e9-8514f23efc0e
+            return item && (item.popupState === 'initializing' || item.popupState === 'creating');
          },
 
          _callManager: function(methodName, args) {
@@ -89,4 +92,4 @@ import BaseController = require('Controls/_popup/Opener/BaseController');
             return false;
          },
       };
-   
+

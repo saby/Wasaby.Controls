@@ -1,11 +1,13 @@
-define(
-   [
-      'Controls/popup',
-      'Core/Deferred',
-      'Core/polyfill/PromiseAPIDeferred'
-   ],
-
-   (popup, Deferred) => {
+define([
+   'Controls/popup',
+   'Controls/popupTemplate',
+   'Core/Deferred',
+   'Core/polyfill/PromiseAPIDeferred'
+], (
+   popup,
+   popupTemplate,
+   Deferred
+) => {
       'use strict';
 
       var popupOpener;
@@ -14,7 +16,7 @@ define(
       describe('Controls/Popup/Opener/Confirmation', () => {
          beforeEach(() => {
             popupOpener = new popup.Confirmation();
-            dialog = new popup.ConfirmationDialog();
+            dialog = new popupTemplate.ConfirmationDialog();
             popupOpener._beforeMount({});
             popupOpener._children.LoadingIndicator = {
                toggleIndicator: () => {}

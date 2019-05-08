@@ -69,14 +69,23 @@ export default class Container extends Control {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
-            constants.isBrowserPlatform
+            !constants.isBrowserPlatform
         ) {
             return;
         }
         config.isShowed = true;
         getTemplate(config.template).then((template) => {
-            this._notify('serviceError', [template, config.options], { bubbling: true });
+            let result: Promise<void> = this._notify('serviceError', [
+                template,
+                config.options
+            ], { bubbling: true });
+            if (result) {
+                result.then(this.__notifyDialogClosed.bind(this));
+            }
         });
+    }
+    private __notifyDialogClosed() {
+        this._notify('dialogClosed', []);
     }
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;
