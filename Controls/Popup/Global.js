@@ -93,6 +93,38 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             }
             return false;
          },
+
+         /**
+          * open modal dialog
+          * @param event
+          * @param {String | Function} template
+          * @param {Object} templateOptions
+          * @return {Promise.<void>} result promise
+          * @private
+          */
+         _openDialogHandler: function(event, template, templateOptions) {
+            var _this = this;
+
+            // т.к. диалог может быть только один, отработаем колбек закрытия предыдущего, если он есть
+            _this._onDialogClosed();
+
+            _this._children.dialogOpener.open({
+               template: template,
+               templateOptions: templateOptions
+            });
+
+            //
+            return new Promise(function(resolve, reject) {
+               _this._closedDialodResolve = resolve;
+            });
+         },
+         _onDialogClosed: function() {
+            if (this._closedDialodResolve) {
+               this._closedDialodResolve();
+               delete this._closedDialodResolve;
+            }
+         },
+
          _private: _private
       });
    });

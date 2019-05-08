@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/_popup/Opener/InfoBox/resources/template" scope="{{_options}}" />
+<ws:partial template="wml!Controls/_popupTemplate/InfoBox/Opener/resources/template" scope="{{_options}}" />

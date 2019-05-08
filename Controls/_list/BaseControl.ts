@@ -16,7 +16,7 @@ import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_list/BaseControl/Footer';
-import 'css!theme?Controls/_list/BaseControl/BaseControl';
+import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';

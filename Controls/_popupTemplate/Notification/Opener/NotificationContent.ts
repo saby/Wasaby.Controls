@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_popup/Opener/Notification/NotificationContent');
+import template = require('wml!Controls/_popupTemplate/Notification/Opener/NotificationContent');
 
       var NotificationContent = Control.extend({
          _template: template,
@@ -13,4 +13,4 @@ import template = require('wml!Controls/_popup/Opener/Notification/NotificationC
       });
 
       export = NotificationContent;
-   
+

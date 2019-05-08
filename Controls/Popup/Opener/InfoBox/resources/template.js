@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/InfoBox/resources/template',
-   ['Controls/_popup/Opener/InfoBox/resources/template'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.templateInfoBox;
    });

@@ -1,11 +1,10 @@
 import Deferred = require('Core/Deferred');
-import StickyController = require('Controls/_popup/Opener/Sticky/StickyController');
-import themeConstantsGetter = require('Controls/_popup/Opener/InfoBox/resources/themeConstantsGetter');
+import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
+import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import TargetCoords = require('Controls/_popup/TargetCoords');
-import StickyStrategy = require('Controls/_popup/Opener/Sticky/StickyStrategy');
-import 'css!theme?Controls/popup';
+import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
+import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
+import 'css!theme?Controls/popupTemplate';
 
 function getConstants() {
     return themeConstantsGetter('controls-InfoBox__themeConstants', {
@@ -121,7 +120,7 @@ var _private = {
 
 /**
  * InfoBox Popup Controller
- * @class Controls/_popup/Opener/InfoBox/InfoBoxController
+ * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
  * @control
  * @private
  * @category Popup
@@ -132,7 +131,7 @@ var InfoBoxController = StickyController.constructor.extend({
     elementCreated: function (cfg, container, id) {
         // Only one popup can be opened
         if (this._openedPopupId) {
-            ManagerController.remove(this._openedPopupId);
+            require('Controls/popup').Controller.remove(this._openedPopupId);
         }
         this._openedPopupId = id;
 
@@ -144,7 +143,7 @@ var InfoBoxController = StickyController.constructor.extend({
 
     elementUpdated: function () {
         // Hide popup then page scroll or resize
-        ManagerController.remove(this._openedPopupId);
+        require('Controls/popup').Controller.remove(this._openedPopupId);
     },
 
     popupResize: function (element, container) {

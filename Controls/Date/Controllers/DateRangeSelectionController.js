@@ -1,7 +1,7 @@
 define('Controls/Date/Controllers/DateRangeSelectionController', [
    'Core/core-merge',
    'Controls/Date/Controllers/RangeSelectionController',
-   'Controls/Date/interface/IDateRangeSelectable',
+   'Controls/_dateRange/interfaces/IDateRangeSelectable',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date'
 ], function(

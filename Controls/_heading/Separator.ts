@@ -19,7 +19,6 @@ import 'css!theme?Controls/heading';
     * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
     *
     * @mixes Controls/_heading/Separator/SeparatorStyles
-    * @mixes Controls/interface/ICaption
     */
 
    /**

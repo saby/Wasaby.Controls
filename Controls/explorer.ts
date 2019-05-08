@@ -1,6 +1,6 @@
 /**
- * explorers library
- * @library Controls/explorers
+ * explorer library
+ * @library Controls/explorer
  * @includes View Controls/_explorer/View
  * @public
  * @author Kraynov D.

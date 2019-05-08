@@ -28,7 +28,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 
             myCfg.closeOnOutsideClick = true;
             myCfg.className = 'controls-PreviewerController';
-            Previewer.superclass.open.call(self, myCfg, require('Controls/popup').PreviewerController);
+            Previewer.superclass.open.call(self, myCfg, 'Controls/popupTemplate:PreviewerController');
          }
       };
 
