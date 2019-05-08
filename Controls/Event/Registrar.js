@@ -1,6 +1,6 @@
 define('Controls/Event/Registrar',
-   ['Controls/_event/Registrar'],
+   ['Controls/event'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Registrar;
    });

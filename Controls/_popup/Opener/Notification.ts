@@ -1,7 +1,6 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
-import NotificationController = require('Controls/_popup/Opener/Notification/NotificationController');
 import {parse as load} from 'Core/library';
 
       /**
@@ -111,7 +110,7 @@ import {parse as load} from 'Core/library';
           */
          open: function(popupOptions) {
             if (isNewEnvironment()) {
-               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), NotificationController);
+               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/popupTemplate:NotificationController');
             } else {
                _private.compatibleOpen(this, popupOptions);
             }

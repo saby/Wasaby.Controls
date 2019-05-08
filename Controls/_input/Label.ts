@@ -1,7 +1,7 @@
 import Env = require('Env/Env');
 import Control = require('Core/Control');
 import entity = require('Types/entity');
-import template = require('wml!Controls/Label/Label');
+import template = require('wml!Controls/_input/Label/Label');
 
       /**
        * Label.
@@ -90,4 +90,4 @@ import template = require('wml!Controls/Label/Label');
       Label._theme = ['Controls/input'];
 
       export = Label;
-   
+

@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/InfoBox/InfoBoxController',
-   ['Controls/_popup/Opener/InfoBox/InfoBoxController'],
+   ['Controls/popupTemplate'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.InfoBoxController;
    });
