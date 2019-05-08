@@ -33,7 +33,7 @@ define('Controls/Date/MonthView', [
     * @extends Core/Control
     * @mixes Controls/Date/interface/IMonth
     * @control
-    * @public
+    * @private
     * @author Миронов А.Ю.
     * @demo Controls-demo/Date/MonthView
     *

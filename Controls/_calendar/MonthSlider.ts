@@ -15,7 +15,7 @@ import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
  * @extends Core/Control
  * @mixes Controls/_calendar/interface/IMonth
  * @mixes Controls/Date/interface/IRangeSelectable
- * @mixes Controls/Date/interface/IDateRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public
  * @author Миронов А.Ю.
