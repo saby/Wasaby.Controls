@@ -97,7 +97,11 @@
    <ws:if data="{{itemData.isEditing}}">
       <div attr:style="{{itemData.editingRowStyles}}">
          <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-            <ws:partial template="partialGridSupportItem"></ws:partial>
+            <ws:partial template="partialGridSupportItem"
+                        currentColumn="{{itemData.getCurrentColumn()}}"
+                        currentColumnKey="{{itemData.getCurrentColumnKey()}}"
+                        itemData="{{itemData}}"
+                        highlightOnHover="{{highlightOnHover}}"/>
          </ws:for>
       </div>
    </ws:if>

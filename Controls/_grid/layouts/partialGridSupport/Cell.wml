@@ -7,11 +7,11 @@
             attr:style="{{ _options.currentColumn.gridCellStyles }}"
             attr:class="{{ getCellClasses() }}"
 
-            on:click="_onClick()"
-            on:mousemove="_onMouseMoveHandler()"
-            on:mouseenter="_onMouseEnter()"
-            on:mouseleave="_onMouseLeave()"
-            on:mousedown="_onMouseDown()"
-            on:wheel="_onWheel()"
-            on:contextmenu="_onContextMenu()"
-            on:swipe="_onSwipe()"/>
+            on:click="_callHandler(_options.itemData.dispItem)"
+            on:mousemove="_callHandler(_options.itemData)"
+            on:mouseenter="_callHandler(_options.itemData)"
+            on:mouseleave="_callHandler(_options.itemData)"
+            on:mousedown="_callHandler(_options.itemData)"
+            on:wheel="_callHandler(_options.itemData)"
+            on:contextmenu="_callHandler(_options.itemData)"
+            on:swipe="_callHandler(_options.itemData)"/>

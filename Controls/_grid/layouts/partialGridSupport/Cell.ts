@@ -6,41 +6,20 @@ import {CssClassList} from "Controls/Utils/CssClassList";
 class Cell extends Control {
     protected _template: Function = template;
 
-    getCellClasses() {
+    getCellClasses(): string {
         let
             itemData = this._options.itemData,
-            isNeedToHighlight = this._options.highlightOnHover !== false && itemData.isHovered;
+            isNeedToHighlight = this._options.highlightOnHover !== false && <boolean>itemData.isHovered;
 
         return  CssClassList.add('controls-ListView__itemV')
-                            .add('controls-Grid__row_'+ itemData.style || 'default')
+                            .add('controls-Grid__row_'+ (itemData.style || 'default'))
                             .add('controls-Grid_row-cell_hovered', isNeedToHighlight)
-                            .add('controls-Grid__row_highlightOnHover_' + itemData.style || 'default')
+                            .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default'))
                             .compile();
     }
-
-    _onClick(event) {
-        this._options.eventHandlers.click(event, this._options.itemData.dispItem);
-    }
-    _onMouseEnter(event) {
-        this._options.eventHandlers.mouseenter(event, this._options.itemData);
-    }
-    _onMouseLeave(event) {
-        this._options.eventHandlers.mouseleave(event, this._options.itemData);
-    }
-    _onMouseMoveHandler(event) {
-        this._options.eventHandlers.mousemove(event, this._options.itemData);
-    }
-    _onMouseDown(event) {
-        this._options.eventHandlers.mousedown(event, this._options.itemData);
-    }
-    _onWheel(event) {
-        this._options.eventHandlers.wheel(event, this._options.itemData);
-    }
-    _onContextMenu(event) {
-        this._options.eventHandlers.contextmenu(event, this._options.itemData);
-    }
-    _onSwipe(event) {
-        this._options.eventHandlers.swipe(event, this._options.itemData);
+    
+    private _callHandler(event, item): void {
+        this._options.eventHandlers[event.type](event, item);
     }
 
 }

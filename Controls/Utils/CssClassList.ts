@@ -72,14 +72,14 @@ class StaticCssClassList {
  *
  *     let
  *         cell = { ... },
- *         cellClassList = new CssClassList({
+ *         cellClassList = new cellClassList({
  *              'item_cell': true,
  *              'item_cell_default': cell.style === 'default',
  *         });
  *
- *     rowClassList.add('item_cell_size_'+cell.size);
+ *     cellClassList.add('item_cell_size_'+cell.size);
  *     ...
- *     rowClassList.add('never_added_class', false)
+ *     cellClassList.add('never_added_class', false)
  *                 .add('item_cell_grouped', cell.parent.isGroup);
  *
  *     cell.classList = cellClassList.compile();
@@ -118,8 +118,10 @@ class CssClassList {
      * @static
      * @public
      */
-    static add = (className: string, shouldAdd: boolean = true) => StaticCssClassList.add(className, shouldAdd);
-
+    static add(className: string, shouldAdd: boolean = true): CssClassListChain {
+        return StaticCssClassList.add(className, shouldAdd);
+    }
+    
     /**
      * Returns class list.
      * Adds class only if the value of its key in class list object is true.
@@ -161,7 +163,9 @@ class CssClassList {
      * @static
      * @public
      */
-    static compile = (classList: ClassListObject = {}): string => StaticCssClassList.compile(classList);
+    static compile(classList: ClassListObject): string {
+        return StaticCssClassList.compile(classList);
+    }
 }
 
 export {
