@@ -47,6 +47,7 @@ type ItemsIndexes = {
     stop: number;
 };
 
+
 /**
  * The size of the placeholders that should be displayed instead of the "excessive" items.
  *
@@ -63,10 +64,13 @@ type PlaceholdersSizes = {
 
 
 /**
+ *
  * @class Controls/_list/Controllers/VirtualScroll
- * @author Rodionov E.A.
+ * @mixes Controls/_list/interface/IVirtualScroll
+ *
  * @public
- * */
+ * @author Родионов Е.А.
+ */
 class VirtualScroll {
 
     private readonly _virtualSegmentSize: number = 20;
