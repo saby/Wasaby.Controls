@@ -8,6 +8,9 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
 import {calcFooterRowIndex} from "../_list/utils/RowIndexUtil";
 
+const FIXED_HEADER_ZINDEX = 4;
+const STICKY_HEADER_ZINDEX = 3;
+
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex) {
@@ -151,8 +154,31 @@ var
             return result;
         },
 
+        isFixedCell: function(params) {
+           if (params.multiSelectVisibility === 'hidden') {
+              return params.columnIndex === 0;
+           }
+           return params.columnIndex <= 1;
+        },
+
+        getHeaderZIndex: function(params) {
+           return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+        },
+
+        getColumnScrollCellClasses: function(params) {
+           return _private.isFixedCell(params) ? ' controls-Grid__cell_fixed' : ' controls-Grid__cell_transform';
+        },
+
         getItemColumnCellClasses: function(current) {
-            var cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
+            var
+               cellClasses = 'controls-Grid__row-cell';
+            if (current.columnScroll) {
+                cellClasses += _private.getColumnScrollCellClasses(current);
+            } else {
+                cellClasses += ' controls-Grid__cell_fit';
+            }
+            cellClasses += current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover';
+
             var currentStyle = current.style || 'default';
 
             cellClasses += _private.prepareRowSeparatorClasses(current);
@@ -520,8 +546,23 @@ var
                     column: this._headerColumns[this._curHeaderColumnIndex],
                     index: columnIndex
                 };
+
+            if (this.isStickyHeader()) {
+               headerColumn.zIndex = _private.getHeaderZIndex({
+                  columnIndex: columnIndex,
+                  multiSelectVisibility: this._options.multiSelectVisibility
+               });
+            }
+
             if (!stickyUtil.isStickySupport()) {
                 cellClasses = cellClasses + ' controls-Grid__header-cell_static';
+            }
+
+            if (this._options.columnScroll) {
+                cellClasses += _private.getColumnScrollCellClasses({
+                    columnIndex: columnIndex,
+                    multiSelectVisibility: this._options.multiSelectVisibility
+                });
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -620,6 +661,20 @@ var
                     column: this._resultsColumns[columnIndex],
                     index: columnIndex
                 };
+
+            if (this.isStickyHeader()) {
+                resultsColumn.zIndex = _private.getHeaderZIndex({
+                    columnIndex: columnIndex,
+                    multiSelectVisibility: this._options.multiSelectVisibility
+                });
+            }
+
+            if (this._options.columnScroll) {
+                cellClasses += _private.getColumnScrollCellClasses({
+                    columnIndex: columnIndex,
+                    multiSelectVisibility: this._options.multiSelectVisibility
+                });
+            }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
@@ -841,6 +896,8 @@ var
             current.isPartialGridSupport = GridLayoutUtil.isPartialSupport;
             current.isNoGridSupport = GridLayoutUtil.isNoSupport;
 
+            current.columnScroll = this._options.columnScroll;
+
             current.style = this._options.style;
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -855,8 +912,12 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (GridLayoutUtil.isPartialSupport && !current.isGroup) {
-                current.rowIndex = _private.calcRowIndexByKey(this, current.key);
+            if (GridLayoutUtil.isPartialSupport || current.columnScroll) {
+                if (current.isGroup) {
+                    current.rowIndex = _private.calcGroupRowIndex(this, current);
+                } else {
+                    current.rowIndex = _private.calcRowIndexByKey(this, current.key);
+                }
             }
 
             if (this._options.groupingKeyCallback) {
@@ -865,7 +926,6 @@ var
 
                     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
                     if (GridLayoutUtil.isPartialSupport) {
-                        current.rowIndex = _private.calcGroupRowIndex(this, current);
                         current.gridGroupStyles = GridLayoutUtil.toCssString([
                             {
                                 name: 'grid-row',
@@ -964,8 +1024,10 @@ var
                 }
 
                 // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                if (GridLayoutUtil.isPartialSupport) {
+                if (GridLayoutUtil.isPartialSupport || current.columnScroll) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
+                } else {
+                    currentColumn.gridCellStyles = '';
                 }
                 return currentColumn;
             };

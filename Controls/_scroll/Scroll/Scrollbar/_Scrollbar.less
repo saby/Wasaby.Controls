@@ -3,15 +3,34 @@
    border-style: solid;
    display: inline-block;
    border-color: transparent;
-   padding: 0 @margin_Scrollbar;
-   border-width: @margin_Scrollbar 0;
-   width: @width_Scrollbar + 2 * @margin_Scrollbar;
-   transition: width @animation-duration_Scrollbar ease-in-out;
    .box-sizing();
 }
 
-.controls-VScrollbar__thumb {
+.controls-VScrollbar_vertical {
+   width: @width_Scrollbar + 2 * @margin_Scrollbar;
+   padding: 0 @margin_Scrollbar;
+   border-width: @margin_Scrollbar 0;
+   transition: width @animation-duration_Scrollbar ease-in-out;
+}
+
+.controls-VScrollbar_horizontal {
+   height: @width_Scrollbar + 2 * @margin_Scrollbar;
+   padding: @margin_Scrollbar 0;
+   border-width: 0 @margin_Scrollbar;
+   transition: height @animation-duration_Scrollbar ease-in-out;
+}
+
+.controls-VScrollbar__thumb_vertical {
    min-height: @min-height_Scrollbar-thumb;
+   width: 100%;
+}
+
+.controls-VScrollbar__thumb_horizontal {
+   min-width: @min-height_Scrollbar-thumb;
+   height: 100%;
+}
+
+.controls-VScrollbar__thumb {
    border-radius: @border-radius_Scrollbar-thumb;
    background-color: @bg_Scrollbar-thumb_normal;
 }
@@ -20,9 +39,14 @@
    background-color: @bg_Scrollbar-thumb_inverted;
 }
 
-.controls-VScrollbar:hover,
-.controls-VScrollbar_dragging {
+.controls-VScrollbar_vertical:hover,
+.controls-VScrollbar_vertical_dragging {
    width: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
+}
+
+.controls-VScrollbar_horizontal:hover,
+.controls-VScrollbar_horizontal_dragging {
+   height: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
 }
 
 .controls-VScrollbar:hover .controls-VScrollbar__thumb,
