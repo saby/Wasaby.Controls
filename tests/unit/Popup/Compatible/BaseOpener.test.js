@@ -258,6 +258,7 @@ define(
             newConfig.closeOnTargetScroll = true;
             newConfig.closeOnTargetHide = true;
             newConfig.trackTarget = false;
+            newConfig.disableActions = true;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(config.templateOptions.closeOnTargetHide, true);
@@ -270,6 +271,7 @@ define(
             assert.equal(newConfig.width, newConfig.templateOptions.width);
             assert.equal(newConfig.height, newConfig.templateOptions.height);
             assert.isTrue(newConfig.templateOptions.canMaximize);
+            assert.isTrue(config.templateOptions.hideCross);
             assert.equal(newConfig.templateOptions.templateOptions.isPanelMaximized, newConfig.maximized);
             delete newConfig.context;
             delete newConfig.templateOptions.context;

@@ -25,7 +25,7 @@ define('Controls-demo/Slider/Base/SliderBaseDemo',
             this._maxValue = 100;
             this._scaleStep = 20;
             this._precision = 0;
-            this._value = 100;
+            this._value = 80;
             this._size = 'm';
             this._sizeSource = new source.Memory({
                idProperty: 'title',
