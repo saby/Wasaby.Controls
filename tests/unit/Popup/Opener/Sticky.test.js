@@ -299,10 +299,23 @@ define(
          });
 
          it('Sticky check overflow', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1920,
+               height: 1040
+            });
             let popupCfg = { ...getPositionConfig() };
+            let tCoords = { ...targetCoords};
             let position = { right: 0 };
-            let overflow = StickyStrategy._private.checkOverflow(popupCfg, targetCoords, position, 'horizontal');
+            let overflow = StickyStrategy._private.checkOverflow(popupCfg, tCoords, position, 'horizontal');
             assert.equal(overflow, 0);
+
+            position = {
+               left: 1800
+            };
+            popupCfg.sizes.width = 178;
+            tCoords.leftScroll = 0;
+            overflow = StickyStrategy._private.checkOverflow(popupCfg, targetCoords, position, 'horizontal');
+            assert.equal(overflow, 58);
          });
 
          it('Sticky invert position', () => {
