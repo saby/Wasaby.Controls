@@ -47,6 +47,7 @@ type ItemsIndexes = {
     stop: number;
 };
 
+
 /**
  * The size of the placeholders that should be displayed instead of the "excessive" items.
  *
@@ -63,10 +64,13 @@ type PlaceholdersSizes = {
 
 
 /**
+ *
  * @class Controls/_list/Controllers/VirtualScroll
- * @author Rodionov E.A.
+ * @mixes Controls/_list/interface/IVirtualScroll
+ *
  * @public
- * */
+ * @author Родионов Е.А.
+ */
 class VirtualScroll {
 
     private readonly _virtualSegmentSize: number = 20;
@@ -191,8 +195,8 @@ class VirtualScroll {
         }
     }
 
-    public updateItemsIndexesOnScrolling(scrollTop: number): void {
-        if (this._isScrollInPlaceholder(scrollTop)) {
+    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
+        if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
             let
                 offsetHeight = 0,
                 heightsCount = this._itemsHeights.length;
@@ -220,13 +224,13 @@ class VirtualScroll {
     }
 
 
-    private _isScrollInPlaceholder(scrollTop: number): boolean {
+    private _isScrollInPlaceholder(scrollTop: number, containerHeight: number = 0): boolean {
         let itemsHeight = 0,
             topPlaceholderSize = this._getItemsHeight(0, this._startIndex);
         for (let i = this._startIndex; i < this._stopIndex; i++) {
             itemsHeight += this._itemsHeights[i];
         }
-        return (scrollTop <= topPlaceholderSize || scrollTop >= (itemsHeight + topPlaceholderSize));
+        return (scrollTop <= topPlaceholderSize || (scrollTop+containerHeight) >= (itemsHeight + topPlaceholderSize));
     }
 
     private _getItemsHeight(startIndex: number, stopIndex: number): number {

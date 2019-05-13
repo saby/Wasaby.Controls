@@ -29,8 +29,8 @@ define('Controls-demo/Slider/Range/SliderRangeDemo',
             this._scaleStep = 20;
             this._precision = 0;
             this._size = 'm';
-            this._startValue = 0;
-            this._endValue = 100;
+            this._startValue = 20;
+            this._endValue = 80;
             this._sizeSource = new source.Memory({
                idProperty: 'title',
                data: [
