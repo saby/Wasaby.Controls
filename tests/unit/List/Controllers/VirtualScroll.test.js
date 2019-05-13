@@ -345,24 +345,38 @@ define([
          assert.deepEqual(itemsHeights, vsInstance.ItemsHeights);
       });
 
-      it('isScrollInPlaceholder', function() {
+      it('_isScrollInPlaceholder', function() {
          var
             vsInstance = new list.VirtualScroll({
                virtualPageSize: 5,
                virtualSegmentSize: 3
             });
          vsInstance._startIndex = 30;
-         vsInstance._topPlaceholderSize = 500;
-         vsInstance._bottomPlaceholderSize = 340;
+         vsInstance._stopIndex = 35;
 
+         // Mock itemsHeights placeholder
+         vsInstance._itemsHeights = new Array(50).fill(0);
+         vsInstance._itemsHeights[0] = 500;
          vsInstance._itemsHeights[30] = 10;
          vsInstance._itemsHeights[31] = 20;
          vsInstance._itemsHeights[32] = 30;
          vsInstance._itemsHeights[33] = 20;
          vsInstance._itemsHeights[34] = 10;
+         vsInstance._itemsHeights[35] = 340;
+         // topPlaceholder = 500
+         // itemsHeight = 90
+         // bottomPlaceholder = 340
 
-         assert.isTrue(vsInstance._isScrollInPlaceholder(300));
-         assert.isFalse(!vsInstance._isScrollInPlaceholder(550));
+
+         //Top placeholder visible
+         assert.isTrue(vsInstance._isScrollInPlaceholder(300, 100));
+
+         assert.isFalse(vsInstance._isScrollInPlaceholder(510, 50));
+
+         //Bottom placeholder visible
+         assert.isTrue(vsInstance._isScrollInPlaceholder(500, 100));
+
+         // Bottom  placeholder visible
          assert.isTrue(vsInstance._isScrollInPlaceholder(700));
       });
 
