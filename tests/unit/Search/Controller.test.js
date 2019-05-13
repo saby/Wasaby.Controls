@@ -46,8 +46,9 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
    var defaultOptions = getDefaultOptions();
 
    var getSearchController = function() {
-      var controller = new searchMod.Controller(defaultOptions);
-      controller.saveOptions(defaultOptions);
+      var options = getDefaultOptions();
+      var controller = new searchMod.Controller(options);
+      controller.saveOptions(options);
       return controller;
    };
 
@@ -113,11 +114,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
       it('_private.abortCallback', function() {
          var controller = getSearchController();
+         var filterChanged = false;
+         var filter = { 'Разворот': 'С разворотом', 'usePages': 'full' };
+
          controller._viewMode = 'search';
          controller._misspellValue = 'testStr';
          controller._loading = true;
          controller._searchValue = 'test';
-         var filterChanged = false;
+         controller._options.parentProperty = 'test';
 
          controller._notify = function(eventName) {
             if (eventName = 'filterChanged') {
@@ -127,7 +131,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          controller._searchContext = { updateConsumers: function() {} };
 
-         searchMod.Controller._private.abortCallback(controller);
+         searchMod.Controller._private.abortCallback(controller, filter);
 
          assert.isTrue(filterChanged);
          assert.isFalse(controller._viewMode === 'search');
@@ -135,18 +139,25 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._misspellValue, '');
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, '');
+         assert.deepEqual(filter, {});
       });
 
       it('_private.searchStartCallback', function() {
-         var self = {};
-         var forceUpdateCalled = false;
-         
-         self._forceUpdate = function() {
-            forceUpdateCalled = true;
-         };
-         searchMod.Controller._private.searchStartCallback(self);
-         assert.isTrue(self._loading);
-         assert.isTrue(forceUpdateCalled);
+         var controller = getSearchController();
+         var filter = {};
+
+         //case 1. Without parentProperty
+         searchMod.Controller._private.searchStartCallback(controller, filter);
+         assert.isTrue(controller._loading);
+         assert.deepEqual(filter, {});
+
+         controller._options.parentProperty = 'test';
+         controller._loading = false;
+
+         //case 2. With parentProperty
+         searchMod.Controller._private.searchStartCallback(controller, filter);
+         assert.isTrue(controller._loading);
+         assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
       });
 
       it('_private.needUpdateSearchController', function() {
