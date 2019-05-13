@@ -125,10 +125,10 @@ define([
                selectedKey: '15',
                keyProperty: 'karambola'
             },
-            expected = 'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs__item_extreme controls-Tabs__item_extreme_first controls-Tabs_style_secondary__item_state_selected controls-Tabs__item_state_selected',
-            expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_default controls-Tabs__item_state_default controls-Tabs__item_type_photo',
+            expected = 'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs__item_extreme controls-Tabs__item_extreme_first controls-Tabs_style_secondary__item_state_selected controls-Tabs__item_state_selected controls-Tabs__item_notShrink',
+            expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_default controls-Tabs__item_state_default controls-Tabs__item_type_photo controls-Tabs__item_notShrink',
             expected3 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_default controls-Tabs__item_state_default controls-Tabs__item_canShrink',
-            expected4 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_extreme controls-Tabs__item_extreme_last controls-Tabs__item_state_default';
+            expected4 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_extreme controls-Tabs__item_extreme_last controls-Tabs__item_state_default controls-Tabs__item_notShrink';
          assert.equal(expected, tabsMod.Buttons._private.prepareItemClass(item, 1, options, 144), 'wrong order cross-brwoser styles');
          assert.equal(expected2, tabsMod.Buttons._private.prepareItemClass(item2, 2, options, 144), 'wrong order cross-brwoser styles');
          assert.equal(expected3, tabsMod.Buttons._private.prepareItemClass(item3, 2, options, 144));
