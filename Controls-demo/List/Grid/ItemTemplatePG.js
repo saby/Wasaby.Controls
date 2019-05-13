@@ -69,7 +69,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                header: data.fullHeader,
                markedKey: 4,
                displayProperty: 'title',
-               itemTemplate: 'wml!Controls/List/Grid/Item',
+               itemTemplate: 'Controls/grids:ItemTemplate',
                itemTemplateProperty: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;
