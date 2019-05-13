@@ -57,10 +57,10 @@ import 'css!theme?Controls/lookup';
          return self._fieldWrapperWidth;
       },
 
-      getFieldWrapperMinHeight: function(self, recount) {
+      getFieldWrapperMinHeight: function(self) {
          var fieldWrapperStyles;
 
-         if (self._fieldWrapperMinHeight === null || recount) {
+         if (self._fieldWrapperMinHeight === null) {
             fieldWrapperStyles = getComputedStyle(self._fieldWrapper);
             self._fieldWrapperMinHeight = parseInt(fieldWrapperStyles['min-height'], 10) || parseInt(fieldWrapperStyles['height'], 10);
          }
@@ -398,12 +398,9 @@ import 'css!theme?Controls/lookup';
       _resize: function() {
          var
             oldFieldWrapperWidth = _private.getFieldWrapperWidth(this),
-            newFieldWrapperWidth = _private.getFieldWrapperWidth(this, true),
-            oldFieldWrapperMinHeight = _private.getFieldWrapperMinHeight(this),
-            newFieldWrapperMinHeight = _private.getFieldWrapperMinHeight(this, true);
+            newFieldWrapperWidth = _private.getFieldWrapperWidth(this, true);
 
-         if (_private.isNeedCalculatingSizes(this._options) &&
-            (newFieldWrapperWidth !== oldFieldWrapperWidth || oldFieldWrapperMinHeight !== newFieldWrapperMinHeight)) {
+         if (_private.isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
             _private.calculatingSizes(this, this._options);
             this._forceUpdate();
          }
