@@ -7,6 +7,12 @@ import _SearchController = require('Controls/Controllers/_SearchController');
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 
+const SERVICE_FILTERS = {
+   HIERARCHY: {
+      'Разворот': 'С разворотом',
+      'usePages': 'full'
+   }
+};
 
 var _private = {
    getSearchController: function (self) {
@@ -41,7 +47,6 @@ var _private = {
       }
 
       self._searchValue = filter[self._options.searchParam] || '';
-      self._forceUpdate();
       self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
 
@@ -58,17 +63,31 @@ var _private = {
          self._searchValue = '';
          self._inputSearchValue = '';
          self._misspellValue = '';
-         self._forceUpdate();
+
+         if (self._options.parentProperty) {
+            _private.deleteServiceFilters(filter);
+         }
          self._notify('filterChanged', [filter]);
       }
    },
 
-   searchStartCallback: function (self) {
-      self._loading = true;
+   assignServiceFilters: function(filter:object):void {
+      Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
+   },
 
-      /* need to call _forceUpdate, because searchStartCallback is not event handler,
-         this is callback function that called asynchronously. */
-      self._forceUpdate();
+   deleteServiceFilters: function(filter:object):void {
+      for (var i in SERVICE_FILTERS.HIERARCHY) {
+         if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
+            delete filter[i];
+         }
+      }
+   },
+
+   searchStartCallback: function (self, filter:object):void {
+      if (self._options.parentProperty && self._viewMode !== 'search') {
+         _private.assignServiceFilters(filter);
+      }
+      self._loading = true;
    },
 
    needUpdateSearchController: function (options, newOptions) {
