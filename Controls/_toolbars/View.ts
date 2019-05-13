@@ -217,7 +217,7 @@ var _private = {
                 rootKey: item.get(self._options.keyProperty),
                 showHeader: item.get('showHeader'),
                 headConfig: {
-                    icon: item.get('icon'),
+                    icon: item.get('icon') + (item.get('icon').split('') > 1 ? '' : ' icon-medium'),
                     caption: item.get('title'),
                     iconStyle: item.get('iconStyle')
                 }
