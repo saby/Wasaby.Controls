@@ -82,6 +82,10 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         if (cfg.hasOwnProperty('disableActions')) {
+            cfg.templateOptions.hideCross = cfg.disableActions;
+         }
+
          cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
          cfg.templateOptions.closeOnTargetScroll = cfg.closeOnTargetScroll || false;
          cfg.templateOptions.closeOnTargetHide = cfg.closeOnTargetHide || false;
