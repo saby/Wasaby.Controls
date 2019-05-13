@@ -8,6 +8,7 @@
  * @includes Number Controls/_decorator/Number
  * @includes PhoneNumber Controls/_decorator/PhoneNumber
  * @includes WrapURLs Controls/_decorator/WrapURLs
+ * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @public
  * @author Kraynov D.
  */
