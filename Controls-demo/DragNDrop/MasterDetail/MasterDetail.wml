@@ -10,7 +10,7 @@
                <div>
                   <Controls.list:Mover name="masterMover" parentProperty="Раздел"/>
                   <Controls.list:Container>
-                     <Controls.Container.MasterList>
+                     <Controls.masterDetail:List>
                         <Controls.treeGrid:View
                            itemsReadyCallback="{{_itemsReadyCallbackMaster}}"
                            itemsDragNDrop="{{true}}"
@@ -32,7 +32,7 @@
                               </ws:partial>
                            </ws:draggingTemplate>
                         </Controls.treeGrid:View>
-                     </Controls.Container.MasterList>
+                     </Controls.masterDetail:List>
                   </Controls.list:Container>
                </div>
             </Controls.list:DataContainer>
