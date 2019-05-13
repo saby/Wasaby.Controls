@@ -5,7 +5,7 @@
  * Created by kraynovdo on 07.02.2018.
  */
 define([
-   'Controls/List/Controllers/ScrollPaging',
+   'Controls/_list/Controllers/ScrollPaging',
    'Types/source',
    'Core/core-instance'
 ], function(ScrollPaging, sourceLib, cInstance){

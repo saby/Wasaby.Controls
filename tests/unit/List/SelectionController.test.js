@@ -1,5 +1,5 @@
 define([
-   'Controls/List/BaseControl/SelectionController',
+   'Controls/_list/BaseControl/SelectionController',
    'Types/collection',
    'Types/entity',
    'Controls/Controllers/Multiselect/Selection'

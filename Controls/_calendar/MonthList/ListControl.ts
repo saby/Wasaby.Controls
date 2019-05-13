@@ -2,7 +2,7 @@ import {factory} from 'Types/chain';
 import {Query} from 'Types/source';
 import {ListControl} from 'Controls/list';
 import tmpl = require('wml!Controls/_calendar/MonthList/ListControl');
-import baseControlTmpl = require('wml!Controls/List/ListControl/ListControl');
+import baseControlTmpl = require('wml!Controls/_list/ListControl/ListControl');
 
 /**
  * Plain list control with custom item template. Can load data from data source and and can enrich data from .

@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_list/List" scope="{{_options}}" />

@@ -14,7 +14,7 @@ import DefaultResultsTemplate = require('wml!Controls/_grid/Results');
 import 'wml!Controls/_grid/Results';
 import 'wml!Controls/_grid/ColGroup';
 import 'css!theme?Controls/grid';
-import 'Controls/List/BaseControl/Scroll/Emitter';
+import {ScrollEmitter} from 'Controls/list';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
 function isEqualWithSkip(obj1, obj2, skipFields) {
