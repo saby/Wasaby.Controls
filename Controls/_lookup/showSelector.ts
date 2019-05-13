@@ -15,7 +15,7 @@ var showSelector = function (self, config, multiSelect) {
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
-                    self._selectCallback(result);
+                    self._selectCallback(null, result);
                     selectorOpener.close();
                 }
             }
