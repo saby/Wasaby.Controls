@@ -1,0 +1,11 @@
+<Controls._lookup.ControllerMultipleInput
+      name="controller"
+      scope="{{_options}}"
+      multiSelect="{{true}}"
+      attr:class="controls-Lookup controls-MultipleInput">
+   <Controls._lookup.MultipleInput.LookupView scope="{{_options}}">
+      <ws:itemTemplate>
+         <ws:partial template="{{_options.itemTemplate}}" attr:class="controls-MultipleInput__SelectedCollection_item"/>
+      </ws:itemTemplate>
+   </Controls._lookup.MultipleInput.LookupView>
+</Controls._lookup.ControllerMultipleInput>

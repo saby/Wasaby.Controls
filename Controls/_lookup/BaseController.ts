@@ -1,11 +1,10 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_lookup/SelectedCollection/Controller');
+import template = require('wml!Controls/_lookup/BaseController/BaseController');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {Controller as SourceController} from 'Controls/source';
 import isEqual = require('Core/helpers/Object/isEqual');
 import collection = require('Types/collection');
-import merge = require('Core/core-merge');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import LoadService = require('Controls/History/LoadService');
@@ -227,40 +226,17 @@ import LoadService = require('Controls/History/LoadService');
          _private.setSelectedKeys(this, selectedKeys);
       },
 
-      showSelector: function(templateOptions) {
-         var
-            self = this,
-            multiSelect = this._options.multiSelect,
-            selectorOpener = this._children.selectorOpener,
-            selectorTemplate = this._options.selectorTemplate;
+      showSelector: function() {
 
-         if (selectorTemplate) {
-            templateOptions = merge(templateOptions || {}, {
-               selectedItems: _private.getItems(this).clone(),
-               multiSelect: multiSelect,
-               handlers: {
-                  onSelectComplete: function(event, result) {
-                     self._selectCallback(null, result);
-                     selectorOpener.close();
-                  }
-               }
-            }, {clone: true});
-
-            selectorOpener.open({
-               opener: self,
-               isCompoundTemplate: this._options.isCompoundTemplate,
-               templateOptions: merge(selectorTemplate.templateOptions || {}, templateOptions, {clone: true})
-            });
-         }
       },
 
       _selectCallback: function(event, result) {
          var prepareItems;
 
+         result = this._notify('selectorCallback', [_private.getItems(this), result]) || result;
          this._setItems(result);
-         prepareItems = _private.getItems(this);
+         prepareItems = _private.getItems(this); // give the record in the correct format
 
-         // give the record in the correct format
          if (prepareItems && prepareItems.getCount() && this._options.historyId) {
             _private.getHistoryService(this).addCallback(function(historyService) {
                historyService.update(prepareItems.at(0), {$_history: true});
