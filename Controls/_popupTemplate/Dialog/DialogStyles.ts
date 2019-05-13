@@ -12,6 +12,7 @@
  * @css @line-height_dialogTemplate_caption line-height of caption.
  *
  * @css @font-size_dialogTemplate_head Font-size of heading.
+ * @css @font-weight_dialogTemplate_head Font-weight of heading.
  * @css @spacing_dialogTemplate-between-head-border-right Spacing between head and border-right.
  *
  * @css @color-border_DialogTemplate Color border.
