@@ -1,5 +1,7 @@
-<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
-                         bind:textValue="item.textValue"
-                         displayProperty="title"
-                         keyProperty="key"
-                         source="{{item.source}}"/>
+<div>
+    <Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
+                             bind:textValue="item.textValue"
+                             displayProperty="title"
+                             keyProperty="key"
+                             source="{{item.source}}"/>
+</div>
