@@ -2,9 +2,7 @@
  * Created by as.krasilnikov on 26.12.2017.
  */
 import lists = require('Controls/list');
-import ItemsViewModel = require('Controls/List/ItemsViewModel');
 import entity = require('Types/entity');
-import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -59,7 +57,7 @@ import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
             var self = this;
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
-            this._itemsModel = new ItemsViewModel({
+            this._itemsModel = new lists.ItemsViewModel({
                groupingKeyCallback: cfg.groupingKeyCallback,
                groupMethod: cfg.groupMethod,
                groupTemplate: cfg.groupTemplate,
@@ -162,7 +160,7 @@ import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
             }
-            itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
+            itemsModelCurrent.iconStyle = lists.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';

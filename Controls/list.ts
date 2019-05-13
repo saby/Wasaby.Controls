@@ -57,6 +57,8 @@ import RowIndexUtil = require('Controls/_list/utils/RowIndexUtil');
 import BaseControl = require('Controls/_list/BaseControl');
 import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
+import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
+import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 
 import {Paging} from 'Controls/paging';
 
@@ -92,5 +94,7 @@ export {
     RowIndexUtil,
     BaseControl,
     ScrollEmitter,
-    SearchItemsUtil
+    SearchItemsUtil,
+    getStyle,
+    ItemsViewModel
 };
