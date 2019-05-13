@@ -18,7 +18,7 @@ define('Controls/Input/Money',
        * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IOnlyPositive
        *
-       * @public
+       * @private
        * @demo Controls-demo/Input/Money/Money
        *
        * @author Журавлев М.С.
