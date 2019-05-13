@@ -566,12 +566,12 @@ var _private = {
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
-    handleListScroll: function(self, scrollTop, position) {
+    handleListScroll: function(self, scrollTop, position, clientHeight: number) {
         var hasMoreData;
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
         if (self._virtualScroll) {
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop);
+            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
             _private.applyVirtualScroll(self);
         }
 
@@ -1269,7 +1269,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
         }
