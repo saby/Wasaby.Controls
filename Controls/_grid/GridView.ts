@@ -123,6 +123,14 @@ var
             }
         },
 
+        /*
+        * When using a custom template, the scope of the base template becomes the same as the scope of custom template.
+        * Because of this, the base handlers are lost. To fix this, need to remember the handlers where the scope is
+        * still right and set them. But current event system prevent do this, because it looks for given event handler
+        * only on closest control (which can be Browser, Explorer or smth else because of template scope).
+        * Therefore it is required to create Cell as control with and subscribe on events in it.
+        * https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4
+        */
         registerHandlersForPartialSupport: function (self, listModel) {
             listModel.setHandlersForPartialSupport({
                 'mouseenter': self._onItemMouseEnter.bind(self),
