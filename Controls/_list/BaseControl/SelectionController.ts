@@ -144,6 +144,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
     },
 
     _beforeUnmount: function () {
+        this._options.listModel.updateSelection({});
         this._multiselection = null;
         this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
         this._onCollectionChangeHandler = null;
