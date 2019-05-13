@@ -548,8 +548,8 @@ import dataSource = require('Controls/dataSource');
       },
 
       _notifyHandler: function(eventName, args) {
-         this._notify(eventName, args, { bubbling: true });
          this._notifyToOpener(eventName, args);
+         this._notify(eventName, args, { bubbling: true });
       },
 
       _notifyToOpener: function(eventName, args) {

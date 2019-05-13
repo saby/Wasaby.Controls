@@ -237,5 +237,21 @@ define([
 
          FC.destroy();
       });
+
+      it('_notifyHandler', () => {
+         let createComponent = function(Component) {
+            return new Component.Controller();
+         };
+         let name = 'deletesuccessed',
+             args = {},
+             sandbox = sinon.sandbox.create(),
+             component = createComponent(form);
+
+         sandbox.stub(component, '_notifyToOpener');
+         sandbox.stub(component, '_notify');
+         component._notifyHandler(name, args);
+         sinon.assert.callOrder(component._notifyToOpener, component._notify);
+         sandbox.restore();
+      });
    });
 });
