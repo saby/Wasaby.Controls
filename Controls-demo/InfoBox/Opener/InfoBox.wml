@@ -14,32 +14,32 @@
       </div>
    </ws:for>
 
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__top-right"
                               attr:style="position: absolute; right: 0px; top: 6px"
                               on:mouseenter="_open(_cfgRight)"/>
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__bottom-right"
                               attr:style="position: absolute; right: 0px; bottom: 5px"
                               on:mouseenter="_open(_cfgRight)"/>
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__top-left"
                               attr:style="position: absolute; left: 0px; top: 6px"
                               on:mouseenter="_open(_cfgLeft)"/>
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__bottom-left"
                               attr:style="position: absolute; left: 0px; bottom: 5px"
                               on:mouseenter="_open(_cfgLeft)"/>
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__top"
                               attr:style="position: absolute; top: 0px;left:calc(50% - 12px)"
                               on:mouseenter="_open(_cfgTop)"/>
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium"
                               attr:class="controls-InfoBoxDemo__bottom"
                               attr:style="position: absolute; bottom: 0px;left:calc(50% - 12px)"
@@ -54,7 +54,7 @@
             <div class="controls-InfoBoxDemo-targets controls-InfoBoxDemo__{{item.items[0].cfg.size}}">
             <ws:for data="config in item.items">
                  <div class="controls-InfoBoxDemo-icon">
-                <Controls._buttons.Button viewMode ='link'
+                <Controls.buttons:Button viewMode ='link'
                                           attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.position}}"
                                           icon="icon-EmptyMessage icon-{{config.cfg.size}}"
                                           on:mouseenter="_open(config.cfg)"/>
