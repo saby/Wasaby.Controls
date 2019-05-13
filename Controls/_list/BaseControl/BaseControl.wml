@@ -11,6 +11,16 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
+    <ws:if data="{{_pagingNavigation}}">
+        <div class="controls-BaseControl__footerPaging_wrapper">
+            <Controls.paging:Paging showDigits = "{{true}}"
+                                    pagesCount = "{{_knownPagesCount}}"
+                                    selectedPage = "{{_currentPage}}"
+                                    on:selectedPageChanged="__pagingChangePage()"
+            ></Controls.paging:Paging>
+
+        </div>
+    </ws:if>
     <ws:if data="{{_shouldDrawFooter}}">
         <ws:partial template="wml!Controls/_list/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
     </ws:if>
