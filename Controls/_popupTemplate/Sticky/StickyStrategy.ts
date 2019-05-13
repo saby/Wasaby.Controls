@@ -56,7 +56,7 @@ import cMerge = require('Core/core-merge');
          if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
-         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + _private.getMargins(popupCfg, direction) + _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         return position[isHorizontal ? 'left' : 'top'] + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
       invertPosition: function(popupCfg, direction) {
