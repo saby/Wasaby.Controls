@@ -40,7 +40,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/Grid/SortButtonStyles
     *
     * @control
-    * @public
+    * @private
     * @author Авраменко А.С.
     * @category List
     * @demo Controls-demo/List/TreeGrid/BasePG

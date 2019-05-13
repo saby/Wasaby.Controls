@@ -1,6 +1,6 @@
 define('Controls/DragNDrop/Container/Compound',
-   ['Controls/_dragnDrop/Controller/Compound'],
+   ['Controls/dragnDrop'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Compound;
    });

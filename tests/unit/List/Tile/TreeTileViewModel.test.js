@@ -48,7 +48,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
          treeTileViewModel.goToNext();
          cur = treeTileViewModel.getCurrent();
          assert.isTrue(!!cur.isHovered);
-         assert.isTrue(!!cur.hasSeparator);
+         assert.isTrue(!!cur.beforeItemTemplate);
          assert.equal(cur.position, 'string with style');
          assert.equal(cur.zoomCoefficient, 1.5);
       });

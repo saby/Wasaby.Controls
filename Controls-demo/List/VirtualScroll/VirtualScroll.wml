@@ -1,42 +1,45 @@
 <div class="demo-wrapper-virt">
     <div class="demo-control_block">
-        <h2>Controls/list:View</h2>
-        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
-            <ws:content>
-                <Controls.list:View
-                        source="{{_viewSource}}"
-                        markedKey="{{2}}"
-                        keyProperty="id"
-                        multiSelectVisibility="visible"
-                        displayProperty="title"
-                        bind:selectedKeys="_listSelectedKeys"
-                        virtualScrolling="{{true}}">
-                    <ws:navigation source="page" view="infinity">
-                        <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
-                    </ws:navigation>
-                </Controls.list:View>
-            </ws:content>
-        </Controls.scroll:Container>
+        <h2>Controls/list:View    90 / 30</h2>
+        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <Controls.list:View
+                    name="myList1"
+                    source="{{_viewSource1}}"
+                    markedKey="{{3}}"
+                    keyProperty="id"
+                    multiSelectVisibility="visible"
+                    bind:selectedKeys="_listSelectedKeys"
+                    displayProperty="title"
+                    virtualPageSize="{{90}}"
+                    virtualSegmentSize="{{30}}"
+                    virtualScrolling="{{true}}">
+                <ws:navigation source="page" view="infinity">
+                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                </ws:navigation>
+            </Controls.list:View>
+        </Controls.Container.Scroll>
     </div>
+
     <div class="demo-control_block">
-        <h2>Controls/grid:View</h2>
-        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
-            <ws:content>
-                <Controls.grid:View
-                        source="{{_viewSource}}"
-                        name="gridVirt"
-                        virtualScrolling="{{true}}"
-                        bind:selectedKeys="_gridSelectedKeys"
-                        multiSelectVisibility="visible"
-                        columns="{{_columns}}"
-                        rowSeparatorVisibility="{{true}}"
-                        keyProperty="id">
-                    <ws:virtualScrollConfig virtualPageSize="{{70}}" virtualSegmentSize="{{30}}"/>
-                    <ws:navigation source="page" view="infinity">
-                        <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
-                    </ws:navigation>
-                </Controls.grid:View>
-            </ws:content>
-        </Controls.scroll:Container>
+        <h2>Controls/list:View    20 / 5</h2>
+        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <Controls.list:View
+                    name="myList2"
+                    source="{{_viewSource1}}"
+                    markedKey="{{3}}"
+                    keyProperty="id"
+                    itemActions="{{_itemActions}}"
+                    multiSelectVisibility="visible"
+                    bind:selectedKeys="_listSelectedKeys"
+                    displayProperty="title"
+                    virtualPageSize="{{20}}"
+                    virtualSegmentSize="{{5}}"
+                    virtualScrolling="{{true}}">
+                <ws:navigation source="page" view="infinity">
+                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                </ws:navigation>
+            </Controls.list:View>
+        </Controls.Container.Scroll>
     </div>
+
 </div>

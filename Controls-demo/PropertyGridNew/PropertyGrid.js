@@ -33,6 +33,7 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
                   editorOptions: {
                      minLines: 3
                   },
+                  editorClass: 'controls-demo-pg-text-editor',
                   group: 'text',
                   type: 'text'
                },
@@ -59,7 +60,8 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
                {
                   caption: 'Тип фона',
                   name: 'backgroundType',
-                  group: 'enum'
+                  group: 'enum',
+                  editorClass: 'controls-demo-pg-enum-editor'
                },
             ];
 

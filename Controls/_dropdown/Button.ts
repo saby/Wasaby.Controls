@@ -13,7 +13,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @mixes Controls/interface/ITooltip
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/List/interface/IHierarchy
+ * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/INavigation
@@ -52,7 +52,8 @@ var Button = Control.extend({
    },
 
    _onItemClickHandler: function (event, result) {
-      return this._notify('onMenuItemActivate', [result[0]]);
+      //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
+      return this._notify('menuItemActivate', [result[0]]) || this._notify('onMenuItemActivate', [result[0]]);
    }
 
 });

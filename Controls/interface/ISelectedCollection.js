@@ -24,7 +24,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/List/interface/IList#dataLoadCallback
+    * @name Controls/_list/interface/IList#dataLoadCallback
     * @cfg {Function} Callback function that will be called when list data loaded by source
     */
 
@@ -32,8 +32,8 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @remark
-    * Base itemTemplate for Controls/lookup:Input: "wml!Controls/Selector/Lookup/itemTemplate".
-    * Base itemTemplate for Controls.lookup:Selector: "wml!Controls.lookup:Selector/itemTemplate".
+    * Base itemTemplate for Controls/lookup:Input: "wml!Controls.lookup:ItemTemplate".
+    * Base itemTemplate for Controls.lookup:Selector: "wml!Controls.lookup:ButtonItemTemplate".
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function|String} - Template for render item content.</li>
@@ -71,7 +71,7 @@ define('Controls/interface/ISelectedCollection', [
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls.lookup:Selector/itemTemplate"
+    *          <ws:partial template="wml!Controls.lookup:ButtonItemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"

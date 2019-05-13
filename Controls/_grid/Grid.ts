@@ -22,7 +22,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
-    * @mixes Controls/_list/interface/IGridControl
+    * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/_list/interface/IDraggable
     *

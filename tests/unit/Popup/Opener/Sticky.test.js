@@ -371,6 +371,48 @@ define(
             assert.equal(position.bottom, 840);
             assert.equal(position.left, 250);
          });
+
+         it('StickyStrategy setMaxSizes', () => {
+            let popupCfg = {
+               config: {
+                  maxWidth: 100,
+                  width: 50,
+                  minWidth: 10,
+                  maxHeight: 200,
+                  height: 150,
+                  minHeight: 110
+               }
+            };
+            let position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, popupCfg.config.maxWidth);
+            assert.equal(position.width, popupCfg.config.width);
+            assert.equal(position.minWidth, popupCfg.config.minWidth);
+            assert.equal(position.maxHeight, popupCfg.config.maxHeight);
+            assert.equal(position.height, popupCfg.config.height);
+            assert.equal(position.minHeight, popupCfg.config.minHeight);
+         });
+
+         it('Centered corner sticky', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1920,
+               height: 1040
+            });
+            let popupCfg = { ...getPositionConfig() };
+            popupCfg.corner.horizontal = 'center';
+
+            popupCfg.sizes.width = 100;
+            popupCfg.sizes.height = 100;
+
+            let position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.left, 300);
+
+            popupCfg.corner.horizontal = 'left';
+            popupCfg.corner.vertical = 'center';
+
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.bottom, 740);
+         });
       });
    }
 );

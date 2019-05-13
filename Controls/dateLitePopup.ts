@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import getCurrentPeriod = require('Core/helpers/Date/getCurrentPeriod');
-import IPeriodSimpleDialog from './_dateLitePopup/IPeriodLiteDialog';
+import IPeriodSimpleDialog from './_dateLitePopup/IDateLitePopup';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_dateLitePopup/DateLitePopup');
 import itemTmpl = require('wml!Controls/_dateLitePopup/Item');
@@ -187,7 +187,7 @@ var Component = BaseControl.extend({
     },
 
     _onWheel: function (event) {
-        let wheelDelta = event.nativeEvent.wheelDelta;
+        let wheelDelta = event.nativeEvent.deltaY;
         // In the year selection mode, years are located in another direction.
         if (this._options.chooseQuarters || this._options.chooseHalfyears || this._options.chooseMonths) {
             wheelDelta = -wheelDelta;

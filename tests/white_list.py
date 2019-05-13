@@ -62,3 +62,7 @@ no_icon_btn # int/VDOM/pages/vdom_toggle.py:29
 icon_button_big_btn	# int/VDOM/pages/vdom_toggle.py:35
 groups_2_btn	# int/VDOM/pages/vdom_toggle.py:39
 scroll_big_btn	# int/VDOM/pages/vdom_toggle.py:41
+bottom_right_btn  # int/VDOM/pages/vdom_toggle.py:42     reg/VDOM/pages/vdom_toggle.py:158
+top_right_btn  # int/VDOM/pages/vdom_toggle.py:43        reg/VDOM/pages/vdom_toggle.py:159 
+scroll_title_btn  # reg/VDOM/pages/vdom_toggle.py:275
+sub_menu_elm  # reg/VDOM/pages/vdom_toggle.py:279

@@ -16,7 +16,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @control
  * @public
  * @category Input
- * @author Водолазских А.А.
+ * @author Mironov A.U.
  * @demo Controls-demo/Input/Date/RangeLink
  *
  */
@@ -60,6 +60,7 @@ var Component = BaseControl.extend({
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
                 headerType: 'link',
+                captionFormatter: this._options.captionFormatter,
                 closeButtonEnabled: true,
                 quantum: this._options.ranges,
                 minQuantum: this._options.minRange,
@@ -90,7 +91,7 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge(coreMerge({}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+    return coreMerge(coreMerge({minRange: 'day'}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function () {

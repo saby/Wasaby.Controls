@@ -16,16 +16,16 @@
          <Controls.dataSource:error.Container
             name="errorContainer"
             viewConfig="{{ __error }}"
-            scope="{{ _options }}"
+            on:dialogClosed="_onCloseErrorDialog()"
          >
-            <!--
-                scope="{{  _options }}" в error.Container нужен для того чтобы не ломать цепочку биндингов
-                убрать после исправления ошибки:
-                https://online.sbis.ru/doc/8dbda473-c716-4a9e-9cbb-1aadfdc96e66
-            -->
-            <ws:partial
-               template="{{ _options.content }}"
-               record="{{ _record }}"/>
+            <ws:if data="{{ _record }}">
+               <ws:partial
+                    template="{{ _options.content }}"
+                    record="{{ _record }}"/>
+            </ws:if>
+            <ws:else>
+               <invisible-node />
+            </ws:else>
          </Controls.dataSource:error.Container>
       </div>
    </Controls._form.Crud>

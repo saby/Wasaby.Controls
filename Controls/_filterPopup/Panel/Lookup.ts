@@ -76,13 +76,19 @@ import 'css!theme?Controls/filterPopup';
       _selectedKeysChanged: function(event, keys) {
          this._passed = true;
          this._notify('selectedKeysChanged', [keys]);
+      },
+
+      // when using Utils/tmplNotify, bubbling event comes with incorrect arguments to the filter panel
+      // https://online.sbis.ru/opendoc.html?guid=88fed89c-9f87-440e-8549-aa6f468f7477
+      _textValueChanged: function(event, textValue) {
+         this._notify('textValueChanged', [textValue]);
       }
    });
 
    Lookup._private = _private;
    Lookup.getDefaultOptions = function() {
       return {
-         lookupTemplateName: 'Controls/Selector/Lookup'
+         lookupTemplateName: 'Controls/_lookup/Lookup'
       };
    };
 

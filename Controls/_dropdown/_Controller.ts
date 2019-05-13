@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import historyUtils = require('Controls/History/dropdownHistoryUtils');
+import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -117,14 +117,6 @@ var _private = {
       }
    },
 
-   // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
-   closeHandler: function (event) {
-      if (this._options.close) {
-         this._options.close();
-      }
-      this._notify('_close', []);
-   },
-
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
          if (typeof (options.open) === 'function') {
@@ -146,7 +138,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/List/interface/IHierarchy
+ * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
@@ -188,7 +180,6 @@ var _Controller = Control.extend({
 
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
-      this._onClose = _private.closeHandler.bind(this);
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoad) {
          if (receivedState) {
@@ -223,13 +214,6 @@ var _Controller = Control.extend({
       }
    },
 
-   _afterUpdate: function (options) {
-      // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
-      if (options.selectedKeys !== this._options.selectedKeys && this._items && this._children.DropdownOpener.isOpened()) {
-         this._open();
-      }
-   },
-
    _open: function (event) {
       // Проверям что нажата левая кнопка мыши
       if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
@@ -241,7 +225,7 @@ var _Controller = Control.extend({
          var config = {
             templateOptions: {
                items: self._items,
-               width: self._options.width,
+               width: self._options.width !== undefined ? self._container.offsetWidth : undefined,
                hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down')
             },
             target: self._container,

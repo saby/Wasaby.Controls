@@ -13,9 +13,10 @@
                      itemsDragNDrop="{{true}}"
                      multiSelectVisibility="onhover"
                      itemsReadyCallback="{{_itemsReadyCallbackFirst}}"
-                     itemActions="{{_itemActionsFirst}}">
+                     itemActions="{{_itemActionsFirst}}"
+                     markerVisibility="hidden">
                      <ws:itemTemplate>
-                        <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
+                        <ws:partial template="Controls/list:ItemTemplate" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
                            <ws:contentTemplate attr:class="demo-DragNDrop__list_itemContent">
                               <div class="demo-DragNDrop__list_itemContent">
                                  <img class="demo-DragNDrop__list_item_icon" src="{{itemTemplate.itemData.item.get('image')}}" />
@@ -72,7 +73,7 @@
          </Controls.list:Container>
       </div>
    </Controls.list:DataContainer>
-   <!--<h2>Перемещение в папку (реестр в виде плитки)</h2>
+   <h2>Перемещение в папку (реестр в виде плитки)</h2>
    <Controls.list:DataContainer source="{{_viewSourceThird}}" keyProperty="id" attr:class="demo-DragNDrop__tile">
       <div>
          <Controls.list:Mover name="listMoverThird" parentProperty="parent"/>
@@ -86,6 +87,7 @@
                displayProperty="title"
                imageProperty="image"
                viewMode="tile"
+               tileScalingMode="outside"
                itemsReadyCallback="{{_itemsReadyCallbackThird}}">
                <ws:draggingTemplate>
                   <ws:partial template="Controls/dragnDrop:DraggingTemplate"
@@ -102,5 +104,5 @@
             </Controls.explorer:View>
          </Controls.list:Container>
       </div>
-   </Controls.list:DataContainer>-->
+   </Controls.list:DataContainer>
 </div>

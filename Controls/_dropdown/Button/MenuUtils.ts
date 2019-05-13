@@ -10,7 +10,7 @@ import buttonLib = require('Controls/buttons');
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       var offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
 
-      if ((!options.icon || options.viewMode === 'toolButton') && options.viewMode !== 'button') {
+      if ((!options.icon || options.viewMode === 'toolButton')) {
          offsetClassName += ('__' + options.size);
       } else if (options.icon) {
          sizes.forEach(function(size) {

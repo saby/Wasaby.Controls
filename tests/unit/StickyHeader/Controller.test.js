@@ -217,28 +217,6 @@ define([
                assert.include(component._fixedHeadersStack.top, 'sticky2');
                assert.notInclude(component._fixedHeadersStack.top, 'sticky1');
             });
-            it('Should increase headers height if stackable header is fixed', function() {
-               component._fixedHandler(event, {
-                  id: 'sticky1',
-                  fixedPosition: 'top',
-                  mode: 'stackable',
-                  height: 10
-               });
-
-               assert.equal(component._headersHeight.top, 10);
-            });
-            it('Should decrease headers height if stackable header is unfixed', function() {
-               component._fixedHeadersStack.top = ['sticky1'];
-               component._headersHeight.top = 10;
-               component._fixedHandler(event, {
-                  id: 'sticky1',
-                  fixedPosition: '',
-                  prevPosition: 'top',
-                  mode: 'stackable',
-                  height: 10
-               });
-               assert.equal(component._headersHeight.top, 0);
-            });
             it('Shadow Optimization Check', function() {
                component._fixedHeadersStack.top = [];
                component._fixedHandler(event, {
@@ -265,28 +243,6 @@ define([
                   height: 10
                });
                sinon.assert.called(component._children.stickyHeaderShadow.start);
-            });
-            it('Should not change headers height if replaceable header is fixed', function() {
-               component._fixedHandler(event, {
-                  id: 'sticky1',
-                  fixedPosition: '',
-                  prevPosition: 'top',
-                  mode: 'replaceable',
-                  height: 10
-               });
-               assert.equal(component._headersHeight.top, 0);
-            });
-            it('Should decrease headers height if stackable header is unfixed', function() {
-               component._fixedHeadersStack.top = ['sticky1'];
-               component._headersHeight.top = 10;
-               component._fixedHandler(event, {
-                  id: 'sticky1',
-                  fixedPosition: '',
-                  prevPosition: 'top',
-                  mode: 'replaceable',
-                  height: 10
-               });
-               assert.equal(component._headersHeight.top, 10);
             });
             it('Should not notify new state if one header registered', function() {
                component._fixedHandler(event, {

@@ -1,13 +1,13 @@
 /**
  * Interface for Grid (table view).
  *
- * @interface Controls/_list/interface/IGridControl
+ * @interface Controls/_grid/interface/IGridControl
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/_list/interface/IGridControl#ladderProperties
+ * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Array of fields that should be sticky.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @example
@@ -63,7 +63,7 @@
  */
 
 /**
- * @name Controls/_list/interface/IGridControl#header
+ * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
@@ -87,21 +87,21 @@
  */
 
 /**
- * @name Controls/_list/interface/IGridControl#columns
+ * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {Array.<Column>} Describes grid's columns.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
- * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_list/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_list/interface/IGridControl#columns columns} option, if necessary.
+ * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  */
 
 /**
- * @name Controls/_list/interface/IGridControl#stickyHeader
+ * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Fix the table header.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @default true
  */
 
 /**
- * @name Controls/_list/interface/IGridControl#rowSeparatorVisibility
+ * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Allows to visible or hide row separator.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @default false

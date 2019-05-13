@@ -1,6 +1,7 @@
 .controls-Container__popup{
    position: absolute;
    .flexbox(); //тоже непонятно зачем, нужно посмотреть где используется и удалить отсюда
+   .flex-direction(column);
 }
 .controls-Container__overlay {
    position: fixed;
@@ -14,4 +15,8 @@
       top: -1000%;
       height: 2000%;
    }
+}
+
+.controls-Popup__template {
+   flex-grow: 1;
 }

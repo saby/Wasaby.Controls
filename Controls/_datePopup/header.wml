@@ -16,6 +16,7 @@
       startValue="{{_headerRangeModel.startValue}}"
       endValue="{{_headerRangeModel.endValue}}"
       emptyCaption="{{_options.emptyCaption}}"
+      captionFormatter="{{_options.captionFormatter}}"
       showNextArrow="{{false}}"
       showPrevArrow="{{false}}"
       showUndefined="{{true}}"

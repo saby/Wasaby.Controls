@@ -17,7 +17,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/_input/Mask
-       * @extends Control/_input/Base
+       * @extends Controls/_input/Base
        *
        * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputMaskValue
