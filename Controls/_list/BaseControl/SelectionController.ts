@@ -3,6 +3,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
+import template = require('wml!Controls/_list/BaseControl/SelectionController');
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -100,6 +101,7 @@ var _private = {
 };
 
 var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/SelectionController.prototype */{
+    _template: template,
     _beforeMount: function (options) {
         var self = this;
         return _private.getMultiselection(options).addCallback(function (multiselectionInstance) {
@@ -144,6 +146,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
     },
 
     _beforeUnmount: function () {
+        this._options.listModel.updateSelection({});
         this._multiselection = null;
         this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
         this._onCollectionChangeHandler = null;

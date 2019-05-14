@@ -436,7 +436,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             };
             dropdownList._openSelectorDialog(config);
 
-            assert.deepEqual(resultOptions.templateOptions, expectedTemplateOptions);
+            assert.deepEqual(resultOptions.templateOptions.items, expectedTemplateOptions.items);
+            assert.deepEqual(resultOptions.templateOptions.caption, expectedTemplateOptions.caption);
+            assert.deepEqual(resultOptions.templateOptions.selectedItems, expectedTemplateOptions.selectedItems);
+            assert.isTrue(!!resultOptions.templateOptions.handlers.onSelectComplete);
             assert.equal(resultOptions.template, 'selectorTemplate');
 
             config.selectedKeys = [null];

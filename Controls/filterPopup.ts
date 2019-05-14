@@ -12,6 +12,8 @@
  * @includes PropertyGridStyles Controls/_filter/Button/Panel/PropertyGrid/Styles
  * @includes PanelStyles Controls/_filter/Button/Panel/Styles
  * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
+ * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
+ * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @public
  * @author Kraynov D.
  */

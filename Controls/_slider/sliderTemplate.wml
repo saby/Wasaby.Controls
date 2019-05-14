@@ -1,6 +1,4 @@
 <div class="my_class_slider">
-   <Controls.dragnDrop:Container name="dragNDrop"
-                                  on:dragmove="_onDragMoveHandler()">
       <div class="controls-Slider_theme-{{_options.theme}}
                   controls-Slider{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
                   {{!_options.borderVisible ? (' controls-Slider' + (_options.size=='m'  ? '_big' : '_small') + '_withoutBorder_theme-'+_options.theme)}}">
@@ -15,6 +13,10 @@
                        style="left:{{point.position}}%;">
                   </div>
                </ws:for>
+               <Controls.dragnDrop:Container name="dragNDrop"
+                                             on:dragstart="_onDragNDropHandler()"
+                                             on:dragmove="_onDragNDropHandler()"
+                                             on:dragend="_onDragNDropHandler()">
                <div class="controls-Slider__line__wrapper_theme-{{_options.theme}}
                            controls-Slider__line__wrapper{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
                            controls-Slider__line__wrapper{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}">
@@ -29,6 +31,7 @@
 
                   </div>
                </div>
+               </Controls.dragnDrop:Container>
             </div>
          </div>
          <div if="{{_scaleData && !_options.borderVisible}}" class="controls-Slider__scale_theme-{{_options.theme}}">
@@ -37,5 +40,4 @@
             </ws:for>
          </div>
       </div>
-   </Controls.dragnDrop:Container>
 </div>

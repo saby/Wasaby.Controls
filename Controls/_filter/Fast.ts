@@ -229,7 +229,10 @@ import 'css!theme?Controls/dropdown';
             if (receivedState) {
                this._configs = receivedState.configs;
                this._items = receivedState.items;
-               _private.calculateStateSourceControllers(this._configs, this._items);
+               if (options.items) {
+                  _private.prepareItems(this, options.items);
+                  _private.calculateStateSourceControllers(this._configs, this._items);
+               }
             } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);

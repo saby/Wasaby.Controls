@@ -16,7 +16,7 @@ var _private = {
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
  *
  * @class Controls/_history/Menu
- * @extends Controls/Button/Menu
+ * @extends Controls/dropdown:Button
  * @control
  * @public
  * @author Герасимов А.М.
