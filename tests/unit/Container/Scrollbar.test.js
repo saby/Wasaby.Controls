@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/Scroll/Scrollbar',
+      'Controls/_scroll/Scroll/Scrollbar',
       'Core/core-merge'
    ],
    function(Scrollbar, coreMerge) {

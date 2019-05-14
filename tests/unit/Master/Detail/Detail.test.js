@@ -1,4 +1,4 @@
-define(['Controls/Container/MasterDetail'], function(MasterDetail) {
+define(['Controls/_masterDetail/Base'], function(MasterDetail) {
    'use strict';
    describe('Controls.Container.MasterDetail', function() {
       let
