@@ -62,7 +62,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          var
              additionalWidth = afterFieldWrapperWidth,
              fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
-             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
+             fieldWrapperWidth = self._getFieldWrapperWidth();
 
          if (!readOnly && multiSelect) {
             additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
