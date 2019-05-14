@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
+import isEqual = require('Core/helpers/Object/isEqual');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 
@@ -197,8 +198,8 @@ var _Controller = Control.extend({
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
       }
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
-         newOptions.navigation !== this._options.navigation ||
-         newOptions.filter !== this._options.filter) {
+         !isEqual(newOptions.navigation, this._options.navigation) ||
+         !isEqual(newOptions.filter, this._options.filter)) {
          this._sourceController = null;
          if (newOptions.lazyItemsLoad) {
             /* source changed, items is not actual now */
