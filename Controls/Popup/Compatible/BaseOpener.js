@@ -413,7 +413,8 @@ function(cMerge,
          };
 
          if (cfg.hasOwnProperty('closeOnOutsideClick')) {
-            cfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
+            newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
+            newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
          }
 
          if (cfg.hasOwnProperty('closeChildWindows')) {
