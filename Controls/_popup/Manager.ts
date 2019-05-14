@@ -93,7 +93,7 @@ import Vdom = require('Vdom/Vdom');
          },
 
          activatePopup: function(item) {
-            if (item.controller.needRestoreFocus()) {
+            if (item.controller.needRestoreFocus(item.isActive)) {
                var maxId = _private.getMaxZIndexPopupIdForActivate();
                if (maxId) {
                   var child = ManagerController.getContainer().getPopupById(maxId);
