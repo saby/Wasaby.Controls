@@ -81,7 +81,7 @@ var _private = {
  *
  * @class Controls/_history/Service
  * @extends Core/core-extend
- * @implements Types/source:ISource
+ * @implements Types/_source/ICrud
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Герасимов А.М.
@@ -135,7 +135,7 @@ var _private = {
  * false - BL return items without data
  */
 
-var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
+var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,
    _historyId: null,
    _historyIds: null,
