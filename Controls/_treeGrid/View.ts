@@ -7,6 +7,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
 
    /**
     * Hierarchical list with custom item template. Can load data from data source.
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>

@@ -3,6 +3,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 
 /**
  * Container for list components.
+ * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
  *
  * @class Controls/_operations/Container
  * @extends Core/Control

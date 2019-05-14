@@ -155,6 +155,24 @@ define(
             assert.isTrue(dataLoadCallbackCalled);
          });
 
+         it('_beforeUpdate new templateOptions', function() {
+            let dropdownController = getDropdownController(config),
+               opened = false, isOpen = false;
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: () => { opened = true; },
+                  isOpened: () => { return isOpen; }
+               }
+            };
+            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            assert.isFalse(opened);
+
+            isOpen = true;
+            dropdownController._items = itemsRecords;
+            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            assert.isTrue(opened);
+         });
+
          it('_beforeUpdate source', () => {
             let dropdownController = getDropdownController(config),
                opened = false;
@@ -225,15 +243,25 @@ define(
             });
          });
 
-         it('_beforeUpdate new filter', () => {
+         it('_beforeUpdate new filter', (done) => {
             let configFilter = Clone(config),
                selectedItems = [];
+            configFilter.filter = {id: '1'};
+            configFilter.selectedKeys = ['2'];
             configFilter.dataLoadCallback = function(items) {
                selectedItems = items;
             };
             let dropdownController = getDropdownController(configFilter);
+            dropdownController._beforeMount(configFilter, {}, itemsRecords);
+            dropdownController._beforeUpdate(configFilter);
+            dropdownController._children.DropdownOpener = {
+               isOpened: function() {
+                  return false;
+               }
+            };
             dropdownController._beforeUpdate({...configFilter, filter: {}}).addCallback(function() {
-               assert.equal(selectedItems[0], itemsRecords.at(1));
+               assert.deepStrictEqual(selectedItems[0].getRawData(), itemsRecords.at(1).getRawData());
+               done();
             });
          });
 

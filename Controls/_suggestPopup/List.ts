@@ -55,6 +55,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 /**
  * Container for list inside Suggest.
+ * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggestPopup/List
  * @extends Core/Control

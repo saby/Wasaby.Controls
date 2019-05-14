@@ -6,6 +6,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
    /**
     * Container for content that can work with multiselection.
     * Puts selection in child context.
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
     *
     * @class Controls/_operations/Controller
     * @extends Core/Control

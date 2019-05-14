@@ -21,7 +21,6 @@
 
 .controls-Dropdown__text_enabled:hover.theme_@{themeName} {
    cursor: pointer;
-   color: @color_Dropdown-text_hovered;
 
    .controls-Dropdown__text-wrapper.theme_@{themeName} {
       text-decoration: underline;
@@ -42,6 +41,9 @@
 
 .controls-Dropdown__defaultItem.theme_@{themeName} {
    color: @color_Dropdown-text;
+   &:hover {
+      color: @color_Dropdown-text_hovered;
+   }
 }
 
 .controls-Dropdown__emptyItem.theme_@{themeName} {

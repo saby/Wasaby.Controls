@@ -9,7 +9,7 @@
          <ws:partial
             template="{{_options.template}}"
             scope="{{_options.templateOptions}}"
-            class="controls-InfoBox__content{{!_options.floatCloseButton ? ' controls-InfoBox__message_margin'}}">
+            class="controls-InfoBox__content controls-InfoBox__message {{!_options.floatCloseButton ? ' controls-InfoBox__message_margin'}}">
          </ws:partial>
       </ws:if>
       <ws:else>
