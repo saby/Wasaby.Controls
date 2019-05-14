@@ -37,7 +37,6 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
     *
-    * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
     * @cssModifier controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields
     *
     * @control

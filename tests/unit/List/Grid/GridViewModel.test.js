@@ -37,7 +37,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             displayProperty: 'title',
             width: '1fr',
             valign: 'top',
-            style: 'default'
+            style: 'default',
+            textOverflow: 'ellipsis'
          },
          {
             displayProperty: 'price',
@@ -661,6 +662,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 1,
                keyProperty: cfg.keyProperty,

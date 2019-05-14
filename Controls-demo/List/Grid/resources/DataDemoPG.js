@@ -115,6 +115,11 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 width: '200px'
              },
              {
+                displayProperty: 'awards',
+                width: '50px',
+                textOverflow: 'ellipsis'
+             },
+             {
                 displayProperty: 'rating',
                 align: 'right',
                 template: 'wml!Controls-demo/List/Grid/resources/DemoRating'
@@ -128,6 +133,9 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
           partialHeader: [
              {
                 title: 'So long header for film name that we need to set width'
+             },
+             {
+                title: 'Awards'
              },
              {
                 title: 'Rating',
