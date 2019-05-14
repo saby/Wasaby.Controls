@@ -1,4 +1,4 @@
-<Controls.Container.MasterDetail attr:class="demo-DragNDrop__MasterDetail">
+<Controls.masterDetail:Base attr:class="demo-DragNDrop__MasterDetail">
    <ws:master>
       <div>
          <div class="ws-flexbox demo-DragNDrop__MasterDetail_search">
@@ -81,4 +81,4 @@
          </Controls.scroll:Container>
       </div>
    </ws:detail>
-</Controls.Container.MasterDetail>
+</Controls.masterDetail:Base>
