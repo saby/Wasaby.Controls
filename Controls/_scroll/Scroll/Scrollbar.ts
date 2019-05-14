@@ -25,6 +25,12 @@ import 'css!theme?Controls/scroll';
        * @cfg {Number} Размер контента на который проецируется тонкий скролл.
        * @remark Не может быть меньше размера контейнера или 0
        *
+       * @name Controls/Container/resources/Scrollbar#direction
+       * @cfg {String} Direction of the scroll bar
+       * @variant vertical Vertical scroll bar.
+       * @variant horizontal Horizontal scroll bar.
+       * @default vertical
+       *
        * @name Controls/_scroll/resources/Scrollbar#style
        * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
        * @variant normal стандартная схема
