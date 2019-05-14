@@ -80,9 +80,9 @@ var _private = {
  * Source working with the service of InputHistory
  *
  * @class Controls/_history/Service
- * @extends Types/entity:Abstract
- * @implements Types/source:ISource
- * @mixes Types/entity:OptionsToPropertyMixin
+ * @extends Core/core-extend
+ * @implements Types/_source/ICrud
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Герасимов А.М.
  * @example
@@ -135,7 +135,7 @@ var _private = {
  * false - BL return items without data
  */
 
-var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
+var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,
    _historyId: null,
    _historyIds: null,
