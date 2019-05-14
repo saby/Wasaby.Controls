@@ -155,6 +155,24 @@ define(
             assert.isTrue(dataLoadCallbackCalled);
          });
 
+         it('_beforeUpdate new templateOptions', function() {
+            let dropdownController = getDropdownController(config),
+               opened = false, isOpen = false;
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: () => { opened = true; },
+                  isOpened: () => { return isOpen; }
+               }
+            };
+            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            assert.isFalse(opened);
+
+            isOpen = true;
+            dropdownController._items = itemsRecords;
+            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            assert.isTrue(opened);
+         });
+
          it('_beforeUpdate source', () => {
             let dropdownController = getDropdownController(config),
                opened = false;
