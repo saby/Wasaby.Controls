@@ -49,7 +49,7 @@ import 'Controls/decorator';
              * Without it, the height, in the case of an empty value, will be zero.
              * In the case when at the end of the transition to a new line height will be one line less.
              */
-            measuredBlock.innerHTML = textBeforeCursor + '&#65279;';
+            measuredBlock.innerText = textBeforeCursor + '&#65279;';
             container.appendChild(measuredBlock);
             var position = measuredBlock.clientHeight;
             container.removeChild(measuredBlock);
