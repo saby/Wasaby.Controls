@@ -101,6 +101,12 @@
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#columnScroll
+ * @cfg {Boolean} Enable column scroll.
+ * @default false
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Allows to visible or hide row separator.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
