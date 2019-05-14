@@ -398,15 +398,17 @@ var
       },
 
       _scrollMoveHandler: function(e, scrollData) {
-         if (scrollData.position === 'up') {
-            this._pagingState.stateUp = 'disabled';
-            this._pagingState.stateDown = 'normal';
-         } else if (scrollData.position === 'down') {
-            this._pagingState.stateUp = 'normal';
-            this._pagingState.stateDown = 'disabled';
-         } else {
-            this._pagingState.stateUp = 'normal';
-            this._pagingState.stateDown = 'normal';
+         if (this._pagingState.visible) {
+            if (scrollData.position === 'up') {
+               this._pagingState.stateUp = 'disabled';
+               this._pagingState.stateDown = 'normal';
+            } else if (scrollData.position === 'down') {
+               this._pagingState.stateUp = 'normal';
+               this._pagingState.stateDown = 'disabled';
+            } else {
+               this._pagingState.stateUp = 'normal';
+               this._pagingState.stateDown = 'normal';
+            }
          }
       },
 
