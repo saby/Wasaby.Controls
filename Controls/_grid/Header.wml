@@ -71,9 +71,9 @@
    </ws:else>
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
-   <Controls.StickyHeader.Group>
+   <Controls.scroll:Group>
       <ws:partial template="header" listModel="{{ listModel }}" />
-   </Controls.StickyHeader.Group>
+   </Controls.scroll:Group>
 </ws:if>
 <ws:else>
    <ws:partial template="header"/>
