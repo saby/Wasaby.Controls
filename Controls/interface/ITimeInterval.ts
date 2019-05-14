@@ -12,7 +12,6 @@ interface ITimeInterval {
         /**
          * @name Controls/interface/ITimeInterval#mask
          * @cfg {String} TimeInterval.
-         *
          * @variant 'HH:MM'
          * @variant 'HHH:MM'
          * @variant 'HHHH:MM'
