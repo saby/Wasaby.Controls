@@ -1,0 +1,37 @@
+<div name="content" class="{{_transformSelector}}">
+   <style name="contentStyle" data-vdom-ignore="true"></style>
+   <ws:if data="{{_isColumnScrollVisible()}}">
+      <Controls._scroll.Scroll.Scrollbar
+              name="columnScrollbar"
+              position="{{_scrollPosition}}"
+              direction="horizontal"
+              contentSize="{{_contentSize}}"
+              attr:class="controls-ColumnScroll"
+              on:positionChanged="_positionChangedHandler()"/>
+      <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
+      <div class="{{_calculateShadowClasses('end')}}"></div>
+   </ws:if>
+   <ws:partial
+           template="{{_options.content}}"
+           scope="{{_options}}"
+           on:itemClick="_notifyHandler('itemClick')"
+           on:checkboxClick="_notifyHandler('checkboxClick')"
+           on:itemSwipe="_notifyHandler('itemSwipe')"
+           on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+           on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+           on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+           on:afterEndEdit="_notifyHandler('afterEndEdit')"
+           on:itemActionsClick="_notifyHandler('itemActionsClick')"
+           on:actionClick="_notifyHandler('actionClick')"
+           on:dragStart="_notifyHandler('dragStart')"
+           on:dragEnd="_notifyHandler('dragEnd')"
+           on:changeDragTarget="_notifyHandler('changeDragTarget')"
+           on:dragEnter="_notifyHandler('dragEnter')"
+           on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+           on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+           on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+           on:keyDown="_onExplorerKeyDown()"
+           on:sortingChanged="_notifyHandler('sortingChanged')"
+   />
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+</div>
