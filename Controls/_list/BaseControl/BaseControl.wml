@@ -112,7 +112,7 @@
                 name="editInPlace"
                 editingConfig="{{_options.editingConfig}}"
                 on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                on:afterBeginEdit="_onAfterBeginEdit()"
                 on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                 on:afterEndEdit="_notifyHandler('afterEndEdit')"
                 listModel="{{_listViewModel}}"
