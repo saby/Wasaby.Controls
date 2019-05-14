@@ -94,6 +94,8 @@ var _private = {
 /**
  * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
  * @cfg {String} Back heading display style.
+ * @variant primary
+ * @variant secondary
  * @default secondary
  * @see Controls/Heading/Back#style
  */

@@ -1,6 +1,6 @@
 <div class="PageWrap" style="padding-top: 50px;">
    <div class="PageBlock">
-      <div class="PageBlock__title">Controls.Calendar.PeriodSimpleDialog</div>
+      <div class="PageBlock__title">Controls.dateLitePopup</div>
       <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; flex-wrap: wrap; align-items: flex-start;">
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
