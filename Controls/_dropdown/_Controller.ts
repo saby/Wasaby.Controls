@@ -128,6 +128,12 @@ var _private = {
             options.close(args);
          }
       };
+   },
+
+   templateOptionsChanged: function(newOptions, options) {
+      if (newOptions.headTemplate !== options.headTemplate) {
+         return true;
+      }
    }
 };
 
@@ -193,6 +199,9 @@ var _Controller = Control.extend({
    },
 
    _beforeUpdate: function (newOptions) {
+      if (_private.templateOptionsChanged(newOptions, this._options) && this._children.DropdownOpener.isOpened()) {
+         this._open();
+      }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
       }
