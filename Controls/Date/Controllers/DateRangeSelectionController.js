@@ -1,13 +1,13 @@
 define('Controls/Date/Controllers/DateRangeSelectionController', [
    'Core/core-merge',
    'Controls/Date/Controllers/RangeSelectionController',
-   'Controls/_dateRange/interfaces/IDateRangeSelectable',
+   'Controls/dateRange',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date'
 ], function(
    coreMerge,
    RangeSelectionController,
-   IDateRangeSelectable,
+   dateRange,
    CalendarUtils,
    DateUtil
 ) {
@@ -86,14 +86,14 @@ define('Controls/Date/Controllers/DateRangeSelectionController', [
       }
    });
 
-   Component.SELECTION_TYPES = IDateRangeSelectable.SELECTION_TYPES;
+   Component.SELECTION_TYPES = dateRange.IDateRangeSelectable.SELECTION_TYPES;
 
    Component.getDefaultOptions = function() {
-      return coreMerge({}, IDateRangeSelectable.getDefaultOptions());
+      return coreMerge({}, dateRange.IDateRangeSelectable.getDefaultOptions());
    };
 
    Component.getOptionTypes = function() {
-      return coreMerge({}, IDateRangeSelectable.getOptionTypes());
+      return coreMerge({}, dateRange.IDateRangeSelectable.getOptionTypes());
    };
 
    return Component;

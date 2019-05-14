@@ -1,7 +1,7 @@
 define(
    [
-      'Controls/Container/Scroll/ScrollWidthUtil',
-      'Controls/Container/Scroll/ScrollHeightFixUtil'
+      'Controls/_scroll/Scroll/ScrollWidthUtil',
+      'Controls/_scroll/Scroll/ScrollHeightFixUtil'
    ],
    function(ScrollWidthUtil, ScrollHeightFixUtil) {
 
