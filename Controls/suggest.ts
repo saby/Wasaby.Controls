@@ -2,7 +2,9 @@
  * suggest library
  * @library Controls/suggest
  * @includes Input Controls/_suggest/Input
+ * @includes InputStyles Controls/_suggest/Input/Styles
  * @includes _InputController Controls/_suggest/_InputController
+ *
  * @public
  * @author Kraynov D.
  */

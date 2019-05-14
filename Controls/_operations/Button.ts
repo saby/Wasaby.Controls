@@ -4,6 +4,7 @@ import template = require('wml!Controls/_operations/Button/Button');
 
    /**
     * Control for changing the extensibility of the "Controls/_operations/Panel".
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
     *
     * @class Controls/_operations/Button
     * @extends Core/Control
