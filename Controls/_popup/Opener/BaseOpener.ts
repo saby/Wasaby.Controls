@@ -78,7 +78,7 @@ import {parse as parserLib, load} from 'Core/library';
 
          _openPopup: function(cfg, controller) {
             var self = this;
-            this._requireModules(cfg, controller).addCallback(function(result) {
+            this._requireModules(cfg, controller).addCallback((result) => {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
@@ -97,6 +97,8 @@ import {parse as parserLib, load} from 'Core/library';
                   }
                });
                return result;
+            }).addErrback(()=> {
+               self._toggleIndicator(false);
             });
          },
 
@@ -118,10 +120,14 @@ import {parse as parserLib, load} from 'Core/library';
                self._requireModule(config.template),
                self._requireModule(controller)
             ]).then(function(results) {
-               return {
-                  template: results[0],
-                  controller: results[1]
-               };
+               // If Opener was destroyed while template loading, then don't open popup.
+               if (!self._destroyed) {
+                  return {
+                     template: results[0],
+                     controller: results[1]
+                  };
+               }
+               return new Error('Opener was destroyed');
             });
          },
 

@@ -1,7 +1,7 @@
-define(['Controls/List/TileView/TileViewModel', 'Types/collection'], function(TileViewModel, collection) {
+define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(TileViewModel, collection) {
    'use strict';
 
-   describe('Controls/List/TileView/TileViewModel', function() {
+   describe('Controls/_tile/TileView/TileViewModel', function() {
       var
          tileViewModel = new TileViewModel({
             tileMode: 'static',

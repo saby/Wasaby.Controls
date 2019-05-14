@@ -1,7 +1,7 @@
-define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], function(TreeTileViewModel, collection) {
+define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], function(TreeTileViewModel, collection) {
    'use strict';
 
-   describe('Controls/List/TreeTileView/TreeTileViewModel', function() {
+   describe('Controls/_tile/TreeTileView/TreeTileViewModel', function() {
       var
          treeTileViewModel = new TreeTileViewModel({
             tileMode: 'static',

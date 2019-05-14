@@ -7,6 +7,32 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  *
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
  *
+ *
+ * @name Controls/_dropdown/Button#displayProperty
+ * @cfg {String} The name of the field whose value will displayed in menu item.
+ * @default title
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.dropdown:Button source="{{_source}}" displayProperty="title" keyProperty="id"/>
+ * </pre>
+ *
+ * JS:
+ * <pre>
+ *     import sourceLib from "Types/source"
+ *
+ *     _beforeMount() {
+ *         this._source = new sourceLib.Memory({
+ *             idProperty: 'id',
+ *             data: [
+ *                {id: 1, title: 'Name'},
+ *                {id: 2, title: 'Date of change'}
+ *             ]
+ *         });
+ *     }
+ * </pre>
+ *
+ *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/interface/ICaption
@@ -25,7 +51,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @mixes Controls/interface/IIconStyle
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Герасимов А.М.
  * @category Button
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */

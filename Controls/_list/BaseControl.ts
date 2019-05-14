@@ -37,6 +37,7 @@ var
 
 var LOAD_TRIGGER_OFFSET = 100;
 
+const INITIAL_PAGES_COUNT = 1;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -119,6 +120,10 @@ var _private = {
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 self._loadedItems = list;
+                if (self._pagingNavigation) {
+                    var hasMoreDataDown = list.getMetaData().more;
+                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
+                }
                 var
                     isActive,
                     listModel = self._listViewModel;
@@ -566,12 +571,12 @@ var _private = {
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
-    handleListScroll: function(self, scrollTop, position) {
+    handleListScroll: function(self, scrollTop, position, clientHeight: number) {
         var hasMoreData;
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
         if (self._virtualScroll) {
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop);
+            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
             _private.applyVirtualScroll(self);
         }
 
@@ -597,7 +602,7 @@ var _private = {
         }
     },
 
-    needScrollCalculation: function(navigationOpt) {
+    needScrollCalculation: function (navigationOpt) {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
@@ -888,6 +893,17 @@ var _private = {
             self._forceUpdate();
         }
     },
+
+    calcPaging: function(self, hasMore, pageSize) {
+        if (typeof hasMore === 'number') {
+            return Math.ceil(hasMore / pageSize);
+        }
+        else
+        if (typeof hasMore === 'boolean' && hasMore) {
+            if (self._currentPage === self._knownPagesCount)
+                return self._knownPagesCount + 1;
+        }
+    }
 };
 
 /**
@@ -942,6 +958,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _popupOptions: null,
 
+    //Variables for paging navigation
+    _knownPagesCount: INITIAL_PAGES_COUNT,
+    _currentPage: INITIAL_PAGES_COUNT,
+    _pagingNavigation: false,
+
     _canUpdateItemsActions: false,
 
     constructor(options) {
@@ -968,6 +989,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.bindHandlers(this);
 
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
+        this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
         if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
@@ -1002,9 +1024,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     keyProperty: newOptions.keyProperty
                 });
 
+
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
+                    if (self._pagingNavigation) {
+                        var hasMoreData = self._items.getMetaData().more;
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
+                    }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
@@ -1022,6 +1049,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 return _private.reload(self, newOptions).addCallback(getState);
             }
         });
+
     },
 
     getViewModel: function() {
@@ -1087,15 +1115,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
         if (recreateSource) {
-            if (this._sourceController) {
-                this._sourceController.destroy();
-            }
-
-            this._sourceController = new SourceController({
-                source: newOptions.source,
-                navigation: newOptions.navigation,
-                keyProperty: newOptions.keyProperty
-            });
+            this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1113,7 +1133,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             //return result here is for unit tests
-            return _private.reload(this, newOptions).addCallback(function () {
+            return _private.reload(self, newOptions).addCallback(() => {
 
                 /*
                 * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
@@ -1269,7 +1289,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
         }
@@ -1375,9 +1395,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender, .controls-Render, .controls-Dropdown, .controls-Suggest_list')) {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
-                this._children.fakeFocusElem.focus();
+                if (this._children.fakeFocusElem) {
+                    this._children.fakeFocusElem.focus();
+                }
             }, 0);
         }
     },
@@ -1564,7 +1586,37 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
+    },
+
+    __pagingChangePage: function (event, page) {
+        this._currentPage = page;
+        var newNavigation = cClone(this._options.navigation);
+        newNavigation.sourceConfig.page = page - 1;
+        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        var self = this;
+        _private.reload(self, self._options).addCallback(() => {
+                const firstItem = self._listViewModel.getFirstItem();
+                if (firstItem) {
+                    self._keyDisplayedItem = firstItem.getId();
+                }
+        });
+        this._shouldRestoreScrollPosition = true;
+    },
+
+    _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
+
+        if (this._sourceController) {
+            this._sourceController.destroy();
+        }
+        this._sourceController = new SourceController({
+            source: newSource,
+            navigation: newNavigation,
+            keyProperty: newKeyProperty
+        });
+
     }
+
+
 });
 
 // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

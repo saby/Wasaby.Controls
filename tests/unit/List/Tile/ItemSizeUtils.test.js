@@ -1,4 +1,4 @@
-define(['Controls/List/TileView/resources/ItemSizeUtils'], function(ItemSizeUtils) {
+define(['Controls/_tile/TileView/resources/ItemSizeUtils'], function(ItemSizeUtils) {
    'use strict';
 
    function mockHTMLElement(width, height) {
@@ -33,7 +33,7 @@ define(['Controls/List/TileView/resources/ItemSizeUtils'], function(ItemSizeUtil
          }
       };
 
-   describe('Controls/List/TileView/resources/ItemSizeUtils', function() {
+   describe('Controls/_tile/TileView/resources/ItemSizeUtils', function() {
       it('without imageWrapper', function() {
          var hasError = false;
 

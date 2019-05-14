@@ -1,0 +1,63 @@
+<div>
+   <div class="demo-wrapper">
+      <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+         <ws:content>
+            <Controls.list:View
+                  stickyFooter = "{{true}}"
+                  source = "{{_viewSource}}"
+                  markedKey = "{{4}}"
+                  displayProperty="title"
+                  allowEmptySelection="{{false}}"
+                  multiSelect="{{true}}"
+                  name="psina"
+                  keyProperty="id">
+               <ws:navigation source="page" view="pages">
+                  <ws:sourceConfig pageSize="{{9}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                  <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+               </ws:navigation>
+            </Controls.list:View>
+         </ws:content>
+      </Controls.Container.Scroll>
+   </div>
+
+   <div class = "demo-separator"></div>
+
+   <div class="demo-wrapper">
+         <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <ws:content>
+               <Controls.grid:View
+                       keyProperty="id"
+                       source = "{{_viewSourceG}}"
+                       stickyFooter = "{{true}}"
+                       displayProperty="title"
+                       resultsPosition="top"
+                       rowSeparatorVisibility="{{true}}"
+                       itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
+                       columns="{{gridColumns2}}"
+                       bind:sorting="_sorting">
+                  <ws:navigation source="page" view="pages">
+                     <ws:sourceConfig pageSize="{{7}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                     <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+                  </ws:navigation>
+                  <ws:header>
+                     <ws:Array>
+                        <ws:Object title=""/>
+                        <ws:Object>
+                           <ws:template name="infoColumn">
+                              <Controls.Input.Dropdown
+                                 keyProperty="key"
+                                 displayProperty="title"
+                                 multiselect="{{ false }}"
+                                 source="{{ _columnSource }}"
+                                 bind:selectedKeys="_selectKeyColumn"
+                                 on:selectedKeysChanged="_selectedKeysChangeColumn()"
+                              />
+                           </ws:template>
+                        </ws:Object>
+                     </ws:Array>
+                  </ws:header>
+               </Controls.grid:View>
+            </ws:content>
+         </Controls.Container.Scroll>
+   </div>
+</div>

@@ -130,4 +130,11 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {RecordSet} item Item selected collection.
     */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#selectorCallback Occurs when selected items with selector.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {RecordSet} currentItems Current list of items in Lookup.
+    * @param {RecordSet} newItems List of items selected from selector.
+    */
 });

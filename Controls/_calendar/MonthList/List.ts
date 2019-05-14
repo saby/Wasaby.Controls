@@ -1,5 +1,4 @@
 import {View as List} from 'Controls/list';
-import 'wml!Controls/List/List';
 import 'Core/Deferred';
 import 'Controls/Utils/tmplNotify';
 import ListControl from 'Controls/_calendar/MonthList/ListControl';

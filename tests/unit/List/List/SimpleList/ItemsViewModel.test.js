@@ -2,7 +2,7 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ItemsViewModel',
+   'Controls/_list/ItemsViewModel',
    'Controls/list',
    'Types/collection',
    'Controls/Constants'
