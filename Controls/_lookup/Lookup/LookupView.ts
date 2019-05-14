@@ -235,7 +235,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
             itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+            availableWidth = _private.getAvailableCollectionWidth(this, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
