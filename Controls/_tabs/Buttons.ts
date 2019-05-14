@@ -40,7 +40,7 @@ import Env = require('Env/Env');
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item'],
+            classes = ['controls-Tabs__item_theme_'+ options.theme],
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
@@ -51,33 +51,33 @@ import Env = require('Env/Env');
          } else {
             modifyToNewStyle = options.style;
          }
-         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
+         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
          if (order === 1 || order === lastRightOrder) {
-            classes.push('controls-Tabs__item_extreme');
+            classes.push('controls-Tabs__item_extreme_theme_' + options.theme);
          }
          if (order === 1) {
-            classes.push('controls-Tabs__item_extreme_first');
+            classes.push('controls-Tabs__item_extreme_first_theme_' + options.theme);
          } else if (order === lastRightOrder) {
-            classes.push('controls-Tabs__item_extreme_last');
+            classes.push('controls-Tabs__item_extreme_last_theme_' + options.theme);
          } else {
-            classes.push('controls-Tabs__item_default');
+            classes.push('controls-Tabs__item_default_theme_' + options.theme);
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected');
-            classes.push('controls-Tabs__item_state_selected');
+            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected_theme_' + options.theme);
+            classes.push('controls-Tabs__item_state_selected_theme_' + options.theme);
          } else {
-            classes.push('controls-Tabs__item_state_default');
+            classes.push('controls-Tabs__item_state_default_theme_' + options.theme);
          }
          if (item.get('type')) {
-            classes.push('controls-Tabs__item_type_' + item.get('type'));
+            classes.push('controls-Tabs__item_type_' + item.get('type')+'_theme_' + options.theme);
          }
 
          // TODO: по поручению опишут как и что должно сжиматься. Пока сжимаем только те вкладки, которые прикладники явно пометили
          // https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
          if (item.get('isMainTab')) {
-            classes.push('controls-Tabs__item_canShrink');
+            classes.push('controls-Tabs__item_canShrink_theme_'+ options.theme);
          } else {
-            classes.push('controls-Tabs__item_notShrink');
+            classes.push('controls-Tabs__item_notShrink_theme_'+ options.theme);
          }
          return classes.join(' ');
       }

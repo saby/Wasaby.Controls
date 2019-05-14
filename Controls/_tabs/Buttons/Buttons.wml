@@ -1,19 +1,20 @@
-<div class="controls-Tabs theme_{{_options.theme}}">
+<div class="controls-Tabs_theme_{{_options.theme}}">
     <ws:for data="index, item in _items">
-        <div attr:class="{{_prepareItemClass(item, index)}} theme_{{_options.theme}}"
+        <div attr:class="{{_prepareItemClass(item, index)}}"
              attr:style="{{_prepareItemOrder(index)}}"
              attr:title="{{ item[_options.displayProperty] }}">
             <ws:partial
-                    attr:class="controls-Tabs__itemClickableArea theme_{{_options.theme}}"
+                    attr:class="controls-Tabs__itemClickableArea_theme_{{_options.theme}}"
                     on:click="_onItemClick(item.get(_options.keyProperty))"
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : _options.itemTemplate : _options.itemTemplate}}"
                     selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
                     item="{{item}}"/>
-            <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_align_{{item.get('align') || 'right'}} theme_{{_options.theme}}"></div>
+            <div class="controls-Tabs__itemSeparator_theme_{{_options.theme}}
+                        controls-Tabs__itemSeparator_align_{{item.get('align') || 'right'}}_theme_{{_options.theme}}"></div>
         </div>
     </ws:for>
-    <div class="controls-Tabs__space theme_{{_options.theme}}">
+    <div class="controls-Tabs__space_theme_{{_options.theme}}">
         <ws:if data="{{ _options.tabSpaceTemplate }}">
             <ws:partial template="{{_options.tabSpaceTemplate}}" scope="{{_options}}"/>
         </ws:if>
