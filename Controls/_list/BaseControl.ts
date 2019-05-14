@@ -1434,6 +1434,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
 
+    _onAfterBeginEdit: function () {
+        this._canUpdateItemsActions = true;
+        return this._notify('afterBeginEdit');
+    },
+
    _showActionMenu(
       event: Event,
       itemData: object,
