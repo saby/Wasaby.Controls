@@ -8,15 +8,15 @@
       font-size: @font-size_Tabs-item;
    }
 }
-.controls-Tabs__itemClickableArea {
+.controls-Tabs__itemClickableArea.theme_@{themeName}{
    min-height: 100%;
    .tabs-baseline();
 }
-.controls-Tabs {
+.controls-Tabs.theme_@{themeName} {
    .inline-flexbox();
    height:@height_Tabs;
 }
-.controls-Tabs__space {
+.controls-Tabs__space.theme_@{themeName} {
    .inline-flexbox();
    //TODO: по поручению опишут как и что должно сжиматься. Пока вешаю огромный flex-shrink на дыру между элементами вкладок, чтобы главная вкладка не начинала сжиматься раньше времени
    //https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
@@ -39,7 +39,7 @@
       background: @border-color_Tabs;
    }
 }
-.controls-Tabs__item {
+.controls-Tabs__item.theme_@{themeName} {
    .inline-flexbox();
    .flex-shrink(0);
    .align-items(baseline);
@@ -62,11 +62,11 @@
       background: @border-color_Tabs;
    }
 }
-.controls-Tabs__item_canShrink {
+.controls-Tabs__item_canShrink.theme_@{themeName} {
    flex-shrink: 1;
    min-width: 0;
 }
-.controls-Tabs__itemSeparator {
+.controls-Tabs__itemSeparator.theme_@{themeName} {
    pointer-events: none;
    position: absolute;
    top: calc(50% ~'-' @height_Tabs-separator / 2);
@@ -74,65 +74,65 @@
    width: @width_Tabs-separator;
    background: @background-color_Tabs-separator;
 }
-.controls-Tabs__itemSeparator_align_left {
+.controls-Tabs__itemSeparator_align_left.theme_@{themeName} {
    right: 0;
 }
-.controls-Tabs__itemSeparator_align_right {
+.controls-Tabs__itemSeparator_align_right.theme_@{themeName} {
    left: 0;
 }
-.controls-Tabs__item_state_default {
+.controls-Tabs__item_state_default.theme_@{themeName} {
    .user-select();
 }
 .ws-is-no-touch {
    .controls-Tabs__item_state_default:hover {
-      &:after {
+      &:after.theme_@{themeName} {
          height: @border-width_Tabs-item_selected;
          background: @border-color_Tabs-item_selected;
       }
       z-index: 1;
    }
 }
-.controls-Tabs__item_state_selected {
+.controls-Tabs__item_state_selected.theme_@{themeName} {
    font-weight: bold;
    font-size: @font-size_Tabs-item_selected;
    z-index: 2;
 }
-.controls-Tabs__item_align_left {
+.controls-Tabs__item_align_left.theme_@{themeName} {
    margin-left: -@border-width_Tabs;
 }
-.controls-Tabs__item_align_right {
+.controls-Tabs__item_align_right.theme_@{themeName} {
    margin-right: -@border-width_Tabs;
 }
 .controls-Tabs__item_extreme {
    margin-right:0;
    margin-left: 0;
 }
-.controls-Tabs__item_extreme_first {
+.controls-Tabs__item_extreme_first.theme_@{themeName} {
    padding-right: @spacing_Tabs-item_default + @border-width_Tabs;
    padding-left: @spacing_Tabs-item_default;
 }
-.controls-Tabs__item_extreme_last {
+.controls-Tabs__item_extreme_last.theme_@{themeName} {
    padding-right: @spacing_Tabs-item_default;
    padding-left: @spacing_Tabs-item_default + @border-width_Tabs;
 }
-.controls-Tabs__item_default {
+.controls-Tabs__item_default.theme_@{themeName} {
    padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
 }
-.controls-Tabs_style_primary__item_state_selected {
+.controls-Tabs_style_primary__item_state_selected.theme_@{themeName} {
    &:after {
       height: @border-width_Tabs-item_selected;
       background: @border-color_Tabs-item_selected_primary;
    }
    color: @text-color_Tabs-item_selected_primary;
 }
-.controls-Tabs_style_secondary__item_state_selected {
+.controls-Tabs_style_secondary__item_state_selected.theme_@{themeName} {
    &:after {
       height: @border-width_Tabs-item_selected;
       background: @border-color_Tabs-item_selected_secondary;
    }
    color: @text-color_Tabs-item_selected_secondary;
 }
-.controls-Tabs__item_overflow {
+.controls-Tabs__item_overflow.theme_@{themeName} {
    overflow: hidden;
    text-overflow: ellipsis;
    max-width: 100%;
@@ -140,28 +140,28 @@
    white-space: nowrap;
 }
 //TODO: удалить этот стиль для фото над табами оп задаче https://online.sbis.ru/opendoc.html?guid=c54eee1c-0578-4047-b3e8-666f078a3ae8
-.controls-Tabs__item_type_photo {
+.controls-Tabs__item_type_photo.theme_@{themeName} {
    padding: 0;
    .align-items(flex-end);
    &:before {
       content: '';
    }
 }
-.controls-Tabs__content_heading {
+.controls-Tabs__content_heading.theme_@{themeName} {
    font-weight: bold;
    color: @color_Heading_secondary;
    font-size: @size_Heading_l;
 }
-.controls-Tabs__content_heading_state_selected {
+.controls-Tabs__content_heading_state_selected.theme_@{themeName} {
    font-weight: bold;
    color: @color_Heading_primary;
    font-size: @size_Heading_l;
 }
-.controls-Tabs__content_text {
+.controls-Tabs__content_text.theme_@{themeName} {
    color: @color_text_default;
    font-size: @font-size_text_m;
 }
-.controls-Tabs__content_additionaltext {
+.controls-Tabs__content_additionaltext.theme_@{themeName} {
    color: @color_text_additional;
    font-size: @font-size_text_m;
 }

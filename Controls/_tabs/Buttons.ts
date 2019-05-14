@@ -6,8 +6,6 @@ import {Controller as SourceController} from 'Controls/source';
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');
-import 'css!theme?Controls/tabs';
-
 
    var _private = {
       initItems: function(source, instance) {
@@ -305,6 +303,7 @@ import 'css!theme?Controls/tabs';
          displayProperty: 'title'
       };
    };
+   TabsButtons._theme = ['Controls/tabs'];
 
    //необходимо для тестов
    TabsButtons._private = _private;
