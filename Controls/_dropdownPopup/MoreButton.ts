@@ -8,10 +8,12 @@ var MoreButton = Control.extend([], {
     _template: template,
 
     _openSelectorDialog: function() {
+        const self = this;
+        const selectorOpener = this._children.selectorDialog;
+        const selectorTemplate = this._options.selectorTemplate;
+        let selectedItems = [];
 
         // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
-        var selectedItems = [],
-            self = this;
         factory(this._options.selectedKeys).each(function(key) {
             if (key !== undefined && key !== null) {
                 selectedItems.push(self._options.items.getRecordById(key));
@@ -19,12 +21,18 @@ var MoreButton = Control.extend([], {
         });
 
         var templateConfig = {
-            selectedItems: new collection.List({ items: selectedItems })
+            selectedItems: new collection.List({ items: selectedItems }),
+            handlers: {
+                onSelectComplete: function(event, result) {
+                    self._selectorDialogResult(event, result);
+                    selectorOpener.close();
+                }
+            }
         };
-        Merge(templateConfig, this._options.selectorTemplate.templateOptions);
-        this._children.selectorDialog.open({
+        Merge(templateConfig, selectorTemplate.templateOptions);
+        selectorOpener.open({
             templateOptions: templateConfig,
-            template: this._options.selectorTemplate.templateName,
+            template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate,
             opener: this
         });

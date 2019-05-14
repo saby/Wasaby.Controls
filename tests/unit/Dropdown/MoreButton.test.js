@@ -45,6 +45,9 @@ define(
             assert.strictEqual(actualOptions.template, defaultConfig.selectorTemplate.templateName);
             assert.strictEqual(actualOptions.isCompoundTemplate, defaultConfig.isCompoundTemplate);
             assert.deepStrictEqual(actualOptions.templateOptions.selectedItems.getCount(), 2);
+            assert.strictEqual(actualOptions.templateOptions.option1, '1');
+            assert.strictEqual(actualOptions.templateOptions.option2, '2');
+            assert.isOk(actualOptions.templateOptions.handlers.onSelectComplete);
 
             button._options.selectedKeys = [null];
             button._openSelectorDialog();
