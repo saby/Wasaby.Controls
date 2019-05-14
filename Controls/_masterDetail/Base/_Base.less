@@ -8,7 +8,10 @@
    flex-shrink: 0;
    width: 27%;
 
-   &:after {
+   // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
+   // :before is necessary for correct work of z-index stack, :after makes below all elements without z-index in the stack
+   // and children of these elements can not overlap this pseudo element.
+   &:before {
       content: '';
       z-index: 0;
       width: @border-width_List-masterList-right;
