@@ -19,7 +19,7 @@
                on:click="_applyNewResolverParam()"
                attr:id="ControlsDemo-Markup__applyNewParam"
                caption="Подтвердить" />
-         <Controls.Button.MenuButton source="{{ _resolversMemorySource }}"
+         <Controls.dropdown:Button source="{{ _resolversMemorySource }}"
                                      caption="Выбор резолвера"
                                      attr:id="ControlsDemo-Markup__resolverSelect"
                                      keyProperty="id"
