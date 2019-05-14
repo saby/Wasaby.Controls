@@ -1,0 +1,89 @@
+<div class="example-RightAlignment">
+   <Controls-demo.Example.resource.BaseDemoInput title="RightAlignment">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Tooltip</div>
+                     <Controls.input:Text fontStyle="default" class="ControlsDemo-ExampleInput_fontHeader"
+                                          textAlign="right"
+                                          placeholder="Tooltip"
+                                          bind:value="_value1"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled input field</div>
+                     <Controls.input:Text fontStyle="default"
+                                          textAlign="right"
+                                          placeholder="Tooltip"
+                                          bind:value="_filledValue1"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled input field in read mode</div>
+                     <Controls.input:Text fontStyle="default"
+                                          textAlign="right"
+                                          placeholder="Tooltip"
+                                          readOnly="{{true}}"
+                                          bind:value="_filledValueRM"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled money input field</div>
+                     <Controls.Input.Money fontStyle="default"
+                                           textAlign="right"
+                                           placeholder="Tooltip"
+                                           bind:value="_filledMoneyValue1"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled money input field in read mode</div>
+                     <Controls.Input.Money fontStyle="default"
+                                           textAlign="right"
+                                           placeholder="Tooltip"
+                                           readOnly="{{true}}"
+                                           bind:value="_filledMoneyValueRM"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+</div>

@@ -8,7 +8,6 @@ define('Controls-demo/Example/Input/Mask',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
@@ -16,5 +15,4 @@ define('Controls-demo/Example/Input/Mask',
 
          _mobilePhone: ''
       });
-   }
-);
+   });
