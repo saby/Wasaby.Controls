@@ -120,8 +120,10 @@ import {parse as parserLib, load} from 'Core/library';
                self._requireModule(config.template),
                self._requireModule(controller)
             ]).then(function(results) {
+
+               // todo https://online.sbis.ru/opendoc.html?guid=b954dff3-9aa5-4415-a9b2-7d3430bb20a5
                // If Opener was destroyed while template loading, then don't open popup.
-               if (!self._destroyed) {
+               if (!self._destroyed || self._options.closePopupBeforeUnmount === false) {
                   return {
                      template: results[0],
                      controller: results[1]
