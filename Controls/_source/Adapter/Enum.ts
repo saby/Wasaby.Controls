@@ -36,15 +36,13 @@ var _private = {
 /**
  * Container component for working with controls.
  * This container accepts an Enum object.
- * @class Controls/Container/Adapter/Enum
+ * @class Controls/_source/Adapter/Enum
  * @extends Core/Control
  * @author Герасимов Александр
  * @demo Controls-demo/Container/Enum
  * @control
  * @public
  */
-
-
 
 var SearchContainer = Control.extend({
 

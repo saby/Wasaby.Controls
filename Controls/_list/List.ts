@@ -11,6 +11,7 @@ import viewTemplate = require('Controls/_list/ListControl');
 
 /**
  * Plain list with custom item template. Can load data from data source.
+ * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
  *
  * @class Controls/_list/List
  * @extends Core/Control
