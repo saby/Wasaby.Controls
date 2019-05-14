@@ -1,6 +1,6 @@
 define('Controls/Decorator/Markup/Converter',
-   ['Controls/_decorator/Markup/Converter'],
+   ['Controls/decorator'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Converter;
    });
