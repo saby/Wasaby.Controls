@@ -1,7 +1,7 @@
 /**
  * An mixin that allows the component to proxy events from models and internal controls.
  * @class Controls/_datePopup/Mixin/EventProxy
- * @public
+ * @private
  * @author Миронов А.Ю.
  */
 
