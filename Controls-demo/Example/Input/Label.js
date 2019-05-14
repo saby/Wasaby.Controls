@@ -1,9 +1,10 @@
-define('Controls-demo/Example/Input/Text',
+define('Controls-demo/Example/Input/Label',
    [
       'Core/Control',
-      'wml!Controls-demo/Example/Input/Text/Text',
+      'wml!Controls-demo/Example/Input/Label/Label',
 
       'Controls/input',
+      'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
