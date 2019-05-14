@@ -37,7 +37,7 @@ import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 
-import * as GridLayoutUtil from 'Controls/_list/utils/GridLayoutUtil';
+import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditInPlace/EditingTemplate');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
@@ -53,7 +53,7 @@ import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapp
 import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
-import RowIndexUtil = require('Controls/_list/utils/RowIndexUtil');
+import RowIndexUtil = require('Controls/_grid/utils/RowIndexUtil');
 import BaseControl = require('Controls/_list/BaseControl');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 
