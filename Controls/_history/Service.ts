@@ -80,9 +80,9 @@ var _private = {
  * Source working with the service of InputHistory
  *
  * @class Controls/_history/Service
- * @extends Types/entity:Abstract
+ * @extends Core/core-extend
  * @implements Types/source:ISource
- * @mixes Types/entity:OptionsToPropertyMixin
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Герасимов А.М.
  * @example

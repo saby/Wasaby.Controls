@@ -237,8 +237,8 @@ var _private = {
 /**
  * A proxy that works only takes data from the history source
  * @class Controls/_history/FilterSource
- * @extends Types/entity:Abstract
- * @mixes Types/entity:OptionsToPropertyMixin
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @control
  * @public
  * @author Герасимов А.М.
