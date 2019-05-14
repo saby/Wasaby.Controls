@@ -133,7 +133,9 @@ define(
 
          describe('_scrollMoveHandler', function() {
             beforeEach(function() {
-               scroll._pagingState = {};
+               scroll._pagingState = {
+                  visible: true
+               };
             });
             it('up', function() {
                scroll._scrollMoveHandler({}, {
