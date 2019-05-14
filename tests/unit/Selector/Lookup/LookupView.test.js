@@ -23,12 +23,12 @@ define([
    describe('Controls/_lookup/Lookup/LookupView', function() {
       it('getAvailableCollectionWidth', function() {
          var afterFieldWrapperWidth = 20;
-         var self = {
-            _fieldWrapperWidth: 100,
-            _fieldWrapperMinHeight: 24,
-            _fieldWrapper: {
-               offsetWidth: 110
-            }
+         var self = new Lookup();
+
+         self._fieldWrapperWidth = 100;
+         self._fieldWrapperMinHeight = 24;
+         self._fieldWrapper = {
+            offsetWidth: 110
          };
 
          assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, false), 80);
