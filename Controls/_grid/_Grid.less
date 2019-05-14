@@ -82,16 +82,31 @@
    display: contents;
 }
 
+.controls-Grid__cell_fit {
+   // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
+   // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
+   min-width: 0;
+}
+
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
    border-top: @height_Grid-row-separator solid;
-   // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
-   // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
-   min-width: 0;
    font-size: @font-size_Grid-cell_m;
    height: 100%;
    box-sizing: border-box;
+}
+
+.controls-Grid__cell_fixed {
+   z-index: 3;
+   background-color: @background-color_Grid-row-sticky;
+}
+
+// In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements:
+// https://stackoverflow.com/questions/20851452/z-index-is-canceled-by-setting-transformrotate
+// Add style "transform" for fixed column to make context-level equals context-level of transform column.
+.ws-is-ie .controls-Grid__cell_fixed {
+   transform: translateX(0);
 }
 
 .controls-Grid__cell_ellipsis {
@@ -404,4 +419,9 @@
    .controls-Grid__row_master.controls-Grid_row-cell_hovered {
       background-color: @background-color_List-masterList-item_hover;
    }
+}
+
+.controls-itemActionsV__container {
+   position: sticky;
+   right: 0;
 }
