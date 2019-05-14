@@ -36,14 +36,9 @@
 
 <ws:template name="scrollTpl">
 <div class="controls-Scroll ws-flexbox ws-flex-column">
-   <ws:if data="{{_pagingState.visible}}">
-      <ws:partial template="content"
-                  attr:class="controls-Scroll__content_paging"
-                  on:scrollMove="_scrollMoveHandler()"/>
-   </ws:if>
-   <ws:else>
-      <ws:partial template="content"/>
-   </ws:else>
+   <ws:partial template="content"
+               attr:class="{{_pagingState.visible ? 'controls-Scroll__content_paging'}}"
+               on:scrollMove="_scrollMoveHandler()"/>
 
    <ws:if data="{{_scrollbarVisibility()}}">
       <Controls._scroll.Scroll.Scrollbar
