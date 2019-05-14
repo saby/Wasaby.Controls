@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
-import IDateRangeSelectable = require('./_dateRange/interfaces/IDateRangeSelectable');
+import dateRange = require('Controls/dateRange');
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import MonthsRange from './_datePopup/MonthsRange';
@@ -339,7 +339,7 @@ Component.getOptionTypes = function () {
             HEADER_TYPES.link,
             HEADER_TYPES.input
         ]),
-    }, IDateRangeSelectable.getOptionTypes());
+    }, dateRange.IDateRangeSelectable.getOptionTypes());
 };
 
 export = Component;
