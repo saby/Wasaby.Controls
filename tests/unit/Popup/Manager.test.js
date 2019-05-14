@@ -101,6 +101,22 @@ define(
             assert.equal(element, null);
          });
 
+         it('activate popup', () => {
+            let Manager = getManager();
+            let myState = false;
+            let item = {
+               controller: {
+                  needRestoreFocus: function(isActive) {
+                     myState = isActive;
+                  }
+               },
+               isActive: true
+            };
+            assert.equal(myState, false);
+            Manager._private.activatePopup(item);
+            assert.equal(myState, true);
+         });
+
          it('update popup', function() {
             let Manager = getManager();
             id = Manager.show({
@@ -174,16 +190,12 @@ define(
 
             let Pending = {
                _hasRegisteredPendings: () => hasPending,
-               finishPendingOperations: () => {
-                  return pendingDeferred;
-               }
+               finishPendingOperations: () => pendingDeferred
             };
 
-            Manager._private.getPopupContainer = () => {
-               return {
-                  getPendingById: () => Pending
-               };
-            };
+            Manager._private.getPopupContainer = () => ({
+               getPendingById: () => Pending
+            });
 
             Manager.remove(id1);
             assert.equal(Manager._private.popupItems.getCount(), 3);
@@ -194,9 +206,7 @@ define(
 
             Pending = {
                _hasRegisteredPendings: () => hasPending,
-               finishPendingOperations: () => {
-                  return pendingDeferred;
-               }
+               finishPendingOperations: () => pendingDeferred
             };
 
             Manager.remove(id3);
@@ -412,11 +422,11 @@ define(
             }, new BaseController());
 
             let fakePopupControl1 = {
-                  _moduleName: 'Controls/_popup/Manager/Popup',
-                  _options: {
-                     id: id1
-                  }
-               };
+               _moduleName: 'Controls/_popup/Manager/Popup',
+               _options: {
+                  id: id1
+               }
+            };
 
             let id2 = Manager.show({
                opener: fakePopupControl1

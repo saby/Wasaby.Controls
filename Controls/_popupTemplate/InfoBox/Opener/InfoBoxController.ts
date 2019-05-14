@@ -157,8 +157,8 @@ var InfoBoxController = StickyController.constructor.extend({
         return (new Deferred()).callback();
     },
 
-    needRestoreFocus: function () {
-        return false;
+    needRestoreFocus: function (isActive) {
+        return isActive;
     },
 
     getDefaultConfig: function (item) {
