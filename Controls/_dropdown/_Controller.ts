@@ -210,7 +210,7 @@ var _Controller = Control.extend({
          !isEqual(newOptions.navigation, this._options.navigation) ||
          !isEqual(newOptions.filter, this._options.filter)) {
          this._sourceController = null;
-         if (newOptions.lazyItemsLoad) {
+         if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
             this._items = null;
          } else {
