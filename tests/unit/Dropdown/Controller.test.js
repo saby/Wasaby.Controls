@@ -79,9 +79,13 @@ define(
          };
 
          it('before mount', (done) => {
-            let dropdownController = getDropdownController(config);
-            dropdownController._beforeMount(config).addCallback(function(items) {
+            let newConfig = Clone(config),
+               loadedItems;
+            newConfig.dataLoadCallback = (items) => {loadedItems = items;};
+            let dropdownController = getDropdownController(newConfig);
+            dropdownController._beforeMount(newConfig).addCallback(function(items) {
                assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               assert.deepEqual(loadedItems.getRawData(), itemsRecords.getRawData());
                done();
             });
          });
@@ -113,15 +117,15 @@ define(
          });
 
          it('received state, selectedItems = [null], emptyText is set', () => {
-            let dataLoadCallbackCalled = false,
+            let selectedItemsChangeCalled = false,
                selectedItems = [];
             const config = {
                selectedKeys: [null],
                keyProperty: 'id',
                emptyText: '123',
-               dataLoadCallback: function(items) {
+               selectedItemsChangedCallback: function(items) {
                   selectedItems = items;
-                  dataLoadCallbackCalled = true;
+                  selectedItemsChangeCalled = true;
                },
                source: new sourceLib.Memory({
                   idProperty: 'id',
@@ -131,18 +135,18 @@ define(
             const dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config, null, itemsRecords);
             assert.deepEqual(selectedItems, [null]);
-            assert.isTrue(dataLoadCallbackCalled);
+            assert.isTrue(selectedItemsChangeCalled);
          });
 
          it('received state, selectedItems = [null], emptyText is NOT set', () => {
-            let dataLoadCallbackCalled = false,
+            let selectedItemsChangeCalled = false,
                selectedItems = [];
             const config = {
                selectedKeys: [null],
                keyProperty: 'id',
-               dataLoadCallback: function(items) {
+               selectedItemsChangedCallback: function(items) {
                   selectedItems = items;
-                  dataLoadCallbackCalled = true;
+                  selectedItemsChangeCalled = true;
                },
                source: new sourceLib.Memory({
                   idProperty: 'id',
@@ -152,7 +156,7 @@ define(
             const dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config, null, itemsRecords);
             assert.deepEqual(selectedItems, []);
-            assert.isTrue(dataLoadCallbackCalled);
+            assert.isTrue(selectedItemsChangeCalled);
          });
 
          it('_beforeUpdate new templateOptions', function() {
@@ -248,7 +252,7 @@ define(
                selectedItems = [];
             configFilter.filter = {id: '1'};
             configFilter.selectedKeys = ['2'];
-            configFilter.dataLoadCallback = function(items) {
+            configFilter.selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
             let dropdownController = getDropdownController(configFilter);
@@ -268,10 +272,15 @@ define(
          it('_beforeUpdate without loaded items', () => {
             let configItems = Clone(config),
                selectedItems = [];
-            configItems.dataLoadCallback = function(items) {
+            configItems.selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
             let dropdownController = getDropdownController(configItems);
+            dropdownController._children.DropdownOpener = {
+               isOpened: function() {
+                  return false;
+               }
+            };
             dropdownController._items = null;
             var newConfig = Clone(configItems);
             newConfig.source = new sourceLib.Memory({
@@ -372,7 +381,7 @@ define(
          it('before update new key', () => {
             let dropdownController = getDropdownController(config),
                selectedItems = [];
-            let dataLoadCallback = function(items) {
+            let selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
             dropdownController._items = itemsRecords;
@@ -380,7 +389,7 @@ define(
                selectedKeys: '[6]',
                keyProperty: 'id',
                filter: config.filter,
-               dataLoadCallback: dataLoadCallback
+               selectedItemsChangedCallback: selectedItemsChangedCallback
             });
             assert.deepEqual(selectedItems[0].getRawData(), items[5]);
          });
@@ -388,10 +397,10 @@ define(
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config),
                selectedItems = [];
-            let dataLoadCallback = function(items) {
+            let selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
-            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [null], 'id', dataLoadCallback);
+            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [null], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
 
             dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id');
@@ -604,7 +613,7 @@ define(
                let historyConfig = { ...config, source: historySource };
                dropdownController = getDropdownController(historyConfig);
                dropdownController._items = itemsRecords;
-               dropdownController._children = { DropdownOpener: { close: setTrue.bind(this, assert) } };
+               dropdownController._children = { DropdownOpener: { close: setTrue.bind(this, assert), isOpened: setTrue.bind(this, assert) } };
             });
 
             it('_beforeUpdate new historySource', function() {

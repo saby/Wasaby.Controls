@@ -24,7 +24,7 @@
                               _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
         dropdownClassName="{{_options.dropdownClassName}}"
         caption="{{_options.caption || _text}}"
-        dataLoadCallback="{{_setText}}"
+        selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         on:selectedKeysChanged="_selectedKeysChangedHandler()"
