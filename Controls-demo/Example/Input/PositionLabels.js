@@ -9,10 +9,9 @@ define('Controls-demo/Example/Input/PositionLabels',
       'css!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
-      
+
       return Control.extend({
          _template: template,
 
@@ -20,5 +19,4 @@ define('Controls-demo/Example/Input/PositionLabels',
             this._children[labelName].activate();
          }
       });
-   }
-);
+   });

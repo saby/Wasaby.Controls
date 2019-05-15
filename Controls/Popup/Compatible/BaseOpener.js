@@ -82,6 +82,10 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         if (cfg.hasOwnProperty('disableActions')) {
+            cfg.templateOptions.hideCross = cfg.disableActions;
+         }
+
          cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
          cfg.templateOptions.closeOnTargetScroll = cfg.closeOnTargetScroll || false;
          cfg.templateOptions.closeOnTargetHide = cfg.closeOnTargetHide || false;
@@ -370,11 +374,21 @@ function(cMerge,
 
          this._setSizes(cfg, templateClass);
 
+         cfg.componentOptions.templateOptions.stackMinWidth = cfg.minWidth;
+         cfg.componentOptions.templateOptions.stackMaxWidth = cfg.maxWidth;
+         cfg.componentOptions.templateOptions.stackWidth = cfg.width;
+
          cfg.componentOptions._popupOptions = {
             minWidth: cfg.minWidth,
             maxWidth: cfg.maxWidth,
+            width: cfg.width,
             minimizedWidth: cfg.minimizedWidth
          };
+
+         // if we have width, delete maxWidth, otherwise FloatArea may calculate a different panel size.
+         if (cfg.width) {
+            delete cfg.maxWidth;
+         }
       },
       _getConfigFromTemplate: function(cfg) {
          // get options from template.getDefaultOptions
@@ -409,7 +423,8 @@ function(cMerge,
          };
 
          if (cfg.hasOwnProperty('closeOnOutsideClick')) {
-            cfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
+            newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
+            newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
          }
 
          if (cfg.hasOwnProperty('closeChildWindows')) {

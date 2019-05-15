@@ -93,7 +93,7 @@ import Vdom = require('Vdom/Vdom');
          },
 
          activatePopup: function(item) {
-            if (item.controller.needRestoreFocus()) {
+            if (item.controller.needRestoreFocus(item.isActive)) {
                var maxId = _private.getMaxZIndexPopupIdForActivate();
                if (maxId) {
                   var child = ManagerController.getContainer().getPopupById(maxId);
@@ -114,7 +114,7 @@ import Vdom = require('Vdom/Vdom');
          needActivateControl: function(control) {
             // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
             // The node can be hidden through display: none
-            return control && !control._unmounted && control._container !== document.body;
+            return control && !control._destroyed && control._container !== document.body;
          },
 
          getMaxZIndexPopupIdForActivate: function() {

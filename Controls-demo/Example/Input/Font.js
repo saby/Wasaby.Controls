@@ -8,7 +8,6 @@ define('Controls-demo/Example/Input/Font',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       var FILLED_VALUE = 'Text in the input field';
@@ -26,5 +25,4 @@ define('Controls-demo/Example/Input/Font',
          _filledMoneyValue3: FILLED_MONEY_VALUE,
          _filledMoneyValueRM: FILLED_MONEY_VALUE
       });
-   }
-);
+   });

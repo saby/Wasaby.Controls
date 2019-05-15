@@ -6,14 +6,15 @@ define('Controls/Input/Search/Suggest',
       'Controls/search'
    ],
    function(Control, template, entity) {
-      
+
       'use strict';
-   
+
       /**
        * Search input that suggests options as you are typing.
+       * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
        *
-       * @class Controls/suggest:Input
-       * @extends Controls/input:Text
+       * @class Controls/Input/Search/Suggest
+       * @extends Controls/_input/Text
        * @mixes Controls/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
@@ -24,24 +25,24 @@ define('Controls/Input/Search/Suggest',
        * @public
        * @category Input
        */
-   
-   
+
+
       var Suggest = Control.extend({
-         
+
          _template: template,
          _suggestState: false,
          _markedKeyChanged: false,
-         
+
          _changeValueHandler: function(event, value) {
             this._notify('valueChanged', [value]);
          },
-         
+
          _choose: function(event, item) {
             this.activate();
             this._notify('choose', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty) || '']);
          },
-         
+
          _close: function() {
             /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
                Notify event only if value is not empty, because event listeners expect, that the value is really changed */
@@ -49,13 +50,13 @@ define('Controls/Input/Search/Suggest',
                this._notify('valueChanged', ['']);
             }
          },
-         
+
          _beforeUpdate: function(newOptions) {
             if (this._options.suggestState !== newOptions.suggestState) {
                this._suggestState = newOptions.suggestState;
             }
          },
-   
+
          _suggestStateChanged: function(event, value) {
             /**
              * Всплытие будет удалено по задаче.
@@ -63,7 +64,7 @@ define('Controls/Input/Search/Suggest',
              */
             this._notify('suggestStateChanged', [value], {bubbling: true});
          },
-   
+
          _deactivated: function() {
             /**
              * Всплытие будет удалено по задаче.
@@ -72,11 +73,11 @@ define('Controls/Input/Search/Suggest',
             this._suggestState = false;
             this._notify('suggestStateChanged', [false], {bubbling: true});
          },
-   
+
          _suggestMarkedKeyChanged: function(event, key) {
             this._markedKeyChanged = key !== null;
          },
-   
+
          _searchClick: function() {
             /* the search should not fire an event if marked key in suggstions list was changed,
                because enter should activate marked item */
@@ -84,13 +85,13 @@ define('Controls/Input/Search/Suggest',
                this._notify('searchClick');
             }
          },
-         
+
          _resetClick: function() {
             this._notify('resetClick');
          }
-         
+
       });
-   
+
       Suggest.getOptionTypes = function() {
          return {
             displayProperty: entity.descriptor(String).required(),
@@ -98,14 +99,14 @@ define('Controls/Input/Search/Suggest',
             searchParam: entity.descriptor(String).required()
          };
       };
-   
+
       Suggest.getDefaultOptions = function() {
          return {
             minSearchLength: 3,
             suggestState: false
          };
       };
-      
+
       return Suggest;
    }
 );

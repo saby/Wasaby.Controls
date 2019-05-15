@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
+import isEqual = require('Core/helpers/Object/isEqual');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 
@@ -128,6 +129,12 @@ var _private = {
             options.close(args);
          }
       };
+   },
+
+   templateOptionsChanged: function(newOptions, options) {
+      if (newOptions.headTemplate !== options.headTemplate) {
+         return true;
+      }
    }
 };
 
@@ -193,12 +200,15 @@ var _Controller = Control.extend({
    },
 
    _beforeUpdate: function (newOptions) {
+      if (_private.templateOptionsChanged(newOptions, this._options) && this._children.DropdownOpener.isOpened()) {
+         this._open();
+      }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
       }
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
-         newOptions.navigation !== this._options.navigation ||
-         newOptions.filter !== this._options.filter) {
+         !isEqual(newOptions.navigation, this._options.navigation) ||
+         !isEqual(newOptions.filter, this._options.filter)) {
          this._sourceController = null;
          if (newOptions.lazyItemsLoad) {
             /* source changed, items is not actual now */
@@ -225,7 +235,8 @@ var _Controller = Control.extend({
          var config = {
             templateOptions: {
                items: self._items,
-               width: self._options.width !== undefined ? self._container.offsetWidth : undefined,
+               //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+               width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
                hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down')
             },
             target: self._container,

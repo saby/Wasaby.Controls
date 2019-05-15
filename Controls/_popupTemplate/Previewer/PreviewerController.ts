@@ -38,8 +38,8 @@ import 'css!theme?Controls/popupTemplate';
                delete this._destroyDeferred[item.id];
             }
          },
-         needRestoreFocus: function() {
-            return false;
+         needRestoreFocus: function(isActive) {
+            return isActive;
          }
       });
 

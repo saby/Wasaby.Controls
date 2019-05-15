@@ -4,7 +4,7 @@ import 'css!theme?Controls/filterPopup';
    /**
     * Control filter link
     * @class Controls/_filterPopup/Panel/Link
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     */

@@ -117,6 +117,7 @@ import 'Controls/breadcrumbs';
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
     *
     * @class Controls/_explorer/View
     * @extends Core/Control

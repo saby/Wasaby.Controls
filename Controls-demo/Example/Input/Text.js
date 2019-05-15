@@ -7,7 +7,6 @@ define('Controls-demo/Example/Input/Text',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
@@ -17,5 +16,4 @@ define('Controls-demo/Example/Input/Text',
             this._children[nameText].activate();
          }
       });
-   }
-);
+   });

@@ -123,7 +123,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<div style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
+                                       '<div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll" style="margin-right: -15px;">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
                                        '</div>' +
                                        '<div></div>' +
@@ -133,7 +133,9 @@ define(
 
          describe('_scrollMoveHandler', function() {
             beforeEach(function() {
-               scroll._pagingState = {};
+               scroll._pagingState = {
+                  visible: true
+               };
             });
             it('up', function() {
                scroll._scrollMoveHandler({}, {

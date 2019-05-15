@@ -15,10 +15,10 @@
  * @includes DateTimeModel Controls/_input/DateTime/Model
  * @includes TimeInterval Controls/_input/TimeInterval
  *
- * @includes Controls/_input/Base/Styles
- * @includes Controls/_input/Render/Styles
- * @includes Controls/_input/Password/PasswordStyles
- * @includes Controls/_input/resources/InputRender/InputRenderStyles
+ * @includes BaseStyles Controls/_input/Base/Styles
+ * @includes RenderStyles Controls/_input/Render/Styles
+ * @includes PasswordStyles Controls/_input/Password/PasswordStyles
+ * @includes InputRenderStyles Controls/_input/resources/InputRender/InputRenderStyles
  *
  * @public
  * @author Kraynov D.
@@ -37,6 +37,7 @@ import Date = require('Controls/_input/Date/Picker');
 import TimeInterval from 'Controls/_input/TimeInterval';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import TextViewModel = require('Controls/_input/Text/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
@@ -61,6 +62,7 @@ export {
     Date,
     TimeInterval,
     BaseViewModel,
+    TextViewModel,
     MaskFormatBuilder,
     MaskInputProcessor,
     InputCallback,

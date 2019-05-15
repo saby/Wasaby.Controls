@@ -5,21 +5,21 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
 
    /**
-    * PendingRegistrator is control (HOC) that helps to distribute order of action executions in the system.
+    * Controls/Pending is control (HOC) that helps to distribute order of action executions in the system.
     * Or, more specifically, it's controlling execution of necessary actions that must be complete before starting current action.
     * Current action requests Deferred instance that will be resolved when all necessary actions ends.
     * For example, popup must be closed only after resolving the question about saving of changed data containing this popup.
     *
     * Pending is registered necessary action that must ends before current action starts.
-    * It would be some pendings registered in current PendingRegistrator instance. Therefore, all of pendings must be ends
+    * It would be some pendings registered in current Controls/Pending instance. Therefore, all of pendings must be ends
     * for unlock next action.
     * @remark
-    * PendingRegistrator is able to ask a confirmation question before closing of tab/browser if pending(s) is registered.
-    * PendingRegistrator has it's own LoadingIndicator that can shows while pending is resolving. This LoadingIndicator has default options.
+    * Controls/Pending is able to ask a confirmation question before closing of tab/browser if pending(s) is registered.
+    * Controls/Pending has it's own LoadingIndicator that can shows while pending is resolving. This LoadingIndicator has default options.
     * In moment when first pending with option showLoadingIndicator = true will be registered LoadingIndicator shows indicator.
     * In moment when last pending with option showLoadingIndicator = true will be unregistered LoadingIndicator hides indicator.
     *
-    * PendingRegistrator is waiting 2 events: registerPending and cancelFinishingPending.
+    * Controls/Pending is waiting 2 events: registerPending and cancelFinishingPending.
     *
     * registerPending - registrate the pending
     * registerPending has 2 arguments: [deferred, config].
@@ -46,16 +46,15 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * will be corrected. It will be unexpected closing of popup for user who maybe don't want to close popup anymore
     * in the light of developments.
     *
-    * @class Controls/Container/PendingRegistrator
+    * @class Controls/Pending
     * @extends Core/Control
     * @control
     * @author Krasilnikov A.
     * @public
-    * @category Container
     */
 
    /**
-    * @event pendingsFinished Event will be notified in moment when no more pendings in PendingRegistrator
+    * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
     * (after moment of last pending is resolving).
     * @param {SyntheticEvent} eventObject.
     */

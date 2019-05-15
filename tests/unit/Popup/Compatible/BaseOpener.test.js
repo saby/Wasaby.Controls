@@ -258,6 +258,7 @@ define(
             newConfig.closeOnTargetScroll = true;
             newConfig.closeOnTargetHide = true;
             newConfig.trackTarget = false;
+            newConfig.disableActions = true;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(config.templateOptions.closeOnTargetHide, true);
@@ -270,6 +271,7 @@ define(
             assert.equal(newConfig.width, newConfig.templateOptions.width);
             assert.equal(newConfig.height, newConfig.templateOptions.height);
             assert.isTrue(newConfig.templateOptions.canMaximize);
+            assert.isTrue(config.templateOptions.hideCross);
             assert.equal(newConfig.templateOptions.templateOptions.isPanelMaximized, newConfig.maximized);
             delete newConfig.context;
             delete newConfig.templateOptions.context;
@@ -291,7 +293,11 @@ define(
          });
 
          it('_prepareConfigForNewTemplate', function() {
-            let newConfig = {};
+            let newConfig = {
+               width: 800,
+               maxWidth: 1200,
+               minWidth: 800
+            };
             newConfig.templateOptions = config.templateOptions;
             newConfig.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
             newConfig.onResultHandler = 'onResultHandler';
@@ -309,6 +315,10 @@ define(
             assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);
             assert.equal(newConfig.componentOptions.onResultHandlerEvent, newConfig.onResultHandlerEvent);
             assert.equal(newConfig.componentOptions.onCloseHandlerEvent, newConfig.onCloseHandlerEvent);
+            assert.equal(newConfig.componentOptions.templateOptions.stackMinWidth, newConfig.minWidth);
+            assert.equal(newConfig.componentOptions.templateOptions.stackMaxWidth, 1200);
+            assert.equal(newConfig.componentOptions.templateOptions.stackWidth, newConfig.width);
+            assert.isFalse(newConfig.hasOwnProperty('maxWidth'));
          });
 
          it('_prepareConfigFromNewToOld', function() {
@@ -347,6 +357,7 @@ define(
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.equal(newConfig.dialogOptions.autoHide, config.closeOnOutsideClick);
+            assert.equal(newConfig.dialogOptions.closeOnOverlayClick, config.closeOnOutsideClick);
             assert.equal(newConfig.dialogOptions.className, config.className);
             assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);

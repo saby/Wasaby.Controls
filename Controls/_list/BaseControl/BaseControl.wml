@@ -2,7 +2,9 @@
     <ws:if data="{{_loadingIndicatorState}}">
         <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
             <ws:if data="{{_showLoadingIndicatorImage}}">
-                <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
+                    <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                </div>
             </ws:if>
         </div>
     </ws:if>
@@ -110,7 +112,7 @@
                 name="editInPlace"
                 editingConfig="{{_options.editingConfig}}"
                 on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                on:afterBeginEdit="_onAfterBeginEdit()"
                 on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                 on:afterEndEdit="_notifyHandler('afterEndEdit')"
                 listModel="{{_listViewModel}}"

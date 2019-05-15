@@ -76,6 +76,13 @@
  */
 
 /**
+ * @typedef {String} TextOverflow Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * @variant ellipsis The text is clipped and an ellipsis is added to the end of the line.
+ * @variant none Standard behavior, as if the property is not set.
+ * @default none
+ */
+
+/**
  * @typedef {Object} Column
  * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) and the value “auto”.
  * @property {String} [displayProperty] Name of the field that will shown in the column by default.
@@ -84,6 +91,7 @@
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [stickyProperty] The name of the field used to sticking the column data.
+ * @property {TextOverflow} [textOverflow] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
  */
 
 /**
@@ -98,6 +106,12 @@
  * @cfg {Boolean} Fix the table header.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @default true
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#columnScroll
+ * @cfg {Boolean} Enable column scroll.
+ * @default false
  */
 
 /**

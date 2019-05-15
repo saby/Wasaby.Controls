@@ -1,0 +1,28 @@
+<div class="demo-Grid" style="padding-left: 12px;">
+   <div class="demo-Grid__container">
+      <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+         <Controls.operations:Controller
+                 bind:selectedKeys="_firstSelectedKeys"
+                 name="multiSelector">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper vertical" scn="1">
+               <Controls.list:Container>
+                  <Controls.operations:Container>
+                     <Controls.grid:View
+                             markedKey="448390"
+                             stickyHeader="{{true}}"
+                             rowSeparatorVisibility="{{true}}"
+                             multiSelectVisibility="visible"
+                             itemActions="{{_itemActions}}"
+                             itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
+                             columns="{{_gridColumns}}"
+                             header="{{_gridHeader}}"
+                             resultsPosition="top"
+                             columnScroll="{{true}}">
+                     </Controls.grid:View>
+                  </Controls.operations:Container>
+               </Controls.list:Container>
+            </Controls.scroll:Container>
+         </Controls.operations:Controller>
+      </Controls.list:DataContainer>
+   </div>
+</div>
