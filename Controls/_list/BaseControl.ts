@@ -248,11 +248,13 @@ var _private = {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+        self.activate();
     },
     moveMarkerToPrevious: function(self) {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+        self.activate();
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
