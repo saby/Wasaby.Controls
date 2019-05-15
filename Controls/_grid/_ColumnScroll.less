@@ -1,0 +1,31 @@
+@import "../_scroll/Scroll/_contentEnvironmentZIndex";
+
+.controls-ColumnScroll {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: @z-index_Scroll-contentEnvironment;
+}
+
+.controls-ColumnScroll__shadow {
+   top: 0;
+   bottom: 0;
+   z-index: @z-index_Scroll-contentEnvironment;
+   position: absolute;
+   pointer-events: none;
+   width: @width-gradient_ColumnScroll-shadow;
+}
+
+.controls-ColumnScroll__shadow_invisible {
+   visibility: hidden;
+}
+
+.controls-ColumnScroll__shadow-start {
+   background: linear-gradient(to right, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
+}
+
+.controls-ColumnScroll__shadow-end {
+   background: linear-gradient(to left, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
+   right: 0;
+}

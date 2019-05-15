@@ -23,7 +23,7 @@ define('Controls/Input/Date/LinkView', [
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
     * @control
-    * @public
+    * @private
     * @category Input
     * @author Миронов А.Ю.
     * @demo Controls-demo/Input/Date/LinkView

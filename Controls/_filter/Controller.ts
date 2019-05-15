@@ -11,7 +11,6 @@ import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import 'Controls/Container/Data/ContextOptions';
 
-
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
       var setPropValue = Utils.object.setPropertyValue.bind(Utils);
 

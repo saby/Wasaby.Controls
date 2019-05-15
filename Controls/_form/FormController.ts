@@ -4,12 +4,13 @@ import tmpl = require('wml!Controls/_form/FormController/FormController');
 import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
 import dataSource = require('Controls/dataSource');
-   
+
 
    /**
     * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
     * @category FormController
     * @class Controls/_form/FormController
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IFormController
     * @demo Controls-demo/Popup/Edit/Opener
@@ -548,8 +549,8 @@ import dataSource = require('Controls/dataSource');
       },
 
       _notifyHandler: function(eventName, args) {
-         this._notify(eventName, args, { bubbling: true });
          this._notifyToOpener(eventName, args);
+         this._notify(eventName, args, { bubbling: true });
       },
 
       _notifyToOpener: function(eventName, args) {

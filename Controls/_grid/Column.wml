@@ -1,17 +1,29 @@
-<div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L">
-   <ws:if data="{{contentTemplate}}">
-      <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
-   </ws:if>
-   <ws:else>
-      <ws:if data="{{itemData.column.needSearchHighlight}}">
-         <Controls.decorator:Highlight highlight="{{itemData.searchValue}}">
+<ws:template name="defaultCellContent">
+    <ws:if data="{{itemData.column.needSearchHighlight}}">
+        <Controls.decorator:Highlight highlight="{{itemData.searchValue}}">
             <ws:text>
-               <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
+                <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
             </ws:text>
-         </Controls.decorator:Highlight>
-      </ws:if>
-      <ws:else>
-         {{itemData.item[itemData.column.displayProperty]}}
-      </ws:else>
-   </ws:else>
+        </Controls.decorator:Highlight>
+    </ws:if>
+    <ws:else>
+        {{itemData.item[itemData.column.displayProperty]}}
+    </ws:else>
+</ws:template>
+
+
+<div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L">
+<ws:if data="{{contentTemplate}}">
+    <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+</ws:if>
+<ws:else>
+    <ws:if data="{{itemData.column.textOverflow}}">
+        <div class="controls-Grid__cell_{{itemData.column.textOverflow}}">
+            <ws:partial template="defaultCellContent"/>
+        </div>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="defaultCellContent"></ws:partial>
+    </ws:else>
+</ws:else>
 </div>

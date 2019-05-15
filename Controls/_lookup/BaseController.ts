@@ -12,21 +12,21 @@ import LoadService = require('Controls/History/LoadService');
 
 
    var _private = {
-      loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
-         var filter = clone(filter || {});
+      loadItems: function(self, options, selectedKeys, sourceIsChanged) {
+         var filter = clone(options.filter || {});
          var resultDef = new Deferred();
 
-         filter[keyProperty] = selectedKeys;
+         filter[options.keyProperty] = selectedKeys;
 
          if (sourceIsChanged || !self.sourceController) {
             self.sourceController = new SourceController({
-               source: source
+               source: options.source
             });
          }
          self.sourceController.load(filter)
             .addCallback(function(result) {
-               if (self._options.dataLoadCallback) {
-                  self._options.dataLoadCallback(result);
+               if (options.dataLoadCallback) {
+                  options.dataLoadCallback(result);
                }
 
                resultDef.callback(self._items = result);
@@ -165,7 +165,7 @@ import LoadService = require('Controls/History/LoadService');
             if (receivedState) {
                this._items = receivedState;
             } else {
-               return _private.loadItems(this, options.filter, options.keyProperty, options.selectedKeys, options.source);
+               return _private.loadItems(this, options, options.selectedKeys);
             }
          }
       },
@@ -190,7 +190,7 @@ import LoadService = require('Controls/History/LoadService');
             this._setItems([]);
          } else if (sourceIsChanged || keysChanged) {
             if (this._selectedKeys.length) {
-               return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
+               return _private.loadItems(this, newOptions, this._selectedKeys, sourceIsChanged).addCallback(function(result) {
                   _private.notifyItemsChanged(self, result);
                   _private.notifyTextValueChanged(self, _private.getTextValue(self));
                   self._forceUpdate();

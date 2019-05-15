@@ -8,7 +8,6 @@ define('Controls-demo/Example/Input/Number',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
@@ -18,5 +17,4 @@ define('Controls-demo/Example/Input/Number',
 
          _value3: 0
       });
-   }
-);
+   });

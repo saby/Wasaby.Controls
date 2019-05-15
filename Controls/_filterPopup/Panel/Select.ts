@@ -6,7 +6,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
     *
     * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     * @author Герасимов А.М.

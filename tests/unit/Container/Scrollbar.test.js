@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/Scroll/Scrollbar',
+      'Controls/_scroll/Scroll/Scrollbar',
       'Core/core-merge'
    ],
    function(Scrollbar, coreMerge) {
@@ -67,7 +67,8 @@ define(
          it('getDefaultOptions', function() {
             result = Scrollbar.getDefaultOptions();
             assert.deepEqual(result, {
-               position: 0
+               position: 0,
+               direction: 'vertical'
             });
          });
 

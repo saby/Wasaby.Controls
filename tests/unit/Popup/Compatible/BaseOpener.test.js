@@ -293,7 +293,11 @@ define(
          });
 
          it('_prepareConfigForNewTemplate', function() {
-            let newConfig = {};
+            let newConfig = {
+               width: 800,
+               maxWidth: 1200,
+               minWidth: 800
+            };
             newConfig.templateOptions = config.templateOptions;
             newConfig.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
             newConfig.onResultHandler = 'onResultHandler';
@@ -311,6 +315,10 @@ define(
             assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);
             assert.equal(newConfig.componentOptions.onResultHandlerEvent, newConfig.onResultHandlerEvent);
             assert.equal(newConfig.componentOptions.onCloseHandlerEvent, newConfig.onCloseHandlerEvent);
+            assert.equal(newConfig.componentOptions.templateOptions.stackMinWidth, newConfig.minWidth);
+            assert.equal(newConfig.componentOptions.templateOptions.stackMaxWidth, 1200);
+            assert.equal(newConfig.componentOptions.templateOptions.stackWidth, newConfig.width);
+            assert.isFalse(newConfig.hasOwnProperty('maxWidth'));
          });
 
          it('_prepareConfigFromNewToOld', function() {
@@ -349,6 +357,7 @@ define(
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.equal(newConfig.dialogOptions.autoHide, config.closeOnOutsideClick);
+            assert.equal(newConfig.dialogOptions.closeOnOverlayClick, config.closeOnOutsideClick);
             assert.equal(newConfig.dialogOptions.className, config.className);
             assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);

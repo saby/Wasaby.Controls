@@ -4,7 +4,7 @@ define('Controls/Input/Search/Styles', [],
    /**
     * @author Герасимов А.М.
     * @mixin Controls/Input/Search/Styles
-    * @public
+    * @private
     *
     * @css @background-color_Search Background color of Search control.
     * @css @background-color_Search_style_header Background color of Search control when style option in set to "header'

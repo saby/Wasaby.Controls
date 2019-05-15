@@ -1,6 +1,6 @@
 
 /**
- * @mixin Controls/Input/Suggest/SuggestStyles
+ * @mixin Controls/_suggest/Input/Styles
  * @css @background-image_Suggest-spinner "Spinner" icon background
  * @css @height_Suggest-spinner "Spinner" icon height
  * @css @width_Suggest-spinner "Spinner" icon width

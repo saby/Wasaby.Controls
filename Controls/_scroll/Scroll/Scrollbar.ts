@@ -21,9 +21,15 @@ import 'css!theme?Controls/scroll';
        * @name Controls/_scroll/resources/Scrollbar#position
        * @cfg {Number} Позиция ползунка спроецированная на контент.
        *
-       * @name Controls/_scroll/resources/Scrollbar#contentHeight
-       * @cfg {Number} Высота контента на который проецируется тонкий скролл.
-       * @remark Не может быть меньше высоты контейнера или 0.
+       * @name Controls/Container/resources/Scrollbar#contentSize
+       * @cfg {Number} Размер контента на который проецируется тонкий скролл.
+       * @remark Не может быть меньше размера контейнера или 0
+       *
+       * @name Controls/Container/resources/Scrollbar#direction
+       * @cfg {String} Direction of the scroll bar
+       * @variant vertical Vertical scroll bar.
+       * @variant horizontal Horizontal scroll bar.
+       * @default vertical
        *
        * @name Controls/_scroll/resources/Scrollbar#style
        * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
@@ -36,62 +42,56 @@ import 'css!theme?Controls/scroll';
        */
       var
          _private = {
-
-            /**
-             * Позиция курсора относительно страницы, в начале перемещения.
-             */
-            currentPageY: null,
-
             /**
              * Посчитать позицию ползунка учитывая граници за которые он не может выйти.
-             * @param {number} position позиция ползунка.
-             * @param {number} bottom нижняя граница ползунка.
-             * @param {number} top верхняя граница ползунка.
+             * @param {number} position текущая позиция ползунка в контейнере ползунка.
+             * @param {number} minPosition минимально допустимая позиция контейнера ползунка.
+             * @param {number} maxPosition максимально допустимая позиция контейнера ползунка.
              * @return {number} позиция ползунка
              */
-            calcPosition: function(position, bottom, top) {
-               return Math.min(Math.max(bottom, position), top);
+            calcPosition: function(position, minPosition, maxPosition) {
+               return Math.min(Math.max(minPosition, position), maxPosition);
             },
 
             /**
-             * Посчитать отношение высот контейнера ползунка к контенту.
-             * @param {number} scrollbarHeight высота контейнера ползунка.
-             * @param {number} contentHeight высота контента.
-             * @return {number} отношение высот контейнера ползунка к контенту.
+             * Посчитать отношение размеров контейнера ползунка к контенту.
+             * @param {number} scrollbarSize размер контейнера ползунка.
+             * @param {number} contentSize размер контента.
+             * @return {number} отношение размеров контейнера ползунка к контенту.
              */
-            calcViewportRatio: function(scrollbarHeight, contentHeight) {
-               return scrollbarHeight / contentHeight;
+            calcViewportRatio: function(scrollbarSize, contentSize) {
+               return scrollbarSize / contentSize;
             },
 
             /**
-             * Получить отношение высот отображения скрытого контента и самого скрытого контента.
-             * @param {number} scrollbarHeight высота контейнера ползунка.
-             * @param {number} scrollbarAvailableHeight высота контейнера по которому может перемещаться ползунок.
-             * @param {number} thumbHeight высота ползунка.
-             * @param {number} contentHeight высота контента.
-             * @return {number} отношение высот отображения скрытого контента и самого скрытого контента.
+             * Получить отношение размера контейнера ползунка к размеру контейнера, по которому может перемещаться ползунок.
+             * @param {number} scrollbarSize размер контейнера ползунка.
+             * @param {number} scrollbarAvailableSize размер контейнера по которому может перемещаться ползунок.
+             * @param {number} thumbSize размер ползунка.
+             * @param {number} contentSize размер контента.
+             * @return {number} отношение размера контейнера ползунка к размеру контейнера, по которому может перемещаться ползунок.
              */
-            calcScrollRatio: function(scrollbarHeight, scrollbarAvailableHeight, thumbHeight, contentHeight) {
+            calcScrollRatio: function(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize) {
                /**
                 * If the content size is equal to the scrollbar size, then scrollRatio is not defined.
                 * Thats why, we consider it equal 1.
                 */
-               return (scrollbarAvailableHeight - thumbHeight) / (contentHeight - scrollbarHeight) || 1;
+               return (scrollbarAvailableSize - thumbSize) / (contentSize - scrollbarSize) || 1;
             },
 
             /**
-             * Посчитать высоту ползунка.
+             * Посчитать размер ползунка.
              * @param thumb ползунок.
-             * @param {number} scrollbarAvailableHeight высота контейнера по которому может перемещаться ползунок.
-             * @param {number} viewportRatio отношение высот контейнера ползунка к контенту.
-             * @return {number} высота ползунка.
+             * @param {number} scrollbarAvailableSize размер контейнера по которому может перемещаться ползунок.
+             * @param {number} viewportRatio отношение размера контейнера ползунка к контенту.
+             * @return {number} размер ползунка.
              */
-            calcThumbHeight: function(thumb, scrollbarAvailableHeight, viewportRatio) {
+            calcThumbSize: function(thumb, scrollbarAvailableSize, viewportRatio, direction) {
                var
-                  thumbHeight = scrollbarAvailableHeight * viewportRatio,
-                  minHeight = parseFloat(getComputedStyle(thumb)['min-height']);
+                  thumbSize = scrollbarAvailableSize * viewportRatio,
+                  minSize = parseFloat(getComputedStyle(thumb)[direction === 'vertical' ? 'min-height' : 'min-width']);
 
-               return Math.max(minHeight, thumbHeight);
+               return Math.max(minSize, thumbSize);
             },
             calcWheelDelta: function(firefox, delta) {
                /**
@@ -108,8 +108,8 @@ import 'css!theme?Controls/scroll';
 
                return delta;
             },
-            calcScrollbarDelta: function(start, end, thumbHeight) {
-               return end - start - thumbHeight / 2;
+            calcScrollbarDelta: function(start, end, thumbSize) {
+               return end - start - thumbSize / 2;
             }
          },
          Scrollbar = Control.extend({
@@ -127,6 +127,11 @@ import 'css!theme?Controls/scroll';
              */
             _position: 0,
 
+            /**
+             * Позиция курсора относительно страницы, в начале перемещения.
+             */
+            _currentPageOffset: null,
+
             _afterMount: function() {
                this._resizeHandler();
 
@@ -139,8 +144,8 @@ import 'css!theme?Controls/scroll';
                   shouldForceUpdatePosition = false,
                   shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
 
-               if (oldOptions.contentHeight !== this._options.contentHeight) {
-                  shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentHeight);
+               if (oldOptions.contentSize !== this._options.contentSize) {
+                  shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentSize);
                   shouldUpdatePosition = true;
                }
                if (shouldUpdatePosition) {
@@ -159,9 +164,14 @@ import 'css!theme?Controls/scroll';
              * @return {boolean} изменилась ли позиция.
              */
             _setPosition: function(position, notify) {
-               var top = (this._children.scrollbar.clientHeight - this._thumbHeight) / this._scrollRatio;
+               var
+                  scrollbarSize = this._children.scrollbar[this._options.direction === 'vertical' ? 'clientHeight' : 'clientWidth'],
 
-               position = _private.calcPosition(position, 0, top);
+                  // todo тут можно убрать деление, в шаблоне Scrollbar.wml можно убрать умножение
+                  // и переписать событие "positionChanged" (тогда логика станет понятной)
+                  maxPosition = (scrollbarSize - this._thumbSize) / this._scrollRatio;
+
+               position = _private.calcPosition(position, 0, maxPosition);
 
                if (this._position === position) {
                   return false;
@@ -178,27 +188,29 @@ import 'css!theme?Controls/scroll';
 
             /**
              * Изменить свойства контрола отвечающего за размеры.
-             * @param contentHeight высота контента.
+             * @param contentSize размер контента.
              * @return {boolean} изменились ли размеры.
              */
-            _setSizes: function(contentHeight) {
+            _setSizes: function(contentSize) {
                var
+                  verticalDirection = this._options.direction === 'vertical',
                   scrollbar = this._children.scrollbar,
-                  scrollbarHeight = scrollbar.offsetHeight,
-                  scrollbarAvailableHeight = scrollbar.clientHeight,
-                  thumbHeight, scrollRatio;
+                  scrollbarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'],
+                  scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'],
+                  thumbSize, scrollRatio;
 
-               thumbHeight = _private.calcThumbHeight(
+               thumbSize = _private.calcThumbSize(
                   this._children.thumb,
-                  scrollbarAvailableHeight,
-                  _private.calcViewportRatio(scrollbarHeight, contentHeight)
+                  scrollbarAvailableSize,
+                  _private.calcViewportRatio(scrollbarSize, contentSize),
+                  this._options.direction
                );
-               scrollRatio = _private.calcScrollRatio(scrollbarHeight, scrollbarAvailableHeight, thumbHeight, contentHeight);
+               scrollRatio = _private.calcScrollRatio(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize);
 
-               if (this._thumbHeight === thumbHeight && this._scrollRatio === scrollRatio) {
+               if (this._thumbSize === thumbSize && this._scrollRatio === scrollRatio) {
                   return false;
                } else {
-                  this._thumbHeight = thumbHeight;
+                  this._thumbSize = thumbSize;
                   this._scrollRatio = scrollRatio;
 
                   return true;
@@ -211,14 +223,15 @@ import 'css!theme?Controls/scroll';
              */
             _scrollbarBeginDragHandler: function(event) {
                var
-                  pageY = event.nativeEvent.pageY,
-                  thumbTop = this._children.thumb.getBoundingClientRect().top,
+                  verticalDirection = this._options.direction === 'vertical',
+                  pageOffset = event.nativeEvent[verticalDirection ? 'pageY' : 'pageX'],
+                  thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
                   delta;
 
-               _private.currentPageY = pageY;
+               this._currentPageOffset = pageOffset;
 
                if (event.target.getAttribute('name') === 'scrollbar') {
-                  delta = _private.calcScrollbarDelta(thumbTop, pageY, this._thumbHeight);
+                  delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
                   this._setPosition(this._position + delta / this._scrollRatio, true);
                } else {
                   this._children.dragNDrop.startDragNDrop(null, event);
@@ -236,11 +249,11 @@ import 'css!theme?Controls/scroll';
              */
             _scrollbarOnDragHandler: function(e, event) {
                var
-                  pageY = event.domEvent.pageY,
-                  delta = pageY - _private.currentPageY;
+                  pageOffset = event.domEvent[this._options.direction === 'vertical' ? 'pageY' : 'pageX'],
+                  delta = pageOffset - this._currentPageOffset;
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
-                  _private.currentPageY = pageY;
+                  this._currentPageOffset = pageOffset;
                }
             },
 
@@ -268,14 +281,15 @@ import 'css!theme?Controls/scroll';
              * Обработчик изменения размеров скролла.
              */
             _resizeHandler: function() {
-               this._setSizes(this._options.contentHeight);
+               this._setSizes(this._options.contentSize);
                this._setPosition(this._options.position);
             }
          });
 
       Scrollbar.getDefaultOptions = function() {
          return {
-            position: 0
+            position: 0,
+            direction: 'vertical'
          };
       };
 

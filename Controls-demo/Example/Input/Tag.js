@@ -24,6 +24,8 @@ define('Controls-demo/Example/Input/Tag',
 
          _value5: '10 500.00',
 
+         _value6: '10 500.00',
+
          _showInfoBox: function(event, target) {
             var cfg = {
                target: target,

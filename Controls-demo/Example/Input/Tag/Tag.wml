@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.input:Text tagStyle="primary" class="ControlsDemo-ExampleInput_fieldWithTag"
+                  <Controls.input:Text tagStyle="secondary" class="ControlsDemo-ExampleInput_fieldWithTag"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -45,6 +45,15 @@
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
                                        bind:value="_value5"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.input:Text tagStyle="primary"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value6"/>
                </ws:template>
             </ws:Object>
          </ws:Array>

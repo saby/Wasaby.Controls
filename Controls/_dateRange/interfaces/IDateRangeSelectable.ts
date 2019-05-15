@@ -9,7 +9,7 @@ import IRangeSelectable = require('Controls/Date/interface/IRangeSelectable');
  */
 var selectionTypes = coreMerge({'quantum': 'quantum'}, IRangeSelectable.SELECTION_TYPES);
 
-return {
+export = {
    getDefaultOptions: function () {
       var options = IRangeSelectable.getDefaultOptions();
 
@@ -47,4 +47,3 @@ return {
       return optionsTypes;
    }
 };
-});

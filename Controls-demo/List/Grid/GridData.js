@@ -1,4 +1,4 @@
-define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], function(DemoImages) {
+define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], function (DemoImages) {
    var data = {
       catalog: [
          {
@@ -8,7 +8,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 260
+            costPrice: 260,
+            costPrice1: 2601,
+            costPrice2: 2602,
+            costPrice3: 2603,
+            costPrice4: 2604,
+            costPrice5: 2605,
+            costPrice6: 2606,
+            costPrice7: 2607,
+            costPrice8: 2608,
+            costPrice9: 2609
          },
          {
             id: '447037',
@@ -17,7 +26,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 2.501,
             balanceCostSumm: 390.12,
             reserve: null,
-            costPrice: 156
+            costPrice: 156,
+            costPrice1: 1561,
+            costPrice2: 1562,
+            costPrice3: 1563,
+            costPrice4: 1564,
+            costPrice5: 1565,
+            costPrice6: 1566,
+            costPrice7: 1567,
+            costPrice8: 1568,
+            costPrice9: 1569
          },
          {
             id: '448390',
@@ -26,7 +44,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 3.441,
             balanceCostSumm: 2408.39,
             reserve: null,
-            costPrice: 700
+            costPrice: 700,
+            costPrice1: 7001,
+            costPrice2: 7002,
+            costPrice3: 7003,
+            costPrice4: 7004,
+            costPrice5: 7005,
+            costPrice6: 7006,
+            costPrice7: 7007,
+            costPrice8: 7008,
+            costPrice9: 7009
          },
          {
             id: '457328',
@@ -35,7 +62,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 17.34
+            costPrice: 17.34,
+            costPrice1: 17.341,
+            costPrice2: 17.342,
+            costPrice3: 17.343,
+            costPrice4: 17.344,
+            costPrice5: 17.345,
+            costPrice6: 17.346,
+            costPrice7: 17.347,
+            costPrice8: 17.348,
+            costPrice9: 17.349
          },
          {
             id: '471329',
@@ -44,7 +80,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 36
+            costPrice: 36,
+            costPrice1: 361,
+            costPrice2: 362,
+            costPrice3: 363,
+            costPrice4: 364,
+            costPrice5: 365,
+            costPrice6: 366,
+            costPrice7: 367,
+            costPrice8: 368,
+            costPrice9: 369
          },
          {
             id: '441931',
@@ -53,7 +98,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 27.19,
             balanceCostSumm: 1039.97,
             reserve: null,
-            costPrice: 38.25
+            costPrice: 38.25,
+            costPrice1: 38.251,
+            costPrice2: 38.252,
+            costPrice3: 38.253,
+            costPrice4: 38.254,
+            costPrice5: 38.255,
+            costPrice6: 38.256,
+            costPrice7: 38.257,
+            costPrice8: 38.258,
+            costPrice9: 38.259
          },
          {
             id: '441737',
@@ -62,7 +116,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 3.925,
             balanceCostSumm: 618.23,
             reserve: null,
-            costPrice: 157.51
+            costPrice: 157.51,
+            costPrice1: 157.511,
+            costPrice2: 157.512,
+            costPrice3: 157.513,
+            costPrice4: 157.514,
+            costPrice5: 157.515,
+            costPrice6: 157.516,
+            costPrice7: 157.517,
+            costPrice8: 157.518,
+            costPrice9: 157.519
          },
          {
             id: '439693',
@@ -71,7 +134,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 18.59,
             balanceCostSumm: 1268.7,
             reserve: null,
-            costPrice: 68.25
+            costPrice: 68.25,
+            costPrice1: 68.251,
+            costPrice2: 68.252,
+            costPrice3: 68.253,
+            costPrice4: 68.254,
+            costPrice5: 68.255,
+            costPrice6: 68.256,
+            costPrice7: 68.257,
+            costPrice8: 68.258,
+            costPrice9: 68.259
          },
          {
             id: '441627',
@@ -80,7 +152,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 56.983,
             balanceCostSumm: 8039.06,
             reserve: null,
-            costPrice: 141.08
+            costPrice: 141.08,
+            costPrice1: 141.081,
+            costPrice2: 141.082,
+            costPrice3: 141.083,
+            costPrice4: 141.084,
+            costPrice5: 141.085,
+            costPrice6: 141.086,
+            costPrice7: 141.087,
+            costPrice8: 141.088,
+            costPrice9: 141.089
          },
          {
             id: '451295',
@@ -89,7 +170,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 39.718,
             balanceCostSumm: 13375.42,
             reserve: null,
-            costPrice: 336.76
+            costPrice: 336.76,
+            costPrice1: 336.761,
+            costPrice2: 336.762,
+            costPrice3: 336.763,
+            costPrice4: 336.764,
+            costPrice5: 336.765,
+            costPrice6: 336.766,
+            costPrice7: 336.767,
+            costPrice8: 336.768,
+            costPrice9: 336.769
          },
          {
             id: '442584',
@@ -98,7 +188,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 1.233,
             balanceCostSumm: 286.61,
             reserve: null,
-            costPrice: 232.41
+            costPrice: 232.41,
+            costPrice1: 232.411,
+            costPrice2: 232.412,
+            costPrice3: 232.413,
+            costPrice4: 232.414,
+            costPrice5: 232.415,
+            costPrice6: 232.416,
+            costPrice7: 232.417,
+            costPrice8: 232.418,
+            costPrice9: 232.419
          },
          {
             id: '447664',
@@ -107,7 +206,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 14.549,
             balanceCostSumm: 2037.62,
             reserve: null,
-            costPrice: 140.05
+            costPrice: 140.05,
+            costPrice1: 140.051,
+            costPrice2: 140.052,
+            costPrice3: 140.053,
+            costPrice4: 140.054,
+            costPrice5: 140.055,
+            costPrice6: 140.056,
+            costPrice7: 140.057,
+            costPrice8: 140.058,
+            costPrice9: 140.059
          },
          {
             id: '439698',
@@ -116,7 +224,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 19.093,
             balanceCostSumm: 511.59,
             reserve: null,
-            costPrice: 26.8
+            costPrice: 26.8,
+            costPrice1: 26.81,
+            costPrice2: 26.82,
+            costPrice3: 26.83,
+            costPrice4: 26.84,
+            costPrice5: 26.85,
+            costPrice6: 26.86,
+            costPrice7: 26.87,
+            costPrice8: 26.88,
+            costPrice9: 26.89
          },
          {
             id: '443503',
@@ -125,7 +242,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 0.45,
             balanceCostSumm: 69,
             reserve: null,
-            costPrice: 153.33
+            costPrice: 153.33,
+            costPrice1: 153.331,
+            costPrice2: 153.332,
+            costPrice3: 153.333,
+            costPrice4: 153.334,
+            costPrice5: 153.335,
+            costPrice6: 153.336,
+            costPrice7: 153.337,
+            costPrice8: 153.338,
+            costPrice9: 153.339
          },
          {
             id: '446823',
@@ -134,7 +260,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 10.314,
             balanceCostSumm: 2288.29,
             reserve: null,
-            costPrice: 221.86
+            costPrice: 221.86,
+            costPrice1: 221.861,
+            costPrice2: 221.862,
+            costPrice3: 221.863,
+            costPrice4: 221.864,
+            costPrice5: 221.865,
+            costPrice6: 221.866,
+            costPrice7: 221.867,
+            costPrice8: 221.868,
+            costPrice9: 221.869
          },
          {
             id: '439672',
@@ -143,7 +278,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 49.877,
             balanceCostSumm: 2828.4,
             reserve: null,
-            costPrice: 56.71
+            costPrice: 56.71,
+            costPrice1: 56.711,
+            costPrice2: 56.712,
+            costPrice3: 56.713,
+            costPrice4: 56.714,
+            costPrice5: 56.715,
+            costPrice6: 56.716,
+            costPrice7: 56.717,
+            costPrice8: 56.718,
+            costPrice9: 56.719
          },
          {
             id: '441302',
@@ -152,7 +296,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 14.311,
             balanceCostSumm: 3353.67,
             reserve: null,
-            costPrice: 234.34
+            costPrice: 234.34,
+            costPrice1: 234.341,
+            costPrice2: 234.342,
+            costPrice3: 234.343,
+            costPrice4: 234.344,
+            costPrice5: 234.345,
+            costPrice6: 234.346,
+            costPrice7: 234.347,
+            costPrice8: 234.348,
+            costPrice9: 234.349
          },
          {
             id: '441518',
@@ -161,7 +314,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 6.857,
             balanceCostSumm: 5799.66,
             reserve: null,
-            costPrice: 845.82
+            costPrice: 845.82,
+            costPrice1: 845.821,
+            costPrice2: 845.822,
+            costPrice3: 845.823,
+            costPrice4: 845.824,
+            costPrice5: 845.825,
+            costPrice6: 845.826,
+            costPrice7: 845.827,
+            costPrice8: 845.828,
+            costPrice9: 845.829
          },
          {
             id: '447906',
@@ -170,7 +332,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 4.388,
             balanceCostSumm: 8475.09,
             reserve: null,
-            costPrice: 1931.63
+            costPrice: 1931.63,
+            costPrice1: 1931.631,
+            costPrice2: 1931.632,
+            costPrice3: 1931.633,
+            costPrice4: 1931.634,
+            costPrice5: 1931.635,
+            costPrice6: 1931.636,
+            costPrice7: 1931.637,
+            costPrice8: 1931.638,
+            costPrice9: 1931.639
          },
          {
             id: '460310',
@@ -179,7 +350,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 7.64,
             balanceCostSumm: 1336.99,
             reserve: null,
-            costPrice: 175
+            costPrice: 175,
+            costPrice1: 1751,
+            costPrice2: 1752,
+            costPrice3: 1753,
+            costPrice4: 1754,
+            costPrice5: 1755,
+            costPrice6: 1756,
+            costPrice7: 1757,
+            costPrice8: 1758,
+            costPrice9: 1759
          },
          {
             id: '439688',
@@ -188,7 +368,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 5.37,
             balanceCostSumm: 3405.95,
             reserve: null,
-            costPrice: 634.23
+            costPrice: 634.23,
+            costPrice1: 634.231,
+            costPrice2: 634.232,
+            costPrice3: 634.233,
+            costPrice4: 634.234,
+            costPrice5: 634.235,
+            costPrice6: 634.236,
+            costPrice7: 634.237,
+            costPrice8: 634.238,
+            costPrice9: 634.239
          },
          {
             id: '460976',
@@ -197,7 +386,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 11.621,
             balanceCostSumm: 11131.65,
             reserve: null,
-            costPrice: 957.93
+            costPrice: 957.93,
+            costPrice1: 957.931,
+            costPrice2: 957.932,
+            costPrice3: 957.933,
+            costPrice4: 957.934,
+            costPrice5: 957.935,
+            costPrice6: 957.936,
+            costPrice7: 957.937,
+            costPrice8: 957.938,
+            costPrice9: 957.939
          },
          {
             id: '443202',
@@ -206,7 +404,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: -0.013,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: null
+            costPrice: null,
+            costPrice1: 1,
+            costPrice2: 2,
+            costPrice3: 3,
+            costPrice4: 4,
+            costPrice5: 5,
+            costPrice6: 6,
+            costPrice7: 7,
+            costPrice8: 8,
+            costPrice9: 9
          },
          {
             id: '443050',
@@ -215,7 +422,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 4,
             balanceCostSumm: 110.48,
             reserve: null,
-            costPrice: 27.62
+            costPrice: 27.62,
+            costPrice1: 27.621,
+            costPrice2: 27.622,
+            costPrice3: 27.623,
+            costPrice4: 27.624,
+            costPrice5: 27.625,
+            costPrice6: 27.626,
+            costPrice7: 27.627,
+            costPrice8: 27.628,
+            costPrice9: 27.629
          },
          {
             id: '443400',
@@ -224,7 +440,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 312.28
+            costPrice: 312.28,
+            costPrice1: 312.281,
+            costPrice2: 312.282,
+            costPrice3: 312.283,
+            costPrice4: 312.284,
+            costPrice5: 312.285,
+            costPrice6: 312.286,
+            costPrice7: 312.287,
+            costPrice8: 312.288,
+            costPrice9: 312.289
          },
          {
             id: '441856',
@@ -233,7 +458,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 35.11
+            costPrice: 35.11,
+            costPrice1: 35.111,
+            costPrice2: 35.112,
+            costPrice3: 35.113,
+            costPrice4: 35.114,
+            costPrice5: 35.115,
+            costPrice6: 35.116,
+            costPrice7: 35.117,
+            costPrice8: 35.118,
+            costPrice9: 35.119
          },
          {
             id: '441915',
@@ -242,7 +476,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 12.137,
             balanceCostSumm: 2034.89,
             reserve: null,
-            costPrice: 167.66
+            costPrice: 167.66,
+            costPrice1: 167.661,
+            costPrice2: 167.662,
+            costPrice3: 167.663,
+            costPrice4: 167.664,
+            costPrice5: 167.665,
+            costPrice6: 167.666,
+            costPrice7: 167.667,
+            costPrice8: 167.668,
+            costPrice9: 167.669
          },
          {
             id: '448193',
@@ -251,7 +494,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 3.437,
             balanceCostSumm: 988.6,
             reserve: null,
-            costPrice: 287.66
+            costPrice: 287.66,
+            costPrice1: 287.661,
+            costPrice2: 287.662,
+            costPrice3: 287.663,
+            costPrice4: 287.664,
+            costPrice5: 287.665,
+            costPrice6: 287.666,
+            costPrice7: 287.667,
+            costPrice8: 287.668,
+            costPrice9: 287.669
          },
          {
             id: '441637',
@@ -260,7 +512,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 96.46,
             balanceCostSumm: 9203.36,
             reserve: null,
-            costPrice: 95.41
+            costPrice: 95.41,
+            costPrice1: 95.411,
+            costPrice2: 95.412,
+            costPrice3: 95.413,
+            costPrice4: 95.414,
+            costPrice5: 95.415,
+            costPrice6: 95.416,
+            costPrice7: 95.417,
+            costPrice8: 95.418,
+            costPrice9: 95.419
          },
          {
             id: '441717',
@@ -269,7 +530,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 32.308,
             balanceCostSumm: 39908.68,
             reserve: null,
-            costPrice: 1235.26
+            costPrice: 1235.26,
+            costPrice1: 1235.261,
+            costPrice2: 1235.262,
+            costPrice3: 1235.263,
+            costPrice4: 1235.264,
+            costPrice5: 1235.265,
+            costPrice6: 1235.266,
+            costPrice7: 1235.267,
+            costPrice8: 1235.268,
+            costPrice9: 1235.269
          },
          {
             id: '441693',
@@ -278,7 +548,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 0.622,
             balanceCostSumm: 1077.32,
             reserve: null,
-            costPrice: 1732.23
+            costPrice: 1732.23,
+            costPrice1: 1732.231,
+            costPrice2: 1732.232,
+            costPrice3: 1732.233,
+            costPrice4: 1732.234,
+            costPrice5: 1732.235,
+            costPrice6: 1732.236,
+            costPrice7: 1732.237,
+            costPrice8: 1732.238,
+            costPrice9: 1732.239
          },
          {
             id: '464854',
@@ -287,7 +566,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 0.08,
             balanceCostSumm: 1245.57,
             reserve: null,
-            costPrice: 15569.63
+            costPrice: 15569.63,
+            costPrice1: 15569.631,
+            costPrice2: 15569.632,
+            costPrice3: 15569.633,
+            costPrice4: 15569.634,
+            costPrice5: 15569.635,
+            costPrice6: 15569.636,
+            costPrice7: 15569.637,
+            costPrice8: 15569.638,
+            costPrice9: 15569.639
          },
          {
             id: '441681',
@@ -296,7 +584,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 9.671,
             balanceCostSumm: 16367.59,
             reserve: null,
-            costPrice: 1692.39
+            costPrice: 1692.39,
+            costPrice1: 1692.391,
+            costPrice2: 1692.392,
+            costPrice3: 1692.393,
+            costPrice4: 1692.394,
+            costPrice5: 1692.395,
+            costPrice6: 1692.396,
+            costPrice7: 1692.397,
+            costPrice8: 1692.398,
+            costPrice9: 1692.399
          },
          {
             id: '466461',
@@ -305,7 +602,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 109666.67
+            costPrice: 109666.67,
+            costPrice1: 109666.671,
+            costPrice2: 109666.672,
+            costPrice3: 109666.673,
+            costPrice4: 109666.674,
+            costPrice5: 109666.675,
+            costPrice6: 109666.676,
+            costPrice7: 109666.677,
+            costPrice8: 109666.678,
+            costPrice9: 109666.679
          },
          {
             id: '439671',
@@ -314,7 +620,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 8.82,
             balanceCostSumm: 992.11,
             reserve: null,
-            costPrice: 112.48
+            costPrice: 112.48,
+            costPrice1: 112.481,
+            costPrice2: 112.482,
+            costPrice3: 112.483,
+            costPrice4: 112.484,
+            costPrice5: 112.485,
+            costPrice6: 112.486,
+            costPrice7: 112.487,
+            costPrice8: 112.488,
+            costPrice9: 112.489
          },
          {
             id: '459928',
@@ -323,7 +638,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 4.162,
             balanceCostSumm: 762.73,
             reserve: null,
-            costPrice: 183.25
+            costPrice: 183.25,
+            costPrice1: 183.251,
+            costPrice2: 183.252,
+            costPrice3: 183.253,
+            costPrice4: 183.254,
+            costPrice5: 183.255,
+            costPrice6: 183.256,
+            costPrice7: 183.257,
+            costPrice8: 183.258,
+            costPrice9: 183.259
          },
          {
             id: '468442',
@@ -332,7 +656,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 1.09,
             balanceCostSumm: 376.22,
             reserve: null,
-            costPrice: 345.16
+            costPrice: 345.16,
+            costPrice1: 345.161,
+            costPrice2: 345.162,
+            costPrice3: 345.163,
+            costPrice4: 345.164,
+            costPrice5: 345.165,
+            costPrice6: 345.166,
+            costPrice7: 345.167,
+            costPrice8: 345.168,
+            costPrice9: 345.169
          },
          {
             id: '461983',
@@ -341,7 +674,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 7.745,
             balanceCostSumm: 268.89,
             reserve: null,
-            costPrice: 34.72
+            costPrice: 34.72,
+            costPrice1: 34.721,
+            costPrice2: 34.722,
+            costPrice3: 34.723,
+            costPrice4: 34.724,
+            costPrice5: 34.725,
+            costPrice6: 34.726,
+            costPrice7: 34.727,
+            costPrice8: 34.728,
+            costPrice9: 34.729
          },
          {
             id: '443348',
@@ -350,7 +692,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 6.891,
             balanceCostSumm: 157.88,
             reserve: null,
-            costPrice: 22.91
+            costPrice: 22.91,
+            costPrice1: 22.911,
+            costPrice2: 22.912,
+            costPrice3: 22.913,
+            costPrice4: 22.914,
+            costPrice5: 22.915,
+            costPrice6: 22.916,
+            costPrice7: 22.917,
+            costPrice8: 22.918,
+            costPrice9: 22.919
          },
          {
             id: '461982',
@@ -359,7 +710,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 25
+            costPrice: 25,
+            costPrice1: 251,
+            costPrice2: 252,
+            costPrice3: 253,
+            costPrice4: 254,
+            costPrice5: 255,
+            costPrice6: 256,
+            costPrice7: 257,
+            costPrice8: 258,
+            costPrice9: 259
          },
          {
             id: '461602',
@@ -368,7 +728,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 3.63,
             balanceCostSumm: 88.09,
             reserve: null,
-            costPrice: 24.27
+            costPrice: 24.27,
+            costPrice1: 24.271,
+            costPrice2: 24.272,
+            costPrice3: 24.273,
+            costPrice4: 24.274,
+            costPrice5: 24.275,
+            costPrice6: 24.276,
+            costPrice7: 24.277,
+            costPrice8: 24.278,
+            costPrice9: 24.279
          },
          {
             id: '443562',
@@ -377,7 +746,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 4.234,
             balanceCostSumm: 1456.92,
             reserve: null,
-            costPrice: 344.13
+            costPrice: 344.13,
+            costPrice1: 344.131,
+            costPrice2: 344.132,
+            costPrice3: 344.133,
+            costPrice4: 344.134,
+            costPrice5: 344.135,
+            costPrice6: 344.136,
+            costPrice7: 344.137,
+            costPrice8: 344.138,
+            costPrice9: 344.139
          },
          {
             id: '441570',
@@ -386,7 +764,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 6.865,
             balanceCostSumm: 2008.6,
             reserve: null,
-            costPrice: 292.59
+            costPrice: 292.59,
+            costPrice1: 292.591,
+            costPrice2: 292.592,
+            costPrice3: 292.593,
+            costPrice4: 292.594,
+            costPrice5: 292.595,
+            costPrice6: 292.596,
+            costPrice7: 292.597,
+            costPrice8: 292.598,
+            costPrice9: 292.599
          },
          {
             id: '439668',
@@ -395,7 +782,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 146.43,
             balanceCostSumm: 9334.41,
             reserve: null,
-            costPrice: 63.75
+            costPrice: 63.75,
+            costPrice1: 63.751,
+            costPrice2: 63.752,
+            costPrice3: 63.753,
+            costPrice4: 63.754,
+            costPrice5: 63.755,
+            costPrice6: 63.756,
+            costPrice7: 63.757,
+            costPrice8: 63.758,
+            costPrice9: 63.759
          },
          {
             id: '448218',
@@ -404,7 +800,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 29.096,
             balanceCostSumm: 4454.06,
             reserve: null,
-            costPrice: 153.08
+            costPrice: 153.08,
+            costPrice1: 153.081,
+            costPrice2: 153.082,
+            costPrice3: 153.083,
+            costPrice4: 153.084,
+            costPrice5: 153.085,
+            costPrice6: 153.086,
+            costPrice7: 153.087,
+            costPrice8: 153.088,
+            costPrice9: 153.089
          },
          {
             id: '440193',
@@ -413,7 +818,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 17.828,
             balanceCostSumm: 515.83,
             reserve: null,
-            costPrice: 28.93
+            costPrice: 28.93,
+            costPrice1: 28.931,
+            costPrice2: 28.932,
+            costPrice3: 28.933,
+            costPrice4: 28.934,
+            costPrice5: 28.935,
+            costPrice6: 28.936,
+            costPrice7: 28.937,
+            costPrice8: 28.938,
+            costPrice9: 28.939
          },
          {
             id: '462143',
@@ -422,7 +836,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 290
+            costPrice: 290,
+            costPrice1: 2901,
+            costPrice2: 2902,
+            costPrice3: 2903,
+            costPrice4: 2904,
+            costPrice5: 2905,
+            costPrice6: 2906,
+            costPrice7: 2907,
+            costPrice8: 2908,
+            costPrice9: 2909
          },
          {
             id: '442239',
@@ -431,7 +854,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 58.164,
             balanceCostSumm: 19848.76,
             reserve: null,
-            costPrice: 341.26
+            costPrice: 341.26,
+            costPrice1: 341.261,
+            costPrice2: 341.262,
+            costPrice3: 341.263,
+            costPrice4: 341.264,
+            costPrice5: 341.265,
+            costPrice6: 341.266,
+            costPrice7: 341.267,
+            costPrice8: 341.268,
+            costPrice9: 341.269
          },
          {
             id: '441871',
@@ -440,7 +872,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 0.235,
             balanceCostSumm: 188,
             reserve: null,
-            costPrice: 800
+            costPrice: 800,
+            costPrice1: 8001,
+            costPrice2: 8002,
+            costPrice3: 8003,
+            costPrice4: 8004,
+            costPrice5: 8005,
+            costPrice6: 8006,
+            costPrice7: 8007,
+            costPrice8: 8008,
+            costPrice9: 8009
          },
          {
             id: '447036',
@@ -449,7 +890,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: null
+            costPrice: null,
+            costPrice1: 1,
+            costPrice2: 2,
+            costPrice3: 3,
+            costPrice4: 4,
+            costPrice5: 5,
+            costPrice6: 6,
+            costPrice7: 7,
+            costPrice8: 8,
+            costPrice9: 9
          },
          {
             id: '447038',
@@ -458,7 +908,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 0.99,
             balanceCostSumm: 784.82,
             reserve: null,
-            costPrice: 792.75
+            costPrice: 792.75,
+            costPrice1: 792.751,
+            costPrice2: 792.752,
+            costPrice3: 792.753,
+            costPrice4: 792.754,
+            costPrice5: 792.755,
+            costPrice6: 792.756,
+            costPrice7: 792.757,
+            costPrice8: 792.758,
+            costPrice9: 792.759
          },
          {
             id: '457491',
@@ -467,7 +926,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: 1670.77
+            costPrice: 1670.77,
+            costPrice1: 1670.771,
+            costPrice2: 1670.772,
+            costPrice3: 1670.773,
+            costPrice4: 1670.774,
+            costPrice5: 1670.775,
+            costPrice6: 1670.776,
+            costPrice7: 1670.777,
+            costPrice8: 1670.778,
+            costPrice9: 1670.779
          },
          {
             id: '439725',
@@ -476,7 +944,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 18.945,
             balanceCostSumm: 7940,
             reserve: null,
-            costPrice: 419.1
+            costPrice: 419.1,
+            costPrice1: 419.11,
+            costPrice2: 419.12,
+            costPrice3: 419.13,
+            costPrice4: 419.14,
+            costPrice5: 419.15,
+            costPrice6: 419.16,
+            costPrice7: 419.17,
+            costPrice8: 419.18,
+            costPrice9: 419.19
          },
          {
             id: '439724',
@@ -485,7 +962,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: 80.123,
             balanceCostSumm: 5079.39,
             reserve: null,
-            costPrice: 63.4
+            costPrice: 63.4,
+            costPrice1: 63.41,
+            costPrice2: 63.42,
+            costPrice3: 63.43,
+            costPrice4: 63.44,
+            costPrice5: 63.45,
+            costPrice6: 63.46,
+            costPrice7: 63.47,
+            costPrice8: 63.48,
+            costPrice9: 63.49
          },
          {
             id: '457489',
@@ -494,7 +980,16 @@ define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], f
             balance: null,
             balanceCostSumm: null,
             reserve: null,
-            costPrice: null
+            costPrice: null,
+            costPrice1: 1,
+            costPrice2: 2,
+            costPrice3: 3,
+            costPrice4: 4,
+            costPrice5: 5,
+            costPrice6: 6,
+            costPrice7: 7,
+            costPrice8: 8,
+            costPrice9: 9
          }
       ],
       tasks: [

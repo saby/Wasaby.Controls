@@ -3,9 +3,10 @@ define(
       'Core/core-instance',
       'Controls/input',
       'unit/resources/ProxyCall',
+      'Env/Env',
       'Vdom/Vdom'
    ],
-   function(instance, inputMod, ProxyCall, Vdom) {
+   function(instance, inputMod, ProxyCall, Env, Vdom) {
       'use strict';
 
       describe('Controls.Input.Text', function() {
@@ -177,6 +178,55 @@ define(
                   start: 3,
                   end: 3
                });
+            });
+         });
+         describe('Validate the constraint option.', function() {
+            var fn = Env.IoC.resolve('ILogger').error;
+            beforeEach(function() {
+               Env.IoC.resolve('ILogger').error = ProxyCall.apply(fn, 'error', calls, true);
+            });
+            afterEach(function() {
+               Env.IoC.resolve('ILogger').error = fn;
+            });
+            it('[0-9]', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[0-9]'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+            it('[A-Z]', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[A-Z]'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+            it('[a-z]', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[a-z]'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+            it('[-0-9,.\\n]', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '[-0-9,.\n]'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+            it('\\d', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  constraint: '\\d'
+               });
+
+               assert.equal(calls.length, 1);
             });
          });
       });

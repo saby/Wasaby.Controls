@@ -17,6 +17,8 @@ import _scrollContext = require('Controls/_scroll/Scroll/Context');
 import _stickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import _stickyHeaderController  from 'Controls/_scroll/StickyHeader/Controller';
 
+import Group = require('Controls/_scroll/StickyHeader/Group');
+
 
 export {
    Container,
@@ -24,5 +26,6 @@ export {
    StickyHeader,
    _scrollContext,
    _stickyHeaderContext,
-   _stickyHeaderController
+   _stickyHeaderController,
+   Group
 }
