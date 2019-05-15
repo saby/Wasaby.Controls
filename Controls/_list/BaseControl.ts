@@ -248,13 +248,11 @@ var _private = {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
-        self.activate();
     },
     moveMarkerToPrevious: function(self) {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
-        self.activate();
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
@@ -1518,6 +1516,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
+        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
+            this.activate();
+        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {
