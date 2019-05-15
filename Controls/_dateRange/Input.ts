@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import DateRangeModel = require('Controls/Date/model/DateRange');
-import stringValueConverter = require('Controls/Input/DateTime/StringValueConverter');
+import {StringValueConverter} from 'Controls/input';
 import IDateTimeMask from './interfaces/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
@@ -83,7 +83,7 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
-        var converter = new stringValueConverter({
+        var converter = new StringValueConverter({
                mask: this._options.mask,
                replacer: this._options.replacer
             });
