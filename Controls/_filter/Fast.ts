@@ -11,9 +11,6 @@ import Utils = require('Types/util');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import 'css!theme?Controls/filter';
-import 'css!theme?Controls/dropdown';
-
 
       /**
        * Control "Fast Filter".
@@ -278,7 +275,7 @@ import 'css!theme?Controls/dropdown';
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
-               className: this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup',
+               className: (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup') + '_theme_' + this._options.theme,
 
                // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
@@ -332,5 +329,6 @@ import 'css!theme?Controls/dropdown';
       });
 
       Fast._private = _private;
+      Fast._theme = ['Control/filter'];
       export = Fast;
 
