@@ -319,7 +319,7 @@
                 <div class="demo-Button__Label">Light close button</div>
             </div>
             <div attr:class="test_element">
-                <Controls.Button.Close/>
+                <Controls.popupTemplate:CloseButton/>
                 <div class="demo-Button__Label">Default close button</div>
             </div>
         </div>

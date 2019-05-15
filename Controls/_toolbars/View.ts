@@ -10,7 +10,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * Graphical control element on which buttons, menu and other input or output elements are placed.
  * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
  *
- * @class Controls/Toolbar
+ * @class Controls/_toolbars/View
  * @extends Core/Control
  * @mixes Controls/interface/ITooltip
  * @mixes Controls/interface/ISource
@@ -24,7 +24,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
- * @name Controls/Toolbar#source
+ * @name Controls/_toolbars/View#source
  * @cfg {Types/source:Base} Object that implements ISource interface for data access.
  * @default undefined
  * @remark
@@ -67,7 +67,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
- * @name Controls/Toolbar#itemsSpacing
+ * @name Controls/_toolbars/View#itemsSpacing
  * @cfg {String} Type of spacing between items.
  * @default medium
  * @example
@@ -82,7 +82,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
- * @event Controls/Toolbar#itemClick Occurs when item was clicked.
+ * @event Controls/_toolbars/View#itemClick Occurs when item was clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
  * @example
@@ -106,7 +106,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
     */
 
 /**
- * @name Controls/Toolbar#itemTemplate
+ * @name Controls/_toolbars/View#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
  * To determine the template, you should call the base template 'Controls/toolbars:ItemTemplate'.
@@ -142,7 +142,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
- * @name Controls/Toolbar#popupClassName
+ * @name Controls/_toolbars/View#popupClassName
  * @cfg {String} Class for drop-down list in toolbar menu.
  * @example
  * <pre>
