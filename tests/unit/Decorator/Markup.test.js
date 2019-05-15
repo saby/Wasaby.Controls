@@ -2,13 +2,13 @@
  * Created by rn.kondakov on 24.10.2018.
  */
 define([
-   'Controls/Decorator/Markup/Converter',
-   'Controls/Decorator/Markup/resources/template',
-   'Controls/Decorator/Markup/resolvers/highlight',
-   'Controls/Decorator/Markup/resolvers/linkDecorate',
-   'Controls/Decorator/Markup/resolvers/noOuterTag',
-   'Controls/Decorator/Markup/resolvers/innerText',
-   'Controls/Decorator/Markup/resources/linkDecorateUtils',
+   'Controls/_decorator/Markup/Converter',
+   'Controls/_decorator/Markup/resources/template',
+   'Controls/_decorator/Markup/resolvers/highlight',
+   'Controls/_decorator/Markup/resolvers/linkDecorate',
+   'Controls/_decorator/Markup/resolvers/noOuterTag',
+   'Controls/_decorator/Markup/resolvers/innerText',
+   'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
 ], function(Converter,
    template,
