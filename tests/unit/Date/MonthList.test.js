@@ -14,7 +14,7 @@ define([
       month: new Date(2018, 0, 1)
    };
 
-   describe('Controls/Date/MonthList', function() {
+   describe('Controls/_calendar/MonthList', function() {
       describe('_getMonth', function() {
          it('should return correct month', function() {
             let mv = calendarTestUtils.createComponent(calendar.MonthList, config);
