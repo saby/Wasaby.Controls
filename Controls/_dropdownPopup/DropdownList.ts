@@ -11,6 +11,7 @@ import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
+import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -284,8 +285,17 @@ import chain = require('Types/chain');
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+               let isApplyButtonVisible = this._needShowApplyButton;
+               let self = this;
+
                this._listModel.updateSelection(item);
                this._needShowApplyButton = _private.needShowApplyButton(this._listModel.getSelectedKeys(), this._options.selectedKeys);
+
+               if (this._needShowApplyButton !== isApplyButtonVisible) {
+                  scheduleCallbackAfterRedraw(this, () => {
+                     self._notify('controlResize', [], {bubbling: true});
+                  });
+               }
             } else {
                var result = {
                   action: pinClicked ? 'pinClicked' : 'itemClick',
