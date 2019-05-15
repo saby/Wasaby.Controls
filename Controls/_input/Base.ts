@@ -645,11 +645,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._notify('mouseenter', [event]);
          },
 
-         _keyDownHandler: function(event) {
-            // Stop propagation of home/end keys because of must prevent reaction except native. Scroll container can react on home/end keys.
-            if (event.nativeEvent.which === Env.constants.key.home || event.nativeEvent.which === Env.constants.key.end) {
-               event.stopPropagation();
-            }
+         _keyDownHandler: function() {
          },
          /**
           * Event handler key up in native field.

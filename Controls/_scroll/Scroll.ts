@@ -371,31 +371,34 @@ var
       },
 
       _keydownHandler: function(ev) {
-         var offset;
-         if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-            offset = this._children.content.scrollTop + this._children.content.clientHeight;
-         }
-         if (ev.nativeEvent.which === Env.constants.key.down) {
-            offset = this._children.content.scrollTop + 40;
-         }
-         if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-            offset = this._children.content.scrollTop - this._children.content.clientHeight;
-         }
-         if (ev.nativeEvent.which === Env.constants.key.up) {
-            offset = this._children.content.scrollTop - 40;
-         }
-         if (offset !== undefined) {
-            this.scrollTo(offset);
-            ev.preventDefault();
-         }
+         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
+         if (!ev.nativeEvent.isTrusted) {
+            var offset;
+            if (ev.nativeEvent.which === Env.constants.key.pageDown) {
+               offset = this._children.content.scrollTop + this._children.content.clientHeight;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.down) {
+               offset = this._children.content.scrollTop + 40;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.pageUp) {
+               offset = this._children.content.scrollTop - this._children.content.clientHeight;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.up) {
+               offset = this._children.content.scrollTop - 40;
+            }
+            if (offset !== undefined) {
+               this.scrollTo(offset);
+               ev.preventDefault();
+            }
 
-         if (ev.nativeEvent.which === Env.constants.key.home) {
-            this.scrollToTop();
-            ev.preventDefault();
-         }
-         if (ev.nativeEvent.which === Env.constants.key.end) {
-            this.scrollToBottom();
-            ev.preventDefault();
+            if (ev.nativeEvent.which === Env.constants.key.home) {
+               this.scrollToTop();
+               ev.preventDefault();
+            }
+            if (ev.nativeEvent.which === Env.constants.key.end) {
+               this.scrollToBottom();
+               ev.preventDefault();
+            }
          }
       },
 
