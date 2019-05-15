@@ -179,7 +179,7 @@ var _private = {
  * @private
  * @category Popup
  */
-var StickyController = BaseController.extend({
+let StickyController = BaseController.extend({
 
     elementCreated: function (item, container) {
         if (_private.isTargetVisible(item)) {
@@ -234,6 +234,10 @@ var StickyController = BaseController.extend({
 
         /* end: Return all values to the node. Need for vdom synchronizer */
         return true;
+    },
+
+    popupResize(item, container):Boolean {
+        return this.elementAfterUpdated(item, container);
     },
 
     getDefaultConfig: function (item) {
