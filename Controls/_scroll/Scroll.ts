@@ -386,18 +386,15 @@ var
          }
          if (offset !== undefined) {
             this.scrollTo(offset);
-            this.activate();
             ev.preventDefault();
          }
 
          if (ev.nativeEvent.which === Env.constants.key.home) {
             this.scrollToTop();
-            this.activate();
             ev.preventDefault();
          }
          if (ev.nativeEvent.which === Env.constants.key.end) {
             this.scrollToBottom();
-            this.activate();
             ev.preventDefault();
          }
       },
