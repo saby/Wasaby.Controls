@@ -1,11 +1,10 @@
 define([
-   'Controls/dragnDrop',
-   'Controls/DragNDrop/Entity/List/Items'
-], function(dragnDrop, Entity) {
+   'Controls/dragnDrop'
+], function(dragnDrop) {
    'use strict';
 
    function crateEntity(itemsCount) {
-      return new Entity({
+      return new dragnDrop.ListItems({
          items: {
             length: itemsCount
          }
