@@ -18,7 +18,7 @@ define([
 ) {
    'use strict';
 
-   describe('Controls/Date/PeriodLiteDialog', function() {
+   describe('Controls/dateLitePopup', function() {
       describe('Initialisation', function() {
          [{
             chooseHalfyears: true, chooseQuarters: true, chooseMonths: true, tmpl: itemTmpl
