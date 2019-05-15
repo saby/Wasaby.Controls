@@ -2613,6 +2613,52 @@ define([
                instance._listSwipe({}, itemData, childEvent);
             });
 
+            it('can update itemActions on left swipe', function(done) {
+               var
+                   cfg = {
+                      viewName: 'Controls/List/ListView',
+                      viewConfig: {
+                         idProperty: 'id'
+                      },
+                      viewModelConfig: {
+                         items: [],
+                         idProperty: 'id'
+                      },
+                      viewModelConstructor: lists.ListViewModel,
+                      source: source
+                   },
+                   instance = new lists.BaseControl(cfg),
+                   itemData = {
+                      key: 1,
+                      multiSelectStatus: false,
+                      item: {}
+                   },
+                   childEvent = {
+                      nativeEvent: {
+                         direction: 'left'
+                      }
+                   };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg).addCallback(function() {
+                  assert.isFalse(instance._canUpdateItemsActions);
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: () => {}
+                     },
+                     selectionController: {
+                        onCheckBoxClick: function() {
+                        }
+                     }
+                  };
+
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.isTrue(instance._canUpdateItemsActions);
+
+                  done();
+               });
+               return done;
+            });
+
             it('list doesn\'t handle swipe, event should fire', function() {
                var
                   cfg = {
