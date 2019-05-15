@@ -390,11 +390,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             config.multiSelect = true;
             let dropdownList = getDropDownListWithConfig(config);
             dropdownList._beforeMount(config);
+            let resizeEventFired = false;
             let result,
                event = { target: { closest: () => { return false; } } };
             dropdownList._notify = function(e, d) {
                if (e === 'sendResult') {
                   result = d[0];
+               }
+
+               if (e === 'controlResize') {
+                  resizeEventFired = true;
                }
             };
             let expectedResult = {
@@ -405,6 +410,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._itemClickHandler(event, items.at(1));
             assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3, 2]);
             assert.isTrue(dropdownList._needShowApplyButton);
+
+            //resize event fired after control update
+            dropdownList._beforeUpdate(config);
+            dropdownList._afterUpdate(config);
+            assert.isTrue(resizeEventFired);
 
             config.selectedKeys = [];
             dropdownList._beforeMount(config);
