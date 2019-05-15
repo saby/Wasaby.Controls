@@ -54,6 +54,12 @@ define(['Controls/List/TileView/TileViewModel', 'Types/collection'], function(Ti
          assert.equal(tileViewModel.getHoveredItem().key, 2);
       });
 
+      it('_onCollectionChange', function() {
+         tileViewModel.setHoveredItem({key: 1});
+         tileViewModel._onCollectionChange();
+         assert.equal(tileViewModel.getHoveredItem(), null);
+      });
+
       it('getTileItemData', function() {
          var tileItemData = tileViewModel.getTileItemData();
          assert.deepEqual(tileItemData, {
