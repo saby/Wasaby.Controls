@@ -1086,6 +1086,41 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getResultsPosition()', function() {
             assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
+
+         it('prepare editing row for partial support', function () {
+            let
+                handlers = {
+                   wewe: ()=> {}
+                },
+                gv = {
+                   getHandlersForPartialSupport: ()=>{return handlers},
+                   _columns: [
+                      { width: '1fr' },
+                      { width: 'auto',realWidth: '15px' }
+                   ],
+                   getCount:()=>2,
+                   _options: {
+                      multiSelectVisibility: 'hidden'
+                   }
+                },
+                iData = {
+                   isEditing: true,
+                   isGroup: false
+                },
+            saveFunc = gridMod.GridViewModel._private.calcRowIndexByKey;
+            gridMod.GridViewModel._private.calcRowIndexByKey = ()=>{return 1};
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gv, iData);
+
+            assert.deepEqual(handlers, iData.handlersForPartialSupport);
+            assert.equal(
+                iData.editingRowStyles,
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 3;'
+            );
+
+            gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
+         });
+
          it('_prepareResultsColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
             gridViewModel._prepareResultsColumns([], false);

@@ -439,14 +439,8 @@ var
                 return;
             }
 
-            if (itemData.isGroup) {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
-            } else {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
-            }
-
             if (itemData.isEditing) {
-                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.index);
+                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
             }
         }
 

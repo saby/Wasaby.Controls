@@ -2,7 +2,6 @@
             itemData="{{_options.itemData}}"
             currentColumn="{{ _options.currentColumn }}"
 
-            attr:key="{{ _options.currentColumnKey }}"
             attr:data-r="{{ _options.itemData.index }}"
             attr:style="{{ _options.currentColumn.gridCellStyles }}"
             attr:class="{{ getCellClasses() }}"
