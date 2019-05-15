@@ -29,10 +29,18 @@ define([
                'parent@': true
             }, {
                id: 5,
-               parent: null,
+               parent: 4,
                'parent@': null
             }, {
                id: 6,
+               parent: 4,
+               'parent@': null
+            }, {
+               id: 7,
+               parent: null,
+               'parent@': true
+            }, {
+               id: 8,
                parent: null,
                'parent@': null
             }];
@@ -74,8 +82,12 @@ define([
             assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(3), rs, 'parent'));
          });
 
-         it('change order list and folder', function() {
-            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(4), rs, 'parent', 'parent@'));
+         it('move folder down', function() {
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(4), rs, 'parent', 'parent@'));
+         });
+
+         it('move last folder down', function() {
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(7), rs, 'parent', 'parent@'));
          });
 
          it('change order list and list', function() {
