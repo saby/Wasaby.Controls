@@ -302,7 +302,8 @@ import Env = require('Env/Env');
       return {
          itemTemplate: ItemTemplate,
          style: 'primary',
-         displayProperty: 'title'
+         displayProperty: 'title',
+         theme: 'default'
       };
    };
    TabsButtons._theme = ['Controls/tabs'];
