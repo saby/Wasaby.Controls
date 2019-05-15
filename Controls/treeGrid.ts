@@ -5,7 +5,7 @@
  * @includes ItemTemplate wml!Controls/_treeGrid/TreeGridView/Item
  * @includes TreeGridStyles Controls/_treeGrid/TreeGrid/Styles
  * @includes ITreeControl Controls/_treeGrid/interface/ITreeControl
- * @includes RowEditor wml!Controls/_treeGrid/RowEditor
+ * @includes RowEditor wml!Controls/_treeGrid/TreeGrid/RowEditor
  * @public
  * @author Kraynov D.
  */
@@ -19,7 +19,7 @@ import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 import SearchGridViewModel = require('Controls/_treeGrid/SearchView/SearchGridViewModel');
 import SearchView = require('Controls/_treeGrid/SearchView');
 import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
-import RowEditor = require('wml!Controls/_treeGrid/RowEditor');
+import RowEditor = require('wml!Controls/_treeGrid/TreeGrid/RowEditor');
 
 export {
     View,
