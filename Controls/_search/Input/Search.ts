@@ -1,7 +1,6 @@
 import entity = require('Types/entity');
 import Env = require('Env/Env');
-import inputMod = require('Controls/input');
-import ViewModel = require('Controls/Input/Text/ViewModel');
+import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
 
@@ -50,7 +49,7 @@ var _private = {
    }
 };
 
-var Search = inputMod.Base.extend({
+var Search = Base.extend({
    _roundBorder: true,
 
    get _renderStyle() {
@@ -130,7 +129,7 @@ var Search = inputMod.Base.extend({
 Search._theme.push('Controls/search');
 
 Search.getOptionTypes = function getOptionsTypes() {
-   var optionTypes = inputMod.Base.getOptionTypes();
+   var optionTypes = Base.getOptionTypes();
 
    /**
     * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
@@ -143,7 +142,7 @@ Search.getOptionTypes = function getOptionsTypes() {
 };
 
 Search.getDefaultOptions = function getDefaultOptions() {
-   var defaultOptions = inputMod.Base.getDefaultOptions();
+   var defaultOptions = Base.getDefaultOptions();
 
    defaultOptions.value = '';
    defaultOptions.trim = false;

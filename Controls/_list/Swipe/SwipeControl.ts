@@ -17,10 +17,12 @@ import { IoC } from 'Env/Env';
 // @ts-ignore
 import { descriptor } from 'Types/entity';
 import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
+import HorizontalMeasurer from 'Controls/_list/Swipe/HorizontalMeasurer';
+import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
 
-const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], string> = {
-   horizontal: 'Controls/_list/Swipe/HorizontalMeasurer',
-   vertical: 'Controls/_list/Swipe/VerticalMeasurer'
+const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
+   horizontal: HorizontalMeasurer,
+   vertical: VerticalMeasurer
 };
 
 export default class SwipeControl extends Control {
@@ -152,16 +154,12 @@ export default class SwipeControl extends Control {
       }
    }
 
-   _beforeMount(newOptions: ISwipeControlOptions): Promise<void> {
+   _beforeMount(newOptions: ISwipeControlOptions): void {
       this._actionAlignment = newOptions.actionAlignment;
       this._actionCaptionPosition = newOptions.actionCaptionPosition;
       this._checkDeprecated({}, newOptions);
       this._updateModel(newOptions);
-      return import(MEASURER_NAMES[this._actionAlignment]).then(
-         (result) => {
-            this._measurer = result.default;
-         }
-      );
+      this._measurer = MEASURER_NAMES[this._actionAlignment];
    }
 
    _beforeUpdate(
@@ -197,10 +195,7 @@ export default class SwipeControl extends Control {
       }
 
       if (this._options.actionAlignment !== newOptions.actionAlignment || this._options.swipeDirection !== newOptions.swipeDirection) {
-         import(MEASURER_NAMES[this._actionAlignment]).then((result) => {
-            this._measurer = result.default;
-            this._forceUpdate();
-         });
+         this._measurer = MEASURER_NAMES[this._actionAlignment];
       }
    }
 

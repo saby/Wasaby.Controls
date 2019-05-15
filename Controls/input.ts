@@ -37,6 +37,7 @@ import Date = require('Controls/_input/Date/Picker');
 import TimeInterval from 'Controls/_input/TimeInterval';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import TextViewModel = require('Controls/_input/Text/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 
@@ -61,6 +62,7 @@ export {
     Date,
     TimeInterval,
     BaseViewModel,
+    TextViewModel,
     MaskFormatBuilder,
     MaskInputProcessor,
     InputCallback,
