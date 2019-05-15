@@ -1,5 +1,5 @@
-<span attr:class="controls-Header__caption
-                  controls-Header__caption_size-{{_options.size}}
-                  controls-Header__caption_style-{{_options.style}}{{_options.readOnly ? '':'_hovered'}}"
+<span attr:class="controls-Header__caption_theme_{{_options.theme}}
+                  controls-Header__caption_size-{{_options.size}}_theme_{{_options.theme}}
+                  controls-Header__caption_style-{{_options.style}}{{_options.readOnly ? '':'_hovered'}}_theme_{{_options.theme}}"
       attr:title="{{_options.tooltip}}"
 >{{_options.caption}}</span>

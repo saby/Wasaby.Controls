@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_heading/Heading/Heading');
 import entity = require('Types/entity');
-import 'css!theme?Controls/heading';
 
 
    /**
@@ -61,11 +60,13 @@ import 'css!theme?Controls/heading';
          ])
       };
    };
+   Header._theme = ['Controls/heading'];
 
    Header.getDefaultOptions = function() {
       return {
          style: 'secondary',
-         size: 'm'
+         size: 'm',
+         theme: 'default'
       };
    };
 
