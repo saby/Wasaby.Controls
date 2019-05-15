@@ -236,7 +236,6 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
          if (!config) {
             return this._toggleIndicator(true, {});
          }
-         waitPromise.catch(this._waitPromiseHandler.bind(this, config));
          return this._show(config, waitPromise);
       },
 
@@ -317,6 +316,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
          if (!config.waitPromise && waitPromise) {
             config.waitPromise = waitPromise;
             config.waitPromise.then(this._waitPromiseHandler.bind(this, config));
+            config.waitPromise.catch(this._waitPromiseHandler.bind(this, config));
          }
          return config;
       },
