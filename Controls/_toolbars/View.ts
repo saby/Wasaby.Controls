@@ -217,7 +217,8 @@ var _private = {
                 rootKey: item.get(self._options.keyProperty),
                 showHeader: item.get('showHeader'),
                 headConfig: {
-                    icon: item.get('icon') + (item.get('icon').split('').length > 1 ? '' : ' icon-medium'),
+                    //TODO: перевести вместе с кнопками на icon-size https://online.sbis.ru/opendoc.html?guid=af44769b-82b0-4b4a-a288-93706eb0a50d
+                    icon: item.get('icon') + (typeof item.get('icon') === 'string' ? (item.get('icon').split(' ').length > 1 ? '' : ' icon-medium') : ''),
                     caption: item.get('title'),
                     iconStyle: item.get('iconStyle')
                 }
