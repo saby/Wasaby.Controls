@@ -72,7 +72,7 @@ define([
             delay: 10
          };
          let id2 = Loading2._show(config, promise);
-         promise.finally((error) => {
+         promise.catch((error) => {
             assert.equal(Loading2._stack.getCount(), 0);
          });
       });
