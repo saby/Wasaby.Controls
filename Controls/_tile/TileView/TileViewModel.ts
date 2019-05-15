@@ -66,6 +66,11 @@ var TileViewModel = ListViewModel.extend({
         TileViewModel.superclass.setActiveItem.apply(this, arguments);
     },
 
+    _onCollectionChange: function() {
+        this.setHoveredItem(null);
+        TileViewModel.superclass._onCollectionChange.apply(this, arguments);
+    },
+
     setDragEntity: function () {
         this.setHoveredItem(null);
         TileViewModel.superclass.setDragEntity.apply(this, arguments);

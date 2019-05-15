@@ -5,7 +5,6 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
-import cInstance = require('Core/core-instance');
 import 'css!theme?Controls/list';
 
 var

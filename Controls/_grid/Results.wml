@@ -56,10 +56,10 @@
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
-<Controls.StickyHeader.Group>
+<Controls.scroll:Group>
    <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
    <ws:partial template="templateChooser" temp="{{ listModel.getVersion() }}"/>
-</Controls.StickyHeader.Group>
+</Controls.scroll:Group>
 </ws:if>
 <ws:else>
 <ws:partial template="templateChooser"/>
