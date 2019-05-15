@@ -1334,6 +1334,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
+        if (direction === 'left') {
+            this._canUpdateItemsActions = true;
+        }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);
         }
