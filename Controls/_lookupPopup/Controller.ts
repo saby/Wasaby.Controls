@@ -31,22 +31,24 @@ import chain = require('Types/chain');
  * In this example stack with two selected items will opened.
  *
  * JS
- * import {RecordSet} from "Types/collection";
+ * <pre>
+ *    import {RecordSet} from "Types/collection";
  *
- * _openSelector: function() {
- *     var selectedItems = new RecordSet({
- *         rawData: [
- *            {id: 'Yaroslavl', title: 'Ярославль'},
- *            {id: 'Moscow', title: 'Москва'}
- *         ]
- *         idProperty: 'id'
- *     })
- *     this._children.stackOpener.open({
- *         templateOptions: {
- *             selectedItems: selectedItems
- *         }
- *     });
- * }
+ *    _openSelector: function() {
+ *       var selectedItems = new RecordSet({
+ *            rawData: [
+ *               {id: 'Yaroslavl', title: 'Ярославль'},
+ *               {id: 'Moscow', title: 'Москва'}
+ *            ],
+ *            idProperty: 'id'
+ *       });
+ *       this._children.stackOpener.open({
+ *          templateOptions: {
+ *                selectedItems: selectedItems
+ *            }
+ *        });
+ *    }
+ * </pre>
  *
  * WML
  * <pre>
@@ -55,9 +57,11 @@ import chain = require('Types/chain');
  * </pre>
  *
  * mySelectorTemplate.wml
- * <Controls.lookupPopup:Controller selectedItems="{{_options.selectedItems}}">
- *     ...
- * </Controls.lookupPopup:Controller>
+ * <pre>
+ *    <Controls.lookupPopup:Controller selectedItems="{{_options.selectedItems}}">
+ *       ...
+ *    </Controls.lookupPopup:Controller>
+ * </pre>
  */
 
 
