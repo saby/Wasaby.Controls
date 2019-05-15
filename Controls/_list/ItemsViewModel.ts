@@ -211,8 +211,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (dispItem.getContents() instanceof Array) {
             let breadCrumbs = dispItem.getContents();
             itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length-1], this._options.keyProperty);
-        }
-        else {
+        } else {
             itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
         }
 

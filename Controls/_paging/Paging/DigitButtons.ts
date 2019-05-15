@@ -3,7 +3,7 @@
  */
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_paging/Paging/DigitButtons');
-import 'css!theme?Controls/_paging/Paging/DigitButtons';
+import 'css!theme?Controls/paging';
 
 var SUR_ELEMENTS_STEP = 3, _private, ModuleClass;
 

@@ -4,6 +4,7 @@ import IInputPlaceholder from "./IInputPlaceholder";
 import ISelectableInput from "./ISelectableInput";
 import IInputTooltip from "./IInputTooltip";
 import IInputStyle from "./IInputStyle";
+import IInputField from "./IInputField";
 
 /**
  * Interface for Input.Base.
@@ -12,6 +13,7 @@ import IInputStyle from "./IInputStyle";
  *
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputPlaceholder
  *
  * @mixes Controls/interface/ISelectableInput
@@ -26,7 +28,7 @@ import IInputStyle from "./IInputStyle";
  * @public
  * @author Журавлев М.С.
  */
-type IInputBase = IPaste & IInputTag & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
+type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
     readonly _options: {
         /**
          * @name Controls/interface/IInputBase#size

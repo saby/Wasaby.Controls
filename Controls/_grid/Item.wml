@@ -67,24 +67,29 @@
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
 </ws:template>
+
 <ws:template name="partialGridSupportItem">
-<ws:partial template="colTpl"
-            currentColumn="{{ itemData.getCurrentColumn() }}"
-            attr:data-r="{{ itemData.index }}"
-            on:click="_onItemClick(itemData.dispItem)"
-            on:contextmenu="_onItemContextMenu(itemData)"
-            on:swipe="_onItemSwipe(itemData)"
-            on:mousedown="_onItemMouseDown(itemData)"
-            on:mouseenter="_onItemMouseEnter(itemData)"
-            on:mouseleave="_onItemMouseLeave(itemData)"
-            on:mousemove="_onItemMouseMove(itemData)"
-            on:wheel="_onItemWheel(itemData)"
-            attr:style="{{ itemData.getCurrentColumn().gridCellStyles }}"
-            attr:class="controls-ListView__itemV
-                              {{ highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
-                              controls-Grid__row_{{itemData.style || 'default'}}
-                              {{itemData.isHovered ? 'controls-Grid_row-cell_hovered'}}" />
+
+<!-- When using a custom item template, the scope of the base template becomes the same as the scope of custom template.-->
+<!-- Because of this, the base handlers are lost.-->
+<!-- To fix this, need to remember the handlers where the scope is still right and set them. -->
+<!-- But current event system prevent do this, because it looks for given event handler only on closest control (which can -->
+<!-- be Browser, Explorer or smth else because of template scope). -->
+<!-- Therefore it is required to create Cell as control with and subscribe on events in it. -->
+<!-- https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4 -->
+<Controls._grid.layouts.partialGridSupport.Cell
+        eventHandlers="{{itemData.handlersForPartialSupport}}"
+        itemData="{{ itemData }}"
+        currentColumn="{{ currentColumn }}"
+        currentColumnKey="{{ currentColumnKey }}"
+        highlightOnHover="{{ highlightOnHover }}">
+   <ws:columnContentTpl>
+      <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>
+   </ws:columnContentTpl>
+</Controls._grid.layouts.partialGridSupport.Cell>
 </ws:template>
+
+
 <ws:if data="{{itemData.isNoGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
@@ -98,6 +103,7 @@
    </tr>
 </ws:if>
 <ws:else data="{{itemData.isPartialGridSupport}}">
+
    <ws:if data="{{itemData.styleLadderHeading}}">
       <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:style="{{itemData.styleLadderHeading}}">
@@ -105,16 +111,34 @@
       </div>
    </ws:if>
 
+   <!-- Строка в режиме редактирования  -->
    <ws:if data="{{itemData.isEditing}}">
       <div attr:style="{{itemData.editingRowStyles}}">
          <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-            <ws:partial template="partialGridSupportItem"></ws:partial>
+            <!-- To avoid closures, need to give all generating in itemData as a template options. -->
+            <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
+            <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->             <!-- Then it begins to build sub templates, for-iteration has been ended, so iterator will always give last column. -->
+            <ws:partial template="partialGridSupportItem"
+                        currentColumn="{{itemData.getCurrentColumn()}}"
+                        currentColumnKey="{{itemData.getCurrentColumnKey()}}"
+                        itemData="{{itemData}}"
+                        highlightOnHover="{{highlightOnHover}}"/>
          </ws:for>
       </div>
    </ws:if>
+
+   <!-- Строка в режиме просмотра -->
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
-         <ws:partial template="partialGridSupportItem"></ws:partial>
+         <!-- To avoid closures, need to give all generating in itemData as a template options. -->
+         <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
+         <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->
+         <ws:partial
+                 template="partialGridSupportItem"
+                 currentColumn="{{itemData.getCurrentColumn()}}"
+                 currentColumnKey="{{itemData.getCurrentColumnKey()}}"
+                 itemData="{{itemData}}"
+                 highlightOnHover="{{highlightOnHover}}" />
       </ws:for>
    </ws:else>
 
@@ -127,7 +151,7 @@
       </div>
    </ws:if>
    <ws:if data="{{itemData.isSticky}}">
-      <Controls.StickyHeader.Group>
+      <Controls.scroll:Group>
          <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
             <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
@@ -136,7 +160,7 @@
                <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
-      </Controls.StickyHeader.Group>
+      </Controls.scroll:Group>
    </ws:if>
    <ws:else>
       <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
