@@ -204,7 +204,7 @@
               showHeader="{{false}}"
               source="{{_createMemory(_groupItems)}}"
               groupingKeyCallback="{{_groupingKeyCallback}}"
-              groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
+              groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
       </Controls.dropdown:Button>
@@ -217,7 +217,7 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups2"
               tooltip="Add">
          <ws:groupTemplate>
-            <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
+            <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}"/>
          </ws:groupTemplate>
       </Controls.dropdown:Button>
    </div>
