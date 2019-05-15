@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "../_list/utils/RowIndexUtil";
+import {calcFooterRowIndex} from "./utils/RowIndexUtil";
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -415,7 +415,41 @@ var
             }
 
             return styles;
+        },
+        prepareItemDataForPartialSupport(self, itemData): void {
+
+            /* When using a custom item template, the scope of the base template becomes the same as the scope of custom template.
+             * Because of this, the base handlers are lost. To fix this, need to remember the handlers where the scope is
+             * still right and set them. But current event system prevent do this, because it looks for given event handler
+             * only on closest control (which can be Browser, Explorer or smth else because of template scope).
+             * Therefore it is required to create Cell as control with and subscribe on events in it.
+             * https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4
+             */
+            itemData.handlersForPartialSupport = self.getHandlersForPartialSupport();
+
+            // In browsers with partial grid support grid requires explicit setting grid cell styles.
+            if (!itemData.isGroup) {
+                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+            } else {
+                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
+                itemData.gridGroupStyles = GridLayoutUtil.toCssString([
+                    {name: 'grid-row', value: itemData.rowIndex + 1},
+                    {name: '-ms-grid-row', value: itemData.rowIndex + 1}
+                ]);
+                return;
+            }
+
+            if (itemData.isGroup) {
+                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
+            } else {
+                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+            }
+
+            if (itemData.isEditing) {
+                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.index);
+            }
         }
+
     },
 
     GridViewModel = BaseViewModel.extend({
@@ -436,6 +470,8 @@ var
 
         _ladder: null,
         _columnsVersion: 0,
+
+        _eventHandlersForPartialSupport: {},
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -912,34 +948,13 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (GridLayoutUtil.isPartialSupport || current.columnScroll) {
-                if (current.isGroup) {
-                    current.rowIndex = _private.calcGroupRowIndex(this, current);
-                } else {
-                    current.rowIndex = _private.calcRowIndexByKey(this, current.key);
-                }
+            if (GridLayoutUtil.isPartialSupport) {
+                _private.prepareItemDataForPartialSupport(this, current);
             }
 
-            if (this._options.groupingKeyCallback) {
-                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
-                    current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
-
-                    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                    if (GridLayoutUtil.isPartialSupport) {
-                        current.gridGroupStyles = GridLayoutUtil.toCssString([
-                            {
-                                name: 'grid-row',
-                                value: current.rowIndex + 1
-                            },
-                            {
-                                name: '-ms-grid-row',
-                                value: current.rowIndex + 1
-                            }
-                        ]);
-                    }
-
-                    return current;
-                }
+            if (current.isGroup) {
+                current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
+                return current;
             }
 
             current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
@@ -969,10 +984,6 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
-
-            if (current.isEditing && GridLayoutUtil.isPartialSupport) {
-                current.editingRowStyles = _private.getEditingRowStyles(self, current.index);
-            }
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
@@ -1271,8 +1282,16 @@ var
         },
 
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
-        getEmptyTemplateStyles() {
+        getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+
+        setHandlersForPartialSupport: function(handlersList: {[key: string]: Function}): void {
+            this._eventHandlersForPartialSupport = handlersList;
+        },
+
+        getHandlersForPartialSupport: function(): {[key: string]: Function} {
+            return this._eventHandlersForPartialSupport;
         },
 
         destroy: function() {
