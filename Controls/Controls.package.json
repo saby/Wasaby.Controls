@@ -57,6 +57,23 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
+    "Controls/Input/Date/Link",
+    "wml!Controls/Input/Date/Link/Link",
+    "Controls/Input/Date/LinkView",
+    "wml!Controls/Input/Date/LinkView/LinkView",
+    "Controls/Input/Date/interface/ILink",
+    "Controls/Input/Money",
+    "wml!Controls/Input/Money/ReadOnly",
+    "Controls/Input/OldText",
+    "wml!Controls/Input/OldText/OldText",
+    "Controls/Input/OldText/OldViewModel",
+    "Controls/Input/Search/Styles",
+    "Controls/Input/Search/Suggest",
+    "wml!Controls/Input/Search/Suggest"
+  ],
+  "output": "controls-input.package.js"
+}, {
+  "include": [
     "Controls/Popup/Global",
     "wml!Controls/Popup/Global/Global"
   ],
