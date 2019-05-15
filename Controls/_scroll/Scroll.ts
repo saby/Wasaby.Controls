@@ -370,6 +370,38 @@ var
          this._children.scrollDetect.start(ev);
       },
 
+      _keydownHandler: function(ev) {
+         var offset;
+         if (ev.nativeEvent.which === Env.constants.key.pageDown) {
+            offset = this._children.content.scrollTop + this._children.content.clientHeight;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.down) {
+            offset = this._children.content.scrollTop + 40;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.pageUp) {
+            offset = this._children.content.scrollTop - this._children.content.clientHeight;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.up) {
+            offset = this._children.content.scrollTop - 40;
+         }
+         if (offset !== undefined) {
+            this.scrollTo(offset);
+            this.activate();
+            ev.preventDefault();
+         }
+
+         if (ev.nativeEvent.which === Env.constants.key.home) {
+            this.scrollToTop();
+            this.activate();
+            ev.preventDefault();
+         }
+         if (ev.nativeEvent.which === Env.constants.key.end) {
+            this.scrollToBottom();
+            this.activate();
+            ev.preventDefault();
+         }
+      },
+
       _scrollbarTaken: function() {
          if (this._showScrollbarOnHover && this._displayState.hasScroll) {
             this._notify('scrollbarTaken', [], { bubbling: true });

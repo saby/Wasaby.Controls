@@ -35,7 +35,7 @@
 </ws:template>
 
 <ws:template name="scrollTpl">
-<div class="controls-Scroll ws-flexbox ws-flex-column">
+<div class="controls-Scroll ws-flexbox ws-flex-column" on:keydown="_keydownHandler()">
    <ws:if data="{{_pagingState.visible}}">
       <ws:partial template="content"
                   attr:class="controls-Scroll__content_paging"

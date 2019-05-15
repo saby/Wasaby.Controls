@@ -3,6 +3,7 @@ import Env = require('Env/Env');
 import inputMod = require('Controls/input');
 import ViewModel = require('Controls/Input/Text/ViewModel');
 import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
+import Vdom = require('Vdom/Vdom');
 
 
 /**
@@ -117,7 +118,29 @@ var Search = inputMod.Base.extend({
       // move focus from search button to input
       this.activate();
    },
+   _keyDownHandler: function(event) {
+      // если isTrusted = false, значит это мы запустили событие по горячим клавишам, его не надо повторно обрабатывать
+      if (event.nativeEvent.isTrusted) {
+         if (
+            event.nativeEvent.which === Env.constants.key.pageDown ||
+            event.nativeEvent.which === Env.constants.key.pageUp ||
+            event.nativeEvent.which === Env.constants.key.down ||
+            event.nativeEvent.which === Env.constants.key.up ||
+            event.nativeEvent.which === Env.constants.key.home ||
+            event.nativeEvent.which === Env.constants.key.end
+         ) {
 
+            var parents = Vdom.DOMEnvironment._goUpByControlTree(this._container);
+            for (var i = 0; i < parents.length; i++) {
+               var parent = parents[i];
+               if (parent._defaultActions && parent._defaultActions[event.nativeEvent.which]) {
+                  parent._defaultActions[event.nativeEvent.which].action();
+                  break;
+               }
+            }
+         }
+      }
+   },
    _keyUpHandler: function(event) {
       if (event.nativeEvent.which === Env.constants.key.enter) {
          this._searchClick();

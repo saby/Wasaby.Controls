@@ -10,6 +10,7 @@
         on:focusout="_focusOutHandler()"
         style="{{_options.style}}"
         on:valueChanged="_valueChangedHandler()"
+        on:keyDown="_keyDownHandler()"
         on:keyUp="_keyUpHandler()">
 
    <ws:content>
