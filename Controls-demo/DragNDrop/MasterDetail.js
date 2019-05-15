@@ -5,11 +5,11 @@ define('Controls-demo/DragNDrop/MasterDetail', [
    'Controls-demo/DragNDrop/MasterDetail/Data',
    'Types/source',
    'Core/core-instance',
-   'Controls/DragNDrop/Entity/List/Items',
+   'Controls/dragnDrop',
    'Controls-demo/DragNDrop/MasterDetail/TasksEntity',
    'wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate',
    'css!Controls-demo/DragNDrop/MasterDetail/MasterDetail'
-], function(Control, entityLib, template, data, source, cInstance, ListEntity, TasksEntity, itemTemplate) {
+], function(Control, entityLib, template, data, source, cInstance, dragnDrop, TasksEntity, itemTemplate) {
    return Control.extend({
       _template: template,
       gridColumns: [{
@@ -55,7 +55,7 @@ define('Controls-demo/DragNDrop/MasterDetail', [
       _dragStartMaster: function(event, items) {
          var firstItem = this._itemsMaster.getRecordById(items[0]);
 
-         return new ListEntity({
+         return new dragnDrop.ListItems({
             items: items,
             mainText: firstItem.get('name')
          });

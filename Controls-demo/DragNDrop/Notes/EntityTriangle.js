@@ -1,8 +1,8 @@
-define('Controls-demo/DragNDrop/Notes/EntityTriangle', ['Controls/DragNDrop/Entity/Item'],
-   function(Entity) {
+define('Controls-demo/DragNDrop/Notes/EntityTriangle', ['Controls/dragnDrop'],
+   function(dragnDrop) {
       'use strict';
 
-      var EntityTriangle = Entity.extend({
+      var EntityTriangle = dragnDrop._ItemEntity.extend({
 
          constructor: function(options) {
             EntityTriangle.superclass.constructor.apply(this, arguments);
