@@ -1,6 +1,6 @@
 define('Controls/Input/Base/ViewModel',
-   ['Controls/_input/Base/ViewModel'],
+   ['Controls/input'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.BaseViewModel;
    });
