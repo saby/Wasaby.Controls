@@ -645,6 +645,9 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._notify('mouseenter', [event]);
          },
 
+         _keyDownHandler: function() {
+
+         },
          /**
           * Event handler key up in native field.
           * @param {Object} event Event descriptor.

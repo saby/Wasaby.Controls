@@ -21,6 +21,7 @@
              {{stretcher ? 'controls-InputBase__nativeField_stretcher'}}
              {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
          on:keyup="_keyUpHandler()"
+         on:keyDown="_keyDownHandler()"
          on:click="_clickHandler()"
          on:input="_inputHandler()"
          on:select="_selectHandler()"

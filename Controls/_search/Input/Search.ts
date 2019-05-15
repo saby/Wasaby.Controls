@@ -132,8 +132,8 @@ var Search = Base.extend({
             var parents = Vdom.DOMEnvironment._goUpByControlTree(this._container);
             for (var i = 0; i < parents.length; i++) {
                var parent = parents[i];
-               if (parent._defaultActions && parent._defaultActions[event.nativeEvent.which]) {
-                  parent._defaultActions[event.nativeEvent.which].action();
+               if (parent._$defaultActions && parent._$defaultActions[event.nativeEvent.which]) {
+                  parent._$defaultActions[event.nativeEvent.which].action();
                   break;
                }
             }
