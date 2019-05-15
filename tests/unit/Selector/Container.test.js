@@ -81,18 +81,20 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       });
 
       it('prepareFilter', function() {
-         var filter = {};
+         var filter = {
+            searchParam: 'test'
+         };
          var selection = {
             selected: [1, 2],
             excluded: [3, 4]
          };
-         var source = new sourceLib.Memory();
 
-         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, source, 'leaf');
+         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');
 
-         assert.deepEqual(filter.selection.get('marked'), ['1', '2']);
-         assert.deepEqual(filter.selection.get('excluded'), ['3', '4']);
-         assert.equal(filter.selection.get('type'), 'leaf');
+         assert.deepEqual(preparedFilter.selection.selected, [1, 2]);
+         assert.deepEqual(preparedFilter.selection.excluded, [3, 4]);
+         assert.isTrue(preparedFilter !== filter);
+         assert.isTrue(!preparedFilter.searchParam);
       });
 
       it('prepareResult', function() {

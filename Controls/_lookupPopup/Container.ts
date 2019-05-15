@@ -121,9 +121,14 @@ import Deferred = require('Core/Deferred');
             return type;
          },
 
-         prepareFilter: function(filter, selection, source, selectionType) {
-            var adapter = source.getAdapter();
-            filter.selection = selectionToRecord(selection, adapter, selectionType);
+         prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
+            filter = Utils.object.clone(filter);
+
+            //FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+            if (searchParam) {
+               delete filter[searchParam];
+            }
+            filter.selection = selection;
             return filter;
          },
 
@@ -174,14 +179,20 @@ import Deferred = require('Core/Deferred');
 
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
+               const adapter = source.getAdapter();
                const sourceController = _private.getSourceController(source, dataOptions.navigation);
                const selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               const filter = Utils.object.clone(dataOptions.filter);
 
-               loadDef = sourceController.load(_private.prepareFilter(filter, selection, source, _private.getValidSelectionType(this._options.selectionType)));
+               loadDef = sourceController.load(
+                   _private.prepareFilter(
+                       dataOptions.filter,
+                       selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
+                       self._options.searchParam
+                   )
+               );
 
                loadDef.addCallback(function(result) {
                   return prepareResult(result);
