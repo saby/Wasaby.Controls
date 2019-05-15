@@ -119,14 +119,13 @@ var Search = Base.extend({
    },
    _keyDownHandler: function(event) {
       // если isTrusted = false, значит это мы запустили событие по горячим клавишам, его не надо повторно обрабатывать
+      // клавиши home и end не обрабатываем, у поля ввода есть реакция на эти клавиши
       if (event.nativeEvent.isTrusted) {
          if (
             event.nativeEvent.which === Env.constants.key.pageDown ||
             event.nativeEvent.which === Env.constants.key.pageUp ||
             event.nativeEvent.which === Env.constants.key.down ||
-            event.nativeEvent.which === Env.constants.key.up ||
-            event.nativeEvent.which === Env.constants.key.home ||
-            event.nativeEvent.which === Env.constants.key.end
+            event.nativeEvent.which === Env.constants.key.up
          ) {
 
             var parents = Vdom.DOMEnvironment._goUpByControlTree(this._container);
