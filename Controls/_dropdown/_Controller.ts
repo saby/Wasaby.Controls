@@ -274,9 +274,7 @@ var _Controller = Control.extend({
          opener.close();
       } else {
          var self = this;
-         require(this._options.additionalDependencies, function () {
-            self._open();
-         });
+         self._open();
       }
    },
 
