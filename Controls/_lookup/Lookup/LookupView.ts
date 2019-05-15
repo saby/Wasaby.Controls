@@ -16,13 +16,15 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
       CLEAR_RECORDS_WIDTH = 0,
-      LIST_OF_DEPENDENT_OPTIONS = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
+      LIST_OF_DEPENDENT_OPTIONS = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'],
+      LEFT_OFFSET_COUNTER = 0;
 
    var _private = {
       initializeConstants: function(self) {
          if (!SHOW_SELECTOR_WIDTH) {
             SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(self._showSelectorTemplate());
             CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(self._clearRecordsTemplate());
+            LEFT_OFFSET_COUNTER = parseInt(getComputedStyle(self._fieldWrapper).paddingLeft, 10);
          }
       },
 
@@ -204,8 +206,8 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
       },
 
       _afterMount: function() {
-         _private.initializeConstants(this);
          LookupView.superclass._afterMount.apply(this, arguments);
+         _private.initializeConstants(this);
       },
 
       _isNeedCalculatingSizes: function(options) {
@@ -261,6 +263,13 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
       _isInputVisible: function(options) {
          return !options.readOnly && (this._isEmpty(options) || options.multiSelect);
+      },
+
+      _openInfoBox: function(config) {
+         LookupView.superclass._openInfoBox.apply(this, arguments);
+         config.offset = {
+            horizontal: -LEFT_OFFSET_COUNTER
+         };
       }
    });
 
