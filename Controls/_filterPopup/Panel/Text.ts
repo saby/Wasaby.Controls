@@ -5,7 +5,7 @@ import 'css!theme?Controls/filterPopup';
    /**
     * Control text with cross
     * @class Controls/_filterPopup/Panel/Text
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     * @author Герасимов А.М.

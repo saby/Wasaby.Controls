@@ -1,6 +1,6 @@
 <div class="example-BaseDemoInput ws-inline-flexbox ws-flex-column">
    <div class="example-Base__title">
-      {{_options.title}}
+      {{_options.title || '&nbsp;'}}
       <div if="{{_options.blocker}}"
            class="icon-24 icon-primary action-hover {{_lock ? 'icon-Lock' : 'icon-Unlock'}}"
            on:click="_switchBlocker()"></div>

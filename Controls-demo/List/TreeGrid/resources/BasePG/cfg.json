@@ -1,5 +1,5 @@
 {
-  "Controls/_treeGrids/TreeGrid": {
+  "Controls/_treeGrid/TreeGrid": {
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

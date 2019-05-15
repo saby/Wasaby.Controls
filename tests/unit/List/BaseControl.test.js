@@ -1667,6 +1667,62 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
+         it('_onAfterBeginEdit', function () {
+            let
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   source: source,
+                   viewConfig: {
+                      keyProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: rs,
+                      keyProperty: 'id',
+                      selectedKeys: [1, 3]
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   navigation: {
+                      source: 'page',
+                      sourceConfig: {
+                         pageSize: 6,
+                         page: 0,
+                         hasMore: false
+                      },
+                      view: 'infinity',
+                      viewConfig: {
+                         pagingMode: 'direct'
+                      }
+                   }
+                },
+                called = false,
+                ctrl = new lists.BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  beginEdit: () => {
+                     return ctrl._onAfterBeginEdit();
+                  }
+               }
+            };
+            ctrl._options = {
+               itemActions: []
+            };
+            ctrl._notify = function(eName) {
+               if (eName === 'afterBeginEdit') {
+                  called = true;
+               }
+               return {anyField: 12};
+            };
+            assert.isFalse(ctrl._canUpdateItemsActions);
+            let result  = ctrl.beginEdit();
+            assert.deepEqual({anyField: 12}, result);
+            assert.isTrue(ctrl._canUpdateItemsActions);
+            assert.isTrue(called);
+            ctrl._afterUpdate({
+               viewModelConstructor: null
+            });
+            assert.isFalse(ctrl._canUpdateItemsActions);
+         });
+
          it('beginAdd', function() {
             var opt = {
                test: 'test'
