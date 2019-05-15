@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
+import contentTemplate = require('Controls/_lookup/Lookup');
 import 'css!theme?Controls/filterPopup';
    /**
     * Control link with lookup
