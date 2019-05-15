@@ -129,42 +129,46 @@
 <ws:else data="{{itemData.isPartialGridSupport}}">
 
    <ws:template name="partialGridSupportItem">
-      <ws:partial template="colTpl"
-                  attr:data-r="{{ itemData.index }}"
-                  currentColumn="{{currentColumn}}"
-                  attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
-                  controls-Grid__row_{{itemData.style || 'default'}} {{currentColumn.cellClasses}}
-                  {{itemData.isHovered ? ' controls-Grid_row-cell_hovered'}}"
-                  attr:style="{{itemData.getCurrentColumn().gridCellStyles}}"
-                  on:click="_onItemClick(itemData.dispItem)"
-                  on:contextmenu="_onItemContextMenu(itemData)"
-                  on:swipe="_onItemSwipe(itemData)"
-                  on:mousedown="_onItemMouseDown(itemData)"
-                  on:mouseenter="_onItemMouseEnter(itemData)"
-                  on:mouseleave="_onItemMouseLeave(itemData)"
-                  on:mousemove="_onItemMouseMove(itemData)"
-                  on:wheel="_onItemWheel(itemData)"/>
+      <Controls._grid.layouts.partialGridSupport.Cell
+              eventHandlers="{{itemData.handlersForPartialSupport}}"
+              itemData="{{ itemData }}"
+              currentColumn="{{ currentColumn }}"
+              colspanCurrentNode="{{ !!colspanCurrentNode }}"
+              highlightOnHover="{{ highlightOnHover }}">
+         <ws:columnContentTpl>
+            <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>
+         </ws:columnContentTpl>
+      </Controls._grid.layouts.partialGridSupport.Cell>
    </ws:template>
 
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
       {{itemData.resetColumnIndex();}}
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-         <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="partialGridSupportItem"
+                     currentColumn="{{itemData.getCurrentColumn()}}"
+                     attr:key="{{ currentColumnKey }}"/>
          {{itemData.goToNextColumn();}}
       </ws:if>
-      <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+      <ws:partial template="partialGridSupportItem"
+                  currentColumn="{{itemData.getCurrentColumn()}}"
+                  attr:key="{{ currentColumnKey }}"
+                  colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isEditing}}">
          <div attr:style="{{itemData.editingRowStyles}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="partialGridSupportItem"
+                           currentColumn="{{itemData.getCurrentColumn()}}"
+                           attr:key="{{ currentColumnKey }}"/>
             </ws:for>
          </div>
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="partialGridSupportItem"
+                        currentColumn="{{itemData.getCurrentColumn()}}"
+                        attr:key="{{ currentColumnKey }}"/>
          </ws:for>
       </ws:else>
 
