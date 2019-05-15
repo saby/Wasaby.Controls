@@ -4,7 +4,7 @@
  */
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_paging/Paging/Paging');
-import 'css!theme?Controls/_paging/Paging/Paging';
+import 'css!theme?Controls/paging';
 
 var _private, ModuleClass;
 
