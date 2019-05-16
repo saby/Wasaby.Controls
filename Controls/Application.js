@@ -249,7 +249,7 @@ define('Controls/Application',
 
             var appData = AppData.getAppData();
 
-            self._scrollData = new scroll._scrollContext({pagingVisible: false});
+            self._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
@@ -329,6 +329,13 @@ define('Controls/Application',
             return def;
          },
 
+         _beforeUpdate: function(cfg) {
+            if (this._scrollData.pagingVisible !== cfg.pagingVisible) {
+               this._scrollData.pagingVisible = cfg.pagingVisible;
+               this._scrollData.updateConsumers();
+            }
+         },
+
          _afterUpdate: function() {
             var elements = document.getElementsByClassName('head-title-tag');
             if (elements.length === 1) {
@@ -352,7 +359,8 @@ define('Controls/Application',
 
       Page.getDefaultOptions = function() {
          return {
-            title: ''
+            title: '',
+            pagingVisible: false
          };
       };
 
