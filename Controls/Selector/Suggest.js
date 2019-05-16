@@ -156,7 +156,7 @@ define('Controls/Selector/Suggest',
             minSearchLength: 3,
             suggestState: false,
             suggestTemplate: {
-               templateName: 'wml!Controls/_suggestPopup/suggestTemplate'
+               templateName: 'Controls/suggestPopup:SuggestTemplate'
             }
          };
       };
