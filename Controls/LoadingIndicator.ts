@@ -137,8 +137,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
       _afterMount: function(cfg) {
          var self = this;
          if (cfg.mainIndicator) {
-            requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
-               ManagerController.setIndicator(self);
+            requirejs(['Controls/popup'], function(popup) {
+               popup.Controller.setIndicator(self);
             });
          }
       },
