@@ -40,6 +40,8 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
             showType: 2
          }];
          this._root = options.root;
+         this._columns = options.columns;
+         this._columns[0].textOverflow = 'ellipsis';
          this._onItemClick = this._onItemClick.bind(this);
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
          this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
