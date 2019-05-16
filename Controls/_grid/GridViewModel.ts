@@ -436,9 +436,13 @@ var
 
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+
+                // If index of item is equal -1, tis item is recently added. It has no any data about like key or parent key.
+                // In such case styles for partial support set on setting editingItemData into model.
+                if (itemData.isEditing && itemData.index !== -1) {
+                    itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
+                }
             } else {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
                     {name: '-ms-grid-row', value: itemData.rowIndex + 1}
@@ -446,15 +450,6 @@ var
                 return;
             }
 
-            if (itemData.isGroup) {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
-            } else {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
-            }
-
-            if (itemData.isEditing) {
-                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.index);
-            }
         }
 
     },
@@ -955,6 +950,12 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
+            if (current.isGroup) {
+                current.rowIndex = _private.calcGroupRowIndex(self, current);
+            } else if (current.index !== -1) {
+                current.rowIndex = _private.calcRowIndexByKey(self, current.key);
+            }
+
             if (GridLayoutUtil.isPartialSupport) {
                 _private.prepareItemDataForPartialSupport(this, current);
             }
@@ -1121,7 +1122,11 @@ var
         },
 
         _setEditingItemData: function(itemData) {
-            this._model._setEditingItemData(itemData);
+            let data = itemData ? itemData : this._model._editingItemData;
+            if (GridLayoutUtil.isPartialSupport) {
+                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
+            }
+            this._model._setEditingItemData(data);
         },
 
         getEditingItemData(): object | null {
