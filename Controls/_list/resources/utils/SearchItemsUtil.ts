@@ -1,5 +1,5 @@
 import display = require('Types/display');
-import {TreeItemsUtil} from 'Controls/list';
+import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 
 var
     SearchItemsUtil = {
