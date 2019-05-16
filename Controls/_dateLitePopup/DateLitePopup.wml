@@ -48,7 +48,7 @@
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
-      <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__text-align-center"
          on:wheel="_onWheel()"
       >
@@ -62,7 +62,7 @@
             </div>
          </ws:for>
       </div>
-      <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__years-home">
          <Controls.buttons:Button
             style="secondary"
