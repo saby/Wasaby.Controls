@@ -1,12 +1,12 @@
 define([
    'Core/core-merge',
    'Core/helpers/Date/format',
-   'Controls/Input/DateTime/StringValueConverter',
+   'Controls/input',
    'Controls/Utils/Date'
 ], function(
    cMerge,
    formatDate,
-   StringValueConverter,
+   input,
    dateUtils
 ) {
    'use strict';
@@ -19,12 +19,12 @@ define([
       },
       now = new Date();
 
-   describe('Controls/Input/DateTime/StringValueConverter', function() {
+   describe('Controls/_input/DateTime/StringValueConverter', function() {
 
       describe('.update', function() {
 
          it('should update mask and replacer options', function() {
-            let converter = new StringValueConverter(),
+            let converter = new input.StringValueConverter(),
                mask = 'HH:mm',
                replacer = '-';
             converter.update(options);
@@ -48,7 +48,7 @@ define([
             dateStr: '01.01.2018'
          }].forEach(function(test) {
             it(`should return "${test.dateStr}" if "${test.date}" is passed`, function() {
-               let converter = new StringValueConverter();
+               let converter = new input.StringValueConverter();
                converter.update(options);
                assert.strictEqual(converter.getStringByValue(test.date), test.dateStr);
             });
@@ -127,7 +127,7 @@ define([
             { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
-               let converter = new StringValueConverter(),
+               let converter = new input.StringValueConverter(),
                   rDate;
                converter.update(cMerge({ mask: test.mask }, options, { preferSource: true }));
                rDate = converter.getValueByString(test.stringValue, null, test.autocomplete || true);
@@ -216,7 +216,7 @@ define([
          ].forEach(function(test) {
             it(`should return curent date if it icludes "${test.mask}"`, function() {
                clock = sinon.useFakeTimers(test.currentDate.getTime(), 'Date');
-               let converter = new StringValueConverter();
+               let converter = new input.StringValueConverter();
                let tested = converter.getCurrentDate(test.baseDate || baseDate, test.mask);
                assert(dateUtils.isDatesEqual(tested, test.value),`"${tested}" "${test.value}"`);
             });
