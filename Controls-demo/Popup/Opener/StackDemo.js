@@ -3,6 +3,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
+      'wml!Controls-demo/Popup/Opener/DialogTpl',
       'css!Controls-demo/Popup/PopupPageOld'
    ],
    function(Control, template) {
@@ -47,8 +48,18 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.sticky.open({
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
-               height: 350,
-               maxHeight: 500
+               height: 130,
+               actionOnScroll: 'track',
+               template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
+            });
+         },
+         openStickyScroll: function() {
+            this._children.sticky.open({
+               target: this._children.stickyButton._container,
+               opener: this._children.stickyButton,
+               height: 130,
+               actionOnScroll: 'close',
+               template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
             });
          },
          openMaximizedStack: function() {

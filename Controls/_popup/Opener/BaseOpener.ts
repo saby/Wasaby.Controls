@@ -35,6 +35,7 @@ import {parse as parserLib, load} from 'Core/library';
        */
       var Base = Control.extend({
          _template: Template,
+         _actionOnScroll: 'none',
 
          _beforeMount: function(options) {
             this._popupIds = [];
@@ -67,7 +68,15 @@ import {parse as parserLib, load} from 'Core/library';
          open: function(popupOptions, controller) {
             var cfg = this._getConfig(popupOptions || {});
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-
+            if(cfg.actionOnScroll) {
+               this._actionOnScroll = cfg.actionOnScroll;
+            } else if (cfg.closeOnTargetScroll){
+               this._actionOnScroll = 'close'
+            } else if(cfg.targetTracking) {
+               this._actionOnScroll = 'track'
+            } else {
+                this._actionOnScroll= 'none'
+            }
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                _private.compatibleOpen(this, cfg, controller);
@@ -283,10 +292,10 @@ import {parse as parserLib, load} from 'Core/library';
 
          _scrollHandler: function(event) {
             if (this.isOpened() && event.type === 'scroll') {
-               if (this._options.targetTracking) {
-                  this._updatePopup();
-               } else if (this._options.closeOnTargetScroll) {
+               if (this._actionOnScroll==='close') {
                   this._closeOnTargetScroll();
+               } else if (this._actionOnScroll==='track') {
+                  this._updatePopup();
                }
             }
          },

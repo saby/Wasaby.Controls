@@ -11,7 +11,6 @@ import Env = require('Env/Env');
        *
        * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
        * @class Controls/_popup/InfoBox
-       * @mixes Controls/_popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
