@@ -1126,7 +1126,7 @@ var
             if (GridLayoutUtil.isPartialSupport) {
                 data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
             }
-            this._model._setEditingItemData(data);
+            this._model._setEditingItemData(itemData);
         },
 
         getEditingItemData(): object | null {
