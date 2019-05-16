@@ -39,7 +39,8 @@ interface IInputDateTime {
 
 
 /**
- * @event Controls/interface/IInputDateTime#valueChanged Occurs when field value was changed.
+ * @event Occurs when field value was changed.
+ * @name Controls/interface/IInputDateTime#valueChanged
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark
@@ -70,7 +71,8 @@ interface IInputDateTime {
  */
 
 /**
- * @event Controls/interface/IInputDateTime#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @event Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @name Controls/interface/IInputDateTime#inputCompleted
  * @param {Date} value Field value.
  * @param {String} displayValue Text value of the field.
  * @remark
