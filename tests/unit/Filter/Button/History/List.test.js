@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Filter/Button/History/List',
+      'Controls/_filterPopup/History/List',
       'Core/Serializer',
       'Types/chain',
       'unit/Filter/Button/History/testHistorySource',
@@ -87,7 +87,7 @@ define(
             List._private.onResize(list);
             assert.isTrue(list._isMaxHeight);
             assert.isTrue(updated);
-            
+
             updated = false;
             List._private.onResize(list);
             assert.isFalse(updated);

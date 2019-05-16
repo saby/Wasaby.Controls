@@ -20,7 +20,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       var panelPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Filter/Button/Panel',
+         _content: 'Controls/filterPopup:Panel',
          _dataObject: null,
          _items: null,
          _itemsSimple: null,
