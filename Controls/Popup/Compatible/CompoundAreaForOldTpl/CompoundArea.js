@@ -315,6 +315,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._notifyVDOM('controlResize', [], { bubbling: true });
             });
 
+            self._windowResize = self._windowResize.bind(self);
+            Env.constants.$win.bind('resize', self._windowResize);
+
             self._trackTarget(true);
 
             self.rebuildChildControl().addCallback(function() {
@@ -625,6 +628,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyUp: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
                event.stopPropagation();
+            }
+         },
+
+         _windowResize: function() {
+            if (this._childControl) {
+               this._childControl._onResizeHandler();
             }
          },
 
@@ -1029,6 +1038,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Unregister CompoundArea's inner Event/Listener, before its
             // container is destroyed by compatibility layer
             this._unregisterEventListener();
+            Env.constants.$win.unbind('resize', this._windowResize);
 
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
