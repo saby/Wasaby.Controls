@@ -208,6 +208,11 @@ var _private = {
         if (item.get('buttonViewMode') === 'toolButton') {
             itemConfig += 'toolButton';
         }
+        if (typeof item.get('icon') === 'string') {
+            if (item.get('icon').split(' ').length === 1) {
+                var _icon = item.get('icon') + ' icon-medium';
+            }
+        }
         return {
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
@@ -218,7 +223,7 @@ var _private = {
                 showHeader: item.get('showHeader'),
                 headConfig: {
                     //TODO: перевести вместе с кнопками на icon-size https://online.sbis.ru/opendoc.html?guid=af44769b-82b0-4b4a-a288-93706eb0a50d
-                    icon: item.get('icon') + (typeof item.get('icon') === 'string' ? (item.get('icon').split(' ').length > 1 ? '' : ' icon-medium') : ''),
+                    icon: _icon,
                     caption: item.get('title'),
                     iconStyle: item.get('iconStyle')
                 }
