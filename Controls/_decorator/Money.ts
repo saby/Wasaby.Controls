@@ -26,7 +26,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
 
 /**
  * @name Controls/_decorator/Money#value
- * @cfg {String} Value in number format to convert.
+ * @cfg {String|Number} Value in number format to convert.
  */
 
 /**
@@ -144,7 +144,7 @@ Money.getOptionTypes = function () {
    return {
       style: entity.descriptor(String),
       useGrouping: entity.descriptor(Boolean),
-      value: entity.descriptor(String)
+      value: entity.descriptor(String, Number)
    };
 };
 
