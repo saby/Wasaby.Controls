@@ -44,7 +44,8 @@ interface IInputTag {
 }
 
 /**
- * @event Controls/interface/IInputTag#tagClick Occurs when tag was clicked.
+ * @event Occurs when tag was clicked.
+ * @name Controls/interface/IInputTag#tagClick
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -71,7 +72,8 @@ interface IInputTag {
  */
 
 /**
- * @event Controls/interface/IInputTag#tagHover Occurs when tag is hovered.
+ * @event Occurs when tag is hovered.
+ * @name Controls/interface/IInputTag#tagHover
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
