@@ -2,7 +2,7 @@
  * Created by kraynovdo on 07.02.2018.
  */
 define([
-   'Controls/Event/Registrar'
+   'Controls/_event/Registrar'
 ], function(Registrar){
    describe('Controls.Event.Registrar', function () {
       var evMock, compMock, result = false;

@@ -1,5 +1,5 @@
 <div class="controls-Popup" on:animationend="_animated()">
-   <Controls.Event.Registrator name="resizeDetect" register="controlResize">
+   <Controls.event:Register name="resizeDetect" register="controlResize">
       <ws:partial
          attr:class="controls-Popup__template"
          template="{{_options.content}}"
@@ -19,7 +19,7 @@
          on:controlResize="_controlResize()"
          on:swipe="_swipeHandler()">
       </ws:partial>
-   </Controls.Event.Registrator>
+   </Controls.event:Register>
    <Controls.event:Listener event="controlResize" on:controlResize="_update()"/>
    <Controls.event:Listener event="scroll" on:scroll="_update()"/>
 </div>
