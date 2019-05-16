@@ -4,7 +4,7 @@
  * @interface Controls/interface/IInputTooltip
  *
  * @public
- * @author Журавлев В.Д.
+ * @author Журавлев М.С.
  */
 interface IInputTooltip {
     readonly _options: {
