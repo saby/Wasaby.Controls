@@ -15,21 +15,19 @@ var _private = {
         if (initialized) {
             return;
         }
-        if (window) {
-            ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
-            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>') + ARROW_WIDTH;
-            DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
-                itemData: {
-                    getPropValue: ItemsUtil.getPropertyValue,
-                    item: {
-                        title: '...'
-                    },
-                    isDots: true,
-                    hasArrow: true
+        ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
+        BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>') + ARROW_WIDTH;
+        DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
+            itemData: {
+                getPropValue: ItemsUtil.getPropertyValue,
+                item: {
+                    title: '...'
                 },
-                displayProperty: 'title'
-            }));
-        }
+                isDots: true,
+                hasArrow: true
+            },
+            displayProperty: 'title'
+        }));
         initialized = true;
     },
 
@@ -154,6 +152,15 @@ export default {
         return _private.getItemsSizes(items, displayProperty).reduce(function (acc, width) {
             return acc + width;
         }, 0);
+    },
+
+    getMinCrumbsWidth(itemsCount: number): number {
+        _private.initializeConstants();
+        if (itemsCount > 2) {
+            return BREAD_CRUMB_MIN_WIDTH * 2 + DOTS_WIDTH;
+        } else {
+            return itemsCount * BREAD_CRUMB_MIN_WIDTH - ARROW_WIDTH;
+        }
     },
 
     shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth) {
