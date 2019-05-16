@@ -1,0 +1,31 @@
+<div class="controls-SimplePanel_theme_{{_options.theme}} controls-Popup__isolatedFocusingContext"
+     attr:ws-no-focus="true">
+   <Controls.scroll:Container
+           attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll_theme_{{_options.theme}}"
+           shadowVisible="{{false}}">
+
+      <div>
+         <ws:for data="index, item in _items">
+            <ws:if data="{{index}}">
+               <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
+            </ws:if>
+            <Controls._filterPopup.SimplePanel._List
+                    scope="{{item}}"
+                    on:itemClick="_itemClickHandler(item)"
+                    on:checkBoxClick="_checkBoxClickHandler(index)"
+                    on:selectorResult="_selectorResultHandler(item)"
+            />
+         </ws:for>
+      </div>
+   </Controls.scroll:Container>
+   <ws:if data="{{_needShowApplyButton}}">
+      <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">
+         <Controls.buttons:Button viewMode="toolButton"
+                                  icon="icon-Yes icon-medium"
+                                  iconStyle="success"
+                                  on:click="_applySelection()"/>
+      </div>
+   </ws:if>
+   <Controls.popupTemplate:CloseButton class="controls-SimplePanel-cross_theme_{{_options.theme}}" viewMode="link"
+                          on:click="_closeClick()"/>
+</div>

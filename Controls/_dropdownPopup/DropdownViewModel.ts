@@ -98,6 +98,13 @@ import entity = require('Types/entity');
             return this._options.selectedKeys;
          },
 
+         setSelectedKeys: function(selectedKeys) {
+            if (this._options.selectedKeys !== selectedKeys) {
+               this._options.selectedKeys = selectedKeys;
+               this._nextVersion();
+            }
+         },
+
          getDisplayFilter: function() {
             var filter = [];
             filter.push(_private.filterHierarchy.bind(this));
