@@ -22,20 +22,26 @@ define([
 
    describe('Controls/_lookup/Lookup/LookupView', function() {
       it('getAvailableCollectionWidth', function() {
-
-         var fieldWrapperWidth = 100;
          var afterFieldWrapperWidth = 20;
-         var fieldWrapper = {
+         var self = new Lookup();
+
+         self._fieldWrapperWidth = 100;
+         self._fieldWrapperMinHeight = 24;
+         self._fieldWrapper = {
             offsetWidth: 110
          };
 
-         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, false, false), 80);
-         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth,  10, false, true), 57);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, false), 80);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, true), 50);
+
+         self._fieldWrapperMinHeight = 5;
+         assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, true), 60);
       });
 
       it('getInputMinWidth', function() {
-         assert.equal(Lookup._private.getInputMinWidth(330, 30), 99);
-         assert.equal(Lookup._private.getInputMinWidth(530, 30), 100);
+         assert.equal(Lookup._private.getInputMinWidth(330, 30, 24), 96);
+         assert.equal(Lookup._private.getInputMinWidth(330, 30, 30), 100);
+         assert.equal(Lookup._private.getInputMinWidth(150, 30, 24), 40);
       });
 
       it('getMaxVisibleItems', function() {
@@ -150,6 +156,8 @@ define([
 
       it('_calculatingSizes', function() {
          var
+         // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
+            FIELD_WRAPPER_MIN_HEIGHT = 25,
             FIELD_WRAPPER_WIDTH = 300,
             ITEM_WIDTH = 50,
             COUNTER_WIDTH = 20,
@@ -171,6 +179,7 @@ define([
             offsetWidth: FIELD_WRAPPER_WIDTH
          };
          lookup._fieldWrapperWidth = FIELD_WRAPPER_WIDTH;
+         lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
 
          Lookup._private.getItemsSizesLastRow = function() {
             var numberItems = newOptions.items.getCount();
