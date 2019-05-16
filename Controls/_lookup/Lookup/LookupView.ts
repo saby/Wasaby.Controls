@@ -60,9 +60,11 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
       getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect) {
          var
-             additionalWidth = afterFieldWrapperWidth,
-             fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
-             fieldWrapperWidth = self._getFieldWrapperWidth();
+            additionalWidth = afterFieldWrapperWidth,
+
+            // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
+            fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
+            fieldWrapperWidth = self._getFieldWrapperWidth();
 
          if (!readOnly && multiSelect) {
             additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
