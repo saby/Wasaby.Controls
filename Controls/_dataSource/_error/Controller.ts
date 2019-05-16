@@ -53,11 +53,10 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
 /// endregion helpers
 
 /**
- * Error handling component
- * @class
- * @name Controls/_dataSource/_error/Controller
- * @public
- * @author Zalyaev A.V.
+ * Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
+ * @class Controls/_dataSource/_error/Controller
+ * @private
+ * @author Заляев А.В.
  * @example
  * <pre>
  *     let handler = ({ error, mode }) => {
@@ -98,6 +97,7 @@ export default class ErrorController {
     }
 
     /**
+     * Добавить обработчик ошибки
      * @method
      * @name Controls/_dataSource/_error/Controller#addHandler
      * @public
@@ -109,6 +109,7 @@ export default class ErrorController {
     }
 
     /**
+     * Убрать обработчик ошибки
      * @method
      * @name Controls/_dataSource/_error/Controller#removeHandler
      * @public
@@ -120,11 +121,12 @@ export default class ErrorController {
     }
 
     /**
+     * Запуск обработки ошибки для формирования объекта с данными для шаблона ошибки.
      * @method
      * @name Controls/_dataSource/_error/Controller#process
      * @public
-     * @param {Error | Controls/_dataSource/_error/HandlerConfig} config
-     * @return {void | Controls/_dataSource/_error/ViewConfig}
+     * @param {Error | Controls/_dataSource/_error/HandlerConfig} config Объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения, лио обрабатываемая ошибка
+     * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения шаблона
      */
     process<T extends Error = Error>(config: HandlerConfig<T> | T): Promise<ViewConfig | void> {
         let _config = prepareConfig<T>(config);
