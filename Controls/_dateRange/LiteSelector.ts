@@ -57,6 +57,7 @@ var Component = BaseControl.extend({
             opener: this,
             target: this._container,
             className: className,
+            fittingMode: 'overflow',
             templateOptions: {
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
