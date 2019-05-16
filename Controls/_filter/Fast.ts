@@ -329,6 +329,6 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
       });
 
       Fast._private = _private;
-      Fast._theme = ['Control/filter'];
+      Fast._theme = ['Controls/filter'];
       export = Fast;
 
