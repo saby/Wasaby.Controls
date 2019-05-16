@@ -183,7 +183,8 @@ interface ISuggest {
       displayProperty: string;
 
       /**
-       * @event Controls/interface/ISuggest#choose Occurs when user selects item from suggest.
+       * @event Occurs when user selects item from suggest.
+       * @name Controls/interface/ISuggest#choose
        * @param {String} value Selected value.
        * @example
        * myModule.js
