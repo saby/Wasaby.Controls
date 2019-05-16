@@ -2,8 +2,6 @@ import * as Control from 'Core/Control';
 import ICheckable, {IOptions as ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import 'css!theme?Controls/toggle';
-
 
 //TODO экспортнуть опции нормально после выполнения https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
 export interface IOptions {
@@ -33,6 +31,7 @@ export interface IOptions {
  */
 class BigSeparator extends Control implements ICheckable{
    protected _template: Function;
+   protected _theme: Array<string> = ['Controls/toggle'];
    protected _options: ICheckableOptions;
    protected _icon: string;
 
@@ -70,6 +69,7 @@ class BigSeparator extends Control implements ICheckable{
 }
 
 //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+BigSeparator.prototype._theme = 'css!theme?Controls/toggle';
 BigSeparator.prototype._template = BigSeparatorTemplate;
 
 export default BigSeparator;
