@@ -1,5 +1,5 @@
 define([
-   'Controls/Explorer/_PathController',
+   'Controls/_explorer/PathController',
    'Controls/_breadcrumbs/HeadingPath/Back',
    'Types/entity'
 ], function(
