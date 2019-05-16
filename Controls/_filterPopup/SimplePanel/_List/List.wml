@@ -1,0 +1,23 @@
+<div>
+   <ws:partial template="Controls/dropdownPopup:_ForTemplate"
+               listModel="{{_listModel}}"
+               selectedKeys="{{_options.selectedKeys}}"
+               displayProperty="{{_options.displayProperty}}"
+               itemTemplate="{{_options.itemTemplate}}"
+               multiSelect="{{_options.multiSelect}}"
+               checkBoxAlign="right"
+               showClose="{{true}}"
+               defaultItemTemplate="{{_defaultItemTemplate}}"
+               emptyTemplate="{{_emptyItemTemplate}}"
+   />
+   <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
+   <Controls.dropdownPopup:MoreButton
+           class="controls-SimplePanel-List__hasMoreButton_theme_{{_options.theme}}"
+           caption="{[Еще]}..."
+           items="{{_options.items}}"
+           selectedKeys="{{_listModel.getSelectedKeys()}}"
+           selectorTemplate="{{_options.selectorTemplate}}"
+           isCompoundTemplate="{{_options.isCompoundTemplate}}"
+           on:selectorResult="_selectorDialogResult()"/>
+   </ws:if>
+</div>

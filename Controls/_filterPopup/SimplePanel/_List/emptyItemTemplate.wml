@@ -1,0 +1,5 @@
+<ws:partial template="wml!Controls/_dropdown/itemTemplate"
+            itemData="{{itemData}}"
+            displayProperty="{{displayProperty}}"
+            multiSelect="{{false}}"
+            class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}"/>

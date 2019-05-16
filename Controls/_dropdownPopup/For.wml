@@ -3,13 +3,13 @@
       <ws:partial
             on:click="_itemClickHandler(listModel.getEmptyItem().item)"
             on:mouseenter="_itemMouseEnter(listModel.getEmptyItem().item, listModel.getEmptyItem().hasChildren)"
-            template="{{itemTemplate || defaultItemTemplate}}"
+            template="{{emptyTemplate || itemTemplate || defaultItemTemplate}}"
             itemData="{{listModel.getEmptyItem()}}"
             resultHandler="{{resultHandler}}"
             marker="{{multiSelect ? false : marker}}"
             displayProperty="{{displayProperty}}"
             showClose="{{showClose}}"
-            class="{{!multiSelect ? 'controls-DropdownList__emptyItem'}} controls-DropdownList__row-separator theme_{{_options.theme}}"/>
+            class="{{!emptyTemplate && !multiSelect ? 'controls-DropdownList__emptyItem'}} controls-DropdownList__row-separator theme_{{_options.theme}}"/>
    </ws:if>
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
       <ws:if data="{{listModel.getCurrent().isGroup}}">
@@ -28,11 +28,12 @@
             resultHandler="{{resultHandler}}"
             marker="{{multiSelect ? false : marker}}"
             multiSelect="{{multiSelect}}"
+            checkBoxAlign="{{checkBoxAlign}}"
             displayProperty="{{displayProperty}}"
             showClose="{{showClose}}"
             parentProperty="{{parentProperty}}"
             iconPadding="{{iconPadding}}"
-            class="{{!listModel.isLast() ? 'controls-DropdownList__row-separator'}} theme_{{_options.theme}}"/>
+            class="controls-DropdownList__defaultItem {{!listModel.isLast() ? 'controls-DropdownList__row-separator'}} theme_{{_options.theme}}"/>
       </ws:else>
    </ws:for>
 </div>
