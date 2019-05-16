@@ -9,14 +9,14 @@
    >
       <div class="ControlsDemo-EditableArea__firstExampleWrapper">
          <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
-         <Controls.EditableArea.Templates.Editors.Base
+         <Controls._EditableArea.Templates.Editors.Base
               bind:value="content.editObject.text1"
               style="asLink"
          >
             <ws:editorTemplate>
                <Controls.input:Text selectOnClick="{{ false }}" />
             </ws:editorTemplate>
-         </Controls.EditableArea.Templates.Editors.Base>
+         </Controls._EditableArea.Templates.Editors.Base>
       </div>
    </Controls.EditableArea>
    <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
