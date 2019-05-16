@@ -199,7 +199,9 @@ var _private = {
                 changed = true;
             }
         }
-        self._notify('periodsChanged');
+        if (changed) {
+            self._notify('periodsChanged');
+        }
     }
 };
 
