@@ -9,5 +9,6 @@ define('Controls/Input/Date/interface/ILink', [
        * @remark This event should be used to react to changes user makes in the field.
        * @see Documentation: Inputs
        * @see Documentation: bind
+       * @private
    */
 });

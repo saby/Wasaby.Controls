@@ -58,7 +58,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
       return dropDownList;
    };
 
-   describe('Controls/Dropdown/resources/template/DropdownList', function() {
+   describe('Controls/_dropdownPopup/DropdownList', function() {
 
       describe('DropdownList::constructor', function() {
          let config2 = {
@@ -77,36 +77,36 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          it('_itemMouseEnter', function() {
             var dropDownConfig, dropDownList;
             var opened = false;
-   
+
             dropDownConfig = getDropDownConfig();
             dropDownList = getDropDownListWithConfig(dropDownConfig);
-   
+
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
-            
+
             //moch child opener
             dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
             dropDownList._hasHierarchy = false;
             dropDownList._subDropdownOpened = false;
-   
+
             dropDownList._itemMouseEnter({}, items.at(4), true);
             assert.isTrue(dropDownList._subDropdownOpened)
             assert.isFalse(opened);
-            
+
             return new Promise(function(resolve) {
                setTimeout(function() {
                   assert.isTrue(opened);
-      
+
                   dropDownList._hasHierarchy = false;
                   dropDownList._itemMouseEnter({}, items.at(4), true);
                   assert.isTrue(opened);
-      
+
                   dropDownList._hasHierarchy = false;
                   dropDownList._subDropdownOpened = false;
                   dropDownList._itemMouseEnter({}, items.at(4), true);
                   assert.isTrue(opened);
-      
-      
+
+
                   dropDownList._hasHierarchy = true;
                   dropDownList._subDropdownOpened = true;
                   dropDownList._itemMouseEnter({}, items.at(4), false);
@@ -390,11 +390,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             config.multiSelect = true;
             let dropdownList = getDropDownListWithConfig(config);
             dropdownList._beforeMount(config);
+            let resizeEventFired = false;
             let result,
                event = { target: { closest: () => { return false; } } };
             dropdownList._notify = function(e, d) {
                if (e === 'sendResult') {
                   result = d[0];
+               }
+
+               if (e === 'controlResize') {
+                  resizeEventFired = true;
                }
             };
             let expectedResult = {
@@ -405,6 +410,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._itemClickHandler(event, items.at(1));
             assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3, 2]);
             assert.isTrue(dropdownList._needShowApplyButton);
+
+            //resize event fired after control update
+            dropdownList._beforeUpdate(config);
+            dropdownList._afterUpdate(config);
+            assert.isTrue(resizeEventFired);
 
             config.selectedKeys = [];
             dropdownList._beforeMount(config);
@@ -419,29 +429,20 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.isUndefined(dropdownList._needShowApplyButton);
          });
 
-         it('_openSelectorDialog', function() {
-            let config = getDropDownConfig();
-            config.selectorTemplate = {
-               templateName: 'selectorTemplate',
-               templateOptions: { items: [], caption: 'text' }
+         it('_selectorDialogResult', function() {
+            let dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            let expectedResult = {
+              action: 'action',
+               items: []
+            },
+            currentResult;
+            dropdownList._notify = (event, data) => {
+               if (event === 'sendResult') {
+                  currentResult = data[0];
+               }
             };
-            let dropdownList = getDropDownListWithConfig(config);
-            dropdownList._beforeMount(config);
-            let expectedTemplateOptions =  { items: [], caption: 'text', selectedItems: new collection.List({ items: [] }) };
-            let resultOptions;
-            dropdownList._children = {
-               selectorDialog: { open: (options) => {
-                  resultOptions = options;
-               } }
-            };
-            dropdownList._openSelectorDialog(config);
-
-            assert.deepEqual(resultOptions.templateOptions, expectedTemplateOptions);
-            assert.equal(resultOptions.template, 'selectorTemplate');
-
-            config.selectedKeys = [null];
-            dropdownList._openSelectorDialog(config);
-            assert.deepEqual(resultOptions.templateOptions.selectedItems.getCount(), 0);
+            dropdownList._selectorDialogResult('selectorResult', expectedResult);
+            assert.deepStrictEqual(expectedResult, currentResult);
          });
       });
    });

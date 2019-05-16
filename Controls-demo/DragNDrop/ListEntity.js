@@ -1,6 +1,6 @@
-define('Controls-demo/DragNDrop/ListEntity', ['Controls/DragNDrop/Entity/List/Items'],
-   function(EntityItems) {
+define('Controls-demo/DragNDrop/ListEntity', ['Controls/dragnDrop'],
+   function(dragnDrop) {
       'use strict';
 
-      return EntityItems.extend({});
+      return dragnDrop.ListItems.extend({});
    });

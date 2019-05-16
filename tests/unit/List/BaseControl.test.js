@@ -1391,12 +1391,8 @@ define([
          });
       });
 
-      it('mouseMove handler', function () {
-         var
-             stopImmediateCalled = false,
-             preventDefaultCalled = false,
-
-             lnSource = new sourceLib.Memory({
+      it('mouseEnter handler', function () {
+         var lnSource = new sourceLib.Memory({
                 idProperty: 'id',
                 data: data
              }),
@@ -1418,7 +1414,7 @@ define([
          lnBaseControl._beforeMount(lnCfg);
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._itemMouseMove();
+         lnBaseControl._itemMouseEnter({});
          assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
@@ -1665,6 +1661,62 @@ define([
             var result = ctrl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
+         });
+
+         it('_onAfterBeginEdit', function () {
+            let
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   source: source,
+                   viewConfig: {
+                      keyProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: rs,
+                      keyProperty: 'id',
+                      selectedKeys: [1, 3]
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   navigation: {
+                      source: 'page',
+                      sourceConfig: {
+                         pageSize: 6,
+                         page: 0,
+                         hasMore: false
+                      },
+                      view: 'infinity',
+                      viewConfig: {
+                         pagingMode: 'direct'
+                      }
+                   }
+                },
+                called = false,
+                ctrl = new lists.BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  beginEdit: () => {
+                     return ctrl._onAfterBeginEdit();
+                  }
+               }
+            };
+            ctrl._options = {
+               itemActions: []
+            };
+            ctrl._notify = function(eName) {
+               if (eName === 'afterBeginEdit') {
+                  called = true;
+               }
+               return {anyField: 12};
+            };
+            assert.isFalse(ctrl._canUpdateItemsActions);
+            let result  = ctrl.beginEdit();
+            assert.deepEqual({anyField: 12}, result);
+            assert.isTrue(ctrl._canUpdateItemsActions);
+            assert.isTrue(called);
+            ctrl._afterUpdate({
+               viewModelConstructor: null
+            });
+            assert.isFalse(ctrl._canUpdateItemsActions);
          });
 
          it('beginAdd', function() {
@@ -2555,6 +2607,52 @@ define([
                   }
                };
                instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('can update itemActions on left swipe', function(done) {
+               var
+                   cfg = {
+                      viewName: 'Controls/List/ListView',
+                      viewConfig: {
+                         idProperty: 'id'
+                      },
+                      viewModelConfig: {
+                         items: [],
+                         idProperty: 'id'
+                      },
+                      viewModelConstructor: lists.ListViewModel,
+                      source: source
+                   },
+                   instance = new lists.BaseControl(cfg),
+                   itemData = {
+                      key: 1,
+                      multiSelectStatus: false,
+                      item: {}
+                   },
+                   childEvent = {
+                      nativeEvent: {
+                         direction: 'left'
+                      }
+                   };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg).addCallback(function() {
+                  assert.isFalse(instance._canUpdateItemsActions);
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: () => {}
+                     },
+                     selectionController: {
+                        onCheckBoxClick: function() {
+                        }
+                     }
+                  };
+
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.isTrue(instance._canUpdateItemsActions);
+
+                  done();
+               });
+               return done;
             });
 
             it('list doesn\'t handle swipe, event should fire', function() {

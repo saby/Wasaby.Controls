@@ -16,7 +16,7 @@ var _private = {
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
  *
  * @class Controls/_history/Menu
- * @extends Controls/Button/Menu
+ * @extends Controls/dropdown:Button
  * @control
  * @public
  * @author Герасимов А.М.
@@ -53,7 +53,7 @@ var HistoryMenu = Menu.extend({
       this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function (result) {
          if (!result) {
             self._children.notificationOpener.open({
-               template: 'wml!Controls/Popup/Templates/Notification/Simple',
+               template: 'Controls/popupTemplate:NotificationSimple',
                templateOptions: {
                   style: 'danger',
                   text: 'Невозможно закрепить более 10 пунктов',

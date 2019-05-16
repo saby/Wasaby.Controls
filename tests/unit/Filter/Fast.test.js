@@ -145,6 +145,45 @@ define(
             open: setTrue.bind(this, assert)
          };
 
+         it('_beforeMount', function() {
+            let fastFilter = getFastFilter(configItems);
+            let receivedItems = [{
+               id: 'first',
+               value: ['Россия'],
+               resetValue: ['все страны'],
+               textValue: '',
+               properties: {
+                  keyProperty: 'title',
+                  displayProperty: 'title'
+               }}
+            ];
+            let receivedState = {
+               configs: [{_items: new collection.RecordSet({
+                  idProperty: 'key',
+                  rawData: items[0]
+               })}],
+               items: receivedItems
+            };
+            let optionsItems = {
+               items: [{
+                  id: 'first',
+                  value: ['Россия'],
+                  resetValue: ['все страны'],
+                  textValue: '',
+                  properties: {
+                     keyProperty: 'title',
+                     displayProperty: 'title',
+                     source: new sourceLib.Memory({
+                        data: items[0],
+                        idProperty: 'key'
+                     })
+                  }}
+               ]
+            };
+            fastFilter._beforeMount(optionsItems, {}, receivedState);
+            assert.isOk(fastFilter._configs[0]._sourceController);
+         });
+
          it('beforeUpdate new items property not changed', function(done) {
             var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeMount(configWithItems).addCallback(function(result) {

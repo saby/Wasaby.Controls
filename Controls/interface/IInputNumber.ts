@@ -37,7 +37,8 @@ interface IInputNumber {
 }
 
 /**
- * @event Controls/interface/IInputNumber#valueChanged Occurs when field value was changed.
+ * @event Occurs when field value was changed.
+ * @name Controls/interface/IInputNumber#valueChanged
  * @param {Number|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark
@@ -67,7 +68,8 @@ interface IInputNumber {
  */
 
 /**
- * @event Controls/interface/IInputNumber#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @name Controls/interface/IInputNumber#inputCompleted
  * @param {Number|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark

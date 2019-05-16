@@ -29,6 +29,11 @@
       "path": "./Controls-theme"
     },
     {
+      "name": "UI",
+      "path": "./node_modules/saby-ui/UI",
+      "required": true
+    },
+    {
       "name": "WS.Core",
       "path": "./node_modules/sbis3-ws/WS.Core",
       "required": true

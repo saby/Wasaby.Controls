@@ -15,8 +15,8 @@ import clone = require('Core/core-clone');
  * Source
  * Proxy source adding history data to the original source
  * @class Controls/_history/Source
- * @extends Types/entity:Abstract
- * @mixes Types/entity:OptionsToPropertyMixin
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @control
  * @public
  * @author Герасимов А.М.

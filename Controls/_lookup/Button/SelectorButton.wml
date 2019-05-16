@@ -1,4 +1,4 @@
-<Controls._lookup.SelectedCollection.Controller
+<Controls._lookup.Controller
       source="{{_options.source}}"
       selectedKeys="{{_options.selectedKeys}}"
       keyProperty="{{_options.keyProperty}}"
@@ -11,4 +11,4 @@
    <ws:content>
       <Controls._lookup.Button._SelectorButton scope="{{_options}}"/>
    </ws:content>
-</Controls._lookup.SelectedCollection.Controller>
+</Controls._lookup.Controller>

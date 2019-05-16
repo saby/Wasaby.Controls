@@ -39,7 +39,8 @@ interface IInputMaskValue {
 }
 
 /**
- * @event Controls/interface/IInputMaskValue#valueChanged Occurs when field value was changed.
+ * @event Occurs when field value was changed.
+ * @name Controls/interface/IInputMaskValue#valueChanged
  * @param {String} value Value of the field without delimiters.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark
@@ -70,7 +71,8 @@ interface IInputMaskValue {
  */
 
 /**
- * @event Controls/interface/IInputMaskValue#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @name Controls/interface/IInputMaskValue#inputCompleted
  * @param {String} value Value of the field.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark

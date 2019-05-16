@@ -7,6 +7,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
 
    /**
     * Table-looking list. Can load data from data source.
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
@@ -37,7 +38,6 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
     *
-    * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
     * @cssModifier controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields
     *
     * @control

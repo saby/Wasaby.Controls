@@ -23,7 +23,7 @@ define('Controls/Input/Date/Link', [
     * @mixes Controls/Input/Date/interface/ILinkView
     * @mixes Controls/Input/Date/interface/ILink
     * @control
-    * @public
+    * @private
     * @category Input
     * @author Водолазских А.А.
     * @demo Controls-demo/Input/Date/Link

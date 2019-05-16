@@ -79,7 +79,7 @@ var _private = {
    },
    setPopupOptions: function (self, popupOptions) {
       popupOptions.className = popupOptions.className || self._options.className;
-      popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
+      popupOptions.template = 'Controls/dropdownPopup:List';
       popupOptions.closeOnOutsideClick = true;
    }
 };

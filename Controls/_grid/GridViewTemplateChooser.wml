@@ -1,11 +1,21 @@
-<ws:partial template="{{_gridTemplate}}"
-            _listModel="{{_listModel}}"
-            _headerContentTemplate="{{_headerContentTemplate}}"
-            _itemOutputWrapper="{{_itemOutputWrapper}}"
-            _itemTemplate="{{_itemTemplate}}"
-            _groupTemplate="{{_groupTemplate}}"
-            _getGridTemplateColumns="{{ _getGridTemplateColumns }}"
-            _getEditingRowStyles="{{ _getEditingRowStyles }}"
-            _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
-            _resultsTemplate="{{_resultsTemplate}}"
-            _options="{{_options}}"/>
+<ws:template name="gridTemplate">
+   <ws:partial template="{{_gridTemplate}}"
+               _listModel="{{_listModel}}"
+               _headerContentTemplate="{{_headerContentTemplate}}"
+               _itemOutputWrapper="{{_itemOutputWrapper}}"
+               _itemTemplate="{{_itemTemplate}}"
+               _groupTemplate="{{_groupTemplate}}"
+               _getGridTemplateColumns="{{ _getGridTemplateColumns }}"
+               _getEditingRowStyles="{{ _getEditingRowStyles }}"
+               _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
+               _resultsTemplate="{{_resultsTemplate}}"
+               _options="{{_options}}"/>
+</ws:template>
+<ws:if data="{{_options.columnScroll}}">
+   <Controls._grid.ColumnScroll scope="{{_options}}">
+      <ws:partial template="gridTemplate"/>
+   </Controls._grid.ColumnScroll>
+</ws:if>
+<ws:else>
+   <ws:partial template="gridTemplate"/>
+</ws:else>

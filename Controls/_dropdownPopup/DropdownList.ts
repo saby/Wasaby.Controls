@@ -11,6 +11,7 @@ import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
+import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -284,8 +285,17 @@ import chain = require('Types/chain');
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+               let isApplyButtonVisible = this._needShowApplyButton;
+               let self = this;
+
                this._listModel.updateSelection(item);
                this._needShowApplyButton = _private.needShowApplyButton(this._listModel.getSelectedKeys(), this._options.selectedKeys);
+
+               if (this._needShowApplyButton !== isApplyButtonVisible) {
+                  scheduleCallbackAfterRedraw(this, () => {
+                     self._notify('controlResize', [], {bubbling: true});
+                  });
+               }
             } else {
                var result = {
                   action: pinClicked ? 'pinClicked' : 'itemClick',
@@ -330,35 +340,7 @@ import chain = require('Types/chain');
             this._forceUpdate();
          },
 
-         _openSelectorDialog: function() {
-
-            // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
-            var selectedItems = [],
-               self = this;
-            chain.factory(this._listModel.getSelectedKeys()).each(function(key) {
-               if (key !== undefined && key !== null) {
-                  selectedItems.push(self._options.items.getRecordById(key));
-               }
-            });
-
-            var templateConfig = {
-               selectedItems: new collection.List({ items: selectedItems })
-            };
-            Merge(templateConfig, this._options.selectorTemplate.templateOptions);
-            this._children.selectorDialog.open({
-               templateOptions: templateConfig,
-               template: this._options.selectorTemplate.templateName,
-               isCompoundTemplate: this._options.isCompoundTemplate,
-               opener: this
-            });
-         },
-
-         _selectorDialogResult: function(event, items) {
-            var result = {
-               action: 'selectorResult',
-               event: event,
-               data: items
-            };
+         _selectorDialogResult: function(event, result) {
             this._notify('sendResult', [result]);
          },
 

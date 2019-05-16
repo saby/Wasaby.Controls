@@ -35,7 +35,7 @@ define(
          config.additionalTemplate = template;
 
          function getFilterPanel(FPconfig) {
-            var panel2 = new filterPopup.Panel(FPconfig);
+            var panel2 = new filterPopup.DetailPanel(FPconfig);
             panel2.saveOptions(FPconfig);
             return panel2;
          }
@@ -53,7 +53,7 @@ define(
                historyId: 'TEST_PANEL_HISTORY_ID'
             };
             var panel2 = getFilterPanel(config2);
-            filterPopup.Panel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
                assert.equal(items.getCount(), 2);
                done();
             });
@@ -67,7 +67,7 @@ define(
             var panel2 = getFilterPanel(config2);
             let hUtilsLoader = filter.HistoryUtils.loadHistoryItems;
             filter.HistoryUtils.loadHistoryItems = () => { return new Deferred.fail(); };
-            filterPopup.Panel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
+            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
                assert.equal(panel2._historyItems.getCount(), 0);
                done();
             });
@@ -195,7 +195,7 @@ define(
             ];
             var panel2 = getFilterPanel({ items: changedItems });
             panel2._resetFilter();
-            assert.deepEqual({}, filterPopup.Panel._private.getFilter(panel2._items));
+            assert.deepEqual({}, filterPopup.DetailPanel._private.getFilter(panel2._items));
             assert.deepEqual(panel2._items, resetedItems);
             assert.isFalse(panel2._isChanged);
          });
@@ -203,14 +203,14 @@ define(
          it('isChangeValue', function() {
             var panel = getFilterPanel(config);
             panel._resetFilter();
-            assert.isFalse(filterPopup.Panel._private.isChangedValue(panel._items));
+            assert.isFalse(filterPopup.DetailPanel._private.isChangedValue(panel._items));
          });
 
          it('without add params', function() {
             var panel = getFilterPanel(config);
             panel._beforeMount(config);
             panel._items[2].visibility = true;
-            assert.isFalse(filterPopup.Panel._private.hasAdditionalParams(panel._items));
+            assert.isFalse(filterPopup.DetailPanel._private.hasAdditionalParams(panel._items));
          });
 
          it('recordSet', function() {
@@ -222,7 +222,7 @@ define(
                options = {};
             options.items = rs;
             options.additionalTemplate = template;
-            var panel2 = new filterPopup.Panel(options);
+            var panel2 = new filterPopup.DetailPanel(options);
             panel2._beforeMount(options);
             panel2._beforeUpdate(options);
             assert.isTrue(panel2._isChanged);
@@ -253,16 +253,16 @@ define(
             };
             var errorCathed = false;
 
-            filterPopup.Panel._private.resolveItems(self, options);
+            filterPopup.DetailPanel._private.resolveItems(self, options);
             assert.isTrue(options.items !== self._items);
             assert.equal(self._items[0], 'test');
 
-            filterPopup.Panel._private.resolveItems(self, {}, context);
+            filterPopup.DetailPanel._private.resolveItems(self, {}, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
 
             try {
-               filterPopup.Panel._private.resolveItems(self, {}, {});
+               filterPopup.DetailPanel._private.resolveItems(self, {}, {});
             } catch (e) {
                errorCathed = true;
             }
@@ -279,10 +279,10 @@ define(
                }
             };
 
-            filterPopup.Panel._private.resolveItems(self, options, context);
+            filterPopup.DetailPanel._private.resolveItems(self, options, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
-            filterPopup.Panel._private.resolveHistoryId(self, {}, self._contextOptions);
+            filterPopup.DetailPanel._private.resolveHistoryId(self, {}, self._contextOptions);
             assert.equal(self._historyId, 'testId');
          });
 
@@ -339,25 +339,25 @@ define(
                      visibility: false
                   }
                ];
-            assert.deepEqual(filterPopup.Panel._private.prepareItems(changeItems), resetItems);
+            assert.deepEqual(filterPopup.DetailPanel._private.prepareItems(changeItems), resetItems);
          });
 
          it('_historyItemsChanged', function() {
             var panel = getFilterPanel(config);
-            filterPopup.Panel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
+            filterPopup.DetailPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
             panel._historyId = 'TEST_HISTORY_ID';
             panel._historyItemsChanged();
          });
 
          it('_private:isPassedValidation', function() {
             var validationResult = [null];
-            assert.isTrue(filterPopup.Panel._private.isPassedValidation(validationResult));
+            assert.isTrue(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
             validationResult = [null, 'Дата заполнена некорректно.'];
-            assert.isFalse(filterPopup.Panel._private.isPassedValidation(validationResult));
+            assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
             validationResult = ['Дата заполнена некорректно.', null];
-            assert.isFalse(filterPopup.Panel._private.isPassedValidation(validationResult));
+            assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
          });
       });
    }

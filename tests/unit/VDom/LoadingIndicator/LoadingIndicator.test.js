@@ -13,17 +13,22 @@ define([
             delay: 1
          });
          assert.equal(LoadingDelay._getDelay({}), 1);
-         assert.equal(LoadingDelay._getDelay({delay: 5}), 5);
+         assert.equal(LoadingDelay._getDelay({ delay: 5 }), 5);
          LoadingDelay._beforeMount({});
          assert.equal(LoadingDelay._getDelay({}), 2000);
-         assert.equal(LoadingDelay._getDelay({delay: 3}), 3);
+         assert.equal(LoadingDelay._getDelay({ delay: 3 }), 3);
          LoadingDelay.destroy();
       });
 
       it('LoadingIndicator - add', () => {
+         let Loading2 = new LoadingIndicator();
+         Loading2._beforeMount({});
          Loading._toggleIndicator = () => {
          };
          let prom = new Promise((resolve) => {
+         });
+         let promise = new Promise((resolve, reject) => {
+            reject(new Error('error'));
          });
          let config = {
             message: 'message 1',
@@ -61,6 +66,15 @@ define([
 
          Loading.hide(id);
          assert.equal(Loading._stack.getCount(), 3);
+         config = {
+            message: 'message 4',
+            overlay: 'none',
+            delay: 10
+         };
+         let id2 = Loading2._show(config, promise);
+         promise.catch((error) => {
+            assert.equal(Loading2._stack.getCount(), 0);
+         });
       });
 
       it('LoadingIndicator - isOpened', () => {

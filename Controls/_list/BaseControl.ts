@@ -15,6 +15,8 @@ import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
+import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
+import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
@@ -498,20 +500,16 @@ var _private = {
 
     createScrollPagingController: function(self) {
         var def = new Deferred();
-        require(['Controls/_list/Controllers/ScrollPaging'], function(ScrollPagingController) {
-            var scrollPagingCtr;
-            scrollPagingCtr = new ScrollPagingController({
-                mode: self._options.navigation.viewConfig.pagingMode,
-                pagingCfgTrigger: function(cfg) {
-                    self._pagingCfg = cfg;
-                    self._forceUpdate();
-                }
-            });
 
-            def.callback(scrollPagingCtr);
-        }, function(error) {
-            def.errback(error);
+        var scrollPagingCtr = new ScrollPagingController({
+            mode: self._options.navigation.viewConfig.pagingMode,
+            pagingCfgTrigger: function(cfg) {
+                self._pagingCfg = cfg;
+                self._forceUpdate();
+            }
         });
+
+        def.callback(scrollPagingCtr);
 
         return def;
     },
@@ -788,9 +786,7 @@ var _private = {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
-            requirejs(['Controls/_list/resources/utils/GroupUtil'], function(GroupUtil) {
-                GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
-            });
+            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
     },
 
@@ -798,10 +794,8 @@ var _private = {
         var
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            requirejs(['Controls/_list/resources/utils/GroupUtil'], function(GroupUtil) {
-                GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
-                    result.callback(collapsedGroupsFromStore || config.collapsedGroups);
-                });
+            GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
+                result.callback(collapsedGroupsFromStore || config.collapsedGroups);
             });
         } else {
             result.callback(config.collapsedGroups);
@@ -1340,6 +1334,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
+        if (direction === 'left') {
+            this._canUpdateItemsActions = true;
+        }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);
         }
@@ -1452,6 +1449,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+    },
+
+    _onAfterBeginEdit: function (event, item) {
+        this._canUpdateItemsActions = true;
+        return this._notify('afterBeginEdit', [item]);
     },
 
    _showActionMenu(
@@ -1575,10 +1577,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+        this._canUpdateItemsActions = true;
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
-        this._canUpdateItemsActions = true;
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 

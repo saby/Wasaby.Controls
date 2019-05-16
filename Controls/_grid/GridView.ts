@@ -7,7 +7,7 @@ import HeaderContentTpl = require('wml!Controls/_grid/HeaderContent');
 import Env = require('Env/Env');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import FullGridSupportLayout = require('wml!Controls/_grid/layouts/FullGridSupport');
-import PartialGridSupportLayout = require('wml!Controls/_grid/layouts/PartialGridSupport');
+import PartialGridSupportLayout = require('wml!Controls/_grid/layouts/partialGridSupport/PartialGridSupport');
 import NoGridSupportLayout = require('wml!Controls/_grid/layouts/NoGridSupport');
 import 'wml!Controls/_grid/Header';
 import DefaultResultsTemplate = require('wml!Controls/_grid/Results');
@@ -121,6 +121,27 @@ var
             if (cells.length > 0) {
                 self._listModel.setCurrentColumnsWidth(cells);
             }
+        },
+
+        /*
+        * When using a custom template, the scope of the base template becomes the same as the scope of custom template.
+        * Because of this, the base handlers are lost. To fix this, need to remember the handlers where the scope is
+        * still right and set them. But current event system prevent do this, because it looks for given event handler
+        * only on closest control (which can be Browser, Explorer or smth else because of template scope).
+        * Therefore it is required to create Cell as control with and subscribe on events in it.
+        * https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4
+        */
+        registerHandlersForPartialSupport: function (self, listModel) {
+            listModel.setHandlersForPartialSupport({
+                'mouseenter': self._onItemMouseEnter.bind(self),
+                'mousemove': self._onItemMouseMove.bind(self),
+                'mouseleave': self._onItemMouseLeave.bind(self),
+                'mousedown': self._onItemMouseDown.bind(self),
+                'click': self._onItemClick.bind(self),
+                'contextmenu': self._onItemContextMenu.bind(self),
+                'wheel': self._onItemWheel.bind(self),
+                'swipe': self._onItemSwipe.bind(self)
+            });
         }
     },
     GridView = ListView.extend({
@@ -137,6 +158,7 @@ var
             _private.checkDeprecated(cfg);
             this._gridTemplate = _private.chooseGridTemplate();
             GridView.superclass._beforeMount.apply(this, arguments);
+            _private.registerHandlersForPartialSupport(this, this._listModel);
             this._listModel.setColumnTemplate(ColumnTpl);
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
         },
@@ -184,6 +206,14 @@ var
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
+        },
+
+        _onItemMouseLeave: function (event, itemData) {
+            // In partial grid supporting browsers hovered item calculates in code
+            if (GridLayoutUtil.isPartialSupport && this._listModel.getHoveredItem() !== itemData.item) {
+                this._listModel.setHoveredItem(null);
+            }
+            GridView.superclass._onItemMouseLeave.apply(this, arguments);
         },
 
         _calcFooterPaddingClass: function(params) {

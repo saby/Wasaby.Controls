@@ -8,7 +8,7 @@ import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
-import LoadService = require('Controls/History/LoadService');
+import {LoadService} from 'Controls/history';
 import 'css!theme?Controls/_suggest/_InputController/InputController';
 
 
@@ -28,7 +28,7 @@ var PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/Container/Scroll', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
+var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
 
 var _private = {
    hasMore: function(searchResult) {

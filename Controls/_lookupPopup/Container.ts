@@ -9,15 +9,66 @@ import selectionToRecord = require('Controls/Container/MultiSelector/selectionTo
 import Deferred = require('Core/Deferred');
 
 /**
+ * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
+ * Loading data by selectedKeys on selection complete.
+ * Must used inside Controls/lookupPopup:Controller.
+ * In one Controls/lookupPopup:Controller can be used some Containers.
  *
- * Control _lookupPopup/Container
+ * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
+ *
+ * <a href="/materials/demo/demo-ws4-engine-selector-browser">Here</a> you can see a demo.
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
  * @control
+ * @mixes Controls/interface/ISource
  * @public
- * @author Kraynov D.
+ * @author Герасимов Александр Максимович
  */
+
+/**
+ * @name Controls/_lookupPopup/Container#selectionFilter
+ * @cfg {Function} Function that filters selectedItems from Controls/lookupPopup:Controller for a specific list.
+ * @remark By default selectionFilter option is setted as function that always returns true.
+ * @example
+ *
+ * WML:
+ * <pre>
+ *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
+ *        ...
+ *    </Controls.lookupPopup:Container>
+ * </pre>
+ *
+ * JS:
+ * <pre>
+ *     _selectionFilter: function(item, index) {
+ *        let filterResult = false;
+ *
+ *        if (item.get('Компания')) {
+ *            filterResult = true;
+ *        }
+ *
+ *        return filterResult;
+ *     }
+ * </pre>
+ */
+
+/**
+ * @name Controls/_lookupPopup/Container#selectionType
+ * @cfg {String} Type of records that can be selected.
+ * @variant node only nodes are available for selection
+ * @variant leaf only leafs are available for selection
+ * @variant all all types of records are available for selection
+ * @example
+ * In this example only leafs are available for selection.
+ * <pre>
+ *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+ *        ...
+ *    </Controls.lookupPopup:ListContainer>
+ * </pre>
+ */
+
+
 
       var SELECTION_TYPES = ['all', 'leaf', 'node'];
 
@@ -70,9 +121,14 @@ import Deferred = require('Core/Deferred');
             return type;
          },
 
-         prepareFilter: function(filter, selection, source, selectionType) {
-            var adapter = source.getAdapter();
-            filter.selection = selectionToRecord(selection, adapter, selectionType);
+         prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
+            filter = Utils.object.clone(filter);
+
+            //FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+            if (searchParam) {
+               delete filter[searchParam];
+            }
+            filter.selection = selection;
             return filter;
          },
 
@@ -123,14 +179,20 @@ import Deferred = require('Core/Deferred');
 
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
+               const adapter = source.getAdapter();
                const sourceController = _private.getSourceController(source, dataOptions.navigation);
                const selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               const filter = Utils.object.clone(dataOptions.filter);
 
-               loadDef = sourceController.load(_private.prepareFilter(filter, selection, source, _private.getValidSelectionType(this._options.selectionType)));
+               loadDef = sourceController.load(
+                   _private.prepareFilter(
+                       dataOptions.filter,
+                       selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
+                       self._options.searchParam
+                   )
+               );
 
                loadDef.addCallback(function(result) {
                   return prepareResult(result);

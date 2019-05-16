@@ -1,15 +1,15 @@
 define(
    [
-      'Controls/Input/Text/ViewModel'
+      'Controls/input'
    ],
-   function(ViewModel) {
+   function(input) {
       'use strict';
 
       describe('Controls.Input.Text.ViewModel', function() {
          var ctrl;
 
          beforeEach(function() {
-            ctrl = new ViewModel({}, '');
+            ctrl = new input.TextViewModel({}, '');
          });
          describe('handleInput', function() {
             it('Delete part of the value.', function() {

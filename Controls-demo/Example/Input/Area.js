@@ -8,11 +8,9 @@ define('Controls-demo/Example/Input/Area',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
          _template: template
       });
-   }
-);
+   });

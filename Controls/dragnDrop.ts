@@ -16,6 +16,7 @@ import Controller = require('Controls/_dragnDrop/Controller');
 import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
 import Entity = require('Controls/_dragnDrop/Entity');
 import ItemsEntity = require('Controls/_dragnDrop/Entity/Items');
+import _ItemEntity = require('Controls/_dragnDrop/Entity/Item');
 
 import Compound = require('Controls/_dragnDrop/Controller/Compound');
 import DraggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
@@ -27,6 +28,7 @@ export {
     DraggingTemplate,
     Entity,
     ItemsEntity,
+    _ItemEntity,
 
     Compound,
     DraggingTemplateWrapper,

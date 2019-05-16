@@ -190,8 +190,8 @@
  */
 
 /**
- * @function Controls/_list/interface/IList#reload
  * Reloads list data and view.
+ * @function Controls/_list/interface/IList#reload
  */
 
 /**
@@ -202,8 +202,8 @@
  */
 
 /**
- * @function Controls/_list/interface/IList#reloadItem
  * Loads model from data source, merges changes into the current data and renders the item.
+ * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Identifier of the collection item, that should be reloaded from source.
  * @param {Object} readMeta Meta information, that which will be passed to the query/read method.
  * @param {Boolean} replaceItem Determine, how the loaded item will be applied to collection.

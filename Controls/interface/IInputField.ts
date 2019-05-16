@@ -41,7 +41,8 @@ interface IInputField {
 
 
 /**
- * @event Controls/interface/IInputField#valueChanged Occurs when field display value was changed.
+ * @event Occurs when field display value was changed.
+ * @name Controls/interface/IInputField#valueChanged
  * @param {String} value Value of the field.
  * @param {String} displayValue Display value of the field.
  * @remark
@@ -71,7 +72,8 @@ interface IInputField {
  */
 
 /**
- * @event Controls/Input/interface/IInputField#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
+ * @name Controls/Input/interface/IInputField#inputCompleted
  * @param {String} value Value of the field.
  * @remark
  * This event can be used as a trigger to validate the field or send entered data to some other control.

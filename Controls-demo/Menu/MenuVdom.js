@@ -8,7 +8,7 @@ define('Controls-demo/Menu/MenuVdom', [
    'Types/source',
    'Core/Deferred',
    'Types/entity',
-   'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
+   'wml!Controls/_dropdownPopup/defaultGroupTemplate',
    'wml!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom',
    'css!Controls-demo/Menu/MenuVdom'

@@ -11,19 +11,27 @@ import Common from './HeadingPath/Common';
 import 'Controls/heading';
 
 var _private = {
-    calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {
-        if (maxCrumbsWidth < availableWidth / 2 && backButtonWidth < availableWidth / 2) {
-            self._backButtonClass = '';
-            self._breadCrumbsClass = '';
-        } else if (maxCrumbsWidth < availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_long';
-            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
-        } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
-            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
-        } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth < availableWidth / 2) {
-            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
-            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long';
+    calculateClasses(
+       self,
+       maxCrumbsWidth: number,
+       minCrumbsWidth: number,
+       backButtonWidth: number,
+       availableWidth: number
+    ): void {
+        if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth > availableWidth / 2) {
+           self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
+           self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
+        } else {
+           if (availableWidth - backButtonWidth < minCrumbsWidth || backButtonWidth > availableWidth / 2) {
+              self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
+           } else {
+              self._backButtonClass = '';
+           }
+           if (maxCrumbsWidth > availableWidth / 2) {
+              self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
+           } else {
+              self._breadCrumbsClass = '';
+           }
         }
     },
 
@@ -53,12 +61,20 @@ var _private = {
                     counterCaption: self._getCounterCaption(options.items)
                  }
               }));
-              _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty), backButtonWidth, containerWidth - homeWidth);
+              _private.calculateClasses(
+                 self,
+                 BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty),
+                 BreadCrumbsUtil.getMinCrumbsWidth(self._breadCrumbsItems.length),
+                 backButtonWidth,
+                 containerWidth - homeWidth
+              );
 
               if (self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half') {
                   availableWidth = containerWidth / 2;
-              } else {
+              } else if (self._backButtonClass === 'controls-BreadCrumbsPath__backButton_short') {
                   availableWidth = containerWidth - self._backButtonMinWidth;
+              } else {
+                  availableWidth = containerWidth - backButtonWidth;
               }
               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
            } else {
@@ -94,6 +110,8 @@ var _private = {
 /**
  * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
  * @cfg {String} Back heading display style.
+ * @variant primary
+ * @variant secondary
  * @default secondary
  * @see Controls/Heading/Back#style
  */

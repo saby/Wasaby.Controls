@@ -74,7 +74,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * Container allows you to handle drag'n'drop events on the page.
-       * The control must be inside Controls/_dragnDrop/Container.
+       * The control must be inside Controls/dragnDrop:Controller.
        * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
        * @class Controls/_dragnDrop/Container
        * @extends Core/Control

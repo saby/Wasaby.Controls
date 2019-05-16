@@ -34,11 +34,11 @@ import entity = require('Types/entity');
             return isAdditional !== true || isHistory;
          },
 
-         needToDrawSeparator: function(item, nextItem) {
+         needToDrawSeparator: function(item, nextItem, hasParent) {
             if (!nextItem.get) {
                return false;
             }
-            var itemInHistory = _private.isHistoryItem(item) && !item.get('parent');
+            var itemInHistory = _private.isHistoryItem(item) && !hasParent;
             var nextItemInHistory = _private.isHistoryItem(nextItem);
             return itemInHistory && !nextItemInHistory;
          },
@@ -96,6 +96,13 @@ import entity = require('Types/entity');
 
          getSelectedKeys: function() {
             return this._options.selectedKeys;
+         },
+
+         setSelectedKeys: function(selectedKeys) {
+            if (this._options.selectedKeys !== selectedKeys) {
+               this._options.selectedKeys = selectedKeys;
+               this._nextVersion();
+            }
          },
 
          getDisplayFilter: function() {
@@ -158,7 +165,7 @@ import entity = require('Types/entity');
             //Separator is needed only when list has both history and nohistory items
             //if the last item is in history then separator is unnecessary
             if (!this._itemsModel.isLast()) {
-               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
+               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
             }
             itemsModelCurrent.iconStyle = lists.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;

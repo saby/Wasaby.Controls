@@ -262,7 +262,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   containerWidth: this._container.width()
                }
             };
-            var width = StackStrategy.getPosition(coords, item).width;
+
+            // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
+            var width = StackStrategy.getPosition(coords, item).stackWidth;
 
             this._panel._options.maximized = this._maximized;
             this._panel._updateAreaWidth(width);
