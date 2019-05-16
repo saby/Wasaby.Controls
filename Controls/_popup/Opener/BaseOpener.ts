@@ -330,6 +330,7 @@ import {parse as parserLib, load} from 'Core/library';
                Base.getManager().addCallback(function() {
                   Base.getZIndexUtil().addCallback(function(getZIndex) {
                      cfg.zIndex = cfg.zIndex || getZIndex(opener);
+                     cfg.theme = opener._options.theme;
                      Base._openPopup(popupId, cfg, controller, def);
                   });
                });
