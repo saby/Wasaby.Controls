@@ -9,11 +9,11 @@
             </div>
             <h2>Horizontal double switcher</h2>
             <div class="demo__block">
-                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOff" bind:value="value2" captions="{{['State1', 'State2']}}"/>
+                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOff" bind:value="value2" captions="{{['Turned on', 'Turned off']}}"/>
             </div>
             <h2>Vertical double switcher</h2>
             <div class="demo__block">
-                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOn" bind:value="value3" orientation="vertical" captions="{{['State1', 'State2']}}" />
+                <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOn" bind:value="value3" orientation="vertical" captions="{{['Turned on', 'Turned off']}}" />
             </div>
         </div>
         <div class="ControlsDemo-standartDemoSwitch_RadioGroups">
@@ -53,7 +53,7 @@
         <h2>readOnly state</h2>
         <div class="demo__block">
             <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{true}}" value="{{value4}}" caption="State"/>
-            <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlyDoubleSwitchOn" readOnly="{{true}}" value="{{value5}}" captions="{{['State1', 'State2']}}"/>
+            <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlyDoubleSwitchOn" readOnly="{{true}}" value="{{value5}}" captions="{{['Turned on', 'Turned off']}}"/>
             <Controls.toggle:RadioGroup
                attr:class="demo__element horizontal__element ControlsDemo-standartDemoSwitch_ReadOnlyRadioGroup"
                keyProperty="id"
