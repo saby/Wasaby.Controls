@@ -156,7 +156,7 @@
                                   keyProperty="id"
                                   displayProperty="title"
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
-                                  groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
+                                  groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
                                   attr:class="ControlsDemo-InputDropdown__item"
                                   source="{{_createMemory(_groupItems)}}">
          </Controls.dropdown:Input>
@@ -166,7 +166,7 @@
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
                                   source="{{_createMemory(_groupTextItems)}}">
             <ws:groupTemplate>
-               <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
+               <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}"/>
             </ws:groupTemplate>
          </Controls.dropdown:Input>
       </div>
