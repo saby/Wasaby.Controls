@@ -406,7 +406,7 @@ var
            if (current.item.get) {
               if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
                  current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
-                  if (!current.hasChildren && this._options.nodeFooterTemplate) {
+                  if (current.item.get(current.nodeProperty) && !current.hasChildren && this._options.nodeFooterTemplate) {
                       current.nodeFooter = {
                           key: current.key,
                           item: current.dispItem.getContents(),
