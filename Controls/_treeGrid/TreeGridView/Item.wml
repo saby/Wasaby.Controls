@@ -28,27 +28,28 @@
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
-   <ws:partial template="{{currentColumn.template}}"
-               attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
-               ladderWrapper="{{currentColumn.ladderWrapper}}"
-               itemData="{{currentColumn}}" />
+   <ws:if data="{{colspan}}">
+      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="{{currentColumn.template}}"
+                  attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                  ladderWrapper="{{currentColumn.ladderWrapper}}"
+                  itemData="{{currentColumn}}" />
+   </ws:else>
    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser"/>
    </ws:if>
 </ws:template>
 <ws:template name="columnContent">
-<ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
-   <ws:partial template="{{multiSelectTpl}}"
-               attr:class="controls-GridView__checkbox
-                  {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
-      <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
-                          multiSelectStatus="{{itemData.multiSelectStatus}}"
-                          key="{{itemData.key}}" />
-   </ws:partial>
-</ws:if>
-<ws:else>
-   <ws:if data="{{colspan}}">
-      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+   <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
+      <ws:partial template="{{multiSelectTpl}}"
+                  attr:class="controls-GridView__checkbox
+                     {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
+         <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
+                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             key="{{itemData.key}}" />
+      </ws:partial>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isNotFullGridSupport}}">
@@ -58,7 +59,6 @@
          <ws:partial template="cellPartialTemplate"/>
       </ws:else>
    </ws:else>
-</ws:else>
 </ws:template>
 <ws:template name="columnContentWrapper">
 <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && currentColumn.columnIndex === 0}}">
