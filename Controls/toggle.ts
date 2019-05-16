@@ -26,7 +26,7 @@ import DoubleSwitch = require('Controls/_toggle/DoubleSwitch');
 import RadioGroup = require('Controls/_toggle/RadioGroup');
 import Checkbox = require('Controls/_toggle/Checkbox');
 import Separator = require('Controls/_toggle/Separator');
-import BigSeparator = require('Controls/_toggle/BigSeparator');
+export {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 
 export {
    Button,
