@@ -195,7 +195,7 @@ define(
                         popupClassName: 'popupClassName',
                         keyProperty: 'itemKeyProperty',
                         showHeader: 'showHeader',
-                        icon: 'icon',
+                        icon: 'icon icon-size',
                         title: 'title',
                         iconStyle: 'iconStyle'
                      }
@@ -224,7 +224,7 @@ define(
                      templateOptions: {
                         headConfig: {
                            caption: 'title',
-                           icon: 'icon icon-medium',
+                           icon: 'icon icon-size',
                            iconStyle: 'iconStyle'
                         },
                         items: 'items',

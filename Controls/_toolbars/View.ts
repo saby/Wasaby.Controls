@@ -201,7 +201,7 @@ var _private = {
     },
 
     generateItemPopupConfig: function (item, event, self) {
-        var itemConfig = '';
+        var itemConfig = '', _icon = '';
         if (item.get('icon') !== undefined && item.get('tittle') === undefined) {
             itemConfig += 'icon';
         }
@@ -210,7 +210,9 @@ var _private = {
         }
         if (typeof item.get('icon') === 'string') {
             if (item.get('icon').split(' ').length === 1) {
-                var _icon = item.get('icon') + ' icon-medium';
+                _icon = item.get('icon') + ' icon-medium';
+            } else {
+                _icon = item.get('icon');
             }
         }
         return {
