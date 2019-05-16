@@ -30,10 +30,10 @@ export interface IOptions {
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
 class BigSeparator extends Control implements ICheckable{
+   //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = BigSeparatorTemplate;
    protected _options: ICheckableOptions;
    protected _icon: string;
-   //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    static _theme: string[] = ['Controls/toggle'];
 
 
