@@ -155,9 +155,11 @@ import 'css!theme?Controls/lookup';
 
       getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect) {
          var
-             additionalWidth = afterFieldWrapperWidth,
-             fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
-             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
+            additionalWidth = afterFieldWrapperWidth,
+
+            // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
+            fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
+            fieldWrapperWidth = _private.getFieldWrapperWidth(self);
 
          if (!readOnly && multiSelect) {
             additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
