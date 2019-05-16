@@ -1,7 +1,14 @@
-import * as Control from 'Core/Control'
+import * as Control from 'Core/Control';
+import ICheckable, {IOptions as ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import 'css!theme?Controls/toggle';
+
+
+//TODO экспортнуть опции нормально после выполнения https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
+export interface IOptions {
+
+}
 
 /**
  * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
@@ -13,7 +20,7 @@ import 'css!theme?Controls/toggle';
  * @control
  * @public
  * @author Михайловский Д.С.
- * @mixes Controls/Toggle/interface/ICheckable
+ * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
  *
@@ -24,10 +31,9 @@ import 'css!theme?Controls/toggle';
  * @name Controls/_toggle/Separator#value
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
-
-class BigSeparator extends Control{
+class BigSeparator extends Control implements ICheckable{
    protected _template: Function;
-   protected _options;
+   protected _options: ICheckableOptions;
    protected _icon: string;
 
    private _iconChangedValue(value: boolean): void {
@@ -38,11 +44,11 @@ class BigSeparator extends Control{
       }
    }
 
-   protected _beforeMount(newOptions): void {
+   protected _beforeMount(newOptions: ICheckableOptions): void {
       this._iconChangedValue(newOptions.value);
    },
 
-   protected _beforeUpdate(newOptions): void {
+   protected _beforeUpdate(newOptions: ICheckableOptions): void {
       this._iconChangedValue(newOptions.value);
    },
 
