@@ -1391,12 +1391,8 @@ define([
          });
       });
 
-      it('mouseMove handler', function () {
-         var
-             stopImmediateCalled = false,
-             preventDefaultCalled = false,
-
-             lnSource = new sourceLib.Memory({
+      it('mouseEnter handler', function () {
+         var lnSource = new sourceLib.Memory({
                 idProperty: 'id',
                 data: data
              }),
@@ -1418,7 +1414,7 @@ define([
          lnBaseControl._beforeMount(lnCfg);
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._itemMouseMove();
+         lnBaseControl._itemMouseEnter({});
          assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
