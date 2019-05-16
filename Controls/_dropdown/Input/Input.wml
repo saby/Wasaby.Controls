@@ -24,7 +24,7 @@
                               _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
         dropdownClassName="{{_options.dropdownClassName}}"
         caption="{{_options.caption || _text}}"
-        dataLoadCallback="{{_setText}}"
+        selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         on:selectedKeysChanged="_selectedKeysChangedHandler()"
@@ -35,5 +35,5 @@
                text="{{_text}}"
                tooltip="{{_tooltip}}"
                hasMoreText="{{_hasMoreText}}"
-               class="{{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
+               class="{{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + '_style-' + _options.style + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
 </Controls._dropdown._Controller>

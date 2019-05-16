@@ -26,9 +26,11 @@ let getTemplate = (template: string | Control): Promise<Control> => {
 };
 
 /**
- * Component to display a parking error template
+ * Компонент для отображения шаблона ошибки по данным контрола {@link Controls/_dataSource/_error/Controller}
  * @class Controls/_dataSource/_error/Container
  * @extends Core/Control
+ * @private
+ * @author Заляев А.В.
  *
  */
 export default class Container extends Control {

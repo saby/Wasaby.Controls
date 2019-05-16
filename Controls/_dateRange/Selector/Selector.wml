@@ -10,6 +10,7 @@
 
       <Controls.popup:Sticky name="opener"
                                     template="SBIS3.CONTROLS/Date/RangeBigChoose"
-                                    closeOnOutsideClick="{{true}}">
+                                    closeOnOutsideClick="{{true}}"
+                                    actionOnScroll="close">
       </Controls.popup:Sticky>
 </div>

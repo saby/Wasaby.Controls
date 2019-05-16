@@ -1,12 +1,12 @@
 /// <amd-module name="Controls/_dataSource/_error/Mode" />
 /**
- * Enum for display error-template mode
- * @enum {string}
- * @name Controls/_dataSource/_error/Mode
- * @readonly
- * @property dialog
- * @property page
- * @property include
+ * Перечисляемое множество возможных способов отображения парковочного шаблона ошибки
+ * @typedef {Object} Controls/_dataSource/_error/Mode
+ * @property {string} dialog в диалоговом окне
+ * @property {string} page во всю страницу
+ * @property {string} include в области контрола
+ * @private
+ * @author Заляев А.В.
  */
 enum Mode {
     dialog = 'dialog',

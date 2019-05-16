@@ -429,32 +429,20 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.isUndefined(dropdownList._needShowApplyButton);
          });
 
-         it('_openSelectorDialog', function() {
-            let config = getDropDownConfig();
-            config.selectorTemplate = {
-               templateName: 'selectorTemplate',
-               templateOptions: { items: [], caption: 'text' }
+         it('_selectorDialogResult', function() {
+            let dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            let expectedResult = {
+              action: 'action',
+               items: []
+            },
+            currentResult;
+            dropdownList._notify = (event, data) => {
+               if (event === 'sendResult') {
+                  currentResult = data[0];
+               }
             };
-            let dropdownList = getDropDownListWithConfig(config);
-            dropdownList._beforeMount(config);
-            let expectedTemplateOptions =  { items: [], caption: 'text', selectedItems: new collection.List({ items: [] }) };
-            let resultOptions;
-            dropdownList._children = {
-               selectorDialog: { open: (options) => {
-                  resultOptions = options;
-               } }
-            };
-            dropdownList._openSelectorDialog(config);
-
-            assert.deepEqual(resultOptions.templateOptions.items, expectedTemplateOptions.items);
-            assert.deepEqual(resultOptions.templateOptions.caption, expectedTemplateOptions.caption);
-            assert.deepEqual(resultOptions.templateOptions.selectedItems, expectedTemplateOptions.selectedItems);
-            assert.isTrue(!!resultOptions.templateOptions.handlers.onSelectComplete);
-            assert.equal(resultOptions.template, 'selectorTemplate');
-
-            config.selectedKeys = [null];
-            dropdownList._openSelectorDialog(config);
-            assert.deepEqual(resultOptions.templateOptions.selectedItems.getCount(), 0);
+            dropdownList._selectorDialogResult('selectorResult', expectedResult);
+            assert.deepStrictEqual(expectedResult, currentResult);
          });
       });
    });

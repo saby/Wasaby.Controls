@@ -14,7 +14,7 @@
         filter="{{_options.filter}}"
         close="{{_onClose}}"
         open="{{_onOpen}}"
-        dataLoadCallback="{{_setText}}"
+        selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-ComboBox">

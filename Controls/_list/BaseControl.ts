@@ -1431,9 +1431,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
 
-    _onAfterBeginEdit: function () {
+    _onAfterBeginEdit: function (event, item) {
         this._canUpdateItemsActions = true;
-        return this._notify('afterBeginEdit');
+        return this._notify('afterBeginEdit', [item]);
     },
 
    _showActionMenu(
@@ -1557,10 +1557,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+        this._canUpdateItemsActions = true;
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
-        this._canUpdateItemsActions = true;
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
