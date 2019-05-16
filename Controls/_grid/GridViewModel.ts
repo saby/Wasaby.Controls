@@ -47,18 +47,25 @@ var
            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
            isBreadCrumbs: boolean = false
         ): string {
-          if (columnIndex === (multiSelectVisibility === 'hidden' ? 0 : 1)) {
+            let
+                multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
+
+          if (columnIndex === multiselectOffset) {
               if (isBreadCrumbs) {
-                 if (isNotFullGridSupport) {
-                    return ' colspan: ' + 1;
+                 if (GridLayoutUtil.isNoSupport) {
+                    return ' colspan: 1';
+                 } else if (GridLayoutUtil.isPartialSupport) {
+                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (multiselectOffset + 2);
                  } else {
-                    return ' grid-column: ' + 1 + ' / ' + (multiSelectVisibility === 'hidden' ? 2 : 3);
+                    return ' grid-column: 1 / ' + (multiselectOffset + 2);
                  }
               } else {
-                 if (isNotFullGridSupport) {
-                    return ' colspan: ' + (multiSelectVisibility === 'hidden' ? columnsLength : columnsLength - 1);
+                 if (GridLayoutUtil.isNoSupport) {
+                    return ' colspan: ' + (columnsLength - multiselectOffset);
+                 } else if (GridLayoutUtil.isPartialSupport) {
+                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (columnsLength + 1);
                  } else {
-                    return ' grid-column: ' + (multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (columnsLength + 1);
+                    return ' grid-column: ' + (multiselectOffset+1) + ' / ' + (columnsLength + 1);
                  }
               }
           }
