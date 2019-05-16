@@ -33,6 +33,16 @@ import 'css!theme?Controls/popupTemplate';
           */
 
          /**
+          * @name Controls/_popupTemplate/Stack#headingCaption
+          * @cfg {String} Heading size.
+          * @variant s Small text size.
+          * @variant m Medium text size.
+          * @variant l Large text size.
+          * @variant xl Extralarge text size.
+          * @default l
+          */
+
+         /**
           * @name Controls/_popupTemplate/Stack#headerContentTemplate
           * @cfg {function|String} The content between the header and the cross closure.
           */
@@ -146,7 +156,9 @@ import 'css!theme?Controls/popupTemplate';
       DialogTemplate.getDefaultOptions = function() {
          return {
             headingStyle: 'secondary',
-            closeButtonVisibility: true
+            closeButtonVisibility: true,
+            headingSize: 'l',
+            headingTheme: 'default'
          };
       };
 
