@@ -4,6 +4,7 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
+import { IoC } from 'Env/Env';
 
 
    // Convert node to jsonML array.
@@ -102,12 +103,17 @@ import objectMerge = require('Core/core-merge');
    }
 
    /**
-    * Convert html string to valid JsonML.
+    * Convert html string to valid JsonML. Is using on client-side only.
     * @function Controls/_decorator/Markup/Converter#htmlToJson
     * @param html {String}
     * @returns {Array}
     */
    var htmlToJson = function(html) {
+      if (typeof document === 'undefined') {
+         IoC.resolve('ILogger')
+            .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
+         return [];
+      }
       var div = document.createElement('div'),
          rootNode,
          rootNodeTagName,
