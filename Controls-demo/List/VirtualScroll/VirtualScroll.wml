@@ -1,7 +1,7 @@
 <div class="demo-wrapper-virt">
     <div class="demo-control_block">
         <h2>Controls/list:View    90 / 30</h2>
-        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
             <Controls.list:View
                     name="myList1"
                     source="{{_viewSource1}}"
@@ -17,12 +17,12 @@
                     <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                 </ws:navigation>
             </Controls.list:View>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </div>
 
     <div class="demo-control_block">
         <h2>Controls/list:View    20 / 5</h2>
-        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+        <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
             <Controls.list:View
                     name="myList2"
                     source="{{_viewSource1}}"
@@ -39,7 +39,7 @@
                     <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                 </ws:navigation>
             </Controls.list:View>
-        </Controls.Container.Scroll>
+        </Controls.scroll:Container>
     </div>
 
 </div>

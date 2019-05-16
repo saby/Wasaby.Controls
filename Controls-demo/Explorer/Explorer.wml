@@ -24,7 +24,7 @@
                      columns="{{_viewColumns}}">
                      <ws:tileItemTemplate>
                         <ws:partial
-                           template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                           template="Controls/tile:ItemTemplate"
                            folderWidth="{{250}}"
                            itemWidth="{{250}}"
                            hasTitle="{{tileItemTemplate.itemData.item.isDocument}}">

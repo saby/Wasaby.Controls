@@ -3,7 +3,7 @@
            caption="{{_options.caption}}"
            on:click="showSelector()"/>
    <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
-      <Controls.Event.Registrator name="controlResize" register="controlResize">
+      <Controls.event:Register name="controlResize" register="controlResize">
          <ws:partial template="{{_options.lookupTemplateName}}"
                      name="lookup"
                      class="controls-FilterPanel__LookupSelector"
@@ -16,6 +16,6 @@
                      on:openInfoBox="_notifyHandler('openInfoBox')"
                      scope="{{_options}}">
          </ws:partial>
-      </Controls.Event.Registrator>
+      </Controls.event:Register>
    </div>
 </div>
