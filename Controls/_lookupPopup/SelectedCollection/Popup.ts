@@ -4,10 +4,12 @@ import 'css!theme?Controls/popup';
 
 /**
  *
- * Control _lookupPopup/List/Container.ts
+ * Shows a collection of items with delete button in two columns.
+ * Used in Controls/lookup:Input, Controls/lookup:Button
  *
  * @class Controls/_lookupPopup/SelectedCollection/Popup
  * @extends Core/Control
+ * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @public
  * @author Kraynov D.
