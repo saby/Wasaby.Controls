@@ -169,7 +169,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                self.setEnabled(self._enabled);
             });
             self.once('onAfterLoad', function() {
-               self._setCustomHeader();
                EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
             });
 
@@ -255,6 +254,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._waitClose = false;
                this.close();
             } else {
+               self._setCustomHeader();
                runDelayed(function() {
                   if (self._container.length && self._options.catchFocus) {
                      doAutofocus(self._container);
