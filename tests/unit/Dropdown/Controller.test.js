@@ -349,13 +349,24 @@ define(
             assert.equal(dropdownController._items, undefined);
          });
 
-         it('before update source lazy load', () => {
-            let dropdownController = getDropdownController(configLazyLoad);
+         it('before update source lazy load', (done) => {
+            let dropdownController = getDropdownController(configLazyLoad),
+               opened = false, open;
             dropdownController._beforeMount(configLazyLoad);
             items.push({
                id: '5',
                title: 'Запись 11'
             });
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: function() {
+                     open = true;
+                  },
+                  isOpened: function() {
+                     return opened;
+                  }
+               }
+            };
             dropdownController._beforeUpdate({
                lazyItemsLoad: true,
                selectedKeys: '[2]',
@@ -367,6 +378,21 @@ define(
             });
             assert.isNull(dropdownController._sourceController);
             assert.equal(dropdownController._items, null);
+
+            opened = true;
+            dropdownController._beforeUpdate({
+               lazyItemsLoad: true,
+               selectedKeys: '[2]',
+               keyProperty: 'id',
+               source: new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            }).addCallback(function(loadedItems) {
+               assert.isOk(dropdownController._sourceController);
+               assert.isTrue(open);
+               done();
+            });
          });
 
          it('before update new key', () => {
