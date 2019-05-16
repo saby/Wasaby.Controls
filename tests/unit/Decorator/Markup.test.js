@@ -2,20 +2,18 @@
  * Created by rn.kondakov on 24.10.2018.
  */
 define([
-   'Controls/_decorator/Markup/Converter',
+   'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
    'Controls/_decorator/Markup/resolvers/highlight',
    'Controls/_decorator/Markup/resolvers/linkDecorate',
    'Controls/_decorator/Markup/resolvers/noOuterTag',
-   'Controls/_decorator/Markup/resolvers/innerText',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
-], function(Converter,
+], function(decorator,
    template,
    highlightResolver,
    linkDecorateResolver,
    noOuterTagResolver,
-   innerTextResolver,
    linkDecorateUtils,
    Env) {
    'use strict';
@@ -135,7 +133,7 @@ define([
       describe('deepCopyJson', function() {
          it('one big', function() {
             var json = [['p', 'text'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            var newJson = Converter.deepCopyJson(json);
+            var newJson = decorator.Converter.deepCopyJson(json);
             assert.notEqual(newJson, json);
             assert.deepEqual(newJson, json);
          });
@@ -150,40 +148,40 @@ define([
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
          });
          it('version', function() {
-            assert.deepEqual(Converter.htmlToJson('<p>No attributes</p>'), [
+            assert.deepEqual(decorator.Converter.htmlToJson('<p>No attributes</p>'), [
                ['p',
                   { version: currentVersion },
                   'No attributes'
                ]
             ]);
-            assert.deepEqual(Converter.htmlToJson('<p style="text-align: center;">With attributes</p>'), [
+            assert.deepEqual(decorator.Converter.htmlToJson('<p style="text-align: center;">With attributes</p>'), [
                ['p',
                   { version: currentVersion, style: 'text-align: center;' },
                   'With attributes'
                ]
             ]);
-            assert.deepEqual(Converter.htmlToJson(''), []);
-            assert.deepEqual(Converter.htmlToJson('just a string'), ['just a string']);
+            assert.deepEqual(decorator.Converter.htmlToJson(''), []);
+            assert.deepEqual(decorator.Converter.htmlToJson('just a string'), ['just a string']);
          });
          it('trim', function() {
             var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
             var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            assert.deepEqual(Converter.htmlToJson(html), json);
-            assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
+            assert.deepEqual(decorator.Converter.htmlToJson('   \n    \n   '), []);
          });
 
          it('undecorate link', function() {
             var html = '<p>' + decoratedLinkHtml + '</p>';
             var json = [['p', { version: currentVersion }, linkNode]];
-            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
          });
 
          it('long html', function() {
             var text = 'a'.repeat(2000);
-            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', { version: currentVersion }, text]]);
+            assert.deepEqual(decorator.Converter.htmlToJson('<p>' + text + '</p>'), [['p', { version: currentVersion }, text]]);
          }).timeout(1000);
 
          it('Wrapping url', function() {
@@ -260,7 +258,7 @@ define([
                   ]
                ]
             ];
-            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
          });
       });
 
@@ -273,27 +271,27 @@ define([
             Env.constants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
-            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), ''));
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(), ''));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(), ''));
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
-            assert.equal(Converter.jsonToHtml(['']), '<div><p></p></div>');
-            assert.equal(Converter.jsonToHtml(['some text']), '<div><p>some text</p></div>');
-            assert.equal(Converter.jsonToHtml(['some\ntext']), '<div><p>some</p><p>\ntext</p></div>');
-            assert.equal(Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
+            assert.equal(decorator.Converter.jsonToHtml(['']), '<div><p></p></div>');
+            assert.equal(decorator.Converter.jsonToHtml(['some text']), '<div><p>some text</p></div>');
+            assert.equal(decorator.Converter.jsonToHtml(['some\ntext']), '<div><p>some</p><p>\ntext</p></div>');
+            assert.equal(decorator.Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
             var vdomTemplate = template({ '_options': { 'value': json } }, {}, undefined, true);
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });
          it('no XSS', function() {
             var
@@ -330,7 +328,7 @@ define([
                   '<p><a>upper and lower case</a></p>' +
                   '<p><iframe>base64 alert</iframe></p>' +
                   '</div>',
-               checkHtml = Converter.jsonToHtml(json);
+               checkHtml = decorator.Converter.jsonToHtml(json);
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });
          it('all valid tags and attributes', function() {
@@ -435,7 +433,7 @@ define([
                '</p>' +
                '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="/testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });
 
          it('validHtml option', function() {
@@ -483,7 +481,7 @@ define([
                ['pre', linkNode],
                ['div', linkNode],
                ['p', linkNode, nbsp + nbsp + '   '],
-               ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
+               ['p', linkNode, '   ', decorator.Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
                ['p', linkNode, ['br'], 'text'],
                ['p', linkNode, '   ', ['br'], 'text'],
@@ -514,7 +512,7 @@ define([
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, linkDecorateResolver), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, linkDecorateResolver), html));
          });
          it('with highlight resolver', function() {
             var json = [
@@ -529,17 +527,17 @@ define([
                '<p><span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span></p>' +
                '<p>no highlight</p>' +
                '</div>';
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
          });
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+            assert.equal(decorator.Converter.jsonToHtml(json, decorator.InnerText), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
          });
          it('with noOuterTag resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
-            assert.equal(Converter.jsonToHtml([], noOuterTagResolver), '');
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, noOuterTagResolver), html));
+            assert.equal(decorator.Converter.jsonToHtml([], noOuterTagResolver), '');
          });
       });
    });
