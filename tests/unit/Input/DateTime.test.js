@@ -1,13 +1,11 @@
 define([
    'Core/core-merge',
    'Controls/input',
-   'Controls/Input/DateTime/StringValueConverter',
    'unit/Calendar/Utils',
    'Core/constants'
 ], function(
    cMerge,
    input,
-   StringValueConverter,
    calendarTestUtils,
    constants
 ) {
@@ -113,7 +111,7 @@ define([
                };
             component._onKeyDown(event);
             const model = component._model;
-            const converter = new StringValueConverter();
+            const converter = new input.StringValueConverter();
             assert.deepEqual(model.value, converter.getCurrentDate(model._lastValue, model._mask));
             sandbox.restore();
          });
@@ -145,7 +143,7 @@ define([
                   stopImmediatePropagation: sinon.fake()
                };
             const model = component._model;
-            const converter = new StringValueConverter();
+            const converter = new input.StringValueConverter();
             const currentDate = converter.getCurrentDate(model._lastValue, model._mask);
             model.value = currentDate;
             component._onKeyDown(event);
@@ -165,7 +163,7 @@ define([
                   stopImmediatePropagation: sinon.fake()
                };
             const model = component._model;
-            const converter = new StringValueConverter();
+            const converter = new input.StringValueConverter();
             const currentDate = converter.getCurrentDate(model._lastValue, model._mask);
             model.value = currentDate;
             component._onKeyDown(event);
