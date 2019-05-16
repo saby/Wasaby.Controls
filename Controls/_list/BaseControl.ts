@@ -1577,10 +1577,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
+        this._canUpdateItemsActions = true;
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
-        this._canUpdateItemsActions = true;
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
