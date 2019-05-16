@@ -8,17 +8,17 @@
 
 /**
  * @name Controls/_toggle/interface/ICheckable#value
- * @cfg {Boolean} Current state.
+ * @cfg {boolean} Current state.
  */
 
 export interface IOptions {
-   value?: Boolean;
+   value?: boolean;
 }
 
 export default interface ICheckable {
    /**
     * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
-    * @param {Boolean} value New value.
+    * @param {boolean} value New value.
     */
 }
 

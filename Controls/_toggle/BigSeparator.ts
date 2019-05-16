@@ -30,10 +30,12 @@ export interface IOptions {
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
 class BigSeparator extends Control implements ICheckable{
-   protected _template: Function;
-   protected _theme: Array<string> = ['Controls/toggle'];
+   protected _template: Function = BigSeparatorTemplate;
    protected _options: ICheckableOptions;
    protected _icon: string;
+   //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+   static _theme: string[] = ['Controls/toggle'];
+
 
    private _iconChangedValue(value: boolean): void {
       if (value) {
@@ -45,32 +47,30 @@ class BigSeparator extends Control implements ICheckable{
 
    protected _beforeMount(newOptions: ICheckableOptions): void {
       this._iconChangedValue(newOptions.value);
-   },
+   }
 
    protected _beforeUpdate(newOptions: ICheckableOptions): void {
       this._iconChangedValue(newOptions.value);
-   },
+   }
 
    protected _clickHandler(): void {
       this._notify('valueChanged', [!this._options.value]);
    }
 
-   static getDefaultOptions() {
+   static getDefaultOptions(): object {
       return {
          value: false
       };
    }
 
-   static getOptionTypes() {
+   static getOptionTypes(): object {
       return {
          value: EntityDescriptor(Boolean)
       };
    }
 }
 
-//TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-BigSeparator.prototype._theme = 'css!theme?Controls/toggle';
-BigSeparator.prototype._template = BigSeparatorTemplate;
+
 
 export default BigSeparator;
 
