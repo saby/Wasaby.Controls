@@ -298,10 +298,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                            styleForLadder: 'LADDER_STYLE;',
                            columnIndex: 0
                         },
-                        isNotFullGridSupport: true,
+                        isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; colspan: 2'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
                   }
                ];
             testCases.forEach(function(testCase, idx) {
