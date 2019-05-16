@@ -35,5 +35,5 @@
                text="{{_text}}"
                tooltip="{{_tooltip}}"
                hasMoreText="{{_hasMoreText}}"
-               class="{{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
+               class="{{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + '_style-' + _options.style + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>
 </Controls._dropdown._Controller>
