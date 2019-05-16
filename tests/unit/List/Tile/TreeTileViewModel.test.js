@@ -10,15 +10,20 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
+            groupingKeyCallback: function(item) {
+               return item.get('group');
+            },
             items: new collection.RecordSet({
                rawData: [{
                   'id': 1,
                   'parent': null,
-                  'parent@': true
+                  'parent@': true,
+                  'group': '1'
                }, {
                   'id': 2,
                   'parent': null,
-                  'parent@': null
+                  'parent@': null,
+                  'group': '1'
                }],
                idProperty: 'id'
             })
@@ -37,7 +42,11 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], fun
             position: 'string with style'
          });
          cur = treeTileViewModel.getCurrent();
+         assert.isTrue(cur.isGroup);
+         assert.isTrue(!!cur.beforeItemTemplate);
 
+         treeTileViewModel.goToNext();
+         cur = treeTileViewModel.getCurrent();
          assert.equal(cur.tileMode, 'static');
          assert.equal(cur.itemsHeight, 300);
          assert.equal(cur.imageProperty, 'image');

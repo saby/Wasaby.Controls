@@ -84,4 +84,22 @@
          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
       </ws:itemTemplate>
    </Controls.tile:View>
+   <h2>Плитка с группировкой</h2>
+   <Controls.tile:View
+      attr:class="demo-Tile__static"
+      tileMode="static"
+      displayProperty="title"
+      imageProperty="image"
+      keyProperty="id"
+      source="{{_viewSourceDynamic}}"
+      groupingKeyCallback="{{_groupingKeyCallback}}"
+      itemActions="{{_itemActions}}"
+      itemsReadyCallback="{{_itemsReadyCallbackThird}}">
+      <ws:itemTemplate>
+         <ws:partial
+                     shadowVisibility="onhover"
+                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                     hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
+      </ws:itemTemplate>
+   </Controls.tile:View>
 </div>
