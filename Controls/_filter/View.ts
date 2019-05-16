@@ -7,7 +7,7 @@ import Merge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
-import SourceController = require('Controls/Controllers/SourceController');
+import {Controller as SourceController} from 'Controls/source';
 import historyUtils = require('Controls/History/dropdownHistoryUtils');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
 
