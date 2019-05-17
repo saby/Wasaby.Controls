@@ -280,8 +280,8 @@
       }
     }
   },
-  "Controls/Toolbar": {
-    "name": "Controls/Toolbar",
+  "Controls/toolbars:View": {
+    "name": "Controls/toolbars:View",
     "title": "Toolbar.",
     "className": "Controls/Toolbar",
     "kind": "control",
