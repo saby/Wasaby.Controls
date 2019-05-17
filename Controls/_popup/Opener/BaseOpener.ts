@@ -65,7 +65,7 @@ import {parse as parserLib, load} from 'Core/library';
             }
          },
          open: function(popupOptions, controller) {
-            if (popupOptions.closeOnTargetScroll || popupOptions.targetTracking) {
+            if (popupOptions && ( popupOptions.closeOnTargetScroll || popupOptions.targetTracking )) {
                Env.IoC.resolve('ILogger').warn('BaseOpener', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
             }
             var cfg = this._getConfig(popupOptions || {});
