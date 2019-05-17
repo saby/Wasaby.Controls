@@ -406,6 +406,19 @@ var
            if (current.item.get) {
               if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
                  current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
+                  if (current.item.get(current.nodeProperty) && !current.hasChildren && this._options.nodeFooterTemplate) {
+                      current.nodeFooter = {
+                          key: current.key,
+                          item: current.dispItem.getContents(),
+                          dispItem: current.dispItem,
+                          multiSelectVisibility: current.multiSelectVisibility,
+                          level: current.dispItem.getLevel(),
+                          rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                      };
+                      if (this._options.nodeFooterTemplate) {
+                          current.nodeFooter.template = this._options.nodeFooterTemplate;
+                      }
+                  }
               }
               var itemParent = current.dispItem.getParent();
               var itemParentKey = current.item.get(current.parentProperty);
