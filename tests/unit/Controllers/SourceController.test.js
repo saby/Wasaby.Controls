@@ -86,7 +86,7 @@ define([
             }
          });
          var resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
-         assert.deepEqual({filter:{}, limit: 10, offset: 0, meta:{hasMore: false}}, resParams, 'Wrong query params in page navigation');
+         assert.deepEqual({filter:{}, limit: 10, offset: 0, meta: { hasMore: false, navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, resParams, 'Wrong query params in page navigation');
 
          controller = new scroll.Controller({
             source: source,
@@ -100,11 +100,11 @@ define([
                }
             }
          });
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
          assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}}, resParams, 'Wrong query params in position navigation');
 
          var originalFilter = {};
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } , null, controller._queryParamsController);
          assert.notEqual(originalFilter, resParams.filter, 'Modified filter should be a new object instance');
       });
 

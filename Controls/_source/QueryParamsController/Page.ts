@@ -25,6 +25,11 @@ import sourceLib = require('Types/source');
 
          prepareQueryParams: function(direction) {
             var addParams = {}, neededPage;
+
+            addParams.meta = {
+               navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE
+            };
+
             if (direction === 'down') {
                neededPage = this._nextPage;
             } else if (direction === 'up') {
@@ -37,7 +42,7 @@ import sourceLib = require('Types/source');
             addParams.limit = this._options.pageSize;
 
             if (this._options.hasMore === false) {
-               addParams.meta = { hasMore: false };
+               addParams.meta.hasMore = false;
             }
 
             return addParams;
@@ -99,12 +104,6 @@ import sourceLib = require('Types/source');
             } else {
                throw new Error('Parameter direction is not defined in hasMoreData call');
             }
-         },
-
-         prepareSource: function(source) {
-            var options = source.getOptions();
-            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.PAGE;
-            source.setOptions(options);
          },
 
          setEdgeState: function(direction) {
