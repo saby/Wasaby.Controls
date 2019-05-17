@@ -201,12 +201,20 @@ var _private = {
     },
 
     generateItemPopupConfig: function (item, event, self) {
-        var itemConfig = '';
+        var itemConfig = '', _icon = '';
         if (item.get('icon') !== undefined && item.get('tittle') === undefined) {
             itemConfig += 'icon';
         }
         if (item.get('buttonViewMode') === 'toolButton') {
             itemConfig += 'toolButton';
+        }
+        //TODO: перевести вместе с кнопками на icon-size https://online.sbis.ru/opendoc.html?guid=af44769b-82b0-4b4a-a288-93706eb0a50d
+        if (typeof item.get('icon') === 'string') {
+            if (item.get('icon').split(' ').length === 1) {
+                _icon = item.get('icon') + ' icon-medium';
+            } else {
+                _icon = item.get('icon');
+            }
         }
         return {
             corner: {vertical: 'top', horizontal: 'left'},
@@ -217,7 +225,7 @@ var _private = {
                 rootKey: item.get(self._options.keyProperty),
                 showHeader: item.get('showHeader'),
                 headConfig: {
-                    icon: item.get('icon'),
+                    icon: _icon,
                     caption: item.get('title'),
                     iconStyle: item.get('iconStyle')
                 }

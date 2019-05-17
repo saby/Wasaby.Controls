@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Manager/Popup');
-import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import Env = require('Env/Env');
 import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
@@ -44,11 +43,7 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
          // After updating the position of the current popup, calls the repositioning of popup from child openers
          _openersUpdateCallback: [],
 
-         constructor: function() {
-            Popup.superclass.constructor.apply(this, arguments);
-
-            this._escProcessing = new EscProcessing();
-         },
+         _isEscDown: false,
 
          _afterMount: function() {
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
@@ -164,11 +159,24 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
           * @param event
           */
          _keyUp: function(event) {
-            this._escProcessing.keyUpHandler(_private.keyUp, this, [event]);
+            /**
+             * Старая панель по событию keydown закрывается и блокирует всплытие события. Новая панель делает
+             * тоже самое, но по событию keyup. Из-за этого возникает следующая ошибка.
+             * https://online.sbis.ru/opendoc.html?guid=0e4a5c02-f64c-4c7d-88b8-3ab200655c27
+             *
+             * Что бы не трогать старые окна, мы добавляем поведение на закрытие по esc. Закрываем только в том случае,
+             * если новая панель поймала событие keydown клавиши esc.
+             */
+            if (this._isEscDown) {
+               this._isEscDown = false;
+               _private.keyUp.call(this, event);
+            }
          },
 
-         _keyDown: function(e) {
-            this._escProcessing.keyDownHandler(e);
+         _keyDown: function(event) {
+            if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+               this._isEscDown = true;
+            }
          }
       });
 

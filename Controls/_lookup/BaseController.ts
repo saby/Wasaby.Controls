@@ -245,6 +245,7 @@ import {LoadService} from 'Controls/history';
 
       _onShowSelectorHandler: function(event, templateOptions) {
          this.showSelector(templateOptions);
+         return false;
       },
 
       _onAddItemHandler: function(event, item) {

@@ -7,7 +7,10 @@ define(['Controls/treeGrid',
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
-         assert.isTrue(cInstance.instanceOfModule(createdModel, 'Controls/_treeGrid/Tree/TreeViewModel'), 'Invalid type of created model.');
+         assert.isTrue(
+            cInstance.instanceOfModule(createdModel, 'Controls/treeGrid:TreeViewModel') ||
+            cInstance.instanceOfModule(createdModel, 'Controls/_treeGrid/Tree/TreeViewModel'),
+         'Invalid type of created model.');
       });
       it('toggleExpanded', function() {
          var

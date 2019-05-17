@@ -330,7 +330,7 @@ import 'Controls/Container/Data/ContextOptions';
 
       function updateFilterHistory(cfg) {
          if (!cfg.historyId) {
-            throw new Error('Controls/Filter/Controller::historyId is required');
+            throw new Error('Controls/_filter/Controller::historyId is required');
          }
          _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
          _private.updateHistory(cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);

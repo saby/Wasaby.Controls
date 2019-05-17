@@ -71,7 +71,7 @@ var _private = {
    open: function(self) {
       _private.loadDependencies(self).addCallback(function() {
          //focus can be moved out while dependencies loading
-         if (self._inputActive && !self._stackWithSearchResultsOpened) {
+         if (self._inputActive) {
             _private.suggestStateNotify(self, true);
          }
       });
@@ -284,7 +284,6 @@ var SuggestLayout = Control.extend({
    _showContent: false,
    _inputActive: false,
    _suggestMarkedKey: null,
-   _stackWithSearchResultsOpened: false,
 
    /**
     * three state flag
@@ -420,11 +419,6 @@ var SuggestLayout = Control.extend({
       this._forceUpdate();
    },
 
-   //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
-   _stackWithSearchResultsClosed: function() {
-      this._stackWithSearchResultsOpened = false;
-   },
-
    // <editor-fold desc="List handlers">
 
    _select: function(event, item) {
@@ -479,16 +473,13 @@ var SuggestLayout = Control.extend({
    _showAllClick: function() {
       var self = this;
 
-      //FIXME remove after https://online.sbis.ru/opendoc.html?guid=e321216a-61c6-4b3c-aed8-587dc524c8cd
-      //popup manager moves focus to control after closing panel asynchronously, because of this, there are problems with focus
-      //if we close suggest popup and instantly open stack with search results, focus will moved to input, and suggest will opened (if autodropdown option is setter to true)
-      this._stackWithSearchResultsOpened = true;
-
-      //loading showAll templates
-      requirejs(['Controls/suggestPopup'], function() {
-         self._children.stackOpener.open();
-      });
-      _private.close(this);
+      if (this._notify('showSelector', []) !== false) {
+         //loading showAll templates
+         requirejs(['Controls/suggestPopup'], function () {
+            self._children.stackOpener.open();
+         });
+      }
+      _private.close(this)
    },
 
    _missSpellClick: function() {

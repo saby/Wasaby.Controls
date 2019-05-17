@@ -137,4 +137,37 @@ define('Controls/interface/ISelectedCollection', [
     * @param {RecordSet} currentItems Current list of items in Lookup.
     * @param {RecordSet} newItems List of items selected from selector.
     */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} config Config on which popup will be built.
+    * @example
+    * The following example creates Controls/lookup:Input and shows how to handle the event.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Input
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       searchParam="title"
+    *       on:openInfoBox="_openInfoBox()"
+    *    </Controls.lookup:Input>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _openInfoBox: function(e, config) {
+    *       config.maxWidth = 500;
+    *       config.templateOptions.items = new collection.List({
+    *          items: Chain(config.templateOptions.items).sort(function() {
+    *             ...
+    *          }).value()
+    *       })
+    *    }
+    * </pre>
+    */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    */
 });

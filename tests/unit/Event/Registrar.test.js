@@ -2,8 +2,8 @@
  * Created by kraynovdo on 07.02.2018.
  */
 define([
-   'Controls/_event/Registrar'
-], function(Registrar){
+   'Controls/event'
+], function(events){
    describe('Controls.Event.Registrar', function () {
       var evMock, compMock, result = false;
       beforeEach(function() {
@@ -21,7 +21,7 @@ define([
       });
 
       it('register - unregister', function () {
-         var reg = new Registrar();
+         var reg = new events.Registrar();
 
          reg.register(evMock, compMock, function(){
             result = true;
@@ -39,7 +39,7 @@ define([
       });
 
       it('start', function () {
-         var reg = new Registrar();
+         var reg = new events.Registrar();
 
 
          reg.register(evMock, compMock, function(){

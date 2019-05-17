@@ -221,8 +221,9 @@ var
          };
 
          if (context.ScrollData && context.ScrollData.pagingVisible) {
+            //paging buttons are invisible. Control calculates height and shows buttons after mounting.
             this._pagingState = {
-               visible: true,
+               visible: false,
                stateUp: 'disabled',
                stateDown: 'normal'
             };

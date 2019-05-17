@@ -18,7 +18,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
       var ToolbarPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toolbar',
+         _content: 'Controls/toolbars:View',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

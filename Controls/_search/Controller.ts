@@ -6,6 +6,7 @@ import clone = require('Core/core-clone');
 import _SearchController = require('Controls/Controllers/_SearchController');
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import {RecordSet} from 'Types/collection';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -58,8 +59,6 @@ var _private = {
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search') {
-         self._viewMode = self._previousViewMode;
-         self._previousViewMode = null;
          self._searchValue = '';
          self._inputSearchValue = '';
          self._misspellValue = '';
@@ -100,18 +99,28 @@ var _private = {
    },
    itemOpenHandler: function () {
       _private.getSearchController(this).abort();
+   },
+
+   dataLoadCallback: function (self, data:RecordSet):void {
+      if (self._viewMode === 'search' && !self._searchValue) {
+         self._viewMode = self._previousViewMode;
+         self._previousViewMode = null;
+      }
+      if (self._options.dataLoadCallback) {
+         self._options.dataLoadCallback(data);
+      }
    }
 };
 
 /**
  * The search controller allows you to search data in a {@link Controls/list:View}
- * using any component with {@link Controls/Input/interface/IInputField} interface.
+ * using any component with {@link Controls/interface/IInputField} interface.
  * Search controller allows you:
  * 1) set delay before searching
  * 2) set number of characters
  * 3) set search parameter
  * 4) change the keyboard layout for an unsuccessful search
- * Note: Component with {@link Controls/Input/interface/IInputField} interface must be located in {@link Controls/_search/Input/Container}.
+ * Note: Component with {@link Controls/interface/IInputField} interface must be located in {@link Controls/_search/Input/Container}.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
@@ -140,6 +149,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
+      this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
       Container.superclass.constructor.apply(this, arguments);
    },
 
@@ -187,6 +197,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          this._searchController = null;
       }
       this._dataOptions = null;
+      this._itemOpenHandler = null;
+      this._dataLoadCallback = null;
    },
 
    _misspellCaptionClick: function () {

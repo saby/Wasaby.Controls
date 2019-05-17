@@ -47,15 +47,12 @@ var BaseLookupView = Control.extend({
         this._inputValue = options.value;
         this._listOfDependentOptions = [];
 
-        // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
         if (!options.multiSelect) {
             this._maxVisibleItems = 1;
-        } else if (options.readOnly) {
-            if (options.multiLine) {
-                this._maxVisibleItems = options.maxVisibleItems;
-            } else {
-                this._maxVisibleItems = options.items.getCount();
-            }
+        } else if (options.multiLine) {
+            this._maxVisibleItems = options.maxVisibleItems;
+        } else {
+            this._maxVisibleItems = options.items.getCount();
         }
     },
 
@@ -127,7 +124,9 @@ var BaseLookupView = Control.extend({
         this._notify('removeItem', [item]);
 
         /* move focus to input after remove, because focus will be lost after removing dom element */
-        this._needSetFocusInInput = true;
+        if (!this._infoboxOpened) {
+            this._needSetFocusInInput = true;
+        }
     },
 
     _getFieldWrapperWidth: function (recount) {

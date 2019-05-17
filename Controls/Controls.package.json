@@ -67,9 +67,7 @@
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
     "Controls/Input/OldText/OldViewModel",
-    "Controls/Input/Search/Styles",
-    "Controls/Input/Search/Suggest",
-    "wml!Controls/Input/Search/Suggest"
+    "Controls/Input/Search/Styles"
   ],
   "output": "controls-input.package.js"
 }, {
@@ -84,7 +82,6 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/Layer",
-    "Controls/Popup/Compatible/EscProcessing",
     "Controls/Popup/Compatible/ManagerWrapper/Controller"
   ],
   "output": "controls-popup-compat.package.js"

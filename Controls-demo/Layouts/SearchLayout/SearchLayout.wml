@@ -11,7 +11,7 @@
                </Controls.search:InputContainer>
                <div class="controls-demo__Layouts_filter">
                   <Controls.filter:FastContainer>
-                     <Controls.Filter.Fast/>
+                     <Controls.filter:Fast/>
                   </Controls.filter:FastContainer>
                   <Controls.filter:ButtonContainer>
                      <Controls.filter:Selector

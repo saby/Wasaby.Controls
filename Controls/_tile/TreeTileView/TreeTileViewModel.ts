@@ -23,7 +23,9 @@ var TreeTileViewModel = TreeViewModel.extend({
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
         prevItem = this._display.at(current.index - 1);
-        if (prevItem && prevItem.isNode() && !current.dispItem.isNode()) {
+
+        //before grouping and when moving from folders to records, you need to draw invisible items
+        if (current.isGroup || prevItem && prevItem.isNode && prevItem.isNode() && !current.dispItem.isNode()) {
             current.beforeItemTemplate = InvisibleFor;
         }
 
@@ -38,6 +40,9 @@ var TreeTileViewModel = TreeViewModel.extend({
         }
 
         current = cMerge(current, this.getTileItemData());
+        if (current.dispItem.isNode && current.dispItem.isNode()) {
+            current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
+        }
 
         var
             originalGetVersion = current.getVersion;

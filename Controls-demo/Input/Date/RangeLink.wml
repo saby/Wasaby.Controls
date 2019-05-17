@@ -60,7 +60,7 @@
       <div class="controlsDemo-RageLink__content">
          <div class="controlsDemo-RageLink__componentWrap">
             <span>With custom formatter: </span>
-            <Controls.Input.Date.RangeLink
+            <Controls.dateRange:Selector
                   captionFormatter="{{_captionFormatter}}"
                   />
          </div>

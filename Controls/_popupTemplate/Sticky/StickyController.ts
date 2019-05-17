@@ -57,24 +57,11 @@ var _private = {
         }
         return newCfg;
     },
-    prepareActionOnScroll: function (config) {
-        var newCfg = cClone(config);
-        if (config.actionOnScroll === 'close') {
-            newCfg.closeOnTargetScroll = true;
-        } else if (config.actionOnScroll === 'track') {
-            newCfg.targetTracking = true;
-        }
-        return newCfg;
-    },
     prepareConfig: function (self, cfg, sizes) {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
-        cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
         var popupCfg = self._getPopupConfig(cfg, sizes);
         if (cfg.popupOptions.corner) {
             Env.IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
-        }
-        if (cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking) {
-            Env.IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
         }
         if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
             Env.IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');

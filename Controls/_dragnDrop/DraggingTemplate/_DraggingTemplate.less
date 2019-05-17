@@ -1,17 +1,8 @@
-.controls-DragNDrop__draggingTemplate-wrapper {
-   position: absolute;
-}
-
 .controls-DragNDrop__draggingTemplate {
    display: flex;
    width: @width_DraggingTemplate;
    background: @background-color_DraggingTemplate;
    border: @border-width_DraggingTemplate solid @border-color_DraggingTemplate;
-
-   //TODO: шаблон dragNDrop может оказаться под всплывающими панелями.
-   //Необходимо убрать этот z-index и перевести показ draggingTemplate на механизм открытия через popup.opener
-   //Выписана задача: https://online.sbis.ru/opendoc.html?guid=b9869c50-a338-4f8e-9dbe-d76b271138ac
-   z-index: 100;
    .box-shadow(@box-shadow-size_DraggingTemplate @box-shadow-color_DraggingTemplate);
 }
 

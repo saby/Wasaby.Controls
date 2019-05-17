@@ -8,7 +8,7 @@ define('Controls/Input/OldText/OldViewModel',
       'use strict';
 
       /**
-       * @class Controls/Input/Text/ViewModel
+       * @class Controls/input:TextViewModel
        * @private
        * @author Журавлев М.С.
        */
