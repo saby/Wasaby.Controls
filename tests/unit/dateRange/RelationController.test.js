@@ -114,6 +114,18 @@ define([
          sandbox.restore();
       });
 
+      it('should not generate an event if date does not changed', function () {
+         let
+            options = getOptions(new Date(2015, 0, 1), new Date(2015, 0, 31)),
+            component = calendarTestUtils.createComponent(RelationController, options),
+            sandbox = sinon.sandbox.create();
+
+         sandbox.stub(component, '_notify');
+         component._beforeUpdate(options);
+         sinon.assert.neverCalledWith(component._notify, 'periodsChanged');
+         sandbox.restore();
+      });
+
       it('should save steps on initialisation', function () {
          let
             options = getOptions(new Date(2015, 0, 1), 4, {bindType: 'byCapacity'}, 2, 1),

@@ -40,7 +40,6 @@ import 'css!theme?Controls/popup';
          getCfg: function(self) {
             var config = {
                autofocus: false,
-               fittingMode: 'overflow',
                opener: self,
                target: self._container,
                template: 'Controls/_popup/Previewer/OpenerTemplate',

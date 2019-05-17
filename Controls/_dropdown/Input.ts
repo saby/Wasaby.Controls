@@ -53,7 +53,7 @@ var _private = {
  * @public
  * @author Золотова Э.Е.
  * @category Input
- * @demo Controls-demo/Input/dropdown/DropdownPG
+ * @demo Controls-demo/Input/Dropdown/DropdownPG
  */
 
 /**
@@ -173,5 +173,11 @@ var Input = Control.extend({
 });
 
 Input._theme = ['Controls/dropdown'];
+
+Input.getDefaultOptions = function () {
+   return {
+      style: 'default'
+   };
+};
 
 export = Input;

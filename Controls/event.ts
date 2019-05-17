@@ -9,7 +9,6 @@
 
 import Register = require('Controls/_event/Register');
 import Listener = require('Controls/_event/Listener');
-
 import Registrar = require('Controls/_event/Registrar');
 
 export {

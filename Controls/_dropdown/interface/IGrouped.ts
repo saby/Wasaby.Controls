@@ -44,9 +44,9 @@
  * @name Controls/_dropdown/interface/IGroupped#groupTemplate
  * @cfg {Function | String} Group template.
  * @remark
- * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/defaultGroupTemplate".
+ * To determine the template, you should call the base template "wml!Controls/_dropdownPopup/defaultGroupTemplate".
  * The template should be placed in the component using the <ws:partial> tag with the template attribute.
- * By default, the base template wml!Controls/Dropdown/resources/template/defaultGroupTemplate only displays a separator.  You can change the separator display by setting the option:
+ * By default, the base template wml!Controls/_dropdownPopup/defaultGroupTemplate only displays a separator.  You can change the separator display by setting the option:
  *    -  showText - sets the display of the group name.
  * You can redefine content using the contentTemplate option.
  * The groupingKeyCallback option must also be set.
@@ -59,7 +59,7 @@
  *          groupingKeyCallback="{{_groupingKeyCallback}}"
  *          source="{{_source}}">
  *       <ws:groupTemplate>
- *          <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}" />
+ *          <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}" />
  *       </ws:groupTemplate>
  *    </Controls.dropdown:Menu>
  * </pre>

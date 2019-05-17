@@ -14,7 +14,7 @@ let getDefaultConfig = (): Partial<Config> => {
         handlers: [],
         configField: 'parkingHandlers'
     };
-}
+};
 
 /// region helpers
 let log = (message) => {
@@ -74,8 +74,8 @@ let findTemplate = (
 /**
  * @class
  * @name Controls/_dataSource/_parking/Controller
- * @public
- * @author Zalyaev A.V.
+ * @private
+ * @author Заляев А.В.
  * @example
  * <pre>
  *     let handler = (config) => {

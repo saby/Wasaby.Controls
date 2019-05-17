@@ -45,14 +45,13 @@
          <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate || _needShowApplyButton}}">
             <div class="controls-DropdownList__footer-content_theme_{{_options.theme}} controls-DropdownList__footer-buttons_theme_{{_options.theme}}">
                <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
-                  <div class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton theme_{{_options.theme}}">
-                     <Controls.buttons:Button viewMode="link"
-                                              caption="{{_options.moreButtonCaption}}"
-                                              on:click="_openSelectorDialog()"/>
-                  </div>
-                  <Controls.lookup:Opener name="selectorDialog" on:result="_selectorDialogResult()">
-                     <ws:popupOptions template="Controls/suggestPopup:Dialog" />
-                  </Controls.lookup:Opener>
+                  <Controls._dropdownPopup.MoreButton attr:class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton_theme_{{_options.theme}}"
+                                                      caption="{{_options.moreButtonCaption}}"
+                                                      items="{{_options.items}}"
+                                                      selectedKeys="{{_listModel.getSelectedKeys()}}"
+                                                      selectorTemplate="{{_options.selectorTemplate}}"
+                                                      isCompoundTemplate="{{_options.isCompoundTemplate}}"
+                                                      on:selectorResult="_selectorDialogResult()" />
                </ws:if>
                <ws:if data="{{_needShowApplyButton}}">
                   <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">

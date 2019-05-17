@@ -26,12 +26,15 @@ var _private = {
       self._filter = historyUtils.getSourceFilter(options.filter, options.source);
       return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
          self._items = items;
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+         if (options.dataLoadCallback) {
+            options.dataLoadCallback(items);
+         }
          return items;
       });
    },
 
-   updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, dataLoadCallback) {
+   updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
       var selectedItems = [];
       if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
          selectedItems.push(null);
@@ -43,8 +46,8 @@ var _private = {
             }
          });
       }
-      if (dataLoadCallback) {
-         dataLoadCallback(selectedItems);
+      if (selectedItemsChangedCallback) {
+         selectedItemsChangedCallback(selectedItems);
       }
    },
 
@@ -192,7 +195,7 @@ var _Controller = Control.extend({
          if (receivedState) {
             this._items = receivedState;
             _private.getSourceController(this, options).calculateState(this._items);
-            _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+            _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          } else if (options.source) {
             return _private.loadItems(this, options);
          }
@@ -204,13 +207,13 @@ var _Controller = Control.extend({
          this._open();
       }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
-         _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
+         _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
          !isEqual(newOptions.navigation, this._options.navigation) ||
          !isEqual(newOptions.filter, this._options.filter)) {
          this._sourceController = null;
-         if (newOptions.lazyItemsLoad) {
+         if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
             this._items = null;
          } else {

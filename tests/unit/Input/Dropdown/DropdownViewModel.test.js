@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Dropdown/resources/DropdownViewModel',
+      'Controls/_dropdownPopup/DropdownViewModel',
       'Types/collection',
       'Controls/Constants',
       'Types/entity',
@@ -95,7 +95,7 @@ define(
 
          let viewModel = new DropdownViewModel(config);
          let viewModel2 = new DropdownViewModel(config2);
-   
+
          function setViewModelItems(viewModel, items) {
             viewModel.setItems({items: items});
          }
@@ -218,6 +218,8 @@ define(
                assert.isFalse(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
                viewModel3.goToNext();
                assert.isTrue(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+               let hasParent = true;
+               assert.isFalse(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item, hasParent));
             });
             it('needHideGroup', function() {
                let groupItems = {
@@ -233,7 +235,7 @@ define(
                      }
                   }
                };
-   
+
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'empty'));
                assert.isFalse(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
             });
@@ -246,11 +248,11 @@ define(
             var simpleItem = new entity.Model({rawData: {
                any: 'any'
             }});
-            
+
             assert.isTrue(!!DropdownViewModel._private.isHistoryItem(historyItem));
             assert.isFalse(!!DropdownViewModel._private.isHistoryItem(simpleItem));
          });
-   
+
          it('_private.filterAdditional', () => {
             var selfWithAdditionalProperty = {
                _options: {
@@ -260,7 +262,7 @@ define(
             var simpleSelf = {
                _options: {}
             };
-            
+
             var itemWithAdditionalProperty = new entity.Model({rawData: {
                additionalProperty: true
             }});
@@ -271,22 +273,22 @@ define(
             var simpleItem = new entity.Model({rawData: {
                any: 'any'
             }});
-   
+
             assert.isFalse(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, itemWithAdditionalProperty));
             assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, historyItem));
             assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, simpleItem));
-   
+
             assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, itemWithAdditionalProperty));
             assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, historyItem));
             assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, simpleItem));
-            
+
          });
-   
+
          it('destroy', () => {
             viewModel.destroy();
             assert.equal(null, viewModel._itemsModel._options);
          });
-   
+
          it('hasAdditional', () => {
             var viewModel = new DropdownViewModel(config);
             var version = viewModel.getVersion();
@@ -298,7 +300,7 @@ define(
             setViewModelItems(viewModel, rs2);
             assert.isTrue(viewModel.getVersion() > version);
             assert.isFalse(!!viewModel.hasAdditional());
-   
+
             version = viewModel.getVersion();
             viewModel.setRootKey('test');
             assert.isTrue(viewModel.getVersion() > version);
@@ -306,7 +308,7 @@ define(
             assert.isFalse(!!viewModel.hasAdditional());
             setViewModelItems(viewModel, rs2);
             assert.isFalse(!!viewModel.hasAdditional());
-   
+
             viewModel.setRootKey(null);
             assert.isTrue(viewModel.getVersion() > version);
             viewModel._options.additionalProperty = '';

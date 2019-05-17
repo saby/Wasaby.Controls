@@ -31,9 +31,9 @@
         </ws:if>
 
         <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" overlay="dark" name="indicator">
-            <Controls.Event.Registrator name="inputKeydown" register="inputKeydown">
+            <Controls.event:Register name="inputKeydown" register="inputKeydown">
                 <ws:partial template="suggestTpl" attr:style="width:{{content.suggestWidth}}px"/>
-            </Controls.Event.Registrator>
+            </Controls.event:Register>
         </Controls.LoadingIndicator>
 
         <ws:if data="{{_isFooterShown}}">

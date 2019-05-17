@@ -28,27 +28,28 @@
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
-   <ws:partial template="{{currentColumn.template}}"
-               attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
-               ladderWrapper="{{currentColumn.ladderWrapper}}"
-               itemData="{{currentColumn}}" />
+   <ws:if data="{{colspan}}">
+      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="{{currentColumn.template}}"
+                  attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                  ladderWrapper="{{currentColumn.ladderWrapper}}"
+                  itemData="{{currentColumn}}" />
+   </ws:else>
    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser"/>
    </ws:if>
 </ws:template>
 <ws:template name="columnContent">
-<ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
-   <ws:partial template="{{multiSelectTpl}}"
-               attr:class="controls-GridView__checkbox
-                  {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
-      <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
-                          multiSelectStatus="{{itemData.multiSelectStatus}}"
-                          key="{{itemData.key}}" />
-   </ws:partial>
-</ws:if>
-<ws:else>
-   <ws:if data="{{colspan}}">
-      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+   <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
+      <ws:partial template="{{multiSelectTpl}}"
+                  attr:class="controls-GridView__checkbox
+                     {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
+         <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
+                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             key="{{itemData.key}}" />
+      </ws:partial>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isNotFullGridSupport}}">
@@ -58,7 +59,6 @@
          <ws:partial template="cellPartialTemplate"/>
       </ws:else>
    </ws:else>
-</ws:else>
 </ws:template>
 <ws:template name="columnContentWrapper">
 <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && currentColumn.columnIndex === 0}}">
@@ -102,9 +102,11 @@
                             {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}
                             controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
     attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
-   <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-   <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-                        {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+   <div class="controls-TreeGridView__row-cell_innerWrapper">
+      <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+      <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
+                           {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+   </div>
 </td>
 </ws:template>
 <ws:if data="{{itemData.isNoGridSupport}}">
@@ -127,42 +129,46 @@
 <ws:else data="{{itemData.isPartialGridSupport}}">
 
    <ws:template name="partialGridSupportItem">
-      <ws:partial template="colTpl"
-                  attr:data-r="{{ itemData.index }}"
-                  currentColumn="{{currentColumn}}"
-                  attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false && itemData.isHovered ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}
-                  controls-Grid__row_{{itemData.style || 'default'}} {{currentColumn.cellClasses}}
-                  {{itemData.isHovered ? ' controls-Grid_row-cell_hovered'}}"
-                  attr:style="{{itemData.getCurrentColumn().gridCellStyles}}"
-                  on:click="_onItemClick(itemData.dispItem)"
-                  on:contextmenu="_onItemContextMenu(itemData)"
-                  on:swipe="_onItemSwipe(itemData)"
-                  on:mousedown="_onItemMouseDown(itemData)"
-                  on:mouseenter="_onItemMouseEnter(itemData)"
-                  on:mouseleave="_onItemMouseLeave(itemData)"
-                  on:mousemove="_onItemMouseMove(itemData)"
-                  on:wheel="_onItemWheel(itemData)"/>
+      <Controls._grid.layouts.partialGridSupport.Cell
+              eventHandlers="{{itemData.handlersForPartialSupport}}"
+              itemData="{{ itemData }}"
+              currentColumn="{{ currentColumn }}"
+              colspanCurrentNode="{{ !!colspanCurrentNode }}"
+              highlightOnHover="{{ highlightOnHover }}">
+         <ws:columnContentTpl>
+            <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>
+         </ws:columnContentTpl>
+      </Controls._grid.layouts.partialGridSupport.Cell>
    </ws:template>
 
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
       {{itemData.resetColumnIndex();}}
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-         <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="partialGridSupportItem"
+                     currentColumn="{{itemData.getCurrentColumn()}}"
+                     attr:key="{{ currentColumnKey }}"/>
          {{itemData.goToNextColumn();}}
       </ws:if>
-      <ws:partial template="partialGridSupportItem" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+      <ws:partial template="partialGridSupportItem"
+                  currentColumn="{{itemData.getCurrentColumn()}}"
+                  attr:key="{{ currentColumnKey }}"
+                  colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isEditing}}">
          <div attr:style="{{itemData.editingRowStyles}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="partialGridSupportItem"
+                           currentColumn="{{itemData.getCurrentColumn()}}"
+                           attr:key="{{ currentColumnKey }}"/>
             </ws:for>
          </div>
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="partialGridSupportItem" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="partialGridSupportItem"
+                        currentColumn="{{itemData.getCurrentColumn()}}"
+                        attr:key="{{ currentColumnKey }}"/>
          </ws:for>
       </ws:else>
 

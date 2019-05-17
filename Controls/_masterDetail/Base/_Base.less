@@ -26,9 +26,9 @@
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {
    .controls-MasterDetail_master .controls-Scroll__content {
-      //if width more than 100.3 ipad sometimes can scroll container to left
-      //100.3 is needed to resolve bug https://css-tricks.com/percentage-bugs-in-webkit/, https://bugs.webkit.org/show_bug.cgi?id=140371 with subpixel render
-      width: 100.3%;
+      //if width more than 100.4 ipad sometimes can scroll container to left
+      //100.4 is needed to resolve bug https://css-tricks.com/percentage-bugs-in-webkit/, https://bugs.webkit.org/show_bug.cgi?id=140371 with subpixel render
+      width: 100.4%;
       //z-index is needed in mobile safari, because scroll have webkit-overflow-scrolling: touch style,
       //webkit-overflow-scrolling creating stacking context, and all elements inside can not be higher by z-index,
       //than elements on the same level with the scroll.

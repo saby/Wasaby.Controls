@@ -649,7 +649,7 @@
           },
           "itemTemplate": {
             "type": "function",
-            "default": "wml!Controls/Dropdown/resources/template/itemTemplate",
+            "default": "wml!Controls/_dropdown/itemTemplate",
             "title": "Template for item render."
           },
           "itemTemplateProperty": {
@@ -957,7 +957,7 @@
           },
           "itemTemplate": {
             "type": "function",
-            "default": "wml!Controls/Dropdown/resources/template/itemTemplate",
+            "default": "wml!Controls/_dropdown/itemTemplate",
             "title": "Template for item render."
           },
           "itemTemplateProperty": {

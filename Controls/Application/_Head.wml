@@ -40,7 +40,7 @@
    </ws:if>
    <ws:if data="{{ headJson }}">
       <ws:for data="json in headJson">
-         <Controls.Decorator.Markup attr:data-vdomignore="true"
+         <Controls.decorator:Markup attr:data-vdomignore="true"
                                     attr:class="head-custom-block"
                                     value="{{ json }}"
                                     tagResolver="{{ headTagResolver }}"

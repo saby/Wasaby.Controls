@@ -75,6 +75,7 @@
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.400",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.400",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.400",
+      "saby-ui": "git+https://github.com/saby/UI.git#rc-19.400",
       "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.400",
       "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.400"
    }
