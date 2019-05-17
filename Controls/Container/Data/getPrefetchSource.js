@@ -8,26 +8,48 @@ define('Controls/Container/Data/getPrefetchSource',
    function(scroll, sourceLib, Deferred) {
       
       'use strict';
-      
-      return function(sourceOptions, data) {
+      function load(sourceOptions, data) {
          var sourceController = new scroll.Controller({
             source: sourceOptions.source,
             navigation: sourceOptions.navigation,
             idProperty: sourceOptions.keyProperty
          });
-         
-         var dataReady = data ? Deferred.success(data) : sourceController.load(sourceOptions.filter, sourceOptions.sorting);
-         
-         return dataReady.addCallback(function(resultData) {
+
+         if (data) {
+            return Promise.resolve(data);
+         }
+
+         return sourceController.load(sourceOptions.filter, sourceOptions.sorting);
+      }
+
+      function getThenFunction(source) {
+         return function (result) {
+            var error;
+            var data;
+
+            if (result instanceof Error) {
+               error = result;
+               data = undefined;
+            } else {
+               error = undefined;
+               data = result;
+            }
+
             return {
                source: new sourceLib.PrefetchProxy({
-                  target: sourceOptions.source,
+                  target: source,
                   data: {
-                     query: resultData
+                     query: error || data
                   }
                }),
-               data: resultData
+               data: data,
+               error: error
             };
-         });
+         }
+      }
+
+      return function(sourceOptions, data) {
+        var thenFunction = getThenFunction(sourceOptions.source);
+        return load(sourceOptions, data).then(thenFunction, thenFunction)
       };
    });
