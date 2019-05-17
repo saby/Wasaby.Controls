@@ -9,9 +9,9 @@ import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
-       *  <li>If option 'mode' is set to 'stack' use {@link Controls/popup/Stack Stack options}</li>
-       *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup/Dialog Dialog options}</li>
-       *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup/Sticky Sticky options}</li>
+       *  <li>If option 'mode' is set to 'stack' use {@link Controls/popup:Stack Stack options}</li>
+       *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup:Dialog Dialog options}</li>
+       *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup:Sticky Sticky options}</li>
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
        * @class Controls/_popup/Opener/Edit
        * @control

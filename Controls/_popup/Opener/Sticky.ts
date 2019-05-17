@@ -175,6 +175,8 @@ import coreMerge = require('Core/core-merge');
  * @cfg {String} Determines the popup action on scroll.
  * @variant close
  * @variant track
+ * @variant none
+ * @default none
  */
 /**
  * @name Controls/_popup/Opener/Sticky#offset
