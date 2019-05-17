@@ -6,6 +6,7 @@ import clone = require('Core/core-clone');
 import _SearchController = require('Controls/Controllers/_SearchController');
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import {RecordSet} from 'Types/collection';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -58,8 +59,6 @@ var _private = {
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search') {
-         self._viewMode = self._previousViewMode;
-         self._previousViewMode = null;
          self._searchValue = '';
          self._inputSearchValue = '';
          self._misspellValue = '';
@@ -100,6 +99,16 @@ var _private = {
    },
    itemOpenHandler: function () {
       _private.getSearchController(this).abort();
+   },
+
+   dataLoadCallback: function (self, data:RecordSet):void {
+      if (self._viewMode === 'search' && !self._searchValue) {
+         self._viewMode = self._previousViewMode;
+         self._previousViewMode = null;
+      }
+      if (self._options.dataLoadCallback) {
+         self._options.dataLoadCallback(data);
+      }
    }
 };
 
@@ -140,6 +149,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
+      this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
       Container.superclass.constructor.apply(this, arguments);
    },
 
@@ -187,6 +197,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          this._searchController = null;
       }
       this._dataOptions = null;
+      this._itemOpenHandler = null;
+      this._dataLoadCallback = null;
    },
 
    _misspellCaptionClick: function () {

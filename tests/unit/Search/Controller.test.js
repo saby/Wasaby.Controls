@@ -45,9 +45,9 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
    
    var defaultOptions = getDefaultOptions();
 
-   var getSearchController = function() {
+   var getSearchController = function(additionalOptions) {
       var options = getDefaultOptions();
-      var controller = new searchMod.Controller(options);
+      var controller = new searchMod.Controller(Object.assign(options, additionalOptions || {}));
       controller.saveOptions(options);
       return controller;
    };
@@ -134,12 +134,28 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchMod.Controller._private.abortCallback(controller, filter);
 
          assert.isTrue(filterChanged);
-         assert.isFalse(controller._viewMode === 'search');
+         assert.isTrue(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, '');
          assert.deepEqual(filter, {});
+      });
+
+      it('_private.dataLoadCallback', function() {
+         var dataLoadCallbackCalled = false;
+         var controller = getSearchController({
+            dataLoadCallback: function() {
+               dataLoadCallbackCalled = true;
+            }
+         });
+
+         controller._viewMode = 'search';
+         controller._previousViewMode = 'testViewMode';
+         controller._dataLoadCallback();
+
+         assert.isTrue(dataLoadCallbackCalled);
+         assert.equal(controller._viewMode, 'testViewMode');
       });
 
       it('_private.searchStartCallback', function() {
