@@ -1,4 +1,4 @@
-<Controls.suggest:_InputController
+<Controls._suggest._InputController
         attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
         on:choose="_choose()"
         on:deactivated="_deactivated()"
@@ -37,4 +37,4 @@
             on:resetClick="_resetClick()"
             on:valueChanged="_changeValueHandler()">
     </Controls.search:Input>
-</Controls.suggest:_InputController>
+</Controls._suggest._InputController>
