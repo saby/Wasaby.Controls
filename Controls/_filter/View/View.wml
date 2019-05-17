@@ -50,10 +50,10 @@
            on:click="_openDetailPanel()">
       </div>
    </ws:if>
-   <Controls.Popup.Opener.Sticky
+   <Controls.popup:Sticky
            name="DropdownOpener"
            className="controls-FilterView-popup"
            closeOnOutsideClick="{{true}}"
            on:result="_resultHandler()">
-   </Controls.Popup.Opener.Sticky>
+   </Controls.popup:Sticky>
 </div>

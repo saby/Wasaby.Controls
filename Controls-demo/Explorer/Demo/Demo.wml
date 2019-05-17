@@ -17,7 +17,7 @@
       bind:excludedKeys="_excludedKeys"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:tileItemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="hidden" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+         <ws:partial template="Controls/tile:ItemTemplate" markerVisibility="hidden" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
          <ws:partial template="Controls/list:EmptyTemplate">
@@ -40,7 +40,7 @@
       <ws:itemTemplate>
          <ws:partial
                      shadowVisibility="onhover"
-                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                     template="Controls/tile:ItemTemplate"
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>
@@ -59,7 +59,7 @@
       <ws:itemTemplate>
          <ws:partial
                      shadowVisibility="hidden"
-                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                     template="Controls/tile:ItemTemplate"
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"
                      itemWidth="{{itemTemplate.itemData.item.get('width')}}"/>
       </ws:itemTemplate>
@@ -81,7 +81,7 @@
       bind:excludedKeys="_excludedKeys"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:itemTemplate>
-         <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" markerVisibility="{{false}}" hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
+         <ws:partial template="Controls/tile:ItemTemplate" markerVisibility="{{false}}" hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
       </ws:itemTemplate>
    </Controls.tile:View>
 </div>
