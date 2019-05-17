@@ -117,6 +117,34 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.equal(sourceController._moduleName, 'Controls/_source/SourceController');
       });
 
+      it('_selectedKeysChanged', function() {
+         let container = new lookupPopup.Container();
+         let eventFired = false;
+
+         container._notify = (e) => {
+            if (e === 'selectedKeysChanged') {
+               eventFired = true;
+            }
+         };
+
+         container._selectedKeysChanged();
+         assert.isTrue(eventFired);
+      });
+
+      it('_excludedKeysChanged', function() {
+         let container = new lookupPopup.Container();
+         let eventFired = false;
+
+         container._notify = (e) => {
+            if (e === 'excludedKeysChanged') {
+               eventFired = true;
+            }
+         };
+
+         container._excludedKeysChanged();
+         assert.isTrue(eventFired);
+      });
+
    });
 
 });
