@@ -1,6 +1,6 @@
 <div>
    <h1>Двухколоночный браузер</h1>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_First">
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_First">
       <ws:master>
 
          <div>
@@ -9,7 +9,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.Container.MasterList selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType">
                   <Controls.grid:View
                      source="{{_masterSource}}"
                      keyProperty="id"
@@ -19,7 +19,7 @@
                      columns="{{gridColumns}}"
                   >
                   </Controls.grid:View>
-               </Controls.Container.MasterList>
+               </Controls.masterDetail:List>
             </Controls.scroll:Container>
          </div>
       </ws:master>
@@ -49,8 +49,8 @@
             </Controls.scroll:Container>
          </div>
       </ws:detail>
-   </Controls.Container.MasterDetail>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_Second">
+   </Controls.masterDetail:Base>
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Second">
       <ws:master>
          <div>
             <div class="controls-demo_MasterDetail_master_search">
@@ -58,7 +58,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.Container.MasterList selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType">
                   <Controls.list:View
                      style="master"
                      keyProperty="id"
@@ -72,7 +72,7 @@
                         </ws:partial>
                      </ws:itemTemplate>
                   </Controls.list:View>
-               </Controls.Container.MasterList>
+               </Controls.masterDetail:List>
             </Controls.scroll:Container>
          </div>
       </ws:master>
@@ -101,8 +101,8 @@
             </Controls.scroll:Container>
          </div>
       </ws:detail>
-   </Controls.Container.MasterDetail>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_Third">
+   </Controls.masterDetail:Base>
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Third">
       <ws:master>
 
          <div>
@@ -111,7 +111,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.Container.MasterList selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType">
                   <Controls.treeGrid:View
                      source="{{_masterSource}}"
                      keyProperty="id"
@@ -121,7 +121,7 @@
                      columns="{{gridColumns}}"
                   >
                   </Controls.treeGrid:View>
-               </Controls.Container.MasterList>
+               </Controls.masterDetail:List>
             </Controls.scroll:Container>
          </div>
       </ws:master>
@@ -150,5 +150,5 @@
             </Controls.scroll:Container>
          </div>
       </ws:detail>
-   </Controls.Container.MasterDetail>
+   </Controls.masterDetail:Base>
 </div>
