@@ -5,7 +5,7 @@
  * @includes Stack Controls/_popupTemplate/Stack
  * @includes Dialog Controls/_popupTemplate/Dialog
  * @includes Confirmation Controls/_popupTemplate/Confirmation
- * @includes Confirmation Controls/_popupTemplate/InfoBox
+ * @includes InfoBox Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
