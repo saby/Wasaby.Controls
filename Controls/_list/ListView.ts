@@ -97,7 +97,7 @@ var ListView = BaseControl.extend(
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
                 this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandler.bind(this));
             }
-            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 
         _beforeUpdate: function(newOptions) {
@@ -131,7 +131,11 @@ var ListView = BaseControl.extend(
             if (this._options.rowSpacing !== newOptions.rowSpacing) {
                 this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
-            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._itemTemplate = this._resolveItemTemplate(newOptions);
+        },
+
+        _resolveItemTemplate(options) {
+           return options.itemTemplate || this._defaultItemTemplate;
         },
 
         _afterMount: function() {

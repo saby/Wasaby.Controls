@@ -1,12 +1,14 @@
 import {GridView} from 'Controls/grid';
-import DefaultItemTpl = require('wml!Controls/_treeGrid/SearchView/Item');
+import SearchItemTpl = require('wml!Controls/_treeGrid/SearchView/Item');
 import 'Controls/breadcrumbs';
 import 'Controls/decorator';
 import 'wml!Controls/_treeGrid/SearchView/SearchBreadCrumbsContent';
 
 var
     SearchView = GridView.extend({
-        _defaultItemTemplate: DefaultItemTpl,
+        _resolveItemTemplate() {
+           return SearchItemTpl;
+        },
         _onSearchItemClick: function (e) {
             e.stopPropagation();
         },
