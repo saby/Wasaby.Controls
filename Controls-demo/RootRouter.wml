@@ -1,11 +1,4 @@
 <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
-   <div class="themeSwitcher">
-      <div class="theme_button" on:click="changeTheme('online')">online</div>
-      <div class="theme_button" on:click="changeTheme('carry_m')">carry_m</div>
-      <div class="theme_button theme_dark" on:click="changeTheme('presto_m')">presto_m</div>
-      <div class="theme_button" on:click="changeTheme('carry')">carry</div>
-      <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
-   </div>
    <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}"
                     attr:id="Back" caption="Назад"
                     viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
