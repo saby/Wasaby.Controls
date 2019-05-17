@@ -112,7 +112,6 @@ var SourceController = cExtend.extend({
 
       if (this._options.navigation && this._options.navigation.source) {
          this._queryParamsController = _private.createQueryParamsController(this._options.navigation.source, this._options.navigation.sourceConfig);
-         this._queryParamsController.prepareSource(this._source);
       }
    },
 
