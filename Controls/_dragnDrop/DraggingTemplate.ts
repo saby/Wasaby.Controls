@@ -149,6 +149,46 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     */
 
    /**
+    * @name Controls/_dragnDrop/DraggingTemplate#imageTemplate
+    * @cfg {String} Template with image of the entity being moved.
+    * @remark The option must contain a link to the image. If this option is specified, the logo option and image option is not applied.
+    * @example
+    * The following example shows how to use a standard dragging template.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      imageTemplate="wml!MyModule/draggingImageTemplate"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /**
     * @name Controls/_dragnDrop/DraggingTemplate#logo
     * @cfg {String} A logo of the entity being moved.
     * @default icon-DocumentUnknownType
