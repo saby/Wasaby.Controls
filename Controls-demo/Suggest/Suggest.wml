@@ -21,7 +21,7 @@
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Search suggest</h3>
-            <Controls.Input.Search.Suggest
+            <Controls.suggest:SearchInput
                     attr:class="ControlsDemo-Suggest__search"
                     bind:value="_suggest2Value"
                     bind:suggestState="_suggestState"
@@ -37,7 +37,7 @@
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
-            </Controls.Input.Search.Suggest>
+            </Controls.suggest:SearchInput>
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Suggest with no footer</h3>
@@ -82,7 +82,7 @@
         </div>
         <div class="demo-SuggestWrapper">
             <h3>Search suggest with tabs</h3>
-            <Controls.Input.Search.Suggest
+            <Controls.suggest:SearchInput
                     attr:class="ControlsDemo-Suggest__searchTabs"
                     bind:value="_suggest4Value"
                     bind:suggestState="_suggestState1"
@@ -99,7 +99,7 @@
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
-            </Controls.Input.Search.Suggest>
+            </Controls.suggest:SearchInput>
         </div>
     </div>
 </div>
