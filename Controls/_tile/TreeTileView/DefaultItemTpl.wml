@@ -44,6 +44,7 @@
          itemData="{{itemData}}"
          invisible="{{invisible}}"
          marker="{{marker}}"
+         staticHeight="{{staticHeight}}"
          shadowVisibility="{{shadowVisibility}}"
          markerVisibility="{{markerVisibility}}"
          contentTemplate="{{contentTemplate}}"
