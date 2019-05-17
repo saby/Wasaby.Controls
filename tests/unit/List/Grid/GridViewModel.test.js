@@ -1105,7 +1105,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 },
                 iData = {
                    isEditing: true,
-                   isGroup: false
+                   isGroup: false,
+                   rowIndex: 1
                 },
             saveFunc = gridMod.GridViewModel._private.calcRowIndexByKey;
             gridMod.GridViewModel._private.calcRowIndexByKey = ()=>{return 1};
@@ -1114,8 +1115,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual(handlers, iData.handlersForPartialSupport);
             assert.equal(
-                iData.editingRowStyles,
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 3;',
+                iData.editingRowStyles
             );
 
             gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
