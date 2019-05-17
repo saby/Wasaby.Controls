@@ -1004,6 +1004,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (self._virtualScroll) {
+                        self._virtualScroll.ItemsCount = self._items.getCount();
                         // При серверной верстке применяем начальные значения
                         _private.applyVirtualScroll(self);
                     }

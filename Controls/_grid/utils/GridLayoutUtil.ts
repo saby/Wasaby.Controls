@@ -136,6 +136,7 @@ const _cssTemplatesStyles = {
 };
 
 function _getSupportStatus(): SupportStatusesEnum {
+    return SupportStatusesEnum.Partial;
     if (!detection.isNotFullGridSupport) {
         return SupportStatusesEnum.Full;
     }
