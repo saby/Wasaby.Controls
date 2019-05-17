@@ -227,7 +227,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                this._subDropdownOpened = false;
             }
 
-            if (hasChildren) {
+            if (hasChildren && !item.get('readOnly')) {
                this._subDropdownOpened = true;
                this._openSubDropdown(event, item);
             }
@@ -284,6 +284,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
+            if (item.get('readOnly')) {
+               return;
+            }
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
                let isApplyButtonVisible = this._needShowApplyButton;
                let self = this;

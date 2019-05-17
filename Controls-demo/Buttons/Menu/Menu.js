@@ -26,6 +26,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _iconAdd: null,
          _iconAddMedium: null,
          _iconButtonItems: null,
+         _multiItems: null,
          _hierarchyItems: null,
          _groupItems: null,
          _itemsGroup: null,
@@ -180,35 +181,51 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 8, title: 'Assignment for delivery' },
                { id: 9, title: 'Assignment for logisticians' }
             ];
+            this._multiItems = [
+               {
+                  id: 1,
+                  title: 'Task',
+                  '@parent': true,
+                  parent: null
+               },
+               { id: 2, title: 'Error in the development', '@parent': false, parent: null },
+               { id: 3, title: 'Commission', parent: 1 },
+               {
+                  id: 4,
+                  title: 'Coordination',
+                  parent: 1,
+                  '@parent': true
+               },
+               { id: 5, title: 'Application', parent: 1 },
+               { id: 6, title: 'Development', parent: 1 },
+               { id: 7, title: 'Exploitation', parent: 1 },
+               { id: 8, title: 'Coordination', parent: 4 },
+               { id: 9, title: 'Negotiate the discount', parent: 4 },
+               { id: 10, title: 'Coordination of change prices', parent: 4 },
+               { id: 11, title: 'Matching new dish', parent: 4 }
+            ];
             this._hierarchyMultiItems = [
                {
                   id: 1,
                   title: 'Task',
                   '@parent': true,
-                  parent: null,
-                  myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
+                  parent: null
                },
-               {
-                  id: 2, title: 'Error in the development', '@parent': false, parent: null
-               },
+               { id: 2, title: 'Error in the development', '@parent': false, parent: null, readOnly: true },
                { id: 3, title: 'Commission', parent: 1 },
                {
                   id: 4,
                   title: 'Coordination',
                   parent: 1,
                   '@parent': true,
-                  myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
+                  readOnly: true
                },
                { id: 5, title: 'Application', parent: 1 },
                { id: 6, title: 'Development', parent: 1 },
-               {
-                  id: 7, title: 'Exploitation', parent: 1, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
-               },
+               { id: 7, title: 'Exploitation', parent: 1, readOnly: true },
                { id: 8, title: 'Coordination', parent: 4 },
                { id: 9, title: 'Negotiate the discount', parent: 4 },
-               {
-                  id: 10, title: 'Coordination of change prices', parent: 4, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
-               },
+               { id: 10, title: 'Coordination of change prices', parent: 4, readOnly: true },
                { id: 11, title: 'Matching new dish', parent: 4 }
             ];
          },

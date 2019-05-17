@@ -12,6 +12,7 @@
     * @css @spacing_DropdownList-item-between-rightBorder-content Spacing between right border and list.
     * @css @spacing_DropdownList-withNodes-item-between-rightBorder-content Spacing between right border and list with hierarchy.
     * @css @spacing_DropdownList_withClose-item-between-rightBorder-content Spacing between right border and list with cross.
+    * @css @spacing_DropdownList-withPin-item-between-rightBorder-content Spacing between right border and list with history.
     * @css @box-shadow-color_DropdownList Shadow Shadow color.
     * @css @box-shadow-size_DropdownList-shadowStyle_center Shadow size of dropdown list with shadow style 'center'.
     * @css @box-shadow-size_DropdownList-shadowStyle_centerTop-left Shadow size of dropdown list with shadow style 'centerTop' on the left side.
@@ -24,6 +25,7 @@
     * @css @font-size_DropdownList Font size dropdown list.
     * @css @background_DropdownList-row_hover Background color for dropdown list in hovered state.
     * @css @color_DropdownList-emptyItem Color empty item.
+    * @css @color_DropdownList__row-text_readOnly Color of readonly item's text.
     * @css @spacing_DropdownList-header-between-icon-text Spacing between icon and text in header.
     * @css @spacing_DropdownList-item-between-icon-text Spacing between icon and text in row.
     * @css @color_DropdownList-icon-iconStyle_primary Primary icon color.
@@ -44,6 +46,7 @@
     * @css @shift-top_DropdownList-submenu Offset on the top for pop-up for submenu.
     * @css @icon-size_DropdownList-arrow Arrow size color.
     * @css @color_DropdownList-arrow Arrow icon color.
+    * @css @color_DropdownList-arrow_readOnly Arrow icon color for readonly item.
     * @css @spacing_DropdownList-item-between-arrow-topBorder Spacing between arrow and top border of row.
     * @css @spacing_DropdownList-item-between-arrow-rightBorder Spacing between arrow and right border.
     * @css @spacing_DropdownList-between-close-rightBorder Spacing between cross and right border.
