@@ -1457,13 +1457,13 @@
       }
     }
   },
-  "Controls/Filter/Button": {
-    "name": "Controls/Filter/Button",
+  "Controls/filter:Selector": {
+    "name": "Controls/filter:Selector",
     "title": "Component for data filtering",
-    "className": "Controls/Filter/Button",
+    "className": "Controls/filter:Selector",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Filter/Button",
+    "fullname": "Controls/filter:Selector",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1505,12 +1505,12 @@
       }
     }
   },
-  "Controls/Filter/Button/Panel": {
-    "name": "Controls/Filter/Button/Panel",
-    "className": "Controls/Filter/Button/Panel",
+  "Controls/filterPopup:Panel": {
+    "name": "Controls/filterPopup:Panel",
+    "className": "Controls/filterPopup:Panel",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Filter/Button/Panel",
+    "fullname": "Controls/filterPopup:Panel",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1811,13 +1811,13 @@
       }
     }
   },
-  "Controls/Filter/Fast": {
-    "name": "Controls/Filter/Fast",
+  "Controls/filter:Fast": {
+    "name": "Controls/filter:Fast",
     "title": "Control \"Fast Filter\".",
-    "className": "Controls/Filter/Fast",
+    "className": "Controls/filter:Fast",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Filter/Fast",
+    "fullname": "Controls/filter:Fast",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

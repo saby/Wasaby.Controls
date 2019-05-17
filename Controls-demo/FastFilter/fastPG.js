@@ -11,7 +11,7 @@ define('Controls-demo/FastFilter/fastPG',
       var fastPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Filter/Fast',
+         _content: 'Controls/filter:Fast',
          _dataObject: null,
          _sourceProjects: null,
          _sourceContacts: null,

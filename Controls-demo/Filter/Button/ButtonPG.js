@@ -22,7 +22,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
       var FilterButtonPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Filter/Button',
+         _content: 'Controls/filter:Selector',
          _dataObject: null,
          _componentOptions: null,
          _items: null,
