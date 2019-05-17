@@ -20,7 +20,7 @@ define('Controls/Input/Date/Link', [
     *
     * @class Controls/Input/Date/Link
     * @extends Core/Control
-    * @mixes Controls/Input/Date/interface/ILinkView
+    * @mixes Controls/interface/ILinkView
     * @mixes Controls/Input/Date/interface/ILink
     * @control
     * @private
