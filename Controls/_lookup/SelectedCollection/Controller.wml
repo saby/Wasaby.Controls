@@ -6,7 +6,9 @@
                on:updateItems="_onUpdateItemsHandler()"
                on:valueChanged="_notifyHandler('valueChanged')"
                on:itemClick="_notifyHandler('itemClick')"
-               on:inputCompleted="_notifyHandler('inputCompleted')"/>
+               on:inputCompleted="_notifyHandler('inputCompleted')"
+               on:openInfoBox="_notifyHandler('openInfoBox')"
+               on:closeInfoBox="_notifyHandler('closeInfoBox')"/>
 
    <ws:if data="{{_options.selectorTemplate}}">
       <Controls._lookup.Opener name="selectorOpener">

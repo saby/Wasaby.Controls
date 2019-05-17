@@ -185,9 +185,6 @@ import Env = require('Env/Env');
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], { bubbling: true });
             } else {
-               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
-               this._notify('openInfoBox', [config]);
-
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
@@ -202,8 +199,6 @@ import Env = require('Env/Env');
             if (this._isNewEnvironment()) {
                this._notify('closeInfoBox', [], { bubbling: true });
             } else {
-               // https://online.sbis.ru/opendoc.html?guid=24acc0ca-fb04-42b2-baca-4e90debbfefb
-               this._notify('closeInfoBox');
                //todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=e6be2dd9-a47f-424c-a86c-bd6b48b98602
                if(!this._destroyed) {
                   this._children.infoBoxOpener.close()
