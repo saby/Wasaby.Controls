@@ -23,7 +23,7 @@ define('Controls/Container/Data/getPrefetchSource',
       }
 
       function getThenFunction(source) {
-         return function (result) {
+         return function(result) {
             var error;
             var data;
 
@@ -45,11 +45,11 @@ define('Controls/Container/Data/getPrefetchSource',
                data: data,
                error: error
             };
-         }
+         };
       }
 
       return function(sourceOptions, data) {
-        var thenFunction = getThenFunction(sourceOptions.source);
-        return load(sourceOptions, data).then(thenFunction, thenFunction)
+         var thenFunction = getThenFunction(sourceOptions.source);
+         return load(sourceOptions, data).then(thenFunction, thenFunction);
       };
    });
