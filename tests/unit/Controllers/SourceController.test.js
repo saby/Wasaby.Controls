@@ -100,11 +100,11 @@ define([
                }
             }
          });
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
-         assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}}, resParams, 'Wrong query params in position navigation');
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({ filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
+         assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2, }, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, resParams, 'Wrong query params in position navigation');
 
          var originalFilter = {};
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } , null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({ filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
          assert.notEqual(originalFilter, resParams.filter, 'Modified filter should be a new object instance');
       });
 
