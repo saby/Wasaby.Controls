@@ -38,7 +38,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         }
 
         current = cMerge(current, this.getTileItemData());
-        if (current.dispItem && current.dispItem.isNode()) {
+        if (current.dispItem.isNode && current.dispItem.isNode()) {
             current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
         }
 
