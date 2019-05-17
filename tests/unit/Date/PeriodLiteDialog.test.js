@@ -257,11 +257,11 @@ define([
          }, {
             wheelDelta: 1,
             options: yearOnlyOptions,
-            year: currentYear + 1
+            year: currentYear - 1
          }, {
             wheelDelta: -1,
             options: yearOnlyOptions,
-            year: currentYear - 1
+            year: currentYear + 1
          }].forEach(function(test) {
             it(`should set year to ${test.year} if options and wheelDelta is equals ${test.options} and ${test.wheelDelta}`, function() {
                const component = calendarTestUtils.createComponent(PeriodLiteDialog, test.options);
