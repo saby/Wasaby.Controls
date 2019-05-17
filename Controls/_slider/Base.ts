@@ -125,7 +125,7 @@ var Base = Control.extend({
    _beforeMount(options) {
       _private._checkOptions(options);
       this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
-      this._value = options.value || options.maxValue;
+      this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}];
       this._lineData = {position: 0, width: 100};
       _private._render(this, options.minValue, options.maxValue, this._value);
