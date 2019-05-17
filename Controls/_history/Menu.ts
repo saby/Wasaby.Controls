@@ -44,10 +44,6 @@ var HistoryMenu = Menu.extend({
       }
    },
 
-   _onItemClickHandler: function (result, items) {
-      this._notify('onMenuItemActivate', [items[0]]);
-   },
-
    _onPinClickHandler: function (event, items) {
       var self = this;
       this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function (result) {
