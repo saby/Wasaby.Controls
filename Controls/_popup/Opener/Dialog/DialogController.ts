@@ -1,5 +1,7 @@
 import BaseController = require('Controls/_popup/Opener/BaseController');
 import DialogStrategy = require('Controls/_popup/Opener/Dialog/DialogStrategy');
+import Env = require('Env/Env');
+import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
       var _private = {
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
@@ -18,9 +20,19 @@ import DialogStrategy = require('Controls/_popup/Opener/Dialog/DialogStrategy');
             }
          },
          getWindowSize: function() {
+            let height = window.innerHeight;
+
+            // if keyboard visible, then window height decreases on scrollTop value.
+            // if user scroll page, then window height will changed.
+            // get real window.height for same position with/without keyboard.
+            if (Env.detection.isMobileIOS) {
+               if (TouchKeyboardHelper._keyboardVisible) {
+                  height += window.scrollY;
+               }
+            }
             return {
                width: window.innerWidth,
-               height: window.innerHeight,
+               height: height,
                scrollTop: 0,
             };
          }
