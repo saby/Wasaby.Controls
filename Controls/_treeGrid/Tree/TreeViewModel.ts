@@ -135,12 +135,12 @@ var
             }
         },
         shouldDrawExpander: function(itemData, expanderIcon) {
-            var
-                itemType = itemData.item.get(itemData.nodeProperty);
+            if (expanderIcon === 'none' || itemData.item.get(itemData.nodeProperty) === null) {
+                return false;
+            }
 
             // Show expander icon if it is not equal 'none' or render leafs
-            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem) &&
-                itemType !== null && expanderIcon !== 'none';
+            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
         shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem) &&
