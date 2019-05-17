@@ -200,7 +200,10 @@ var ListView = BaseControl.extend(
             event.blockUpdate = true;
         },
 
-        _onItemWheel: function() {},
+        _onItemWheel: function(event) {
+            //FIXME delete after https://online.sbis.ru/opendoc.html?guid=c1021079-f404-47bc-b5ce-4070af539d61
+            event.blockUpdate = true;
+        },
 
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
