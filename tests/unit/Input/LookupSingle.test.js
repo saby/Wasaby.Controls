@@ -143,10 +143,6 @@ define([
          lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
          assert.equal(lookup._maxVisibleItems, 5);
 
-         lookup._maxVisibleItems = null;
-         lookup._beforeMount({items: getItems(5), multiSelect: true});
-         assert.equal(lookup._maxVisibleItems, null);
-
          lookup._beforeMount({items: getItems(5), readOnly: true});
          assert.equal(lookup._maxVisibleItems, 1);
 
