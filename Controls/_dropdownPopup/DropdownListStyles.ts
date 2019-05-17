@@ -69,4 +69,6 @@
     * @css @spacing_DropdownList-between-applyButton-footerContent Spacing between apply button anf footer content.
     * @css @spacing_DropdownList-between-footer-bottomBorder Spacing between bottom border and footer.
     * @css @spacing_DropdownList-between-moreButton-leftBorder Spacing between more button and left border.
+    * @css @spacing_DropdownList-row-between-checkbox-topBorder Spacing between checkBox and top border of row.
+    * @css @spacing_DropdownList-row-between-checkbox-rightBorder Spacing between checkBox and right border of row
     */

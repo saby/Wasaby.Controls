@@ -1,6 +1,7 @@
 <ws:partial template="{{_options.columnContentTpl}}"
             itemData="{{_options.itemData}}"
             currentColumn="{{ _options.currentColumn }}"
+            colspanCurrentNode="{{_options.colspanCurrentNode}}"
 
             attr:key="{{ _options.currentColumnKey }}"
             attr:data-r="{{ _options.itemData.index }}"

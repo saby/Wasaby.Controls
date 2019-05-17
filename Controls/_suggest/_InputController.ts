@@ -8,7 +8,7 @@ import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
-import LoadService = require('Controls/History/LoadService');
+import {LoadService} from 'Controls/history';
 import 'css!theme?Controls/_suggest/_InputController/InputController';
 
 

@@ -3,7 +3,7 @@
    <div class="controls-HistoryList__content {{_isMaxHeight ? 'controls-FilterPanel_block-maxHeight'}}">
       <ws:for data="index, item in _options.items">
          <div class="controls-HistoryList__itemWrapper">
-            <div class="controls-HistoryList__item {{item.get('pinned') ? 'controls-HistoryList__item_pinned'}}" on:click="_contentClick(item)" title="{{_itemsText[index]}}">{{_itemsText[index]}}</div>
+            <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{item.get('pinned') ? 'controls-HistoryList__item_pinned'}}" on:click="_contentClick(item)" title="{{_itemsText[index]}}">{{_itemsText[index]}}</div>
             <span class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
                   on:click="_onPinClick(item)"></span>
          </div>

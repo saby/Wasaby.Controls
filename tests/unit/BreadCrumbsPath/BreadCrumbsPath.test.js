@@ -112,8 +112,8 @@ define([
                clientWidth: 1920
             };
             path._afterMount();
-            assert.equal(path._backButtonClass, 'controls-BreadCrumbsPath__backButton_long');
-            assert.equal(path._breadCrumbsClass, 'controls-BreadCrumbsPath__breadCrumbs_short');
+            assert.equal(path._backButtonClass, 'controls-BreadCrumbsPath__backButton_short');
+            assert.equal(path._breadCrumbsClass, '');
          });
 
          it('half backButton, half crumbs', function() {
@@ -132,8 +132,8 @@ define([
                clientWidth: 1920
             };
             path._afterMount();
-            assert.equal(path._backButtonClass, 'controls-BreadCrumbsPath__backButton_short');
-            assert.equal(path._breadCrumbsClass, 'controls-BreadCrumbsPath__breadCrumbs_long');
+            assert.equal(path._backButtonClass, '');
+            assert.equal(path._breadCrumbsClass, 'controls-BreadCrumbsPath__breadCrumbs_short');
          });
       });
 
