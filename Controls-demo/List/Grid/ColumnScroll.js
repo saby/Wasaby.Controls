@@ -10,7 +10,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
    'wml!Controls-demo/List/Grid/DemoName',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
-   'Controls/Container/Scroll',
+   'Controls/scroll',
    'Controls/grid',
    'wml!Controls-demo/List/Grid/Results'
 ], function(BaseControl, GridData, template, source) {

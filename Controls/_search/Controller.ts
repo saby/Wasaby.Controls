@@ -105,13 +105,13 @@ var _private = {
 
 /**
  * The search controller allows you to search data in a {@link Controls/list:View}
- * using any component with {@link Controls/Input/interface/IInputField} interface.
+ * using any component with {@link Controls/interface/IInputField} interface.
  * Search controller allows you:
  * 1) set delay before searching
  * 2) set number of characters
  * 3) set search parameter
  * 4) change the keyboard layout for an unsuccessful search
- * Note: Component with {@link Controls/Input/interface/IInputField} interface must be located in {@link Controls/_search/Input/Container}.
+ * Note: Component with {@link Controls/interface/IInputField} interface must be located in {@link Controls/_search/Input/Container}.
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *

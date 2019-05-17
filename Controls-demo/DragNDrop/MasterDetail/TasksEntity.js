@@ -1,5 +1,5 @@
-define('Controls-demo/DragNDrop/MasterDetail/TasksEntity', ['Controls/DragNDrop/Entity/List/Items'], function(EntityItems) {
+define('Controls-demo/DragNDrop/MasterDetail/TasksEntity', ['Controls/dragnDrop'], function(dragnDrop) {
    'use strict';
 
-   return EntityItems.extend({});
+   return dragnDrop.ListItems.extend({});
 });

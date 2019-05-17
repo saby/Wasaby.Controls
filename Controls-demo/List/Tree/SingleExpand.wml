@@ -1,6 +1,6 @@
 <div class="demo-Grid">
    <div class="demo-Grid__container" attr:style="margin: 10px">
-      <Controls.Container.Scroll attr:style="height: 700px; width: 700px;">
+      <Controls.scroll:Container attr:style="height: 700px; width: 700px;">
          <Controls.list:Container>
             <Controls.treeGrid:View
                     source="{{_viewSource}}"
@@ -13,6 +13,6 @@
                     multiSelectVisibility="visible">
             </Controls.treeGrid:View>
          </Controls.list:Container>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </div>
 </div>

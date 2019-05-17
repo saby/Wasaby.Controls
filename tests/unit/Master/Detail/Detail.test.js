@@ -1,8 +1,8 @@
-define(['Controls/Container/MasterDetail'], function(MasterDetail) {
+define(['Controls/masterDetail'], function(masterDetail) {
    'use strict';
    describe('Controls.Container.MasterDetail', function() {
       let
-         Control = new MasterDetail(),
+         Control = new masterDetail.Base(),
          event = {
             stopPropagation() {}
          };

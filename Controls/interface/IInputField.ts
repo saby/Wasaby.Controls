@@ -73,7 +73,7 @@ interface IInputField {
 
 /**
  * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
- * @name Controls/Input/interface/IInputField#inputCompleted
+ * @name Controls/interface/IInputField#inputCompleted
  * @param {String} value Value of the field.
  * @remark
  * This event can be used as a trigger to validate the field or send entered data to some other control.

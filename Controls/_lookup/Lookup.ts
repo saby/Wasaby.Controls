@@ -20,7 +20,7 @@ import Env = require('Env/Env');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/Input/interface/IInputField
+ * @mixes Controls/interface/IInputField
  * @mixes Controls/_lookup/Lookup/LookupStyles
  * @control
  * @public
