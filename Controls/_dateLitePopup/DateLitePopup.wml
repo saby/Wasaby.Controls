@@ -7,6 +7,7 @@
             <div class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></div>
             <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
                <Controls.buttons:Button
+                  class="controls-PeriodLiteDialog__homeButton"
                   style="secondary"
                   viewMode="link"
                   icon="icon-small icon-Home3"
@@ -24,6 +25,7 @@
             <div class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></div>
          </div>
          <ws:partial
+               class="controls-PeriodLiteDialog__body"
                template="{{_options.itemTemplate}}"
                monthCaptionTemplate="{{_monthCaptionTemplate}}"
                on:wheel="_onWheel()">
@@ -49,7 +51,7 @@
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
-      <div class="controls-PeriodLiteDialog__text-align-center"
+      <div class="controls-PeriodLiteDialog__body controls-PeriodLiteDialog__text-align-center"
          on:wheel="_onWheel()"
       >
          <ws:for data="value in [0, 1, 2, 3, 4]">
