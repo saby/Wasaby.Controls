@@ -506,9 +506,7 @@ define(
                }
             };
             dropdownController._mousedown();
-            setTimeout(function() {
-               assert.isTrue(opened);
-            }, 100);
+            assert.isTrue(opened);
 
             dropdownController._mousedown();
             assert.isFalse(opened);
