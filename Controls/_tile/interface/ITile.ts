@@ -24,6 +24,23 @@
  */
 
 /**
+ * @name Controls/_tile/interface/ITile#nodesHeight
+ * @cfg {Number} The height of the tile nodes items.
+ * @default 150
+ * @remark This option is required to calculate element sizes when rendering on the server.
+ * If you set the height using css, the component cannot be displayed immediately in the correct state.
+ * @example
+ * The following example shows how to set the height of nodes to 200 pixels.
+ * <pre>
+ *    <Controls._tile.Tile nodesHeight="{{200}}"
+ *                   source="{{_viewSource}}"
+ *                   keyProperty="id"
+ *                   parentProperty="Раздел"
+ *                   nodeProperty="Раздел@"/>
+ * </pre>
+ */
+
+/**
  * @name Controls/_tile/interface/ITile#tileScalingMode
  * @cfg {String} Scale mode for items when you hover over them.
  * @variant none On hover the size of the items is not changed.
