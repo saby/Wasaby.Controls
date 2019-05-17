@@ -1,15 +1,23 @@
-<div class="controls-SelectedCollection__infobox_content">
-   <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
-   <Controls.scroll:Container>
-      <Controls.lookup:Collection
-            items="{{_items}}"
-            displayProperty="{{_options.displayProperty}}"
-            itemTemplate="{{_options.itemTemplate}}"
-            readOnly="{{_options.readOnly}}"
-            itemsLayout="twoColumns"
-            on:crossClick="_crossClick()"
-            on:itemClick="_itemClick()"
-            attr:style="width: {{_options.width}}px">
-      </Controls.lookup:Collection>
-   </Controls.scroll:Container>
-</div>
+<Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}" attr:class="controls-SelectedCollection__infobox_content">
+   <Controls.popupTemplate:Dialog>
+      <ws:headerContentTemplate>
+         <div class="controls-SelectedCollection__header_wrapper">
+            <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
+         </div>
+      </ws:headerContentTemplate>
+      <ws:bodyContentTemplate>
+         <Controls.scroll:Container class="controls-SelectedCollection__body">
+            <Controls.lookup:Collection
+                  items="{{_items}}"
+                  displayProperty="{{_options.displayProperty}}"
+                  itemTemplate="{{_options.itemTemplate}}"
+                  readOnly="{{_options.readOnly}}"
+                  itemsLayout="twoColumns"
+                  on:crossClick="_crossClick()"
+                  on:itemClick="_itemClick()"
+                  attr:style="width: {{_options.width}}px">
+            </Controls.lookup:Collection>
+         </Controls.scroll:Container>
+      </ws:bodyContentTemplate>
+   </Controls.popupTemplate:Dialog>
+</Controls.popupTemplate:InfoBox>

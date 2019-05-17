@@ -164,7 +164,21 @@
     flex-direction: column;
 }
 
-//https://online.sbis.ru/opendoc.html?guid=d3234727-b6a0-4f3a-a941-cfb1a3b3e433
-.controls-SelectedCollection__popup .controls-InfoBox {
+.controls-SelectedCollection__infobox_content .controls-InfoBoxTemplate__content {
+    width: 100%;
     max-width: none;
+}
+
+.controls-SelectedCollection__header_wrapper {
+    height: 100%;
+    align-items: center;
+    display: flex;
+    padding-left: @spacing_SelectedCollection-between-infoBoxContent-borderLeft;
+}
+
+.controls-SelectedCollection__body {
+    padding-left: @spacing_SelectedCollection-between-infoBoxContent-borderLeft;
+    padding-right: @spacing_SelectedCollection-between-infoBoxContent-borderRight;
+    padding-top: @spacing_SelectedCollection-between-infoBoxContent-borderTop;
+    padding-bottom: @spacing_SelectedCollection-between-infoBoxContent-borderBottom;
 }
