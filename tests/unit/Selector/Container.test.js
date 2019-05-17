@@ -114,7 +114,10 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          var navigation = {};
          var sourceController = lookupPopup.Container._private.getSourceController(source, navigation);
 
-         assert.equal(sourceController._moduleName, 'Controls/_source/SourceController');
+         assert.include(
+            ['Controls/source:Controller', 'Controls/_source/SourceController'],
+            sourceController._moduleName
+         );
       });
 
    });
