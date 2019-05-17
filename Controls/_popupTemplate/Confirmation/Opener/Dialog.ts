@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import Env = require('Env/Env');
-import EscProcessing = require('Controls/Popup/Compatible/EscProcessing');
 import {Converter as MarkupConverter} from 'Controls/decorator';
 import contentTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/content');
 import footerTemplate = require('wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/footer');
@@ -100,11 +99,7 @@ import 'css!theme?Controls/popupTemplate';
       _contentTemplate: contentTemplate,
       _footerTemplate: footerTemplate,
 
-      constructor: function() {
-         Submit.superclass.constructor.apply(this, arguments);
-
-         this._escProcessing = new EscProcessing();
-      },
+      _isEscDown: false,
 
       _sendResultHandler: function(e, res) {
          this._sendResult(res);
@@ -115,12 +110,25 @@ import 'css!theme?Controls/popupTemplate';
          this._notify('close');
       },
 
-      _keyDown: function(e) {
-         this._escProcessing.keyDownHandler(e);
+      _keyDown: function(event) {
+         if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+            this._isEscDown = true;
+         }
       },
 
       _keyPressed: function(e) {
-         this._escProcessing.keyUpHandler(_private.keyPressed, this, [e]);
+         /**
+          * Старая панель по событию keydown закрывается и блокирует всплытие события. Новая панель делает
+          * тоже самое, но по событию keyup. Из-за этого возникает следующая ошибка.
+          * https://online.sbis.ru/opendoc.html?guid=0e4a5c02-f64c-4c7d-88b8-3ab200655c27
+          *
+          * Что бы не трогать старые окна, мы добавляем поведение на закрытие по esc. Закрываем только в том случае,
+          * если новая панель поймала событие keydown клавиши esc.
+          */
+         if (this._isEscDown) {
+            this._isEscDown = false;
+            _private.keyPressed.call(this, e);
+         }
       },
       _getMessage: function() {
          if (this._hasMarkup()) {
