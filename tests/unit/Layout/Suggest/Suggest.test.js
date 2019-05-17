@@ -137,15 +137,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             self._inputActive = false;
             self._dependenciesDeferred.addCallback(function() {
                assert.isFalse(state);
-
-               self._inputActive = true;
-               self._stackWithSearchResultsOpened = true;
-               suggestMod._InputController._private.open(self);
-
-               self._dependenciesDeferred.addCallback(function() {
-                  assert.isFalse(state);
-                  done();
-               });
+               done();
             });
          });
       });
@@ -303,6 +295,26 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
             done();
          });
+      });
+
+      it('Suggest::showAllClick', function() {
+         var suggest = new suggestMod._InputController();
+         var stackOpened = false;
+
+         suggest._notify = () => {return false};
+         suggest._showContent = true;
+         suggest._children = {
+            stackOpener: {
+               open: () => {
+                  stackOpened = true;
+               }
+            }
+         };
+
+         suggest._showAllClick();
+
+         assert.isFalse(stackOpened);
+         assert.isFalse(suggest._showContent);
       });
 
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
@@ -634,13 +646,6 @@ self._options.historyId = '';
 
          suggestComponent._markedKeyChangedHandler(null, 'test2');
          assert.equal(suggestComponent._suggestMarkedKey, 'test2');
-      });
-
-      it('Suggest::_stackWithSearchResultsClosed', function() {
-         var suggestComponent = new suggestMod._InputController();
-         suggestComponent._stackWithSearchResultsOpened = true;
-         suggestComponent._stackWithSearchResultsClosed();
-         assert.isFalse(suggestComponent._stackWithSearchResultsOpened);
       });
 
 
