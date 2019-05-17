@@ -66,7 +66,9 @@ var Suggest = Control.extend({
    _clearClick: function() {
       /* move focus to input after clear text, because focus will be lost after hiding cross  */
       this.activate();
-      this._suggestState = false;
+      if (!this._options.autoDropDown) {
+         this._suggestState = false;
+      }
       this._notify('valueChanged', ['']);
    },
 
