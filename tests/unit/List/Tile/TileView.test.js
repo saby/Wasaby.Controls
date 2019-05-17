@@ -9,37 +9,43 @@ define(['Controls/List/TileView/TileView',
       height: 60
    };
 
+   var
+      cfg,
+      tileView;
+
    describe('Controls/List/TileView/TileView', function() {
-      var
-         treeTileViewModel = new TreeTileViewModel({
-            tileMode: 'static',
-            itemsHeight: 300,
-            imageProperty: 'image',
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            nodeProperty: 'parent@',
-            items: new collection.RecordSet({
-               rawData: [{
-                  'id': 1,
-                  'parent': null,
-                  'parent@': true
-               }, {
-                  'id': 2,
-                  'parent': null,
-                  'parent@': null
-               }],
-               idProperty: 'id'
-            })
-         }),
+      beforeEach(function() {
+         var
+            treeTileViewModel = new TreeTileViewModel({
+               tileMode: 'static',
+               itemsHeight: 300,
+               imageProperty: 'image',
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'parent@',
+               items: new collection.RecordSet({
+                  rawData: [{
+                     'id': 1,
+                     'parent': null,
+                     'parent@': true
+                  }, {
+                     'id': 2,
+                     'parent': null,
+                     'parent@': null
+                  }],
+                  idProperty: 'id'
+               })
+            });
+
          cfg = {
             listModel: treeTileViewModel,
             keyProperty: 'id',
             tileScalingMode: 'outside'
-         },
+         };
          tileView = new TileView(cfg);
-
-      tileView.saveOptions(cfg);
-      tileView._beforeMount(cfg);
+         tileView.saveOptions(cfg);
+         tileView._beforeMount(cfg);
+      });
 
       describe('getPositionInContainer', function() {
 
@@ -546,6 +552,27 @@ define(['Controls/List/TileView/TileView',
          //hovered
          tileView._onItemMouseLeave({}, {key: 2});
          assert.equal(tileView._listModel.getHoveredItem(), null);
+      });
+
+      it('_calculateHoveredItemPosition', function() {
+         var
+            setHoveredItemCalled = false,
+            event = {
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               }
+            };
+
+         tileView._setHoveredItem = function() {
+            setHoveredItemCalled = true;
+         };
+
+         cfg.tileScalingMode = 'none';
+         tileView.saveOptions(cfg);
+         tileView._calculateHoveredItemPosition(event);
+         assert.isTrue(setHoveredItemCalled);
       });
    });
 });

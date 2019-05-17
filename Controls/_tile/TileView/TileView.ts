@@ -181,12 +181,16 @@ var TileView = ListView.extend({
 
         //If the hover on the checkbox does not increase the element
         if (!event.target.closest('.js-controls-TileView__withoutZoom')) {
-            itemContainer = event.target.closest('.controls-TileView__item');
-            itemContainerRect = itemContainer.getBoundingClientRect();
-            container = this._options.tileScalingMode === TILE_SCALING_MODE.INSIDE ? this._children.tileContainer : document.documentElement;
-            containerRect = container.getBoundingClientRect();
-            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
-            this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
+            if (this._options.tileScalingMode === TILE_SCALING_MODE.NONE) {
+                this._setHoveredItem(itemData);
+            } else {
+                itemContainer = event.target.closest('.controls-TileView__item');
+                itemContainerRect = itemContainer.getBoundingClientRect();
+                container = this._options.tileScalingMode === TILE_SCALING_MODE.INSIDE ? this._children.tileContainer : document.documentElement;
+                containerRect = container.getBoundingClientRect();
+                itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
+                this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
+            }
         }
     },
 
@@ -246,7 +250,7 @@ TileView.getDefaultOptions = function () {
     return {
         itemsHeight: 150,
         tileMode: 'static',
-        tileScalingMode: 'none'
+        tileScalingMode: TILE_SCALING_MODE.NONE
     };
 };
 
