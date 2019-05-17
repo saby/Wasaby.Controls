@@ -203,7 +203,9 @@ var ListView = BaseControl.extend(
             event.blockUpdate = true;
         },
 
-        _onItemWheel: function() {},
+        _onItemWheel: function(event) {
+            event.blockUpdate = true;
+        },
 
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
