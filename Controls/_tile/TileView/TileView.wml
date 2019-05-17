@@ -11,7 +11,7 @@
          isAdd="{{_options.isAdd}}"
          itemOutputWrapper="{{_itemOutputWrapper}}"
          itemTemplate="{{_itemTemplate}}"/>
-      <ws:if data="{{_options.tileMode === 'static'}}">
+      <ws:if data="{{_options.tileMode === 'static' && !!_listModel.getCount()}}">
          <ws:partial template="wml!Controls/_tile/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
       </ws:if>
       <ws:if data="{{_options.emptyTemplate}}">
