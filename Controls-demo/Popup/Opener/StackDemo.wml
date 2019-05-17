@@ -28,6 +28,9 @@
         <Controls.buttons:Button name="button5" caption="Open Modal Dialog" on:click="openModalDialog()"/>
     </div>
     <div >
-        <Controls.buttons:Button caption="Open Sticky" name="stickyButton" on:click="openSticky()"/>
+        <Controls.buttons:Button caption="Open Sticky(close on scroll)" name="stickyButton" on:click="openStickyScroll()"/>
+    </div>
+    <div >
+        <Controls.buttons:Button caption="Open Sticky(track on scroll)" name="stickyButton" on:click="openSticky()"/>
     </div>
 </div>

@@ -11,7 +11,6 @@ import getZIndex = require('Controls/Utils/getZIndex');
        * @class Controls/_popup/Opener/InfoBox
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
-       * @mixes Controls/_popup/InfoBox/InfoboxStyles
        *
        * @private
        * @control

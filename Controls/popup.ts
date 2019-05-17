@@ -5,15 +5,11 @@
  * @includes Dialog Controls/_popup/Opener/Dialog
  * @includes Stack Controls/_popup/Opener/Stack
  * @includes Edit Controls/_popup/Opener/Edit
- * @includes Infobox Controls/_popup/Opener/Infobox
  * @includes Notification Controls/_popup/Opener/Notification
- * @includes Previewer Controls/_popup/Opener/Previewer
  * @includes Sticky Controls/_popup/Opener/Sticky
  * @includes InfoboxTarget Controls/_popup/InfoBox
  * @includes PreviewerTarget Controls/_popup/Previewer
  * @includes Manager Controls/_popup/Manager
- * @includes Controller Controls/_popup/Manager/ManagerController
- * @includes Container Controls/_popup/Manager/Container
  * @public
  * @author Kraynov D.
  */
