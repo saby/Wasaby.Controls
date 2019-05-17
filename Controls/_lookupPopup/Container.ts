@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('tmpl!Controls/_lookupPopup/Container');
+import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import chain = require('Types/chain');
@@ -206,6 +206,10 @@ import Deferred = require('Core/Deferred');
 
          _selectedKeysChanged: function(event, selectedKeys, added, removed) {
             this._notify('selectedKeysChanged', [selectedKeys, added, removed], {bubbling: true});
+         },
+
+         _excludedKeysChanged: function(event, excludedKey, added, removed) {
+            this._notify('excludedKeysChanged', [excludedKey, added, removed], {bubbling: true});
          }
 
       });

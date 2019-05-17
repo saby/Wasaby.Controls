@@ -146,12 +146,12 @@
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
          <ws:partial template="partialGridSupportItem"
                      currentColumn="{{itemData.getCurrentColumn()}}"
-                     attr:key="{{ currentColumnKey }}"/>
+                     attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          {{itemData.goToNextColumn();}}
       </ws:if>
       <ws:partial template="partialGridSupportItem"
                   currentColumn="{{itemData.getCurrentColumn()}}"
-                  attr:key="{{ currentColumnKey }}"
+                  attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
                   colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
@@ -159,8 +159,8 @@
          <div attr:style="{{itemData.editingRowStyles}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
                <ws:partial template="partialGridSupportItem"
-                           currentColumn="{{itemData.getCurrentColumn()}}"
-                           attr:key="{{ currentColumnKey }}"/>
+                           attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
+                           currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
       </ws:if>
@@ -168,7 +168,7 @@
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
             <ws:partial template="partialGridSupportItem"
                         currentColumn="{{itemData.getCurrentColumn()}}"
-                        attr:key="{{ currentColumnKey }}"/>
+                        attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          </ws:for>
       </ws:else>
 
@@ -183,7 +183,7 @@
    </div>
 </ws:if>
 <ws:if data="{{itemData.isSticky}}">
-   <Controls.StickyHeader.Group>
+   <Controls.scroll:Group>
       <div class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
          <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
          <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
@@ -201,7 +201,7 @@
             </ws:for>
          </ws:else>
       </div>
-   </Controls.StickyHeader.Group>
+   </Controls.scroll:Group>
 </ws:if>
 <ws:else>
    <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">

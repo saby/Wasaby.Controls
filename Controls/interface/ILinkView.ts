@@ -3,12 +3,12 @@ import dateControlsUtils = require('Controls/Calendar/Utils');
 import {descriptor} from 'Types/entity';
 
 /**
- * @interface Controls/Input/Date/interface/ILinkView
+ * @interface Controls/interface/ILinkView
  * @public
  */
 interface ILinkView {
     /**
-     * @name Controls/Input/Date/interface/ILinkView#style
+     * @name Controls/interface/ILinkView#style
      * @cfg {String} Display style of component.
      * @variant default Component display as default style.
      * @variant linkMain Component display as main link style.
@@ -19,31 +19,31 @@ interface ILinkView {
     linkClickable: boolean;
 
     /**
-     * @name Controls/Input/Date/interface/ILinkView#showNextArrow
+     * @name Controls/interface/ILinkView#showNextArrow
      * @cfg {Boolean} Display the control arrow to switch to the next period
      */
     showNextArrow: boolean;
 
     /**
-     * @name Controls/Input/Date/interface/ILinkView#showPrevArrow
+     * @name Controls/interface/ILinkView#showPrevArrow
      * @cfg {Boolean} Display the control arrow to switch to the previous period
      */
     showPrevArrow: boolean;
 
     /**
-     * @name Controls/Input/Date/interface/ILinkView#showDeleteButton
+     * @name Controls/interface/ILinkView#showDeleteButton
      * @cfg {Boolean} Enables or disables the display of the period clear button.
      */
     showDeleteButton: boolean;
 
     /**
-     * @name Controls/Input/Date/interface/ILinkView#emptyCaption
+     * @name Controls/interface/ILinkView#emptyCaption
      * @cfg {String} Text that is used if the period is not selected.
      */
     emptyCaption: string;
 
     /**
-     * @name Controls/Input/Date/interface/ILinkView#captionFormatter
+     * @name Controls/interface/ILinkView#captionFormatter
      * @cfg {Function} Caption formatting function.
      */
     captionFormatter: Function;

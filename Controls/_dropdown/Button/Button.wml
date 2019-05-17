@@ -23,7 +23,6 @@
         navigation="{{_options.navigation}}"
         filter="{{_options.filter}}"
         lazyItemsLoad="{{true}}"
-        additionalDependencies="{{['css!theme?Controls/_dropdown/Button/MenuPopup']}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"

@@ -1,6 +1,6 @@
 <ws:template name="content">
    <Controls._scroll.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
-      <Controls.Event.Registrator name="scrollDetect" register="scroll">
+      <Controls.event:Register name="scrollDetect" register="scroll">
          <Controls._scroll.StickyHeader.Controller
             name="stickyController"
             on:fixed="_fixedHandler()">
@@ -30,7 +30,7 @@
                            on:actionClick="_tmplNotify('actionClick')"/>
             </div>
          </Controls._scroll.StickyHeader.Controller>
-      </Controls.Event.Registrator>
+      </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
 </ws:template>
 

@@ -19,13 +19,13 @@
    servicesPath="{{ servicesPath }}"
    product="{{ product }}">
 </Controls.Application._Head>
-<Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
-   <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">
-      <Controls.Event.Registrator name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
-         <Controls.Event.Registrator name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
-            <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
-               <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
-                  <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+<Controls.event:Register name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls.event:Register name="resizeDetect" register="controlResize" attr:fixCompatible="1">
+      <Controls.event:Register name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
+         <Controls.event:Register name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
+            <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
+               <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
+                  <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.popup:Manager
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
@@ -135,11 +135,11 @@
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>
-                  </Controls.Event.Registrator>
-               </Controls.Event.Registrator>
-            </Controls.Event.Registrator>
-         </Controls.Event.Registrator>
-      </Controls.Event.Registrator>
-   </Controls.Event.Registrator>
-</Controls.Event.Registrator>
+                  </Controls.event:Register>
+               </Controls.event:Register>
+            </Controls.event:Register>
+         </Controls.event:Register>
+      </Controls.event:Register>
+   </Controls.event:Register>
+</Controls.event:Register>
 </html>

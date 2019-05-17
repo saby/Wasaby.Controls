@@ -97,7 +97,10 @@ import Env = require('Env/Env');
 
             return {
                filter: additionalFilter,
-               limit: this._options.limit
+               limit: this._options.limit,
+               meta: {
+                  navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION
+               }
             };
          },
 
@@ -198,12 +201,6 @@ import Env = require('Env/Env');
                navDirection = 'after';
             }
             return this._more[navDirection];
-         },
-
-         prepareSource: function(source) {
-            var options = source.getOptions();
-            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.POSITION;
-            source.setOptions(options);
          },
 
          setEdgeState: function(direction) {

@@ -81,7 +81,6 @@
         eventHandlers="{{itemData.handlersForPartialSupport}}"
         itemData="{{ itemData }}"
         currentColumn="{{ currentColumn }}"
-        currentColumnKey="{{ currentColumnKey }}"
         highlightOnHover="{{ highlightOnHover }}">
    <ws:columnContentTpl>
       <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>
@@ -120,9 +119,8 @@
             <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->             <!-- Then it begins to build sub templates, for-iteration has been ended, so iterator will always give last column. -->
             <ws:partial template="partialGridSupportItem"
                         currentColumn="{{itemData.getCurrentColumn()}}"
-                        currentColumnKey="{{itemData.getCurrentColumnKey()}}"
-                        itemData="{{itemData}}"
-                        highlightOnHover="{{highlightOnHover}}"/>
+                        attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
+                        itemData="{{itemData}}" />
          </ws:for>
       </div>
    </ws:if>
@@ -136,9 +134,8 @@
          <ws:partial
                  template="partialGridSupportItem"
                  currentColumn="{{itemData.getCurrentColumn()}}"
-                 currentColumnKey="{{itemData.getCurrentColumnKey()}}"
                  itemData="{{itemData}}"
-                 highlightOnHover="{{highlightOnHover}}" />
+                 attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
       </ws:for>
    </ws:else>
 

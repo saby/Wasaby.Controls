@@ -474,19 +474,16 @@
    .border-radius(@border-radius_Button_size_l);
 }
 
+.controls-Button__icon {
+   flex-shrink: 0;
+}
+
 .controls-Button__icon-default_iconStyle-default.theme_@{themeName}, .controls-Button__icon-default-big_iconStyle-default.theme_@{themeName} {
    color: @color_secondary;
 }
 
 .controls-Button__icon-primary_iconStyle-default.theme_@{themeName}, .controls-Button__icon-primary-big_iconStyle-default.theme_@{themeName} {
    color: @color_primaryV;
-}
-
-.controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
-   .controls-Button__icon-secondary_viewMode_iconStyle-default {
-      color: @color_Link-main-text_hovered;
-   }
-   color: @color_Link-main-text_hovered;
 }
 
 .controls-Button_viewMode-link:active.theme_@{themeName}{

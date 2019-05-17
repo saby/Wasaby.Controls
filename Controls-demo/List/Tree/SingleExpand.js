@@ -4,7 +4,7 @@ define('Controls-demo/List/Tree/SingleExpand', [
    'wml!Controls-demo/List/Tree/SingleExpand',
    'Controls-demo/List/Tree/TreeMemory',
    'css!Controls-demo/List/Tree/Tree',
-   'Controls/Container/Scroll',
+   'Controls/scroll',
    'Controls/treeGrid',
    'wml!Controls-demo/List/Tree/DemoContentTemplate'
 ], function(BaseControl, GridData, template, MemorySource) {
