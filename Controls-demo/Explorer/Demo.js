@@ -2,10 +2,11 @@ define('Controls-demo/Explorer/Demo', [
    'Core/Control',
    'wml!Controls-demo/Explorer/Demo/Demo',
    'Types/source',
+   'Controls/Constants',
    'Controls-demo/Explorer/ExplorerImages',
    'css!Controls-demo/Explorer/Demo/Demo',
    'Controls/explorer'
-], function(BaseControl, template, source, explorerImages) {
+], function(BaseControl, template, source, constants, explorerImages) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -115,6 +116,7 @@ define('Controls-demo/Explorer/Demo', [
                   title: 'Сравнение условий конкурентов по ЭДО.xlsx',
                   image: explorerImages[4],
                   isDocument: true,
+                  hiddenGroup: true,
                   width: 200
                }, {
                   id: 2,
@@ -123,6 +125,7 @@ define('Controls-demo/Explorer/Demo', [
                   title: 'Сравнение систем по учету рабочего времени.xlsx',
                   image: explorerImages[5],
                   isDocument: true,
+                  hiddenGroup: true,
                   width: 200
                }, {
                   id: 3,
@@ -194,6 +197,15 @@ define('Controls-demo/Explorer/Demo', [
                   showType: 0
                }
             ];
+         },
+         _groupingKeyCallback: function(item) {
+            var group;
+            if (item.get('hiddenGroup')) {
+               group = constants.view.hiddenGroup;
+            } else {
+               group = item.get('isDocument') ? 'document' : 'image';
+            }
+            return group;
          }
       });
 
