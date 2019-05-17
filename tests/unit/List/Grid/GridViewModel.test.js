@@ -1086,6 +1086,42 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getResultsPosition()', function() {
             assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
+
+         it('prepare editing row for partial support', function () {
+            let
+                handlers = {
+                   wewe: ()=> {}
+                },
+                gv = {
+                   getHandlersForPartialSupport: ()=>{return handlers},
+                   _columns: [
+                      { width: '1fr' },
+                      { width: 'auto',realWidth: '15px' }
+                   ],
+                   getCount:()=>2,
+                   _options: {
+                      multiSelectVisibility: 'hidden'
+                   }
+                },
+                iData = {
+                   isEditing: true,
+                   isGroup: false,
+                   rowIndex: 1
+                },
+            saveFunc = gridMod.GridViewModel._private.calcRowIndexByKey;
+            gridMod.GridViewModel._private.calcRowIndexByKey = ()=>{return 1};
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gv, iData);
+
+            assert.deepEqual(handlers, iData.handlersForPartialSupport);
+            assert.equal(
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 3;',
+                iData.editingRowStyles
+            );
+
+            gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
+         });
+
          it('_prepareResultsColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
             gridViewModel._prepareResultsColumns([], false);
@@ -1183,6 +1219,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" with multiselect.');
             gridViewModel._prepareColgroupColumns(gridColumns, true);
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
+         });
+         it('prepareItemDataForPartialSupport', function () {
+            let
+                groupItemData = {
+                   key: '234',
+                   isGroup: true,
+                   rowIndex: 2
+                },
+                editingItemData = {
+                   key: '234',
+                   isEditing: true,
+                   rowIndex: 2
+                };
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
+
+            assert.equal(
+                editingItemData.editingRowStyles,
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 1fr; grid-column: 1; ' +
+                'grid-column-start: 1; grid-row: 3; grid-column-end: 5;'
+            );
+            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function() {
             assert.deepEqual({

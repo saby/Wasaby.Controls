@@ -11,6 +11,7 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             });
             var model = new treeGrid.SearchGridViewModel({
                items: items,
+               keyProperty: 'id',
                searchValue: 'tes',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
                multiSelectVisibility: 'hidden'
@@ -35,6 +36,7 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             var model = new treeGrid.SearchGridViewModel({
                items: items,
                searchValue: 'tes',
+               keyProperty: 'id',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
                multiSelectVisibility: 'visible'
             });

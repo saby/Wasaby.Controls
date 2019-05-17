@@ -146,12 +146,12 @@
       <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
          <ws:partial template="partialGridSupportItem"
                      currentColumn="{{itemData.getCurrentColumn()}}"
-                     attr:key="{{ currentColumnKey }}"/>
+                     attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          {{itemData.goToNextColumn();}}
       </ws:if>
       <ws:partial template="partialGridSupportItem"
                   currentColumn="{{itemData.getCurrentColumn()}}"
-                  attr:key="{{ currentColumnKey }}"
+                  attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
                   colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
@@ -159,8 +159,8 @@
          <div attr:style="{{itemData.editingRowStyles}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
                <ws:partial template="partialGridSupportItem"
-                           currentColumn="{{itemData.getCurrentColumn()}}"
-                           attr:key="{{ currentColumnKey }}"/>
+                           attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
+                           currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
       </ws:if>
@@ -168,7 +168,7 @@
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
             <ws:partial template="partialGridSupportItem"
                         currentColumn="{{itemData.getCurrentColumn()}}"
-                        attr:key="{{ currentColumnKey }}"/>
+                        attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          </ws:for>
       </ws:else>
 
