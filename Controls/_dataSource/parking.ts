@@ -4,7 +4,7 @@
  * @include Handler Controls/_dataSource/_parking/Handler
  * @include ViewConfig Controls/_dataSource/_parking/ViewConfig
  * @include Controller Controls/_dataSource/_parking/Controller
- * @public
+ * @private
  * @author Заляев А.В.
  */
 export { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';

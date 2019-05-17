@@ -169,16 +169,16 @@ define('Controls/interface/IEditableArea', [
     * @name Controls/interface/IEditableArea#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
-    * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
+    * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/_EditableArea/Templates/Editors/Base Controls/_EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
-    * Using Controls.EditableArea.Templates.Editors.Base:
+    * Using Controls._EditableArea.Templates.Editors.Base:
     * <pre>
     *     <Controls.EditableArea editObject="{{_editObject}}">
-    *        <Controls.EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
+    *        <Controls._EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
     *              <Controls.input:Text />
     *           </ws:editorTemplate>
-    *        </Controls.EditableArea.Templates.Editors.Base>
+    *        </Controls._EditableArea.Templates.Editors.Base>
     *     </Controls.EditableArea>
     * </pre>
     * Using custom template:
@@ -197,7 +197,7 @@ define('Controls/interface/IEditableArea', [
     *       <ws:partial template="editingTemplate" scope="{{content}}" />
     *    </Controls.EditableArea>
     * </pre>
-    * @see Controls/EditableArea/Templates/Editors/Base
+    * @see Controls/_EditableArea/Templates/Editors/Base
     */
 
    /**

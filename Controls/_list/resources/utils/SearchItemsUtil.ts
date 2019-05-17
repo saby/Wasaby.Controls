@@ -1,19 +1,10 @@
 import display = require('Types/display');
+import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 
 var
-    TreeItemsUtil = {
+    SearchItemsUtil = {
         getDefaultDisplaySearch: function (items, cfg, filter) {
-            var
-                displayProperties = {
-                    collection: items,
-                    idProperty: cfg.keyProperty,
-                    parentProperty: cfg.parentProperty,
-                    nodeProperty: cfg.nodeProperty,
-                    unique: true,
-                    filter: filter,
-                    root: null
-                };
-            return new display.Search(displayProperties);
+            return new display.Search(TreeItemsUtil.prepareDisplayProperties(items, cfg, filter));
         }
     };
-export = TreeItemsUtil;
+export = SearchItemsUtil;
