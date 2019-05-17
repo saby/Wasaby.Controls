@@ -132,13 +132,6 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#selectorCallback Occurs when selected items with selector.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {RecordSet} currentItems Current list of items in Lookup.
-    * @param {RecordSet} newItems List of items selected from selector.
-    */
-
-   /**
     * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} config Config on which popup will be built.
