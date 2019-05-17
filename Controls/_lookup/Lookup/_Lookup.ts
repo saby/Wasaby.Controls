@@ -302,15 +302,12 @@ import 'css!theme?Controls/lookup';
       _beforeMount: function(options) {
          this._inputValue = options.value;
 
-         // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
          if (!options.multiSelect) {
             this._maxVisibleItems = 1;
-         } else if (options.readOnly) {
-            if (options.multiLine) {
-               this._maxVisibleItems = options.maxVisibleItems;
-            } else {
-               this._maxVisibleItems = options.items.getCount();
-            }
+         } else if (options.multiLine) {
+            this._maxVisibleItems = options.maxVisibleItems;
+         } else {
+            this._maxVisibleItems = options.items.getCount();
          }
       },
 
