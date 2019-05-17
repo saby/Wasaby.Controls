@@ -15,6 +15,7 @@
         groupingKeyCallback="{{_options.groupingKeyCallback}}"
         groupMethod="{{_options.groupMethod}}"
         groupTemplate="{{_options.groupTemplate}}"
+        dataLoadCallback="{{_options.dataLoadCallback}}"
         caption="{{_options.caption}}"
         popupClassName="{{_options.popupClassName || _offsetClassName}} theme_{{_options.theme}}"
         dropdownClassName="{{_options.dropdownClassName}}"

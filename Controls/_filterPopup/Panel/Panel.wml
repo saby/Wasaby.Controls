@@ -23,6 +23,7 @@
               items="{{_historyItems}}"
               filterItems="{{_items}}"
               historyId="{{_historyId}}"
+              orientation="{{_options.orientation}}"
               on:historyChanged="_historyItemsChanged()"
               attr:class="controls-HistoryList__{{_options.orientation}}"
               on:applyHistoryFilter="_applyHistoryFilter()"/>

@@ -1,6 +1,7 @@
 <ws:partial template="{{_options.columnContentTpl}}"
             itemData="{{_options.itemData}}"
             currentColumn="{{ _options.currentColumn }}"
+            colspanCurrentNode="{{_options.colspanCurrentNode}}"
 
             attr:data-r="{{ _options.itemData.index }}"
             attr:style="{{ _options.currentColumn.gridCellStyles }}"

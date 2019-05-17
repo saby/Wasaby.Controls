@@ -47,18 +47,25 @@ var
            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
            isBreadCrumbs: boolean = false
         ): string {
-          if (columnIndex === (multiSelectVisibility === 'hidden' ? 0 : 1)) {
+            let
+                multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
+
+          if (columnIndex === multiselectOffset) {
               if (isBreadCrumbs) {
-                 if (isNotFullGridSupport) {
-                    return ' colspan: ' + 1;
+                 if (GridLayoutUtil.isNoSupport) {
+                    return ' colspan: 1';
+                 } else if (GridLayoutUtil.isPartialSupport) {
+                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (multiselectOffset + 2);
                  } else {
-                    return ' grid-column: ' + 1 + ' / ' + (multiSelectVisibility === 'hidden' ? 2 : 3);
+                    return ' grid-column: 1 / ' + (multiselectOffset + 2);
                  }
               } else {
-                 if (isNotFullGridSupport) {
-                    return ' colspan: ' + (multiSelectVisibility === 'hidden' ? columnsLength : columnsLength - 1);
+                 if (GridLayoutUtil.isNoSupport) {
+                    return ' colspan: ' + (columnsLength - multiselectOffset);
+                 } else if (GridLayoutUtil.isPartialSupport) {
+                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (columnsLength + 1);
                  } else {
-                    return ' grid-column: ' + (multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (columnsLength + 1);
+                    return ' grid-column: ' + (multiselectOffset+1) + ' / ' + (columnsLength + 1);
                  }
               }
           }
@@ -429,9 +436,13 @@ var
 
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+
+                // If index of item is equal -1, tis item is recently added. It has no any data about like key or parent key.
+                // In such case styles for partial support set on setting editingItemData into model.
+                if (itemData.isEditing && itemData.index !== -1) {
+                    itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
+                }
             } else {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
                     {name: '-ms-grid-row', value: itemData.rowIndex + 1}
@@ -439,9 +450,6 @@ var
                 return;
             }
 
-            if (itemData.isEditing) {
-                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
-            }
         }
 
     },
@@ -942,6 +950,12 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
+            if (current.isGroup) {
+                current.rowIndex = _private.calcGroupRowIndex(self, current);
+            } else if (current.index !== -1) {
+                current.rowIndex = _private.calcRowIndexByKey(self, current.key);
+            }
+
             if (GridLayoutUtil.isPartialSupport) {
                 _private.prepareItemDataForPartialSupport(this, current);
             }
@@ -1108,6 +1122,10 @@ var
         },
 
         _setEditingItemData: function(itemData) {
+            let data = itemData ? itemData : this._model._editingItemData;
+            if (GridLayoutUtil.isPartialSupport) {
+                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
+            }
             this._model._setEditingItemData(itemData);
         },
 

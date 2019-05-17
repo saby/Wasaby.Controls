@@ -1,6 +1,6 @@
 define('Controls/History/LoadService',
-   ['Controls/_history/LoadService'], 
+   ['Controls/history'], 
    function(Control) {
       'use strict';
-      return Control;
+      return Control.LoadService;
    });

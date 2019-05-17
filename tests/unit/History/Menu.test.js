@@ -92,7 +92,7 @@ define(
                notificationOpener: {
                   open: (popupOptions) => {
                      assert.deepEqual(popupOptions, {
-                        template: 'wml!Controls/Popup/Templates/Notification/Simple',
+                        template: 'Controls/popupTemplate:NotificationSimple',
                         templateOptions: {
                            style: 'error',
                            text: 'Невозможно закрепить более 10 пунктов',

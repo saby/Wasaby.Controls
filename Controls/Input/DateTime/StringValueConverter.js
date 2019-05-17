@@ -1,6 +1,6 @@
 define('Controls/Input/DateTime/StringValueConverter',
-   ['Controls/_input/DateTime/StringValueConverter'],
+   ['Controls/input'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.StringValueConverter;
    });

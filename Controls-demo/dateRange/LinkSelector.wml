@@ -1,0 +1,35 @@
+<div class="PageWrap">
+   <div class="PageBlock">
+      <div class="PageBlock__title">Controls.dateRange:LinkSelector</div>
+      <div class="PageBlock__content">
+         <div class="PageBlock__component-left">
+            <Controls.dateRange:LiteSelector
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"/>
+         </div>
+         <div class="PageBlock__component-right">
+            <Controls.dateRange:LiteSelector
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"/>
+         </div>
+      </div>
+      <div class="PageBlock__content">
+         <div class="PageBlock__component-left">
+            <Controls.dateRange:LiteSelector
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               chooseQuarters="{{false}}"/>
+         </div>
+         <div class="PageBlock__component-right">
+            <Controls.dateRange:LiteSelector
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               chooseQuarters="{{false}}"/>
+         </div>
+      </div>
+   </div>
+</div>

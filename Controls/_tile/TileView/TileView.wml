@@ -15,7 +15,7 @@
          <ws:partial template="wml!Controls/_tile/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
       </ws:if>
       <ws:if data="{{_options.emptyTemplate}}">
-         <ws:partial template="{{_options.emptyTemplate}}"/>
+         <ws:partial template="{{_options.emptyTemplate}}" attr:class="controls-TileView__flex-grow"/>
       </ws:if>
       <div class="controls-TileView__footer">
          <ws:partial template="{{_options.footerTemplate}}"/>
