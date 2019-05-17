@@ -6,6 +6,7 @@
             itemOpenHandler="{{_itemOpenHandler}}"
             viewMode="{{_viewMode}}"
             loading="{{_loading}}"
+            dataLoadCallback="{{_dataLoadCallback}}"
             on:search="_search()"
             on:resetSearch="_resetSearch()"
             on:misspellCaptionClick="_misspellCaptionClick()"/>
