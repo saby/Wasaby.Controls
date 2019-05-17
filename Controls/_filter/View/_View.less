@@ -13,6 +13,14 @@
    cursor: pointer;
 }
 
+.controls-FilterView__item-wrapper_theme_@{themeName} {
+   display: inline-flex;
+   align-items: center;
+   white-space: nowrap;
+   overflow: hidden;
+   height: @height_FilterButton;
+}
+
 .controls-FilterView__block_theme_@{themeName} {
    display: inline-flex;
    align-items: center;
@@ -123,6 +131,16 @@
 }
 
 //arrow
+.controls-FilterView__item-wrapper_theme_@{themeName}:first-of-type {
+   .controls-FilterView-left__iconArrow_theme_@{themeName} {
+      display: none;
+   }
+
+   .controls-FilterView-left__block_theme_@{themeName} {
+      min-width: @min-width_FilterButton_text;
+   }
+}
+
 .controls-FilterView__iconArrow_theme_@{themeName} {
    .icon-size(@font-size_FastFilter-arrow);
    flex-shrink: 0;
