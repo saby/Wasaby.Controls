@@ -58,12 +58,15 @@ define(
                arguments: ['valueChanged', ['test paste', 'test paste']]
             }]);
          });
-         it('The model belongs to the "Controls/_input/Base/ViewModel" class.', function() {
+         it('The model belongs to the "Controls/input:BaseViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''
             });
 
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Base/ViewModel'));
+            assert.isTrue(
+               instance.instanceOfModule(ctrl._viewModel, 'Controls/input:BaseViewModel') ||
+               instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Base/ViewModel')
+            );
          });
          it('Insert the value into the unfocused field.', function() {
             ctrl._getActiveElement = function() {

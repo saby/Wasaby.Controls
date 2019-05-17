@@ -34,12 +34,15 @@ define(
             inputMod.Text.getOptionTypes();
             inputMod.Text.getDefaultOptions();
          });
-         it('The model belongs to the "Controls/_input/Text/ViewModel" class.', function() {
+         it('The model belongs to the "Controls/input:TextViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''
             });
 
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Text/ViewModel'));
+            assert.isTrue(
+               instance.instanceOfModule(ctrl._viewModel, 'Controls/input:TextViewModel') ||
+               instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Text/ViewModel')
+            );
          });
          describe('Click event', function() {
             beforeEach(function() {
