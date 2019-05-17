@@ -2,9 +2,11 @@ define(
    [
       'Controls/popupTemplate',
       'Controls/_popupTemplate/Notification/Opener/NotificationContent',
-      'Controls/_popup/Opener/Notification'
+      'Controls/_popup/Opener/Notification',
+      'Controls/_popupTemplate/Notification/Opener/NotificationController',
+      'Types/collection'
    ],
-   (popupTemplate, NotificationContent, Notification) => {
+   (popupTemplate, NotificationContent, Notification, NotificationController, collection) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Notification', () => {
@@ -91,18 +93,52 @@ define(
             assert.equal(item.popupOptions.content, NotificationContent);
          });
 
-         it('getCompatibleConfig', function() {
+         it('getCustomZIndex', () => {
+            let list = new collection.List();
+            list.add({
+               id: 1,
+               hasMaximizedPopup: false
+            });
+            let zIndex = NotificationController.getCustomZIndex(list);
+            assert.equal(zIndex, 100);
+
+            list.add({
+               id: 2,
+               hasMaximizePopup: true
+            });
+
+            zIndex = NotificationController.getCustomZIndex(list);
+            assert.equal(zIndex, 19);
+
+            let item = {
+               id: 3,
+               parentId: 2
+            };
+            list.add(item);
+            zIndex = NotificationController.getCustomZIndex(list, item);
+            assert.equal(zIndex, 100);
+
+         });
+
+         it('getCompatibleConfig', () => {
             const cfg = {
                autoClose: true
             };
 
-            Notification._private.getCompatibleConfig({ prepareNotificationConfig: function(config) {return config;} }, cfg);
+            Notification._private.getCompatibleConfig({
+               prepareNotificationConfig: function(config) {
+                  return config;
+               }
+            }, cfg);
             assert.equal(cfg.notHide, false);
             cfg.autoClose = false;
-            Notification._private.getCompatibleConfig({ prepareNotificationConfig: function(config) {return config;} }, cfg);
+            Notification._private.getCompatibleConfig({
+               prepareNotificationConfig: function(config) {
+                  return config;
+               }
+            }, cfg);
             assert.equal(cfg.notHide, true);
          });
-
       });
    }
 );
