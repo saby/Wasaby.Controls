@@ -32,10 +32,9 @@ export interface IOptions {
 class BigSeparator extends Control implements ICheckable{
    //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = BigSeparatorTemplate;
+   protected _theme: string[] = ['Controls/toggle'];
    protected _options: ICheckableOptions;
    protected _icon: string;
-   static _theme: string[] = ['Controls/toggle'];
-
 
    private _iconChangedValue(value: boolean): void {
       if (value) {
