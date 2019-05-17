@@ -209,7 +209,7 @@ var
 
         _onItemMouseLeave: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialSupport && this._listModel.getHoveredItem() !== itemData.item) {
+            if (GridLayoutUtil.isPartialSupport) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
