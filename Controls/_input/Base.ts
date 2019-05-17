@@ -646,6 +646,7 @@ import 'wml!Controls/_input/Base/Stretcher';
          },
 
          _keyDownHandler: function() {
+            // no action by default
          },
          /**
           * Event handler key up in native field.

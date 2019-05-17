@@ -118,6 +118,8 @@ var Search = Base.extend({
       this.activate();
    },
    _keyDownHandler: function(event) {
+      // Это костыль, код будет удален в процесс выполнения проекта по горячим клавишам
+      // https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
       // если isTrusted = false, значит это мы запустили событие по горячим клавишам, его не надо повторно обрабатывать
       // клавиши home и end не обрабатываем, у поля ввода есть реакция на эти клавиши
       if (event.nativeEvent.isTrusted) {
