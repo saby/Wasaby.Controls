@@ -1,17 +1,17 @@
 define(
    [
-      'Controls/History/dropdownHistoryUtils',
+      'Controls/dropdown',
       'Controls/history',
       'Types/source'
    ],
-   (hUtils, history, Source) => {
+   (dropdown, history, Source) => {
    describe('dropdownHistoryUtils',() => {
       it('getFilter', () => {
-         var filter = hUtils.getSourceFilter({id: 'test'}, new history.Source({}));
+         var filter = dropdown.dropdownHistoryUtils.getSourceFilter({id: 'test'}, new history.Source({}));
          assert.deepEqual(filter, {$_history: true, id: 'test'});
-         filter = hUtils.getSourceFilter({id: 'test2'}, new Source.Memory({}));
+         filter = dropdown.dropdownHistoryUtils.getSourceFilter({id: 'test2'}, new Source.Memory({}));
          assert.deepEqual(filter, {id: 'test2'});
-         filter = hUtils.getSourceFilter(undefined, new history.Source({}));
+         filter = dropdown.dropdownHistoryUtils.getSourceFilter(undefined, new history.Source({}));
          assert.deepEqual(filter, {$_history: true});
       });
    });

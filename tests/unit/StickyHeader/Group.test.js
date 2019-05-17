@@ -1,9 +1,9 @@
 define([
-   'Controls/StickyHeader/Group',
+   'Controls/scroll',
    'Controls/StickyHeader/Utils',
    'Core/core-merge'
 ], function(
-   StickyHeader,
+   scroll,
    stickyUtils,
    coreMerge
 ) {
@@ -27,7 +27,7 @@ define([
    describe('Controls/StickyHeader/Group', function() {
       describe('Initialisation', function() {
          it('should set correct header id', function() {
-            const component = createComponent(StickyHeader, options);
+            const component = createComponent(scroll.Group, options);
             component._afterMount();
             assert.strictEqual(component._index, stickyUtils._lastId);
          });
@@ -39,7 +39,7 @@ define([
 
          it('should add fixed header to list of fixed headers', function() {
             const
-               component = createComponent(StickyHeader, options),
+               component = createComponent(scroll.Group, options),
                headerIdTop = stickyUtils.getNextId(),
                headerIdBottom = stickyUtils.getNextId();
 
@@ -56,7 +56,7 @@ define([
 
          it('should remove fixed header from list of fixed headers on header unfixed', function() {
             const
-               component = createComponent(StickyHeader, options),
+               component = createComponent(scroll.Group, options),
                headerIdTop = stickyUtils.getNextId(),
                headerIdBottom = stickyUtils.getNextId();
 
@@ -74,7 +74,7 @@ define([
 
          it('should generate event on first header fixed', function() {
             const
-               component = createComponent(StickyHeader, options),
+               component = createComponent(scroll.Group, options),
                headerId = stickyUtils.getNextId();
 
             sinon.stub(component, '_notify');
@@ -99,7 +99,7 @@ define([
 
          it('should not generate event on second header fixed', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
 
             component._fixedHandler(event,
                 { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
@@ -114,7 +114,7 @@ define([
 
          it('should generate event on last header unfixed', function() {
             const
-               component = createComponent(StickyHeader, options),
+               component = createComponent(scroll.Group, options),
                headerId = stickyUtils.getNextId();
 
             component._fixedHandler(event,
@@ -142,7 +142,7 @@ define([
 
          it('should not generate event on not last header unfixed', function() {
             const
-               component = createComponent(StickyHeader, options),
+               component = createComponent(scroll.Group, options),
                headerId = stickyUtils.getNextId();
 
             component._fixedHandler(event,
@@ -162,7 +162,7 @@ define([
       describe('_updateStickyShadow', function() {
          it('should transfer an event if the header identifier is equal to the current one', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
 
             component._children.stickyHeaderShadow = {
                start: sinon.fake()
@@ -174,7 +174,7 @@ define([
 
          it('should not transfer an event if the header identifier is not equal to the current one', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
 
             component._children.stickyHeaderShadow = {
                start: sinon.fake()
@@ -187,7 +187,7 @@ define([
 
       describe('set top', function() {
          it('should update top on internal headers', function () {
-            const component = createComponent(StickyHeader, {});
+            const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
                   top: 0
@@ -200,7 +200,7 @@ define([
 
       describe('set bottom', function() {
          it('should update bottom on internal headers', function () {
-            const component = createComponent(StickyHeader, {});
+            const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
                   bottom: 0
@@ -214,7 +214,7 @@ define([
       describe('get height', function() {
          it('should return the height of one of the headers', function () {
             const
-               component = createComponent(StickyHeader, {}),
+               component = createComponent(scroll.Group, {}),
                height = 10;
             component._headers = {
                'header1': {
@@ -227,7 +227,7 @@ define([
          });
          it('should return 0 if there are no fixed headers', function () {
             const
-               component = createComponent(StickyHeader, {});
+               component = createComponent(scroll.Group, {});
             component._headers = {};
             assert.strictEqual(component.height, 0);
          });
@@ -236,7 +236,7 @@ define([
       describe('_stickyRegisterHandler', function() {
          it('should stopImmediatePropagation event', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
             let event = {
                blockUpdate: false,
                stopImmediatePropagation: sinon.fake()
@@ -246,7 +246,7 @@ define([
          });
          it('should register new header', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
             let
                event = {
                   blockUpdate: false,
@@ -258,7 +258,7 @@ define([
          });
          it('should unregister deleted header', function() {
             const
-               component = createComponent(StickyHeader, options);
+               component = createComponent(scroll.Group, options);
             let event = {
                   blockUpdate: false,
                   stopImmediatePropagation: sinon.fake()

@@ -1,8 +1,8 @@
-define(['Controls/_masterDetail/List'], function(MasterList) {
+define(['Controls/masterDetail'], function(masterDetail) {
    'use strict';
    describe('Controls.Container.MasterList', function() {
       let
-         Control = new MasterList(),
+         Control = new masterDetail.List(),
          key;
 
       describe('itemClickHandler', function() {
