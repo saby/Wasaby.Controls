@@ -149,7 +149,7 @@ var
                 columns = self._listModel.getColumns(),
                 itemsContainer = self._itemsContainerForPartialSupport,
                 columnslength = columns.length + multiselectOffset,
-                cellsHTML = self._container.getElementsByClassName('controls-Grid__row-cell'),
+                cellsHTML = (self._container[0] || self._container).getElementsByClassName('controls-Grid__row-cell'),
                 items = [];
 
 

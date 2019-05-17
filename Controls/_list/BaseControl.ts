@@ -1210,11 +1210,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
-            if (this._virtualScroll) {
-               this._virtualScroll.updateItemsSizes();
-               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
-               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
-            }
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
