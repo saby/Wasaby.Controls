@@ -459,7 +459,8 @@ define([
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
-                  expandedItems: [null]
+                  expandedItems: [null],
+                  nodeFooterTemplate: "footer"
                }, cfg));
             treeViewModel.setHasMoreStorage({
                123: true,
@@ -471,6 +472,7 @@ define([
                hasMoreStorage: true,
                item: treeViewModel._items.at(0),
                key: treeViewModel._items.at(0).getId(),
+               template: "footer",
                level: 1,
                rowIndex: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
@@ -480,11 +482,21 @@ define([
                dispItem: treeViewModel._display.at(1),
                hasMoreStorage: true,
                item: treeViewModel._items.at(1),
+               template: "footer",
                key: treeViewModel._items.at(1).getId(),
                level: 2,
                rowIndex: 6,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
+            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter, {
+               dispItem: treeViewModel._display.at(5),
+               item: treeViewModel._items.at(5),
+               template: "footer",
+               key: treeViewModel._items.at(5).getId(),
+               level: 1,
+               rowIndex: 8,
+               multiSelectVisibility: cfg.multiSelectVisibility
+            }, 'Incorrect nodeFooter for displayItem[5].');
          });
 
          it('getFirstItem and getLastItem', function() {
