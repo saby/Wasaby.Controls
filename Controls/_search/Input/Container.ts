@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Input/Container');
 
 /**
- * Special container for component with {@link Controls/Input/interface/IInputField}.
+ * Special container for component with {@link Controls/interface/IInputField}.
  * Listens for child's "valueChanged" event and notify bubbling event "search".
  * NOTE: must be located inside {@link Controls/_search/Controller}.
  *

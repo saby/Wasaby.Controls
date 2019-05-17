@@ -21,7 +21,7 @@ define('Controls/Input/Date/LinkView', [
     * <a href="/materials/demo-ws4-input-date-linkView">Demo examples.</a>.
     * @class Controls/Input/Date/LinkView
     * @extends Core/Control
-    * @mixes Controls/Input/Date/interface/ILinkView
+    * @mixes Controls/interface/ILinkView
     * @control
     * @private
     * @category Input
