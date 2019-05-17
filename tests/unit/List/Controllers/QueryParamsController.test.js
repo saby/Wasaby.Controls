@@ -110,52 +110,18 @@ define(
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({limit: 4, offset: 4}, params, 'Method prepareQueryParams returns incorrect parameters before reload');
+               assert.deepEqual({limit: 4, offset: 4, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, params, 'Method prepareQueryParams returns incorrect parameters before reload');
 
                params = pNav.prepareQueryParams('down');
-               assert.deepEqual({limit: 4, offset: 8}, params, 'Method prepareQueryParams returns incorrect parameters before load down');
+               assert.deepEqual({limit: 4, offset: 8, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, params, 'Method prepareQueryParams returns incorrect parameters before load down');
 
                params = pNav.prepareQueryParams('up');
-               assert.deepEqual({limit: 4, offset: 0}, params, 'Method prepareQueryParams returns incorrect parameters before load up');
+               assert.deepEqual({limit: 4, offset: 0, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, params, 'Method prepareQueryParams returns incorrect parameters before load up');
             })
 
          });
 
-         describe('OffsetNavigation', function () {
-            it('prepareSource', function () {
-               var pNav = new OffsetNavigation({
-                  page: 1,
-                  pageSize: 4
-               });
-               var source = new sourceLib.SbisService({
-                  endpoint: 'ОбъектБл',
-                  keyProperty: 'id'
-               });
-               pNav.prepareSource(source);
-               var options = source.getOptions();
-               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.OFFSET, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
-
-            });
-         });
-
          describe('PositionNavigation', function () {
-            it('prepareSource', function () {
-               var pNav = new PositionNavigation({
-                  field: 'field',
-                  direction: 'both',
-                  position: null,
-                  limit: 100
-               });
-               var source = new sourceLib.SbisService({
-                  endpoint: 'ОбъектБл',
-                  keyProperty: 'id'
-               });
-               pNav.prepareSource(source);
-               var options = source.getOptions();
-               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
-
-            });
-
             it('calculate state with first query', function () {
                var pNav = new PositionNavigation({
                   field: 'field',
@@ -306,7 +272,7 @@ define(
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field>=' : 1}, limit: 100}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field>=' : 1}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
 
 
                pNav = new PositionNavigation({
@@ -317,7 +283,7 @@ define(
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}, limit: 50}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}, limit: 50, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
 
 
                pNav = new PositionNavigation({
@@ -328,7 +294,7 @@ define(
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field~' : 3}, limit: 100}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field~' : 3}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
             });
 
             it('prepare query params load to direction', function () {
@@ -346,12 +312,12 @@ define(
 
 
                params = pNav.prepareQueryParams('up');
-               assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}, limit: 100}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
 
 
                params = pNav.prepareQueryParams('down');
-               assert.deepEqual({filter : {'field>=' : 2, 'id>=' : 4}, limit: 100}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field>=' : 2, 'id>=' : 4}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
             });
-         })
+         });
       });
    });
