@@ -84,7 +84,6 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/Layer",
-    "Controls/Popup/Compatible/EscProcessing",
     "Controls/Popup/Compatible/ManagerWrapper/Controller"
   ],
   "output": "controls-popup-compat.package.js"
