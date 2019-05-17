@@ -78,7 +78,7 @@ import 'css!theme?Controls/popup';
          },
 
          _getPopupZIndex: function(item, index) {
-            var customZIndex = item.controller.getCustomZIndex(this._popupItems);
+            let customZIndex = item.controller.getCustomZIndex(this._popupItems, item);
             return item.popupOptions.zIndex || customZIndex || (index + 1) * POPUP_ZINDEX_STEP;
          }
       });
