@@ -1184,6 +1184,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._prepareColgroupColumns(gridColumns, true);
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
          });
+         it('prepareItemDataForPartialSupport', function () {
+            let
+                groupItemData = {
+                   key: '234',
+                   isGroup: true,
+                   rowIndex: 2
+                },
+                editingItemData = {
+                   key: '234',
+                   isEditing: true,
+                   rowIndex: 2
+                };
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
+
+            assert.equal(
+                editingItemData.editingRowStyles,
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 1fr; grid-column: 1; ' +
+                'grid-column-start: 1; grid-row: 3; grid-column-end: 5;'
+            );
+            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+         });
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function() {
             assert.deepEqual({
                column: {},
