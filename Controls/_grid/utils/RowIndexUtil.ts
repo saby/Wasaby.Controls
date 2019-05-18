@@ -65,7 +65,7 @@ function calcResultsRowIndex(
         lastRowIndex = calcRowIndexByKey(lastItemId, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
     } else {
         lastItem = display.at(display.getCount() - 1);
-        lastRowIndex = calcGroupRowIndex(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
+        lastRowIndex = calcRowIndexByItem(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
     }
 
     // If after last item exists node footer
@@ -78,8 +78,8 @@ function calcResultsRowIndex(
     return lastRowIndex + 1;
 }
 
-function calcGroupRowIndex(groupItem, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
-    let index = display.getIndex(groupItem);
+function calcRowIndexByItem(item, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
+    let index = display.getIndex(item);
     return _calcRowIndexByDisplayIndex(index, display, hasHeader, resultsPosition, hasMoreStorage, hierarchyRelation);
 }
 
@@ -140,7 +140,7 @@ export {
     ResultsPosition,
     calcRowIndexByKey,
     calcResultsRowIndex,
-    calcGroupRowIndex,
+    calcRowIndexByItem,
     calcTopOffset,
     calcFooterRowIndex
 }
