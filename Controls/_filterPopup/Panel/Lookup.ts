@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
+import 'Controls/lookup';
 import 'css!theme?Controls/filterPopup';
    /**
     * Control link with lookup
@@ -89,7 +90,7 @@ import 'css!theme?Controls/filterPopup';
    Lookup._private = _private;
    Lookup.getDefaultOptions = function() {
       return {
-         lookupTemplateName: 'Controls/_lookup/Lookup'
+         lookupTemplateName: 'Controls/lookup:Input'
       };
    };
 
