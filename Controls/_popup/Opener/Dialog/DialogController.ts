@@ -26,9 +26,8 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             // if user scroll page, then window height will changed.
             // get real window.height for same position with/without keyboard.
             if (Env.detection.isMobileIOS) {
-               if (TouchKeyboardHelper._keyboardVisible) {
-                  height += window.scrollY;
-               }
+               // todo: https://online.sbis.ru/opendoc.html?guid=7223381a-dc7c-44b4-a628-7f2d7ba8a703
+               height += window.scrollY;
             }
             return {
                width: window.innerWidth,
