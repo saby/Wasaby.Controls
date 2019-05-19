@@ -97,8 +97,10 @@ var _private = {
          options.searchParam !== newOptions.searchParam ||
          options.minSearchLength !== newOptions.minSearchLength;
    },
-   itemOpenHandler: function () {
-      _private.getSearchController(this).abort();
+   itemOpenHandler: function(root:string|number|null):void {
+      if (root !== null) {
+         _private.getSearchController(this).abort();
+      }
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
