@@ -284,14 +284,14 @@ define([
          assert.equal(Util.calcTopOffset(true, Util.ResultsPosition.Bottom), 1);
       });
 
-      it('calcGroupRowIndex', function () {
+      it('calcRowIndexByItem', function () {
          var
              hasMoreStorage = {
                 1: true,
                 5: true
              },
              templateCalc = function (index, hasHeader, resultsPosition) {
-                return Util.calcGroupRowIndex(
+                return Util.calcRowIndexByItem(
                     treeGridViewModel._model._display.at(index),
                     treeGridViewModel._model._display,
                     hasHeader,

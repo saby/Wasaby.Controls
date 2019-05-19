@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "./utils/RowIndexUtil";
+import {calcFooterRowIndex} from './utils/RowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -371,17 +371,8 @@ var
             return styles;
         },
 
-        calcRowIndexByKey: function(self, key): number {
-            return RowIndexUtil.calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
-        },
-
         calcResultsRowIndex: function (self): number {
             return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader());
-        },
-
-        calcGroupRowIndex: function (self, current): number {
-            let groupItem = self._model.getDisplay().at(current.index);
-            return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
 
         getFooterStyles: function (self): string {
@@ -920,6 +911,16 @@ var
             this._model.goToNext();
         },
 
+        _calcRowIndex: function(current) {
+            if (current.isGroup) {
+                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            } else if (current.index !== -1) {
+                return RowIndexUtil.calcRowIndexByKey(current.key,
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            }
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
@@ -950,11 +951,7 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (current.isGroup) {
-                current.rowIndex = _private.calcGroupRowIndex(self, current);
-            } else if (current.index !== -1) {
-                current.rowIndex = _private.calcRowIndexByKey(self, current.key);
-            }
+            current.rowIndex = this._calcRowIndex(current);
 
             if (GridLayoutUtil.isPartialSupport) {
                 _private.prepareItemDataForPartialSupport(this, current);

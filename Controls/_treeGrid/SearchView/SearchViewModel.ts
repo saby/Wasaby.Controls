@@ -21,8 +21,10 @@ var
          var
             self = this,
             data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments);
-         data.resolveItemTemplate = function(item) {
-            if (item.getId && self._options.itemTemplate) {
+         // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
+         data.breadCrumbs = !!data.item.forEach;
+         data.resolveItemTemplate = function(itemData) {
+            if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;
             }
             return TreeGridDefaultItemTemplate;
