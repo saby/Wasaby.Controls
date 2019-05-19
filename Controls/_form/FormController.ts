@@ -443,6 +443,7 @@ import dataSource = require('Controls/dataSource');
                   return arg;
                });
                res.addErrback((error: Error) => {
+                  updateDef.errback(error);
                   return self._processError(error, dataSource.error.Mode.dialog);
                });
             } else {
