@@ -73,12 +73,16 @@
       </ws:partial>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
-         <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+      <ws:partial template="itemTpl" attr:style="{{(staticHeight ? ('height:' + itemData.itemsHeight + 'px; ') : '') + '-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+         <ws:if data="{{!staticHeight}}">
+            <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+         </ws:if>
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl">
-                  <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+                  <ws:if data="{{!staticHeight}}">
+                     <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+                  </ws:if>
                   <ws:partial template="imageTpl"/>
                </ws:partial>
             </ws:imageWrapper>
