@@ -55,7 +55,7 @@ var TileViewModel = ListViewModel.extend({
     setHoveredItem: function (hoveredItem) {
         if (this._hoveredItem !== hoveredItem) {
             this._hoveredItem = hoveredItem;
-            this._nextModelVersion();
+            this._nextModelVersion(false, 'hoveredItemChanged');
         }
     },
 

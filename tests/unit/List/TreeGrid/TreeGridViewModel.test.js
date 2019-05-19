@@ -298,17 +298,9 @@ define(['Controls/treeGrid',
              }),
              current = model.getCurrent();
 
-         var safeFunc = treeGrid.ViewModel.calcGroupRowIndex;
-
-         treeGrid.ViewModel._private.calcGroupRowIndex = function () {
-            return 1;
-         };
-
          treeGrid.ViewModel._private.prepareGroupGridStyles(model, current);
 
-         assert.equal(current.gridGroupStyles, 'grid-row: 2; -ms-grid-row: 2;');
-
-         treeGrid.ViewModel._private.calcGroupRowIndex = safeFunc;
+         assert.equal(current.gridGroupStyles, 'grid-row: 1; -ms-grid-row: 1;');
       });
 
       it('setExpandedItems', function() {
