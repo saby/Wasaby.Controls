@@ -145,6 +145,7 @@ define('Controls-demo/List/Grid/BasePG', [
             displayProperty: 'title',
             rowSeparatorVisibility: true,
             markerVisibility: 'visible',
+            multiSelectVisibility: 'visible',
             keyProperty: 'id',
             footerTemplate: undefined,
             emptyTemplate: undefined,
