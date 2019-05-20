@@ -20,8 +20,15 @@ define('Controls/Container/Adapter/SelectedKey',
       'use strict';
 
       var _private = {
-         getSelectedKeys: function(selectedKey) {
-            return selectedKey === null ? [] : [selectedKey];
+         getSelectedKeys: function(selectedKey, items) {
+            return selectedKey === null && !(items && items.getRecordById(null)) ? [] : [selectedKey];
+         },
+
+         dataLoadCallbackHandler: function(items) {
+            this._items = items;
+            if (this._options.dataLoadCallback) {
+               this._options.dataLoadCallback(items);
+            }
          }
       };
 
@@ -29,19 +36,20 @@ define('Controls/Container/Adapter/SelectedKey',
 
          _template: template,
          _selectedKeys: null,
+         _items: null,
 
          _beforeMount: function(options) {
-            this._selectedKeys = _private.getSelectedKeys(options.selectedKey);
+            this._dataLoadCallbackHandler = _private.dataLoadCallbackHandler.bind(this);
+            this._selectedKeys = _private.getSelectedKeys(options.selectedKey, this._items);
          },
 
          _beforeUpdate: function(newOptions) {
             if (this._options.selectedKey !== newOptions.selectedKey) {
-               this._selectedKeys = _private.getSelectedKeys(newOptions.selectedKey);
+               this._selectedKeys = _private.getSelectedKeys(newOptions.selectedKey, this._items);
             }
          },
 
          _selectedKeysChanged: function(event, keys) {
-            this._selectedKeys = keys;
             event.stopPropagation();
             var selectedKey = keys.length ? keys[0] : null;
             this._notify('selectedKeyChanged', [selectedKey]);
