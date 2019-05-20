@@ -467,6 +467,9 @@ var
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
+                if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialSupport){
+                    this._nextModelVersion();
+                }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
