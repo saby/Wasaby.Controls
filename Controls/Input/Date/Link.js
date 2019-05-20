@@ -34,11 +34,11 @@ define('Controls/Input/Date/Link', [
       _template: componentTmpl,
 
       _openDialog: function(event) {
-         this._children.opener.open({
+         var cfg = {
             opener: this,
             target: this._container,
+            template: 'Controls/Date/PeriodDialog',
             className: 'controls-PeriodDialog__picker',
-            isCompoundTemplate: true,
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
             eventHandlers: {
@@ -50,12 +50,15 @@ define('Controls/Input/Date/Link', [
                headerType: 'link',
                closeButtonEnabled: true,
                rangeselect: false,
-               quantum: null,
-               handlers: {
-                  onChoose: this._onResultWS3.bind(this)
-               }
+               quantum: null
             }
-         });
+         };
+         if (!this._options.vdomDialog) {
+            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.isCompoundTemplate = true;
+            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
+         }
+         this._children.opener.open(cfg);
       },
       _onResultWS3: function(event, startValue) {
          this._onResult(startValue);
