@@ -217,6 +217,14 @@ define([
          assert.isFalse(rootChanged);
       });
 
+      it('_beforeMount', function() {
+         let cfg = { root: 'rootNode' };
+         let instance = new explorerMod.View(cfg);
+
+         instance._beforeMount(cfg);
+         assert.deepEqual(instance._breadCrumbsItems, []);
+      });
+
       it('_onBreadCrumbsClick', function() {
          var
             testBreadCrumbs = new collection.RecordSet({

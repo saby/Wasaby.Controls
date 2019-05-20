@@ -155,6 +155,13 @@ import 'Controls/breadcrumbs';
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
+
+         //if root is not null, need to create a crumbs with empty items to take a space.
+         //otherwise a content of the explorer will move down after getting item from source.
+         if (cfg.root !== null) {
+            this._breadCrumbsItems = [];
+         }
+
          _private.setViewMode(this, cfg.viewMode);
       },
       _beforeUpdate: function(cfg) {
