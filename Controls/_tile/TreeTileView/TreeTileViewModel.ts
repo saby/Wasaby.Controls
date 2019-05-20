@@ -9,9 +9,9 @@ var TreeTileViewModel = TreeViewModel.extend({
     constructor: function (cfg) {
         TreeTileViewModel.superclass.constructor.apply(this, arguments);
         this._tileModel = new TileViewModel(cfg);
-        this._onListChangeFn = function () {
+        this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
-            this._notify('onListChange');
+            this._notify('onListChange', changesType);
         }.bind(this);
         this._tileModel.subscribe('onListChange', this._onListChangeFn);
     },
