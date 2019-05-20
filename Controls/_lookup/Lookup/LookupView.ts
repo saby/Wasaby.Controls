@@ -6,7 +6,6 @@ import Collection = require('Controls/_lookup/SelectedCollection');
 import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import Env = require('Env/Env');
-import inputWml = require('wml!Controls/Input/resources/input');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');

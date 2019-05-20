@@ -1,7 +1,7 @@
 define(
    [
       'Env/Env',
-      'Controls/Input/Render',
+      'Controls/_input/Render',
       'unit/resources/TemplateUtil',
       'wml!unit/Input/Render/Content',
       'wml!unit/Input/Render/PlaceholderTest'
@@ -9,7 +9,7 @@ define(
    function(Env, Render, TemplateUtil, Content, placeholderTest) {
       'use strict';
 
-      describe('Controls.Input.Render', function() {
+      describe('Controls/_input/Render', function() {
          var ctrl;
 
          beforeEach(function() {

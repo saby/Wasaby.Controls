@@ -1,13 +1,13 @@
 define(
    [
       'Core/core-merge',
-      'Controls/Input/Mask/ViewModel'
+      'Controls/_input/Mask/ViewModel'
    ],
    function(coreMerge, ViewModel) {
 
       'use strict';
 
-      describe('Controls.Input.Mask.ViewModel', function() {
+      describe('Controls/_input/Mask/ViewModel', function() {
          var viewModel = new ViewModel({
                mask: 'DD.MM.YY',
                value: '',

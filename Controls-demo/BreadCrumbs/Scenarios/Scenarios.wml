@@ -131,7 +131,7 @@
          <Controls.search:Controller searchParam="name" minSearchLength="{{3}}">
             <div class="ws-fragment">
                <Controls.search:InputContainer>
-                  <Controls.Input.Search/>
+                  <Controls.search:Input/>
                </Controls.search:InputContainer>
                <Controls.list:Container>
                   <Controls.explorer:View

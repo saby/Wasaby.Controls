@@ -20,7 +20,7 @@
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
         layerName="Controls/Container/Suggest/__PopupLayer">
-   <Controls.Input.Suggest.InputRender
+   <Controls/suggest:InputRender
            size="{{_options.size}}"
            value="{{_value}}"
            style="{{_options.style}}"
@@ -35,5 +35,5 @@
       <ws:afterFieldWrapper>
          <Controls.toggle:Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
       </ws:afterFieldWrapper>
-   </Controls.Input.Suggest.InputRender>
+   </Controls/suggest:InputRender>
 </Controls.suggest:_InputController>

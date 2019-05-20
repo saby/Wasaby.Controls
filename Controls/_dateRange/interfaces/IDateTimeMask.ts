@@ -57,7 +57,7 @@ export default {
              * In this example, the mask is set so that only the time can be entered in the input field.
              * After a user has entered a “09:30”, the value of the _inputValue will be equal 01.01.1900 09:30.000.
              * <pre>
-             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>
              * <pre>
              *    Control.extend({
@@ -66,7 +66,7 @@ export default {
              * </pre>
              * In the next example after a user has entered a “09:30”, the value of the _inputValue will be equal 10.03.2018 09:30.000
              * <pre>
-             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>
              * <pre>
              *    Control.extend({

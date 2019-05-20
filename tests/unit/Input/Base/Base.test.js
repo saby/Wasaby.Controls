@@ -13,7 +13,7 @@ define(
    function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
-      describe('Controls.Input.Base', function() {
+      describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
          makeInstanceCompatible(ctrl);

@@ -20,7 +20,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/RangeLink', function() {
+   describe('Controls/_dateRange/Selector', function() {
       describe('_openDialog', function() {
          it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(dateRange.Selector, options);

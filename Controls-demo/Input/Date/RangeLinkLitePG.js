@@ -14,7 +14,7 @@ define('Controls-demo/Input/Date/RangeLinkLitePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Date/RangeLinkLite',
+         _content: 'Controls/dateRange:LiteSelector',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

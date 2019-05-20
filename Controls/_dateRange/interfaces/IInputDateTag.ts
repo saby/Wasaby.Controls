@@ -19,7 +19,7 @@
  * @example
  * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
+ *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *
@@ -49,7 +49,7 @@
  * @example
  * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
+ *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *
@@ -79,7 +79,7 @@
  * @example
  * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range startTagStyle="danger" on:startTagHover="_tagHoverHandler()"/>
+ *    <Controls.dateRange:Input startTagStyle="danger" on:startTagHover="_tagHoverHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *
@@ -115,7 +115,7 @@
  * @example
  * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *
@@ -145,7 +145,7 @@
  * @example
  * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *
@@ -175,7 +175,7 @@
  * @example
  * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.Input.Date.Range endTagStyle="danger" on:endTagHover="_tagHoverHandler()"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagHover="_tagHoverHandler()"/>
  *    <Controls.Opener.Infobox name="infoboxOpener"/>
  * </pre>
  *

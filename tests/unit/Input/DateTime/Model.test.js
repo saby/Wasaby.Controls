@@ -1,6 +1,6 @@
 define([
    'Core/core-merge',
-   'Controls/Input/DateTime/Model'
+   'Controls/_input/DateTime/Model'
 ], function(
    cMerge,
    DateTimeModel
@@ -13,7 +13,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/DateTime/Model', function() {
+   describe('Controls/_input/DateTime/Model', function() {
       describe('constructor', function() {
          it('should initialize internal fields', function() {
             let model = new DateTimeModel(options);

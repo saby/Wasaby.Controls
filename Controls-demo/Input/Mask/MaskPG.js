@@ -14,7 +14,7 @@ define('Controls-demo/Input/Mask/MaskPG',
       var MaskPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Mask',
+         _content: 'Controls/input:Mask',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

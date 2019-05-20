@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_input/Base/Base" scope="{{_options}}" />

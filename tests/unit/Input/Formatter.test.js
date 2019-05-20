@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Input/Mask/Formatter',
+      'Controls/_input/Mask/Formatter',
       'Controls/input'
    ],
    function(Formatter, input) {
 
       'use strict';
 
-      describe('Controls.Input.Mask.Formatter', function() {
+      describe('Controls/_input/Mask/Formatter', function() {
          var
             formatMaskChars = {
                'd': '[0-9]',

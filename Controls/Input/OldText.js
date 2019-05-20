@@ -5,10 +5,10 @@ define('Controls/Input/OldText',
       'wml!Controls/Input/OldText/OldText',
       'Types/entity',
       'Controls/Input/OldText/OldViewModel',
-      'Controls/Input/resources/InputHelper',
+      'Controls/_input/resources/InputHelper',
 
       'css!theme?Controls/input',
-      'wml!Controls/Input/resources/input'
+      'wml!Controls/_input/resources/input'
    ],
    function(Control, tmplNotify, template, entity, TextViewModel, inputHelper) {
 
@@ -26,7 +26,7 @@ define('Controls/Input/OldText',
        * @mixes Controls/interface/IPaste
        * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputPlaceholder
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        *
        * @private
        * @demo Controls-demo/Input/Text/TextPG

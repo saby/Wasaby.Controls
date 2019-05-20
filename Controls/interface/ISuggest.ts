@@ -64,11 +64,11 @@ interface ISuggest {
        *
        * component with Input/Suggest:
        * <pre>
-       *    <Controls.Input.Suggest>
+       *    <Controls.suggest:Input>
        *       <ws:suggestTemplate templateName="wml!SuggestTemplate">
        *          <ws:templateOptions />
        *       </ws:suggestTemplate>
-       *    </Controls.Input.Suggest>
+       *    </Controls.suggest:Input>
        * </pre>
        */
       suggestTemplate: ISuggestTemplateProp | null;
@@ -84,11 +84,11 @@ interface ISuggest {
        * </pre>
        *
        * MySuggest.wml:
-       * <Controls.Input.Suggest>
+       * <Controls.suggest:Input>
        *    <ws:emptyTemplate templateName="wml!emptyTemplate">
        *       <ws:templateOptions showImage={{_showImage}}/>
        *    </ws:emptyTemplate>
-       * </Controls.Input.Suggest>
+       * </Controls.suggest:Input>
        */
       emptyTemplate: IEmptyTemplateProp | null;
 
@@ -114,9 +114,9 @@ interface ISuggest {
        *
        * mySuggest.wml
        * <pre>
-       *    <Controls.Input.Suggest>
+       *    <Controls.suggest:Input>
        *       <ws:suggestFooterTemplate templateName="myFooter">
-       *    </Controls.Input.Suggest>
+       *    </Controls.suggest:Input>
        * </pre>
        */
       footerTemplate: ISuggestFooterTemplate;
@@ -127,7 +127,7 @@ interface ISuggest {
        * @remark If items were previously selected, suggest with this items will be displayed after input get focused.
        * @example
        * <pre>
-       *    <Controls.Input.Suggest historyId="myHistoryId"/>
+       *    <Controls.suggest:Input historyId="myHistoryId"/>
        * </pre>
        */
       historyId: string;
@@ -138,7 +138,7 @@ interface ISuggest {
        * @example
        * In this example suggest will shown after input get focused.
        * <pre>
-       *    <Controls.Input.Suggest autoSuggest={{true}}/>
+       *    <Controls.suggest:Input autoSuggest={{true}}/>
        * </pre>
        */
       autoDropDown: boolean;
@@ -175,7 +175,7 @@ interface ISuggest {
        * myModule.wml
        * <pre>
        *    <div>
-       *       <Controls.Input.Suggest displayProperty="city" on:choose="_choose()"/>
+       *       <Controls.suggest:Input displayProperty="city" on:choose="_choose()"/>
        *    </div>
        *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
        * </pre>
@@ -214,7 +214,7 @@ interface ISuggest {
        * myModule.wml
        * <pre>
        *    <div>
-       *       <Controls.Input.Suggest displayProperty='city' on:choose="_choose()"/>
+       *       <Controls.suggest:Input displayProperty='city' on:choose="_choose()"/>
        *    </div>
        *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
        * </pre>

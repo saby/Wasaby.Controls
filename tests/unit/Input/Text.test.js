@@ -107,7 +107,7 @@ define(
             }
          ];
 
-      describe('Controls.Input.Text', function() {
+      describe('Controls/_input/Text', function() {
          testCases.forEach(function(item) {
             it(item.testName, function () {
                var

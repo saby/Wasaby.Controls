@@ -14,7 +14,7 @@ define('Controls-demo/Input/DateTime/DateTimePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/DateTime',
+         _content: 'Controls/input:DateBase',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

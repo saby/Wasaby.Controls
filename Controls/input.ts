@@ -43,6 +43,8 @@ import TextViewModel = require('Controls/_input/Text/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
+import InputRender = require('Controls/_input/resources/InputRender/InputRender');
+import inputTemplate = require('wml!Controls/_input/resources/input');
 
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
@@ -69,6 +71,8 @@ export {
     MaskFormatBuilder,
     MaskInputProcessor,
     StringValueConverter,
+    InputRender,
+    inputTemplate,
     InputCallback,
     INewLineKey,
     Render

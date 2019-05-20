@@ -1,11 +1,11 @@
 {
-  "Controls/Input/Text": {
-    "name": "Controls/Input/Text",
+  "Controls/input:Text": {
+    "name": "Controls/input:Text",
     "title": "Single-line text input.",
-    "className": "Controls/Input/Text",
+    "className": "Controls/input:Text",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Text",
+    "fullname": "Controls/input:Text",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -538,13 +538,13 @@
       }
     }
   },
-  "Controls/Input/Area": {
-    "name": "Controls/Input/Area",
+  "Controls/input:Area": {
+    "name": "Controls/input:Area",
     "title": "Multiline text input with autoheight.",
-    "className": "Controls/Input/Area",
+    "className": "Controls/input:Area",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Area",
+    "fullname": "Controls/input:Area",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -632,13 +632,13 @@
       }
     }
   },
-  "Controls/Input/ComboBox": {
-    "name": "Controls/Input/ComboBox",
+  "Controls/dropdown:Combobox": {
+    "name": "Controls/dropdown:Combobox",
     "title": "Control that shows list of options",
-    "className": "Controls/Input/ComboBox",
+    "className": "Controls/dropdown:Combobox",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/ComboBox",
+    "fullname": "Controls/dropdown:Combobox",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -689,13 +689,13 @@
       }
     }
   },
-  "Controls/Input/DateTime": {
-    "name": "Controls/Input/DateTime",
+  "Controls/input:DateBase": {
+    "name": "Controls/input:DateBase",
     "title": "Input for entering date or/and time.",
-    "className": "Controls/Input/DateTime",
+    "className": "Controls/input:DateBase",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/DateTime",
+    "fullname": "Controls/input:DateBase",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -758,13 +758,13 @@
       }
     }
   },
-  "Controls/Input/Date/Picker": {
-    "name": "Controls/Input/Date/Picker",
+  "Controls/input:Date": {
+    "name": "Controls/input:Date",
     "title": "Input for entering date.",
-    "className": "Controls/Input/Date/Picker",
+    "className": "Controls/input:Date",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Date/Picker",
+    "fullname": "Controls/input:Date",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -810,13 +810,13 @@
       }
     }
   },
-  "Controls/Input/Date/Range": {
-    "name": "Controls/Input/Date/Range",
+  "Controls/dateRange:Input": {
+    "name": "Controls/dateRange:Input",
     "title": "Input for entering date range.",
-    "className": "Controls/Input/Date/Range",
+    "className": "Controls/dateRange:Input",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Date/Range",
+    "fullname": "Controls/dateRange:Input",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -894,13 +894,13 @@
       }
     }
   },
-  "Controls/Input/Date/RangeLinkLite": {
-    "name": "Controls/Input/Date/RangeLinkLite",
+  "Controls/dateRange:LiteSelector": {
+    "name": "Controls/dateRange:LiteSelector",
     "title": "Input for selection date range links in Light Calendar.",
-    "className": "Controls/Input/Date/RangeLinkLite",
+    "className": "Controls/dateRange:LiteSelector",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Date/RangeLinkLite",
+    "fullname": "Controls/dateRange:LiteSelector",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -940,13 +940,13 @@
       }
     }
   },
-  "Controls/Input/Dropdown": {
-    "name": "Controls/Input/Dropdown",
+  "Controls/dropdown:Input": {
+    "name": "Controls/dropdown:Input",
     "title": "Input for selection from the list of options.",
-    "className": "Controls/Input/Dropdown",
+    "className": "Controls/dropdown:Input",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Dropdown",
+    "fullname": "Controls/dropdown:Input",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1020,13 +1020,13 @@
       }
     }
   },
-  "Controls/Input/Mask": {
-    "name": "Controls/Input/Mask",
+  "Controls/input:Mask": {
+    "name": "Controls/input:Mask",
     "title": "Input for entering text with a specified format.",
-    "className": "Controls/Input/Mask",
+    "className": "Controls/input:Mask",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Mask",
+    "fullname": "Controls/input:Mask",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1080,13 +1080,13 @@
       }
     }
   },
-  "Controls/Input/Password": {
-    "name": "Controls/Input/Password",
+  "Controls/input:Password": {
+    "name": "Controls/input:Password",
     "title": "Password input.",
-    "className": "Controls/Input/Password",
+    "className": "Controls/input:Password",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Password",
+    "fullname": "Controls/input:Password",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1137,13 +1137,13 @@
       }
     }
   },
-  "Controls/Input/Phone": {
-    "name": "Controls/Input/Phone",
+  "Controls/input:Phone": {
+    "name": "Controls/input:Phone",
     "title": "Phone input.",
-    "className": "Controls/Input/Phone",
+    "className": "Controls/input:Phone",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Phone",
+    "fullname": "Controls/input:Phone",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1374,13 +1374,13 @@
       }
     }
   },
-  "Controls/Input/Number": {
-    "name": "Controls/Input/Number",
+  "Controls/input:Number": {
+    "name": "Controls/input:Number",
     "title": "A component are used to let the user enter a number.",
-    "className": "Controls/Input/Number",
+    "className": "Controls/input:Number",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Number",
+    "fullname": "Controls/input:Number",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2150,13 +2150,13 @@
       }
     }
   },
-  "Controls/Input/Search": {
-    "name": "Controls/Input/Search",
+  "Controls/search:Input": {
+    "name": "Controls/search:Input",
     "title": "Search input.",
-    "className": "Controls/Input/Search",
+    "className": "Controls/search:Input",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Search",
+    "fullname": "Controls/search:Input",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2200,13 +2200,13 @@
       }
     }
   },
-  "Controls/Input/Suggest": {
-    "name": "Controls/Input/Suggest",
+  "Controls/suggest:Input": {
+    "name": "Controls/suggest:Input",
     "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
-    "className": "Controls/Input/Suggest",
+    "className": "Controls/suggest:Input",
     "kind": "class",
     "isPublic": true,
-    "fullname": "Controls/Input/Suggest",
+    "fullname": "Controls/suggest:Input",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2275,13 +2275,13 @@
       }
     }
   },
-  "Controls/Input/Search/Suggest": {
-    "name": "Controls/Input/Search/Suggest",
+  "Controls/suggest:SearchInput": {
+    "name": "Controls/suggest:SearchInput",
     "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
-    "className": "Controls/Input/Search/Suggest",
+    "className": "Controls/suggest:SearchInput",
     "kind": "class",
     "isPublic": true,
-    "fullname": "Controls/Input/Search/Suggest",
+    "fullname": "Controls/suggest:SearchInput",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

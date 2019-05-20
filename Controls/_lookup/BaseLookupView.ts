@@ -4,7 +4,6 @@ import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
-import inputWml = require('wml!Controls/Input/resources/input');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 

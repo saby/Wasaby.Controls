@@ -1,4 +1,4 @@
-<Controls.Input.resources.InputRender.InputRender
+<Controls.input:InputRender
         autocomplete="{{_options.autocomplete}}"
         tooltip="{{_options.tooltip}}"
         tagStyle="{{_options.tagStyle}}"
@@ -14,7 +14,7 @@
 
    <ws:content>
       <ws:partial
-              template="wml!Controls/Input/resources/input"
+              template="Controls/input:inputTemplate"
               attr:class="controls-Search__input"
               value="{{_options.value}}"
               readOnly="{{_options.readOnly}}"
@@ -30,4 +30,4 @@
               on:click="_searchClick()"></div>
    </ws:afterFieldWrapper>
 
-</Controls.Input.resources.InputRender.InputRender>
+</Controls.input:InputRender>

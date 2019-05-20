@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Input/Mask/Formatter',
+      'Controls/_input/Mask/Formatter',
       'Controls/input'
    ],
    function(Formatter, inputMod) {
 
       'use strict';
 
-      describe('Controls.Input.Mask.InputProcessor', function() {
+      describe('Controls/_input/Mask/InputProcessor', function() {
          var
             replacer = ' ',
             format = inputMod.MaskFormatBuilder.getFormat('dd.dd', {

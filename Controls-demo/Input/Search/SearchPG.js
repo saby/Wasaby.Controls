@@ -16,7 +16,7 @@ define('Controls-demo/Input/Search/SearchPG',
       var InputSearchPg = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Search',
+         _content: 'Controls/search:Input',
          _dataObject: null,
          _componentOptions: null,
          _componentClass: 'ControlsDemo__searchPG',

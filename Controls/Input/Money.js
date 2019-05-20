@@ -2,7 +2,7 @@ define('Controls/Input/Money',
    [
       'Types/entity',
       'Controls/input',
-      'Controls/Input/Number/ViewModel',
+      'Controls/_input/Number/ViewModel',
 
       'wml!Controls/Input/Money/ReadOnly'
    ],

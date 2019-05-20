@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Input/Phone/ViewModel'
+      'Controls/_input/Phone/ViewModel'
    ],
    function(ViewModel) {
 

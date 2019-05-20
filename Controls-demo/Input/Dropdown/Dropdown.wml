@@ -97,7 +97,7 @@
                                   source="{{_createMemory(_titleItems)}}"
                                   showHeader="{{true}}"
                                   caption="Sort"
-                                  contentTemplate="wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon">
+                                  contentTemplate="wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon">
             <ws:headConfig iconSize="icon-small"/>
          </Controls.dropdown:Input>
       </div>

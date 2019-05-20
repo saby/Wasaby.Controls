@@ -14,7 +14,7 @@ define('Controls-demo/Input/Phone/PhonePG',
       var PhonePG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Phone',
+         _content: 'Controls/input:Phone',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

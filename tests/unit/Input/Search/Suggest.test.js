@@ -2,7 +2,7 @@ define(['Controls/suggest'], function(suggest) {
    'use strict';
 
 
-   describe('Controls.Input.Search.Suggest', function() {
+   describe('Controls/_suggest/Input/Search/Suggest', function() {
 
       it('_close', function() {
          var searchSuggest = new suggest.SearchInput();

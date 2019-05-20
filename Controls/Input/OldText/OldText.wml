@@ -1,4 +1,4 @@
-<Controls.Input.resources.InputRender.InputRender
+<Controls.input:InputRender
    name="inputRender"
    autocomplete="{{_options.autocomplete}}"
    size="{{ _options.size }}"
@@ -17,11 +17,11 @@
    on:inputCompleted="_inputCompletedHandler()">
    <ws:content>
       <ws:partial
-         template="wml!Controls/Input/resources/input"
+         template="Controls/input:inputTemplate"
          type="text"
          inputName="{{_inputName}}"
          readOnly="{{_options.readOnly}}"
          value="{{_value}}"
       />
    </ws:content>
-</Controls.Input.resources.InputRender.InputRender>
+</Controls.input:InputRender>

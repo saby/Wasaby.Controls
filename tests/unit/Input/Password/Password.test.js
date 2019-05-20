@@ -4,7 +4,7 @@ define(
       'Controls/input'
    ],
    function(instance, input) {
-      describe('Controls.Input.Password', function() {
+      describe('Controls/_input/Password', function() {
          var ctrl, calls;
 
          beforeEach(function() {

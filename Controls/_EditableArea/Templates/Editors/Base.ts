@@ -5,7 +5,7 @@ import 'css!theme?Controls/_EditableArea/Templates/Editors/Base';
 'use strict';
 
 /**
- * Base template for editing of input fields. Mimicks styles of {@link Controls/input:Text Controls/Input/Text}.
+ * Base template for editing of input fields. Mimicks styles of {@link Controls/input:Text Text}.
  * <a href="/materials/demo-ws4-editable-area">Demo</a>.
  *
  * @class Controls/_EditableArea/Templates/Editors/Base

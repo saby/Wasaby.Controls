@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Input/Phone/MaskBuilder'
+      'Controls/_input/Phone/MaskBuilder'
    ],
    function(MaskBuilder) {
 
       'use strcit';
 
-      describe('Controls.Input.Phone.MaskBuilder', function() {
+      describe('Controls/_input/Phone/MaskBuilder', function() {
          var result;
          describe('MaskBuilder', function() {
             it('Invalid value', function() {
