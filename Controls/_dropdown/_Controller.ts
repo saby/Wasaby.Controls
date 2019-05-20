@@ -276,8 +276,14 @@ var _Controller = Control.extend({
       if (opener.isOpened()) {
          opener.close();
       } else {
-         var self = this;
-         self._open();
+         this._open();
+      }
+   },
+
+   _beforeUnmount: function() {
+      if (this._sourceController) {
+         this._sourceController.cancelLoading();
+         this._sourceController = null;
       }
    },
 
