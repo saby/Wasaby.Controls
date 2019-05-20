@@ -83,6 +83,26 @@ define([
 
       });
 
+      it('should not notify about click if item is editing now', function () {
+         let
+             called = false,
+             options = {
+                itemData: {
+                   isEditing: true
+                },
+                eventHandlers: {
+                   'click': () => {
+                      called = true
+                   }
+                }
+             },
+             cell = new Cell(options);
+         cell.saveOptions(options);
+
+         cell._beforeMount(options);
+         cell._callHandler({type:'click'}, {});
+         assert.isFalse(called);
+      });
    });
 
 });
