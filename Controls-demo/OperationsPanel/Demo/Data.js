@@ -294,6 +294,7 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             id: 27,
             'Раздел': 22,
             'Раздел@': true,
+            'Раздел$': true,
             name: 'Авраменко А.С.',
             photo: null,
             position: null,
@@ -312,6 +313,17 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             likes: null,
             department: 'Базовые аспекты',
             count: 5
+         }, {
+            id: 29,
+            'Раздел': 27,
+            'Раздел@': true,
+            name: 'Авраменко А.С.',
+            photo: null,
+            position: null,
+            phone: null,
+            likes: null,
+            department: 'Тюмень/ Расширенный набор контролов (Компоненты фреймворка)',
+            count: 1
          }],
          panelItems: [{
             id: 'print',
