@@ -152,6 +152,26 @@ define([
          assert.isTrue(stub.calledOnce);
       });
 
+      it('should not notify about resize by hoveredItemChanged', function() {
+         var
+            cfg = {
+               listModel: new lists.ListViewModel({
+                  items: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id'
+            },
+            listView = new lists.ListView(cfg);
+         listView.saveOptions(cfg);
+         listView._beforeMount(cfg);
+         var stubControlResize = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
+
+         listView._listModel._notify('onListChange', 'hoveredItemChanged');
+         listView._beforeUpdate(cfg);
+         listView._afterUpdate();
+         assert.isTrue(stubControlResize.notCalled);
+      });
+
       it('_onItemMouseEnter', function(done) {
          var
             fakeHTMLElement = {

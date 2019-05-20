@@ -464,9 +464,16 @@ var
         },
 
         setDragItemData: function(itemDragData) {
+            var getVersionOrigin;
+
             //Displays the movable item as closed
-            if (itemDragData && itemDragData.isExpanded) {
+            if (itemDragData) {
                 itemDragData.isExpanded = false;
+
+                getVersionOrigin = itemDragData.getVersion;
+                itemDragData.getVersion = function() {
+                    return getVersionOrigin() + '_LEVEL_' + itemDragData.level;
+                };
             }
             TreeViewModel.superclass.setDragItemData.apply(this, arguments);
         },

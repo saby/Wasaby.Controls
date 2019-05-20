@@ -316,7 +316,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
 
             self._windowResize = self._windowResize.bind(self);
-            Env.constants.$win.bind('resize', self._windowResize);
+            if (window) {
+               window.addEventListener('resize', self._windowResize);
+            }
 
             self._trackTarget(true);
 
@@ -1038,7 +1040,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Unregister CompoundArea's inner Event/Listener, before its
             // container is destroyed by compatibility layer
             this._unregisterEventListener();
-            Env.constants.$win.unbind('resize', this._windowResize);
+            if (window) {
+               window.removeEventListener('resize', this._windowResize);
+            }
 
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {

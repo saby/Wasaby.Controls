@@ -142,6 +142,24 @@ var
                 'wheel': self._onItemWheel.bind(self),
                 'swipe': self._onItemSwipe.bind(self)
             });
+        },
+
+        fillItemsContainerForPartialSupport: function (self): void {
+            let
+                multiselectOffset = self._options.multiSelectVisibility === 'hidden'?0:1,
+                columns = self._listModel.getColumns(),
+                itemsContainer = self._itemsContainerForPartialSupport,
+                columnslength = columns.length + multiselectOffset,
+                cellsHTML = (self._container[0] || self._container).getElementsByClassName('controls-Grid__row-cell'),
+                items = [];
+
+
+            for (let i = 0; i<cellsHTML.length;i+=columnslength) {
+                items.push(cellsHTML[i]);
+            }
+
+            itemsContainer.children = items;
+
         }
     },
     GridView = ListView.extend({
@@ -153,6 +171,7 @@ var
         _defaultItemTemplate: DefaultItemTpl,
         _headerContentTemplate: HeaderContentTpl,
         _getGridTemplateColumns: _private.getGridTemplateColumns,
+        _itemsContainerForPartialSupport: null,
 
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
@@ -160,6 +179,9 @@ var
             GridView.superclass._beforeMount.apply(this, arguments);
             _private.registerHandlersForPartialSupport(this, this._listModel);
             this._listModel.setColumnTemplate(ColumnTpl);
+            this._itemsContainerForPartialSupport = {
+                children: null
+            };
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
         },
 
@@ -200,6 +222,12 @@ var
             }
         },
 
+        _afterUpdate() {
+            if (GridLayoutUtil.isPartialSupport) {
+                _private.fillItemsContainerForPartialSupport(this);
+            }
+        },
+
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
             if (GridLayoutUtil.isPartialSupport && itemData.item !== this._hoveredItem) {
@@ -218,6 +246,15 @@ var
 
         _calcFooterPaddingClass: function(params) {
             return _private.calcFooterPaddingClass(params);
+        },
+
+        getItemsContainer: function () {
+            if (GridLayoutUtil.isPartialSupport) {
+                _private.fillItemsContainerForPartialSupport(this);
+                return this._itemsContainerForPartialSupport;
+            } else {
+                return GridView.superclass.getItemsContainer.apply(this, arguments);
+            }
         },
 
         _afterMount: function() {

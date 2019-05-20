@@ -129,7 +129,7 @@ define(
                toolbar._beforeMount(config, null, records);
                let isHeadConfigCorrect = false;
                let standart = {
-                  icon: 'icon-Ezy',
+                  icon: 'icon-Ezy icon-medium',
                   caption: 'Запись 2',
                   iconStyle: 'super'
                };
@@ -195,7 +195,7 @@ define(
                         popupClassName: 'popupClassName',
                         keyProperty: 'itemKeyProperty',
                         showHeader: 'showHeader',
-                        icon: 'icon',
+                        icon: 'icon icon-size',
                         title: 'title',
                         iconStyle: 'iconStyle'
                      }
@@ -224,7 +224,7 @@ define(
                      templateOptions: {
                         headConfig: {
                            caption: 'title',
-                           icon: 'icon',
+                           icon: 'icon icon-size',
                            iconStyle: 'iconStyle'
                         },
                         items: 'items',

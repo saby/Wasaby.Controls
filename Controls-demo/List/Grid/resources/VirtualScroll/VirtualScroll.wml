@@ -1,0 +1,18 @@
+<div style="width: 700px; margin: 0 auto; margin-top: 250px">
+    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+            <Controls.scroll:Container attr:style="height: 320px" attr:class="grid-scroll-container" attr:test_name="default">
+                <Controls.list:Container>
+                        <Controls.grid:View
+                                name="{{gridOne}}"
+                                columns="{{_columns}}"
+                                virtualScrolling="{{true}}"
+                                virtualPageSize="{{30}}"
+                                virtualSegmentSize="{{5}}">
+                            <ws:navigation source="page" view="infinity">
+                                <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                            </ws:navigation>
+                        </Controls.grid:View>
+                </Controls.list:Container>
+            </Controls.scroll:Container>
+    </Controls.list:DataContainer>
+</div>

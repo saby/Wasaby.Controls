@@ -2691,6 +2691,34 @@ define([
             });
          });
 
+         it('_onAfterBeginEdit parametrs', function () {
+            var
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                item = {},
+                instance = new lists.BaseControl(cfg);
+
+            instance._notify = (eventName, args) => {
+               assert.equal('afterBeginEdit', eventName);
+               assert.equal(item, args[0]);
+               assert.isTrue(args[1]);
+               return true;
+            };
+
+            let isNotified = instance._onAfterBeginEdit({}, item, true);
+            assert.isTrue(isNotified);
+         });
+
          it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var

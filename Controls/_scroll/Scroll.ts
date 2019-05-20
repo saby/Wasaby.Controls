@@ -23,7 +23,7 @@ import 'css!theme?Controls/scroll';
  * @extends Core/Control
  * @control
  * @public
- * @author Журавлев М.С.
+ * @author Миронов А.Ю.
  * @category Container
  * @demo Controls-demo/Container/Scroll
  *

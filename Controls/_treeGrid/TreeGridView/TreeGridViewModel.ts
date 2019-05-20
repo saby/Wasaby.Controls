@@ -14,23 +14,16 @@ var _private = {
 
     // region only for browsers with partial grid support
 
-    // Using util for calculating real group-rows' index on display considering footers, headers, results
-    calcGroupRowIndex: function (self, current): number {
-        let groupItem = self._model.getDisplay().at(current.index);
-
-        return RowIndexUtil.calcGroupRowIndex(
-            groupItem,
-            self._model.getDisplay(),
-            !!self.getHeader(),
-            self.getResultsPosition(),
-            self._model.getHasMoreStorage(),
-            self._model.getHierarchyRelation()
-        );
-    },
-
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = _private.calcGroupRowIndex(self, current);
+        current.rowIndex = RowIndexUtil.calcRowIndexByItem(
+           self._model.getDisplay().at(current.index),
+           self._model.getDisplay(),
+           !!self.getHeader(),
+           self.getResultsPosition(),
+           self._model.getHasMoreStorage(),
+           self._model.getHierarchyRelation()
+        );
         current.gridGroupStyles = GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',

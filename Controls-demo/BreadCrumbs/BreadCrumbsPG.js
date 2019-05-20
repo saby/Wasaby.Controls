@@ -14,7 +14,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
       _dataObject: null,
       _componentOptions: null,
       _metaData: null,
-      _content: 'Controls.breadcrumbs:Path',
+      _content: 'Controls/breadcrumbs:Path',
 
       _beforeMount: function() {
          var

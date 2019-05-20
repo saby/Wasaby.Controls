@@ -9,9 +9,9 @@ var TreeTileViewModel = TreeViewModel.extend({
     constructor: function (cfg) {
         TreeTileViewModel.superclass.constructor.apply(this, arguments);
         this._tileModel = new TileViewModel(cfg);
-        this._onListChangeFn = function () {
+        this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
-            this._notify('onListChange');
+            this._notify('onListChange', changesType);
         }.bind(this);
         this._tileModel.subscribe('onListChange', this._onListChangeFn);
     },
@@ -23,7 +23,9 @@ var TreeTileViewModel = TreeViewModel.extend({
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
         prevItem = this._display.at(current.index - 1);
-        if (prevItem && prevItem.isNode() && !current.dispItem.isNode()) {
+
+        //before grouping and when moving from folders to records, you need to draw invisible items
+        if (current.isGroup || prevItem && prevItem.isNode && prevItem.isNode() && !current.dispItem.isNode()) {
             current.beforeItemTemplate = InvisibleFor;
         }
 

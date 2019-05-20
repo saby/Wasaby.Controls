@@ -1031,6 +1031,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (self._virtualScroll) {
+                        self._virtualScroll.ItemsCount = self._items.getCount();
                         // При серверной верстке применяем начальные значения
                         _private.applyVirtualScroll(self);
                     }
@@ -1229,11 +1230,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
-            if (this._virtualScroll) {
-               this._virtualScroll.updateItemsSizes();
-               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
-               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
-            }
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
@@ -1451,9 +1447,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
 
-    _onAfterBeginEdit: function (event, item) {
+    _onAfterBeginEdit: function (event, item, isAdd) {
         this._canUpdateItemsActions = true;
-        return this._notify('afterBeginEdit', [item]);
+        return this._notify('afterBeginEdit', [item, isAdd]);
     },
 
    _showActionMenu(

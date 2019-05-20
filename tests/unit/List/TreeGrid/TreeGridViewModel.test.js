@@ -216,32 +216,6 @@ define(['Controls/treeGrid',
          assert.equal(expected.l_xl, current.getLevelIndentClasses('l', 'xl'));
       });
 
-      it('calcGroupRowIndex', function () {
-         var
-             initialColumns = [{
-                width: '1fr',
-                displayProperty: 'title'
-             }],
-             model = new treeGrid.ViewModel({
-                items: new collection.RecordSet({
-                   idProperty: 'id',
-                   rawData: [
-                      {id: 0, title: 'i0', parent: null, type: true},
-                      {id: 1, title: 'i1', parent: null, type: false},
-                      {id: 2, title: 'i2', parent: null, type: null}
-                   ]
-                }),
-                keyProperty: 'id',
-                nodeProperty: 'type',
-                parentProperty: 'parent',
-                columns: initialColumns
-             }),
-             current = model.getCurrent();
-
-         assert.equal(treeGrid.ViewModel._private.calcGroupRowIndex(model, current), 0);
-
-      });
-
       it('getFooterStyles', function () {
          var
              initialColumns = [{
@@ -327,17 +301,9 @@ define(['Controls/treeGrid',
              }),
              current = model.getCurrent();
 
-         var safeFunc = treeGrid.ViewModel.calcGroupRowIndex;
-
-         treeGrid.ViewModel._private.calcGroupRowIndex = function () {
-            return 1;
-         };
-
          treeGrid.ViewModel._private.prepareGroupGridStyles(model, current);
 
-         assert.equal(current.gridGroupStyles, 'grid-row: 2; -ms-grid-row: 2;');
-
-         treeGrid.ViewModel._private.calcGroupRowIndex = safeFunc;
+         assert.equal(current.gridGroupStyles, 'grid-row: 1; -ms-grid-row: 1;');
       });
 
       it('setExpandedItems', function() {
