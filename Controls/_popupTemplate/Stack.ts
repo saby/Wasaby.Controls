@@ -157,8 +157,7 @@ import 'css!theme?Controls/popupTemplate';
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            headingSize: 'l',
-            headingTheme: 'default'
+            headingSize: 'l'
          };
       };
 
