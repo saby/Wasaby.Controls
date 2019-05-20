@@ -1,4 +1,4 @@
-define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone'], function(gridMod, cMerge, collection, entity, clone) {
+define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil) {
    var
       gridData = [
          {
@@ -545,6 +545,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
          });
+
+         it('should update model in old browsers on collection change', function () {
+            var
+                gridViewModel = new gridMod.GridViewModel(cfg),
+                oldVersion = gridViewModel._model._prefixItemVersion,
+                initialStatus = GridLayoutUtil.isPartialSupport;
+
+            GridLayoutUtil.isPartialSupport = true;
+
+            gridViewModel._model._notify('onListChange', 'collectionChanged');
+            assert.equal(oldVersion + 1, gridViewModel._model._prefixItemVersion);
+
+            GridLayoutUtil.isPartialSupport = initialStatus;
+         });
+
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
