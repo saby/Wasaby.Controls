@@ -308,7 +308,7 @@ var _private = {
                     userCallback(addedItems, direction);
                 }
 
-                _private.hideIndicator(self);
+                _private.resolveIndicatorStateAfterReload(self, addedItems);
 
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
