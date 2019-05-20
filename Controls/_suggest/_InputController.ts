@@ -50,9 +50,7 @@ var _private = {
 
       // when closing popup we reset the cache with recent keys
       self._historyLoad = null;
-      if (self._filter) {
-         delete self._filter[HISTORY_KEYS_FIELD];
-      }
+      self._historyKeys = null;
    },
 
    setSuggestMarkedKey: function(self, key) {
@@ -78,27 +76,25 @@ var _private = {
    },
 
    openWithHistory: function(self) {
-      var historyKeys = self._filter && self._filter[HISTORY_KEYS_FIELD];
       var filter;
 
-      if (!historyKeys) {
-         return _private.getRecentKeys(self).addCallback(function(keys) {
-            if (keys && keys.length) {
-               filter = clone(self._options.filter || {});
-               filter[HISTORY_KEYS_FIELD] = keys;
-               _private.setSearchValue(self, '');
-               _private.setFilter(self, filter);
-               _private.open(self);
-            } else if (!self._options.suggestState && self._options.autoDropDown) {
-               _private.open(self);
+      if (!self._historyKeys) {
+         _private.getRecentKeys(self).addCallback(function(keys) {
+            self._historyKeys = keys || [];
+            filter = clone(self._options.filter || {});
+
+            if (self._historyKeys.length) {
+               filter[HISTORY_KEYS_FIELD] = self._historyKeys;
             }
-            return keys;
+
+            _private.setFilter(self, filter);
+            _private.open(self);
+
+            return self._historyKeys;
          });
       } else {
-         if (!self._options.suggestState) {
-            _private.open(self);
-         }
-         return Deferred.success(historyKeys);
+         _private.setFilter(self, self._options.filter);
+         _private.open(self);
       }
    },
 
@@ -111,9 +107,7 @@ var _private = {
          // The delay is needed when searching, when receiving the focus of the input field, open without delay
          self._searchDelay = 0;
 
-         if (self._options.historyId && !self._searchValue) {
-            _private.openWithHistory(self);
-         } else if (!self._options.suggestState) {
+         if (!self._options.suggestState) {
             _private.updateSuggestState(self);
          }
       }
@@ -172,22 +166,29 @@ var _private = {
          self._isFooterShown = _private.shouldShowFooter(self, resultData);
       }
    },
-   prepareFilter: function(self, filter, searchValue, tabId) {
+   prepareFilter: function(self, filter, searchValue, tabId, historyKeys) {
       var preparedFilter = clone(filter) || {};
       if (tabId) {
          preparedFilter.currentTab = tabId;
+      }
+      if (self._searchValue.length < self._options.minSearchLength && historyKeys && historyKeys.length) {
+         preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
       preparedFilter[self._options.searchParam] = searchValue;
       return preparedFilter;
    },
    setFilter: function(self, filter) {
-      self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey);
+      self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey, self._historyKeys);
    },
    getEmptyTemplate: function(emptyTemplate) {
       return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
    },
    updateSuggestState: function(self) {
-      if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown && !self._options.suggestState) {
+      var shouldSearch = _private.shouldSearch(self, self._searchValue);
+
+      if (self._options.historyId && self._options.autoDropDown && !shouldSearch && !self._options.suggestState) {
+         _private.openWithHistory(self);
+      } else if (shouldSearch || self._options.autoDropDown && !self._options.suggestState) {
          _private.setFilter(self, self._options.filter);
          _private.open(self);
       } else if (!self._options.autoDropDown) {
@@ -277,6 +278,7 @@ var SuggestLayout = Control.extend({
    _tabsSource: null,
    _filter: null,
    _tabsSelectedKey: null,
+   _historyKeys: null,
    _searchResult: null,
    _searchDelay: null,
    _dependenciesDeferred: null,
@@ -373,19 +375,9 @@ var SuggestLayout = Control.extend({
       _private.loadDependencies(this);
       this._searchDelay = this._options.searchDelay;
 
-      if (!shouldSearch && historyId) {
-         _private.openWithHistory(this).addCallback(function(res) {
-            if (!res.length && self._options.suggestState) {
-               _private.close(self);
-            }
-
-            return res;
-         });
-      } else {
-         _private.setSearchValue(self, shouldSearch ? value : '');
-         _private.setFilter(self, self._options.filter);
-         _private.updateSuggestState(this);
-      }
+      _private.setSearchValue(self, shouldSearch ? value : '');
+      _private.setFilter(self, self._options.filter);
+      _private.updateSuggestState(this);
    },
    _inputActivated: function() {
       this._inputActive = true;
@@ -409,7 +401,7 @@ var SuggestLayout = Control.extend({
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
-         this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key);
+         this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key, this._historyKeys);
       }
 
       // move focus from tabs to input, after change tab
