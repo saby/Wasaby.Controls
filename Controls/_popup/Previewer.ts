@@ -9,8 +9,8 @@ import 'css!theme?Controls/popup';
       /**
        * @class Controls/_popup/Previewer
        * @extends Core/Control
-       * @public
        * @control
+       * @public
        * @author Красильников А.С.
        *
        * @name Controls/_popup/Previewer#content
