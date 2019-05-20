@@ -74,21 +74,19 @@ type GetSourceResult = {
             self,
             data: RecordSet | void,
             dataLoadErrback: Function | void
-         ): Deferred<GetSourceResult> {
+         ): Promise<GetSourceResult> {
             return getPrefetchSource({
                source: self._source,
                navigation: self._navigation,
                sorting: self._sorting,
                filter: self._filter,
                keyProperty: self._keyProperty
-            }, data).then((result) => {
-                  return result;
-               }, (error) => {
-                  if (dataLoadErrback instanceof Function) {
-                     dataLoadErrback(error);
-                  }
-                  return error;
-               });
+            }, data).then((result: GetSourceResult) => {
+               if (result.error && dataLoadErrback instanceof Function) {
+                  dataLoadErrback(result.error);
+               }
+               return result;
+            });
          },
 
          resolveOptions: function(self, options) {
