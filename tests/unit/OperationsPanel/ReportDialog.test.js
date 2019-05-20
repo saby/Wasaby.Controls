@@ -1,7 +1,7 @@
 define(['Controls/operationsPopup'], function(operationsPopup) {
    'use strict';
 
-   describe('Controls.Operations.ReportDialog', function() {
+   describe('Controls/_operationsPopup/ReportDialog', function() {
       var reportDialog = new operationsPopup.ReportDialog();
 
       it('success', function() {

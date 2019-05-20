@@ -38,7 +38,7 @@ define([
       };
    }
 
-   describe('Controls.Operations.Panel', function() {
+   describe('Controls/_operations/Panel', function() {
       var
          instance,
          oldFillItemsType,
