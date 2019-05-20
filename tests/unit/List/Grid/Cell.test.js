@@ -30,8 +30,7 @@ define([
          cell._options.itemData.isHovered = true;
          cell._options.highlightOnHover = false;
 
-         assert.equal('controls-ListView__itemV controls-Grid__row_default ' +
-             'controls-Grid__row_highlightOnHover_default', cell.getCellClasses());
+         assert.equal('controls-ListView__itemV controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
 
       });
 
