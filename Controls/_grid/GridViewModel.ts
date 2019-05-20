@@ -372,7 +372,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader());
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!this._options.emptyTemplate);
         },
 
         getFooterStyles: function (self): string {
@@ -383,7 +383,7 @@ var
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
                     hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
-                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader());
+                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader(), !!self._options.emptyTemplate);
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -397,19 +397,12 @@ var
 
             if (GridLayoutUtil.isPartialSupport) {
                 let
-                    columnsLength = self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
+                    multiselectOffset = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
                     rowIndex = 0;
-
-                styles += GridLayoutUtil.toCssString([
-                    {
-                        name: '-ms-grid-column-span',
-                        value: columnsLength
-                    },
-                ]);
 
                 rowIndex += self.getHeader() ? 1 : 0;
                 rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                styles += GridLayoutUtil.getCellStyles(rowIndex, 0);
+                styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
             }
 
             return styles;
