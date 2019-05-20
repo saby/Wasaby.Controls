@@ -13,10 +13,13 @@
    </div>
 
    <Controls.calendar:MonthList
+      name="monthList"
+      date="{{_year}}"
       attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
       calendarSource="{{_options.calendarSource}}"
       dayTemplate="{{_options.dayTemplate}}"
       on:itemClick="_onItemClick()"
+      on:scroll="_onScroll()"
    >
       <ws:itemTemplate>
          <ws:partial
