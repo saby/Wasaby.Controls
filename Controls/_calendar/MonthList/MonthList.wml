@@ -5,7 +5,8 @@
       source="{{_viewSource}}"
       sourceExt="{{_options.calendarSource}}"
       name="months"
-      idProperty="id"
+      keyProperty="id"
+      markerVisibility="hidden"
       >
 
       <ws:navigation source="position" view="infinity">

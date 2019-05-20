@@ -41,11 +41,11 @@ import 'css!theme?Controls/input';
       // },
 
       _openDialog: function(event) {
-         this._children.opener.open({
+          var cfg = {
             opener: this,
             target: this._container,
+            template: 'Controls/Date/PeriodDialog',
             className: 'controls-PeriodDialog__picker-withoutModeBtn',
-            isCompoundTemplate: true,
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
             eventHandlers: {
@@ -57,12 +57,15 @@ import 'css!theme?Controls/input';
                mask: this._options.mask,
                selectionType: 'single',
                headerType: 'input',
-               closeButtonEnabled: true,
-               handlers: {
-                  onChoose: this._onResultWS3.bind(this)
-               }
+               closeButtonEnabled: true
             }
-         });
+         };
+         if (!this._options.vdomDialog) {
+            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.isCompoundTemplate = true;
+            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
+         }
+         this._children.opener.open(cfg);
       },
 
       _onResultWS3: function(event, startValue) {
