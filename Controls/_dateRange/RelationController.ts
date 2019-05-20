@@ -214,20 +214,7 @@ var Component = Control.extend({
     },
 
     _beforeUpdate: function (options) {
-        let ranges = this._model.ranges,
-            newRanges;
-        if (options.bindType !== this._options.bindType) {
-            this._model.bindType = options.bindType;
-        }
-
         this._model.update(options);
-        newRanges = this._model.ranges;
-
-        _private.notifyRangeChanged(this, newRanges, ranges);
-
-        if (options.bindType !== this._model.bindType) {
-            this._notify('bindTypeChanged', [this._model.bindType]);
-        }
     },
 
     _onRelationWrapperRangeChanged: function(event, start, end, controlNumber) {
