@@ -17,6 +17,15 @@ var
          }
          return filter;
       },
+      getItemActions(item) {
+         if (!!item.forEach) {
+            return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);
+         }
+         return SearchViewModel.superclass.getItemActions.call(this, item);
+      },
+      getItemById(id) {
+         return this._items.getRecordById(id);
+      },
       getItemDataByItem() {
          var
             self = this,

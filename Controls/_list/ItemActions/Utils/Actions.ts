@@ -12,7 +12,7 @@ export = {
             var container = self._container.get ? self._container.get(0) : self._container;
             const args = [
                 action,
-                itemData.item,
+                itemData.breadCrumbs ? itemData.item[itemData.item.length - 1] : itemData.item,
                 Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function (item) {
                     return item.className.indexOf('controls-ListView__itemV') !== -1;
                 })[itemData.index - listModel.getStartIndex()]
@@ -20,7 +20,7 @@ export = {
             self._notify('itemActionsClick', args.concat(event));
             IoC.resolve('ILogger').warn('Событие itemActionsClick было переименовано и будет удалено в версию 19.400. Используйте событие actionClick.');
             self._notify('actionClick', args);
-            action.handler && action.handler(itemData.item);
+            action.handler && action.handler(args[1]);
         }
     }
 };
