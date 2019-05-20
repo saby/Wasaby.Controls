@@ -29,11 +29,7 @@ define([
       });
 
       it('getCellStyles', function () {
-         assert.equal(Util.getCellStyles(1, 9), 'grid-column: 10; grid-column-start: 10; grid-row: 2;');
-      });
-
-      it('getCellStyles', function () {
-         assert.equal(Util.getCellStyles(1, 9), 'grid-column: 10; grid-column-start: 10; grid-row: 2;');
+         assert.equal(Util.getCellStyles(1, 9), 'grid-column: 10 / 11; grid-row: 2;');
       });
 
    });

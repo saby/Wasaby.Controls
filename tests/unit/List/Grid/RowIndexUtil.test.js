@@ -87,6 +87,7 @@ define([
                     treeGridViewModel._model._display,
                     Util.ResultsPosition.Bottom,
                     hasHeader,
+                    false,
                     hierarchyRelation,
                     hasMoreStorage);
              };
@@ -135,6 +136,7 @@ define([
                     treeGridViewModel._model._display,
                     hasResults,
                     hasHeader,
+                    false,
                     hierarchyRelation,
                     hasMoreStorage);
              };
