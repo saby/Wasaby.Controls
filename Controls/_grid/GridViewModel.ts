@@ -6,7 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "./utils/RowIndexUtil";
+import {calcFooterRowIndex} from './utils/RowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -371,17 +371,8 @@ var
             return styles;
         },
 
-        calcRowIndexByKey: function(self, key): number {
-            return RowIndexUtil.calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
-        },
-
         calcResultsRowIndex: function (self): number {
             return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader());
-        },
-
-        calcGroupRowIndex: function (self, current): number {
-            let groupItem = self._model.getDisplay().at(current.index);
-            return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
         },
 
         getFooterStyles: function (self): string {
@@ -436,9 +427,13 @@ var
 
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
+
+                // If index of item is equal -1, tis item is recently added. It has no any data about like key or parent key.
+                // In such case styles for partial support set on setting editingItemData into model.
+                if (itemData.isEditing && itemData.index !== -1) {
+                    itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
+                }
             } else {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
                     {name: '-ms-grid-row', value: itemData.rowIndex + 1}
@@ -446,15 +441,6 @@ var
                 return;
             }
 
-            if (itemData.isGroup) {
-                itemData.rowIndex = _private.calcGroupRowIndex(self, itemData);
-            } else {
-                itemData.rowIndex = _private.calcRowIndexByKey(self, itemData.key);
-            }
-
-            if (itemData.isEditing) {
-                itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.index);
-            }
         }
 
     },
@@ -925,6 +911,16 @@ var
             this._model.goToNext();
         },
 
+        _calcRowIndex: function(current) {
+            if (current.isGroup) {
+                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            } else if (current.index !== -1) {
+                return RowIndexUtil.calcRowIndexByKey(current.key,
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            }
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
@@ -954,6 +950,8 @@ var
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                 current.stickyColumnIndex = stickyColumn.index;
             }
+
+            current.rowIndex = this._calcRowIndex(current);
 
             if (GridLayoutUtil.isPartialSupport) {
                 _private.prepareItemDataForPartialSupport(this, current);
@@ -1121,6 +1119,10 @@ var
         },
 
         _setEditingItemData: function(itemData) {
+            let data = itemData ? itemData : this._model._editingItemData;
+            if (GridLayoutUtil.isPartialSupport) {
+                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
+            }
             this._model._setEditingItemData(itemData);
         },
 

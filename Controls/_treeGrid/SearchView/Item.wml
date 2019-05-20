@@ -1,11 +1,9 @@
-<ws:if data="{{itemData.item.getId}}">
-   <ws:partial template="wml!Controls/_treeGrid/TreeGridView/Item"
-               scope="{{_options}}"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="wml!Controls/_treeGrid/TreeGridView/Item"
+<ws:if data="{{itemData.breadCrumbs}}">
+   <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
                scope="{{_options}}"
                colspan="{{true}}"
+               expanderIcon="none"
+               marker="{{false}}"
                on:click="_onSearchItemClick(itemData.dispItem)">
       <ws:colspanTemplate>
          <Controls.breadcrumbs:Path items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()" keyProperty="{{itemData.keyProperty}}" displayProperty="{{itemData.displayProperty}}">
@@ -19,4 +17,9 @@
          </Controls.breadcrumbs:Path>
       </ws:colspanTemplate>
    </ws:partial>
+</ws:if>
+<ws:else>
+   <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
+               expanderIcon="none"
+               scope="{{_options}}"/>
 </ws:else>

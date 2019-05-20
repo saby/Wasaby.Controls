@@ -134,7 +134,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_list/interface/IExplorer
     * @mixes Controls/_list/interface/IDraggable
-    * @mixes Controls/List/interface/ITile
+    * @mixes Controls/_tile/interface/ITile
     * @control
     * @public
     * @category List

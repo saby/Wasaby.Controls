@@ -45,10 +45,10 @@ var _private = {
 
    getTemplateOptions: function (self, options) {
       var
-         templateOptions = self._templateOptions || {},
-         itemsIsChanged = self._options.items !== options.items;
+         templateOptions = {},
+         options = self._options,
 
-      if (options.items && (!templateOptions.items || itemsIsChanged)) {
+      if (options.items) {
          templateOptions.items = utils.object.clone(options.items);
       }
 
@@ -76,7 +76,6 @@ var _private = {
 
 var Collection = Control.extend({
    _template: template,
-   _templateOptions: null,
    _items: null,
    _notifyHandler: tmplNotify,
    _counterWidth: 0,
@@ -89,14 +88,12 @@ var Collection = Control.extend({
       this._clickCallbackPopup = _private.clickCallbackPopup.bind(this);
       this._items = _private.getItemsInArray(options.items);
       this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
-      this._templateOptions = _private.getTemplateOptions(this, options);
       this._counterWidth = options._counterWidth || 0;
    },
 
    _beforeUpdate: function (newOptions) {
       this._items = _private.getItemsInArray(newOptions.items);
       this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
-      this._templateOptions = _private.getTemplateOptions(this, newOptions);
 
       if (_private.isShowCounter(this._items.length, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length, newOptions.readOnly, newOptions.itemsLayout);
@@ -121,9 +118,16 @@ var Collection = Control.extend({
       }
    },
 
-   _openInfoBox: function (event, config) {
-      config.maxWidth = this._container.offsetWidth;
+   _openInfoBox: function (event) {
+      var config = {
+         target: this._children.infoBoxLink,
+         opener: this,
+         maxWidth: this._container.offsetWidth,
+         templateOptions: _private.getTemplateOptions(this)
+      };
+
       this._notify('openInfoBox', [config]);
+      this._children.infoBox.open(config);
    }
 });
 

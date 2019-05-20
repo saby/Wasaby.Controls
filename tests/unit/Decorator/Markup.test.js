@@ -492,8 +492,8 @@ define([
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
          });
          it('with innerText resolver', function() {
-            var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            assert.equal(decorator.Converter.jsonToHtml(json, decorator.InnerText), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+            var json = [['p', 'text&amp;', ['br'], 'more text'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.equal(decorator.Converter.jsonToHtml(json, decorator.InnerText), 'text&amp;\nmore text\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
          });
          it('with noOuterTag resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];

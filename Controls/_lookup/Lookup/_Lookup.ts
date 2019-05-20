@@ -24,13 +24,15 @@ import 'css!theme?Controls/lookup';
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
       CLEAR_RECORDS_WIDTH = 0,
-      KEY_KODE_F2 = 113;
+      KEY_KODE_F2 = 113,
+      LEFT_OFFSET_COUNTER = 0;
 
    var _private = {
-      initializeConstants: function() {
+      initializeConstants: function(fieldWrapper) {
          if (!SHOW_SELECTOR_WIDTH) {
             SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
             CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(clearRecordsTemplate());
+            LEFT_OFFSET_COUNTER = parseInt(getComputedStyle(fieldWrapper).paddingLeft, 10);
          }
       },
 
@@ -302,23 +304,20 @@ import 'css!theme?Controls/lookup';
       _beforeMount: function(options) {
          this._inputValue = options.value;
 
-         // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
          if (!options.multiSelect) {
             this._maxVisibleItems = 1;
-         } else if (options.readOnly) {
-            if (options.multiLine) {
-               this._maxVisibleItems = options.maxVisibleItems;
-            } else {
-               this._maxVisibleItems = options.items.getCount();
-            }
+         } else if (options.multiLine) {
+            this._maxVisibleItems = options.maxVisibleItems;
+         } else {
+            this._maxVisibleItems = options.items.getCount();
          }
       },
 
       _afterMount: function() {
          var itemsCount = this._options.items.getCount();
 
-         _private.initializeConstants();
          _private.initializeContainers(this);
+         _private.initializeConstants(this._fieldWrapper);
 
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
@@ -394,7 +393,9 @@ import 'css!theme?Controls/lookup';
          this._notify('removeItem', [item]);
 
          /* move focus to input after remove, because focus will be lost after removing dom element */
-         this._needSetFocusInInput = true;
+         if (!this._infoboxOpened) {
+            this._needSetFocusInInput = true;
+         }
       },
 
       _resize: function() {
@@ -432,6 +433,10 @@ import 'css!theme?Controls/lookup';
 
       _openInfoBox: function(event, config) {
          config.maxWidth = this._container.offsetWidth;
+         config.offset = {
+            horizontal: -LEFT_OFFSET_COUNTER
+         };
+
          this._suggestState = false;
          this._infoboxOpened = true;
       },

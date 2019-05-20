@@ -8,6 +8,22 @@ import NotificationContent = require('Controls/_popupTemplate/Notification/Opene
       var _private = {
          setNotificationContent: function(item) {
             item.popupOptions.content = NotificationContent;
+         },
+         findItemById: function(popupItems, id) {
+            let index = popupItems && popupItems.getIndexByValue('id', id);
+            if (index > -1) {
+               return popupItems.at(index);
+            }
+            return null;
+         },
+         isLinkedPopup(popupItems, parentItem, item):Boolean {
+            while (item && item.parentId) {
+               item = _private.findItemById(popupItems, item.parentId);
+               if (item === parentItem) {
+                  return true;
+               }
+            }
+            return  false;
          }
       };
 
@@ -68,13 +84,14 @@ import NotificationContent = require('Controls/_popupTemplate/Notification/Opene
             }, timeAutoClose);
          },
 
-         getCustomZIndex: function(popupItems) {
+         getCustomZIndex(popupItems, item):Number {
             // Notification windows must be above all popup windows
             // will be fixed by https://online.sbis.ru/opendoc.html?guid=e6a136fc-be49-46f3-84d5-be135fae4761
-            var count = popupItems.getCount();
-            for (var i = 0; i < count; i++) {
-               if (popupItems.at(i).hasMaximizePopup) {
-                  var maximizedPopupZIndex = (i + 1) * 10;
+            let count = popupItems.getCount();
+            for (let i = 0; i < count; i++) {
+               // if popups are linked, then notification must be higher then parent
+               if (popupItems.at(i).hasMaximizePopup && !_private.isLinkedPopup(popupItems, popupItems.at(i), item)) {
+                  let maximizedPopupZIndex = (i + 1) * 10;
                   return maximizedPopupZIndex - 1;
                }
             }

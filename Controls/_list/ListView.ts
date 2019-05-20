@@ -97,7 +97,7 @@ var ListView = BaseControl.extend(
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
                 this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandler.bind(this));
             }
-            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 
         _beforeUpdate: function(newOptions) {
@@ -131,7 +131,11 @@ var ListView = BaseControl.extend(
             if (this._options.rowSpacing !== newOptions.rowSpacing) {
                 this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
-            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._itemTemplate = this._resolveItemTemplate(newOptions);
+        },
+
+        _resolveItemTemplate(options) {
+           return options.itemTemplate || this._defaultItemTemplate;
         },
 
         _afterMount: function() {
@@ -203,7 +207,10 @@ var ListView = BaseControl.extend(
             event.blockUpdate = true;
         },
 
-        _onItemWheel: function() {},
+        _onItemWheel: function(event) {
+            //FIXME delete after https://online.sbis.ru/opendoc.html?guid=c1021079-f404-47bc-b5ce-4070af539d61
+            event.blockUpdate = true;
+        },
 
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
