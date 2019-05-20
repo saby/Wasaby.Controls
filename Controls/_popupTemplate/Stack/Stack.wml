@@ -8,7 +8,7 @@
                                           caption="{{_options.caption || _options.headingCaption}}"
                                           style="{{_options.headingStyle}}"
                                           size="{{_options.headingSize}}"
-                                          theme="{{_options.headingTheme || _options.theme}}"
+                                          theme="{{_options.headingTheme}}"
                                           readOnly="{{true}}"
                                           tooltip="{{_options.caption || _options.headingCaption}}"/>
                     </div>
