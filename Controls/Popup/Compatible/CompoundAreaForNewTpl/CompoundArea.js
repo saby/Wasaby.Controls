@@ -333,7 +333,18 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          _activatedHandler: function(event, args) {
             if (!this.isActive()) {
                var activationTarget = args[0];
-               this.setActive(true, activationTarget.isShiftKey, true, activationTarget._$to);
+               var curContainer = this._container.length
+                  ? this._container[0]
+                  : this._container;
+               var toContainer = activationTarget._$to._container.length
+                  ? activationTarget._$to._container[0]
+                  : activationTarget._$to._container;
+
+               // активируем только тот контрол CompoundArea, в который ушел фокус. Родительским панелям не зовем setActive,
+               // потому что тогда FloatAreaManager решит, что фокус ушел туда и закроет текущую панель
+               if (curContainer.contains(toContainer)) {
+                  this.setActive(true, activationTarget.isShiftKey, true, activationTarget._$to);
+               }
             }
          },
 
