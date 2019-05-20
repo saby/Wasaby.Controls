@@ -94,6 +94,19 @@
   color: @color_asLink_hovered;
 }
 
+//Дублирую стили из Application.less, чтоб на старых страницах корректно отображались ссылки с классом ws-link
+.ws-link {
+  cursor: pointer;
+  text-decoration: none;
+  background-color: transparent;
+  color: @color_App-link;
+}
+.ws-is-no-touch .ws-link:hover,
+.ws-link:active {
+  text-decoration: underline;
+  color: @color_App-link_hover;
+}
+
 // доработка, аналог closeButton ws через модификатор на абстрактной кнопке
 .ws-float-close.ws-float-close-right {
   .controls-ButtonBase__content {
