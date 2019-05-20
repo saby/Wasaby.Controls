@@ -19,6 +19,9 @@ class Cell extends Control {
     }
     
     private _callHandler(event, item): void {
+        if (this._options.itemData.isEditing) {
+            return;
+        }
         this._options.eventHandlers[event.type](event, item);
     }
 
