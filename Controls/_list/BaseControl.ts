@@ -1368,7 +1368,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-Dropdown, .controls-Suggest_list')) {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-EditableArea, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 if (this._children.fakeFocusElem) {
                     this._children.fakeFocusElem.focus();
