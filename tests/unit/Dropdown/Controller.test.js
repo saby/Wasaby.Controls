@@ -512,6 +512,15 @@ define(
             assert.isFalse(opened);
          });
 
+         it('_beforeUnmount', function() {
+            let dropdownController = getDropdownController(configLazyLoad);
+            dropdownController._beforeMount(configLazyLoad);
+            dropdownController._open();
+            assert.isTrue(!!dropdownController._sourceController.isLoading());
+            dropdownController._beforeUnmount();
+            assert.isFalse(!!dropdownController._sourceController);
+         });
+
          it('_private::getNewItems', function() {
             let curItems = new collection.RecordSet({
                   idProperty: 'id',
