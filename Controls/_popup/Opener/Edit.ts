@@ -34,6 +34,7 @@ import Deferred = require('Core/Deferred');
 
             if (meta.record) {
                cfg.templateOptions.record = meta.record.clone();
+               cfg.templateOptions.record.acceptChanges();
                instance._linkedKey = cfg.templateOptions.record.getId();
             } else {
                instance._linkedKey = undefined;
