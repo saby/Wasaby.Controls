@@ -64,7 +64,10 @@ import validHtml = require('Core/validHtml');
          wasResolved,
          i;
       if (isString(valueToBuild)) {
-         return markupGenerator.createText(markupGenerator.escape(valueToBuild), key);
+         if (!resolver || !resolver.__noNeedEscapeString) {
+            valueToBuild = markupGenerator.escape(valueToBuild);
+         }
+         return markupGenerator.createText(valueToBuild, key);
       }
       if (!valueToBuild) {
          return [];
