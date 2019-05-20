@@ -32,16 +32,18 @@ function calcFooterRowIndex(
     display,
     hasResults: boolean = false,
     hasHeader: boolean = false,
+    hasEmptyTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
-    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
+    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hasEmptyTemplate, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
 }
 
 function calcResultsRowIndex(
     display,
     resultsPosition: ResultsPosition|null = null,
     hasHeader: boolean = false,
+    hasEmptyTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
