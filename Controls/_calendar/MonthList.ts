@@ -51,6 +51,11 @@ var ModuleComponent = BaseControl.extend({
     },
 
     _beforeUpdate: function (options) {
+        var year = options.date.getFullYear();
+        if (year !== this._position) {
+            this._position = year;
+        }
+
         this._startValue = options.startValue;
         this._endValue = options.endValue;
 

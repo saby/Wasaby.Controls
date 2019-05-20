@@ -1,4 +1,4 @@
-<div style="margin: 50px;" >
+<div style="margin: 50px; flex-shrink: 1; height: 100%; display: flex; flex-direction: column;" >
    <div>month: {{_month}}</div>
    <div>startValue: {{_startValue}}</div>
    <div>endValue: {{_endValue}}</div>
@@ -6,8 +6,7 @@
    <div>selectionBaseValue: {{_selectionBaseValue}}</div>
    <div>selectionHoveredValue: {{_selectionHoveredValue}}</div>
    <Controls.calendar:MonthList
-      attr:style="margin: 10px; border: red;"
-      calendarSource="{{_source}}"
+      attr:style="margin: 10px; border: red; flex-shrink: 1;"
       bind:startValue="_startValue"
       bind:endValue="_endValue"
       bind:month="_month"
