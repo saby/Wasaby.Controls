@@ -180,6 +180,7 @@ import getZIndex = require('Controls/Utils/getZIndex');
                maxWidth: cfg.maxWidth,
                zIndex: cfg.zIndex || getZIndex(this),
                eventHandlers: cfg.eventHandlers,
+               closeOnOutsideClick: true,
                opener: cfg.opener,
                templateOptions: { // for template: Opener/InfoBox/resources/template
                   template: cfg.template,
