@@ -78,13 +78,13 @@
          </Router.router:Reference>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
-            List/Multiselect
-         </a>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/Grid/VirtualScroll' }}">
+            <a href="{{content.href}}">Grid/VirtualScroll</a>
+         </Router.router:Reference>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FVirtualScroll">
-            List/VirtualScroll
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
+            List/Multiselect
          </a>
       </div>
       <div>
