@@ -1,6 +1,7 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Deferred = require('Core/Deferred');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 
       /**
@@ -88,8 +89,11 @@ import Deferred = require('Core/Deferred');
 
       var _private = {
          compatibleOptions: function(self, popupOptions) {
-            // For the old page, set the zIndex manually
-            popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex || getZIndex(self);
+            popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
+            if(!isNewEnvironment()){
+                // For the old page, set the zIndex manually
+                popupOptions.zIndex = 5000;
+            }
          }
       };
 
