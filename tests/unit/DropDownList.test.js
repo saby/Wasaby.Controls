@@ -204,6 +204,23 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
          });
 
+         it('itemschanged', function() {
+            var dropDownConfig, dropDownList;
+
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._children = { subDropdownOpener: { close: function() {} } };
+
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig);
+            assert.deepEqual(dropDownList._listModel.getItems().getRawData(), dropDownConfig.items.getRawData());
+
+            let newItems = Clone(rawData);
+            newItems[3].parent = 1;
+            dropDownList._beforeUpdate({...dropDownConfig, items: new collection.RecordSet({idProperty: 'id', rawData: newItems})});
+            assert.deepEqual(dropDownList._listModel.getItems().getRawData(), newItems);
+         });
+
       });
 
       describe('DropdownList::_beforeMount', function() {
