@@ -24,7 +24,6 @@ define([
                close: function() {
                   result.push('close');
                }
-            }
          };
 
          ctrl._openInfoBoxHandler(event1);
