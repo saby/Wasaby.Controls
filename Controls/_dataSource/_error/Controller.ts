@@ -55,7 +55,7 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
 /**
  * Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * @class Controls/_dataSource/_error/Controller
- * @public
+ * @private
  * @author Заляев А.В.
  * @example
  * <pre>

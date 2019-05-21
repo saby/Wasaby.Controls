@@ -1,11 +1,10 @@
 /// <amd-module name="Controls/_dataSource/parking" />
 /**
- * Набор модулей необходимых для обработки и отображения парковочных шаблонов
  * @library Controls/_dataSource/parking
- * @includes Handler Controls/_dataSource/_parking/Handler
- * @includes ViewConfig Controls/_dataSource/_parking/ViewConfig
- * @includes Controller Controls/_dataSource/_parking/Controller
- * @public
+ * @include Handler Controls/_dataSource/_parking/Handler
+ * @include ViewConfig Controls/_dataSource/_parking/ViewConfig
+ * @include Controller Controls/_dataSource/_parking/Controller
+ * @private
  * @author Заляев А.В.
  */
 export { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';

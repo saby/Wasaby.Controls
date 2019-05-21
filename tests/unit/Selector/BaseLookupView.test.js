@@ -177,12 +177,19 @@ define([
       });
 
       it('_onClickShowSelector', function() {
-         var lookup = new Lookup();
+         var
+            lookup = new Lookup(),
+            stopPropagation = false;
 
          lookup._suggestState = true;
-         lookup._onClickShowSelector();
+         lookup._onClickShowSelector({
+            stopPropagation: function() {
+               stopPropagation = true;
+            }
+         });
 
          assert.isFalse(lookup._suggestState);
+         assert.isTrue(stopPropagation);
       });
 
       it('_onClickClearRecords', function() {
