@@ -114,7 +114,7 @@ DropdownOpener._private = _private;
 DropdownOpener.getDefaultOptions = function () {
    return Merge(
       Sticky.getDefaultOptions(), {
-         closeOnTargetScroll: true,
+          actionOnScroll: 'close',
          _vdomOnOldPage: true
       });
 };
