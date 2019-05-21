@@ -168,18 +168,15 @@
     height: 100%;
     width: 100%;
     max-width: none;
-}
-
-.controls-SelectedCollection__header_wrapper {
-    height: 100%;
-    align-items: center;
-    display: flex;
-    padding-left: @spacing_SelectedCollection-between-infoBoxContent-borderLeft;
-}
-
-.controls-SelectedCollection__body {
+    box-shadow: @size_SelectedCollection-infoBoxContent-shadow @color_SelectedCollection-infoBoxContent-shadow;
+    border: @size_SelectedCollection-infoBoxContent-border solid @color-border_SelectedCollection-infoBoxContent;
+    background-color: @background-color_SelectedCollection-infoBoxContent;
     padding-left: @spacing_SelectedCollection-between-infoBoxContent-borderLeft;
     padding-right: @spacing_SelectedCollection-between-infoBoxContent-borderRight;
     padding-top: @spacing_SelectedCollection-between-infoBoxContent-borderTop;
     padding-bottom: @spacing_SelectedCollection-between-infoBoxContent-borderBottom;
+}
+
+.controls-SelectedCollection__header_wrapper {
+    line-height: @line-height_SelectedCollection-infoBoxContent-header;
 }
