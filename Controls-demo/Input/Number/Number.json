@@ -3,6 +3,9 @@
     "properties": {
       "ws-config": {
         "options": {
+          "value": {
+            "type": "Number"
+          },
           "integersLength": {
             "type": "Number"
           },
