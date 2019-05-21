@@ -159,19 +159,6 @@ import 'css!theme?Controls/popup';
             }
          },
 
-         _contentMousedownHandler: function(event) {
-            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
-               /**
-                * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
-                */
-               if (!this._isPopupOpened()) {
-                  this._debouncedAction('_open', [event]);
-               }
-               event.preventDefault();
-               event.stopPropagation();
-            }
-         },
-
          _contentMouseenterHandler: function(event) {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
                this._cancel(event, 'closing');
@@ -204,7 +191,13 @@ import 'css!theme?Controls/popup';
 
          _previewerClickHandler: function(event) {
             if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
-               // Cancel the ascent of the click. Thus cancel the parent reaction.
+               /**
+                * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+                */
+               if (!this._isPopupOpened()) {
+                  this._debouncedAction('_open', [event]);
+               }
+               event.preventDefault();
                event.stopPropagation();
             }
          },
