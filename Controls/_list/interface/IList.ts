@@ -122,7 +122,7 @@
 /**
  * @name Controls/_list/interface/IList#actionAlignment
  * @cfg {String} Determines how item actions will be aligned on swipe.
- * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant horizontal Actions will be displayed in a line.
  * @variant vertical Actions will be displayed in a line.
  */
@@ -130,7 +130,7 @@
 /**
  * @name Controls/_list/interface/IList#actionCaptionPosition
  * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
- * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant right Title will be displayed to the right of the action's icon.
  * @variant bottom Title will be displayed under the action's icon.
  * @variant none Title will not be displayed.
