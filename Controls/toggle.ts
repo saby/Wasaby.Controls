@@ -20,13 +20,13 @@
  * @author Kraynov D.
  */
 
-import Button = require('Controls/_toggle/Button');
+import {default as Button} from 'Controls/_toggle/Button';
 import Switch = require('Controls/_toggle/Switch');
 import DoubleSwitch = require('Controls/_toggle/DoubleSwitch');
 import RadioGroup = require('Controls/_toggle/RadioGroup');
-import Checkbox = require('Controls/_toggle/Checkbox');
+import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import Separator = require('Controls/_toggle/Separator');
-export {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
+import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 
 export {
    Button,
@@ -36,4 +36,4 @@ export {
    Checkbox,
    Separator,
    BigSeparator
-}
+};

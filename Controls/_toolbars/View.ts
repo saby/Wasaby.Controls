@@ -12,7 +12,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  *
  * @class Controls/Toolbar
  * @extends Core/Control
- * @mixes Controls/interface/ITooltip
+ * @mixes Controls/_interface/ITooltip
  * @mixes Controls/interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_list/interface/IHierarchy

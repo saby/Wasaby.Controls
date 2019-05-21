@@ -17,7 +17,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/interface/ITooltip
+ * @mixes Controls/_interface/ITooltip
  *
  * @ignoreOptions style
  *
