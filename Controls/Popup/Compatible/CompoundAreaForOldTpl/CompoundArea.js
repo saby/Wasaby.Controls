@@ -90,7 +90,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
 
             // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
-            if (_options.type === 'dialog' || _options.type === 'stack') {
+            if ((_options.popupComponent !== 'floatArea' && _options.type === 'dialog') || _options.type === 'stack') {
                this._className += ' controls-CompoundArea-close_button';
             }
 
