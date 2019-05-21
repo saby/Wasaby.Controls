@@ -66,7 +66,7 @@ import {parse as parserLib, load} from 'Core/library';
          },
          open: function(popupOptions, controller) {
             var cfg = this._getConfig(popupOptions || {});
-            this._actionOnScroll = cfg.actionOnScroll ? cfg.actionOnScroll : 'none';
+            this._actionOnScroll = cfg.actionOnScroll;
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -450,6 +450,7 @@ import {parse as parserLib, load} from 'Core/library';
       Base.getDefaultOptions = function() {
          return {
             closePopupBeforeUnmount: true,
+            actionOnScroll: 'none',
             displayMode: 'single',
             _vdomOnOldPage: false // Always open vdom panel
          };
