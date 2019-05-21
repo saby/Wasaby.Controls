@@ -93,7 +93,7 @@ define('Controls/interface/INavigation', [
     *    });
     *    this._navigation = {
     *       source: 'page',
-    *       view: 'page',
+    *       view: 'pages',
     *       sourceConfig: {
     *          pageSize: 2,
     *          page: 0
