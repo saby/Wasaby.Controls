@@ -20,6 +20,7 @@
         multiSelect="{{_options.multiSelect}}"
         selectorTemplate="{{_options.selectorTemplate}}"
         isCompoundTemplate="{{_options.isCompoundTemplate}}"
+        dataLoadCallback="{{_options.dataLoadCallback}}"
         popupClassName="{{_options.popupClassName || (_options.showHeader ? 'controls-DropdownList__margin-head' :
                               _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
         dropdownClassName="{{_options.dropdownClassName}}"

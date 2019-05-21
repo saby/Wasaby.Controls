@@ -62,7 +62,7 @@ var _private = {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
                     itemData = options.listModel.getCurrent(),
-                    item = itemData.item;
+                    item = itemData.breadCrumbs ? itemData.item[itemData.item.length - 1] : itemData.item;
                 if (item !== ControlsConstants.view.hiddenGroup && item.get) {
                     _private.updateItemActions(self, item, options);
                 }

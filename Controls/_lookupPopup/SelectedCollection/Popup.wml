@@ -1,5 +1,5 @@
 <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}" attr:class="controls-SelectedCollection__infobox_content">
-   <Controls.popupTemplate:Dialog>
+   <Controls.popupTemplate:Dialog closeButtonViewMode="light">
       <ws:headerContentTemplate>
          <div class="controls-SelectedCollection__header_wrapper">
             <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>

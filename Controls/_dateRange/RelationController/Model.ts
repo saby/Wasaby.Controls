@@ -10,9 +10,7 @@ class ModuleClass {
     private _relationMode: String;
 
     constructor(options) {
-        this.ranges = this._getRangesFromOptions(options);
-        this._updateSteps(this.ranges);
-        this._relationMode = options.bindType;
+        this.update(options);
     }
 
     /**
@@ -20,18 +18,9 @@ class ModuleClass {
      * @param options
      */
     update(options) {
-        let ranges = this._getRangesFromOptions(options),
-            changedRangeIndex = this._getChangedIndex(ranges);
-        if (changedRangeIndex !== -1) {
-            this.updateRanges(
-                options['startValue' + changedRangeIndex],
-                options['endValue' + changedRangeIndex],
-                changedRangeIndex
-            );
-        } else {
-            // this._relationMode = options.bindType;
-            this._updateSteps(this.ranges);
-        }
+        this.ranges = this._getRangesFromOptions(options);
+        this._updateSteps(this.ranges);
+        this._relationMode = options.bindType;
     }
 
     updateRanges(start, end, changedRangeIndex, relationMode) {

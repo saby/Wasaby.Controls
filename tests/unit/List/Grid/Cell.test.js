@@ -30,8 +30,7 @@ define([
          cell._options.itemData.isHovered = true;
          cell._options.highlightOnHover = false;
 
-         assert.equal('controls-ListView__itemV controls-Grid__row_default ' +
-             'controls-Grid__row_highlightOnHover_default', cell.getCellClasses());
+         assert.equal('controls-ListView__itemV controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
 
       });
 
@@ -83,6 +82,26 @@ define([
 
       });
 
+      it('should not notify about click if item is editing now', function () {
+         let
+             called = false,
+             options = {
+                itemData: {
+                   isEditing: true
+                },
+                eventHandlers: {
+                   'click': () => {
+                      called = true
+                   }
+                }
+             },
+             cell = new Cell(options);
+         cell.saveOptions(options);
+
+         cell._beforeMount(options);
+         cell._callHandler({type:'click'}, {});
+         assert.isFalse(called);
+      });
    });
 
 });
