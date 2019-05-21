@@ -372,7 +372,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!this._options.emptyTemplate);
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
         },
 
         getFooterStyles: function (self): string {

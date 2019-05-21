@@ -9,15 +9,15 @@ class Cell extends Control {
     getCellClasses(): string {
         let
             itemData = this._options.itemData,
-            isNeedToHighlight = this._options.highlightOnHover !== false && <boolean>itemData.isHovered;
+            canBeHighlighted = this._options.highlightOnHover !== false;
 
         return  CssClassList.add('controls-ListView__itemV')
                             .add('controls-Grid__row_'+ (itemData.style || 'default'))
-                            .add('controls-Grid_row-cell_hovered', isNeedToHighlight)
-                            .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default'))
+                            .add('controls-Grid_row-cell_hovered', itemData.isHovered)
+                            .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default'), canBeHighlighted)
                             .compile();
     }
-    
+
     private _callHandler(event, item): void {
         if (this._options.itemData.isEditing) {
             return;

@@ -139,6 +139,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             }, 1, 1), '1_1_0');
          });
+         it('calcResultsRowIndex', function() {
+            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
+               resultsPosition: 'top'
+            }, cfg))), 1, 'Invalid results row index than "resultsPosition" equals "top".');
+            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
+               resultsPosition: 'bottom'
+            }, cfg))), 6, 'Invalid results row index than "resultsPosition" equals "bottom".');
+         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {

@@ -961,14 +961,14 @@ import 'wml!Controls/_input/Base/Stretcher';
          return {
 
             /**
-             * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
-             * placeholder: descriptor(String|Function),
+             * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
              * value: descriptor(String|null),
              */
             tooltip: entity.descriptor(String),
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             inputCallback: entity.descriptor(Function),
+            placeholder: entity.descriptor(String, Function),
             size: entity.descriptor(String).oneOf([
                's',
                'm',
