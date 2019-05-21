@@ -23,6 +23,16 @@ define([
          });
       });
       describe('_beforeMount', function() {
+         it('should not throw on getHeader if items are an empty array', function() {
+            var
+               instance = new PathController(),
+               header = [{}];
+            instance._beforeMount({
+               header: header,
+               items: []
+            });
+            assert.isNotOk(instance._header);
+         });
          it('without header', function() {
             var instance = new PathController();
             instance._beforeMount({});
