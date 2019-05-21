@@ -10,7 +10,7 @@ import entity = require('Types/entity');
     * @class Controls/_toggle/Switch
     * @extends Core/Control
     * @mixes Controls/_toggle/interface/ICheckable
-    * @mixes Controls/interface/ITooltip
+    * @mixes Controls/_interface/ITooltip
     * @control
     * @public
     * @author Михайловский Д.С.

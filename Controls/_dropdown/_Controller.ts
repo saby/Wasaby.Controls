@@ -154,9 +154,9 @@ var _private = {
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IButton
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control

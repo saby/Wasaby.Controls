@@ -16,8 +16,8 @@ import entity = require('Types/entity');
     * @author Михайловский Д.С.
     * @demo Controls-demo/Headers/headerDemo
     *
-    * @mixes Controls/interface/ITooltip
-    * @mixes Controls/interface/ICaption
+    * @mixes Controls/_interface/ITooltip
+    * @mixes Controls/_interface/ICaption
     * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
