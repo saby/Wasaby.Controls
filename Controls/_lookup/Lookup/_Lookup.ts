@@ -445,9 +445,12 @@ import 'css!theme?Controls/lookup';
          this._infoboxOpened = false;
       },
 
-      _onClickShowSelector: function() {
+      _onClickShowSelector: function(event) {
          this._suggestState = false;
          this._notify('showSelector');
+
+         // In Controls.suggest: _InputController, when the content is clicked, auto-completion opens, canceling the event ascent
+         event.stopPropagation();
       },
 
       _onClickClearRecords: function() {
