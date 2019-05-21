@@ -286,7 +286,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   },
                   {
                      inputData: {
@@ -301,7 +301,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   }
                ];
             testCases.forEach(function(testCase, idx) {

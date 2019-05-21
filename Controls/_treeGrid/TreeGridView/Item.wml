@@ -77,7 +77,7 @@
                                 {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                 {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                                 controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-        attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport) + currentColumn.gridCellStyles}}">
+        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport) }}">
       <ws:partial template="columnContentWrapper"/>
    </div>
 </ws:template>
@@ -90,7 +90,7 @@
                                 {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                 {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                                 controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-                          attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport) + currentColumn.gridCellStyles}}">
+                          attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
 </ws:template>
@@ -133,6 +133,7 @@
               eventHandlers="{{itemData.handlersForPartialSupport}}"
               itemData="{{ itemData }}"
               currentColumn="{{ currentColumn }}"
+              attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}"
               colspanCurrentNode="{{ !!colspanCurrentNode }}"
               highlightOnHover="{{ highlightOnHover }}">
          <ws:columnContentTpl>
