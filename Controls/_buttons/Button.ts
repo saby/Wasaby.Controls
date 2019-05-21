@@ -17,7 +17,7 @@ import { IoC } from 'Env/Env';
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/IClick
  * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/IButton
+ * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IButton
  * @mixes Controls/_button/ButtonStyles
