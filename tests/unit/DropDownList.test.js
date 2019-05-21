@@ -204,6 +204,29 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
          });
 
+         it('change root key', function() {
+            let dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = 'test';
+
+            let dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._beforeMount(dropDownConfig);
+
+            dropDownList.saveOptions(dropDownConfig);
+            dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = 'test root';
+
+            dropDownList._beforeUpdate(dropDownConfig);
+            assert.equal(dropDownList._listModel._options.rootKey, 'test root');
+
+            dropDownList.saveOptions(dropDownConfig);
+            dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = undefined;
+
+            dropDownList._beforeUpdate(dropDownConfig);
+            dropDownList.saveOptions(dropDownConfig);
+            assert.equal(dropDownList._listModel._options.rootKey, null);
+         });
+
          it('itemschanged', function() {
             var dropDownConfig, dropDownList;
 
