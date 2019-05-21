@@ -155,9 +155,12 @@ define([
 
 
          hasMoreStorage = {
+            1: undefined,
             2: true,
             3: true,
-            5: true
+            4: false,
+            5: true,
+            6: null
          };
 
 
