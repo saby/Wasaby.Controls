@@ -7,7 +7,30 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  *
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
  *
- *
+ * @class Controls/_dropdown/Button
+ * @extends Core/Control
+ * @mixes Controls/interface/ICaption
+ * @mixes Controls/interface/ITooltip
+ * @mixes Controls/interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/_list/interface/IHierarchy
+ * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @mixes Controls/_dropdown/interface/IHeaderTemplate
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IMenu
+ * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/interface/IDropdown
+ * @mixes Controls/interface/IButton
+ * @mixes Controls/interface/IIcon
+ * @mixes Controls/interface/IIconStyle
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Button
+ * @demo Controls-demo/Buttons/Menu/MenuPG
+ */
+
+/**
  * @name Controls/_dropdown/Button#displayProperty
  * @cfg {String} The name of the field whose value will displayed in menu item.
  * @default title
@@ -32,28 +55,6 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  *     }
  * </pre>
  *
- *
- * @class Controls/_dropdown/Button
- * @extends Core/Control
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/ITooltip
- * @mixes Controls/interface/ISource
- * @mixes Controls/interface/IFilter
- * @mixes Controls/_list/interface/IHierarchy
- * @mixes Controls/_dropdown/interface/IFooterTemplate
- * @mixes Controls/_dropdown/interface/IHeaderTemplate
- * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IMenu
- * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IButton
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
- * @control
- * @public
- * @author Герасимов А.М.
- * @category Button
- * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
 /**
