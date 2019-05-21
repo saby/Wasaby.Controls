@@ -66,6 +66,23 @@ define(
             assert.isTrue(!!data._prefetchSource);
          });
 
+         it('_beforeMount with receivedState and prefetchProxy', function() {
+            let memory = new sourceLib.Memory({
+               idProperty: 'id',
+               data: sourceData
+            });
+            let prefetchSource = new sourceLib.PrefetchProxy({
+               target: memory,
+               data: {
+                  query: sourceData
+               }
+            });
+            let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
+
+            data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
+            assert.isTrue(data._prefetchSource === prefetchSource);
+         });
+
          it('update equal source', function(done) {
             var
                items,
