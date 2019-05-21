@@ -439,10 +439,12 @@ import 'css!theme?Controls/lookup';
 
          this._suggestState = false;
          this._infoboxOpened = true;
+         this._notify('openInfoBox', [config]);
       },
 
       _closeInfoBox: function() {
          this._infoboxOpened = false;
+         this._notify('closeInfoBox');
       },
 
       _onClickShowSelector: function() {
