@@ -8,7 +8,7 @@ import {ItemsUtil} from 'Controls/list';
    var _private = {
       getHeader: function(self, options) {
          var newHeader;
-         if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
+         if (options.items && options.items.length > 0 && options.header && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
                template: HeadingPathBack,
