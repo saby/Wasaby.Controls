@@ -198,14 +198,22 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
       it('Suggest::_private.prepareFilter', function() {
          var self = getComponentObject();
+         self._searchValue = 'dassdaasd';
          self._options.searchParam = 'searchParam';
+         self._options.minSearchLength = 3;
+
          var resultFilter = {
             currentTab: 1,
             searchParam: 'test',
             filterTest: 'filterTest'
          };
 
-         var filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1);
+         var filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1, [1, 2]);
+         assert.deepEqual(filter, resultFilter);
+
+         self._searchValue = '';
+         resultFilter.historyKeys = [1, 2];
+         filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1, [1, 2]);
          assert.deepEqual(filter, resultFilter);
       });
 
@@ -426,15 +434,15 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.equal(suggestComponent._searchValue, '');
 
          self._options.historyId = 'testFieldHistoryId';
+         self._options.autoDropDown = true;
          suggestComponent._changeValueHandler(null, 'te');
          assert.equal(suggestComponent._searchValue, '');
          assert.deepEqual(suggestComponent._filter.historyKeys, IDENTIFICATORS);
-self._options.historyId = '';
-         suggestComponent._options.autoDropDown = true;
+         self._options.historyId = '';
          suggestComponent._changeValueHandler(null, 'test');
          assert.deepEqual(suggestComponent._filter, {searchParam: 'test'});
          suggestComponent._changeValueHandler(null, 'te');
-         assert.deepEqual(suggestComponent._filter, {searchParam: ''});
+         assert.deepEqual(suggestComponent._filter, {searchParam: '', historyKeys: IDENTIFICATORS});
       });
 
       it('Suggest::_private.loadDependencies', function(done) {
@@ -567,21 +575,28 @@ self._options.historyId = '';
          var compObj = getComponentObject();
          compObj._options.fitler = {};
          compObj._options.searchParam = 'testSearchParam';
+         compObj._options.minSearchLength = 3;
+         compObj._options.historyId = 'historyField';
+
 
          var suggestComponent = new suggestMod._InputController();
+
          suggestComponent.saveOptions(compObj._options);
          suggestComponent._searchValue = 'te';
+         suggestComponent._historyKeys = [1, 2];
+         suggestComponent._inputActive = true;
 
          compObj._options.autoDropDown = true;
-         compObj._options.suggestState = true;
+         //compObj._options.suggestState = true;
          suggestMod._InputController._private.updateSuggestState(suggestComponent);
-         assert.equal(suggestComponent._filter, null);
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te', historyKeys: suggestComponent._historyKeys});
 
-         compObj._options.suggestState = false;
+         suggestComponent._searchValue = 'test';
          suggestMod._InputController._private.updateSuggestState(suggestComponent);
-         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te'});
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
 
          compObj._options.autoDropDown = false;
+         compObj._options.minSearchLength = 10;
          suggestComponent._filter = {};
          suggestMod._InputController._private.updateSuggestState(suggestComponent);
          assert.deepEqual(suggestComponent._filter, {});
@@ -716,61 +731,15 @@ self._options.historyId = '';
       });
 
       it('Suggest::_private.openWithHistory', function () {
-         var
-            isCallOpenPopup = false,
-            suggestComponent = new suggestMod._InputController(),
-            getRecentKeys = suggestMod._InputController._private.getRecentKeys,
-            _privateOpen = suggestMod._InputController._private.open;
-
-         suggestMod._InputController._private.open = function() {
-            isCallOpenPopup = true;
-         };
+         var suggestComponent = new suggestMod._InputController();
 
          suggestComponent._filter = {};
+         suggestComponent._historyKeys = [7, 8];
+         suggestComponent._searchValue = '';
+         suggestComponent._options.minSearchLength = 3;
+         suggestComponent._options.searchParam = 'search';
          suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isTrue(isCallOpenPopup);
-
-         isCallOpenPopup = false;
-         suggestComponent._filter = {};
-         suggestComponent._options.suggestState = true;
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isTrue(isCallOpenPopup);
-
-         isCallOpenPopup = false;
-         suggestComponent._filter = {};
-         suggestMod._InputController._private.getRecentKeys = function() {
-            return Deferred.success([]);
-         };
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isFalse(isCallOpenPopup);
-
-         suggestComponent._options.suggestState = false;
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isFalse(isCallOpenPopup);
-
-         suggestComponent._options.suggestState = false;
-         suggestComponent._options.autoDropDown = true;
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isTrue(isCallOpenPopup);
-
-         isCallOpenPopup = false;
-         suggestComponent._filter.historyKeys = [7, 8];
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isTrue(isCallOpenPopup);
-
-         isCallOpenPopup = false;
-         suggestComponent._filter.historyKeys = [7, 8];
-         suggestComponent._options.suggestState = true;
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isFalse(isCallOpenPopup);
-
-         isCallOpenPopup = false;
-         suggestComponent._filter.historyKeys = [7, 8];
-         suggestMod._InputController._private.getRecentKeys = getRecentKeys;
-         suggestMod._InputController._private.openWithHistory(suggestComponent);
-         assert.isFalse(isCallOpenPopup);
-
-         suggestMod._InputController._private.open = _privateOpen;
+         assert.deepEqual(suggestComponent._filter, {search: '', historyKeys: [7, 8]});
       });
 
       it('Suggest::_private.getRecentKeys', function() {
