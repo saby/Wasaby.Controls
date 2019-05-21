@@ -81,7 +81,12 @@ import 'css!theme?Controls/popupTemplate';
          if (options.viewMode !== undefined) {
             self._viewMode = options.viewMode;
          } else {
-            self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
+            //TODO: https://online.sbis.ru/opendoc.html?guid=1f771374-0295-4add-bbd4-12d478d14163
+            if(options.style==='popup') {
+               self._viewMode = options.style;
+            } else {
+               self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
+            }
             if (options.style !== undefined) {
                Env.IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
                if (options.style === 'primary') {
