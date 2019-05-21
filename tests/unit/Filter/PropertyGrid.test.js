@@ -110,6 +110,9 @@ define(
             pGrid._beforeUpdate({ items: newItems });
             assert.equal(pGrid._changedIndex, 2);
             assert.deepEqual(pGrid._items, newItems);
+
+            pGrid._beforeUpdate({ items: newItems });
+            assert.equal(pGrid._changedIndex, -1);
          });
 
          it('_isItemVisible', function() {
