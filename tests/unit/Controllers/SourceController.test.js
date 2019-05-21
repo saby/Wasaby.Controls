@@ -47,8 +47,20 @@ define([
             controller.destroy();
             done();
          });
+      });
 
+      it('call load while loading', function(done) {
+         var controller = new scroll.Controller({
+            source: source
+         });
 
+         controller.load();
+         controller.load().addCallback(function(rs) {
+            assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
+            assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
+            controller.destroy();
+            done();
+         });
       });
 
       it('load + navigation', function (done) {
