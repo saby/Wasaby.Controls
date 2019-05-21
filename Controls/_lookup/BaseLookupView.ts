@@ -193,7 +193,8 @@ var BaseLookupView = Control.extend({
         this._suggestState = false;
         this._notify('showSelector');
 
-        // In Controls.suggest: _InputController, when the content is clicked, auto-completion opens, canceling the event ascent
+        /* Controls.Suggest:_InputController show suggest after input get focused or clicked, then we need to stopPropagation
+           click on showSelector button, otherwise click event will bubbling to controller from input and suggest will showed. */
         event.stopPropagation();
     },
 
