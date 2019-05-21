@@ -47,16 +47,20 @@ define([
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(input.DateBase, options),
                textValue = '01.12.2017',
-               value = new Date(2017, 11, 1);
+               value = new Date(2017, 11, 1),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               };
 
             sandbox.stub(component, '_notify');
-            component._inputCompletedHandler(null, '01122017', textValue);
+            component._inputCompletedHandler(event, '01122017', textValue);
 
             assert.strictEqual(component._model.value.getTime(), value.getTime());
             assert.strictEqual(component._model.textValue, textValue);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
+            sinon.assert.calledOnce(event.stopImmediatePropagation);
 
             sandbox.restore();
          });
