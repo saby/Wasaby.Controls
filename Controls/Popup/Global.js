@@ -23,6 +23,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             this._previewerOpener = Control.createControl(popup.Previewer, {}, document.createElement('div'));
             this._infoBoxOpener = Control.createControl(popup.Infobox, {}, document.createElement('div'));
             this._dialogOpener = Control.createControl(popup.Dialog, {}, document.createElement('div'));
+
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
             var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
