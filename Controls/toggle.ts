@@ -22,7 +22,7 @@
 
 import {default as Button} from 'Controls/_toggle/Button';
 import Switch = require('Controls/_toggle/Switch');
-import DoubleSwitch = require('Controls/_toggle/DoubleSwitch');
+import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
 import RadioGroup = require('Controls/_toggle/RadioGroup');
 import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import Separator = require('Controls/_toggle/Separator');

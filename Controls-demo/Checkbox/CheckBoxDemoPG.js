@@ -14,7 +14,7 @@ define('Controls-demo/Checkbox/CheckBoxDemoPG',
       var CheckBoxDemoPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/Checkbox',
+         _content: 'Controls/toggle:Checkbox',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

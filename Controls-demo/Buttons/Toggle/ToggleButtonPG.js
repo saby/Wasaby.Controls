@@ -16,7 +16,7 @@ define('Controls-demo/Buttons/Toggle/ToggleButtonPG',
          _metaData: null,
          _items: null,
          _itemsSimple: null,
-         _content: 'Controls/_toggle/Button',
+         _content: 'Controls/toggle:Button',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

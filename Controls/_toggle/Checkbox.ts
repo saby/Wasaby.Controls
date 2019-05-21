@@ -133,18 +133,21 @@ class Checkbox extends Control implements ICaption, IIcon, ITooltip {
    private _notifyChangeValue(value: boolean | null): void {
       this._notify('valueChanged', [value]);
    }
-   protected _clickHandler(): void {
+
+   private _clickHandler(): void {
       if (!this._options.readOnly) {
          const map = this._options.triState ? mapTriState : mapBoolState;
          this._notifyChangeValue(map[this._options.value + '']);
       }
    }
+
    static getDefaultOptions(): object {
       return {
          value: false,
          triState: false
       };
    }
+
    static getOptionTypes(): object {
       return {
          triState: EntityDescriptor(Boolean),

@@ -119,18 +119,18 @@ class ToggleButton extends Control implements ICheckable {
       this._iconStyle = iconsUtil.iconStyleTransformation(options.iconStyle);
    }
 
+   private _clickHandler(): void {
+      if (!this._options.readOnly) {
+         this._notify('valueChanged', [!this._options.value]);
+      }
+   }
+
    protected _beforeMount(newOptions: IToggleButtonOptions): void {
       this._optionsGeneration(newOptions);
    }
 
    protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
       this._optionsGeneration(newOptions);
-   }
-
-   protected _clickHandler(): void {
-      if (!this._options.readOnly) {
-         this._notify('valueChanged', [!this._options.value]);
-      }
    }
 
    static getDefaultOptions(): object {
