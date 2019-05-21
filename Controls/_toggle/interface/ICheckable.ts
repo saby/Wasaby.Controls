@@ -1,3 +1,7 @@
+export interface ICheckableOptions {
+   value?: boolean;
+}
+
 /**
  * Interface for 2-position control.
  *
@@ -10,11 +14,6 @@
  * @name Controls/_toggle/interface/ICheckable#value
  * @cfg {boolean} Current state.
  */
-
-export interface IOptions {
-   value?: boolean;
-}
-
 export default interface ICheckable {
    /**
     * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.

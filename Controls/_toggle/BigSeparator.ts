@@ -1,5 +1,5 @@
 import * as Control from 'Core/Control';
-import ICheckable, {IOptions as ICheckableOptions} from './interface/ICheckable';
+import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 
