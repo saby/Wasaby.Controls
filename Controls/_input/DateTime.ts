@@ -63,6 +63,7 @@ var Component = Control.extend([], {
    },
 
    _inputCompletedHandler: function(event, value, textValue) {
+      event.stopImmediatePropagation();
       this._model.autocomplete(textValue, this._options.autocompleteType);
       this._needInputCompletedEvent = false;
       this._notify('inputCompleted', [this._model.value, textValue]);
