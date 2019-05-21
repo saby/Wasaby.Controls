@@ -1,6 +1,6 @@
 <div class="controls-DragNDrop__draggingTemplate">
    <ws:if data="{{_options.imageTemplate}}">
-      <ws:partial template="{{_options.imageTemplate}}"/>
+      <ws:partial template="{{_options.imageTemplate}}" scope="{{_options}}"/>
    </ws:if>
    <ws:else data="{{_options.image}}">
       <img class="controls-DragNDrop__draggingTemplate-icon" src="{{_options.image}}" />

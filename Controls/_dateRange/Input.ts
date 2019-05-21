@@ -53,29 +53,32 @@ var Component = Control.extend([], {
     },
 
     _openDialog: function (event) {
-        this._children.opener.open({
+        var cfg = {
             opener: this,
             target: this._container,
+            template: 'Controls/Date/PeriodDialog',
             className: 'controls-PeriodDialog__picker',
-            isCompoundTemplate: true,
-            horizontalAlign: {side: 'right'},
-            corner: {horizontal: 'left'},
+            horizontalAlign: { side: 'right' },
+            corner: { horizontal: 'left' },
             eventHandlers: {
-                onResult: this._onResult.bind(this)
+               onResult: this._onResult.bind(this)
             },
             templateOptions: {
-                startValue: this._rangeModel.startValue,
-                endValue: this._rangeModel.endValue,
-                selectionType: this._options.selectionType,
-                quantum: this._options.quantum,
-                headerType: 'input',
-                closeButtonEnabled: true,
-                rangeselect: true,
-                handlers: {
-                    onChoose: this._onResultWS3.bind(this)
-                }
+               startValue: this._rangeModel.startValue,
+               endValue: this._rangeModel.endValue,
+               selectionType: this._options.selectionType,
+               quantum: this._options.quantum,
+               headerType: 'input',
+               closeButtonEnabled: true,
+               rangeselect: true
             }
-        });
+        };
+        if (!this._options.vdomDialog) {
+            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.isCompoundTemplate = true;
+            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
+        }
+        this._children.opener.open(cfg);
     },
 
     _onResultWS3: function (event, startValue, endValue) {

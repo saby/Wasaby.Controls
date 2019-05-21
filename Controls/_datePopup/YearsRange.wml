@@ -12,7 +12,7 @@
    <div class="controls-PeriodDialog-Years__yearsRange">
       <ws:for data="yearIndex, year in _model">
          <div class="controls-PeriodDialog-Years__rangeBtn {{
-                     _prepareItemClass(year.date) }}"
+                     _prepareItemClass(year.year) }}"
             on:click="_onItemClick(year.date)"
             on:mouseenter="_onItemMouseEnter(year.date)"
             on:mouseleave="_onItemMouseLeave(year.date)">

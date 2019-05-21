@@ -11,18 +11,18 @@
          on:click="_toggleState()"
       />
    <!--</div>-->
-   <Controls.Input.Date.LinkView
-      if="{{ _headerType === _HEADER_TYPES.link }}"
-      startValue="{{_headerRangeModel.startValue}}"
-      endValue="{{_headerRangeModel.endValue}}"
-      emptyCaption="{{_options.emptyCaption}}"
-      captionFormatter="{{_options.captionFormatter}}"
-      showNextArrow="{{false}}"
-      showPrevArrow="{{false}}"
-      showUndefined="{{true}}"
-      attr:class="controls-PeriodDialog__header-period"
-      on:linkClick="_headerLinkClick()"
-   />
+   <div if="{{ _headerType === _HEADER_TYPES.link }}" class="controls-PeriodDialog__header-period">
+      <Controls.Input.Date.LinkView
+         startValue="{{_headerRangeModel.startValue}}"
+         endValue="{{_headerRangeModel.endValue}}"
+         emptyCaption="{{_options.emptyCaption}}"
+         captionFormatter="{{_options.captionFormatter}}"
+         showNextArrow="{{false}}"
+         showPrevArrow="{{false}}"
+         showUndefined="{{true}}"
+         on:linkClick="_headerLinkClick()"
+      />
+   </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">
       <Controls.input:DateBase
          mask="{{_options.mask}}"
@@ -48,9 +48,10 @@
       style="secondary"
       viewMode="link"
       activableByClick="{{false}}"
-      iconStyle="default"
+      iconStyle="secondary"
       tooltip="{[Текущий период]}"
       icon="icon-size icon-small icon-Home3 icon-primary"
+      on:click="_homeButtonClick()"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.buttons:Button

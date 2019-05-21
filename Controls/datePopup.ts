@@ -216,6 +216,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._state = this._state === STATES.year ? STATES.month : STATES.year;
     },
 
+    _homeButtonClick: function () {
+        this._displayedDate = dateUtils.getStartOfMonth(new Date());
+    },
+
     _yearsRangeChanged: function (e, start, end) {
         _private.rangeChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
     },
