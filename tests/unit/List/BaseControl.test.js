@@ -418,10 +418,13 @@ define([
 
          setTimeout(function() {
             lists.BaseControl._private.loadToDirection(ctrl, 'down');
+
+            assert.equal(ctrl._loadingState, 'down');
             setTimeout(function() {
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
+               assert.equal(ctrl._loadingState, null);
                done();
             }, 100);
          }, 100);
@@ -471,11 +474,13 @@ define([
             assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
             lists.BaseControl._private.loadToDirection(ctrl, 'down');
+            assert.equal(ctrl._loadingState, 'down');
             setTimeout(function() {
                assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
 
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.equal(ctrl._loadingState, null);
                done();
             }, 100);
          }, 100);
@@ -779,7 +784,10 @@ define([
 
          setTimeout(function() {
             lists.BaseControl._private.loadToDirection(ctrl, 'up');
+
+            assert.equal(ctrl._loadingState, 'up');
             setTimeout(function() {
+               assert.equal(ctrl._loadingState, null);
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                done();
             }, 100);

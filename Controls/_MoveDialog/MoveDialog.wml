@@ -34,7 +34,7 @@
                         bind:root="_root"
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
-                        columns="{{_options.columns}}"/>
+                        columns="{{_columns}}"/>
                   </Controls.list:Container>
                </Controls.scroll:Container>
             </div>

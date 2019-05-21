@@ -801,6 +801,10 @@
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
           },
+          "vdomDialog": {
+            "type": "Boolean",
+            "title": "Use new vdom dialog."
+          },
           "name": {
             "title": "Имя контрола",
             "type": "String",
@@ -884,6 +888,10 @@
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
+          },
+          "vdomDialog": {
+            "type": "Boolean",
+            "title": "Use new vdom dialog."
           },
           "name": {
             "title": "Имя контрола",

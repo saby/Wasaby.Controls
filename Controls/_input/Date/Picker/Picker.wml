@@ -4,7 +4,6 @@
       value="{{_options.value}}"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
-      style="{{_options.style}}"
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       placeholder="{{_options.placeholder}}"
@@ -24,7 +23,6 @@
       on:click="_openDialog()"
    />
    <Controls.popup:Sticky name="opener"
-                                 template="SBIS3.CONTROLS/Date/RangeBigChoose"
                                  closeOnOutsideClick="{{true}}"
                                  actionOnScroll="close">
    </Controls.popup:Sticky>

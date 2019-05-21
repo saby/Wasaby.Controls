@@ -105,5 +105,11 @@
     "wml!Controls/Selector/Suggest/Suggest"
   ],
   "output": "controls-selector.package.js"
+}, {
+  "include": [
+    "Controls/SwitchableArea",
+    "Controls/_SwitchableArea/*"
+  ],
+  "output": "controls-switchable-area.package.js"
 }
 ]

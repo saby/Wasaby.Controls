@@ -313,7 +313,7 @@ var _private = {
                     userCallback(addedItems, direction);
                 }
 
-                _private.hideIndicator(self);
+                _private.resolveIndicatorStateAfterReload(self, addedItems);
 
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
@@ -1031,6 +1031,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (self._virtualScroll) {
+                        self._virtualScroll.ItemsCount = self._items.getCount();
                         // При серверной верстке применяем начальные значения
                         _private.applyVirtualScroll(self);
                     }
@@ -1229,11 +1230,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
-            if (this._virtualScroll) {
-               this._virtualScroll.updateItemsSizes();
-               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
-               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
-            }
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
@@ -1392,7 +1388,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // !!!!! НЕ ПЫТАТЬСЯ ВЫНЕСТИ В MOUSEDOWN, ИНАЧЕ НЕ БУДЕТ РАБОТАТЬ ВЫДЕЛЕНИЕ ТЕКСТА В СПИСКАХ !!!!!!
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-Dropdown, .controls-Suggest_list')) {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-EditableArea, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 if (this._children.fakeFocusElem) {
                     this._children.fakeFocusElem.focus();

@@ -1,4 +1,4 @@
-define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone'], function(gridMod, cMerge, collection, entity, clone) {
+define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil) {
    var
       gridData = [
          {
@@ -545,6 +545,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
          });
+
+         it('should update model in old browsers on collection change', function () {
+            var
+                gridViewModel = new gridMod.GridViewModel(cfg),
+                oldVersion = gridViewModel._model._prefixItemVersion,
+                initialStatus = GridLayoutUtil.isPartialSupport;
+
+            GridLayoutUtil.isPartialSupport = true;
+
+            gridViewModel._model._notify('onListChange', 'collectionChanged');
+            assert.equal(oldVersion + 1, gridViewModel._model._prefixItemVersion);
+
+            GridLayoutUtil.isPartialSupport = initialStatus;
+         });
+
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
@@ -1016,12 +1031,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ];
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 4;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1 / 4; grid-row: 2;');
 
             gridViewModel._options.multiSelectVisibility = 'onhover';
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 5;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1 / 5; grid-row: 2;');
 
          });
 
@@ -1115,8 +1130,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual(handlers, iData.handlersForPartialSupport);
             assert.equal(
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1; grid-column-start: 1; grid-row: 2; grid-column-end: 3;',
-                iData.editingRowStyles
+                iData.editingRowStyles,
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1 / 3; grid-row: 2;'
             );
 
             gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
@@ -1238,8 +1253,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.editingRowStyles,
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 1fr; grid-column: 1; ' +
-                'grid-column-start: 1; grid-row: 3; grid-column-end: 5;'
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 1fr; grid-column: 1 / 5; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
