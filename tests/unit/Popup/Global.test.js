@@ -17,8 +17,7 @@ define([
          };
          let result = [];
 
-         ctrl._children = {
-            infoBoxOpener: {
+         ctrl._infoBoxOpener = {
                open: function() {
                   result.push('open');
                },
