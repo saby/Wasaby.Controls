@@ -40,6 +40,10 @@
   white-space: nowrap;
   color: @color_Toolbar-text;
 }
+.controls-Toolbar__item_title_readOnly_theme-@{themeName} {
+  white-space: nowrap;
+  color: @color_Toolbar-text_readOnly;
+}
 .controls-Toolbar__item_title_theme-@{themeName}:active {
   color: @color_Toolbar-text_active;
 }
@@ -49,6 +53,9 @@
 }
 .controls-Toolbar__item_icon_secondary_theme-@{themeName} {
   color: @color_secondary;
+}
+.controls-Toolbar__item_icon_readOnly_theme-@{themeName} {
+  color: @color_Toolbar-icon_readOnly;
 }
 //TODO выпилить старые вариант iconStyle когда пмо и ддл поддержат новые iconStyle'ы
 .controls-Toolbar__item_icon_hover_theme-@{themeName}, .controls-Toolbar__item_icon_primary_theme-@{themeName} {

@@ -8,10 +8,10 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{item.icon || item[iconProperty]}}">
-            <i class="controls-Toolbar__item_icon_{{(item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}}_theme-{{theme}} controls-Toolbar__item_icon_theme-{{theme}} {{item['icon'] || item[iconProperty]}}"/>
+            <i class="controls-Toolbar__item_icon_{{ item['readOnly'] === true ? 'readOnly' : (item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}}_theme-{{theme}} controls-Toolbar__item_icon_theme-{{theme}} {{item['icon'] || item[iconProperty]}}"/>
         </ws:if>
         <ws:else data="{{!!item['buttonStyle']}}">
-            <Controls.buttons:Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
+            <Controls.buttons:Button readOnly="{{buttonReadOnly || item['buttonReadOnly'] || item['readOnly']}}"
                              caption="{{item[displayProperty] || item['buttonCaption']}}"
                              transparent="{{buttonTransparent || item['buttonTransparent']}}"
                              iconStyle="{{item['buttonIconStyle'] || item['iconStyle']}}"
@@ -21,7 +21,7 @@
                              size="m"/>
         </ws:else>
         <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
-            <span class="controls-Toolbar__item_title_theme-{{theme}} {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon_theme-' + theme}}">{{item['title'] || item[displayProperty]}}</span>
+            <span class="controls-Toolbar__item_title{{item['readOnly'] ? '_readOnly'}}_theme-{{theme}} {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon_theme-' + theme}}">{{item['title'] || item[displayProperty]}}</span>
         </ws:if>
     </ws:else>
 </div>
