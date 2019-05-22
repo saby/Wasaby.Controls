@@ -111,7 +111,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field</div>
-                     <Controls.Input.Money fontStyle="default"
+                     <Controls._input.Money fontStyle="default"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoneyValue1"/>
                   </div>
@@ -120,7 +120,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.Input.Money fontStyle="secondary"
+                     <Controls._input.Money fontStyle="secondary"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoneyValue2"/>
                   </div>
@@ -129,7 +129,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.Input.Money fontStyle="primary"
+                     <Controls._input.Money fontStyle="primary"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoneyValue3"/>
                   </div>
@@ -145,7 +145,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field in read mode</div>
-                     <Controls.Input.Money fontStyle="default"
+                     <Controls._input.Money fontStyle="default"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyValueRM"/>
@@ -155,7 +155,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.Input.Money fontStyle="secondary"
+                     <Controls._input.Money fontStyle="secondary"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyValueRM"/>
@@ -165,7 +165,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.Input.Money fontStyle="primary"
+                     <Controls._input.Money fontStyle="primary"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyValueRM"/>

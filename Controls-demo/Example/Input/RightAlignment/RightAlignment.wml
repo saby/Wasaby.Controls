@@ -58,7 +58,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field</div>
-                     <Controls.Input.Money fontStyle="default"
+                     <Controls._input.Money fontStyle="default"
                                            textAlign="right"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoneyValue1"/>
@@ -75,7 +75,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field in read mode</div>
-                     <Controls.Input.Money fontStyle="default"
+                     <Controls._input.Money fontStyle="default"
                                            textAlign="right"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"

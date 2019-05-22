@@ -9,7 +9,7 @@ define('Controls-demo/Input/Money/Money',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Money'
+         CONTENT: 'Controls/_input/Money'
       };
 
       var Money = Base.extend({

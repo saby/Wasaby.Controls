@@ -1,5 +1,5 @@
 {
-  "Controls/Input/Money": {
+  "Controls/_input/Money": {
     "properties": {
       "ws-config": {
         "options": {
