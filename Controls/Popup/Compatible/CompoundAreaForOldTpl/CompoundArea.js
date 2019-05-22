@@ -663,7 +663,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          setTemplate: function(template, templateOptions) {
             if (templateOptions) {
-               this._childConfig = templateOptions.templateOptions;
+               this._childConfig = templateOptions;
             }
             this._childControlName = template;
             return this.rebuildChildControl();
