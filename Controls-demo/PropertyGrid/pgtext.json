@@ -809,6 +809,18 @@
             "title": "Имя контрола",
             "type": "String",
             "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
           }
         }
       }
