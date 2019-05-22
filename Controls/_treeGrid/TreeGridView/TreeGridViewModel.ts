@@ -193,7 +193,7 @@ var
             var index:number;
 
             if (current.isGroup) {
-                index = RowIndexUtil.calcRowIndexByItem.apply(null, _private.getArgsForRowIndexUtil(this, this._model.getDisplay().at(current.index)));
+                index = RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index), this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
             } else if (current.index !== -1) {
                 index = RowIndexUtil.calcRowIndexByKey.apply(null, _private.getArgsForRowIndexUtil(this, current.key));
             }
