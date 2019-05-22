@@ -15,7 +15,7 @@ define(
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Money();
+            ctrl = new Money.default();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
