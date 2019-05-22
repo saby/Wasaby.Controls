@@ -190,7 +190,7 @@ Base.getOptionTypes = function() {
    };
 }
 
-Base._theme = ['Controls/_slider/slider'];
+Base._theme = ['Controls/slider'];
 
 Base._private = _private;
 export default Base;
