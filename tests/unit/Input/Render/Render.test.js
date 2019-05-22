@@ -1,19 +1,19 @@
 define(
    [
       'Env/Env',
-      'Controls/Input/Render',
+      'Controls/input',
       'unit/resources/TemplateUtil',
       'wml!unit/Input/Render/Content',
       'wml!unit/Input/Render/PlaceholderTest'
    ],
-   function(Env, Render, TemplateUtil, Content, placeholderTest) {
+   function(Env, input, TemplateUtil, Content, placeholderTest) {
       'use strict';
 
       describe('Controls.Input.Render', function() {
          var ctrl;
 
          beforeEach(function() {
-            ctrl = new Render();
+            ctrl = new input.Render();
          });
 
          describe('Behavior', function() {
@@ -46,7 +46,7 @@ define(
             });
          });
          describe('Template', function() {
-            var template = TemplateUtil.clearTemplate(new Render({})._template);
+            var template = TemplateUtil.clearTemplate(new input.Render({})._template);
 
             beforeEach(function() {
                ctrl._options = {

@@ -34,6 +34,7 @@ import Phone = require('Controls/_input/Phone');
 import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
+import Render = require('Controls/_input/Render');
 import TimeInterval from 'Controls/_input/TimeInterval';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
@@ -61,6 +62,7 @@ export {
     Password,
     DateBase,
     Date,
+    Render,
     TimeInterval,
     BaseViewModel,
     TextViewModel,

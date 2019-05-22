@@ -56,6 +56,8 @@ import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import RowIndexUtil = require('Controls/_grid/utils/RowIndexUtil');
 import BaseControl = require('Controls/_list/BaseControl');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
+import ItemsViewModel = require('Controls/_list/ItemsViewModel');
+import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 
 import {Paging} from 'Controls/paging';
 
@@ -90,5 +92,7 @@ export {
     TreeItemsUtil,
     RowIndexUtil,
     BaseControl,
-    SearchItemsUtil
+    SearchItemsUtil,
+    ItemsViewModel,
+    getStyle
 };

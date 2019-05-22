@@ -11,6 +11,7 @@
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
+ * @includes Link Controls/_lookup/Lookup/Link
  * @public
  * @author Kraynov D.
  */
@@ -22,6 +23,7 @@ import _CollectionController = require("Controls/_lookup/SelectedCollection/Cont
 import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/ItemTemplate");
 import ButtonItemTemplate = require("wml!Controls/_lookup/Button/itemTemplate");
 import Opener = require("Controls/_lookup/Opener");
+import Link = require('Controls/_lookup/Lookup/Link');
 
 export {
    Selector,
@@ -30,5 +32,6 @@ export {
    _CollectionController,
    ItemTemplate,
    Opener,
-   ButtonItemTemplate
+   ButtonItemTemplate,
+   Link
 }

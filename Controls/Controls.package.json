@@ -116,5 +116,12 @@
     "Controls/SwitchableArea/*"
   ],
   "output": "controls-switchable-area.package.js"
-}
+},
+  {
+    "include": [
+      "Controls/EditableArea",
+      "Controls/_EditableArea/*"
+    ],
+    "output": "controls-editable-area.package.js"
+  }
 ]
