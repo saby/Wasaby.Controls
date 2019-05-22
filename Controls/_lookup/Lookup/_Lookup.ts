@@ -222,7 +222,7 @@ import 'css!theme?Controls/lookup';
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         collectionItems = measurer.getElementsByClassName('controls-SelectedCollection__item');
+         collectionItems = measurer.getElementsByClassName('js-controls-SelectedCollection__item');
          itemsCount = collectionItems.length;
 
          // items only from the last line
