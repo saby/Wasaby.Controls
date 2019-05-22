@@ -120,19 +120,20 @@ function _calcRowIndexByDisplayIndex(
     return rowTopOffset + index + _calcHasMoreButtonsBefore(index, display, hasMoreStorage, hierarchyRelation);
 }
 
-function _calcHasMoreButtonsBefore(itemIndex: number, display, hasMoreStorage, hierarchyRelation): number{
+function _calcHasMoreButtonsBefore(itemIndex: number, display, hasMoreStorage, hierarchyRelation): number {
     let
         count = 0,
         keyProperty: string = display.getCollection().getIdProperty();
 
     for (let key in hasMoreStorage) {
+        if (hasMoreStorage[key] === true) {
+            let
+                item = ItemsUtil.getDisplayItemById(display, key, keyProperty),
+                childsCount = hierarchyRelation.getChildren(key, display.getCollection()).length;
 
-        let
-            item = ItemsUtil.getDisplayItemById(display, key, keyProperty),
-            childsCount = hierarchyRelation.getChildren(key, display.getCollection()).length;
-
-        if (itemIndex > display.getIndex(item) + childsCount) {
-            count++;
+            if (itemIndex > display.getIndex(item) + childsCount) {
+                count++;
+            }
         }
     }
     return count;

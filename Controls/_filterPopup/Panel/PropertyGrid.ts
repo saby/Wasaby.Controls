@@ -92,6 +92,8 @@ import 'css!theme?Controls/filterPopup';
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
             this._items = _private.cloneItems(newOptions.items);
             _private.observeItems(this, this._items);
+         } else {
+            this._changedIndex = -1;
          }
       },
 

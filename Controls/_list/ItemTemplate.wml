@@ -2,7 +2,7 @@
    <ws:partial attr:class="controls-ListView__itemV{{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? (' controls-ListView__itemV_withMarker controls-ListView__item__marked_' + itemData.style)}}
        {{highlightOnHover !== false && !itemData.isEditing ? 'controls-ListView__item_highlightOnHover_' + itemData.style}}
        controls-ListView__item_{{itemData.style}}
-       {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
+       controls-ListView__item_showActions
        {{!!itemData.isActive && highlightOnHover !== false ? ' controls-ListView__item_active'}}
        {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
        {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}

@@ -1,5 +1,5 @@
-define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Global', 'Core/Deferred'],
-   function(Control, template, Deferred) {
+define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Global', 'Controls/popup', 'Core/Deferred'],
+   function(Control, template, popup, Deferred) {
       var _private = {
          getPopupConfig: function(config) {
             var def = new Deferred();
@@ -20,6 +20,10 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
       return Control.extend({
          _template: template,
          _afterMount: function() {
+            this._previewerOpener = Control.createControl(popup.Previewer, {}, document.createElement('div'));
+            this._infoBoxOpener = Control.createControl(popup.Infobox, {}, document.createElement('div'));
+            this._dialogOpener = Control.createControl(popup.Dialog, {}, document.createElement('div'));
+
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
             var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
@@ -31,7 +35,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             var self = this;
             this._activeInfobox = event.target;
             _private.getPopupConfig(config).addCallback(function(popupConfig) {
-               self._children.infoBoxOpener.open(popupConfig);
+               self._infoBoxOpener.open(popupConfig);
             });
          },
 
@@ -41,7 +45,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             var eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
             if (activeInf === eventTarget) {
                this._activeInfobox = null;
-               this._children.infoBoxOpener.close(delay);
+               this._infoBoxOpener.close(delay);
             }
          },
 
@@ -52,24 +56,24 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
          _forceCloseInfoBoxHandler: function() {
             if (this._activeInfobox) {
                this._activeInfobox = null;
-               this._children.infoBoxOpener.close(0);
+               this._infoBoxOpener.close(0);
             }
          },
          _openPreviewerHandler: function(event, config, type) {
             this._activePreviewer = event.target;
-            this._children.previewerOpener.open(config, type);
+            this._previewerOpener.open(config, type);
          },
 
          _closePreviewerHandler: function(event, type) {
-            this._children.previewerOpener.close(type);
+            this._previewerOpener.close(type);
          },
 
          _cancelPreviewerHandler: function(event, action) {
-            this._children.previewerOpener.cancel(action);
+            this._previewerOpener.cancel(action);
          },
          _isPreviewerOpenedHandler: function(event) {
             if (this._activePreviewer === event.target) {
-               return this._children.previewerOpener.isOpened();
+               return this._previewerOpener.isOpened();
             }
             return false;
          },
@@ -78,7 +82,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                // If infobox is displayed inside the popup, then close infobox.
                if (this._needCloseInfoBox(this._activeInfobox, popupContainer)) {
                   this._activeInfobox = null;
-                  this._children.infoBoxOpener.close(0);
+                  this._infoBoxOpener.close(0);
                }
             }
          },
@@ -108,9 +112,12 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             // т.к. диалог может быть только один, отработаем колбек закрытия предыдущего, если он есть
             _this._onDialogClosed();
 
-            _this._children.dialogOpener.open({
+            _this._dialogOpener.open({
                template: template,
-               templateOptions: templateOptions
+               templateOptions: templateOptions,
+               eventHandlers: {
+                  onClose: _this._onDialogClosed.bind(_this)
+               }
             });
 
             //
@@ -123,6 +130,15 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                this._closedDialodResolve();
                delete this._closedDialodResolve;
             }
+         },
+         _beforeUnmount: function() {
+            this._previewerOpener.destroy();
+            this._infoBoxOpener.destroy();
+            this._dialogOpener.destroy();
+
+            this._previewerOpener = null;
+            this._infoBoxOpener = null;
+            this._dialogOpener = null;
          },
 
          _private: _private

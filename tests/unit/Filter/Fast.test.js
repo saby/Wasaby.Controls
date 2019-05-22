@@ -42,7 +42,10 @@ define(
                value: 'фэнтези',
                textValue: '',
                properties: {
-                  items: items[1],
+                  source: new sourceLib.Memory({
+                     data: items[1],
+                     idProperty: 'key'
+                  }),
                   keyProperty: 'title',
                   displayProperty: 'title'
                }
@@ -203,7 +206,7 @@ define(
             fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
-            newConfigItems.items[0].properties.navigation = {page: 2};
+            newConfigItems.items[0].properties.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
                done();
@@ -496,6 +499,20 @@ define(
             assert.isFalse(fastFilter._needShowCross(item));
             item = {value: ['test1'], resetValue: ['test1']};
             assert.isFalse(fastFilter._needShowCross(item));
+         });
+
+         it('_private::loadNewItems', function() {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems).addCallback(function(result) {
+               assert.isTrue(!!result.configs);
+               assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
+               var newConfigItems = Clone(configWithItems);
+               newConfigItems.items[3].value = 'Великобритания';
+               fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+                  assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                  done();
+               });
+            });
          });
 
          function setTrue(assert) {
