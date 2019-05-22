@@ -1,6 +1,6 @@
 define('Controls/Decorator/Markup/resolvers/linkDecorate',
-   ['Controls/_decorator/Markup/resolvers/linkDecorate'],
+   ['Controls/decorator'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.LinkDecorate;
    });
