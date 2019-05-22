@@ -167,7 +167,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 3, title: 'Task', group: 'Select' },
                { id: 4, title: 'Merge request', group: 'Create' },
                { id: 5, title: 'Meeting', group: 'Create' },
-               { id: 5, title: 'Video meeting', group: 'Create' }
+               { id: 6, title: 'Video meeting', group: 'Create' }
             ];
             this._scrollItems = [
                { id: 1, title: 'Task in development' },
