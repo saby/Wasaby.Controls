@@ -112,7 +112,8 @@
 }, {
   "include": [
     "Controls/SwitchableArea",
-    "Controls/_SwitchableArea/*"
+    "Controls/_SwitchableArea/*",
+    "Controls/SwitchableArea/*"
   ],
   "output": "controls-switchable-area.package.js"
 }
