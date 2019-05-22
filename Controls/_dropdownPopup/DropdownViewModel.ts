@@ -1,10 +1,8 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-import lists = require('Controls/list');
-import ItemsViewModel = require('Controls/List/ItemsViewModel');
+import {ItemsViewModel, BaseViewModel, ItemsUtil, getStyle} from 'Controls/list';
 import entity = require('Types/entity');
-import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -51,7 +49,7 @@ import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
          }
       };
 
-      var DropdownViewModel = lists.BaseViewModel.extend({
+      var DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 
@@ -243,7 +241,7 @@ import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
                });
                emptyItem.item = item;
                emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
-               emptyItem.getPropValue = lists.ItemsUtil.getPropertyValue;
+               emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';
                return emptyItem;
@@ -253,4 +251,4 @@ import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
 
       DropdownViewModel._private = _private;
       export = DropdownViewModel;
-   
+
