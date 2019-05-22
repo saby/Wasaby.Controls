@@ -9,6 +9,7 @@ import 'css!theme?Controls/lookup';
    /**
     * Link for use in Selector/Lookup
     *
+    * @class Controls/_lookup/Lookup/Link
     * @mixes Controls/interface/ICaption
     * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
     * @control

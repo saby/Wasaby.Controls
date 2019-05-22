@@ -124,7 +124,7 @@
                         <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:placeholder>
                             Выберите
-                            <Controls.Selector.Lookup.Link caption="имя" on:click="showSelector()"/>
+                            <Controls.lookup:Link caption="имя" on:click="showSelector()"/>
                         </ws:placeholder>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
