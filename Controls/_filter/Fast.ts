@@ -45,11 +45,12 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             }
          },
 
-         getSourceController: function(self, source, navigation) {
+         getSourceController: function(self, {source, navigation, keyProperty}) {
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: source,
-                  navigation: navigation
+                  navigation: navigation,
+                  keyProperty: keyProperty
                });
             }
             return self._sourceController;
@@ -69,13 +70,14 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             return itemConfig;
          },
 
-         loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
+         loadItemsFromSource: function(instance, {source, keyProperty filter, navigation, dataLoadCallback}) {
             // As the data source can be history source, then you need to merge the filter
-            return _private.getSourceController(instance, source, navigation).load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
+            return _private.getSourceController(instance, {source, navigation, keyProperty}).load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
                instance._items = items;
                if (dataLoadCallback) {
                   dataLoadCallback(items);
                }
+               return items
             });
          },
 
@@ -89,7 +91,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                return Deferred.success(self._configs[index]._items);
             } if (properties.source) {
                self._configs[index]._sourceController = null;
-               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter, properties.navigation, properties.dataLoadCallback);
+               return _private.loadItemsFromSource(self._configs[index], properties);
             }
          },
 
@@ -205,9 +207,37 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
          calculateStateSourceControllers: function(configs, items) {
             chain.factory(configs).each(function(config, index) {
-               _private.getSourceController(config, getPropValue(items.at(index), 'properties').source,
-                  getPropValue(items.at(index), 'properties').navigation).calculateState(config._items);
+               _private.getSourceController(config, getPropValue(items.at(index), 'properties')).calculateState(config._items);
             });
+         },
+
+         getKeysLoad: function(items, keys) {
+            let result = [];
+            chain.factory(keys).each(function(key) {
+               if (!items.getRecordById(key)) {
+                  result.push(key);
+               }
+            });
+           return result;
+         },
+
+         loadNewItems: function(items, configs) {
+            let pDef = new pDeferred();
+            chain.factory(items).each(function(item, index) {
+               let keys = _private.getKeysLoad(configs[index]._items, item.value instanceof Array ? item.value: [item.value]);
+               if (keys.length) {
+                  let properties = {...getPropValue(item, 'properties')};
+                  properties.filter = properties.filter || {};
+                  properties.filter[properties.keyProperty] = keys;
+                  let result = _private.loadItemsFromSource({}, properties).addCallback(function(items) {
+                     configs[index]._items.prepend(items);
+                  });
+                  pDef.push(result);
+               } else {
+                  pDef.push(Deferred.success());
+               }
+            });
+            return pDef.done().getResult();
          }
       };
 
@@ -234,7 +264,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.loadItemsFromSource(self, options.source).addCallback(function() {
+               resultDef = _private.loadItemsFromSource(self, options).addCallback(function() {
                   return _private.reload(self);
                });
             }
@@ -249,11 +279,13 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                if (_private.isNeedReload(this._options.items, newOptions.items)) {
                   resultDef = _private.reload(this);
                } else {
-                  this._setText();
+                  resultDef = _private.loadNewItems(newOptions.items, this._configs).addCallback(function() {
+                     self._setText();
+                  });
                }
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                this._sourceController = null;
-               resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
+               resultDef = _private.loadItemsFromSource(self, newOptions).addCallback(function() {
                   return _private.reload(self);
                });
             }
@@ -270,8 +302,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: _private.getSourceController(this._configs[index],
-                  getPropValue(this._items.at(index), 'properties').source,
-                  getPropValue(this._items.at(index), 'properties').navigation).hasMoreData('down')
+                  getPropValue(this._items.at(index), 'properties')).hasMoreData('down')
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),

@@ -25,7 +25,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          id: 4,
          parent: null,
          isAdditional: true,
-         '@parent': true
+         '@parent': true, readOnly: true
       },
       {
          id: 5,
@@ -88,7 +88,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
             dropDownList._hasHierarchy = false;
             dropDownList._subDropdownOpened = false;
-   
+
+            dropDownList._itemMouseEnter( {}, items.at(3), true);
+            assert.isFalse(dropDownList._subDropdownOpened);
+            assert.isFalse(opened);
+
             dropDownList._itemMouseEnter({}, items.at(4), true);
             assert.isTrue(dropDownList._subDropdownOpened)
             assert.isFalse(opened);
@@ -202,6 +206,46 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
 
+         });
+
+         it('change root key', function() {
+            let dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = 'test';
+
+            let dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._beforeMount(dropDownConfig);
+
+            dropDownList.saveOptions(dropDownConfig);
+            dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = 'test root';
+
+            dropDownList._beforeUpdate(dropDownConfig);
+            assert.equal(dropDownList._listModel._options.rootKey, 'test root');
+
+            dropDownList.saveOptions(dropDownConfig);
+            dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = undefined;
+
+            dropDownList._beforeUpdate(dropDownConfig);
+            dropDownList.saveOptions(dropDownConfig);
+            assert.equal(dropDownList._listModel._options.rootKey, null);
+         });
+
+         it('itemschanged', function() {
+            var dropDownConfig, dropDownList;
+
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._children = { subDropdownOpener: { close: function() {} } };
+
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig);
+            assert.deepEqual(dropDownList._listModel.getItems().getRawData(), dropDownConfig.items.getRawData());
+
+            let newItems = Clone(rawData);
+            newItems[3].parent = 1;
+            dropDownList._beforeUpdate({...dropDownConfig, items: new collection.RecordSet({idProperty: 'id', rawData: newItems})});
+            assert.deepEqual(dropDownList._listModel.getItems().getRawData(), newItems);
          });
 
       });

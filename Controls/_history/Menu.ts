@@ -46,7 +46,7 @@ var HistoryMenu = Menu.extend({
 
    _onPinClickHandler: function (event, items) {
       var self = this;
-      this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function (result) {
+      this._options.source.update(items[0].clone(), _private.getMetaPinned(items[0])).addCallback(function (result) {
          if (!result) {
             self._children.notificationOpener.open({
                template: 'Controls/popupTemplate:NotificationSimple',
