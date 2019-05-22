@@ -1,6 +1,5 @@
 <div class="controls-PopupPreviewer">
    <ws:partial template="{{_options.content}}"
-               on:mousedown="_contentMousedownHandler()"
                on:mouseenter="_contentMouseenterHandler()"
                on:mousemove="_contentMousemoveHandler()"
                on:mouseleave="_contentMouseleaveHandler()"

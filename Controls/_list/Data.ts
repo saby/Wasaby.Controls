@@ -44,12 +44,13 @@ type GetSourceResult = {
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {
-         isEqualItems: function(oldList, newList) {
+         isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
             return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          },
+
          updateDataOptions: function(self, dataOptions) {
             function reducer(result, optName) {
                if (optName === 'source' && self._source) {
@@ -154,7 +155,7 @@ type GetSourceResult = {
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new source.PrefetchProxy({target: options.source})
+                  source: options.source instanceof source.PrefetchProxy ? options.source : new source.PrefetchProxy({target: options.source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {

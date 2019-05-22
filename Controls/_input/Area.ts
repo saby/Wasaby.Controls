@@ -250,7 +250,7 @@ import 'Controls/decorator';
          var optionTypes = Text.getOptionTypes();
 
          /**
-          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
           * optionTypes.minLines = descriptor(Number);
           * optionTypes.maxLines = descriptor(Number);
           */

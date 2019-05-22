@@ -111,6 +111,10 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
                hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null;
             return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+         },
+
+         getRootKey: function(key) {
+            return key === undefined ? null : key;
          }
 
       };
@@ -172,7 +176,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
-                  rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
+                  rootKey: _private.getRootKey(newOptions.rootKey),
                   selectedKeys: Clone(newOptions.selectedKeys),
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
@@ -197,7 +201,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                itemsChanged = newOptions.items !== this._options.items;
 
             if (rootChanged) {
-               this._listModel.setRootKey(newOptions.rootKey);
+               this._listModel.setRootKey(_private.getRootKey(newOptions.rootKey));
             }
 
             if (itemsChanged) {
@@ -227,7 +231,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                this._subDropdownOpened = false;
             }
 
-            if (hasChildren) {
+            if (hasChildren && !item.get('readOnly')) {
                this._subDropdownOpened = true;
                this._openSubDropdown(event, item);
             }
@@ -284,6 +288,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
+            if (item.get('readOnly')) {
+               return;
+            }
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
                let isApplyButtonVisible = this._needShowApplyButton;
                let self = this;
