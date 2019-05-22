@@ -208,13 +208,13 @@
       }
     }
   },
-  "Controls/Heading/Separator": {
-    "name": "Controls/Heading/Separator",
+  "Controls/heading:Separator": {
+    "name": "Controls/heading:Separator",
     "title": "Heading.",
-    "className": "Controls/Heading/Separator",
+    "className": "Controls/heading:Separator",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Separator",
+    "fullname": "Controls/heading:Separator",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -231,13 +231,13 @@
       }
     }
   },
-  "Controls/Heading/Counter": {
-    "name": "Controls/Heading/Counter",
+  "Controls/heading:Counter": {
+    "name": "Controls/heading:Counter",
     "title": "Heading.",
-    "className": "Controls/Heading/Counter",
+    "className": "Controls/heading:Counter",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Counter",
+    "fullname": "Controls/heading:Counter",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -409,13 +409,13 @@
       }
     }
   },
-  "Controls/Heading/Back": {
-    "name": "Controls/Heading/Back",
+  "Controls/heading:Back": {
+    "name": "Controls/heading:Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
-    "className": "Controls/Heading/Back",
+    "className": "Controls/heading:Back",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Back",
+    "fullname": "Controls/heading:Back",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
