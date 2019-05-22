@@ -117,7 +117,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }, 0);
          },
 
-         // https://online.sbis.ru/opendoc.html?guid=f8330377-2fad-4982-80c7-af9be0b6c706
+         // todo getSelectedChildrenCount vs getSelectedCount: one of these must removed
+         // refactor by https://online.sbis.ru/opendoc.html?guid=face920a-41ce-49f4-bf79-25add7363adf
          getSelectedCount: function(self, hierarchyRelation, selectedKeys, excludedKeys, items) {
             var
                selection = self.getSelectedKeysForRender(),
