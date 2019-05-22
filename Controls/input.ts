@@ -14,6 +14,7 @@
  * @includes Time Controls/_input/Time/Picker
  * @includes DateTimeModel Controls/_input/DateTime/Model
  * @includes TimeInterval Controls/_input/TimeInterval
+ * @includes Money Controls/_input/Money
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
@@ -35,6 +36,7 @@ import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
 import TimeInterval from 'Controls/_input/TimeInterval';
+import Money from 'Controls/_input/Money';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import TextViewModel = require('Controls/_input/Text/ViewModel');
@@ -62,6 +64,7 @@ export {
     DateBase,
     Date,
     TimeInterval,
+    Money,
     BaseViewModel,
     TextViewModel,
     MaskFormatBuilder,
