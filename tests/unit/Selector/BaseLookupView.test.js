@@ -277,7 +277,7 @@ define([
          assert.deepEqual(config, {
             maxWidth: 100,
             offset: {
-               horizontal: 0
+               horizontal: -0
             }
          });
          assert.isFalse(lookup._suggestState);
