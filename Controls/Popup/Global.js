@@ -20,9 +20,11 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
       return Control.extend({
          _template: template,
          _afterMount: function() {
-            this._previewerOpener = Control.createControl(popup.Previewer, {}, document.createElement('div'));
-            this._infoBoxOpener = Control.createControl(popup.Infobox, {}, document.createElement('div'));
-            this._dialogOpener = Control.createControl(popup.Dialog, {}, document.createElement('div'));
+            var openerContainer = this._getOpenerContainer();
+
+            this._previewerOpener = Control.createControl(popup.Previewer, {}, openerContainer.previewer);
+            this._infoBoxOpener = Control.createControl(popup.Infobox, {}, openerContainer.infobox);
+            this._dialogOpener = Control.createControl(popup.Dialog, {}, openerContainer.dialog);
 
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
@@ -31,6 +33,26 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                requirejs(ManagerWrapperControllerModule).registerGlobalPopup(this);
             }
          },
+
+         _getOpenerContainer: function() {
+            // PopupGlobal - hoc, that wraps the body. we can't put opener on template, cause it's breaking  layout of page.
+            var container = document.createElement('div');
+            container.setAttribute('data-vdom-ignore', true);
+            container.setAttribute('class', 'controls-PopupGlobal__container');
+            var previewerContainer = document.createElement('div');
+            var infoboxContainer = document.createElement('div');
+            var dialogContainer = document.createElement('div');
+            container.append(previewerContainer);
+            container.append(infoboxContainer);
+            container.append(dialogContainer);
+            document.body.append(container);
+            return {
+               previewer: previewerContainer,
+               infobox: infoboxContainer,
+               dialog: dialogContainer,
+            };
+         },
+
          _openInfoBoxHandler: function(event, config) {
             var self = this;
             this._activeInfobox = event.target;
