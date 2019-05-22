@@ -35,6 +35,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             // PopupGlobal - hoc, that wraps the body. we can't put opener on template, cause it's breaking  layout of page.
             var container = document.createElement('div');
             container.setAttribute('data-vdom-ignore', true);
+            container.setAttribute('ws-no-focus', true);
             container.setAttribute('class', 'controls-PopupGlobal__container');
             var openersContainer = document.createElement('div');
             container.append(openersContainer);
