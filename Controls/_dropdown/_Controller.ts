@@ -96,9 +96,9 @@ var _private = {
 
    onResult: function (event, result) {
       switch (result.action) {
-         case 'pinClicked':
+         case 'pinClick':
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
-            this._notify('pinClicked', [result.data]);
+            this._notify('pinClick', [result.data]);
             this._items = this._options.source.getItems();
             this._open();
             break;
