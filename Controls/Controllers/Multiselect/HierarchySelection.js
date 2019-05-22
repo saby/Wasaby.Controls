@@ -117,6 +117,33 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }, 0);
          },
 
+         // https://online.sbis.ru/opendoc.html?guid=f8330377-2fad-4982-80c7-af9be0b6c706
+         getSelectedCount: function(self, hierarchyRelation, selectedKeys, excludedKeys, items) {
+            var
+               selection = self.getSelectedKeysForRender(),
+               keys = Object.keys(selection),
+               type;
+            if (!keys.length) {
+               return 0;
+            }
+
+            // detect type of key, object cast all types to string
+            type = typeof items.at(0).getId();
+            keys.forEach(function(key) {
+               var
+                  correctKey = type === 'string' ? key : +key;
+               if (selection[correctKey] === null) {
+                  if (excludedKeys.indexOf(correctKey) !== -1) {
+                     delete selection[correctKey];
+                  }
+                  if (!(selectedKeys.indexOf(correctKey) !== -1 || _private.isParentSelected(hierarchyRelation, correctKey, selectedKeys, excludedKeys, items))) {
+                     delete selection[correctKey];
+                  }
+               }
+            });
+            return Object.keys(selection).length;
+         },
+
          getSelectedButNotLoadedItemsCount: function(selectedKeys, items) {
             return selectedKeys.reduce(function(acc, key) {
                if (key !== null && !items.getRecordById(key)) {
@@ -209,9 +236,9 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
       getCount: function() {
          return (
-            _private.getSelectedChildrenCount(
+            _private.getSelectedCount(
+               this,
                this._hierarchyRelation,
-               null,
                this._selectedKeys,
                this._excludedKeys,
                this._items
