@@ -197,7 +197,8 @@ var StickyHeader = Control.extend({
       offset = this._isMobilePlatform ? 1 : 0;
 
       if (this._options.position.indexOf('top') !== -1) {
-         top = this._stickyHeadersHeight.top;
+         const stickyTop = this._options.stickyTop;
+         top = stickyTop ? stickyTop : this._stickyHeadersHeight.top;
          if (this._context.stickyHeader) {
             top += this._context.stickyHeader.top;
          }
@@ -240,6 +241,9 @@ var StickyHeader = Control.extend({
    },
 
    _isShadowVisible: function(shadowPosition) {
+      if (this._options.stickyTop !== undefined) {
+         return false;
+      }
       //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
       var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
 

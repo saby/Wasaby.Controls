@@ -414,6 +414,7 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
+        _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
 
@@ -476,6 +477,7 @@ var
         },
 
         _prepareColumns: function(columns) {
+            console.log('sds', columns)
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
@@ -511,6 +513,8 @@ var
         },
 
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
+            console.log('columns', columns)
+
             if (multiSelectVisibility) {
                 this._headerColumns = [{}].concat(columns);
             } else {
@@ -570,7 +574,6 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isHeader: true,
-
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs
                 });
@@ -601,7 +604,41 @@ var
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
+            // -----------------------------------------------------------
+            // ---------------------- multyHeader ----------------------
+            // -----------------------------------------------------------
+            if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerColumns[columnIndex + 1].startColumn) {
+                headerColumn.cellStyles = 'grid-row:1/3;';
+            }
 
+            if (this._headerColumns[columnIndex].startColumn) {
+                const { startColumn, endColumn, startRow, endRow } = this._headerColumns[this._curHeaderColumnIndex];
+
+
+
+                headerColumn.cellContentClasses += ' controls-Grid__cell_header-content_center';
+                if (endRow % 2 === 0) {
+                    headerColumn.cellContentClasses += ' controls-Grid__cell_header-content_border-bottom';
+                }
+                const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
+                const cellStyles = [
+                    {
+                        name: 'grid-column',
+                        value: `${startColumn + additionalColumn} / ${endColumn + additionalColumn}`
+                    },
+                    {
+                        name: 'grid-row',
+                        value: `${startRow} / ${endRow}`
+                    },
+                ];
+
+                if (this._headerColumns[this._curHeaderColumnIndex] === this._headerColumns[this._headerColumns.length - 1] && !this.isStickyHeader()) {
+                    cellStyles.push({ name: 'z-index', value: '0' });
+                }
+                headerColumn.stickyTop = (startRow - 1 ) * 20;
+                headerColumn.cellStyles = GridLayoutUtil.toCssString(cellStyles);
+                headerColumn.height = `height:${(endRow - startRow) * 20}px;min-height:${(endRow - startRow) * 20}px`;
+            }
             return headerColumn;
         },
 
