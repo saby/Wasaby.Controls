@@ -260,8 +260,6 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-            } else {
-                _private.setCurrentColumnsWidth(this, this._container);
             }
         }
     });
