@@ -173,10 +173,10 @@ var _private = {
       // Нужно чтобы не потерялся формат https://online.sbis.ru/opendoc.html?guid=e76fca5b-3bda-401d-9eed-ead8f8a0d469
       items.getFormat();
       items.clear();
-      this.addProperty(this, items, 'pinned', 'boolean', false);
-      this.addProperty(this, items, 'recent', 'boolean', false);
-      this.addProperty(this, items, 'frequent', 'boolean', false);
-      this.addProperty(this, items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
+      this.addProperty(items, 'pinned', 'boolean', false);
+      this.addProperty(items, 'recent', 'boolean', false);
+      this.addProperty(items, 'frequent', 'boolean', false);
+      this.addProperty(items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
       this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
       this.fillFrequentItems(self, filteredHistory, oldItems, items);
       this.fillItems(self, filteredHistory, 'recent', oldItems, items);
@@ -192,6 +192,10 @@ var _private = {
             });
             if (filteredHistory.pinned.indexOf(id) !== -1) {
                newItem.set('pinned', true);
+            }
+            if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1) {
+               newItem.set('id', id + '_history');
+               newItem.set('originalId', id);
             }
             items.add(newItem);
          }
@@ -257,7 +261,7 @@ var _private = {
       items.append(frequentItems);
    },
 
-   addProperty: function (self, record, name, type, defaultValue) {
+   addProperty: function (record, name, type, defaultValue) {
       if (record.getFormat().getFieldIndex(name) === -1) {
          record.addField({
             name: name,

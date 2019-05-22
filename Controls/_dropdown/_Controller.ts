@@ -76,8 +76,15 @@ var _private = {
       }
    },
 
+   resetUniqueHistoryId: function(item) {
+      if (item.get && item.get('originalId')) {
+         item.set('id', item.get('originalId'));
+      }
+   },
+
    updateHistory: function (self, items) {
       if (historyUtils.isHistorySource(self._options.source)) {
+         _private.resetUniqueHistoryId(items);
          self._options.source.update(items, historyUtils.getMetaHistory());
 
          if (self._sourceController && self._options.source.getItems) {
@@ -89,6 +96,7 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClicked':
+            _private.resetUniqueHistoryId(result.data[0]);
             this._notify('pinClicked', [result.data]);
             this._items = this._options.source.getItems();
             this._open();
