@@ -2,10 +2,9 @@ define(
    [
       'Env/Env',
       'Controls/scroll',
-      'Controls/StickyHeader/Utils',
       'wml!unit/Container/resources/Content'
    ],
-   function(Env, scrollMod, stickyUtils, Content) {
+   function(Env, scrollMod, Content) {
 
       'use strict';
 
