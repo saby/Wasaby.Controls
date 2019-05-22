@@ -27,11 +27,10 @@
             <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+                     <Controls.Popup.Global>
                      <Controls.popup:Manager
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
-                             on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()"
-                             on:serviceError="PopupGlobal._openDialogHandler()"
                              stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
@@ -46,15 +45,8 @@
                                  on:touchend="_touchendPage()"
                                  on:mousedown="_mousedownPage()"
                                  on:mouseup="_mouseupPage()"
-                                 on:openInfoBox="PopupGlobal._openInfoBoxHandler()"
-                                 on:closeInfoBox="PopupGlobal._closeInfoBoxHandler()"
-                                 on:forceCloseInfoBox="PopupGlobal._forceCloseInfoBoxHandler()"
                                  on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
-                                 on:openPreviewer="PopupGlobal._openPreviewerHandler()"
-                                 on:cancelPreviewer="PopupGlobal._cancelPreviewerHandler()"
-                                 on:isPreviewerOpened="PopupGlobal._isPreviewerOpenedHandler()"
-                                 on:closePreviewer="PopupGlobal._closePreviewerHandler()"
                                  on:suggestStateChanged="_suggestStateChangedHandler()">
                               <ws:if data="{{isCompatible}}">
                                  <div class="ws-focus-in"></div>
@@ -128,7 +120,6 @@
                                  </div>
                               </ws:else>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
-                              <Controls.Popup.Global name="PopupGlobal"></Controls.Popup.Global>
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
@@ -136,6 +127,7 @@
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>
+                     </Controls.Popup.Global>
                   </Controls.event:Register>
                </Controls.event:Register>
             </Controls.event:Register>

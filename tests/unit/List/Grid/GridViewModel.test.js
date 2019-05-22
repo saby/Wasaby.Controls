@@ -139,6 +139,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             }, 1, 1), '1_1_0');
          });
+         it('calcResultsRowIndex', function() {
+            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
+               resultsPosition: 'top'
+            }, cfg))), 1, 'Invalid results row index than "resultsPosition" equals "top".');
+            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
+               resultsPosition: 'bottom'
+            }, cfg))), 6, 'Invalid results row index than "resultsPosition" equals "bottom".');
+         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -286,7 +294,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   },
                   {
                      inputData: {
@@ -301,7 +309,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   }
                ];
             testCases.forEach(function(testCase, idx) {
@@ -634,7 +642,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
             assert.isTrue(current.multiSelectVisibility === 'visible');
-            assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
 

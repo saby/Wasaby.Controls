@@ -1,14 +1,16 @@
 <Controls.dragnDrop:Controller attr:class="controls-CompoundArea__dragContainer">
-   <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
-      <ws:partial
-         template="{{_options.template}}"
-         scope="{{_options.templateOptions}}"
-         on:close="_onCloseHandler()"
-         on:controlresize="_onResizeHandler()"
-         on:sendresult="_onResultHandler()"
-         on:register="_onRegisterHandler()"
-         on:unregister="_onRegisterHandler()"
-         on:maximized="_onMaximizedHandler()"
-      ></ws:partial>
-   </Controls.Pending>
+   <Controls.Popup.Global>
+      <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
+         <ws:partial
+            template="{{_options.template}}"
+            scope="{{_options.templateOptions}}"
+            on:close="_onCloseHandler()"
+            on:controlresize="_onResizeHandler()"
+            on:sendresult="_onResultHandler()"
+            on:register="_onRegisterHandler()"
+            on:unregister="_onRegisterHandler()"
+            on:maximized="_onMaximizedHandler()"
+         ></ws:partial>
+      </Controls.Pending>
+   </Controls.Popup.Global>
 </Controls.dragnDrop:Controller>

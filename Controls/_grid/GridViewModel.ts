@@ -53,19 +53,19 @@ var
           if (columnIndex === multiselectOffset) {
               if (isBreadCrumbs) {
                  if (GridLayoutUtil.isNoSupport) {
-                    return ' colspan: 1';
+                    return ' colspan: 1;';
                  } else if (GridLayoutUtil.isPartialSupport) {
-                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (multiselectOffset + 2);
+                        return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
                  } else {
-                    return ' grid-column: 1 / ' + (multiselectOffset + 2);
+                    return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
               } else {
                  if (GridLayoutUtil.isNoSupport) {
-                    return ' colspan: ' + (columnsLength - multiselectOffset);
+                    return ` colspan: ${columnsLength - multiselectOffset};`;
                  } else if (GridLayoutUtil.isPartialSupport) {
-                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (columnsLength + 1);
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
                  } else {
-                    return ' grid-column: ' + (multiselectOffset+1) + ' / ' + (columnsLength + 1);
+                    return ` grid-column: ${multiselectOffset+1} / ${columnsLength + 1};`;
                  }
               }
           }
@@ -372,7 +372,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!this._options.emptyTemplate);
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
         },
 
         getFooterStyles: function (self): string {

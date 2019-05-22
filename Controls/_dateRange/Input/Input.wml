@@ -12,7 +12,7 @@
       validationErrors="{{_options.validationErrors}}"
       autocompleteType="start"
       on:keyup="_keyUpHandler()"
-      on:inputCompleted="_proxyEvent('inputCompleted')"
+      on:inputCompleted="_notifyInputCompleted()"
       on:tagClick="_proxyEvent('startTagClick')"
       on:tagHover="_proxyEvent('startTagHover')">
    </Controls.input:DateBase>
@@ -29,7 +29,7 @@
       style="{{_options.style}}"
       validationErrors="{{_options.validationErrors}}"
       autocompleteType="end"
-      on:inputCompleted="_proxyEvent('inputCompleted')"
+      on:inputCompleted="_notifyInputCompleted()"
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">
    </Controls.input:DateBase>
