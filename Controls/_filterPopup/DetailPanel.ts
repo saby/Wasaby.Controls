@@ -97,8 +97,8 @@ import 'Controls/Controllers/PrimaryAction';
       isChangedValue: function(items) {
          var isChanged = false;
          chain.factory(items).each(function(item) {
-            if ((!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
-               getPropValue(item, 'visibility') === undefined) || getPropValue(item, 'visibility')) {
+            if ((getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
+                getPropValue(item, 'visibility') === undefined) || getPropValue(item, 'visibility')) {
                isChanged = true;
             }
          });
@@ -217,7 +217,9 @@ import 'Controls/Controllers/PrimaryAction';
             if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
-            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            if (getPropValue(item, 'resetValue') !== undefined) {
+               setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            }
          });
          this._isChanged = false;
       }
