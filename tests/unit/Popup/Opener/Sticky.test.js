@@ -2,7 +2,7 @@ define(
    [
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Controls/Popup/Opener/Sticky/StickyController',
-      'Controls/Popup/Manager/ManagerController'
+      'Controls/_popup/Manager/ManagerController'
    ],
    (StickyStrategy, StickyController, ManagerController) => {
       'use strict';

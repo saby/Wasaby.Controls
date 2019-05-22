@@ -20,7 +20,7 @@ define(
          BaseController.prototype._checkContainer = () => true;
       });
 
-      describe('Controls/Popup/Manager/ManagerController', () => {
+      describe('Controls/_popup/Manager/ManagerController', () => {
          it('initialize', function() {
             // Manager and container doesn't initialized
             popupMod.Controller._manager = undefined;
