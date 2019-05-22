@@ -1998,13 +1998,13 @@
       }
     }
   },
-  "Controls/Indicator/Progress/Bar": {
-    "name": "Controls/Indicator/Progress/Bar",
+  "Controls/progress:Bar": {
+    "name": "Controls/progress:Bar",
     "title": "Control that renders progress bar",
-    "className": "Controls/Indicator/Progress/Bar",
+    "className": "Controls/progress:Bar",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Indicator/Progress/Bar",
+    "fullname": "Controls/progress:Bar",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
