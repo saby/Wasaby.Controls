@@ -148,6 +148,8 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
          },
 
          _swipeHandler: function(event) {
+            // close popup by swipe only for vdom, cause ws3 controls use differ system of swipe,
+            // we can't stop it on vdom controls.
             if (event.nativeEvent.direction === 'right' && !this._options.isCompoundTemplate) {
                this._close();
             }
