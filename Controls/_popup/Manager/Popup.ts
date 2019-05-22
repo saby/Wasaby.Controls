@@ -148,7 +148,7 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
          },
 
          _swipeHandler: function(event) {
-            if (event.nativeEvent.direction === 'right') {
+            if (event.nativeEvent.direction === 'right' && !this._options.isCompoundTemplate) {
                this._close();
             }
          },
