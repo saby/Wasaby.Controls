@@ -21,7 +21,7 @@
  */
 
 import {default as Button} from 'Controls/_toggle/Button';
-import Switch = require('Controls/_toggle/Switch');
+import {default as Switch} from 'Controls/_toggle/Switch';
 import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
 import RadioGroup = require('Controls/_toggle/RadioGroup');
 import {default as Checkbox} from 'Controls/_toggle/Checkbox';

@@ -12,7 +12,7 @@ import 'css!theme?Controls/suggest';
  * @class Controls/_suggest/Input
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation

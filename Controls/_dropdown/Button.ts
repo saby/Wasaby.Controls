@@ -11,7 +11,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/_dropdown/interface/IFooterTemplate

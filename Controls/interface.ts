@@ -5,6 +5,9 @@
  * @includes IButton Controls/_interface/IButton
  * @includes IIconStyle Controls/_interface/IIconStyle
  * @includes ICaption Controls/_interface/ICaption
+ * @includes IIcon Controls/_interface/IIcon
+ * @includes ISource Controls/_interface/ISource
+ * @includes ISingleSelectable Controls/_interface/ISingleSelectable
  * @public
  * @author Kraynov D.
  */
@@ -13,3 +16,4 @@ export {default as IButton, IButtonOptions} from './_interface/IButton';
 export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
+export {default as ISingleSelectable, ISingleSelectableOptions} from './_interface/ISingleSelectable';

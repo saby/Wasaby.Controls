@@ -13,7 +13,7 @@ import 'css!theme?Controls/filterPopup';
     * @class Controls/_filterPopup/Panel/PropertyGrid
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @control
     * @private

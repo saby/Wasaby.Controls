@@ -146,7 +146,7 @@ var _private = {
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/INavigation
