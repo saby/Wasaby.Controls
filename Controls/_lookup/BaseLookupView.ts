@@ -183,10 +183,12 @@ var BaseLookupView = Control.extend({
         config.maxWidth = this._container.offsetWidth;
         this._suggestState = false;
         this._infoboxOpened = true;
+        this._notify('openInfoBox', [config]);
     },
 
     _closeInfoBox: function () {
         this._infoboxOpened = false;
+        this._notify('closeInfoBox');
     },
 
     _onClickShowSelector: function (event) {
