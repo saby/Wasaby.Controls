@@ -3,13 +3,13 @@
  * Набор модулей необходимых для обработки и отображения ошибок
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/handling-errors/}
  * @library Controls/_dataSource/error
- * @includes Controller Controls/_dataSource/_error/Controller
- * @includes Container Controls/_dataSource/_error/Container
- * @includes Mode Controls/_dataSource/_error/Mode
- * @includes DefaultTemplate Controls/_dataSource/_error/DefaultTemplate
- * @includes Handler Controls/_dataSource/_error/Handler
- * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
- * @public
+ * @include Controller Controls/_dataSource/_error/Controller
+ * @include Container Controls/_dataSource/_error/Container
+ * @include Mode Controls/_dataSource/_error/Mode
+ * @include DefaultTemplate Controls/_dataSource/_error/DefaultTemplate
+ * @include Handler Controls/_dataSource/_error/Handler
+ * @include ViewConfig Controls/_dataSource/_error/ViewConfig
+ * @private
  * @author Заляев А.В.
  */
 

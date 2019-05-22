@@ -10,7 +10,7 @@ import {
  * @property {String} template Шаблон отображения ошибки
  * @property {Object} [options] параметры построяния шаблона ошибки
  * @property {Controls/_dataSource/_error/Mode} [mode]
- * @public
+ * @private
  * @author Заляев А.В.
  */
 export type ViewConfig<TOptions = object> = ParkingViewConfig<TOptions> & {
@@ -22,7 +22,7 @@ export type ViewConfig<TOptions = object> = ParkingViewConfig<TOptions> & {
  * @typedef {Object} Controls/_dataSource/_error/HandlerConfig
  * @property {Controls/_dataSource/_error/Mode} mode Способ отображения ошибки (на всё окно / диалог / внутри компонента)
  * @property {Error} Обрабатываемая ошибка
- * @public
+ * @private
  * @author Заляев А.В.
  */
 export type HandlerConfig<T extends Error = Error> = {
@@ -35,7 +35,7 @@ export type HandlerConfig<T extends Error = Error> = {
  * @typedef {Function} Controls/_dataSource/_error/Handler
  * @param {HandlerConfig} объект с параметрами
  * @return {void | Controls/_dataSource/_error/ViewConfig}
- * @public
+ * @private
  * @author Заляев А.В.
  */
 export type Handler<

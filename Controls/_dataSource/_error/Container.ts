@@ -29,7 +29,7 @@ let getTemplate = (template: string | Control): Promise<Control> => {
  * Компонент для отображения шаблона ошибки по данным контрола {@link Controls/_dataSource/_error/Controller}
  * @class Controls/_dataSource/_error/Container
  * @extends Core/Control
- * @public
+ * @private
  * @author Заляев А.В.
  *
  */
