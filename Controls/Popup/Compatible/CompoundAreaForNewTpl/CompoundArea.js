@@ -315,7 +315,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._isNewOptions = true;
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
-               this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
+               // Если панель стековая, то не скрываем, т.к. позиция окна не изменится.
+               if (this._panel._moduleName !== 'Lib/Control/FloatArea/FloatArea' || this._panel._options.isStack !== true) {
+                  this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
+               }
                this._updateVDOMTemplate(this._options.templateOptions);
             }
          },
@@ -326,7 +329,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _updateVDOMTemplate: function(templateOptions) {
-            this._vDomTemplate._options.templateOptions = templateOptions;
+            this._vDomTemplate.setTemplateOptions(templateOptions);
             this._vDomTemplate._forceUpdate();
          },
 
