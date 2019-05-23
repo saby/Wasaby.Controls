@@ -403,5 +403,16 @@ define([
          condResult = iv.isLast();
          assert.isTrue(condResult);
       });
+
+      it('getItemDataByItem', function() {
+         let cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+         let model = new list.ItemsViewModel(cfg);
+         let itemData = model.getItemDataByItem({ getContents: () => [] });
+
+         assert.isFalse(!!itemData.isGroup);
+      });
    })
 });
