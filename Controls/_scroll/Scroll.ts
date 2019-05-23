@@ -196,14 +196,11 @@ var
        */
       _stickyHeaderContext: null,
 
-      _isStickyInEdge: null,
-
       _headersHeight: null,
       _scrollbarStyles: '',
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
-         this._isStickyInEdge = stickyHeaderUtils.isStickySupport() && Env.detection.isIE;
       },
 
       _beforeMount: function(options, context, receivedState) {

@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_heading/Counter/Counter" scope="{{_options}}" />
