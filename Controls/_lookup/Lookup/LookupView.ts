@@ -137,7 +137,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         collectionItems = measurer.getElementsByClassName('controls-SelectedCollection__item');
+         collectionItems = measurer.getElementsByClassName('js-controls-SelectedCollection__item');
          itemsCount = collectionItems.length;
 
          // items only from the last line

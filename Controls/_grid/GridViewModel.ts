@@ -1,11 +1,10 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
-
+import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import stickyUtil = require('Controls/StickyHeader/Utils');
 import {calcFooterRowIndex} from './utils/RowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;

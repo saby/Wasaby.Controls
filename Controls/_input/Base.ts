@@ -968,7 +968,11 @@ import 'wml!Controls/_input/Base/Stretcher';
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             inputCallback: entity.descriptor(Function),
-            placeholder: entity.descriptor(String, Function),
+
+            /**
+             * Setting placeholder as HTML in wml, template engine converts it to an array.
+             */
+            placeholder: entity.descriptor(String, Function, Array),
             size: entity.descriptor(String).oneOf([
                's',
                'm',
