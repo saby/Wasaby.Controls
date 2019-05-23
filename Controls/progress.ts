@@ -7,8 +7,6 @@
  * @author Колесов В.А.
  */
 
-import 'css!theme?Controls/_progress/progress';
-
 export {default as StateIndicator} from './_progress/StateIndicator';
 export {default as Legend} from './_progress/Legend';
 export {default as Bar} from './_progress/Bar';

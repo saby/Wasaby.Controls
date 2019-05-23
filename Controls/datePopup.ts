@@ -10,8 +10,7 @@ import periodDialogUtils from './_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
-import 'css!theme?Controls/_datePopup/DatePopup';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.
