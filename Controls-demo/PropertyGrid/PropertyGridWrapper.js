@@ -5,6 +5,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'Core/core-clone',
       'Core/core-merge',
       'Core/library',
+      'Controls-demo/PropertyGrid/propertyGridUtil',
       'wml!Controls-demo/PropertyGrid/PropertyGridWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'wml!Controls-demo/PropertyGrid/Types/booleanOrNull',
@@ -26,7 +27,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cClone, cMerge, libHelper, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl, timeIntervalTmpl) {
       'use strict';
 
@@ -60,9 +61,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             var def = new Deferred();
             this.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
-               var testName = opts.content.split('/');
-               testName.splice(0, 1);
-               this._demoName = testName.join('');
+               this._demoName = propertyGridUtil.getDemoName(opts.content);
                libHelper.load(opts.content).then(function() {
                   def.callback();
                });

@@ -4,6 +4,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
       'Core/Deferred',
       'Core/core-merge',
       'Core/library',
+      'Controls-demo/PropertyGrid/propertyGridUtil',
       'wml!Controls-demo/Popup/Opener/OpenersPGWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'wml!Controls-demo/PropertyGrid/Types/booleanOrNull',
@@ -24,7 +25,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cMerge, libHelper, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
@@ -53,10 +54,8 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
                'enum': enumTmpl,
                'Object': objTmpl,
             };
-            var testName = opts.content.split('/');
-            testName.splice(0, 1);
             this._dialogRes= opts.dialogResult;
-            this._demoName = testName.join('');
+            this._demoName = propertyGridUtil.getDemoName(opts.content);
 
             opts.componentOpt._version = 0;
             opts.componentOpt.getVersion = function() { return this._version; };
