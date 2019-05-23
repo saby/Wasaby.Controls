@@ -432,7 +432,7 @@ import 'css!theme?Controls/lookup';
       },
 
       _openInfoBox: function(event, config) {
-         config.maxWidth = this._container.offsetWidth;
+         config.width = this._container.offsetWidth;
          config.offset = {
             horizontal: -LEFT_OFFSET_COUNTER
          };
