@@ -416,7 +416,7 @@ define(
             });
 
             it('_private:getRecentIds', function() {
-               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
+               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned,  hSource._history.frequent.getCount());
                assert.deepEqual(recentIds, ['7', '8']);
             });
 
@@ -432,7 +432,7 @@ define(
 
                expectedResult = {
                   pinned: ['5'],
-                  frequent: ['6', '4'],
+                  frequent: ['6'],
                   recent: ['8', '1', '2', '3', '7']
                };
                let recentFilteredData = {
@@ -454,6 +454,7 @@ define(
                   ]
                };
                hSource._history.recent = createRecordSet(recentFilteredData);
+               hSource._recentCount = 8;
                actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
             });
