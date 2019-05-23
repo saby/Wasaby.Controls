@@ -450,10 +450,6 @@ import 'css!theme?Controls/lookup';
       _onClickShowSelector: function(event) {
          this._suggestState = false;
          this._notify('showSelector');
-
-         /* Controls.Suggest:_InputController show suggest after input get focused or clicked, then we need to stopPropagation
-            click on showSelector button, otherwise click event will bubbling to controller from input and suggest will showed. */
-         event.stopPropagation();
       },
 
       _onClickClearRecords: function() {
