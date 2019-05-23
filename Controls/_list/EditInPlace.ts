@@ -67,30 +67,37 @@ var
             if (!self._editingItem) {
                 return Deferred.success();
             }
-            let result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
-            return _private.processBeforeEndEditResult(self, result, commit);
-        },
+            var eventResult = self._notify('beforeEndEdit', [
+                self._editingItem,
+                commit,
+                self._isAdd
+            ]);
+            if (eventResult && eventResult.addBoth) {
+                var id = self._notify('showIndicator', [{}], { bubbling: true });
+                return eventResult.addBoth(function(resultOfDeferred) {
+                    self._notify('hideIndicator', [id], { bubbling: true });
 
-        processBeforeEndEditResult: function (self, eventResult, commit) {
-            var result;
+                    if (resultOfDeferred === Constants.editing.CANCEL) {
+                        return Deferred.success({ cancelled: true });
+                    }
 
-            if (eventResult === Constants.editing.CANCEL) {
-                result = Deferred.success({cancelled: true});
-            } else if (eventResult && eventResult.addBoth) {
-                let id = self._notify('showIndicator', [{}], {bubbling: true});
-                eventResult.addBoth(function (defResult) {
-                    self._notify('hideIndicator', [id], {bubbling: true});
-                    return defResult;
+                    return Deferred.success(resultOfDeferred).addCallback(function(res) {
+                        _private.afterEndEdit(self);
+                        return res;
+                    });
                 });
-                result = eventResult;
             } else {
-                result = _private.updateModel(self, commit).addCallback(function () {
-                    _private.afterEndEdit(self);
-                })
+                if (eventResult === Constants.editing.CANCEL) {
+                    return Deferred.success({ cancelled: true });
+                }
+                return _private.updateModel(self, commit).addCallback(function() {
+                    return Deferred.success().addCallback(function() {
+                        _private.afterEndEdit(self);
+                    });
+                });
             }
-
-            return result;
         },
+
 
         afterEndEdit: function (self) {
             self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);

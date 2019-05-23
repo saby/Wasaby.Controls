@@ -3,12 +3,12 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Env/Env',
+      'Core/helpers/getResourceUrl',
       'Application/Env',
       'Controls/_decorator/Markup/resolvers/noOuterTag',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Env, AppEnv, noOuterTagResolver, ThemesControllerNew) {
+   function(Base, Deferred, template, getResourceUrl, AppEnv, noOuterTagResolver, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -38,19 +38,6 @@ define('Controls/Application/_Head',
                'class': true
             }
          };
-      }
-
-      function updateLink(link) {
-         var updatedLink = link,
-            resourceRoot = Env.constants.resourceRoot;
-         if (link.indexOf(resourceRoot) === 0) {
-            updatedLink = link.substr(resourceRoot.length);
-            var moduleName = updatedLink.substr(0, updatedLink.indexOf('/')),
-               moduleBuildNumber = moduleName && Env.constants.modules[moduleName] &&
-                  Env.constants.modules[moduleName].buildnumber;
-            updatedLink = resourceRoot + updatedLink + (moduleBuildNumber ? '?x_version=' + moduleBuildNumber : '');
-         }
-         return updatedLink;
       }
 
       var Page = Base.extend({
@@ -141,7 +128,7 @@ define('Controls/Application/_Head',
                for (var attributeName in attributes) {
                   if (attributes.hasOwnProperty(attributeName)) {
                      // Try update all attributes as link, but only links would be updated.
-                     attributes[attributeName] = updateLink(attributes[attributeName]);
+                     attributes[attributeName] = getResourceUrl(attributes[attributeName]);
                   }
                }
             }

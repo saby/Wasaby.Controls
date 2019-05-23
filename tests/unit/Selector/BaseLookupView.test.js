@@ -258,5 +258,48 @@ define([
          lookup._keyDown(null, eventF2);
          assert.isTrue(isNotifyShowSelector);
       });
+
+      it('_openInfoBox', function() {
+         var
+            config = {},
+            isNotifyOpenPopup = false,
+            lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._container = {offsetWidth: 100};
+         lookup._notify = function(eventName) {
+            if (eventName === 'openInfoBox') {
+               isNotifyOpenPopup = true;
+            }
+         };
+
+         lookup._openInfoBox(null, config);
+         assert.deepEqual(config, {
+            maxWidth: 100,
+            offset: {
+               horizontal: -0
+            }
+         });
+         assert.isFalse(lookup._suggestState);
+         assert.isTrue(lookup._infoboxOpened);
+         assert.isTrue(isNotifyOpenPopup);
+      });
+
+      it('_closeInfoBox', function() {
+         var
+            isNotifyClosePopup = false,
+            lookup = new Lookup();
+
+         lookup._infoboxOpened = true;
+         lookup._notify = function(eventName) {
+            if (eventName === 'closeInfoBox') {
+               isNotifyClosePopup = true;
+            }
+         };
+
+         lookup._closeInfoBox();
+         assert.isFalse(lookup._infoboxOpened);
+         assert.isTrue(isNotifyClosePopup);
+      });
    });
 });

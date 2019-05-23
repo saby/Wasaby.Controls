@@ -21,6 +21,13 @@ define('Controls-demo/Input/Date/PickerPG',
             this._dataObject = {
                value: {
                   readOnly: true
+               },
+               style: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {

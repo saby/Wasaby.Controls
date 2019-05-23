@@ -1,6 +1,6 @@
 define('Controls/Selector/Lookup/Link',
-   ['Controls/_lookup/Lookup/Link'],
+   ['Controls/lookup'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Link;
    });
