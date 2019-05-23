@@ -219,8 +219,8 @@ import {parse as parserLib, load} from 'Core/library';
                   baseCfg.actionOnScroll = 'track';
                }
             }
-            if(!baseCfg.actionOnScroll) {
-               baseCfg.actionOnScroll = 'none';
+            if(baseCfg.actionOnScroll) {
+              this._actionOnScroll = baseCfg.actionOnScroll;
             }
 
             if (baseCfg.hasOwnProperty('isModal')) {
