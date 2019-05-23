@@ -1,4 +1,4 @@
-<Controls.datasource:error.Container
+<Controls.dataSource:error.Container
     name="errorContainer"
 >
     <Controls.validate:Controller name="formController">
@@ -11,4 +11,4 @@
                     on:itemClick="_onItemClick()">
         </ws:partial>
     </Controls.validate:Controller>
-</Controls.datasource:error.Container>
+</Controls.dataSource:error.Container>
