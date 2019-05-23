@@ -9,7 +9,7 @@ define('Controls-demo/Input/Number/NumberPG',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Number'
+         CONTENT: 'Controls/input:Number'
       };
 
       var NumberPG = Base.extend({
