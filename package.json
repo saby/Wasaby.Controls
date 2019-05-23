@@ -54,8 +54,7 @@
       "eager": true,
       "report-dir": "./application/artifacts/coverage"
    },
-   "dependencies": {
-   },
+   "dependencies": {},
    "devDependencies": {
       "tslint": "^5.13.1",
       "@tensor-corp/eslint-config": "^2.0.3",

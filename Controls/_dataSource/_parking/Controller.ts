@@ -72,10 +72,9 @@ let findTemplate = (
 /// endregion helpers
 
 /**
- * Модуль для выбора обработчика и формирования объекта с данными для шаблона парковочного компонента.
  * @class
  * @name Controls/_dataSource/_parking/Controller
- * @public
+ * @private
  * @author Заляев А.В.
  * @example
  * <pre>

@@ -90,7 +90,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
 
             // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
-            if (_options.type === 'dialog' || _options.type === 'stack') {
+            if ((_options.popupComponent !== 'floatArea' && _options.type === 'dialog') || _options.type === 'stack') {
                this._className += ' controls-CompoundArea-close_button';
             }
 
@@ -663,7 +663,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          setTemplate: function(template, templateOptions) {
             if (templateOptions) {
-               this._childConfig = templateOptions.templateOptions;
+               this._childConfig = templateOptions;
             }
             this._childControlName = template;
             return this.rebuildChildControl();
@@ -966,11 +966,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                   var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
+                        // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+                        item.isHiddenForRecalc = false;
+
                         // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
                         self._notifyVDOM('controlResize', [], { bubbling: true });
 
-                        // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
-                        item.isHiddenForRecalc = false;
                         runDelayed(function() {
                            item.popupOptions.className = item.popupOptions.className.replace(invisibleRe, '');
                            container.className = container.className.replace(invisibleRe, '');

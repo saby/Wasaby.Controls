@@ -32,12 +32,15 @@
 }
 
 .controls-DropdownList__row.theme_@{themeName} {
-   cursor: pointer;
    position: relative;
    min-height: @height_DropdownList-row;
    .flexbox();
    .align-items(center);
    box-sizing: border-box;
+}
+
+.controls-DropdownList__row_state_default {
+   cursor: pointer;
 }
 
 .controls-DropdownList__row-separator.theme_@{themeName} {
@@ -53,7 +56,7 @@
    }
 }
 
-.controls-DropdownList__row.theme_@{themeName} {
+.controls-DropdownList__row_state_default.theme_@{themeName} {
    &:active {
       background: @background_DropdownList-row_active;
    }
@@ -64,7 +67,7 @@
    height: @height_DropdownList-row;
 }
 
-.controls-DropdownList__defaultItem.theme_@{themeName} {
+.controls-DropdownList__defaultItem.theme_@{themeName},.controls-DropdownList__emptyItem.theme_@{themeName} {
    font-size: @font-size_DropdownList;
 }
 
@@ -92,6 +95,10 @@
    padding-right: @spacing_DropdownList_withClose-item-between-rightBorder-content;
 }
 
+.controls-DropdownList__item-right_history-padding.theme_@{themeName} {
+   padding-right: @spacing_DropdownList-withPin-item-between-rightBorder-content;
+}
+
 .controls-DropdownList__row_pinned.theme_@{themeName} {
    font-weight: bold;
 }
@@ -99,6 +106,10 @@
 .controls-DropdownList__content.theme_@{themeName} {
    width: 100%;
    flex-shrink: 1;
+}
+
+.controls-DropdownList__content-readOnly {
+   color: @color_DropdownList__row-text_readOnly;
 }
 
 .controls-DropdownList__content_singleLine.theme_@{themeName} {
@@ -156,8 +167,15 @@
    top: @spacing_DropdownList-item-between-arrow-topBorder;
    right: @spacing_DropdownList-item-between-arrow-rightBorder;
    .icon-size(@icon-size_DropdownList-arrow);
-   color: @color_DropdownList-arrow;
    .box-sizing(border-box);
+}
+
+.controls-DropdownList__arrow_readOnly.theme_@{themeName} {
+   color: @color_DropdownList-arrow_readOnly;
+}
+
+.controls-DropdownList__arrow_default.theme_@{themeName} {
+   color: @color_DropdownList-arrow;
 }
 
 .controls-DropdownList-cross.theme_@{themeName} {
@@ -182,7 +200,7 @@
 }
 
 .ws-is-no-touch {
-   .controls-DropdownList__row:hover.theme_@{themeName} {
+   .controls-DropdownList__row_state_default:hover.theme_@{themeName} {
       background: @background_DropdownList-row_hover;
       .controls-DropdownList__row-checkbox.theme_@{themeName} {
           visibility: visible;

@@ -86,19 +86,10 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
-        var converter = new StringValueConverter({
-               mask: this._options.mask,
-               replacer: this._options.replacer
-            });
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
-        this._notify('inputCompleted', [
-            startValue,
-            endValue,
-            converter.getStringByValue(startValue),
-            converter.getStringByValue(endValue)
-        ]);
+        this._notifyInputCompleted();
     },
 
     // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
@@ -120,7 +111,21 @@ var Component = Control.extend([], {
             this._children.endValueField.activate();
             datetimeEnd.setSelectionRange(0, 0);
          }
+    },
+
+    _notifyInputCompleted: function() {
+        const converter = new StringValueConverter({
+               mask: this._options.mask,
+               replacer: this._options.replacer
+            });
+        this._notify('inputCompleted', [
+            this._rangeModel.startValue,
+            this._rangeModel.endValue,
+            converter.getStringByValue(this._rangeModel.startValue),
+            converter.getStringByValue(this._rangeModel.endValue)
+        ]);
     }
+
 });
 
 Component.getDefaultOptions = function () {

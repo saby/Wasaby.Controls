@@ -1,8 +1,8 @@
 /// <amd-module name="Controls/dataSource" />
 /**
  * @library Controls/dataSource
- * @includes parking Controls/_dataSource/parking
- * @includes error Controls/_dataSource/error
+ * @include parking Controls/_dataSource/parking
+ * @include error Controls/_dataSource/error
  * @public
  * @author Заляев А.В.
  */

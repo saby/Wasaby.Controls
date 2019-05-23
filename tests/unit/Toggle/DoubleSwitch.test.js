@@ -169,7 +169,7 @@ define(['Controls/toggle'], function (toggleMod) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
+                     SW._checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -183,7 +183,7 @@ define(['Controls/toggle'], function (toggleMod) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
+                     SW._checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -197,7 +197,7 @@ define(['Controls/toggle'], function (toggleMod) {
                   };
                   SW.saveOptions(opt);
                   try {
-                     toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
+                     SW._checkCaptions(SW._options.captions);
                      assert(false);
                   }
                   catch(e) {
@@ -210,7 +210,7 @@ define(['Controls/toggle'], function (toggleMod) {
                      captions: ['capt1', 'capt2']
                   };
                   SW.saveOptions(opt);
-                  toggleMod.DoubleSwitch._private.checkCaptions(SW._options.captions);
+                  SW._checkCaptions(SW._options.captions);
                   assert(true);
                });
             });

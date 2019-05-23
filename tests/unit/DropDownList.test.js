@@ -25,7 +25,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          id: 4,
          parent: null,
          isAdditional: true,
-         '@parent': true
+         '@parent': true,
+         readOnly: true
       },
       {
          id: 5,
@@ -60,18 +61,6 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
    describe('Controls/_dropdownPopup/DropdownList', function() {
 
-      describe('DropdownList::constructor', function() {
-         let config2 = {
-            showHeader: true,
-            headConfig: { icon: 'icon-add' },
-            parentProperty: 'parent',
-            rootKey: null,
-            iconPadding: { null: [null, 'icon-small'] }
-         };
-         let ddl = getDropDownListWithConfig(config2);
-         assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
-      });
-
       describe('DropdownList::_beforeUpdate', function() {
 
          it('_itemMouseEnter', function() {
@@ -88,6 +77,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
             dropDownList._hasHierarchy = false;
             dropDownList._subDropdownOpened = false;
+
+            dropDownList._itemMouseEnter( {}, items.at(3), true);
+            assert.isFalse(dropDownList._subDropdownOpened);
+            assert.isFalse(opened);
 
             dropDownList._itemMouseEnter({}, items.at(4), true);
             assert.isTrue(dropDownList._subDropdownOpened)
@@ -202,6 +195,14 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
 
+            /**** CHANGE HEADER CONFIG *******************/
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._beforeMount(dropDownConfig);
+            assert.isNotOk(dropDownList._headConfig);
+
+            dropDownList._beforeUpdate({...dropDownConfig, caption: 'New caption', showHeader: true});
+            assert.equal(dropDownList._headConfig.caption, 'New caption');
          });
 
          it('change root key', function() {
@@ -247,6 +248,22 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
       });
 
       describe('DropdownList::_beforeMount', function() {
+         it ('check headConfig', function() {
+            let config2 = {
+               showHeader: true,
+               icon: 'icon-add',
+               parentProperty: 'parent',
+               rootKey: null,
+               caption: 'Caption',
+               iconPadding: { null: [null, 'icon-small'] }
+            };
+            let ddlConfig = getDropDownConfig();
+            ddlConfig = {...ddlConfig, ...config2};
+            let ddl = getDropDownListWithConfig(ddlConfig);
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
+         });
          it('check list view model', function() {
             let expectedConfig = {
                items: items,

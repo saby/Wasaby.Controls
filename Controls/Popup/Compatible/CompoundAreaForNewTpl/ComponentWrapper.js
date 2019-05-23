@@ -17,9 +17,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
       },
       _beforeMount: function(cfg) {
          this._fillCallbacks(cfg);
+         this.setTemplateOptions(cfg.templateOptions);
       },
       _beforeUpdate: function(cfg) {
          this._fillCallbacks(cfg);
+      },
+      setTemplateOptions: function(templateOptions) {
+         this._templateOptions = templateOptions;
       }
    });
 });

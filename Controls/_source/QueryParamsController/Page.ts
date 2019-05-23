@@ -126,5 +126,5 @@ import sourceLib = require('Types/source');
       });
 
       export = PageNavigation;
-   
+
 

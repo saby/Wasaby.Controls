@@ -134,6 +134,12 @@ function(cMerge,
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
+
+         // поддерживаем такое поведение для старых панелей, на VDOM его убрали
+         if (cfg.templateOptions.type === 'stack') {
+            cfg.width = cfg.width || cfg.maxWidth;
+         }
+
          cfg.templateOptions.minWidth = cfg.minWidth;
          cfg.templateOptions.maxWidth = cfg.maxWidth;
          cfg.templateOptions.minHeight = cfg.minHeight;

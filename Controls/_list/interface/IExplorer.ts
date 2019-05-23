@@ -33,7 +33,7 @@
  * @name Controls/_list/interface/IExplorer#backButtonStyle
  * @cfg {String} Back heading display style.
  * @default secondary
- * @see Controls/Heading/Back#style
+ * @see Controls/_heading/Back#style
  */
 
 /**

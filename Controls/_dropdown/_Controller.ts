@@ -146,7 +146,7 @@ var _private = {
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/INavigation
@@ -154,9 +154,9 @@ var _private = {
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control

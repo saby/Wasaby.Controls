@@ -42,6 +42,7 @@ define(
             };
             var popupOptions = {
                closeByExternalClick: true,
+               closeOnTargetScroll: true,
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
@@ -56,6 +57,7 @@ define(
             assert.equal(baseConfig.closeOnOutsideClick, true);
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
+            assert.equal(baseConfig.actionOnScroll, 'close');
             opener.destroy();
          });
 

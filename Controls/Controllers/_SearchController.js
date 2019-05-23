@@ -77,7 +77,7 @@ define('Controls/Controllers/_SearchController',
        * @author Герасимов Александр
        * @class Controls/Controllers/_SearchController
        * @mixes Controls/interface/ISearch
-       * @mixes Controls/interface/ISource
+       * @mixes Controls/_interface/ISource
        */
       /**
        * @name searchCallback

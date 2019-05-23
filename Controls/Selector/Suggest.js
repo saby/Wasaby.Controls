@@ -19,7 +19,7 @@ define('Controls/Selector/Suggest',
        * @class Controls/Selector/Suggest
        * @extends Controls/input:Text
        * @mixes Controls/interface/ISearch
-       * @mixes Controls/interface/ISource
+       * @mixes Controls/_interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/ISuggest
        * @mixes Controls/interface/INavigation

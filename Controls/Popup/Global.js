@@ -1,5 +1,5 @@
-define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Global', 'Controls/popup', 'Core/Deferred'],
-   function(Control, template, popup, Deferred) {
+define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Global', 'Controls/Popup/Global/Openers', 'Core/Deferred'],
+   function(Control, template, GlobalOpeners, Deferred) {
       var _private = {
          getPopupConfig: function(config) {
             var def = new Deferred();
@@ -20,9 +20,8 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
       return Control.extend({
          _template: template,
          _afterMount: function() {
-            this._previewerOpener = Control.createControl(popup.Previewer, {}, document.createElement('div'));
-            this._infoBoxOpener = Control.createControl(popup.Infobox, {}, document.createElement('div'));
-            this._dialogOpener = Control.createControl(popup.Dialog, {}, document.createElement('div'));
+            var openerContainer = this._getOpenerContainer();
+            this._globalOpeners = Control.createControl(GlobalOpeners, {}, openerContainer);
 
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
@@ -31,11 +30,34 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                requirejs(ManagerWrapperControllerModule).registerGlobalPopup(this);
             }
          },
+
+         _getOpenerContainer: function() {
+            // PopupGlobal - hoc, that wraps the body. we can't put opener on template, cause it's breaking  layout of page.
+            var container = document.createElement('div');
+            container.setAttribute('data-vdom-ignore', true);
+            container.setAttribute('ws-no-focus', true);
+            container.setAttribute('class', 'controls-PopupGlobal__container');
+            var openersContainer = document.createElement('div');
+            container.append(openersContainer);
+            document.body.append(container);
+            return openersContainer;
+         },
+
+         getPreviewer: function() {
+            return this._globalOpeners.getPreviewer();
+         },
+         getInfoBox: function() {
+            return this._globalOpeners.getInfoBox();
+         },
+         getDialog: function() {
+            return this._globalOpeners.getDialog();
+         },
+
          _openInfoBoxHandler: function(event, config) {
             var self = this;
             this._activeInfobox = event.target;
             _private.getPopupConfig(config).addCallback(function(popupConfig) {
-               self._infoBoxOpener.open(popupConfig);
+               self.getInfoBox().open(popupConfig);
             });
          },
 
@@ -45,7 +67,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             var eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
             if (activeInf === eventTarget) {
                this._activeInfobox = null;
-               this._infoBoxOpener.close(delay);
+               this.getInfoBox().close(delay);
             }
          },
 
@@ -56,24 +78,24 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
          _forceCloseInfoBoxHandler: function() {
             if (this._activeInfobox) {
                this._activeInfobox = null;
-               this._infoBoxOpener.close(0);
+               this.getInfoBox().close(0);
             }
          },
          _openPreviewerHandler: function(event, config, type) {
             this._activePreviewer = event.target;
-            this._previewerOpener.open(config, type);
+            this.getPreviewer().open(config, type);
          },
 
          _closePreviewerHandler: function(event, type) {
-            this._previewerOpener.close(type);
+            this.getPreviewer().close(type);
          },
 
          _cancelPreviewerHandler: function(event, action) {
-            this._previewerOpener.cancel(action);
+            this.getPreviewer().cancel(action);
          },
          _isPreviewerOpenedHandler: function(event) {
             if (this._activePreviewer === event.target) {
-               return this._previewerOpener.isOpened();
+               return this.getPreviewer().isOpened();
             }
             return false;
          },
@@ -82,7 +104,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                // If infobox is displayed inside the popup, then close infobox.
                if (this._needCloseInfoBox(this._activeInfobox, popupContainer)) {
                   this._activeInfobox = null;
-                  this._infoBoxOpener.close(0);
+                  this.getInfoBox().close(0);
                }
             }
          },
@@ -112,7 +134,7 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             // т.к. диалог может быть только один, отработаем колбек закрытия предыдущего, если он есть
             _this._onDialogClosed();
 
-            _this._dialogOpener.open({
+            _this.getDialog().open({
                template: template,
                templateOptions: templateOptions,
                eventHandlers: {
@@ -132,13 +154,8 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             }
          },
          _beforeUnmount: function() {
-            this._previewerOpener.destroy();
-            this._infoBoxOpener.destroy();
-            this._dialogOpener.destroy();
-
-            this._previewerOpener = null;
-            this._infoBoxOpener = null;
-            this._dialogOpener = null;
+            this._globalOpeners.destroy();
+            this._globalOpeners = null;
          },
 
          _private: _private

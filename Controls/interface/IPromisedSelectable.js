@@ -6,7 +6,7 @@ define('Controls/interface/IPromisedSelectable', [
     * @interface Controls/interface/IPromisedSelectable
     * @public
     * @author Авраменко А.С.
-    * @see Controls/interface/ISingleSelectable
+    * @see Controls/_interface/ISingleSelectable
     * @see Controls/interface/IMultiSelectable
     */
 
@@ -14,7 +14,7 @@ define('Controls/interface/IPromisedSelectable', [
     * @typedef {Object} Selection
     * @property {Array.<Number|String>} selection.selected Array of selected keys.
     * @property {Array.<Number|String>} selection.excluded Array of excluded keys.
-    * @see Controls/interface/ISource#keyProperty
+    * @see Controls/_interface/ISource#keyProperty
     * @see selectedKeys
     * @see excludedKeys
     */
@@ -25,7 +25,7 @@ define('Controls/interface/IPromisedSelectable', [
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
     * @default []
     * @remark
-    * You can pass node's {@link Controls/interface/ISource#keyProperty key property} to select every item inside that node. To select every item in the list you should pass [null].
+    * You can pass node's {@link Controls/_interface/ISource#keyProperty key property} to select every item inside that node. To select every item in the list you should pass [null].
     * @example
     * The following example creates List and selects everything except two items. Subsequent changes made to selectedKeys and excludedKeys will be synchronized through binding mechanism.
     * TMPL:
@@ -39,7 +39,7 @@ define('Controls/interface/IPromisedSelectable', [
     *       this._excludedKeys = [1, 2];
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
+    * @see Controls/_interface/ISource#keyProperty
     * @see excludedKeys
     * @see selectedKeysChanged
     */
@@ -64,7 +64,7 @@ define('Controls/interface/IPromisedSelectable', [
     *       this._excludedKeys = [1, 2];
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
+    * @see Controls/_interface/ISource#keyProperty
     * @see selectedKeys
     * @see excludedKeysChanged
     */

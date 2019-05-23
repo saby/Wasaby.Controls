@@ -5,15 +5,12 @@ define([
    'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
    'Controls/_decorator/Markup/resolvers/highlight',
-   'Controls/_decorator/Markup/resolvers/linkDecorate',
-   'Controls/_decorator/Markup/resolvers/noOuterTag',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
-], function(decorator,
+], function(
+   decorator,
    template,
    highlightResolver,
-   linkDecorateResolver,
-   noOuterTagResolver,
    linkDecorateUtils,
    Env) {
    'use strict';
@@ -467,7 +464,7 @@ define([
                   _options: {
                      value: json,
                      validHtml: validHtml,
-                     tagResolver: noOuterTagResolver
+                     tagResolver: decorator.NoOuterTag
                   }
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
@@ -512,7 +509,7 @@ define([
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, linkDecorateResolver), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.linkDecorate), html));
          });
          it('with highlight resolver', function() {
             var json = [
@@ -536,8 +533,8 @@ define([
          it('with noOuterTag resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, noOuterTagResolver), html));
-            assert.equal(decorator.Converter.jsonToHtml([], noOuterTagResolver), '');
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.noOuterTag), html));
+            assert.equal(decorator.Converter.jsonToHtml([], decorator.noOuterTag), '');
          });
       });
    });

@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/filter'
+      'Controls/filter',
+      'Core/core-clone'
    ],
-   function(filterMod) {
+   function(filterMod, Clone) {
       describe('FilterButton', function() {
 
          var button = new filterMod.Selector();
@@ -36,8 +37,24 @@ define(
          });
 
          it('reset items', function() {
-            filterMod.Selector._private.resetItems(button, filterItems);
-            assert.deepEqual(filterItems, filterItemsReseted);
+            let filterItems2 = [
+               {id: 'FIO', value: 'Petrov K.K.', resetValue: '', textValue: 'Petrov K.K.', visibility: true},
+               {id: 'firstName', value: '', resetValue: '', visibility: true},
+               {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
+               {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: true},
+               {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true},
+               {id: 'WithoutReset', value: [3], textValue: 'reseted', visibility: true}
+            ], filterItemsReseted2 = [
+               {id: 'FIO', value: '', resetValue: '', textValue: 'Petrov K.K.', visibility: false},
+               {id: 'firstName', value: '', resetValue: '', visibility: false},
+               {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
+               {id: 'unread', value: false, resetValue: false, textValue: 'Unread', visibility: false},
+               {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true},
+               {id: 'WithoutReset', value: [3], textValue: 'reseted', visibility: false}
+            ];
+            filterMod.Selector._private.resetItems(button, filterItems2);
+            assert.deepStrictEqual(filterItems2, filterItemsReseted2);
+
          });
 
          it('clear click', function() {

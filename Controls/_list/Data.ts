@@ -4,7 +4,7 @@ import template = require('wml!Controls/Container/Data/Data');
 import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
-import source = require('Types/source');
+import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
 
 import {RecordSet} from 'Types/collection'
@@ -147,15 +147,20 @@ type GetSourceResult = {
 
          _template: template,
 
-         _beforeMount: function(options, context, receivedState) {
-            var self = this;
+         _beforeMount: function(options, context, receivedState:GetSourceResult|undefined):Deferred<GetSourceResult>|void {
+            let self = this;
+            let source:ICrud;
+
             _private.resolveOptions(this, options);
+
             if (receivedState) {
+               source = options.source instanceof sourceLib.PrefetchProxy ? options.source.getOriginal() : options.source;
+
                // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: options.source instanceof source.PrefetchProxy ? options.source : new source.PrefetchProxy({target: options.source})
+                  source: new sourceLib.PrefetchProxy({target: source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
