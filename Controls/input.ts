@@ -32,6 +32,7 @@ import Text = require('Controls/_input/Text');
 import Label = require('Controls/_input/Label');
 import Mask = require('Controls/_input/Mask');
 import Phone = require('Controls/_input/Phone');
+import Money = require('Controls/_input/Money');
 import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
@@ -63,6 +64,7 @@ export {
     Label,
     Mask,
     Phone,
+    Money,
     Password,
     DateBase,
     Date,

@@ -3,7 +3,7 @@ define('Controls-demo/Example/Input/Money',
       'Core/Control',
       'wml!Controls-demo/Example/Input/Money/Money',
 
-      'Controls/_input/Money',
+      'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
