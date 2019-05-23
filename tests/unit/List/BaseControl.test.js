@@ -2947,6 +2947,39 @@ define([
          });
       });
 
+      it('updateVirtualWindowIfNeed', async function () {
+
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id',
+                },
+                viewModelConstructor: lists.ListViewModel,
+                virtualScrolling: true,
+                virtualPageSize: 2,
+                virtualSegmentSize: 1,
+                navigation: { view: 'infinity' },
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._loadTriggerVisibility = {
+            up: false,
+            down: true
+         };
+         instance._sourceController.hasMoreData = () => false;
+
+         lists.BaseControl._private.updateVirtualWindow(instance, 'up');
+
+         assert.isTrue(instance._checkShouldLoadToDirection);
+         instance._afterUpdate(cfg);
+         assert.isFalse(instance._checkShouldLoadToDirection);
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
