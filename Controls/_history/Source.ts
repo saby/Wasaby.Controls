@@ -173,10 +173,10 @@ var _private = {
       // Нужно чтобы не потерялся формат https://online.sbis.ru/opendoc.html?guid=e76fca5b-3bda-401d-9eed-ead8f8a0d469
       items.getFormat();
       items.clear();
-      this.addProperty(this, items, 'pinned', 'boolean', false);
-      this.addProperty(this, items, 'recent', 'boolean', false);
-      this.addProperty(this, items, 'frequent', 'boolean', false);
-      this.addProperty(this, items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
+      this.addProperty(items, 'pinned', 'boolean', false);
+      this.addProperty(items, 'recent', 'boolean', false);
+      this.addProperty(items, 'frequent', 'boolean', false);
+      this.addProperty(items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
       this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
       this.fillFrequentItems(self, filteredHistory, oldItems, items);
       this.fillItems(self, filteredHistory, 'recent', oldItems, items);
@@ -193,10 +193,26 @@ var _private = {
             if (filteredHistory.pinned.indexOf(id) !== -1) {
                newItem.set('pinned', true);
             }
+            if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1 || filteredHistory.frequent.indexOf(id) !== -1) {
+               _private.setHistoryFields(newItem, item.getIdProperty(), id);
+            }
             items.add(newItem);
          }
       });
       return items;
+   },
+
+   setHistoryFields: function(item, idProperty, id) {
+      item.set(idProperty, id + '_history');
+      item.set('originalId', id);
+   },
+
+   resetHistoryFields: function(item, keyProperty) {
+      let origItem = item.clone();
+      if (item.get && item.get('originalId')) {
+         origItem.set(keyProperty, item.get('originalId'));
+      }
+      return origItem;
    },
 
    fillItems: function (self, history, historyType, oldItems, items) {
@@ -257,7 +273,7 @@ var _private = {
       items.append(frequentItems);
    },
 
-   addProperty: function (self, record, name, type, defaultValue) {
+   addProperty: function (record, name, type, defaultValue) {
       if (record.getFormat().getFieldIndex(name) === -1) {
          record.addField({
             name: name,
@@ -431,6 +447,10 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    getItems: function () {
       return _private.getItemsWithHistory(this, this._history, this._oldItems);
+   },
+
+   resetHistoryFields: function(item, keyProperty) {
+      return _private.resetHistoryFields(item, keyProperty);
    },
 
    // <editor-fold desc="Types/_source/OptionsMixin">
