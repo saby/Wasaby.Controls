@@ -34,7 +34,8 @@ class Money extends Base {
             showEmptyDecimals: true,
             precision: Money.PRECISION,
             useAdditionToMaxPrecision: true,
-            onlyPositive: options.onlyPositive
+            onlyPositive: options.onlyPositive,
+            _newValueBehavior: options._newValueBehavior
         };
     }
 
@@ -44,12 +45,18 @@ class Money extends Base {
 
     private static PRECISION: number = 2;
 
+    private static calcStartFractionPart(value: string): number {
+        const splitterLength = 1;
+
+        return value.length - Money.PRECISION - splitterLength;
+    }
+
     private static integerPart(value: string): string {
-        return value.slice(0, -Money.PRECISION);
+        return value.substring(0, Money.calcStartFractionPart(value));
     }
 
     private static fractionPart(value: string): string {
-        return value.slice(-Money.PRECISION);
+        return value.substring(Money.calcStartFractionPart(value));
     }
 
     static getDefaultOptions() {
