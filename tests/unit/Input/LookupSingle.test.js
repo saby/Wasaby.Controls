@@ -511,7 +511,7 @@ define([
 
          lookup._openInfoBox(null, config);
          assert.deepEqual(config, {
-            maxWidth: 100,
+            width: 100,
             offset: {
                horizontal: -0
             }
