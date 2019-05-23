@@ -1,6 +1,6 @@
 import {Button as Menu, MenuUtils} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
-import 'css!theme?Controls/_history/Menu';
+import 'css!theme?Controls/history';
 
 var _private = {
    getMetaPinned: function (item) {
