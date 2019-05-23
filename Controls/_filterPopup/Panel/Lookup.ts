@@ -12,7 +12,7 @@ import 'css!theme?Controls/filterPopup';
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/interface/ISelectorDialog
     * @mixes Controls/interface/ISearch
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/ISuggest

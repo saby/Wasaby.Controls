@@ -121,7 +121,7 @@ import 'Controls/breadcrumbs';
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
