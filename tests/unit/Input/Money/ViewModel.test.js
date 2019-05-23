@@ -5,8 +5,8 @@ define(
    function(ViewModel) {
       'use strict';
 
-      describe('Controls.Input.Money', function() {
-         var model = new ViewModel({
+      describe('Controls.Money.ViewModel', function() {
+         var model = new ViewModel.default({
             precision: 2,
             useGrouping: true,
             onlyPositive: false,
