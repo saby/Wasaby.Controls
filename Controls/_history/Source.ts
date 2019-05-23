@@ -194,13 +194,25 @@ var _private = {
                newItem.set('pinned', true);
             }
             if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1 || filteredHistory.frequent.indexOf(id) !== -1) {
-               newItem.set(item.getIdProperty(), id + '_history');
-               newItem.set('originalId', id);
+               _private.setHistoryFields(newItem, item.getIdProperty(), id);
             }
             items.add(newItem);
          }
       });
       return items;
+   },
+
+   setHistoryFields: function(item, idProperty, id) {
+      item.set(idProperty, id + '_history');
+      item.set('originalId', id);
+   },
+
+   resetHistoryFields: function(item, keyProperty) {
+      let origItem = item.clone();
+      if (item.get && item.get('originalId')) {
+         origItem.set(keyProperty, item.get('originalId'));
+      }
+      return origItem;
    },
 
    fillItems: function (self, history, historyType, oldItems, items) {
@@ -435,6 +447,10 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    getItems: function () {
       return _private.getItemsWithHistory(this, this._history, this._oldItems);
+   },
+
+   resetHistoryFields: function(item, keyProperty) {
+      return _private.resetHistoryFields(item, keyProperty);
    },
 
    // <editor-fold desc="Types/_source/OptionsMixin">

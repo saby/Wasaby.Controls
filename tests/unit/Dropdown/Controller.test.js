@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Types/collection',
       'Controls/history',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Types/entity'
    ],
-   (dropdown, sourceLib, Clone, collection, history, Deferred) => {
+   (dropdown, sourceLib, Clone, collection, history, Deferred, entity) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -355,49 +356,6 @@ define(
             closeByNodeClick = undefined;
             dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
-
-            // return the original Id value
-            let item = dropdownController._items.at(5).clone();
-            item.set('originalId', item.getId());
-            item.set('id', item.getId() + '_history');
-            closed = false;
-            closeByNodeClick = undefined;
-            assert.equal(item.getId(), '6_history');
-            dropdownController._onResult(null, {action: 'itemClick', data: [item]});
-            assert.isTrue(closed);
-            assert.equal(resultItems[0].getId(), '6');
-         });
-
-         it('check pin click', () => {
-            let newConfig = Clone(config);
-            newConfig.source.getItems = () => {return itemsRecords};
-            let dropdownController = getDropdownController(newConfig);
-            let closed = false;
-            let resultItems;
-
-            dropdownController._beforeMount(configLazyLoad);
-            dropdownController._items = itemsRecords;
-            dropdownController._children.DropdownOpener = {
-               close: function() {
-                  closed = true;
-               }
-            };
-
-            dropdownController._notify = (e, eventResult) => {
-               if (e === 'pinClicked') {
-                  resultItems = eventResult[0];
-               }
-            };
-
-            // return the original Id value
-            let item = dropdownController._items.at(5).clone();
-            item.set('originalId', item.getId());
-            item.set('id', item.getId() + '_history');
-            closed = false;
-            assert.equal(item.getId(), '6_history');
-            dropdownController._onResult(null, {action: 'pinClicked', data: [item]});
-            assert.isFalse(closed);
-            assert.equal(resultItems[0].getId(), '6');
          });
 
          it('lazy load', () => {
@@ -730,6 +688,77 @@ define(
                assert.deepEqual(selectedItems, items);
                assert.isTrue(updated);
             });
+
+            it('_private::onResult itemClick on history item', function() {
+               let resultItems, updated;
+               dropdownController._notify = function(e, d) {
+                  if (e === 'selectedItemsChanged') {
+                     resultItems = d[0];
+                  }
+               };
+
+               historySource.update = function() {
+                  updated = true;
+               };
+               dropdownController._items = itemsRecords;
+               dropdownController._beforeMount({
+                  selectedKeys: [2],
+                  keyProperty: 'id',
+                  source: historySource,
+                  filter: {}
+               });
+
+               // return the original Id value
+               let item = new entity.Model({
+                  rawData: {
+                     id: '6', title: 'title 6'
+                  },
+                  idProperty: 'id'
+               });
+               item.set('originalId', item.getId());
+               item.set('id', item.getId() + '_history');
+               assert.equal(item.getId(), '6_history');
+               dropdownController._onResult(null, {action: 'itemClick', data: [item]});
+               assert.equal(resultItems[0].getId(), '6');
+            });
+
+            it('check pin click', () => {
+               let closed = false, opened;
+               let resultItems;
+
+               dropdownController._beforeMount(configLazyLoad);
+               dropdownController._items = itemsRecords;
+               dropdownController._children.DropdownOpener = {
+                  close: function() {
+                     closed = true;
+                  },
+                  open: function() {
+                     opened = true;
+                  }
+               };
+
+               dropdownController._notify = (e, eventResult) => {
+                  if (e === 'pinClicked') {
+                     resultItems = eventResult[0];
+                  }
+               };
+
+               // return the original Id value
+               let item = new entity.Model({
+                  rawData: {
+                     id: '6', title: 'title 6'
+                  },
+                  idProperty: 'id'
+               });
+               item.set('originalId', item.getId());
+               item.set('id', item.getId() + '_history');
+               closed = false;
+               assert.equal(item.getId(), '6_history');
+               dropdownController._onResult(null, {action: 'pinClicked', data: [item]});
+               assert.isFalse(closed);
+               assert.equal(resultItems[0].getId(), '6');
+            });
+
          });
 
          function setTrue(assert) {
