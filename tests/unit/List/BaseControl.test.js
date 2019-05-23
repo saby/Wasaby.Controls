@@ -2637,6 +2637,7 @@ define([
                       multiSelectStatus: false,
                       item: {}
                    },
+                   updated = false,
                    childEvent = {
                       nativeEvent: {
                          direction: 'left'
@@ -2644,20 +2645,23 @@ define([
                    };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg).addCallback(function() {
-                  assert.isFalse(instance._canUpdateItemsActions);
                   instance._children = {
                      itemActionsOpener: {
                         close: () => {}
                      },
+                     itemActions: {
+                        updateItemActions: () => {
+                           updated = true;
+                        }
+                     },
                      selectionController: {
-                        onCheckBoxClick: function() {
+                        onCheckBoxClick: function () {
                         }
                      }
                   };
 
                   instance._listSwipe({}, itemData, childEvent);
-                  assert.isTrue(instance._canUpdateItemsActions);
-
+                  assert.isTrue(updated);
                   done();
                });
                return done;
@@ -2727,24 +2731,25 @@ define([
          it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var
-               cfg = {
-                  viewName: 'Controls/List/ListView',
-                  viewConfig: {
-                     idProperty: 'id'
-                  },
-                  viewModelConfig: {
-                     items: [],
-                     idProperty: 'id'
-                  },
-                  viewModelConstructor: lists.ListViewModel,
-                  source: source
-               },
-               instance = new lists.BaseControl(cfg),
-               itemData,
-               childEvent = {
-                  nativeEvent: {
-                     direction: 'left'
-                  }
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                updated = false,
+                instance = new lists.BaseControl(cfg),
+                itemData,
+                childEvent = {
+                   nativeEvent: {
+                      direction: 'left'
+                   }
                };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
@@ -2752,6 +2757,11 @@ define([
                   itemActionsOpener: {
                      close: function() {
                         callBackCount++;
+                     }
+                  },
+                  itemActions: {
+                     updateItemActions: () => {
+                        updated = true;
                      }
                   },
                   selectionController: {
@@ -2772,6 +2782,7 @@ define([
                      direction: 'right'
                   }
                };
+               assert.isTrue(updated);
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
