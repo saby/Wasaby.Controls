@@ -131,6 +131,14 @@ var
         },
 
         processError(self/*: EditInPlace*/, error: Error) {
+            /*
+             * в detail сейчас в многих местах редактирования по месту приходит текст из запроса
+             * Не будем его отображать
+             * TODO Убрать после закрытия задачи по написанию документа по правильному формированию текстов ошибок
+             *  https://online.sbis.ru/doc/c8ff58ac-e6f7-4f0e-877a-e9cbbe661139
+             */
+            delete error.details;
+
             return self.__errorController.process({
                 error,
                 mode: dataSourceError.Mode.dialog
