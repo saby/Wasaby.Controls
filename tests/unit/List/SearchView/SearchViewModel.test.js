@@ -79,5 +79,18 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          assert.deepEqual(searchViewModel.getItemActions(item1), [{ id: 'action_for_node' }]);
          assert.deepEqual(searchViewModel.getItemActions(item2), [{ id: 'action_for_leaf' }]);
       });
+
+      it('isGroup', function() {
+         let searchViewModel = new SearchViewModel({
+               root: 'myTestRoot',
+               items: []
+            });
+
+         let itemGroupMock = 'test';
+         let breadCrumbsMock = [];
+
+         assert.isFalse(searchViewModel._isGroup(breadCrumbsMock));
+         assert.isTrue(searchViewModel._isGroup(itemGroupMock));
+      });
    });
 });
