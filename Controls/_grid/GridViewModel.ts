@@ -1275,8 +1275,8 @@ var
 
         // Only for browsers with partial grid support. Explicit grid cell styles with grid row and grid column
         setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
-            for (let i = 0; i< this._columns.length; i++){
-                this._columns[i].realWidth = cells[0].getBoundingClientRect().width + 'px';
+            for (let i = 0; i< this.cells.length; i++){
+                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
             }
         },
 
