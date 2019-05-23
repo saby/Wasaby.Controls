@@ -456,6 +456,57 @@ define([
             assert.deepEqual({'2': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
          });
 
+         it('calcNodeFooterIndex', function () {
+            var cfg = {
+               keyProperty: 'id',
+               displayProperty: 'title',
+               parentProperty: 'parent',
+               nodeProperty: 'itemType',
+               expandedItems: [1, 2],
+               nodeFooterTemplate: 'asas',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        'id': 1,
+                        'parent': null,
+                        'itemType': true,
+                        'title': '1'
+                     },
+                     {
+                        'id': 2,
+                        'parent': 1,
+                        'itemType': true,
+                        'title': '2'
+                     },
+                     {
+                        'id': 11,
+                        'parent': 1,
+                        'itemType': null,
+                        'title': '11'
+                     },
+                     {
+                        'id': 21,
+                        'parent': 2,
+                        'itemType': null,
+                        'title': '21'
+                     },
+                     {
+                        'id': 3,
+                        'parent': null,
+                        'itemType': null,
+                        'title': '21'
+                     }
+                  ],
+                  idProperty: 'id'
+               })
+            };
+            let model = new treeGrid.TreeViewModel(cfg);
+            model._hasMoreStorage = {};
+
+            assert.equal(5, treeGrid.TreeViewModel._private.calcNodeFooterIndex(model, 21));
+
+         });
+
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
