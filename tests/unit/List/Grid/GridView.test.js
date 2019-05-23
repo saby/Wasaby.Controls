@@ -61,7 +61,7 @@ define(['Controls/grid'], function(gridMod) {
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
-      it('should update columns widths only if cells exist in HTML', function () {
+      it('should update columns widths only after mount', function () {
          var
              called = false,
              cells = [],
