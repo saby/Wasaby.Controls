@@ -1,0 +1,5 @@
+<div attr:tabindex="-1">
+   <Controls.popup:Previewer name="previewerOpener"/>
+   <Controls.popup:Infobox name="infoBoxOpener"/>
+   <Controls.popup:Dialog name="dialogOpener" />
+</div>
