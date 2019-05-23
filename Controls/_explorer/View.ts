@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
-import 'css!theme?Controls/_explorer/View/View';
+import 'css!theme?Controls/explorer';
 import 'Types/entity';
 import 'Controls/breadcrumbs';
 

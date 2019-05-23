@@ -275,10 +275,7 @@ define([
 
          lookup._openInfoBox(null, config);
          assert.deepEqual(config, {
-            maxWidth: 100,
-            offset: {
-               horizontal: -0
-            }
+            maxWidth: 100
          });
          assert.isFalse(lookup._suggestState);
          assert.isTrue(lookup._infoboxOpened);

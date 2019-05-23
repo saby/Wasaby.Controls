@@ -46,7 +46,7 @@ define(
 
          describe('Page', function () {
             it('init', function () {
-               var pNav = new PageNavigation({
+               var pNav = new PageNavigation.default({
                   page: 1,
                   pageSize: 4
                });
@@ -55,7 +55,7 @@ define(
             });
 
             it('calculateState', function () {
-               var pNav = new PageNavigation({
+               var pNav = new PageNavigation.default({
                   page: 1,
                   pageSize: 4
                });
@@ -79,7 +79,7 @@ define(
             });
 
             it('calculateState + withHasMore=False', function () {
-               var pNav = new PageNavigation({
+               var pNav = new PageNavigation.default({
                   page: 0,
                   hasMore: false,
                   pageSize: 4
@@ -104,7 +104,7 @@ define(
 
             it('prepareQueryParams', function () {
                var params;
-               var pNav = new PageNavigation({
+               var pNav = new PageNavigation.default({
                   page: 1,
                   pageSize: 4
                });
@@ -123,7 +123,7 @@ define(
 
          describe('PositionNavigation', function () {
             it('calculate state with first query', function () {
-               var pNav = new PositionNavigation({
+               var pNav = new PositionNavigation.default({
                   field: 'field',
                   limit: 100,
                   direction: 'after',
@@ -140,7 +140,7 @@ define(
                assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
 
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: ['field', 'id'],
                   direction: 'both',
                   position: 1,
@@ -156,7 +156,7 @@ define(
             });
 
             it('calculate state with load to direction query', function () {
-               var pNav = new PositionNavigation({
+               var pNav = new PositionNavigation.default({
                   field: 'field',
                   direction: 'after',
                   position: 1,
@@ -178,7 +178,7 @@ define(
 
                /**/
 
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: ['field', 'id'],
                   direction: 'both',
                   position: 1,
@@ -202,7 +202,7 @@ define(
 
 
             it('calculate state with nextPosition', function () {
-               var pNav = new PositionNavigation({
+               var pNav = new PositionNavigation.default({
                   field: 'field',
                   direction: 'both',
                   position: 5,
@@ -217,7 +217,7 @@ define(
 
 
                //first query with direction: after
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: 'field',
                   direction: 'after',
                   position: 5,
@@ -229,7 +229,7 @@ define(
                pNav.calculateState(dataRs);
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: 'field',
                   direction: 'before',
                   position: 5,
@@ -243,7 +243,7 @@ define(
 
 
                /*any first query, but having "load to direction query"*/
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: 'field',
                   direction: 'both',
                   position: 5,
@@ -264,7 +264,7 @@ define(
 
             it('prepare query params first load', function () {
                var params, pNav;
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: 'field',
                   limit: 100,
                   direction: 'after',
@@ -275,7 +275,7 @@ define(
                assert.deepEqual({filter : {'field>=' : 1}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
 
 
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: ['field', 'id'],
                   limit: 50,
                   direction: 'before',
@@ -286,7 +286,7 @@ define(
                assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}, limit: 50, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');
 
 
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: ['field'],
                   limit: 100,
                   direction: 'both',
@@ -299,7 +299,7 @@ define(
 
             it('prepare query params load to direction', function () {
                var params, pNav;
-               pNav = new PositionNavigation({
+               pNav = new PositionNavigation.default({
                   field: ['field', 'id'],
                   direction: 'both',
                   position: 1,
