@@ -122,7 +122,7 @@ var Collection = Control.extend({
       var config = {
          target: this._children.infoBoxLink,
          opener: this,
-         maxWidth: this._container.offsetWidth,
+         width: this._container.offsetWidth,
          templateOptions: _private.getTemplateOptions(this)
       };
 
