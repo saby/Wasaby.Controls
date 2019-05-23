@@ -243,10 +243,24 @@ define(
                });
             });
             it('getItemsWithHistory', function() {
+               let newHistoryItem = new entity.Model({
+                  rawData: {
+                     d: ['7', null, 'TEST_HISTORY_ID_V1'],
+                     s: [
+                        { n: 'ObjectId', t: 'Строка'},
+                        { n: 'ObjectData', t: 'Строка'},
+                        { n: 'HistoryId', t: 'Строка'}
+                     ]
+                  },
+                  adapter: new entity.adapter.Sbis()
+               });
+               hSource._history.pinned.add(newHistoryItem);
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
-               assert.equal(historyItems.at(1).get('title'), 'Запись 4');
-               assert.equal(historyItems.at(3).get('title'), 'Запись 8');
+               assert.equal(historyItems.at(1).get('title'), 'Запись 7');
+               assert.equal(historyItems.at(3).get('title'), 'Запись 6');
+               assert.equal(historyItems.at(8).getId(), '7_history');
+               hSource._history.pinned.removeAt(1);
             });
             it('check alphabet', function() {
                historyItems = hSource.getItems();
