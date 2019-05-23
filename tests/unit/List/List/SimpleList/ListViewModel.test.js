@@ -356,6 +356,28 @@ define([
          assert.equal(0, Object.keys(listModel._actions).length);
       });
 
+      it('Clear itemActions for removed items', function() {
+         var
+            cfg = {
+               keyProperty: 'id',
+               markerVisibility: 'visible',
+               markedKey: null,
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               })
+            },
+            listModel = new lists.ListViewModel(cfg);
+
+         listModel.setItemActions(cfg.items.at(0), {
+            all: [{ id: 1, icon: 'testIcon' }],
+            showed: []
+         });
+         assert.equal(1, Object.keys(listModel._actions).length);
+         listModel.getItems().removeAt(0);
+         assert.equal(0, Object.keys(listModel._actions).length);
+      });
+
       it('_updateSelection', function() {
          var cfg = {
             items: data,
