@@ -107,32 +107,6 @@ var
             return preparedClasses;
         },
 
-        isFirstInGroup: function(self, dispItem) {
-
-            var
-                item = dispItem.item,
-                display = self._model._display,
-                groupingKeyCallback = self._options.groupingKeyCallback,
-                currentItemGroup,
-                currentGroupItems;
-
-            // If grouping is not enabled.
-            if (!groupingKeyCallback) {
-                return false;
-            }
-
-            // Getting all items of the current items' group.
-            currentItemGroup = groupingKeyCallback(item);
-            currentGroupItems = display.getGroupItems(currentItemGroup);
-
-            // If current item is out of any group.
-            if (!currentGroupItems || currentGroupItems.length === 0) {
-                return false;
-            }
-
-
-            return item === currentGroupItems[0].getContents();
-        },
         prepareRowSeparatorClasses: function(current) {
             var
                 result = '',
@@ -957,7 +931,7 @@ var
                 return current;
             }
 
-            current.isFirstInGroup = !current.isGroup && current.item.get && _private.isFirstInGroup(this, current);
+            current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
 
             if (current.isFirstInGroup) {
                 current.rowSeparatorVisibility = false;
@@ -1296,6 +1270,30 @@ var
 
         getHandlersForPartialSupport: function(): {[key: string]: Function} {
             return this._eventHandlersForPartialSupport;
+        },
+
+        _isFirstInGroup: function(item):boolean {
+            var display = this._model._display,
+                groupingKeyCallback = this._options.groupingKeyCallback,
+                currentItemGroup,
+                currentGroupItems;
+
+            // If grouping is not enabled.
+            if (!groupingKeyCallback) {
+                return false;
+            }
+
+            // Getting all items of the current items' group.
+            currentItemGroup = groupingKeyCallback(item);
+            currentGroupItems = display.getGroupItems(currentItemGroup);
+
+            // If current item is out of any group.
+            if (!currentGroupItems || currentGroupItems.length === 0) {
+                return false;
+            }
+
+
+            return item === currentGroupItems[0].getContents();
         },
 
         destroy: function() {
