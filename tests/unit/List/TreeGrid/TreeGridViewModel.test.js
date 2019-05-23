@@ -278,29 +278,43 @@ define(['Controls/treeGrid',
 
       it('getArgsForRowIndexUtil', function() {
          let columns = [{
-            width: '1fr',
-            displayProperty: 'title'
-         }];
-         let model = new treeGrid.ViewModel({
-               items: new collection.RecordSet({
-                  idProperty: 'id',
-                  rawData: [
-                     {id: 0, title: 'i0', parent: null, type: true},
-                     {id: 1, title: 'i1', parent: null, type: false},
-                     {id: 2, title: 'i2', parent: null, type: null}
-                  ]
-               }),
-               keyProperty: 'id',
-               nodeProperty: 'type',
-               parentProperty: 'parent',
-               columns: columns
-            });
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new treeGrid.ViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                nodeFooterTemplate: 'tpl',
+                resultsPosition: 'top',
+                expandedItems: [1, 2],
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: columns
+             }),
+             hasMoreStorage = {
+                0: true,
+                1: false
+             };
+         model.setHasMoreStorage(hasMoreStorage);
 
          let args = treeGrid.ViewModel._private.getArgsForRowIndexUtil(model, 'testKey');
 
          assert.equal(args[0], 'testKey');
          assert.equal(args[1], model.getDisplay());
          assert.equal(args[2], false);
+         assert.equal(args[3], 'top');
+         assert.equal(args[4], model._model.getHierarchyRelation());
+         assert.equal(args[5], hasMoreStorage);
+         assert.equal(args[6], 'tpl');
+         assert.equal(args[7], model.getExpandedItems());
+
       });
 
       it('prepareGroupGridStyles', function () {
