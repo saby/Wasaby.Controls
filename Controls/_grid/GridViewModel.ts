@@ -89,7 +89,7 @@ var
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (params.isBreadCrumbs) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
             }
 
             // Стиль колонки
@@ -104,6 +104,42 @@ var
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
+
+            return preparedClasses;
+        },
+        getPaddingHeaderCellClasses: function(params) {
+            let preparedClasses = '';
+            const { multiSelectVisibility, columnIndex, columns,
+                rowIndex, itemPadding, isBreadCrumbs, style } = params;
+            if (rowIndex === 0) {
+                if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
+                    preparedClasses += ' controls-Grid__cell_spacingLeft';
+                }
+            } else {
+                    preparedClasses += ' controls-Grid__cell_spacingLeft';
+            }
+
+            if (columnIndex < columns.length - 1) {
+                preparedClasses += ' controls-Grid__cell_spacingRight';
+            }
+            // Отступ для последней колонки
+            if (columnIndex === columns.length - 1) {
+                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            }
+            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
+            if (rowIndex === 0 && columnIndex === 0 && !multiSelectVisibility) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
+            }
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (isBreadCrumbs) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+            }
+            // Стиль колонки
+            preparedClasses += ' controls-Grid__cell_' + (style || 'default');
+            if (!params.isHeader) {
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase();
+            }
 
             return preparedClasses;
         },
@@ -417,6 +453,7 @@ var
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
+        _maxEndRow: 0,
 
         _resultsColumns: [],
         _curResultsColumnIndex: 0,
@@ -477,7 +514,7 @@ var
         },
 
         _prepareColumns: function(columns) {
-            console.log('sds', columns)
+            // console.log('sds', columns)
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
@@ -513,19 +550,21 @@ var
         },
 
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
-            console.log('columns', columns)
-
-            if (multiSelectVisibility) {
-                this._headerColumns = [{}].concat(columns);
-            } else {
-                this._headerColumns = columns;
+            if (columns && columns.length) {
+                this._headerRows = GridLayoutUtil.getRowsArray(columns, multiSelectVisibility);
+                this._maxEndRow = GridLayoutUtil.getMaxEndRow(this._headerRows);
             }
-            this.resetHeaderColumns();
+            // if (multiSelectVisibility) {
+            //     this._headerColumns = [{}].concat(columns);
+            // } else {
+            //     this._headerColumns = columns;
+            // }
+            // this.resetHeaderColumns();
         },
 
-        resetHeaderColumns: function() {
-            this._curHeaderColumnIndex = 0;
-        },
+        // resetHeaderColumns: function() {
+        //     this._curHeaderColumnIndex = 0;
+        // },
 
         isNotFullGridSupport: function() {
             return Env.detection.isNotFullGridSupport;
@@ -536,12 +575,12 @@ var
            return this._options.stickyHeader && !this.isNotFullGridSupport();
         },
 
-        getCurrentHeaderColumn: function() {
+        getCurrentHeaderColumn: function(cell, columnIndex, rowIndex) {
             var
-                columnIndex = this._curHeaderColumnIndex,
+                // columnIndex = i,
                 cellClasses = 'controls-Grid__header-cell',
                 headerColumn = {
-                    column: this._headerColumns[this._curHeaderColumnIndex],
+                    column: cell,
                     index: columnIndex
                 };
 
@@ -564,16 +603,18 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
+            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
-                cellClasses += _private.getPaddingCellClasses({
+                cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
-                    columns: this._headerColumns,
+                    columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isHeader: true,
+                    cell,
+                    rowIndex,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs
                 });
@@ -584,14 +625,14 @@ var
             if (headerColumn.column.valign) {
                 cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
             }
-            headerColumn.cellClasses = cellClasses;
+
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
                headerColumn.style = _private.getColspan(
                   this._options.multiSelectVisibility,
                   columnIndex,
-                  this._headerColumns.length,
+                  this._headerRows[0].length,
                   true
                );
             }
@@ -605,50 +646,78 @@ var
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
             // -----------------------------------------------------------
-            // ---------------------- multyHeader ----------------------
+            // ---------------------- multyHeader ------------------------
             // -----------------------------------------------------------
-            if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerColumns[columnIndex + 1].startColumn) {
-                headerColumn.cellStyles = 'grid-row:1/3;';
+            let cellContentClasses = '';
+            let cellStyles = '';
+            let height = '';
+            let stickyTop = 0;
+            let shadowVisibility = 'visible';
+            if (cell.startRow) {
+                const { endRow, startRow, endColumn, startColumn } = cell;
+                if (this.isNoGridSupport()) {
+                    headerColumn.rowSpan = endRow - startRow;
+                    headerColumn.colSpan = endColumn - startColumn;
+                    cellClasses += ' controls-Grid__cell_header-relative';
+                    cellContentClasses += ' controls-Grid__cell_header-content';
+                }
+                if (!this.isNoGridSupport()) {
+                    cellContentClasses += ' controls-Grid__cell_header-content';
+                    if (!this.isStickyHeader()) {
+                        cellClasses += ' controls-Grid__cell_header-relative';
+                    } else {
+                        stickyTop = startRow ? (startRow - 1 ) * 20 : 0;
+                        shadowVisibility = rowIndex === this._headerRows.length - 1 ? 'visible' : 'hidden';
+                    }
+
+                    const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
+                    const gridStyles = [
+                        {
+                            name: 'grid-column',
+                            value: `${startColumn + additionalColumn} / ${endColumn + additionalColumn}`
+                        },
+                        {
+                            name: 'grid-row',
+                            value: `${startRow} / ${endRow}`
+                        },
+                    ];
+
+                    cellStyles += GridLayoutUtil.toCssString(gridStyles);
+
+                }
+                height = `height:${(endRow - startRow) * 20}px;`;
+                cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
+                cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             }
 
-            if (this._headerColumns[columnIndex].startColumn) {
-                const { startColumn, endColumn, startRow, endRow } = this._headerColumns[this._curHeaderColumnIndex];
-
-
-
-                headerColumn.cellContentClasses += ' controls-Grid__cell_header-content_center';
-                if (endRow % 2 === 0) {
-                    headerColumn.cellContentClasses += ' controls-Grid__cell_header-content_border-bottom';
-                }
-                const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
-                const cellStyles = [
-                    {
-                        name: 'grid-column',
-                        value: `${startColumn + additionalColumn} / ${endColumn + additionalColumn}`
-                    },
-                    {
-                        name: 'grid-row',
-                        value: `${startRow} / ${endRow}`
-                    },
-                ];
-
-                if (this._headerColumns[this._curHeaderColumnIndex] === this._headerColumns[this._headerColumns.length - 1] && !this.isStickyHeader()) {
-                    cellStyles.push({ name: 'z-index', value: '0' });
-                }
-                headerColumn.stickyTop = (startRow - 1 ) * 20;
-                headerColumn.cellStyles = GridLayoutUtil.toCssString(cellStyles);
-                headerColumn.height = `height:${(endRow - startRow) * 20}px;min-height:${(endRow - startRow) * 20}px`;
+            if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+                cellStyles = `grid-row:1/${this._maxEndRow};`;
+                headerColumn.rowSpan = this._maxEndRow - 1;
+                headerColumn.colSpan = 1;
             }
+            if (headerColumn.column.valign) {
+                cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
+            }
+            if (headerColumn.column.align) {
+                cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
+            }
+            headerColumn.shadowVisibility = shadowVisibility;
+            headerColumn.stickyTop = stickyTop;
+            headerColumn.height = height;
+            headerColumn.cellStyles = cellStyles;
+            headerColumn.cellClasses = cellClasses;
+            headerColumn.cellContentClasses = cellContentClasses;
+
             return headerColumn;
         },
 
-        goToNextHeaderColumn: function() {
-            this._curHeaderColumnIndex++;
-        },
-
-        isEndHeaderColumn: function() {
-            return this._curHeaderColumnIndex < this._headerColumns.length;
-        },
+        // goToNextHeaderColumn: function() {
+        //     this._curHeaderColumnIndex++;
+        // },
+        //
+        // isEndHeaderColumn: function() {
+        //     return this._curHeaderColumnIndex < this._headerColumns.length;
+        // },
 
         // -----------------------------------------------------------
         // ---------------------- resultColumns ----------------------
@@ -690,12 +759,14 @@ var
                     column: this._resultsColumns[columnIndex],
                     index: columnIndex
                 };
-
+            // let stickyTop = 0;
             if (this.isStickyHeader()) {
                 resultsColumn.zIndex = _private.getHeaderZIndex({
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility
                 });
+                // stickyTop = (this._maxEndRow - 1) * 20;
+                // console.log('RESOFFSET', resultsColumn.stickyTop);
             }
 
             if (this._options.columnScroll) {
@@ -724,7 +795,7 @@ var
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
-
+            // resultsColumn.stickyTop = stickyTop;
             return resultsColumn;
         },
 

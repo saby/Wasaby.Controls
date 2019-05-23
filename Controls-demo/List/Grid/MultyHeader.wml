@@ -5,7 +5,7 @@
             <Controls.operations:Controller
                     bind:selectedKeys="_firstSelectedKeys"
                     name="multiSelector">
-                <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="default">
+                <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="default" attr:style="width:70%">
                     <Controls.list:Container>
                         <Controls.operations:Container>
                             <Controls.grid:View
@@ -32,7 +32,7 @@
             <Controls.operations:Controller
                     bind:selectedKeys="_firstSelectedKeys"
                     name="multiSelector">
-                <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="default">
+                <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="default" attr:style="width:70%">
                     <Controls.list:Container>
                         <Controls.operations:Container>
                             <Controls.grid:View
@@ -44,7 +44,7 @@
                                     rowSeparatorVisibility="{{true}}"
                                     header="{{gridHeader}}"
                                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
-                                    multiSelectVisibility="visible"
+
                                     columns="{{gridColumns}}"
                                     bind:sorting="_sorting">
                             </Controls.grid:View>

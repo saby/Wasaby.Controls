@@ -92,20 +92,21 @@ define('Controls-demo/List/Grid/MultyHeader', [
            align: 'right'
         }
      ],
-     fullHeader = [
+     fullHeader2 = [
         {
-           title: 'naim',
+           title: 'Наименование',
            startColumn:   1,
            endColumn:     2,
            startRow:      1,
-           endRow:        3
+           endRow:        3,
         },
         {
            title: 'Цена',
            startColumn:   2,
            endColumn:     3,
            startRow:      2,
-           endRow:        3
+           endRow:        3,
+            align: 'right'
         },
         {
            title: 'Остаток',
@@ -113,81 +114,119 @@ define('Controls-demo/List/Grid/MultyHeader', [
            startColumn:   3,
            endColumn:     4,
            startRow:      2,
-           endRow:        3
+           endRow:        3,
+            align: 'right'
         },
         {
            title: 'Резерв',
            startColumn:   4,
            endColumn:     5,
            startRow:      2,
-           endRow:        3
+           endRow:        3,
+            align: 'right'
         },
         {
            title: 'Себест.',
            startColumn:   5,
            endColumn:     6,
            startRow:      2,
-           endRow:        3
+           endRow:        3,
+            align: 'right'
         },
         {
-           title: 'left',
+           title: 'Магазин',
            startColumn:   2,
-           endColumn:     4,
+           endColumn:     5,
            startRow:      1,
-           endRow:        2
+           endRow:        2,
         },
         {
-           title: 'right',
-           startColumn:   4,
+           title: 'Склад',
+           startColumn:   5,
            endColumn:     7,
            startRow:      1,
-           endRow:        2
+           endRow:        2,
         },
          {
              title: 'Сумма остатка',
              startColumn:   6,
              endColumn:     7,
              startRow:      2,
-             endRow:        3
+             endRow:        3,
+             align: 'right'
          }
      ],
-      fullHeader2 = [
-      {
-         title: ''
-      },
-      {
-         title:         'Наименование',
-         startColumn:   1,
-         endColumn:     2,
-         startRow:      1,
-         endRow:        3
-      },
-      {
-         title:         'Остатки',
-         startColumn:   2,
-         endColumn:     4,
-         startRow:      1,
-         endRow:        2
-      },
-      {
-         title:         'На складе',
-         startColumn:   2,
-         endColumn:     3,
-         startRow:      2,
-         endRow:        3
-      },
-      {
-         title:         'У поставщика',
-         startColumn:   3,
-         endColumn:     4,
-         startRow:      2,
-         endRow:        3
-      },
-      {
-         title: 'Сумма остатка',
-         align: 'right'
-      }
-   ],
+      fullHeader = [
+          {
+              title: 'Наименование',
+              startColumn:   1,
+              endColumn:     2,
+              startRow:      1,
+              endRow:        4,
+          },
+          {
+              title: 'Общие',
+              startColumn:   2,
+              endColumn:     7,
+              startRow:      1,
+              endRow:        2,
+          },
+          {
+              title: 'Цена',
+              startColumn:   2,
+              endColumn:     3,
+              startRow:      3,
+              endRow:        4,
+              align: 'right'
+          },
+          {
+              title: 'Остаток',
+              sortingProperty: 'balance',
+              startColumn:   3,
+              endColumn:     4,
+              startRow:      3,
+              endRow:        4,
+              align: 'right'
+          },
+          {
+              title: 'Резерв',
+              startColumn:   4,
+              endColumn:     5,
+              startRow:      3,
+              endRow:        4,
+              align: 'right'
+          },
+          {
+              title: 'Себест.',
+              startColumn:   5,
+              endColumn:     6,
+              startRow:      3,
+              endRow:        4,
+              align: 'right'
+          },
+          {
+              title: 'Магазин',
+              startColumn:   2,
+              endColumn:     5,
+              startRow:      2,
+              endRow:        3,
+          },
+          {
+              title: 'Склад',
+              startColumn:   5,
+              endColumn:     7,
+              startRow:      2,
+              endRow:        3,
+          },
+          {
+              title: 'Сумма остатка',
+              startColumn:   6,
+              endColumn:     7,
+              startRow:      3,
+              endRow:        4,
+              align: 'right'
+          }
+      ],
      ModuleClass = BaseControl.extend({
         _template: template,
         _actionClicked: '',

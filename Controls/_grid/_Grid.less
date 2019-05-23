@@ -46,7 +46,8 @@
 
 .controls-Grid__header-cell__content {
    display: inline-block;
-   min-height: @min-height_Grid-header;
+   min-height: 20px;
+   //min-height: @min-height_Grid-header;
 }
 
 .controls-Grid__row-header__content_baseline:before {
@@ -426,13 +427,43 @@
    right: 0;
 }
 
-.controls-Grid__cell_header-content_center {
+.controls-Grid__cell_header-content {
    display: flex;
    justify-content: center;
    align-items: center;
    flex: 1;
 }
 .controls-Grid__cell_header-content_border-bottom {
-   border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.control-Grid__cell_header-nowrap {
+   white-space: nowrap;
+
 }
 
+.controls-Grid__cell_header-relative {
+   position: relative;
+}
+
+.controls-Grid__header-cell_justify_content_left {
+   justify-content: flex-start;
+}
+
+.controls-Grid__header-cell_justify_content_right {
+   justify-content: flex-end;
+}
+
+.controls-Grid__header-cell_justify_content_center {
+   justify-content: center;
+}
+
+.controls-Grid__header-cell_align_items_top {
+   align-items: flex-start;
+}
+
+.controls-Grid__header-cell_align_items_bottom {
+   align-items: flex-end;
+}
