@@ -38,8 +38,8 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             container.setAttribute('ws-no-focus', true);
             container.setAttribute('class', 'controls-PopupGlobal__container');
             var openersContainer = document.createElement('div');
-            container.append(openersContainer);
-            document.body.append(container);
+            container.appendChild(openersContainer);
+            document.body.appendChild(container);
             return openersContainer;
          },
 
