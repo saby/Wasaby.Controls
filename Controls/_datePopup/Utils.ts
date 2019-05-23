@@ -1,3 +1,4 @@
+import {detection} from 'Env/Env';
 import formatDate = require('Core/helpers/Date/format');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import scrollToElement = require('Controls/Utils/scrollToElement');
@@ -54,5 +55,9 @@ export default {
     dataStringToDate: function (str) {
         var d = str.split('.');
         return new Date(d[0], d[1]);
+    },
+
+    isStickySupport: function() {
+        return !((detection.isIE && detection.IEVersion < 16) || (detection.isWinXP && detection.chrome));
     }
 };
