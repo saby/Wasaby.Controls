@@ -69,7 +69,7 @@ define(
                scrollTop: 0
             };
 
-            let sizesTest = {...sizes};
+            let sizesTest = { ...sizes };
             sizesTest.width = 600;
 
             let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
@@ -87,7 +87,7 @@ define(
                height: 500,
                scrollTop: 0
             };
-            let sizesTest = {...sizes};
+            let sizesTest = { ...sizes };
             sizesTest.width = 700;
             let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
@@ -110,7 +110,7 @@ define(
             let width = 800;
             let height = 800;
 
-            let sizesTest = {...sizes, width, height};
+            let sizesTest = { ...sizes, width, height };
             let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
             assert.equal(position.top, 0);
@@ -132,9 +132,17 @@ define(
          });
 
          it('dialog container sizes after update', () => {
-            DialogController.prepareConfig = () => {
-               assert.equal(container.style.width, 'auto');
-               assert.equal(container.style.height, 'auto');
+            DialogController.prepareConfig = (cfg) => {
+               if (!cfg.popupOptions.width) {
+                  assert.equal(container.style.width, 'auto');
+               } else {
+                  assert.equal(container.style.width, 10);
+               }
+               if (!cfg.popupOptions.height) {
+                  assert.equal(container.style.height, 'auto');
+               } else {
+                  assert.equal(container.style.height, 10);
+               }
                assert.equal(container.style.maxWidth, '20px');
                assert.equal(container.style.maxHeight, '30px');
             };
@@ -144,6 +152,14 @@ define(
                   height: 10
                }
             };
+            DialogController.elementUpdated({
+               popupOptions: {
+                  width: 15,
+                  height: 15,
+                  maxWidth: 20,
+                  maxHeight: 30
+               }
+            }, container);
             DialogController.elementUpdated({
                popupOptions: {
                   maxWidth: 20,
