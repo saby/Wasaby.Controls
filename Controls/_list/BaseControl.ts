@@ -420,6 +420,7 @@ var _private = {
             // Иначе пересчитываем скролл
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
+            self._checkShouldLoadToDirection = true;
         }
     },
 
