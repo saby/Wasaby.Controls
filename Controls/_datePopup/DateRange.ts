@@ -10,7 +10,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods of multiple days.

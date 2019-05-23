@@ -21,14 +21,6 @@ define(
       };
 
       describe('Controls.Input.Mask', function() {
-         it('findLastUserEnteredCharPosition', function() {
-            var findLastUserEnteredCharPosition = input.Mask._private.findLastUserEnteredCharPosition;
-
-            assert.equal(findLastUserEnteredCharPosition('12.34.56', ' '), 8);
-            assert.equal(findLastUserEnteredCharPosition('12.34.  ', ' '), 6);
-            assert.equal(findLastUserEnteredCharPosition('12.34.56', ''), 8);
-            assert.equal(findLastUserEnteredCharPosition('12.34.', ''), 6);
-         });
 
          it('validateReplacer', function() {
             var message = '';
@@ -59,20 +51,11 @@ define(
          });
 
          describe('_focusInHandler', function() {
-            it('should set default selection position', function(done) {
+            it('should set default selection position', function() {
                var component = createComponent(input.Mask, {mask: 'dd.dd', replacer: ' '});
                component._viewModel.selection = {
                     start: 3,
                     end: 3
-               }
-               component._getField = function() {
-                  return {
-                     setSelectionRange: function(start, end) {
-                        assert.equal(start, 0);
-                        assert.equal(end, 0);
-                        done();
-                     }
-                  }
                }
                component._focusInHandler();
                assert.deepEqual(

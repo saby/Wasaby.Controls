@@ -84,6 +84,9 @@ import 'css!theme?Controls/filterPopup';
 
       _beforeMount: function(options) {
          this._items = _private.cloneItems(options.items);
+      },
+
+      _afterMount: function() {
          _private.observeItems(this, this._items);
       },
 

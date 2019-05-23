@@ -208,13 +208,13 @@
       }
     }
   },
-  "Controls/Heading/Separator": {
-    "name": "Controls/Heading/Separator",
+  "Controls/heading:Separator": {
+    "name": "Controls/heading:Separator",
     "title": "Heading.",
-    "className": "Controls/Heading/Separator",
+    "className": "Controls/heading:Separator",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Separator",
+    "fullname": "Controls/heading:Separator",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -231,13 +231,13 @@
       }
     }
   },
-  "Controls/Heading/Counter": {
-    "name": "Controls/Heading/Counter",
+  "Controls/heading:Counter": {
+    "name": "Controls/heading:Counter",
     "title": "Heading.",
-    "className": "Controls/Heading/Counter",
+    "className": "Controls/heading:Counter",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Counter",
+    "fullname": "Controls/heading:Counter",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -409,13 +409,13 @@
       }
     }
   },
-  "Controls/Heading/Back": {
-    "name": "Controls/Heading/Back",
+  "Controls/heading:Back": {
+    "name": "Controls/heading:Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
-    "className": "Controls/Heading/Back",
+    "className": "Controls/heading:Back",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/Back",
+    "fullname": "Controls/heading:Back",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -809,6 +809,18 @@
             "title": "Имя контрола",
             "type": "String",
             "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
           }
         }
       }
@@ -1986,13 +1998,13 @@
       }
     }
   },
-  "Controls/Indicator/Progress/Bar": {
-    "name": "Controls/Indicator/Progress/Bar",
+  "Controls/progress:Bar": {
+    "name": "Controls/progress:Bar",
     "title": "Control that renders progress bar",
-    "className": "Controls/Indicator/Progress/Bar",
+    "className": "Controls/progress:Bar",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Indicator/Progress/Bar",
+    "fullname": "Controls/progress:Bar",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

@@ -275,8 +275,35 @@ define(['Controls/treeGrid',
              }),
              current = model.getCurrent();
 
-         assert.equal(treeGrid.ViewModel._private.calcRowIndex(model, current), 0);
+         assert.equal(model._calcRowIndex(current), 0);
 
+      });
+
+      it('getArgsForRowIndexUtil', function() {
+         let columns = [{
+            width: '1fr',
+            displayProperty: 'title'
+         }];
+         let model = new treeGrid.ViewModel({
+               items: new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     {id: 0, title: 'i0', parent: null, type: true},
+                     {id: 1, title: 'i1', parent: null, type: false},
+                     {id: 2, title: 'i2', parent: null, type: null}
+                  ]
+               }),
+               keyProperty: 'id',
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               columns: columns
+            });
+
+         let args = treeGrid.ViewModel._private.getArgsForRowIndexUtil(model, 'testKey');
+
+         assert.equal(args[0], 'testKey');
+         assert.equal(args[1], model.getDisplay());
+         assert.equal(args[2], false);
       });
 
       it('prepareGroupGridStyles', function () {

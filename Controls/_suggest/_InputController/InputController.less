@@ -69,6 +69,8 @@
 .controls-Suggest__scrollContainer {
 	height: 100%;
 	width: 100%;
+	//need to inherit max-height from popup on IOS, otherwise height 100% will not work
+	max-height: inherit;
 }
 
 .controls-Suggest__Misspell {

@@ -35,6 +35,11 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
       };
 
       class ViewModel extends BaseViewModel {
+         constructor(...args: any[]) {
+            super(...args);
+            this.setCarriageDefaultPosition();
+         }
+
          _convertToValue(displayValue) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             const value = Formatter.getClearData(this._format, displayValue).value;
@@ -59,6 +64,22 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
             return super.handleInput.call(this, _private.prepareSplitValue(result));
+         }
+
+         setCarriageDefaultPosition() {
+             this.selection = this.getDefaultCarriagePosition();
+             this._nextVersion();
+             this._shouldBeChanged = true;
+         }
+
+         private getDefaultCarriagePosition() {
+            let position;
+
+            if (this.options.replacer) {
+               position = this.displayValue.indexOf(this.options.replacer);
+               return position === -1 ? this.displayValue.length : position;
+            }
+            return this.displayValue.length;
          }
       }
 
