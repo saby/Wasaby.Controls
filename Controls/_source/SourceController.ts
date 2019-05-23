@@ -178,7 +178,7 @@ var SourceController = cExtend.extend({
 
    getNavigation: function() {
       return this._options.navigation;
-   }
+   },
 
    hasMoreData: function(direction) {
       if (this._queryParamsController) {
