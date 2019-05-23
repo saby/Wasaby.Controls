@@ -60,18 +60,6 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
 
-      describe('DropdownList::constructor', function() {
-         let config2 = {
-            showHeader: true,
-            headConfig: { icon: 'icon-add' },
-            parentProperty: 'parent',
-            rootKey: null,
-            iconPadding: { null: [null, 'icon-small'] }
-         };
-         let ddl = getDropDownListWithConfig(config2);
-         assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
-      });
-
       describe('DropdownList::_beforeUpdate', function() {
 
          it('_itemMouseEnter', function() {
@@ -206,6 +194,14 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
 
+            /**** CHANGE HEADER CONFIG *******************/
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._beforeMount(dropDownConfig);
+            assert.isNotOk(dropDownList._headConfig);
+
+            dropDownList._beforeUpdate({...dropDownConfig, caption: 'New caption', showHeader: true});
+            assert.equal(dropDownList._headConfig.caption, 'New caption');
          });
 
          it('change root key', function() {
@@ -251,6 +247,22 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
       });
 
       describe('DropdownList::_beforeMount', function() {
+         it ('check headConfig', function() {
+            let config2 = {
+               showHeader: true,
+               icon: 'icon-add',
+               parentProperty: 'parent',
+               rootKey: null,
+               caption: 'Caption',
+               iconPadding: { null: [null, 'icon-small'] }
+            };
+            let ddlConfig = getDropDownConfig();
+            ddlConfig = {...ddlConfig, ...config2};
+            let ddl = getDropDownListWithConfig(ddlConfig);
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
+         });
          it('check list view model', function() {
             let expectedConfig = {
                items: items,
