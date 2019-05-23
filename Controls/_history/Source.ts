@@ -193,8 +193,8 @@ var _private = {
             if (filteredHistory.pinned.indexOf(id) !== -1) {
                newItem.set('pinned', true);
             }
-            if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1) {
-               newItem.set('id', id + '_history');
+            if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1 || filteredHistory.frequent.indexOf(id) !== -1) {
+               newItem.set(item.getIdProperty(), id + '_history');
                newItem.set('originalId', id);
             }
             items.add(newItem);

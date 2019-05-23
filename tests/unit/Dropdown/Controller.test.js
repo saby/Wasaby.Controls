@@ -311,6 +311,7 @@ define(
             let closed = false;
             let opened = false;
             let closeByNodeClick = false;
+            let resultItems;
 
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords;
@@ -325,6 +326,10 @@ define(
 
             dropdownController._notify = (e, eventResult) => {
                assert.equal(e, 'selectedItemsChanged');
+
+               if (e === 'selectedItemsChanged') {
+                  resultItems = eventResult[0];
+               }
 
                return closeByNodeClick;
             };
@@ -350,6 +355,49 @@ define(
             closeByNodeClick = undefined;
             dropdownController._onResult(null, {action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);
+
+            // return the original Id value
+            let item = dropdownController._items.at(5).clone();
+            item.set('originalId', item.getId());
+            item.set('id', item.getId() + '_history');
+            closed = false;
+            closeByNodeClick = undefined;
+            assert.equal(item.getId(), '6_history');
+            dropdownController._onResult(null, {action: 'itemClick', data: [item]});
+            assert.isTrue(closed);
+            assert.equal(resultItems[0].getId(), '6');
+         });
+
+         it('check pin click', () => {
+            let newConfig = Clone(config);
+            newConfig.source.getItems = () => {return itemsRecords};
+            let dropdownController = getDropdownController(newConfig);
+            let closed = false;
+            let resultItems;
+
+            dropdownController._beforeMount(configLazyLoad);
+            dropdownController._items = itemsRecords;
+            dropdownController._children.DropdownOpener = {
+               close: function() {
+                  closed = true;
+               }
+            };
+
+            dropdownController._notify = (e, eventResult) => {
+               if (e === 'pinClicked') {
+                  resultItems = eventResult[0];
+               }
+            };
+
+            // return the original Id value
+            let item = dropdownController._items.at(5).clone();
+            item.set('originalId', item.getId());
+            item.set('id', item.getId() + '_history');
+            closed = false;
+            assert.equal(item.getId(), '6_history');
+            dropdownController._onResult(null, {action: 'pinClicked', data: [item]});
+            assert.isFalse(closed);
+            assert.equal(resultItems[0].getId(), '6');
          });
 
          it('lazy load', () => {

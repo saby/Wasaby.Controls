@@ -76,15 +76,14 @@ var _private = {
       }
    },
 
-   resetUniqueHistoryId: function(item) {
+   resetUniqueHistoryId: function(item, keyProperty) {
       if (item.get && item.get('originalId')) {
-         item.set('id', item.get('originalId'));
+         item.set(keyProperty, item.get('originalId'));
       }
    },
 
    updateHistory: function (self, items) {
       if (historyUtils.isHistorySource(self._options.source)) {
-         _private.resetUniqueHistoryId(items);
          self._options.source.update(items, historyUtils.getMetaHistory());
 
          if (self._sourceController && self._options.source.getItems) {
@@ -96,7 +95,7 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClicked':
-            _private.resetUniqueHistoryId(result.data[0]);
+            _private.resetUniqueHistoryId(result.data[0], this._options.keyProperty);
             this._notify('pinClicked', [result.data]);
             this._items = this._options.source.getItems();
             this._open();
@@ -107,6 +106,7 @@ var _private = {
             this._children.DropdownOpener.close();
             break;
          case 'itemClick':
+            _private.resetUniqueHistoryId(result.data[0], this._options.keyProperty);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
             var item = result.data[0];
