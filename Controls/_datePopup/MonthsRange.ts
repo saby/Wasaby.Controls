@@ -7,7 +7,7 @@ import dateUtils = require('Controls/Utils/Date');
 import MonthsRangeItem from './MonthsRangeItem';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select a period of multiple months.

@@ -9,7 +9,7 @@ import template = require('wml!Controls/_input/Label/Label');
        * @class Controls/_input/Label
        * @extends Core/Control
        *
-       * @mixes Controls/interface/ICaption
+       * @mixes Controls/_interface/ICaption
        *
        * @public
        * @demo Controls-demo/Label/Label

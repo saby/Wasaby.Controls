@@ -9,7 +9,7 @@ import Deferred = require('Core/Deferred');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
 import {LoadService} from 'Controls/history';
-import 'css!theme?Controls/_suggest/_InputController/InputController';
+import 'css!theme?Controls/suggest';
 
 
 var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
@@ -261,7 +261,7 @@ var _private = {
  * @class Controls/_suggest/_InputController
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation

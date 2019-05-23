@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
-import 'css!theme?Controls/_explorer/View/View';
+import 'css!theme?Controls/explorer';
 import 'Types/entity';
 import 'Controls/breadcrumbs';
 
@@ -121,7 +121,7 @@ import 'Controls/breadcrumbs';
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList

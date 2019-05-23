@@ -15,7 +15,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     *
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/View
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGrouped

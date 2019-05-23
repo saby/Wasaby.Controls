@@ -1,8 +1,8 @@
 /**
  * Created by rn.kondakov on 30.10.2018.
  */
-import 'css!theme?Controls/_decorator/Markup/resolvers/highlight';
-   
+import 'css!theme?Controls/decorator';
+
 
    // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {

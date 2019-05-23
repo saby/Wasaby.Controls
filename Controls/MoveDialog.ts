@@ -9,7 +9,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @extends Core/Control
     * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/interface/IFilter
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @control

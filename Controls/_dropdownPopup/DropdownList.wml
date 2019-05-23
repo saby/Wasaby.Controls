@@ -22,7 +22,7 @@
                      showClose="{{_options.showClose}}"
                      marker="{{_options.marker}}"
                      displayProperty="{{_options.displayProperty}}"
-                     groupTemplate="{{_groupTemplate}}"
+                     groupTemplate="{{_options.groupTemplate || _groupTemplate}}"
                      parentProperty="{{_options.parentProperty}}"
                      multiSelect="{{_options.multiSelect}}"
                      iconPadding="{{_options.iconPadding}}"

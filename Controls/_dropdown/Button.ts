@@ -9,9 +9,9 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/ITooltip
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/_dropdown/interface/IFooterTemplate
@@ -20,9 +20,9 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @mixes Controls/interface/IMenu
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IButton
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
+ * @mixes Controls/_interface/IButton
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
  * @control
  * @public
  * @author Герасимов А.М.
