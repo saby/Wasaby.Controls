@@ -324,19 +324,12 @@ define([
       });
 
       it('_onClickShowSelector', function() {
-         var
-            lookup = new Lookup(),
-            stopPropagation = false;
+         var lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._onClickShowSelector({
-            stopPropagation: function() {
-               stopPropagation = true;
-            }
-         });
+         lookup._onClickShowSelector();
 
          assert.isFalse(lookup._suggestState);
-         assert.isTrue(stopPropagation);
       });
 
       it('calculatingSizes', function() {
