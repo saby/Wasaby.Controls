@@ -1,7 +1,7 @@
 define(
    [
       'Controls/popup',
-      'Controls/Popup/Opener/BaseController',
+      'Controls/_popupTemplate/BaseController',
       'Core/Deferred'
    ],
 
@@ -49,7 +49,7 @@ define(
          });
       });
 
-      describe('Controls/Popup/Manager', function() {
+      describe('Controls/_popup/Manager', function() {
          let id, element;
          let Manager = getManager();
 

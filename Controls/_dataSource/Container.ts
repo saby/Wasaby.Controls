@@ -92,7 +92,7 @@ abstract class DataSourceController extends Control {
 */
 /*
 <div class="controls-DataSourceContainer">
-    <Controls.Popup.Opener.Dialog name="dialogOpener" />
+    <Controls.popup:Dialog name="dialogOpener" />
     <ws:if data="{{ _error }}">
         <ws:partial
             template="{{ _error.template }}"

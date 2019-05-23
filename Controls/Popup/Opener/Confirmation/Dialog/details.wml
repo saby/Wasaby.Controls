@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/details" scope="{{_options}}" />

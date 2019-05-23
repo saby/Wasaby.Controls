@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Popup/Opener/Sticky/StickyStrategy',
-      'Controls/Popup/Opener/Sticky/StickyController',
+      'Controls/_popupTemplate/Sticky/StickyStrategy',
+      'Controls/_popupTemplate/Sticky/StickyController',
       'Controls/_popup/Manager/ManagerController'
    ],
    (StickyStrategy, StickyController, ManagerController) => {
       'use strict';
 
-      describe('Controls/Popup/Opener/Sticky', () => {
+      describe('Controls/_popup/Opener/Sticky', () => {
          var targetCoords = {
             top: 200,
             left: 200,

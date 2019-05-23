@@ -5,7 +5,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
-      'Controls/Popup/Opener/Stack/StackStrategy',
+      'Controls/_popupTemplate/Stack/Opener/StackStrategy',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'Vdom/Vdom',

@@ -3,7 +3,7 @@
  */
 define(
    [
-      
+
       'Controls/popup',
       'Types/collection',
       'Core/Deferred',
@@ -31,7 +31,7 @@ define(
       editOpener._beforeMount({});
       editOpener._options.items = dataRS;
 
-      describe('Controls/Popup/Opener/Edit', () => {
+      describe('Controls/_popup/Opener/Edit', () => {
          it('mode', () => {
             editOpener._beforeMount({});
             assert.equal(editOpener._openerTemplate, popup.Stack);

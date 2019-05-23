@@ -8,7 +8,7 @@ import template = require('tmpl!Controls/_lookup/Opener');
  *
  * @class Controls/_lookup/Opener
  * @control
- * @extends Controls/Popup/Opener/Stack
+ * @extends Controls/_popup/Opener/Stack
  * @public
  * @author Герасимов А.М.
  */

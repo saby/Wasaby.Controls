@@ -2088,13 +2088,13 @@
       }
     }
   },
-  "Controls/Popup/InfoBox": {
-    "name": "Controls/Popup/InfoBox",
+  "Controls/popup:InfoboxTarget": {
+    "name": "Controls/popup:InfoboxTarget",
     "title": "Component that opens a popup that is positioned relative to a specified element",
-    "className": "Controls/Popup/InfoBox",
+    "className": "Controls/popup:InfoboxTarget",
     "kind": "class",
     "isPublic": true,
-    "fullname": "Controls/Popup/InfoBox",
+    "fullname": "Controls/popup:InfoboxTarget",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2370,14 +2370,14 @@
       }
     }
   },
-  "Controls/Popup/Opener/Confirmation": {
-    "name": "Controls/Popup/Opener/Confirmation",
+  "Controls/popup:Confirmation": {
+    "name": "Controls/popup:Confirmation",
     "title": "Component that opens the confirmation popup.",
-    "className": "Controls/Popup/Opener/Confirmation",
+    "className": "Controls/popup:Confirmation",
     "kind": "control",
     "isPublic": true,
     "category": "Popup",
-    "fullname": "Controls/Popup/Opener/Confirmation",
+    "fullname": "Controls/popup:Confirmation",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2433,13 +2433,13 @@
       }
     }
   },
-  "Controls/Popup/Opener/Stack": {
-    "name": "Controls/Popup/Opener/Stack",
+  "Controls/popup:Stack": {
+    "name": "Controls/popup:Stack",
     "title": "Component that opens the popup to the right of content area at the full height of the screen",
-    "className": "Controls/Popup/Opener/Stack",
+    "className": "Controls/popup:Stack",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Opener/Stack",
+    "fullname": "Controls/popup:Stack",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2485,13 +2485,13 @@
       }
     }
   },
-  "Controls/Popup/Opener/Dialog": {
-    "name": "Controls/Popup/Opener/Dialog",
+  "Controls/popup:Dialog": {
+    "name": "Controls/popup:Dialog",
     "title": "Component that opens a popup that is positioned in the center of the browser window",
-    "className": "Controls/Popup/Opener/Dialog",
+    "className": "Controls/popup:Dialog",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Opener/Dialog",
+    "fullname": "Controls/popup:Dialog",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2646,13 +2646,13 @@
       }
     }
   },
-  "Controls/Popup/Opener/Notification": {
-    "name": "Controls/Popup/Opener/Notification",
+  "Controls/popup:Notification": {
+    "name": "Controls/popup:Notification",
     "title": "Component that opens a popup that is positioned in the lower right corner of the browser window",
-    "className": "Controls/Popup/Opener/Notification",
+    "className": "Controls/popup:Notification",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Opener/Notification",
+    "fullname": "Controls/popup:Notification",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2678,13 +2678,13 @@
       }
     }
   },
-  "Controls/Popup/Templates/Dialog/ConfirmationTemplate": {
-    "name": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+  "Controls/popupTemplate:Confirmation": {
+    "name": "Controls/popupTemplate:Confirmation",
     "title": "Base template of confirm dialog.",
-    "className": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+    "className": "Controls/popupTemplate:Confirmation",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+    "fullname": "Controls/popupTemplate:Confirmation",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2725,13 +2725,13 @@
       }
     }
   },
-  "Controls/Popup/Templates/Dialog/DialogTemplate": {
-    "name": "Controls/Popup/Templates/Dialog/DialogTemplate",
+  "Controls/popupTemplate:Dialog": {
+    "name": "Controls/popupTemplate:Dialog",
     "title": "Layout of the dialog template",
-    "className": "Controls/Popup/Templates/Dialog/DialogTemplate",
+    "className": "Controls/popupTemplate:Dialog",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Templates/Dialog/DialogTemplate",
+    "fullname": "Controls/popupTemplate:Dialog",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2791,7 +2791,7 @@
       }
     }
   },
-  "Controls/Popup/Templates/Stack/StackTemplate": {
+  "Controls/popupTemplate:Stack": {
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -2850,13 +2850,13 @@
       }
     }
   },
-  "Controls/Popup/Templates/Notification/Base": {
-    "name": "Controls/Popup/Templates/Notification/Base",
+  "Controls/popupTemplate:Notification": {
+    "name": "Controls/popupTemplate:Notification",
     "title": "Base template of notification popup.",
-    "className": "Controls/Popup/Templates/Notification/Base",
+    "className": "Controls/popupTemplate:Notification",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Popup/Templates/Notification/Base",
+    "fullname": "Controls/popupTemplate:Notification",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
