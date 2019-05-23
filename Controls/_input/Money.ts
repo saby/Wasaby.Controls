@@ -34,8 +34,7 @@ class Money extends Base {
             showEmptyDecimals: true,
             precision: Money.PRECISION,
             useAdditionToMaxPrecision: true,
-            onlyPositive: options.onlyPositive,
-            _newValueBehavior: options._newValueBehavior
+            onlyPositive: options.onlyPositive
         };
     }
 
