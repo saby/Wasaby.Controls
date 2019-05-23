@@ -409,7 +409,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         var
            self = this;
-        if (action === IObservable.ACTION_CHANGE.ACTION_REMOVE && removedItems && removedItems.length) {
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
             // TODO KINGO. При удалении элементов очищаем закешированные для них операции над записью. Тем самым:
             // а) избавляемся от утечек (не храним в памяти лишние ссылки);
             // б) при создании записи с таким же ID мы сгенерим для неё новые операции над записью, а не переиспользуем старые.
