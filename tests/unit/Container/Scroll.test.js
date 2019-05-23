@@ -40,7 +40,8 @@ define(
                start: sinon.fake()
             };
             scroll._children.content = {
-               scrollHeight: 50
+               scrollHeight: 50,
+               scrollTop: 10
             };
             scroll._displayState = {
                contentHeight: 0
@@ -172,7 +173,19 @@ define(
                assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
                assert.strictEqual(scroll._displayState.contentHeight, 50);
             });
-         })
+         });
+
+         describe('Save/restore scroll position.', function() {
+            it('Should restore previous scroll position', function() {
+               const
+                  addedHeight = 100,
+                  oldScrollTop = scroll._children.content.scrollTop;
+               scroll._saveScrollPosition({stopPropagation: function(){}});
+               scroll._children.content.scrollHeight += addedHeight;
+               scroll._restoreScrollPosition({stopPropagation: function(){}});
+               assert.equal(scroll._children.content.scrollTop, oldScrollTop + addedHeight);
+            });
+         });
       });
 
       describe('selectedKeysChanged', function() {
