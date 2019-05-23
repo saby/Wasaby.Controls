@@ -109,7 +109,7 @@ var _private = {
    getFilterHistory: function (self, rawHistoryData) {
       var pinnedIds = this.getPinnedIds(rawHistoryData.pinned);
       var frequentIds = this.getFrequentIds(self, rawHistoryData.frequent, rawHistoryData.pinned);
-      var recentIds = this.getRecentIds(self, rawHistoryData.recent, rawHistoryData.frequent, rawHistoryData.pinned);
+      var recentIds = this.getRecentIds(self, rawHistoryData.recent, rawHistoryData.frequent, rawHistoryData.pinned, frequentIds.length);
 
       return {
          pinned: pinnedIds,
@@ -147,10 +147,10 @@ var _private = {
       return frequentIds;
    },
 
-   getRecentIds: function(self, recent, frequent, pinned) {
+   getRecentIds: function(self, recent, frequent, pinned, filteredFrequentCount) {
       var recentIds = [];
       var countRecent = 0;
-      var maxCountRecent = Constants.MAX_HISTORY - (pinned.getCount() + frequent.getCount());
+      var maxCountRecent = Constants.MAX_HISTORY - (pinned.getCount() + filteredFrequentCount);
       var item, id;
 
       recent.forEach(function (element) {
