@@ -65,20 +65,9 @@ import {parse as parserLib, load} from 'Core/library';
             }
          },
          open: function(popupOptions, controller) {
-            if (popupOptions && ( popupOptions.closeOnTargetScroll || popupOptions.targetTracking )) {
-               Env.IoC.resolve('ILogger').warn('BaseOpener', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
-            }
             var cfg = this._getConfig(popupOptions || {});
+            this._actionOnScroll = cfg.actionOnScroll;
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-            if(cfg.actionOnScroll) {
-               this._actionOnScroll = cfg.actionOnScroll;
-            } else if (cfg.closeOnTargetScroll){
-               this._actionOnScroll = 'close'
-            } else if(cfg.targetTracking) {
-               this._actionOnScroll = 'track'
-            } else {
-                this._actionOnScroll= 'none'
-            }
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                _private.compatibleOpen(this, cfg, controller);
@@ -175,6 +164,7 @@ import {parse as parserLib, load} from 'Core/library';
                'isModal',
                'modal',
                'closeOnOutsideClick',
+               'closeOnTargetScroll',
                'className',
                'template',
                'templateOptions',
@@ -195,6 +185,7 @@ import {parse as parserLib, load} from 'Core/library';
                'direction',
                'corner',
                'targetPoint',
+               'targetTracking',
                'locationStrategy',
                'actionOnScroll',
             ];
@@ -215,6 +206,18 @@ import {parse as parserLib, load} from 'Core/library';
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
                baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
+            }
+            if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
+               if(baseCfg.closeOnTargetScroll) {
+                  baseCfg.actionOnScroll = 'close';
+               }
+            }
+            if (baseCfg.hasOwnProperty('targetTracking')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
+               if(baseCfg.targetTracking) {
+                  baseCfg.actionOnScroll = 'track';
+               }
             }
 
             if (baseCfg.hasOwnProperty('isModal')) {
@@ -447,6 +450,7 @@ import {parse as parserLib, load} from 'Core/library';
       Base.getDefaultOptions = function() {
          return {
             closePopupBeforeUnmount: true,
+            actionOnScroll: 'none',
             displayMode: 'single',
             _vdomOnOldPage: false // Always open vdom panel
          };
