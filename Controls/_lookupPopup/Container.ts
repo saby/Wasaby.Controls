@@ -21,7 +21,7 @@ import Deferred = require('Core/Deferred');
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
  * @control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @public
  * @author Герасимов Александр Максимович
  */

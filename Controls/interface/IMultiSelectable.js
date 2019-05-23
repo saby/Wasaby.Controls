@@ -6,7 +6,7 @@ define('Controls/interface/IMultiSelectable', [
     * @interface Controls/interface/IMultiSelectable
     * @public
     * @author Герасимов А.М.
-    * @see Controls/interface/ISingleSelectable
+    * @see Controls/_interface/ISingleSelectable
     * @see Controls/interface/IPromisedSelectable
     */
 
@@ -26,7 +26,7 @@ define('Controls/interface/IMultiSelectable', [
     *       this._selectedKeys = [1, 2, 3];
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
+    * @see Controls/_interface/ISource#keyProperty
     * @see selectedKeysChanged
     */
 
@@ -59,7 +59,7 @@ define('Controls/interface/IMultiSelectable', [
     *       }
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
+    * @see Controls/_interface/ISource#keyProperty
     * @see selectedKeys
     */
 });
