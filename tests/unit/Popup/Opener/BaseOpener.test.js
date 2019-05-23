@@ -58,6 +58,16 @@ define(
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
             assert.equal(baseConfig.actionOnScroll, 'close');
+            popupOptions = {
+               templateOptions: {
+                  type: 'stack',
+                  name: 'popupOptions'
+               },
+               opener: null
+            };
+            baseConfig = opener._getConfig(popupOptions);
+            assert.equal(baseConfig.actionOnScroll, 'none');
+
             opener.destroy();
          });
 

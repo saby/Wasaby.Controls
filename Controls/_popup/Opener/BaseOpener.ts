@@ -219,6 +219,9 @@ import {parse as parserLib, load} from 'Core/library';
                   baseCfg.actionOnScroll = 'track';
                }
             }
+            if(!baseCfg.actionOnScroll) {
+               baseCfg.actionOnScroll = 'none';
+            }
 
             if (baseCfg.hasOwnProperty('isModal')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "modal" instead of "isModal"');
