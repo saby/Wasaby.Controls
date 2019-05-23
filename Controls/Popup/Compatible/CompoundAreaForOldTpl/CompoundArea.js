@@ -966,11 +966,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                   var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
+                        // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+                        item.isHiddenForRecalc = false;
+
                         // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
                         self._notifyVDOM('controlResize', [], { bubbling: true });
 
-                        // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
-                        item.isHiddenForRecalc = false;
                         runDelayed(function() {
                            item.popupOptions.className = item.popupOptions.className.replace(invisibleRe, '');
                            container.className = container.className.replace(invisibleRe, '');
