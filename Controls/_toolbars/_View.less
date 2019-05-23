@@ -21,8 +21,11 @@
     margin-right: 0;
   }
 }
-.controls-Toolbar_item:before {
+.controls-Toolbar_item:before, .controls-Toolbar_item_readOnly:before {
   content: "\200b";
+}
+.controls-Toolbar_item_readOnly {
+  cursor: auto;
 }
 .controls-Toolbar_content {
   width: 100%;

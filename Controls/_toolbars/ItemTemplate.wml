@@ -1,4 +1,4 @@
-<div class="controls-Toolbar_item controls-Toolbar_item_theme-{{theme}} controls-Toolbar_item_{{itemsSpacing}}_theme-{{theme}}"
+<div class="controls-Toolbar_item{{item['readOnly'] ? '_readOnly'}} controls-Toolbar_item_theme-{{theme}} controls-Toolbar_item_{{itemsSpacing}}_theme-{{theme}}"
      title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
