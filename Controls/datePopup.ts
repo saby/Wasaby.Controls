@@ -277,9 +277,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _monthRangeMonthClick: function (e, date) {
+        this._displayedDate = date;
         this._toggleState();
-
-        // TODO: промотать месяца в режиме дней до месяца который выбрали.
     },
 
     _monthRangeFixedPeriodClick: function (e, start, end) {
