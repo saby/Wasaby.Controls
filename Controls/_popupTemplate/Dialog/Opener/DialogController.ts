@@ -63,6 +63,7 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
+            // We won't remove width and height, if they are set explicitly.
             if(!cfg.popupOptions.width) {
                container.style.width = 'auto';
             }
