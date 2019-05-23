@@ -286,7 +286,7 @@ var
 var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype */{
     _template: template,
 
-    constructor: function (options) {
+    constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
         this._resetValidation = function () {
             /**
