@@ -957,7 +957,7 @@ var
                 return current;
             }
 
-            current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
+            current.isFirstInGroup = !current.isGroup && current.item.get && _private.isFirstInGroup(this, current);
 
             if (current.isFirstInGroup) {
                 current.rowSeparatorVisibility = false;
