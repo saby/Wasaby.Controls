@@ -105,7 +105,7 @@ class Button extends Control {
       return {
          style: 'secondary',
          viewMode: 'button',
-         size: 'm',
+         size: 'default',
          iconStyle: 'secondary',
          transparent: true,
          theme: 'default'
