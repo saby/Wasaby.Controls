@@ -8,7 +8,9 @@
             "ws4-retail",
             "ws4-default",
             "ws4-default-layout",
-            "ws4-cloud"
+            "ws4-cloud",
+            "ws4-plugin",
+            "ws3-plugin"
         ]
     }
 }
