@@ -1,4 +1,5 @@
-<div class="controls-Dropdown__wrapper theme_{{_options.theme}}" name="popupTarget">
+<div class="controls-Dropdown__wrapper {{!_options.readOnly ? 'controls-Dropdown__' + ((_isEmptyItem && !_options.multiSelect) ? 'emptyItem' : 'defaultItem') + '_style-' + (style || 'default') +
+         ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}" name="popupTarget">
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}" text="{{text}}" icon="{{icon}}" item="{{item}}"/>
    </ws:if>
