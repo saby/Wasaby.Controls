@@ -29,7 +29,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
 
-   export = Control.extend({
+let MoveDialog = Control.extend({
       _template: template,
       _itemActions: undefined,
 
@@ -81,3 +81,11 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
          this._notify('close', [], {bubbling: true});
       }
    });
+
+MoveDialog.getDefaultOptions = (): object => {
+   return {
+      root: null
+   };
+};
+
+export = MoveDialog;
