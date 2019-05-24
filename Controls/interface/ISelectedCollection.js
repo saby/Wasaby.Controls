@@ -174,7 +174,7 @@ define('Controls/interface/ISelectedCollection', [
    /**
     * @event Controls/interface/ISelectedCollection#showSelector Occurs before opening the selector through the interface.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Object} templateOptions Template parameters by which the selector will be built.
+    * @param {PopupOptions[]} popupOptions Stack popup options.
     * @example
     * The following example creates Controls/lookup:Input and shows how to handle the event.
     * WML:
@@ -192,16 +192,30 @@ define('Controls/interface/ISelectedCollection', [
     *       ...
     *    },
     *
-    *    _showSelectorHandler: function(e, templateOptions) {
+    *    _showSelectorHandler: function(e, popupOptions) {
     *       var self = this;
     *
-    *       this._loadParams(templateOptions).addCallback(function(newTemplateOptions) {
-    *          self.showSelector(newTemplateOptions);
+    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
+    *          self.showSelector(newPopupOptions);
     *       });
     *
     *       // cancel the opening of the selector
     *       return false;
     *    }
     * </pre>
+    */
+
+   /**
+    * @typedef {Object} PopupOptions
+    * @description Stack popup options.
+    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+    * @property {Boolean} modal Determines whether the window is modal.
+    * @property {String} className Class names of popup.
+    * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+    * @property {function|String} template Template inside popup.
+    * @property {function|String} templateOptions Template options inside popup.
+    * @property {Number} minWidth The minimum width of popup.
+    * @property {Number} maxWidth The maximum width of popup.
+    * @property {Number} width Width of popup.
     */
 });
