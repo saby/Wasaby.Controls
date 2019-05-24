@@ -142,6 +142,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._closeAfterMount = true;
                event.setResult(false);
             } else {
+               try{
+                  if (this._container[0].contains(document.activeElement)) {
+                     this._container.focus();
+                  }
+               }catch(e){}
                this.popupBeforeDestroyed();
             }
          },
