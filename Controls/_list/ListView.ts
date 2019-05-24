@@ -9,6 +9,7 @@ import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import {isEqual} from "Types/object";
 import 'wml!Controls/_list/resources/ItemOutput';
 import 'css!theme?Controls/list';
 
@@ -111,7 +112,7 @@ var ListView = BaseControl.extend(
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
             }
-            if (this._options.itemPadding !== newOptions.itemPadding) {
+            if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
             }
 
