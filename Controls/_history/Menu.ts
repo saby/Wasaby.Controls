@@ -1,6 +1,5 @@
 import {Button as Menu, MenuUtils} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
-import 'css!theme?Controls/_history/Menu';
 
 var _private = {
    getMetaPinned: function (item) {
@@ -61,6 +60,7 @@ var HistoryMenu = Menu.extend({
    }
 });
 
+HistoryMenu._theme = HistoryMenu.superclass.constructor._theme.concat(['Controls/history']);
 HistoryMenu._private = _private;
 
 export = HistoryMenu;

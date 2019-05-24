@@ -1,7 +1,8 @@
 .controls-PeriodDialog-DateRange {
    display: flex;
    flex-direction: column;
-   min-height: 0;
+   flex-shrink: 1;
+   min-height: 1px;
    position: relative;
    user-select: none;
 }
@@ -13,6 +14,13 @@
    border-bottom: @border-width_PeriodDialog solid @border-color_PeriodDialog;
    align-items: center;
    font-size: @font-size_PeriodDialog-dateRange-header;
+}
+
+.controls-PeriodDialog-DateRange__body {
+   display: flex;
+   flex-shrink: 1;
+   min-height: 1px;
+   align-items: stretch;
 }
 
 .controls-PeriodDialog-DateRange__year {

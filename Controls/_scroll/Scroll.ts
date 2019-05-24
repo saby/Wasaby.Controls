@@ -530,7 +530,7 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._savedScrollPosition = this._children.content.scrollHeight;
+         this._savedScrollPosition = this._children.content.scrollHeight - this._children.content.scrollTop;
       },
 
       _restoreScrollPosition: function(e) {

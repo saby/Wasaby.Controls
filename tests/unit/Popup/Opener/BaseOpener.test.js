@@ -58,7 +58,19 @@ define(
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
             assert.equal(baseConfig.actionOnScroll, 'close');
+            let opener2 = new popup.BaseOpener();
+            popupOptions = {
+               templateOptions: {
+                  type: 'stack',
+                  name: 'popupOptions'
+               },
+               opener: null
+            };
+            baseConfig = opener2._getConfig(popupOptions);
+            assert.equal(opener2._actionOnScroll, 'none');
+
             opener.destroy();
+			opener2.destroy();
          });
 
          it('_beforeUnmount', () => {

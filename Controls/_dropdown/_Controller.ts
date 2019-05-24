@@ -76,6 +76,14 @@ var _private = {
       }
    },
 
+   prepareItem: function(item, keyProperty, source) {
+      if (historyUtils.isHistorySource(source)) {
+         return source.resetHistoryFields(item, keyProperty);
+      } else {
+         return item;
+      }
+   },
+
    updateHistory: function (self, items) {
       if (historyUtils.isHistorySource(self._options.source)) {
          self._options.source.update(items, historyUtils.getMetaHistory());
@@ -89,6 +97,7 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClicked':
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
             this._notify('pinClicked', [result.data]);
             this._items = this._options.source.getItems();
             this._open();
@@ -99,6 +108,7 @@ var _private = {
             this._children.DropdownOpener.close();
             break;
          case 'itemClick':
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
             var item = result.data[0];

@@ -163,4 +163,38 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#showSelector Occurs before opening the selector through the interface.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} templateOptions Template parameters by which the selector will be built.
+    * @example
+    * The following example creates Controls/lookup:Input and shows how to handle the event.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Input
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       searchParam="title"
+    *       on:showSelector="_showSelectorHandler()"
+    *    </Controls.lookup:Input>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _loadParams: function() {
+    *       ...
+    *    },
+    *
+    *    _showSelectorHandler: function(e, templateOptions) {
+    *       var self = this;
+    *
+    *       this._loadParams(templateOptions).addCallback(function(newTemplateOptions) {
+    *          self.showSelector(newTemplateOptions);
+    *       });
+    *
+    *       // cancel the opening of the selector
+    *       return false;
+    *    }
+    * </pre>
+    */
 });

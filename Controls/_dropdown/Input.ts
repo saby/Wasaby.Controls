@@ -174,10 +174,4 @@ var Input = Control.extend({
 
 Input._theme = ['Controls/dropdown'];
 
-Input.getDefaultOptions = function () {
-   return {
-      style: 'default'
-   };
-};
-
 export = Input;

@@ -32,7 +32,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       resolverParams: {},
 
       _combineResolver: function(json, parent, resolverParams) {
-         var newJson = decorator.LinkDecorate(json, parent, resolverParams);
+         var newJson = decorator.linkDecorate(json, parent, resolverParams);
          if (newJson === json) {
             newJson = highlightResolver(json, parent, resolverParams);
          }
@@ -61,7 +61,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
          }
       },
       _beforeMount: function() {
-         this.allTagResolvers = [decorator.LinkDecorate, highlightResolver, this._combineResolver];
+         this.allTagResolvers = [decorator.linkDecorate, highlightResolver, this._combineResolver];
          this._resolversMemorySource = new source.Memory({
             idProperty: 'id',
             data: [

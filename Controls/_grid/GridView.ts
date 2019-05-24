@@ -192,7 +192,7 @@ var
                 this._listModel.setColumns(newCfg.columns);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                } else {
+                } else if (this._listModel.getEditingItemData()) {
                     _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
@@ -200,7 +200,7 @@ var
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                } else {
+                } else if (this._listModel.getEditingItemData()) {
                     _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
@@ -260,7 +260,7 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-            } else {
+            } else if (this._listModel.getEditingItemData()) {
                 _private.setCurrentColumnsWidth(this, this._container);
             }
         }
