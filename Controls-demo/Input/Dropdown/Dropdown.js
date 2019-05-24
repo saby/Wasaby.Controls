@@ -6,7 +6,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'Controls/Constants',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',
-   'wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon',
+   'Controls/dropdown',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',

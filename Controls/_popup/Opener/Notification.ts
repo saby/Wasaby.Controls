@@ -82,10 +82,10 @@ import {parse as load} from 'Core/library';
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Notification name="notificationOpener">
+          *    <Controls.popup:Notification name="notificationOpener">
           *       <ws:popupOptions template="wml!Controls/Template/NotificationTemplate">
           *       </ws:popupOptions>
-          *    </Controls.Popup.Opener.Notification>
+          *    </Controls.popup:Notification>
           *
           *    <Controls.Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
           * </pre>
