@@ -56,7 +56,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          }
       ],
       gridHeader = [
-         [
             {
                title: '',
                style: 'default'
@@ -72,7 +71,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                align: 'right',
                style: 'default'
             }
-         ]
       ],
       itemActions = [],
       cfg = {
@@ -1042,71 +1040,131 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
+
+
+         it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
+            gridViewModel._prepareHeaderColumns(gridHeader, true);
+            assert.deepEqual({
+               column: {},
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox controls-Grid__header-cell_halign_center',
+               index: 0,
+               cellContentClasses: '',
+               cellStyles:'',
+               cellContentStyles:'',
+               shadowVisibility: 'visible',
+               stickyTop: 0,
+            }, gridViewModel.getCurrentHeaderColumn(0, 0), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
+            // // gridViewModel.goToNextHeaderColumn();
+            //
+
+            assert.deepEqual({
+               column: gridHeader[0],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__header-cell_halign_center',
+               index: 1,
+               cellContentStyles: "",
+               shadowVisibility: "visible",
+               stickyTop: 0,
+               cellContentClasses: "",
+               cellStyles: "",
+            }, gridViewModel.getCurrentHeaderColumn(1, 0), 'Incorrect value second call "getCurrentHeaderColumn()".');
+            //
+            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
+            // // gridViewModel.goToNextHeaderColumn();
+            // console.log(gridViewModel.getCurrentHeaderColumn(gridHeader[0][2], 2, 0));
+            assert.deepEqual({
+               column: gridHeader[1],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
+                  'controls-Grid__header-cell_halign_right',
+               index: 2,
+               sortingDirection: 'DESC',
+               cellContentClasses: "",
+               cellStyles: "",
+               cellContentStyles: "",
+               shadowVisibility: "visible",
+               stickyTop: 0
+            }, gridViewModel.getCurrentHeaderColumn(2, 0), 'Incorrect value third call "getCurrentHeaderColumn()".');
+            //
+            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
+            // // gridViewModel.goToNextHeaderColumn();
+            //
+            console.log(gridViewModel.getCurrentHeaderColumn(3, 0));
+            assert.deepEqual({
+               column: gridHeader[2],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default ' +
+                  'controls-Grid__header-cell_halign_right',
+               index: 3,
+               cellContentClasses: "",
+               cellStyles: "",
+               cellContentStyles: "",
+               shadowVisibility: "visible",
+               stickyTop: 0
+            }, gridViewModel.getCurrentHeaderColumn(3, 0), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+            //
+            // //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
+            // //
+            // //    gridViewModel.goToNextHeaderColumn();
+            // //    assert.equal(false, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
+            // //
+            // //    assert.equal(4, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
+            // //    gridViewModel.resetHeaderColumns();
+            // //    assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+            });
+            it('getResultsPosition()', function() {
+               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            });
+
          it('_prepareHeaderColumns', function() {
-            // const gridHeaderWithMultiSelect = [...gridHeader];
-            // gridHeaderWithMultiSelect[0].unshift({});
+            gridViewModel._headerRows = [];
+            // gridViewModel._prepareHeaderColumns(gridHeader, false);
             assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
+            console.log('hello', gridViewModel._headerRows);
             gridViewModel._prepareHeaderColumns([], false);
             assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, false);
-            assert.deepEqual(gridHeader, gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
+            assert.deepEqual([gridHeader], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
             gridViewModel._prepareHeaderColumns([], true);
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
-            assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+            assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
          });
 
 
+         it('prepare editing row for partial support', function () {
+            let
+                handlers = {
+                   wewe: ()=> {}
+                },
+                gv = {
+                   getHandlersForPartialSupport: ()=>{return handlers},
+                   _columns: [
+                      { width: '1fr' },
+                      { width: 'auto',realWidth: '15px' }
+                   ],
+                   getCount:()=>2,
+                   _options: {
+                      multiSelectVisibility: 'hidden'
+                   }
+                },
+                iData = {
+                   isEditing: true,
+                   isGroup: false,
+                   rowIndex: 1
+                },
+            saveFunc = gridMod.GridViewModel._private.calcRowIndexByKey;
+            gridMod.GridViewModel._private.calcRowIndexByKey = ()=>{return 1};
 
-         // it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
-         //    assert.deepEqual({
-         //       column: {},
-         //       cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
-         //       index: 0
-         //    }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
-         //
-         //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
-         //    gridViewModel.goToNextHeaderColumn();
-         //
-         //    assert.deepEqual({
-         //       column: gridHeader[0],
-         //       cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
-         //       index: 1
-         //    }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
-         //
-         //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
-         //    gridViewModel.goToNextHeaderColumn();
-         //
-         //    assert.deepEqual({
-         //       column: gridHeader[1],
-         //       cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-         //          'controls-Grid__header-cell_halign_right',
-         //       index: 2,
-         //       sortingDirection: 'DESC'
-         //    }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
-         //
-         //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
-         //    gridViewModel.goToNextHeaderColumn();
-         //
-         //    assert.deepEqual({
-         //       column: gridHeader[2],
-         //       cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
-         //          'controls-Grid__header-cell_halign_right',
-         //       index: 3
-         //    }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
-         //
-         //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
-         //
-         //    gridViewModel.goToNextHeaderColumn();
-         //    assert.equal(false, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
-         //
-         //    assert.equal(4, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
-         //    gridViewModel.resetHeaderColumns();
-         //    assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-         // });
-         // it('getResultsPosition()', function() {
-         //    assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-         // });
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gv, iData);
+
+            assert.deepEqual(handlers, iData.handlersForPartialSupport);
+            assert.equal(
+                iData.editingRowStyles,
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1 / 3; grid-row: 2;'
+            );
+
+            gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
+         });
 
 
          it('_prepareResultsColumns', function() {

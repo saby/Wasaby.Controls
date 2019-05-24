@@ -62,6 +62,8 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
                bottom: []
             };
             this._headers = {};
+            console.log('render');
+            console.log(options.columnVersion)
          },
 
          _afterMount: function() {

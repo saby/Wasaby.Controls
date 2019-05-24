@@ -6,7 +6,7 @@
          <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
                      defaultHeaderContent="{{defaultHeaderContent}}"
                      listModel="{{listModel}}"
-                     headerColumn="{{ listModel.getCurrentHeaderColumn(headerColumn, index, rowIndex) }}"
+                     headerColumn="{{ listModel.getCurrentHeaderColumn(index, rowIndex) }}"
                      class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
                      multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
       </ws:for>
@@ -102,7 +102,9 @@
    </ws:else>
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
-   <Controls.scroll:Group>
+   <Controls.scroll:Group
+      columnVersion="{{ listModel._columnsVersion }}"
+   >
       <ws:partial template="header" listModel="{{ listModel }}" />
    </Controls.scroll:Group>
 </ws:if>

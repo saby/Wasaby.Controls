@@ -553,6 +553,10 @@ var
             if (columns && columns.length) {
                 this._headerRows = GridLayoutUtil.getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = GridLayoutUtil.getMaxEndRow(this._headerRows);
+            } else if (multiSelectVisibility) {
+                this._headerRows = [{}];
+            } else {
+                this._headerRows = [];
             }
             // if (multiSelectVisibility) {
             //     this._headerColumns = [{}].concat(columns);
@@ -566,6 +570,10 @@ var
         //     this._curHeaderColumnIndex = 0;
         // },
 
+        getColumnsVersion: function() {
+            return this._columnsVersion;
+        },
+
         isNotFullGridSupport: function() {
             return Env.detection.isNotFullGridSupport;
         },
@@ -575,9 +583,9 @@ var
            return this._options.stickyHeader && !this.isNotFullGridSupport();
         },
 
-        getCurrentHeaderColumn: function(cell, columnIndex, rowIndex) {
-            var
-                // columnIndex = i,
+        getCurrentHeaderColumn: function(columnIndex, rowIndex) {
+            const cell = this._headerRows[rowIndex][columnIndex];
+            let
                 cellClasses = 'controls-Grid__header-cell',
                 headerColumn = {
                     column: cell,
@@ -619,12 +627,6 @@ var
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs
                 });
             }
-            if (headerColumn.column.align) {
-                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
-            }
-            if (headerColumn.column.valign) {
-                cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
-            }
 
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -638,9 +640,9 @@ var
             }
 
             // For browsers with partial grid support need to set its grid-row and grid-column
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
-            }
+            // if (GridLayoutUtil.isPartialSupport) {
+            //     headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
+            // }
 
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
@@ -656,15 +658,11 @@ var
             if (cell.startRow) {
                 const { endRow, startRow, endColumn, startColumn } = cell;
                 if (this.isNoGridSupport()) {
+
                     headerColumn.rowSpan = endRow - startRow;
                     headerColumn.colSpan = endColumn - startColumn;
-                    cellClasses += ' controls-Grid__cell_header-relative';
-                    cellContentClasses += ' controls-Grid__cell_header-content';
-                }
-                if (!this.isNoGridSupport()) {
-                    cellContentClasses += ' controls-Grid__cell_header-content';
+                } else {
                     if (!this.isStickyHeader()) {
-                        cellClasses += ' controls-Grid__cell_header-relative';
                     } else {
                         stickyTop = startRow ? (startRow - 1 ) * 20 : 0;
                         shadowVisibility = rowIndex === this._headerRows.length - 1 ? 'visible' : 'hidden';
@@ -685,22 +683,25 @@ var
                     cellStyles += GridLayoutUtil.toCssString(gridStyles);
 
                 }
-                height = `height:${(endRow - startRow) * 20}px;`;
+                cellContentClasses += ' controls-Grid__cell_header-content';
+                height = `max-height:${(endRow - startRow) * 20}px;`;
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             }
 
             if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
-                cellStyles = `grid-row:1/${this._maxEndRow};`;
+                cellStyles = `grid-row:1/${this._maxEndRow};grid-column:1/2;`;
                 headerColumn.rowSpan = this._maxEndRow - 1;
                 headerColumn.colSpan = 1;
-            }
-            if (headerColumn.column.valign) {
-                cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
             }
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
             }
+            if (headerColumn.column.valign) {
+                cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
+            }
+
+
             headerColumn.shadowVisibility = shadowVisibility;
             headerColumn.stickyTop = stickyTop;
             headerColumn.height = height;

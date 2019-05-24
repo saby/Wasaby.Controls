@@ -203,9 +203,7 @@ var StickyHeader = Control.extend({
          if (offsetTop) {
             top = offsetTop + top;
          }
-         if (this._options.curIndex !== undefined) {
-            console.log('offset', offsetTop, 'top', top);
-         }
+            // console.log('offset', offsetTop, 'top', top);
          if (this._context.stickyHeader) {
             top += this._context.stickyHeader.top;
          }
@@ -254,14 +252,9 @@ var StickyHeader = Control.extend({
    },
 
    _isShadowVisible: function(shadowPosition) {
-      // if (!this._options.isResultsColumn) {
-      //    return false;
-      // }
       //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
       var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
-      // if (this._options.curIndex === 3) {
-      //    console.log('TAK', this._model, '===', fixedPosition);
-      // }
+
       return (!this._context.stickyHeader || this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
          this._model && this._model.fixedPosition === fixedPosition && this._options.shadowVisibility === 'visible' &&
          (this._options.mode === 'stackable' || this._shadowVisible);
