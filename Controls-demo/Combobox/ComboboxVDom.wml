@@ -22,7 +22,7 @@
                                keyProperty="id"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey2"
-                               popupClassName="ControlsDemo-ComboboxVDOM__popupScroll"
+                               dropdownClassName="ControlsDemo-ComboboxVDOM__popupScroll"
                                attr:class="ControlsDemo-ComboboxVDOM__item"/>
    </div>
 
