@@ -76,16 +76,23 @@ define([
          assert.equal(notifyResult, dispItem.getContents(), 'Incorrect selected item before updating');
       });
 
-      it('_beforeUpdate', function () {
+      it('_beforeUpdate', function() {
+         let itemPadding = {
+            test: 'test'
+         };
+         let itemPaddingChanged = false;
+
          var model = new lists.ListViewModel({
             items: data,
             keyProperty: 'id',
-            markedKey: null
+            markedKey: null,
+            itemPadding: itemPadding
          });
          var cfg = {
             listModel: model,
             keyProperty: 'id',
-            markedKey: 2
+            markedKey: 2,
+            itemPadding: itemPadding
          };
          var lv = new lists.ListView(cfg);
          lv.saveOptions(cfg);
@@ -95,17 +102,27 @@ define([
          model = new lists.ListViewModel({
             items: data2,
             keyProperty: 'id',
-            markedKey: null
+            markedKey: null,
+            itemPadding: itemPadding
          });
 
          cfg = {
             listModel: model,
             keyProperty: 'id',
-            markedKey: 2
+            markedKey: 2,
+            itemPadding: itemPadding
          };
-
          lv._beforeUpdate(cfg);
          assert.equal(model, lv._listModel, 'Incorrect listModel before update');
+
+         cfg.itemPadding = {
+            test: 'test'
+         };
+         model.setItemPadding = function() {
+            itemPaddingChanged = true;
+         };
+         lv._beforeUpdate(cfg);
+         assert.isFalse(itemPaddingChanged);
       });
 
       it('should notify about resize after the list was updated with new items', function() {
