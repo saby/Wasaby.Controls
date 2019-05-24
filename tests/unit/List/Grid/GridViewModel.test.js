@@ -1060,9 +1060,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             let
                 called = false,
                 nativeFn = gridViewModel._model._setEditingItemData,
-                initialStatus = GridLayoutUtil.isPartialSupport;
+                initialStatus = GridLayoutUtil.isPartialGridSupport;
 
-            GridLayoutUtil.isPartialSupport = true;
+            GridLayoutUtil.isPartialGridSupport = function() { return true };
 
             gridViewModel._model._setEditingItemData = (iData) => {
                called = true;
@@ -1074,7 +1074,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             assert.isTrue(called);
 
-            GridLayoutUtil.isPartialSupport = initialStatus;
+            GridLayoutUtil.isPartialGridSupport = initialStatus;
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
