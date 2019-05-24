@@ -18,6 +18,7 @@ import _stickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import _stickyHeaderController  from 'Controls/_scroll/StickyHeader/Controller';
 
 import Group = require('Controls/_scroll/StickyHeader/Group');
+import HotKeysRegistrator = require('Controls/_scroll/HotKeysRegistrator');
 
 
 export {
@@ -27,5 +28,6 @@ export {
    _scrollContext,
    _stickyHeaderContext,
    _stickyHeaderController,
-   Group
+   Group,
+   HotKeysRegistrator
 }

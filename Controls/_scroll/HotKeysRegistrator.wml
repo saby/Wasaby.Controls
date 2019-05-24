@@ -1,0 +1,3 @@
+<HotKeys.Base:Registrator defaultActions="{{ [{'keyCode': 33}, {'keyCode': 34}, {'keyCode': 35}, {'keyCode': 36}, {'keyCode': 38}, {'keyCode': 40}] }}">
+   <ws:partial template="{{_options.content}}" scope="{{_options}}"/>
+</HotKeys.Base:Registrator>

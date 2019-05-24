@@ -117,30 +117,6 @@ var Search = Base.extend({
       // move focus from search button to input
       this.activate();
    },
-   _keyDownHandler: function(event) {
-      // Это костыль, код будет удален в процесс выполнения проекта по горячим клавишам
-      // https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
-      // если isTrusted = false, значит это мы запустили событие по горячим клавишам, его не надо повторно обрабатывать
-      // клавиши home и end не обрабатываем, у поля ввода есть реакция на эти клавиши
-      if (event.nativeEvent.isTrusted) {
-         if (
-            event.nativeEvent.which === Env.constants.key.pageDown ||
-            event.nativeEvent.which === Env.constants.key.pageUp ||
-            event.nativeEvent.which === Env.constants.key.down ||
-            event.nativeEvent.which === Env.constants.key.up
-         ) {
-
-            var parents = Vdom.DOMEnvironment._goUpByControlTree(this._container);
-            for (var i = 0; i < parents.length; i++) {
-               var parent = parents[i];
-               if (parent._$defaultActions && parent._$defaultActions[event.nativeEvent.which]) {
-                  parent._$defaultActions[event.nativeEvent.which].action();
-                  break;
-               }
-            }
-         }
-      }
-   },
    _keyUpHandler: function(event) {
       if (event.nativeEvent.which === Env.constants.key.enter) {
          this._searchClick();
