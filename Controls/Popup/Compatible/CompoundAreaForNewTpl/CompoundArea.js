@@ -150,8 +150,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      //все очистится
                      this._container.focus();
                   }
-               }
-               catch(e) {
+               } catch(e) {
 
                }
                this.popupBeforeDestroyed();
