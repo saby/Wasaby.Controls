@@ -177,6 +177,7 @@ var _private = {
       this.addProperty(items, 'recent', 'boolean', false);
       this.addProperty(items, 'frequent', 'boolean', false);
       this.addProperty(items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
+      this.addProperty(items, 'originalId', 'string', '');
       this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
       this.fillFrequentItems(self, filteredHistory, oldItems, items);
       this.fillItems(self, filteredHistory, 'recent', oldItems, items);
@@ -211,6 +212,7 @@ var _private = {
       let origItem = item.clone();
       if (item.get && item.get('originalId')) {
          origItem.set(keyProperty, item.get('originalId'));
+         origItem.removeField('originalId');
       }
       return origItem;
    },
