@@ -5,6 +5,7 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import Constants = require('Controls/Constants');
+import { error as dataSourceError } from 'Controls/dataSource';
 import 'css!theme?Controls/list';
 
 var
@@ -106,23 +107,45 @@ var
         },
 
         createModel: function (self, options) {
-            return self._options.source.create().addCallback(function (item) {
+            return self._options.source.create().addCallbacks(function (item) {
                 options.item = item;
                 return options;
+            }, (error: Error) => {
+                return _private.processError(self, error);
             });
         },
 
         updateModel: function (self, commit) {
             if (commit) {
                 if (self._options.source) {
-                    return self._options.source.update(self._editingItem).addCallback(function () {
+                    return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
+                    }, (error: Error) => {
+                        return _private.processError(self, error);
                     });
                 }
                 _private.acceptChanges(self);
             }
 
             return Deferred.success();
+        },
+
+        processError(self/*: EditInPlace*/, error: Error) {
+            /*
+             * в detail сейчас в многих местах редактирования по месту приходит текст из запроса
+             * Не будем его отображать
+             * TODO Убрать после закрытия задачи по написанию документа по правильному формированию текстов ошибок
+             *  https://online.sbis.ru/doc/c8ff58ac-e6f7-4f0e-877a-e9cbbe661139
+             */
+            delete error.details;
+
+            return self.__errorController.process({
+                error,
+                mode: dataSourceError.Mode.dialog
+            }).then((errorConfig: dataSourceError.ViewConfig) => {
+                self._children.errorContainer.show(errorConfig);
+                return Promise.reject(error);
+            });
         },
 
         acceptChanges: function (self) {
@@ -263,7 +286,7 @@ var
 var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype */{
     _template: template,
 
-    constructor: function () {
+    constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
         this._resetValidation = function () {
             /**
@@ -279,6 +302,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             this._children.formController.setValidationResult();
         }.bind(this);
         this._updateIndex = this._updateIndex.bind(this);
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
     },
 
     _beforeMount: function (newOptions) {
