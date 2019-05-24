@@ -9,15 +9,15 @@ define('Controls/Container/Data/getPrefetchSource',
       
       'use strict';
       function load(sourceOptions, data) {
+         if (data) {
+            return Promise.resolve(data);
+         }
+
          var sourceController = new scroll.Controller({
             source: sourceOptions.source,
             navigation: sourceOptions.navigation,
             idProperty: sourceOptions.keyProperty
          });
-
-         if (data) {
-            return Promise.resolve(data);
-         }
 
          return sourceController.load(sourceOptions.filter, sourceOptions.sorting);
       }
