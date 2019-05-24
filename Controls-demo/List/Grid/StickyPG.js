@@ -66,6 +66,10 @@ define('Controls-demo/List/Grid/StickyPG',
                 ladderProperties: []
             };
             this._metaData = config[this._content].properties['ws-config'].options;
+         },
+
+         _optionsChanged: function() {
+            this._forceUpdate();
          }
       });
       return DialogPG;
