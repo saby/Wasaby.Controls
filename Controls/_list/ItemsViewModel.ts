@@ -216,7 +216,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
 
         if (this._options.groupingKeyCallback) {
-            if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
+            if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
                 itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
                 itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
@@ -323,6 +323,10 @@ var ItemsViewModel = BaseViewModel.extend({
     },
     _onEndCollectionChange: function() {
         // method may be implemented
+    },
+
+    _isGroup: function(item) {
+        return item === ControlsConstants.view.hiddenGroup || !item.get
     },
     setItems: function(items) {
         if (_private.isEqualItems(this._items, items)) {

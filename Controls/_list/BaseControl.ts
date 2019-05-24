@@ -415,6 +415,7 @@ var _private = {
             // Иначе пересчитываем скролл
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
+            self._checkShouldLoadToDirection = true;
         }
     },
 
@@ -881,7 +882,7 @@ var _private = {
             self.__error = null;
             self._forceUpdate();
         }
-    },
+    }
 };
 
 /**
@@ -1311,7 +1312,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setActiveItem(itemData);
         }
         if (direction === 'left') {
-            this._canUpdateItemsActions = true;
+            this._children.itemActions.updateItemActions(itemData.item);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);

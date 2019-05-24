@@ -211,20 +211,20 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             });
          },
 
-         getKeysLoad: function(items, keys) {
+         getKeysLoad: function(config, keys) {
             let result = [];
             chain.factory(keys).each(function(key) {
-               if (!items.getRecordById(key)) {
+               if (!config._items.getRecordById(key) && !(key === null && config.emptyText)) {
                   result.push(key);
                }
             });
-           return result;
+            return result;
          },
 
          loadNewItems: function(items, configs) {
             let pDef = new pDeferred();
             chain.factory(items).each(function(item, index) {
-               let keys = _private.getKeysLoad(configs[index]._items, item.value instanceof Array ? item.value: [item.value]);
+               let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
                if (keys.length) {
                   let properties = {...getPropValue(item, 'properties')};
                   properties.filter = properties.filter || {};
