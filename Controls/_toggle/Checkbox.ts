@@ -1,6 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import entity = require('Types/entity');
+// убрать после https://online.sbis.ru/opendoc.html?guid=39d8fd32-5701-4e7f-b022-3ef5893977e8
+import 'css!theme?Controls/_toggle/Checkbox/Checkbox';
+
 
    /**
     * Represents a control that a user can select and clear.
@@ -142,8 +145,6 @@ import entity = require('Types/entity');
          triState: false
       };
    };
-
-   Checkbox._theme = ['Controls/toggle'];
 
    Checkbox._ptivate = _private;
 

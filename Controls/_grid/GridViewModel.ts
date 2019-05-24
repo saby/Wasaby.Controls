@@ -327,7 +327,7 @@ var
                 if (self.getCount() > 1 && ((column.width && column.width === 'auto') || !column.width)) {
                     columnsWidths.push(column.realWidth || '1fr')
                 } else {
-                    columnsWidths.push(column.width);
+                    columnsWidths.push(column.width || '1fr');
                 }
             });
 
@@ -1085,8 +1085,11 @@ var
 
         _setEditingItemData: function(itemData) {
             let data = itemData ? itemData : this._model._editingItemData;
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
+            if (GridLayoutUtil.isPartialGridSupport() && data) {
+                if (!data.rowIndex) {
+                    data.rowIndex = data.index + 1;
+                }
+                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex);
             }
             this._model._setEditingItemData(itemData);
         },

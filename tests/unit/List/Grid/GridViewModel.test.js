@@ -1033,6 +1033,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             gridViewModel._columns = [
                {
+
+               },
+               {
                   width: '1fr'
                },
                {
@@ -1045,13 +1048,34 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ];
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1 / 4; grid-row: 2;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 127px 1fr; grid-column: 1 / 5; grid-row: 2;');
 
             gridViewModel._options.multiSelectVisibility = 'onhover';
 
             assert.equal(gridMod.GridViewModel._private.getEditingRowStyles(gridViewModel, 1),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 127px 1fr; grid-column: 1 / 5; grid-row: 2;');
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 1fr 127px 1fr; grid-column: 1 / 6; grid-row: 2;');
+         });
 
+         it('setEditingItemData', function () {
+            let
+                called = false,
+                nativeFn = gridViewModel._model._setEditingItemData,
+                initialStatus = GridLayoutUtil.isPartialSupport;
+
+            GridLayoutUtil.isPartialSupport = true;
+
+            gridViewModel._model._setEditingItemData = (iData) => {
+               called = true;
+               assert.equal(iData.rowIndex, 2);
+            };
+
+            gridViewModel._setEditingItemData({
+               index: 1
+            });
+            assert.isTrue(called);
+
+            GridLayoutUtil.isPartialSupport = initialStatus;
+            gridViewModel._model._setEditingItemData = nativeFn;
          });
 
          it('_prepareHeaderColumns', function() {
@@ -1150,6 +1174,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
          });
+
 
          it('_prepareResultsColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
