@@ -1,0 +1,2 @@
+// Created in 19.400
+<ws:partial template="wml!Controls/_calendar/MonthTableBody" scope="{{_options}}" />
