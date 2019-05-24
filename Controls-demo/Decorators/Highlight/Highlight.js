@@ -4,8 +4,7 @@ define('Controls-demo/Decorators/Highlight/Highlight',
       'wml!Controls-demo/Decorators/Highlight/Highlight',
 
       'Controls/input',
-      'Controls/decorator',
-      'css!Controls-demo/Decorators/Highlight/Highlight'
+      'Controls/decorator'
    ],
    function(Control, template) {
 

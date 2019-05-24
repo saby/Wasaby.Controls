@@ -5,8 +5,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplate',
       'Controls-demo/List/Tree/GridData',
       'Controls-demo/List/Tree/TreeMemory',
       'Controls/Constants',
-      'wml!Controls-demo/List/Tree/DemoContentTemplate',
-      'css!Controls-demo/Popup/Opener/resources/Grid'
+      'wml!Controls-demo/List/Tree/DemoContentTemplate'
    ],
    function (Control, template, GridData, MemorySource) {
       'use strict';
