@@ -27,6 +27,7 @@ import RadioGroup = require('Controls/_toggle/RadioGroup');
 import Checkbox = require('Controls/_toggle/Checkbox');
 import Separator = require('Controls/_toggle/Separator');
 import BigSeparator = require('Controls/_toggle/BigSeparator');
+import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
 export {
    Button,
@@ -35,5 +36,6 @@ export {
    RadioGroup,
    Checkbox,
    Separator,
-   BigSeparator
+   BigSeparator,
+   ItemTemplate
 }
