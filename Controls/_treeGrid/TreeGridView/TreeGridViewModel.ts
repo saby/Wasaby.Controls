@@ -177,7 +177,7 @@ var
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
             if (current.nodeFooter) {
                 current.nodeFooter.columns = current.columns;
-                current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
+                current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
                 if (GridLayoutUtil.isPartialGridSupport()) {
                     current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());

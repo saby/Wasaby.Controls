@@ -19,7 +19,7 @@
     </div>
 </ws:template>
 
-<ws:if data="{{!itemData.isPartialGridSupport}}">
+<ws:if data="{{!itemData.isPartialGridSupport()}}">
     <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.key}}">
         <ws:partial template="footer"></ws:partial>
     </div>
