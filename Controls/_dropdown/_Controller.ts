@@ -162,7 +162,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/ICaption
  * @mixes Controls/interface/IIcon
