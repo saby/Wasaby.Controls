@@ -126,7 +126,7 @@ var Search = Base.extend({
    }
 });
 
-Search._theme.push('Controls/search');
+Search._theme = Base._theme.concat(['Controls/search']);
 
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();
