@@ -55,7 +55,6 @@ define(
                'tagStyle',
                'textAlign',
                'fontStyle',
-               'placeholder',
                'useGrouping',
                'autoComplete',
                'onlyPositive',
