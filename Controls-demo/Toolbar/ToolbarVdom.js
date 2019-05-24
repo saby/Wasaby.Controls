@@ -55,8 +55,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   buttonTransparent: false,
                   title: 'Связанные документы',
                   '@parent': true,
-                  parent: null,
-                  readOnly: true
+                  parent: null
                },
                {
                   id: '5',
@@ -175,7 +174,8 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   buttonTransparent: false,
                   title: 'Обсудить',
                   '@parent': true,
-                  parent: null
+                  parent: null,
+                  readOnly: true
                },
                {
                   id: '7',
