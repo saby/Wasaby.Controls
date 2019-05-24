@@ -12,9 +12,13 @@
 }
 
 .controls-DateRangeSelectorLite__picker-normal {
-   margin-top: (@height_DateLinkView - @height_PeriodLiteDialog-currentValue)/2 - @thickness_border_default;
+   margin-top: ceil((@height_DateLinkView - @height_PeriodLiteDialog-currentValue)/2) - @border-width_DateLitePopup;
+}
+
+.controls-DateRangeSelectorLite__picker-normal-prevNext {
+   margin-top: ceil((@height_DateLinkView - @height_PeriodLiteDialog-currentValue)/2) - @border-width_DateLitePopup + @padding_DateLinkView-value;
 }
 
 .controls-DateRangeSelectorLite__picker-years-only {
-   margin-top: (@height_DateLinkView - @standart-line-height_PeriodLiteDialog)/2 - (2 * @thickness_border_default) - @standart-line-height_PeriodLiteDialog;
+   margin-top: ceil((@height_DateLinkView - @standart-line-height_PeriodLiteDialog)/2) - @border-width_DateLitePopup - @height_PeriodLiteDialog-year;
 }
