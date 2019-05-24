@@ -35,7 +35,9 @@ var _private = {
             !!self.getHeader(),
             self.getResultsPosition(),
             self._model.getHierarchyRelation(),
-            self._model.getHasMoreStorage()
+            self._model.getHasMoreStorage(),
+            self._options.nodeFooterTemplate,
+            self.getExpandedItems()
         ]);
     },
 

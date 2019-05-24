@@ -209,7 +209,7 @@ var
         // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column.
         // Using util for calculating real rows' index on display considering footers, headers, results
         calcNodeFooterIndex: function(self, parentKey) {
-            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
+            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage, self._options.nodeFooterTemplate, self.getExpandedItems());
         },
 
         collapseNode: function (self, nodeId) {

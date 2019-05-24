@@ -103,7 +103,9 @@ var _private = {
    },
 
    inputActivated: function(self) {
-      if (self._options.autoDropDown && !self._options.readOnly) {
+
+      // toDO Временный костыль, в .320 убрать, должно исправиться с этой ошибкой https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
+      if (self._options.autoDropDown && !self._options.readOnly && !_private.getActiveElement().classList.contains('controls-Lookup__icon')) {
          // The delay is needed when searching, when receiving the focus of the input field, open without delay
          self._searchDelay = 0;
 
@@ -111,6 +113,10 @@ var _private = {
             _private.updateSuggestState(self);
          }
       }
+   },
+
+   getActiveElement: function() {
+      return document.activeElement;
    },
 
    searchErrback: function(self, error) {

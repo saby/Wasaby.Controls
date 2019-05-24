@@ -1,6 +1,7 @@
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 import TreeGridDefaultItemTemplate = require('wml!Controls/_treeGrid/TreeGridView/Item');
 import {SearchItemsUtil} from 'Controls/list';
+import {Record} from 'Types/entity'
 
 var
    SearchViewModel = TreeViewModel.extend({
@@ -39,6 +40,19 @@ var
             return TreeGridDefaultItemTemplate;
          };
          return data;
+      },
+
+      _isGroup: function(item:Record):boolean {
+          let result;
+
+          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
+          if (!!item.forEach) {
+              result = false;
+          } else {
+              result = SearchViewModel.superclass._isGroup.call(this, item);
+          }
+
+          return result;
       }
    });
 

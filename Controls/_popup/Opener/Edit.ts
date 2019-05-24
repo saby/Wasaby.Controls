@@ -119,11 +119,11 @@ import Deferred = require('Core/Deferred');
           * @example
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Edit name="EditOpener">
+          *     <Controls.popup:Edit name="EditOpener">
           *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
           *           <ws:templateOptions source="{{_viewSource}}" />
           *        </ws:popupOptions>
-          *     </Controls.Popup.Opener.Edit>
+          *     </Controls.popup:Edit>
           * </pre>
           * js
           * <pre>
