@@ -171,10 +171,16 @@ var _private = {
       historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
       items.clear();
-       let format = oldItems.getFormat();
-       chain.factory(format).each(function(field) {
-           _private.addProperty(items, field.getName(), field.getType(), field.getDefaultValue());
-       });
+
+      // Clear может стереть исходный формат. Поэтому восстанавливаем его из исходного рекордсета.
+      // https://online.sbis.ru/opendoc.html?guid=21e24eb1-8beb-46c8-acc0-43ec7286b2d4
+      if (!oldItems.hasDecalredFormat()) {
+         let format = oldItems.getFormat();
+         chain.factory(format).each(function (field) {
+            _private.addProperty(items, field.getName(), field.getType(), field.getDefaultValue());
+         });
+      }
+
       this.addProperty(items, 'pinned', 'boolean', false);
       this.addProperty(items, 'recent', 'boolean', false);
       this.addProperty(items, 'frequent', 'boolean', false);
