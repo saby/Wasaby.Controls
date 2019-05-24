@@ -5,8 +5,7 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'wml!Controls-demo/SwitchableArea/resources/content',
    'wml!Controls-demo/SwitchableArea/resources/content2',
    'wml!Controls-demo/SwitchableArea/resources/contentAsync',
-   'wml!Controls-demo/SwitchableArea/resources/contentDop',
-   'css!Controls-demo/SwitchableArea/DemoSwitchableArea'
+   'wml!Controls-demo/SwitchableArea/resources/contentDop'
 ], function(Control,
             template,
             collection

@@ -37,7 +37,7 @@ define('Controls/Input/Date/Link', [
          var cfg = {
             opener: this,
             target: this._container,
-            template: 'Controls/Date/PeriodDialog',
+            template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },

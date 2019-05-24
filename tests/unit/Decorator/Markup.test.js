@@ -464,7 +464,7 @@ define([
                   _options: {
                      value: json,
                      validHtml: validHtml,
-                     tagResolver: decorator.NoOuterTag
+                     tagResolver: decorator.noOuterTag
                   }
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));

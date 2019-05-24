@@ -2,6 +2,8 @@ import * as Control from 'Core/Control';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions} from 'Controls/interface';
+// убрать после https://online.sbis.ru/opendoc.html?guid=39d8fd32-5701-4e7f-b022-3ef5893977e8
+import 'css!theme?Controls/_toggle/Checkbox/Checkbox';
 
 // TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
 interface IControlOptions {

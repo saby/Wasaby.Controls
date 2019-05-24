@@ -20,15 +20,32 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
       return Control.extend({
          _template: template,
          _afterMount: function() {
-            var openerContainer = this._getOpenerContainer();
-            this._globalOpeners = Control.createControl(GlobalOpeners, {}, openerContainer);
-
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
             var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
-            if (requirejs.defined(ManagerWrapperControllerModule)) {
-               requirejs(ManagerWrapperControllerModule).registerGlobalPopup(this);
+            var ManagerWrapperController = requirejs.defined(ManagerWrapperControllerModule) ? requirejs(ManagerWrapperControllerModule) : null;
+
+            // COMPATIBLE: В слое совместимости для каждого окна с vdom шаблоном создается Global.js. Это нужно для работы событий по
+            // открытию глобальный окон (openInfobox, etc). Но глобальные опенеры должны быть одни для всех из созданных Global.js
+            // Код ниже делает создание глобальных опенеров единоразовым, при создании второго и следующего инстанса Global.js
+            // в качестве опенеров ему передаются уже созданные опенеры у первого инстанста
+            // На Vdom странице Global.js всегда один.
+            if (ManagerWrapperController) {
+               if (!ManagerWrapperController.getGlobalPopup()) {
+                  this._createGlobalOpeners();
+                  ManagerWrapperController.registerGlobalPopupOpeners(this._globalOpeners);
+                  ManagerWrapperController.registerGlobalPopup(this);
+               } else {
+                  this._globalOpeners = ManagerWrapperController.getGlobalPopupOpeners();
+               }
+            } else {
+               this._createGlobalOpeners();
             }
+         },
+
+         _createGlobalOpeners: function() {
+            var openerContainer = this._getOpenerContainer();
+            this._globalOpeners = Control.createControl(GlobalOpeners, {}, openerContainer);
          },
 
          _getOpenerContainer: function() {
@@ -38,8 +55,8 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             container.setAttribute('ws-no-focus', true);
             container.setAttribute('class', 'controls-PopupGlobal__container');
             var openersContainer = document.createElement('div');
-            container.append(openersContainer);
-            document.body.append(container);
+            container.appendChild(openersContainer);
+            document.body.appendChild(container);
             return openersContainer;
          },
 
@@ -152,10 +169,6 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
                this._closedDialodResolve();
                delete this._closedDialodResolve;
             }
-         },
-         _beforeUnmount: function() {
-            this._globalOpeners.destroy();
-            this._globalOpeners = null;
          },
 
          _private: _private

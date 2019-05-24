@@ -301,8 +301,8 @@ define([
                     treeGridViewModel._model._display,
                     hasHeader,
                     resultsPosition,
-                    hasMoreStorage,
-                    hierarchyRelation
+                    hierarchyRelation,
+                    hasMoreStorage
                 );
              };
 
@@ -312,6 +312,31 @@ define([
          assert.equal(templateCalc(2, false, 'bottom'), 4);
          assert.equal(templateCalc(2, true, 'bottom'), 5);
       });
+
+      it('calcRowIndexByKey for tree with node Footer Template', function () {
+         var
+             hasMoreStorage = {
+                1: true,
+                5: true
+             };
+
+         assert.equal(4, Util.calcRowIndexByKey(
+             6,
+             treeGridViewModel._model._display,
+             false,
+             false,
+             hierarchyRelation,
+             hasMoreStorage,
+             true,
+             {
+                0: true,
+                1: true,
+                2: true
+             }
+         ));
+
+      });
+
    });
 });
 
