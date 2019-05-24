@@ -454,13 +454,13 @@
       }
     }
   },
-  "Controls/Toggle/Switch": {
-    "name": "Controls/Toggle/Switch",
+  "Controls/toggle:Switch": {
+    "name": "Controls/toggle:Switch",
     "title": "Switch control.",
-    "className": "Controls/Toggle/Switch",
+    "className": "Controls/toggle:Switch",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Toggle/Switch",
+    "fullname": "Controls/toggle:Switch",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -498,13 +498,13 @@
       }
     }
   },
-  "Controls/Toggle/Checkbox": {
-    "name": "Controls/Toggle/Checkbox",
+  "Controls/toggle:Checkbox": {
+    "name": "Controls/toggle:Checkbox",
     "title": "Basic checkbox.",
-    "className": "Controls/Toggle/Checkbox",
+    "className": "Controls/toggle:Checkbox",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Toggle/Checkbox",
+    "fullname": "Controls/toggle:Checkbox",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1343,7 +1343,7 @@
       }
     }
   },
-  "Controls/Toggle/RadioGroup": {
+  "Controls/toggle:RadioGroup": {
     "name": "Controls/Toggle/Radio",
     "title": "Radio button switch.",
     "className": "Controls/Toggle/Radio",
@@ -1588,13 +1588,13 @@
       }
     }
   },
-  "Controls/Toggle/Button": {
-    "name": "Controls/Toggle/Button",
+  "Controls/toggle:Button": {
+    "name": "Controls/toggle:Button",
     "title": "Button that switches between different states",
-    "className": "Controls/Toggle/Button",
+    "className": "Controls/toggle:Button",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Toggle/Button",
+    "fullname": "Controls/toggle:Button",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1786,13 +1786,13 @@
       }
     }
   },
-  "Controls/Toggle/DoubleSwitch": {
-    "name": "Controls/Toggle/DoubleSwitch",
+  "Controls/toggle:DoubleSwitch": {
+    "name": "Controls/toggle:DoubleSwitch",
     "title": "Switch with two captions and with support two orientation.",
-    "className": "Controls/Toggle/DoubleSwitch",
+    "className": "Controls/toggle:DoubleSwitch",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Toggle/DoubleSwitch",
+    "fullname": "Controls/toggle:DoubleSwitch",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

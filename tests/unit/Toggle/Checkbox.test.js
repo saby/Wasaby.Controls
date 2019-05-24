@@ -1,6 +1,6 @@
 define(['Controls/toggle'], function (toggle) {
    var CB, changeValue, eventValue;
-   describe('Controls/Toggle/Checkbox', function () {
+   describe('Controls/_toggle/Checkbox', function () {
       describe('click to checkbox', function () {
          beforeEach(function () {
             CB = new toggle.Checkbox({});

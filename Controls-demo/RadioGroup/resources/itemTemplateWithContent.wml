@@ -1,5 +1,5 @@
 <span attr:class="controls-RadioItem__wrapper{{selected ? ' js-controls-RaidoItem__wrapper__selected'}}">
-    <ws:partial template="wml!Controls/Toggle/resources/SwitchCircle/SwitchCircle" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
+    <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
     <ws:if data="{{contentTemplate}}">
         <ws:partial template="{{contentTemplate}}" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
     </ws:if>

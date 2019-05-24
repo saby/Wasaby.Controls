@@ -45,7 +45,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Checkbox with enabled triState.
  * <pre>
- *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -71,7 +71,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Checkbox regulate theme in control.
  * <pre>
- *    <Controls.Toggle.Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -85,7 +85,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * </pre>
  * Checkbox value when triState option is true.
  * <pre>
- *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -107,7 +107,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Example description.
  * <pre>
- *    <Controls.Toggle.Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
+ *    <Controls.toggle:Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
  * </pre>
  * <pre>
  *    Control.extend({
