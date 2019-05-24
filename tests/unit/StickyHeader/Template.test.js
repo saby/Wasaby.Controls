@@ -2,7 +2,7 @@ define(
    [
       'Controls/scroll',
       'unit/resources/TemplateUtil',
-      'Controls/StickyHeader/_StickyHeader'
+      'Controls/_scroll/StickyHeader/_StickyHeader'
    ],
    function(scroll, TemplateUtil, _StickyHeader) {
 

@@ -6,7 +6,7 @@ define(
 
       'use strict';
 
-      describe('Controls.StickyHeader.Context', function() {
+      describe('Controls/_scroll/StickyHeader/Context', function() {
          var result;
          describe('constructor', function() {
             it('Create a component with a invisible shadow', function() {
