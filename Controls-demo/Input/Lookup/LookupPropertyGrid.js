@@ -12,7 +12,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
    var Lookup = Control.extend({
       _selectedKeys: [],
       _template: template,
-      _content: 'Controls/Selector/Lookup',
+      _content: 'Controls/lookup:Input',
       _dataObject: null,
       _sourceNames: null,
       _sourceCars: null,

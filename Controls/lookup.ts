@@ -4,7 +4,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes Collection Controls/_lookup/SelectedCollection
- * @includes ItemTemplate wml!Controls/_lookup/Lookup/itemTemplate
+ * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
  * @includes Opener Controls/_lookup/Opener
  * @includes LookupStyles Controls/_lookup/Lookup/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles

@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="bold" size="l" scope="{{_options}}"/>
+<ws:partial template="wml!Controls/lookup:ItemTemplate" style="bold" size="l" scope="{{_options}}"/>

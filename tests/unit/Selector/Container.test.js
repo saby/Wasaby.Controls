@@ -18,7 +18,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       return items;
    };
 
-   describe('Controls.Selector.Container', function() {
+   describe('Controls/_lookupPopup/Container', function() {
 
       it('getFilteredItems', function() {
          var items = ['toRemoveItem', 'toSaveItem', 'toSaveItem'];

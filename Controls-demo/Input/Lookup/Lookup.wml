@@ -25,7 +25,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" displayProperty="title"></ws:partial>
+                            <ws:partial template="wml!Controls/lookup:ItemTemplate" displayProperty="title"></ws:partial>
                         </ws:itemTemplate>
                     </Controls.lookup:Input>
                 </div>
@@ -50,7 +50,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="bold"/>
+                            <ws:partial template="wml!Controls/lookup:ItemTemplate" style="bold"/>
                         </ws:itemTemplate>
                     </Controls.lookup:Input>
                 </div>
@@ -77,7 +77,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="accent" size="m"/>
+                            <ws:partial template="wml!Controls/lookup:ItemTemplate" style="accent" size="m"/>
                         </ws:itemTemplate>
                     </Controls.lookup:Input>
                 </div>
@@ -102,7 +102,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="primary" size="m"/>
+                            <ws:partial template="wml!Controls/lookup:ItemTemplate" style="primary" size="m"/>
                         </ws:itemTemplate>
                     </Controls.lookup:Input>
                 </div>

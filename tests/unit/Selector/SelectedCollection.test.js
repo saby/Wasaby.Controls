@@ -1,5 +1,5 @@
 define(['Controls/lookup'], function(scroll) {
-   describe('Controls/Selector/SelectedCollection', function() {
+   describe('"Controls/_lookup/SelectedCollection', function() {
       if (typeof window === 'undefined') {
          // Кастыль, дабы избежать работы с версткой
          scroll.Collection._private.getCounterWidth = function(itemsCount, readOnly, itemsLayout) {
