@@ -143,3 +143,9 @@
 .ws-is-chrome-xp .controls-TreeGridView__row-cell_innerWrapper {
    display: flex;
 }
+
+// Master list sets ::before on selected item, witch overflows expander. It has z-index: 2 and pointer-events: none, but
+// Old IE doesn't support pointer-events.
+.ws-is-ie10 .controls-TreeGrid__row-expander {
+   z-index: 2;
+}

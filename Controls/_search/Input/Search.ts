@@ -18,7 +18,7 @@ import Vdom = require('Vdom/Vdom');
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/interface/ITooltip
+ * @mixes Controls/_interface/ITooltip
  *
  * @ignoreOptions style
  *
@@ -132,7 +132,7 @@ Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();
 
    /**
-    * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+    * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
     * optionTypes.maxLength = descriptor(Number|null);
     */
    optionTypes.trim = entity.descriptor(Boolean);

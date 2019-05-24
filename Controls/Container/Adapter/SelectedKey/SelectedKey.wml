@@ -1,4 +1,5 @@
 <ws:partial template="{{_options.content}}"
             on:selectedKeysChanged="_selectedKeysChanged()"
             scope="{{_options}}"
-            selectedKeys="{{_selectedKeys}}"/>
+            selectedKeys="{{_selectedKeys}}"
+            dataLoadCallback="{{_dataLoadCallbackHandler}}"/>

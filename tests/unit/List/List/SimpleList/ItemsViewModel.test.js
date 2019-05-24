@@ -2,11 +2,10 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/_list/ItemsViewModel',
    'Controls/list',
    'Types/collection',
    'Controls/Constants'
-], function(ItemsViewModel, list, collection, ControlsConstants){
+], function(list, collection, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, data3, display;
       beforeEach(function() {
@@ -58,7 +57,7 @@ define([
             items: data,
             keyProperty: 'id'
          };
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
 
          var disp = iv._display;
          assert.equal(data.length, disp.getCount(), 'Incorrect display\'s creating before mounting');
@@ -71,7 +70,7 @@ define([
             keyProperty: 'id'
          };
 
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
 
 
 
@@ -101,7 +100,7 @@ define([
          },
          setted = false;
 
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
          iv._startIndex = 10;
          iv._stopIndex = 20;
 
@@ -121,7 +120,7 @@ define([
             displayProperty: 'title'
          };
 
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
@@ -141,7 +140,7 @@ define([
                 keyProperty: 'id',
                 displayProperty: 'title'
              },
-             iv = new ItemsViewModel(cfg),
+             iv = new list.ItemsViewModel(cfg),
              dispItem = {
                 getContents: function () {
                    return {
@@ -213,7 +212,7 @@ define([
          };
 
          //первый кейс - были items - массив, а ставим рекордсет. Должен полностью смениться инстанс
-         var iv = new ItemsViewModel(cfg1);
+         var iv = new list.ItemsViewModel(cfg1);
          iv.setItems(rs2);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
@@ -222,7 +221,7 @@ define([
 
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
-         iv = new ItemsViewModel(cfg2);
+         iv = new list.ItemsViewModel(cfg2);
          iv.setItems(rs2);
          assert.equal(rs1, iv._items, 'Incorrect items after setItems');
          assert.equal(4, iv._items.at(0).get('id'), 'Incorrect items after setItems');
@@ -248,7 +247,7 @@ define([
             displayProperty: 'title'
          };
 
-         var iv = new ItemsViewModel(cfg1);
+         var iv = new list.ItemsViewModel(cfg1);
          iv.appendItems(rs2);
 
          assert.equal(6, iv._items.getCount(), 'Incorrect items count after appendItems');
@@ -272,7 +271,7 @@ define([
             displayProperty: 'title'
          };
 
-         var iv = new ItemsViewModel(cfg1);
+         var iv = new list.ItemsViewModel(cfg1);
          iv.prependItems(rs2);
 
          assert.equal(6, iv._items.getCount(), 'Incorrect items count after prependItems');
@@ -308,29 +307,29 @@ define([
          };
 
          result = 0;
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
 
          result = 0;
          iv.setItems(rs2);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
-   
+
       it('setFilter', function () {
          var rs = new collection.RecordSet({
             rawData: data,
             keyProperty : 'id'
          });
-      
+
          var cfg = {
             items: data,
             keyProperty: 'id',
             displayProperty: 'title'
          };
-         
-         var itemsViewModel = new ItemsViewModel(cfg);
+
+         var itemsViewModel = new list.ItemsViewModel(cfg);
          var modelVersion = itemsViewModel._prefixItemVersion;
-   
+
          itemsViewModel.setFilter(function testFilter(){});
          assert.isTrue(itemsViewModel._prefixItemVersion > modelVersion, 'setFilter should change model version')
       });
@@ -361,17 +360,17 @@ define([
                },
                displayProperty: 'title'
             },
-            itemsViewModel = new ItemsViewModel(cfg);
+            itemsViewModel = new list.ItemsViewModel(cfg);
          assert.equal(itemsViewModel._display.getGroup(), cfg.groupingKeyCallback, 'Grouping for display not applied. Error sending to display grouping method.');
-         assert.equal(itemsViewModel._display.getCount(), 9, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
+         assert.equal(itemsViewModel._display.getCount(), 8, 'Grouping for display not applied. Display items count (with groups) not equal 8.');
          itemsViewModel.toggleGroup('group_1');
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');
          itemsViewModel.toggleGroup('group_2');
          assert.equal(itemsViewModel._display.getCount(), 4, 'Invalid display items count after collapsing "group_2".');
          itemsViewModel.toggleGroup('group_1');
-         assert.equal(itemsViewModel._display.getCount(), 7, 'Invalid display items count after expanding "group_1".');
+         assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after expanding "group_1".');
          itemsViewModel.toggleGroup('group_2');
-         assert.equal(itemsViewModel._display.getCount(), 9, 'Invalid display items count after expanding "group_2".');
+         assert.equal(itemsViewModel._display.getCount(), 8, 'Invalid display items count after expanding "group_2".');
          current = itemsViewModel.getCurrent();
          assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
          assert.equal(current.isHiddenGroup, true, 'Invalid value isHiddenGroup for current item.');
@@ -395,7 +394,7 @@ define([
             keyProperty: 'id'
          };
 
-         var iv = new ItemsViewModel(cfg);
+         var iv = new list.ItemsViewModel(cfg);
 
          var condResult = iv.isLast();
          assert.isFalse(condResult);
@@ -403,6 +402,17 @@ define([
          iv.goToNext();
          condResult = iv.isLast();
          assert.isTrue(condResult);
+      });
+
+      it('getItemDataByItem', function() {
+         let cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+         let model = new list.ItemsViewModel(cfg);
+         let itemData = model.getItemDataByItem({ getContents: () => [] });
+
+         assert.isFalse(!!itemData.isGroup);
       });
    })
 });

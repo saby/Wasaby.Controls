@@ -34,6 +34,7 @@ import Deferred = require('Core/Deferred');
 
             if (meta.record) {
                cfg.templateOptions.record = meta.record.clone();
+               cfg.templateOptions.record.acceptChanges();
                instance._linkedKey = cfg.templateOptions.record.getId();
             } else {
                instance._linkedKey = undefined;
@@ -118,11 +119,11 @@ import Deferred = require('Core/Deferred');
           * @example
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Edit name="EditOpener">
+          *     <Controls.popup:Edit name="EditOpener">
           *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
           *           <ws:templateOptions source="{{_viewSource}}" />
           *        </ws:popupOptions>
-          *     </Controls.Popup.Opener.Edit>
+          *     </Controls.popup:Edit>
           * </pre>
           * js
           * <pre>

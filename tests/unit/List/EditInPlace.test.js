@@ -552,11 +552,14 @@ define([
                       data: data
                    }),
                    isIndicatorHasBeenShown = false,
-                   isIndicatorHasBeenHiden = false;
+                   isIndicatorHasBeenHiden = false,
+                   isAfterEndEditHasBeenNotified = false;
 
                eip._notify = function(e) {
                   if (e === 'beforeEndEdit') {
                      return Deferred.success({});
+                  } else if (e === 'afterEndEdit') {
+                     isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
                   } else if (e === 'hideIndicator') {
@@ -576,6 +579,47 @@ define([
                   assert.deepEqual(result, {});
                   assert.isTrue(isIndicatorHasBeenShown);
                   assert.isTrue(isIndicatorHasBeenHiden);
+                  assert.isTrue(isAfterEndEditHasBeenNotified);
+                  done();
+               });
+
+            });
+
+            it('Defered with cancel', function (done) {
+               var
+                   source = new sourceLib.Memory({
+                      idProperty: 'id',
+                      data: data
+                   }),
+                   isIndicatorHasBeenShown = false,
+                   isIndicatorHasBeenHiden = false,
+                   isAfterEndEditHasBeenNotified = false;
+
+               eip._notify = function (e) {
+                  if (e === 'beforeEndEdit') {
+                     return Deferred.success(Constants.editing.CANCEL);
+                  } else if (e === 'afterEndEdit') {
+                     isAfterEndEditHasBeenNotified = true;
+                  } else if (e === 'showIndicator') {
+                     isIndicatorHasBeenShown = true;
+                  } else if (e === 'hideIndicator') {
+                     isIndicatorHasBeenHiden = true;
+                  }
+               };
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip.cancelEdit().addCallback(function (result) {
+                  assert.deepEqual(result, {cancelled: true});
+                  assert.isTrue(isIndicatorHasBeenShown);
+                  assert.isTrue(isIndicatorHasBeenHiden);
+                  assert.isFalse(isAfterEndEditHasBeenNotified);
                   done();
                });
 

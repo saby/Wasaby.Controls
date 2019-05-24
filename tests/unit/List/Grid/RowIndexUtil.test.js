@@ -87,6 +87,7 @@ define([
                     treeGridViewModel._model._display,
                     Util.ResultsPosition.Bottom,
                     hasHeader,
+                    false,
                     hierarchyRelation,
                     hasMoreStorage);
              };
@@ -135,6 +136,7 @@ define([
                     treeGridViewModel._model._display,
                     hasResults,
                     hasHeader,
+                    false,
                     hierarchyRelation,
                     hasMoreStorage);
              };
@@ -153,9 +155,12 @@ define([
 
 
          hasMoreStorage = {
+            1: undefined,
             2: true,
             3: true,
-            5: true
+            4: false,
+            5: true,
+            6: null
          };
 
 
@@ -284,20 +289,20 @@ define([
          assert.equal(Util.calcTopOffset(true, Util.ResultsPosition.Bottom), 1);
       });
 
-      it('calcGroupRowIndex', function () {
+      it('calcRowIndexByItem', function () {
          var
              hasMoreStorage = {
                 1: true,
                 5: true
              },
              templateCalc = function (index, hasHeader, resultsPosition) {
-                return Util.calcGroupRowIndex(
+                return Util.calcRowIndexByItem(
                     treeGridViewModel._model._display.at(index),
                     treeGridViewModel._model._display,
                     hasHeader,
                     resultsPosition,
-                    hasMoreStorage,
-                    hierarchyRelation
+                    hierarchyRelation,
+                    hasMoreStorage
                 );
              };
 
@@ -307,6 +312,31 @@ define([
          assert.equal(templateCalc(2, false, 'bottom'), 4);
          assert.equal(templateCalc(2, true, 'bottom'), 5);
       });
+
+      it('calcRowIndexByKey for tree with node Footer Template', function () {
+         var
+             hasMoreStorage = {
+                1: true,
+                5: true
+             };
+
+         assert.equal(4, Util.calcRowIndexByKey(
+             6,
+             treeGridViewModel._model._display,
+             false,
+             false,
+             hierarchyRelation,
+             hasMoreStorage,
+             true,
+             {
+                0: true,
+                1: true,
+                2: true
+             }
+         ));
+
+      });
+
    });
 });
 

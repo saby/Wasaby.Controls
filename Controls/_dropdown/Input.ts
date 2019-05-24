@@ -34,7 +34,7 @@ var _private = {
  * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
  * @class Controls/_dropdown/Input
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
@@ -173,11 +173,5 @@ var Input = Control.extend({
 });
 
 Input._theme = ['Controls/dropdown'];
-
-Input.getDefaultOptions = function () {
-   return {
-      style: 'default'
-   };
-};
 
 export = Input;

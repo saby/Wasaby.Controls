@@ -1,9 +1,9 @@
-define(['Controls/Selector/Lookup/Link'], function(LookupLink) {
-   describe('Controls/Selector/Lookup/Link', function() {
+define(['Controls/lookup'], function(lookup) {
+   describe('Controls/lookup:Link', function() {
       it('_keyUpHandler', function() {
          var
             isNotifyClick = false,
-            link = new LookupLink(),
+            link = new lookup.Link(),
             event = {
                nativeEvent: {
                   keyCode: 13
@@ -28,7 +28,7 @@ define(['Controls/Selector/Lookup/Link'], function(LookupLink) {
       it('_clickHandler', function() {
          var
             isStopPropagation = false,
-            link = new LookupLink(),
+            link = new lookup.Link(),
             event = {
                stopPropagation: function() {
                   isStopPropagation = true;

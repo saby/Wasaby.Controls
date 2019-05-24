@@ -50,7 +50,7 @@
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
    </ws:if>
    <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-        attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport) + currentColumn.gridCellStyles}}">
+        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
       <ws:partial template="columnContentWrapper"/>
    </div>
 </ws:template>
@@ -63,7 +63,7 @@
                                       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
-                          attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport) + currentColumn.gridCellStyles}}">
+                          attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
 </ws:template>
@@ -80,6 +80,7 @@
 <Controls._grid.layouts.partialGridSupport.Cell
         eventHandlers="{{itemData.handlersForPartialSupport}}"
         itemData="{{ itemData }}"
+        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}"
         currentColumn="{{ currentColumn }}"
         highlightOnHover="{{ highlightOnHover }}">
    <ws:columnContentTpl>

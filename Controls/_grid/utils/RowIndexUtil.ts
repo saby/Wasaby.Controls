@@ -12,7 +12,9 @@ function calcRowIndexByKey(
     hasHeader: boolean = false,
     resultsPosition: ResultsPosition|null = null,
     hierarchyRelation?,
-    hasMoreStorage?
+    hasMoreStorage?,
+    hasFooterTemplate = false,
+    expandedItems = {}
 ): number {
 
     let
@@ -25,23 +27,25 @@ function calcRowIndexByKey(
         return rowTopOffset + itemIndex;
     }
 
-    return rowTopOffset + itemIndex + _calcHasMoreButtonsBefore(itemIndex, display, hasMoreStorage, hierarchyRelation);
+    return rowTopOffset + itemIndex + _calcHasMoreButtonsBefore(itemIndex, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems);
 }
 
 function calcFooterRowIndex(
     display,
     hasResults: boolean = false,
     hasHeader: boolean = false,
+    hasEmptyTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
-    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
+    return calcResultsRowIndex(display, ResultsPosition.Bottom, hasHeader, hasEmptyTemplate, hierarchyRelation, hasMoreStorage) + (hasResults ? 1 : 0);
 }
 
 function calcResultsRowIndex(
     display,
     resultsPosition: ResultsPosition|null = null,
     hasHeader: boolean = false,
+    hasEmptyTemplate: boolean = false,
     hierarchyRelation?,
     hasMoreStorage?
 ): number {
@@ -65,7 +69,7 @@ function calcResultsRowIndex(
         lastRowIndex = calcRowIndexByKey(lastItemId, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage);
     } else {
         lastItem = display.at(display.getCount() - 1);
-        lastRowIndex = calcGroupRowIndex(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
+        lastRowIndex = calcRowIndexByItem(lastItem, display, hasHeader, resultsPosition, hierarchyRelation);
     }
 
     // If after last item exists node footer
@@ -78,9 +82,9 @@ function calcResultsRowIndex(
     return lastRowIndex + 1;
 }
 
-function calcGroupRowIndex(groupItem, display, hasHeader, resultsPosition, hasMoreStorage?, hierarchyRelation?): number {
-    let index = display.getIndex(groupItem);
-    return _calcRowIndexByDisplayIndex(index, display, hasHeader, resultsPosition, hasMoreStorage, hierarchyRelation);
+function calcRowIndexByItem(item, display, hasHeader, resultsPosition, hierarchyRelation?, hasMoreStorage?, hasFooterTemplate = false, expandedItems = {}): number {
+    let index = display.getIndex(item);
+    return _calcRowIndexByDisplayIndex(index, display, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems);
 }
 
 function calcTopOffset(
@@ -106,8 +110,10 @@ function _calcRowIndexByDisplayIndex(
     display,
     hasHeader: boolean = false,
     resultsPosition: ResultsPosition|null = null,
+    hierarchyRelation?,
     hasMoreStorage?,
-    hierarchyRelation?
+    hasFooterTemplate: boolean = false,
+    expandedItems = {}
 ): number {
     let rowTopOffset: number = calcTopOffset(hasHeader, resultsPosition);
 
@@ -115,22 +121,32 @@ function _calcRowIndexByDisplayIndex(
         return index + rowTopOffset;
     }
 
-    return rowTopOffset + index + _calcHasMoreButtonsBefore(index, display, hasMoreStorage, hierarchyRelation);
+    return rowTopOffset + index + _calcHasMoreButtonsBefore(index, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems);
 }
 
-function _calcHasMoreButtonsBefore(itemIndex: number, display, hasMoreStorage, hierarchyRelation): number{
+function _calcHasMoreButtonsBefore(itemIndex: number, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems = {}): number {
     let
         count = 0,
         keyProperty: string = display.getCollection().getIdProperty();
 
+    if (hierarchyRelation && hasFooterTemplate) {
+        for (let i = 0; i < itemIndex; i++) {
+            let item = display.at(1).getContents();
+            if (item.get && hierarchyRelation.isNode(item) && expandedItems[item.getId()]) {
+                count++;
+            }
+        }
+    }
+
     for (let key in hasMoreStorage) {
+        if (hasMoreStorage[key] === true) {
+            let
+                item = ItemsUtil.getDisplayItemById(display, key, keyProperty),
+                childsCount = hierarchyRelation.getChildren(key, display.getCollection()).length;
 
-        let
-            item = ItemsUtil.getDisplayItemById(display, key, keyProperty),
-            childsCount = hierarchyRelation.getChildren(key, display.getCollection()).length;
-
-        if (itemIndex > display.getIndex(item) + childsCount) {
-            count++;
+            if (itemIndex > display.getIndex(item) + childsCount) {
+                count++;
+            }
         }
     }
     return count;
@@ -140,7 +156,7 @@ export {
     ResultsPosition,
     calcRowIndexByKey,
     calcResultsRowIndex,
-    calcGroupRowIndex,
+    calcRowIndexByItem,
     calcTopOffset,
     calcFooterRowIndex
 }

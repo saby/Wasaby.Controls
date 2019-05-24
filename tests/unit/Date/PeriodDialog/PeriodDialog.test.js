@@ -90,6 +90,17 @@ define([
          });
       });
 
+      describe('_homeButtonClick', function() {
+         it('should update _displayedDate.', function() {
+            const
+               oldDate = new Date(2017, 0, 1),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: oldDate, endValue: oldDate });
+            assert(dateUtils.isDatesEqual(component._displayedDate, oldDate));
+            component._homeButtonClick();
+            assert(dateUtils.isMonthsEqual(component._displayedDate, new Date()));
+         });
+      });
+
       describe('_headerLinkClick', function() {
          it('should toggle header type.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {});
@@ -177,11 +188,14 @@ define([
       });
 
       describe('_monthRangeMonthClick', function() {
-         it('should toggle state.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+         it('should toggle state and update _displayedDate.', function() {
+            const
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               newDate = dateUtils.getStartOfMonth(new Date());
             assert.strictEqual(component._state, component._STATES.year);
-            component._toggleState();
+            component._toggleState(null, newDate);
             assert.strictEqual(component._state, component._STATES.month);
+            assert(dateUtils.isDatesEqual(component._displayedDate, newDate));
          });
       });
 

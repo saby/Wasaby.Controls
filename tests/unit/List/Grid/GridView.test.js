@@ -86,5 +86,30 @@ define(['Controls/grid'], function(gridMod) {
 
       });
 
+      it('fill itemsContainer from separated columns', function () {
+
+         let
+             realItemsContainer = {},
+             refOnRealItemsContainer = realItemsContainer,
+             partialGridView = {
+                _options: {
+                   multiSelectVisibility: 'hidden'
+                },
+                _listModel: {
+                   getColumns: () => [{}, {}]
+                },
+                _itemsContainerForPartialSupport: refOnRealItemsContainer,
+                _container: {
+                   getElementsByClassName: () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                }
+             };
+
+         gridMod.GridView._private.fillItemsContainerForPartialSupport(partialGridView);
+
+         assert.equal(refOnRealItemsContainer, realItemsContainer);
+         assert.deepEqual([1,3,5,7,9], realItemsContainer.children);
+
+      });
+
    });
 });

@@ -42,7 +42,15 @@ var _private = {
 
          /*Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
           в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
-         var queryDefAsync = cDeferred.fromTimer(0);
+         var queryDefAsync = new cDeferred();
+
+         //deferred.fromTimer is not support canceling
+         setTimeout(function() {
+            if (!queryDefAsync.isReady()) {
+               queryDefAsync.callback();
+            }
+         }, 0);
+
          queryDefAsync.addCallback(function() {
             return queryDef;
          });

@@ -1,16 +1,12 @@
-.controls-HistoryMenu__row {
-	padding-right: @spacing_HistoryMenu-between-itemCaption-rightBorder;
-}
-
-.controls-HistoryMenu__row_pinned {
+.controls-HistoryMenu__row_pinned.theme_@{themeName} {
 	font-weight: bold;
 }
 
-.controls-HistoryMenu__iconUnnpin {
+.controls-HistoryMenu__iconUnnpin.theme_@{themeName} {
 	font-weight: normal;
 }
 
-.controls-HistoryMenu__iconPin {
+.controls-HistoryMenu__iconPin.theme_@{themeName} {
 	position: absolute;
 	display: none;
 	.align-items(center);
@@ -20,16 +16,16 @@
 	color: @color_HistoryMenu-pin;
 }
 
-.controls-HistoryMenu__iconPin.controls-HistoryMenu__iconPin_swiped {
+.controls-HistoryMenu__iconPin.controls-HistoryMenu__iconPin_swiped.theme_@{themeName} {
 	.inline-flexbox();
 }
 
 .ws-is-no-touch {
-	.controls-HistoryMenu__row:hover .controls-HistoryMenu__iconPin {
+	.controls-DropdownList__row:hover .controls-HistoryMenu__iconPin.theme_@{themeName} {
 		.inline-flexbox();
 	}
 
-	.controls-HistoryMenu__iconPin:hover {
+	.controls-HistoryMenu__iconPin.theme_@{themeName}:hover {
 		color: @color_HistoryMenu-pin_hovered;
 	}
 }

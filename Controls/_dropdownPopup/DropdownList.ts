@@ -111,6 +111,44 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
                hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null;
             return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+         },
+
+         getRootKey: function(key) {
+            return key === undefined ? null : key;
+         },
+
+         prepareHeaderConfig: function(self, options) {
+            if (options.showHeader) {
+               let headConfig;
+               headConfig = options.headConfig || {};
+               headConfig.caption = headConfig.caption || options.caption;
+               headConfig.icon = headConfig.icon || options.icon || '';
+               headConfig.menuStyle = headConfig.menuStyle || 'defaultHead';
+
+               let rootKey = options.parentProperty ? options.rootKey : options.parentProperty,
+                   iconSizes = ['small', 'medium', 'large'],
+                   iconSize;
+
+               if (headConfig.icon) {
+                  iconSizes.forEach(function(size) {
+                     if (headConfig.icon.indexOf('icon-' + size) !== -1) {
+                        iconSize = size;
+                     }
+                  })
+               }
+               if (!iconSize && options.iconPadding && options.iconPadding[rootKey]) {
+                  headConfig.icon += ' ' + options.iconPadding[rootKey][1];
+               }
+               if (headConfig.menuStyle === 'duplicateHead') {
+                  self._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
+               }
+               self._headConfig = headConfig;
+            }
+         },
+
+         isHeadConfigChanged: function(newOptions, oldOptions) {
+            return newOptions.headConfig !== oldOptions.headConfig || newOptions.icon !== oldOptions.icon ||
+                newOptions.caption !== oldOptions.caption || newOptions.iconPadding !== oldOptions.iconPadding;
          }
 
       };
@@ -134,45 +172,12 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
          _listModel: null,
          _subDropdownOpened: false,
 
-         constructor: function(config) {
-            if (config.defaultItemTemplate) {
-               this._defaultItemTemplate = config.defaultItemTemplate;
-            }
-            if (config.groupTemplate) {
-               this._groupTemplate = config.groupTemplate;
-            }
-
-            if (config.showHeader) {
-               this._headConfig = config.headConfig || {};
-               this._headConfig.caption = this._headConfig.caption || config.caption;
-               this._headConfig.icon = this._headConfig.icon || config.icon || '';
-               this._headConfig.menuStyle = this._headConfig.menuStyle || 'defaultHead';
-
-               var rootKey = config.parentProperty ? config.rootKey : config.parentProperty,
-                  iconSizes = /small|medium|large/g,
-                  iconSize;
-
-               if (this._headConfig.icon && this._headConfig.icon.match(iconSizes)) {
-                  iconSize = this._headConfig.icon.match(iconSizes)[0];
-               } else if (config.iconPadding && config.iconPadding[rootKey]) {
-                  this._headConfig.icon += ' ' + config.iconPadding[rootKey][1];
-               }
-               if (this._headConfig.menuStyle === 'duplicateHead') {
-                  this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
-               }
-            }
-            DropdownList.superclass.constructor.apply(this, arguments);
-            this._resultHandler = this._resultHandler.bind(this);
-            this._subDropdownClose = this._subDropdownClose.bind(this);
-            this._mousemoveHandler = this._mousemoveHandler.bind(this);
-            this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
-         },
          _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
-                  rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
+                  rootKey: _private.getRootKey(newOptions.rootKey),
                   selectedKeys: Clone(newOptions.selectedKeys),
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
@@ -189,7 +194,12 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
                _private.setPopupOptions(this);
+               _private.prepareHeaderConfig(this, newOptions);
             }
+            this._resultHandler = this._resultHandler.bind(this);
+            this._subDropdownClose = this._subDropdownClose.bind(this);
+            this._mousemoveHandler = this._mousemoveHandler.bind(this);
+            this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -197,7 +207,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                itemsChanged = newOptions.items !== this._options.items;
 
             if (rootChanged) {
-               this._listModel.setRootKey(newOptions.rootKey);
+               this._listModel.setRootKey(_private.getRootKey(newOptions.rootKey));
             }
 
             if (itemsChanged) {
@@ -210,6 +220,10 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
             if (rootChanged || itemsChanged) {
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
+            }
+
+            if (_private.isHeadConfigChanged(newOptions, this._options)) {
+               _private.prepareHeaderConfig(this, newOptions);
             }
 
             if (newOptions.stickyPosition.horizontalAlign &&
@@ -227,7 +241,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
                this._subDropdownOpened = false;
             }
 
-            if (hasChildren) {
+            if (hasChildren && !item.get('readOnly')) {
                this._subDropdownOpened = true;
                this._openSubDropdown(event, item);
             }
@@ -284,6 +298,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
          },
 
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
+            if (item.get('readOnly')) {
+               return;
+            }
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
                let isApplyButtonVisible = this._needShowApplyButton;
                let self = this;

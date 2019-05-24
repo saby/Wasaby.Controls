@@ -23,7 +23,7 @@ import 'css!theme?Controls/scroll';
  * @extends Core/Control
  * @control
  * @public
- * @author Журавлев М.С.
+ * @author Миронов А.Ю.
  * @category Container
  * @demo Controls-demo/Container/Scroll
  *
@@ -196,14 +196,11 @@ var
        */
       _stickyHeaderContext: null,
 
-      _isStickyInEdge: null,
-
       _headersHeight: null,
       _scrollbarStyles: '',
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
-         this._isStickyInEdge = stickyHeaderUtils.isStickySupport() && Env.detection.isIE;
       },
 
       _beforeMount: function(options, context, receivedState) {
@@ -565,7 +562,7 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._savedScrollPosition = this._children.content.scrollHeight;
+         this._savedScrollPosition = this._children.content.scrollHeight - this._children.content.scrollTop;
       },
 
       _restoreScrollPosition: function(e) {

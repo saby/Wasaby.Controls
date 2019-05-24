@@ -35,9 +35,8 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             // if user scroll page, then window height will changed.
             // get real window.height for same position with/without keyboard.
             if (Env.detection.isMobileIOS) {
-               if (TouchKeyboardHelper._keyboardVisible) {
-                  height += window.scrollY;
-               }
+               // todo: https://online.sbis.ru/opendoc.html?guid=7223381a-dc7c-44b4-a628-7f2d7ba8a703
+               height += window.scrollY;
             }
             return {
                width: window.innerWidth,
@@ -64,8 +63,13 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
-            container.style.width = 'auto';
-            container.style.height = 'auto';
+            // We won't remove width and height, if they are set explicitly.
+            if(!cfg.popupOptions.width) {
+               container.style.width = 'auto';
+            }
+            if(!cfg.popupOptions.height) {
+               container.style.height = 'auto';
+            }
             if (cfg.popupOptions.maxWidth) {
                container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
             }

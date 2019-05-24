@@ -418,10 +418,13 @@ define([
 
          setTimeout(function() {
             lists.BaseControl._private.loadToDirection(ctrl, 'down');
+
+            assert.equal(ctrl._loadingState, 'down');
             setTimeout(function() {
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
+               assert.equal(ctrl._loadingState, null);
                done();
             }, 100);
          }, 100);
@@ -471,11 +474,13 @@ define([
             assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
             lists.BaseControl._private.loadToDirection(ctrl, 'down');
+            assert.equal(ctrl._loadingState, 'down');
             setTimeout(function() {
                assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
 
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               assert.equal(ctrl._loadingState, null);
                done();
             }, 100);
          }, 100);
@@ -779,7 +784,10 @@ define([
 
          setTimeout(function() {
             lists.BaseControl._private.loadToDirection(ctrl, 'up');
+
+            assert.equal(ctrl._loadingState, 'up');
             setTimeout(function() {
+               assert.equal(ctrl._loadingState, null);
                assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                done();
             }, 100);
@@ -2632,6 +2640,7 @@ define([
                       multiSelectStatus: false,
                       item: {}
                    },
+                   updated = false,
                    childEvent = {
                       nativeEvent: {
                          direction: 'left'
@@ -2639,20 +2648,23 @@ define([
                    };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg).addCallback(function() {
-                  assert.isFalse(instance._canUpdateItemsActions);
                   instance._children = {
                      itemActionsOpener: {
                         close: () => {}
                      },
+                     itemActions: {
+                        updateItemActions: () => {
+                           updated = true;
+                        }
+                     },
                      selectionController: {
-                        onCheckBoxClick: function() {
+                        onCheckBoxClick: function () {
                         }
                      }
                   };
 
                   instance._listSwipe({}, itemData, childEvent);
-                  assert.isTrue(instance._canUpdateItemsActions);
-
+                  assert.isTrue(updated);
                   done();
                });
                return done;
@@ -2691,27 +2703,56 @@ define([
             });
          });
 
+         it('_onAfterBeginEdit parametrs', function () {
+            var
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                item = {},
+                instance = new lists.BaseControl(cfg);
+
+            instance._notify = (eventName, args) => {
+               assert.equal('afterBeginEdit', eventName);
+               assert.equal(item, args[0]);
+               assert.isTrue(args[1]);
+               return true;
+            };
+
+            let isNotified = instance._onAfterBeginEdit({}, item, true);
+            assert.isTrue(isNotified);
+         });
+
          it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var
-               cfg = {
-                  viewName: 'Controls/List/ListView',
-                  viewConfig: {
-                     idProperty: 'id'
-                  },
-                  viewModelConfig: {
-                     items: [],
-                     idProperty: 'id'
-                  },
-                  viewModelConstructor: lists.ListViewModel,
-                  source: source
-               },
-               instance = new lists.BaseControl(cfg),
-               itemData,
-               childEvent = {
-                  nativeEvent: {
-                     direction: 'left'
-                  }
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                updated = false,
+                instance = new lists.BaseControl(cfg),
+                itemData,
+                childEvent = {
+                   nativeEvent: {
+                      direction: 'left'
+                   }
                };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
@@ -2719,6 +2760,11 @@ define([
                   itemActionsOpener: {
                      close: function() {
                         callBackCount++;
+                     }
+                  },
+                  itemActions: {
+                     updateItemActions: () => {
+                        updated = true;
                      }
                   },
                   selectionController: {
@@ -2739,6 +2785,7 @@ define([
                      direction: 'right'
                   }
                };
+               assert.isTrue(updated);
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
@@ -2901,6 +2948,39 @@ define([
                });
             });
          });
+      });
+
+      it('updateVirtualWindowIfNeed', async function () {
+
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id',
+                },
+                viewModelConstructor: lists.ListViewModel,
+                virtualScrolling: true,
+                virtualPageSize: 2,
+                virtualSegmentSize: 1,
+                navigation: { view: 'infinity' },
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._loadTriggerVisibility = {
+            up: false,
+            down: true
+         };
+         instance._sourceController.hasMoreData = () => false;
+
+         lists.BaseControl._private.updateVirtualWindow(instance, 'up');
+
+         assert.isTrue(instance._checkShouldLoadToDirection);
+         instance._afterUpdate(cfg);
+         assert.isFalse(instance._checkShouldLoadToDirection);
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {

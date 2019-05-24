@@ -11,7 +11,7 @@ import dataSource = require('Controls/dataSource');
     * @category FormController
     * @class Controls/_form/FormController
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IFormController
     * @demo Controls-demo/Popup/Edit/Opener
     * @control
@@ -443,6 +443,7 @@ import dataSource = require('Controls/dataSource');
                   return arg;
                });
                res.addErrback((error: Error) => {
+                  updateDef.errback(error);
                   return self._processError(error, dataSource.error.Mode.dialog);
                });
             } else {

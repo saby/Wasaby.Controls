@@ -217,6 +217,29 @@ define([
          assert.isFalse(rootChanged);
       });
 
+      it('_beforeMount', function() {
+         let instance = new explorerMod.View();
+         let path = new collection.RecordSet({
+            rawData: [
+               { id: 1, title: 'item1' }
+            ],
+            idProperty: 'id'
+         });
+         let cfg = { items: {
+               getMetaData: () => {
+                  return { path: path };
+               }
+            }
+         };
+
+         instance._beforeMount(cfg);
+         assert.equal(instance._breadCrumbsItems.length, 1);
+
+         path.clear();
+         instance._beforeMount(cfg);
+         assert.equal(instance._breadCrumbsItems, null);
+      });
+
       it('_onBreadCrumbsClick', function() {
          var
             testBreadCrumbs = new collection.RecordSet({

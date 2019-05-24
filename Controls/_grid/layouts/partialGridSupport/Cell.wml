@@ -4,7 +4,6 @@
             colspanCurrentNode="{{_options.colspanCurrentNode}}"
 
             attr:data-r="{{ _options.itemData.index }}"
-            attr:style="{{ _options.currentColumn.gridCellStyles }}"
             attr:class="{{ getCellClasses() }}"
 
             on:click="_callHandler(_options.itemData.dispItem)"

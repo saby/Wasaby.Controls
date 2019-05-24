@@ -1,6 +1,6 @@
 import Controller = require('Controls/_validate/Controller');
 import template = require('wml!Controls/_validate/Input');
-      
+
 
       export = Controller.extend({
          _template: template,
@@ -21,8 +21,8 @@ import template = require('wml!Controls/_validate/Input');
          _inputCompletedHandler: function(event, value) {
             this._notify('inputCompleted', [value]);
          },
-         _afterUpdate: function() {
-            if (this._shouldValidate) {
+         _afterUpdate: function(oldOptions) {
+            if (this._shouldValidate || this._options.value !== oldOptions.value) {
                this._shouldValidate = false;
                this.validate();
             }

@@ -45,7 +45,7 @@ define([
             assert.notEqual(beforeMountResult, true);
             resolve();
          }).catch((error) => {
-               done(error);
+            done(error);
          });
 
          let p3 = new Promise((resolve) => {
@@ -60,7 +60,7 @@ define([
                beforeMountResult instanceof Deferred ||
                beforeMountResult instanceof Promise
             );
-            beforeMountResult.then(({data}) => {
+            beforeMountResult.then(({ data }) => {
                assert.equal(data, true);
                resolve();
             }).catch((error) => {
@@ -77,7 +77,7 @@ define([
                beforeMountResult instanceof Deferred ||
                beforeMountResult instanceof Promise
             );
-            beforeMountResult.then(({data}) => {
+            beforeMountResult.then(({ data }) => {
                assert.equal(data, true);
                resolve();
             });
@@ -187,6 +187,20 @@ define([
          FC.destroy();
       });
 
+      it('FormController update', () => {
+         let FC = new form.Controller();
+         let validation = {
+            submit: () => (new Deferred()).callback({})
+         };
+         let crud = {
+            update: () => (new Deferred()).errback()
+         };
+         FC._children = { crud, validation };
+         FC._processError = () => {};
+         let updateDeferred = FC._update();
+         assert.equal(updateDeferred.isReady(), true);
+      });
+
       it('beforeUnmount', () => {
          let isDestroyCall = false;
          let dataSource = {
@@ -196,7 +210,7 @@ define([
             }
          };
          let FC = new form.Controller();
-         FC.saveOptions({dataSource});
+         FC.saveOptions({ dataSource });
          FC._source = dataSource;
          FC._record = {
             getId: () => 'id1'
@@ -243,9 +257,9 @@ define([
             return new Component.Controller();
          };
          let name = 'deletesuccessed',
-             args = {},
-             sandbox = sinon.sandbox.create(),
-             component = createComponent(form);
+            args = {},
+            sandbox = sinon.sandbox.create(),
+            component = createComponent(form);
 
          sandbox.stub(component, '_notifyToOpener');
          sandbox.stub(component, '_notify');

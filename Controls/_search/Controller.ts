@@ -97,8 +97,10 @@ var _private = {
          options.searchParam !== newOptions.searchParam ||
          options.minSearchLength !== newOptions.minSearchLength;
    },
-   itemOpenHandler: function () {
-      _private.getSearchController(this).abort();
+   itemOpenHandler: function(root:string|number|null):void {
+      if (root !== null) {
+         _private.getSearchController(this).abort();
+      }
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
@@ -129,7 +131,7 @@ var _private = {
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @author Герасимов А.М.

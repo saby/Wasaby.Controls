@@ -171,7 +171,7 @@
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
-              source="{{_createMemory(_hierarchyMultiItems)}}"
+              source="{{_createMemory(_multiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__levels"
               tooltip="Document">
       </Controls.dropdown:Button>
@@ -186,7 +186,6 @@
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
-              itemTemplateProperty="myTemplate"
               source="{{_createMemory(_hierarchyMultiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__levelsComments">
       </Controls.dropdown:Button>
@@ -257,7 +256,7 @@
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
-              source="{{_createMemory(_hierarchyMultiItems)}}"
+              source="{{_createMemory(_multiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__bottom-right"
               tooltip="Document">
       </Controls.dropdown:Button>
@@ -273,7 +272,7 @@
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
-              source="{{_createMemory(_hierarchyMultiItems)}}"
+              source="{{_createMemory(_multiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__top-right"
               tooltip="Document">
       </Controls.dropdown:Button>

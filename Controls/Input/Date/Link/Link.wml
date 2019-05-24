@@ -9,9 +9,7 @@
          attr:class="controls-DateLink__view"
       />
 
-      <Controls.popup:Sticky name="opener"
-                                    template="SBIS3.CONTROLS/Date/RangeBigChoose"
-                                    closeOnOutsideClick="{{true}}">
+      <Controls.popup:Sticky name="opener" closeOnOutsideClick="{{true}}">
       </Controls.popup:Sticky>
    </div>
 </div>

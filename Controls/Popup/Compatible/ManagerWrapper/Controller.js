@@ -17,6 +17,12 @@ define('Controls/Popup/Compatible/ManagerWrapper/Controller', [], function() {
       getGlobalPopup: function() {
          return this._globalPopup;
       },
+      registerGlobalPopupOpeners: function(GlobalPopupOpeners) {
+         this._globalPopupOpeners = GlobalPopupOpeners;
+      },
+      getGlobalPopupOpeners: function() {
+         return this._globalPopupOpeners;
+      },
       scrollHandler: function() {
          if (this._managerWrapper) {
             this._managerWrapper._scrollHandler();

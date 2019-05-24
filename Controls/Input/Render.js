@@ -1,6 +1,6 @@
 define('Controls/Input/Render',
-   ['Controls/_input/Render'],
+   ['Controls/input'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.Render;
    });

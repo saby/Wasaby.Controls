@@ -14,6 +14,8 @@
  * @css @background-color_CloseButton_primary_untransparent Background of close button with options viewMode 'toolButton' and transparent false.
  * @css @background-color_CloseButton-primary-untransparent_active Background of close button in active state with options viewMode 'toolButton' and transparent false.
  * @css @background-color_CloseButton-primary-untransparent_hovered Background of close button in hovered state with options viewMode 'toolButton' and transparent false.
+ * @css @background-color_CloseButton-primary-transparent_active Background of close button in active state with options viewMode 'toolButton' and transparent true.
+ * @css @background-color_CloseButton-primary-transparent_hovered Background of close button in hovered state with options viewMode 'toolButton' and transparent true.
  *
  * @css @border-color_CloseButton_toolButton Border color of close button with option viewMode 'toolButton'.
  * @css @border-color_CloseButton_toolButton_hover Border color of close button in hover state with option viewMode 'toolButton'.

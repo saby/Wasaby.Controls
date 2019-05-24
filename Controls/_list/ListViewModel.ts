@@ -120,7 +120,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-        itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
         itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
@@ -374,7 +373,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setHoveredItem: function(item){
         this._hoveredItem = item;
-        this._nextModelVersion(true);
+        this._nextModelVersion(true, 'hoveredItemChanged');
     },
 
     getHoveredItem: function () {
@@ -407,7 +406,22 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
-    _onBeginCollectionChange: function() {
+    _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        var
+           self = this;
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+            // TODO KINGO. При удалении элементов очищаем закешированные для них операции над записью. Тем самым:
+            // а) избавляемся от утечек (не храним в памяти лишние ссылки);
+            // б) при создании записи с таким же ID мы сгенерим для неё новые операции над записью, а не переиспользуем старые.
+            // https://online.sbis.ru/opendoc.html?guid=905c3018-384a-4587-845c-aca5dc51944b
+            removedItems.forEach(function(removedItem) {
+                var
+                   removedItemContents = removedItem.getContents();
+                if (removedItemContents.get) {
+                    delete self._actions[removedItemContents.get(self._options.keyProperty)];
+                }
+            });
+        }
         _private.updateIndexes(this, 0, this.getCount());
     },
 

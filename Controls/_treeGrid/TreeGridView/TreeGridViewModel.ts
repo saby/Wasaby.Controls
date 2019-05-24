@@ -14,23 +14,9 @@ var _private = {
 
     // region only for browsers with partial grid support
 
-    // Using util for calculating real group-rows' index on display considering footers, headers, results
-    calcGroupRowIndex: function (self, current): number {
-        let groupItem = self._model.getDisplay().at(current.index);
-
-        return RowIndexUtil.calcGroupRowIndex(
-            groupItem,
-            self._model.getDisplay(),
-            !!self.getHeader(),
-            self.getResultsPosition(),
-            self._model.getHasMoreStorage(),
-            self._model.getHierarchyRelation()
-        );
-    },
-
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = _private.calcGroupRowIndex(self, current);
+        current.rowIndex = RowIndexUtil.calcRowIndexByItem.apply(null, _private.getArgsForRowIndexUtil(self, self._model.getDisplay().at(current.index)));
         current.gridGroupStyles = GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',
@@ -40,6 +26,18 @@ var _private = {
                 name: '-ms-grid-row',
                 value: current.rowIndex+1
             }
+        ]);
+    },
+
+    getArgsForRowIndexUtil: function(self, item) {
+        return [item].concat([
+            self._model.getDisplay(),
+            !!self.getHeader(),
+            self.getResultsPosition(),
+            self._model.getHierarchyRelation(),
+            self._model.getHasMoreStorage(),
+            self._options.nodeFooterTemplate,
+            self.getExpandedItems()
         ]);
     },
 
@@ -69,18 +67,6 @@ var _private = {
                 value: columnsCount - 1
             },
         ]);
-    },
-
-    // Using util for calculating real rows' index on display considering footers, headers, results
-    calcRowIndex: function (self, current) {
-        return RowIndexUtil.calcRowIndexByKey(
-            current.key,
-            self.getDisplay(),
-            !!self.getHeader(),
-            self.getResultsPosition(),
-            self._model._hierarchyRelation,
-            self._model.getHasMoreStorage()
-        );
     }
     // endregion
 
@@ -141,7 +127,7 @@ var
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
                 } else {
-                    current.rowIndex = _private.calcRowIndex(this, current);
+                    current.rowIndex = this._calcRowIndex(current);
                 }
             }
 
@@ -203,6 +189,18 @@ var
         },
         _onNodeRemoved: function (event, nodeId) {
             this._notify('onNodeRemoved', nodeId);
+        },
+
+        _calcRowIndex: function(current):number {
+            var index:number;
+
+            if (current.isGroup) {
+                index = RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index), this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            } else if (current.index !== -1) {
+                index = RowIndexUtil.calcRowIndexByKey.apply(null, _private.getArgsForRowIndexUtil(this, current.key));
+            }
+
+            return index;
         },
         setHasMoreStorage: function (hasMoreStorage) {
             this._model.setHasMoreStorage(hasMoreStorage);

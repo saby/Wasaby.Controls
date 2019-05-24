@@ -1,7 +1,7 @@
 define(['Controls/heading'], function(heading) {
    'use strict';
    var separator;
-   describe('Controls/Heading/BackButton', function() {
+   describe('Controls/_heading/BackButton', function() {
       it('_beforeMount', function() {
          var backB = new heading.Back(),
             opt = {

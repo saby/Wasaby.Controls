@@ -1,12 +1,10 @@
 define([
    'Env/Env',
    'Controls/scroll',
-   'Controls/StickyHeader/Utils',
    'Core/core-merge'
 ], function(
    Env,
    scroll,
-   stickyUtils,
    coreMerge
 ) {
    'use strict';
@@ -24,7 +22,7 @@ define([
       },
       getRegisterObject = function(cfg) {
          return {
-            id: stickyUtils.getNextId(),
+            id: scroll.Utils.getNextId(),
             position: (cfg && cfg.position) || 'top',
             inst: {
                getOffset: function() {

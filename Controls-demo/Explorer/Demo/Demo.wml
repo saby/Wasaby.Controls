@@ -98,7 +98,7 @@
       <ws:itemTemplate>
          <ws:partial
                      shadowVisibility="onhover"
-                     template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                     template="Controls/tile:ItemTemplate"
                      hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
       </ws:itemTemplate>
    </Controls.tile:View>

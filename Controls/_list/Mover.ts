@@ -222,6 +222,7 @@ var _private = {
  * @class Controls/_list/Mover
  * @extends Core/Control
  * @mixes Controls/interface/IMovable
+ * @mixes Controls/_list/interface/IHierarchy
  * @control
  * @public
  * @author Авраменко А.С.

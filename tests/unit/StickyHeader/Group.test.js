@@ -1,10 +1,8 @@
 define([
    'Controls/scroll',
-   'Controls/StickyHeader/Utils',
    'Core/core-merge'
 ], function(
    scroll,
-   stickyUtils,
    coreMerge
 ) {
 
@@ -29,7 +27,7 @@ define([
          it('should set correct header id', function() {
             const component = createComponent(scroll.Group, options);
             component._afterMount();
-            assert.strictEqual(component._index, stickyUtils._lastId);
+            assert.strictEqual(component._index, scroll.Utils._lastId);
          });
       });
 
@@ -40,8 +38,8 @@ define([
          it('should add fixed header to list of fixed headers', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerIdTop = stickyUtils.getNextId(),
-               headerIdBottom = stickyUtils.getNextId();
+               headerIdTop = scroll.Utils.getNextId(),
+               headerIdBottom = scroll.Utils.getNextId();
 
             component._fixedHandler(event, { fixedPosition: 'top', id: headerIdTop });
             assert.lengthOf(component._stickyHeadersIds.top, 1);
@@ -57,8 +55,8 @@ define([
          it('should remove fixed header from list of fixed headers on header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerIdTop = stickyUtils.getNextId(),
-               headerIdBottom = stickyUtils.getNextId();
+               headerIdTop = scroll.Utils.getNextId(),
+               headerIdBottom = scroll.Utils.getNextId();
 
             component._stickyHeadersIds.top.push(headerIdTop);
             component._stickyHeadersIds.bottom.push(headerIdBottom);
@@ -75,7 +73,7 @@ define([
          it('should generate event on first header fixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = stickyUtils.getNextId();
+               headerId = scroll.Utils.getNextId();
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
@@ -102,11 +100,11 @@ define([
                component = createComponent(scroll.Group, options);
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
@@ -115,7 +113,7 @@ define([
          it('should generate event on last header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = stickyUtils.getNextId();
+               headerId = scroll.Utils.getNextId();
 
             component._fixedHandler(event,
                 { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
@@ -143,10 +141,10 @@ define([
          it('should not generate event on not last header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = stickyUtils.getNextId();
+               headerId = scroll.Utils.getNextId();
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
             component._fixedHandler(event,
                 { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
 

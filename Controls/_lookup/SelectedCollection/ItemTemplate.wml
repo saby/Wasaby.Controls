@@ -1,4 +1,4 @@
-<div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}">
+<div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}} controls-SelectedCollection__item_layout_{{_options.itemsLayout}}">
    <span class="controls-SelectedCollection__item__caption-wrapper controls-SelectedCollection__item__caption-wrapper-{{itemsLayout}}">
       <ws:partial template="{{contentTemplate}}"
                   item="{{item}}"

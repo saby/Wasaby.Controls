@@ -4,7 +4,7 @@ import template = require('wml!Controls/Container/Data/Data');
 import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
-import source = require('Types/source');
+import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
 
 import {RecordSet} from 'Types/collection'
@@ -44,12 +44,13 @@ type GetSourceResult = {
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {
-         isEqualItems: function(oldList, newList) {
+         isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
             return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          },
+
          updateDataOptions: function(self, dataOptions) {
             function reducer(result, optName) {
                if (optName === 'source' && self._source) {
@@ -146,15 +147,20 @@ type GetSourceResult = {
 
          _template: template,
 
-         _beforeMount: function(options, context, receivedState) {
-            var self = this;
+         _beforeMount: function(options, context, receivedState:GetSourceResult|undefined):Deferred<GetSourceResult>|void {
+            let self = this;
+            let source:ICrud;
+
             _private.resolveOptions(this, options);
+
             if (receivedState) {
+               source = options.source instanceof sourceLib.PrefetchProxy ? options.source.getOriginal() : options.source;
+
                // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new source.PrefetchProxy({target: options.source})
+                  source: new sourceLib.PrefetchProxy({target: source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {

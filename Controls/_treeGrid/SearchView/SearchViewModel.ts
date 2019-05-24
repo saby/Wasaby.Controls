@@ -1,6 +1,7 @@
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 import TreeGridDefaultItemTemplate = require('wml!Controls/_treeGrid/TreeGridView/Item');
 import {SearchItemsUtil} from 'Controls/list';
+import {Record} from 'Types/entity'
 
 var
    SearchViewModel = TreeViewModel.extend({
@@ -17,17 +18,41 @@ var
          }
          return filter;
       },
+      getItemActions(item) {
+         if (!!item.forEach) {
+            return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);
+         }
+         return SearchViewModel.superclass.getItemActions.call(this, item);
+      },
+      getItemById(id) {
+         return this._items.getRecordById(id);
+      },
       getItemDataByItem() {
          var
             self = this,
             data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments);
-         data.resolveItemTemplate = function(item) {
-            if (item.getId && self._options.itemTemplate) {
+         // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
+         data.breadCrumbs = !!data.item.forEach;
+         data.resolveItemTemplate = function(itemData) {
+            if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;
             }
             return TreeGridDefaultItemTemplate;
          };
          return data;
+      },
+
+      _isGroup: function(item:Record):boolean {
+          let result;
+
+          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
+          if (!!item.forEach) {
+              result = false;
+          } else {
+              result = SearchViewModel.superclass._isGroup.call(this, item);
+          }
+
+          return result;
       }
    });
 

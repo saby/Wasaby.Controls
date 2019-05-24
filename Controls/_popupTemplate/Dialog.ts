@@ -127,7 +127,7 @@ import 'css!theme?Controls/popupTemplate';
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'toolButton'
+            closeButtonViewMode: 'popup'
          };
       };
 

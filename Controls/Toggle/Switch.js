@@ -1,6 +1,6 @@
 define('Controls/Toggle/Switch',
-   ['Controls/_toggle/Switch'],
-   function(Control) {
+   ['Controls/toggle'],
+   function(toggle) {
       'use strict';
-      return Control;
+      return toggle.Switch;
    });

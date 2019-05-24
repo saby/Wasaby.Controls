@@ -1,6 +1,6 @@
 define('Controls/Toggle/Checkbox',
-   ['Controls/_toggle/Checkbox'],
-   function(Control) {
+   ['Controls/toggle'],
+   function(toggle) {
       'use strict';
-      return Control;
+      return toggle.Checkbox;
    });

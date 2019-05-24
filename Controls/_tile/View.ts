@@ -12,7 +12,7 @@ import {TreeControl} from 'Controls/treeGrid';
  *
  * @class Controls/_tile/View
  * @extends Controls/list:View
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped

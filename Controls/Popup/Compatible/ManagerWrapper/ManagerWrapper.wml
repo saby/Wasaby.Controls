@@ -6,15 +6,8 @@
                <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                   <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.popup:Manager name="Manager"
-                                                on:openInfoBox="PopupGlobal._openInfoBoxHandler()"
-                                                on:closeInfoBox="PopupGlobal._closeInfoBoxHandler()"
-                                                on:forceCloseInfoBox="PopupGlobal._forceCloseInfoBoxHandler()"
-                                                on:openPreviewer="PopupGlobal._openPreviewerHandler()"
-                                                on:cancelPreviewer="PopupGlobal._cancelPreviewerHandler()"
-                                                on:isPreviewerOpened="PopupGlobal._isPreviewerOpenedHandler()"
-                                                on:closePreviewer="PopupGlobal._closePreviewerHandler()"
-                                                on:managerPopupBeforeDestroyed="_beforePopupDestroyedHandler()">
+                        <Controls.Popup.Global name="PopupGlobal">
+                        <Controls.popup:Manager name="Manager">
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
@@ -23,6 +16,7 @@
                               </Controls.dragnDrop:Controller>
                            </Controls.Application.TouchDetector>
                         </Controls.popup:Manager>
+                        </Controls.Popup.Global>
                      </Controls.event:Register>
                   </Controls.event:Register>
                </Controls.event:Register>
@@ -30,5 +24,4 @@
          </Controls.event:Register>
       </Controls.event:Register>
    </Controls.event:Register>
-   <Controls.Popup.Global name="PopupGlobal"></Controls.Popup.Global>
 </div>

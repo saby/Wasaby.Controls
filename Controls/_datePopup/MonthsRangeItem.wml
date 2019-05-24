@@ -1,8 +1,8 @@
-<div>
+<div class="controls-PeriodDialog-MonthsRange" data-date="{{ _formatDate(_options.item.months[0], 'YYYY.M') }}">
    <div class="controls-PeriodDialog-MonthsRange__header">
       {{ _formatDate(_options.item.months[0], 'YYYY') }}
    </div>
-   <div class="controls-PeriodDialog-MonthsRange__body">
+   <div class="controls-PeriodDialog-MonthsRange__body" data-date="{{ _formatDate(_options.item.months[0], 'YYYY.M') }}">
       <div class="controls-PeriodDialog-MonthsRange__halfYears">
          <div
             for="halfYearIndex as halfYear in _yearStructure"

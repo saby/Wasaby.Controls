@@ -41,7 +41,7 @@ define(
          return hMenu;
       };
 
-      describe('Controls/History/Menu', function() {
+      describe('Controls/_history/Menu', function() {
          it('_private.getMetaPinned', function() {
             var item = new entity.Model({
                rawData: {
@@ -84,7 +84,8 @@ define(
                }),
                parentProperty: 'parent'
             });
-            newConfig.source.update = function() {
+            newConfig.source.update = function(item) {
+               item.set('pinned', true);
                return Deferred.success(false);
             };
             var menu = getHistoryMenu(newConfig);
@@ -102,11 +103,13 @@ define(
                   }
                }
             };
-            menu._onPinClickHandler('pinClicked', [new entity.Model({
+            let pinnedItem = new entity.Model({
                rawData: {
                   pinned: false
                }
-            })]);
+            });
+            menu._onPinClickHandler('pinClicked', [pinnedItem]);
+            assert.isFalse(pinnedItem.get('pinned'));
          });
       });
    }

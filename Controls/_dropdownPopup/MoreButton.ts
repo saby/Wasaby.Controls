@@ -34,6 +34,13 @@ var MoreButton = Control.extend([], {
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate,
+            handlers: {
+                // Для совместимости.
+                // Старая система фокусов не знает про существование VDOM окна и не может восстановить на нем фокус после закрытия старой панели.
+                onAfterClose: function () {
+                    self.activate();
+                }
+            },
             opener: this
         });
     },

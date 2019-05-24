@@ -38,10 +38,12 @@
    overflow: hidden;
    display: inline-flex;
    font-size: @font-size_FastFilter-text;
+   flex-shrink: 1;
 }
 
 .controls-FastFilter__text_theme_@{themeName} {
   .text-overflow();
+   flex-shrink: 1;
 }
 
 .controls-FastFilter__hasMoreText_theme_@{themeName} {
@@ -59,12 +61,14 @@
 .controls-FastFilter_theme_@{themeName} {
    display: flex;
    height: @height_FastFilter;
+   flex-shrink: 1;
 }
 
 .controls-FastFilter__wrapper_theme_@{themeName} {
    display: inline-flex;
    align-items: center;
    overflow: hidden;
+   flex-shrink: 1;
 }
 
 .controls-FastFilter__wrapper_state_enabled_theme_@{themeName} {
@@ -76,6 +80,7 @@
    display: inline-flex;
    align-items: center;
    min-width: 0;
+   flex-shrink: 1;
 }
 
 .ws-is-no-touch {

@@ -1,12 +1,11 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
-
+import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import stickyUtil = require('Controls/StickyHeader/Utils');
-import {calcFooterRowIndex} from "./utils/RowIndexUtil";
+import {calcFooterRowIndex} from './utils/RowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -53,19 +52,19 @@ var
           if (columnIndex === multiselectOffset) {
               if (isBreadCrumbs) {
                  if (GridLayoutUtil.isNoSupport) {
-                    return ' colspan: 1';
+                    return ' colspan: 1;';
                  } else if (GridLayoutUtil.isPartialSupport) {
-                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (multiselectOffset + 2);
+                        return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
                  } else {
-                    return ' grid-column: 1 / ' + (multiselectOffset + 2);
+                    return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
               } else {
                  if (GridLayoutUtil.isNoSupport) {
-                    return ' colspan: ' + (columnsLength - multiselectOffset);
+                    return ` colspan: ${columnsLength - multiselectOffset};`;
                  } else if (GridLayoutUtil.isPartialSupport) {
-                    return ' -ms-grid-column-start: 1; -ms-grid-column-end: ' + (columnsLength + 1);
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
                  } else {
-                    return ' grid-column: ' + (multiselectOffset+1) + ' / ' + (columnsLength + 1);
+                    return ` grid-column: ${multiselectOffset+1} / ${columnsLength + 1};`;
                  }
               }
           }
@@ -108,32 +107,6 @@ var
             return preparedClasses;
         },
 
-        isFirstInGroup: function(self, dispItem) {
-
-            var
-                item = dispItem.item,
-                display = self._model._display,
-                groupingKeyCallback = self._options.groupingKeyCallback,
-                currentItemGroup,
-                currentGroupItems;
-
-            // If grouping is not enabled.
-            if (!groupingKeyCallback) {
-                return false;
-            }
-
-            // Getting all items of the current items' group.
-            currentItemGroup = groupingKeyCallback(item);
-            currentGroupItems = display.getGroupItems(currentItemGroup);
-
-            // If current item is out of any group.
-            if (!currentGroupItems || currentGroupItems.length === 0) {
-                return false;
-            }
-
-
-            return item === currentGroupItems[0].getContents();
-        },
         prepareRowSeparatorClasses: function(current) {
             var
                 result = '',
@@ -356,7 +329,7 @@ var
                 if (self.getCount() > 1 && ((column.width && column.width === 'auto') || !column.width)) {
                     columnsWidths.push(column.realWidth || '1fr')
                 } else {
-                    columnsWidths.push(column.width);
+                    columnsWidths.push(column.width || '1fr');
                 }
             });
 
@@ -371,17 +344,8 @@ var
             return styles;
         },
 
-        calcRowIndexByKey: function(self, key): number {
-            return RowIndexUtil.calcRowIndexByKey(key, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition())
-        },
-
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader());
-        },
-
-        calcGroupRowIndex: function (self, current): number {
-            let groupItem = self._model.getDisplay().at(current.index);
-            return RowIndexUtil.calcGroupRowIndex(groupItem, self._model.getDisplay(), !!self.getHeader(), self.getResultsPosition());
+            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
         },
 
         getFooterStyles: function (self): string {
@@ -392,7 +356,7 @@ var
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
                     hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
-                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader());
+                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader(), !!self._options.emptyTemplate);
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -406,19 +370,12 @@ var
 
             if (GridLayoutUtil.isPartialSupport) {
                 let
-                    columnsLength = self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0),
+                    multiselectOffset = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
                     rowIndex = 0;
-
-                styles += GridLayoutUtil.toCssString([
-                    {
-                        name: '-ms-grid-column-span',
-                        value: columnsLength
-                    },
-                ]);
 
                 rowIndex += self.getHeader() ? 1 : 0;
                 rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                styles += GridLayoutUtil.getCellStyles(rowIndex, 0);
+                styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
             }
 
             return styles;
@@ -482,6 +439,9 @@ var
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
+                }
+                if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialSupport){
+                    this._nextModelVersion();
                 }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
@@ -920,6 +880,16 @@ var
             this._model.goToNext();
         },
 
+        _calcRowIndex: function(current) {
+            if (current.isGroup) {
+                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            } else if (current.index !== -1) {
+                return RowIndexUtil.calcRowIndexByKey(current.key,
+                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            }
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
@@ -950,11 +920,7 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (current.isGroup) {
-                current.rowIndex = _private.calcGroupRowIndex(self, current);
-            } else if (current.index !== -1) {
-                current.rowIndex = _private.calcRowIndexByKey(self, current.key);
-            }
+            current.rowIndex = this._calcRowIndex(current);
 
             if (GridLayoutUtil.isPartialSupport) {
                 _private.prepareItemDataForPartialSupport(this, current);
@@ -965,7 +931,7 @@ var
                 return current;
             }
 
-            current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
+            current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
 
             if (current.isFirstInGroup) {
                 current.rowSeparatorVisibility = false;
@@ -1123,8 +1089,11 @@ var
 
         _setEditingItemData: function(itemData) {
             let data = itemData ? itemData : this._model._editingItemData;
-            if (GridLayoutUtil.isPartialSupport) {
-                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex || (data.index + 1));
+            if (GridLayoutUtil.isPartialSupport && data) {
+                if (!data.rowIndex) {
+                    data.rowIndex = data.index + 1;
+                }
+                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex);
             }
             this._model._setEditingItemData(itemData);
         },
@@ -1304,6 +1273,30 @@ var
 
         getHandlersForPartialSupport: function(): {[key: string]: Function} {
             return this._eventHandlersForPartialSupport;
+        },
+
+        _isFirstInGroup: function(item):boolean {
+            var display = this._model._display,
+                groupingKeyCallback = this._options.groupingKeyCallback,
+                currentItemGroup,
+                currentGroupItems;
+
+            // If grouping is not enabled.
+            if (!groupingKeyCallback) {
+                return false;
+            }
+
+            // Getting all items of the current items' group.
+            currentItemGroup = groupingKeyCallback(item);
+            currentGroupItems = display.getGroupItems(currentItemGroup);
+
+            // If current item is out of any group.
+            if (!currentGroupItems || currentGroupItems.length === 0) {
+                return false;
+            }
+
+
+            return item === currentGroupItems[0].getContents();
         },
 
         destroy: function() {

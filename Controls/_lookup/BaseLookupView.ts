@@ -180,16 +180,18 @@ var BaseLookupView = Control.extend({
     },
 
     _openInfoBox: function (event, config) {
-        config.maxWidth = this._container.offsetWidth;
+        config.width = this._container.offsetWidth;
         this._suggestState = false;
         this._infoboxOpened = true;
+        this._notify('openInfoBox', [config]);
     },
 
     _closeInfoBox: function () {
         this._infoboxOpened = false;
+        this._notify('closeInfoBox');
     },
 
-    _onClickShowSelector: function () {
+    _onClickShowSelector: function (event) {
         this._suggestState = false;
         this._notify('showSelector');
     },

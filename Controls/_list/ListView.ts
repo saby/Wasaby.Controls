@@ -73,8 +73,8 @@ var ListView = BaseControl.extend(
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             let pendingRedraw = false;
-            this._onListChangeFnc = () => {
-               if (!pendingRedraw) {
+            this._onListChangeFnc = (event, changesType) => {
+               if (changesType !== 'hoveredItemChanged' && !pendingRedraw) {
                   pendingRedraw = true;
                   scheduleCallbackAfterRedraw(
                      this,

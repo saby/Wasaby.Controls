@@ -10,8 +10,7 @@ import periodDialogUtils from './_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
-import 'css!theme?Controls/_datePopup/DatePopup';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.
@@ -216,6 +215,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._state = this._state === STATES.year ? STATES.month : STATES.year;
     },
 
+    _homeButtonClick: function () {
+        this._displayedDate = dateUtils.getStartOfMonth(new Date());
+    },
+
     _yearsRangeChanged: function (e, start, end) {
         _private.rangeChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
     },
@@ -273,9 +276,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _monthRangeMonthClick: function (e, date) {
+        this._displayedDate = date;
         this._toggleState();
-
-        // TODO: промотать месяца в режиме дней до месяца который выбрали.
     },
 
     _monthRangeFixedPeriodClick: function (e, start, end) {

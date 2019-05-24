@@ -106,5 +106,22 @@ define([
          });
       });
 
+      describe('_notifyInputCompleted', function() {
+         it('should generate inputCompleted event', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               startValue = new Date(2017, 11, 1),
+               endValue = new Date(2017, 11, 2),
+               component = calendarTestUtils.createComponent(dateRange.Input, cMerge({startValue: startValue, endValue: endValue}, options));
+
+            sandbox.stub(component, '_notify');
+
+            component._notifyInputCompleted(startValue, endValue);
+            sinon.assert.calledWith(component._notify, 'inputCompleted', [startValue, endValue, '01.12.2017', '02.12.2017']);
+
+            sandbox.restore();
+         });
+      });
+
    });
 });

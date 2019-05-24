@@ -13,7 +13,7 @@ import 'css!theme?Controls/filterPopup';
     * @class Controls/_filterPopup/Panel/PropertyGrid
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @control
     * @private
@@ -24,6 +24,7 @@ import 'css!theme?Controls/filterPopup';
     */
 
 
+   const observableItemProps = ['value', 'textValue', 'visibility'];
 
    var _private = {
       cloneItems: function(items) {
@@ -50,6 +51,31 @@ import 'css!theme?Controls/filterPopup';
             }
          });
          return result;
+      },
+
+      //Necessary for correct work of updating control, after update object in array.
+      //Binding on object property in array does not update control, if this property is not versioned.
+      observeProp: function(self, propName, obj) {
+         var value = obj[propName];
+
+         Object.defineProperty(obj, propName, {
+            set(newValue) {
+               value = newValue;
+               self._notify('itemsChanged', [self._items]);
+            },
+
+            get() {
+               return value;
+            }
+         })
+      },
+
+      observeItems: function(self, items) {
+         chain.factory(items).each(function(item) {
+            observableItemProps.forEach(function (propName) {
+               _private.observeProp(self, propName, item);
+            })
+         })
       }
    };
 
@@ -60,10 +86,17 @@ import 'css!theme?Controls/filterPopup';
          this._items = _private.cloneItems(options.items);
       },
 
+      _afterMount: function() {
+         _private.observeItems(this, this._items);
+      },
+
       _beforeUpdate: function(newOptions) {
          if (!isEqual(newOptions.items, this._items)) {
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
             this._items = _private.cloneItems(newOptions.items);
+            _private.observeItems(this, this._items);
+         } else {
+            this._changedIndex = -1;
          }
       },
 

@@ -90,8 +90,8 @@ import Env = require('Env/Env');
     *
     * @class Controls/_tabs/Buttons
     * @extends Core/Control
-    * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISingleSelectable
+    * @mixes Controls/_interface/ISource
     * @control
     * @public
     * @category List

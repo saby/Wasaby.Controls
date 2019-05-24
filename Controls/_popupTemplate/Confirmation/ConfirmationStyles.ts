@@ -7,7 +7,6 @@
  * @css @border-color_InformationPopup_danger Border color when option style is set to danger.
  * @css @border-color_InformationPopup_warning Border color when option style is set to warning.
  *
- * @css @spacing_InformationPopup-window Spacing between content and border.
  * @css @border-width_InformationPopup Border width.
  * @css @size_InformationPopup-shadow Size of shadow.
  * @css @color_InformationPopup-shadow Color of shadow.

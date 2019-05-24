@@ -3,7 +3,7 @@
  */
 define(
    [
-      
+
       'Controls/popup',
       'Types/collection',
       'Core/Deferred',
@@ -31,7 +31,7 @@ define(
       editOpener._beforeMount({});
       editOpener._options.items = dataRS;
 
-      describe('Controls/Popup/Opener/Edit', () => {
+      describe('Controls/_popup/Opener/Edit', () => {
          it('mode', () => {
             editOpener._beforeMount({});
             assert.equal(editOpener._openerTemplate, popup.Stack);
@@ -47,16 +47,18 @@ define(
          });
 
          it('get config', () => {
-            let record = dataRS.at(0);
+            let record = dataRS.at(0).clone();
             let meta = {
                record: record,
                key: '123'
             };
+            record.set('title', 'Rashford');
             var config = popup.Edit._private.getConfig(editOpener, meta);
             assert.equal(editOpener._linkedKey, record.getId());
             assert.notEqual(config.templateOptions.record, record); // by link
             assert.equal(config.templateOptions.key, '123');
             assert.equal(config.templateOptions.record.getId(), record.getId());
+            assert.equal(config.templateOptions.record.isChanged(), false);
          });
 
          it('onResult', () => {

@@ -39,7 +39,7 @@ Legend.getOptionTypes = function getOptionTypes() {
    };
 };
 
-Legend._theme = ['Controls/_progress/progress'];
+Legend._theme = ['Controls/progress'];
 
 export default Legend;
 

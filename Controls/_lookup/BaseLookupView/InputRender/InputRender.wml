@@ -1,4 +1,4 @@
-<Controls.Input.Render attr:title="{{_tooltip}}"
+<Controls.input:Render attr:title="{{_tooltip}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        style="{{_options.style}}"
@@ -28,4 +28,4 @@
                   attr:style="width: {{_options.inputWidth}}px;"
                   on:keyDown="_keyDownInput()"/>
    </ws:content>
-</Controls.Input.Render>
+</Controls.input:Render>

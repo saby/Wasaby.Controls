@@ -1,9 +1,7 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*",
-    "Controls/Container/Async",
-    "Controls/Container/Async/*"
+    "Controls/Application/*"
   ],
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
@@ -11,6 +9,12 @@
     "Controls/Application/AppData"
   ],
   "output": "controls-application.package.js"
+}, {
+  "include": [
+    "Controls/Container/Async",
+    "Controls/Container/Async/*"
+  ],
+  "output": "controls-container-async.package.js"
 }, {
   "include": [
     "Controls/Application/HeadDataContext",
@@ -105,5 +109,19 @@
     "wml!Controls/Selector/Suggest/Suggest"
   ],
   "output": "controls-selector.package.js"
-}
+}, {
+  "include": [
+    "Controls/SwitchableArea",
+    "Controls/_SwitchableArea/*",
+    "Controls/SwitchableArea/*"
+  ],
+  "output": "controls-switchable-area.package.js"
+},
+  {
+    "include": [
+      "Controls/EditableArea",
+      "Controls/_EditableArea/*"
+    ],
+    "output": "controls-editable-area.package.js"
+  }
 ]

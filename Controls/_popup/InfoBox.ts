@@ -252,14 +252,6 @@ import Env = require('Env/Env');
             }, self._options.hideDelay);
          },
 
-         _mousedownHandler: function(e, args) {
-            // we shouldn't close InfoBox, when the click event was on the container
-            if (!args.target.closest('.controls-InfoBox__popup')) {
-               this._close();
-            }
-         },
-
-
          /**
           * Open InfoBox
           * @function Controls/_popup/InfoBox#open

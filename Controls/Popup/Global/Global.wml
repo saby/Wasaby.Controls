@@ -1,5 +1,11 @@
-<div>
-   <Controls.popup:Previewer name="previewerOpener"/>
-   <Controls.popup:Infobox name="infoBoxOpener"/>
-   <Controls.popup:Dialog name="dialogOpener" on:close="_onDialogClosed()" />
-</div>
+<ws:partial template="{{_options.content}}" scope="{{ _options }}"
+            on:managerPopupBeforeDestroyed="_popupBeforeDestroyedHandler()"
+            on:serviceError="_openDialogHandler()"
+            on:openInfoBox="_openInfoBoxHandler()"
+            on:closeInfoBox="_closeInfoBoxHandler()"
+            on:forceCloseInfoBox="_forceCloseInfoBoxHandler()"
+            on:openPreviewer="_openPreviewerHandler()"
+            on:cancelPreviewer="_cancelPreviewerHandler()"
+            on:isPreviewerOpened="_isPreviewerOpenedHandler()"
+            on:closePreviewer="_closePreviewerHandler()"
+/>

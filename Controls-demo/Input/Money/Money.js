@@ -18,9 +18,10 @@ define('Controls-demo/Input/Money/Money',
          _beforeMount: function() {
             Money.superclass._beforeMount.apply(this, arguments);
 
-            this._componentOptions.value = '0.00';
+            this._componentOptions.value = '0';
             this._componentOptions.name = 'InputMoney';
             this._componentOptions.onlyPositive = false;
+            this._componentOptions._newValueBehavior = true;
 
             this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }

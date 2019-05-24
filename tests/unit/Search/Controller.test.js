@@ -233,6 +233,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
       });
 
+      it('itemOpenHandler', function() {
+         var searchController = getSearchController(defaultOptions);
+         var searchAborted = false;
+
+         //Controller moch
+         searchController._searchController = {
+            abort: function() {
+               searchAborted = true;
+            }
+         }
+
+         searchController._itemOpenHandler(null);
+         assert.isFalse(searchAborted);
+
+         searchController._itemOpenHandler('test');
+         assert.isTrue(searchAborted);
+      });
+
    });
 
 });

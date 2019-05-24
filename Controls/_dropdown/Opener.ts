@@ -89,7 +89,7 @@ var _private = {
  *
  * @class Controls/_dropdown/Opener
  * @mixes Controls/interface/IDropdownList
- * @extends Controls/Popup/Opener/Sticky
+ * @extends Controls/_popup/Opener/Sticky
  * @control
  * @public
  * @author Красильников А.С.
@@ -114,7 +114,7 @@ DropdownOpener._private = _private;
 DropdownOpener.getDefaultOptions = function () {
    return Merge(
       Sticky.getDefaultOptions(), {
-         closeOnTargetScroll: true,
+          actionOnScroll: 'close',
          _vdomOnOldPage: true
       });
 };

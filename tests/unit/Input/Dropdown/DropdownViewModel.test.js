@@ -180,6 +180,11 @@ define(
             viewModelSelection._options.selectedKeys = [null];
             viewModelSelection.updateSelection(rs.at(0));
             assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = [null];
+            viewModelSelection._options.selectedKeys = ['1'];
+            viewModelSelection.updateSelection(rs.at(0));
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
          });
          describe('Groups and separator', function() {
                let newConfig = {

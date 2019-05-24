@@ -172,6 +172,10 @@ define(
                   value: true,
                   resetValue: false,
                   visibility: false
+               },
+               {
+                  id: 'reseted',
+                  value: 'reset'
                }
             ];
             var resetedItems = [
@@ -191,12 +195,16 @@ define(
                   value: false,
                   resetValue: false,
                   visibility: false
+               },
+               {
+                  id: 'reseted',
+                  value: 'reset'
                }
             ];
             var panel2 = getFilterPanel({ items: changedItems });
             panel2._resetFilter();
-            assert.deepEqual({}, filterPopup.DetailPanel._private.getFilter(panel2._items));
-            assert.deepEqual(panel2._items, resetedItems);
+            assert.deepStrictEqual({'reseted': 'reset'}, filterPopup.DetailPanel._private.getFilter(panel2._items));
+            assert.deepStrictEqual(panel2._items, resetedItems);
             assert.isFalse(panel2._isChanged);
          });
 
@@ -204,6 +212,13 @@ define(
             var panel = getFilterPanel(config);
             panel._resetFilter();
             assert.isFalse(filterPopup.DetailPanel._private.isChangedValue(panel._items));
+            panel._items.push(
+               {
+                  id: 'reseted',
+                  value: 'reset'
+               });
+            panel._resetFilter();
+            assert.isFalse(filterPopup.Panel._private.isChangedValue(panel._items));
          });
 
          it('without add params', function() {

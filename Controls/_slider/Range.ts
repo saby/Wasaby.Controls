@@ -247,7 +247,7 @@ Range.getOptionTypes = function() {
       precision: entity.descriptor(Number)
    };
 }
-Range._theme = ['Controls/_slider/slider'];
+Range._theme = ['Controls/slider'];
 
 Range._private = _private;
 export default Range;

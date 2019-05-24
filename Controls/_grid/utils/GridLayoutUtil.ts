@@ -23,28 +23,17 @@ const isPartialSupport = supportStatus === SupportStatusesEnum.Partial;
 const isNoSupport = supportStatus === SupportStatusesEnum.None;
 
 
-function getCellStyles(rowIndex: number, columnIndex: number, rowSpan?: number, colSpan?: number): string {
+function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 1, colSpan: number = 1): string {
     let rules: Array<CssRule> = [
         {
             name: 'grid-column',
-            value: columnIndex + 1
-        },
-        {
-            name: 'grid-column-start',
-            value: columnIndex + 1
+            value: ((columnIndex + 1) + ' / ' + (columnIndex + 1 + colSpan))
         },
         {
             name: 'grid-row',
             value: rowIndex + 1
         }
     ];
-
-    if (colSpan) {
-        rules.push({
-            name: 'grid-column-end',
-            value: colSpan + columnIndex + 1
-        })
-    }
 
     if (detection.isIE) {
         rules.push(
@@ -55,14 +44,12 @@ function getCellStyles(rowIndex: number, columnIndex: number, rowSpan?: number, 
             {
                 name: '-ms-grid-row',
                 value: rowIndex + 1
-            }
-        );
-        if (colSpan) {
-            rules.push({
+            },
+            {
                 name: '-ms-grid-column-span',
                 value: colSpan
-            })
-        }
+            }
+        );
     }
     return toCssString(rules);
 }

@@ -1,3 +1,4 @@
+import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
@@ -53,29 +54,32 @@ var Component = Control.extend([], {
     },
 
     _openDialog: function (event) {
-        this._children.opener.open({
+        var cfg = {
             opener: this,
             target: this._container,
+            template: 'Controls/Date/PeriodDialog',
             className: 'controls-PeriodDialog__picker',
-            isCompoundTemplate: true,
-            horizontalAlign: {side: 'right'},
-            corner: {horizontal: 'left'},
+            horizontalAlign: { side: 'right' },
+            corner: { horizontal: 'left' },
             eventHandlers: {
-                onResult: this._onResult.bind(this)
+               onResult: this._onResult.bind(this)
             },
             templateOptions: {
-                startValue: this._rangeModel.startValue,
-                endValue: this._rangeModel.endValue,
-                selectionType: this._options.selectionType,
-                quantum: this._options.quantum,
-                headerType: 'input',
-                closeButtonEnabled: true,
-                rangeselect: true,
-                handlers: {
-                    onChoose: this._onResultWS3.bind(this)
-                }
+               startValue: this._rangeModel.startValue,
+               endValue: this._rangeModel.endValue,
+               selectionType: this._options.selectionType,
+               quantum: this._options.quantum,
+               headerType: 'input',
+               closeButtonEnabled: true,
+               rangeselect: true
             }
-        });
+        };
+        if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
+            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.isCompoundTemplate = true;
+            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
+        }
+        this._children.opener.open(cfg);
     },
 
     _onResultWS3: function (event, startValue, endValue) {
@@ -83,19 +87,10 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
-        var converter = new StringValueConverter({
-               mask: this._options.mask,
-               replacer: this._options.replacer
-            });
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
-        this._notify('inputCompleted', [
-            startValue,
-            endValue,
-            converter.getStringByValue(startValue),
-            converter.getStringByValue(endValue)
-        ]);
+        this._notifyInputCompleted();
     },
 
     // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
@@ -117,7 +112,21 @@ var Component = Control.extend([], {
             this._children.endValueField.activate();
             datetimeEnd.setSelectionRange(0, 0);
          }
+    },
+
+    _notifyInputCompleted: function() {
+        const converter = new StringValueConverter({
+               mask: this._options.mask,
+               replacer: this._options.replacer
+            });
+        this._notify('inputCompleted', [
+            this._rangeModel.startValue,
+            this._rangeModel.endValue,
+            converter.getStringByValue(this._rangeModel.startValue),
+            converter.getStringByValue(this._rangeModel.endValue)
+        ]);
     }
+
 });
 
 Component.getDefaultOptions = function () {
