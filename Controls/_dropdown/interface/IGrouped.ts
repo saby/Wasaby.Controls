@@ -1,13 +1,13 @@
 /**
  * Interface for controls with  implementing item grouping.
  *
- * @interface Controls/_dropdown/interface/IGroupped
+ * @interface Controls/_dropdown/interface/IGrouped
  * @public
  * @author Золотова Э.Е.
  */
 
 /**
- * @name Controls/_dropdown/interface/IGroupped#groupingKeyCallback
+ * @name Controls/_dropdown/interface/IGrouped#groupingKeyCallback
  * @cfg {Function} Function that returns group identifier.
  * @example
  * TMPL:
@@ -41,7 +41,7 @@
  */
 
 /**
- * @name Controls/_dropdown/interface/IGroupped#groupTemplate
+ * @name Controls/_dropdown/interface/IGrouped#groupTemplate
  * @cfg {Function | String} Group template.
  * @remark
  * To determine the template, you should call the base template "wml!Controls/_dropdownPopup/defaultGroupTemplate".
