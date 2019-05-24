@@ -142,6 +142,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._closeAfterMount = true;
                event.setResult(false);
             } else {
+               try {
+                  if (this._container[0].contains(document.activeElement)) {
+                     //Я не знаю, как это работает, но если фокус будет внутри Wasaby слоя 
+                     //то мы получаем утечку, всех дом элементов внутри.
+                     //если мы просто переведем фокус на контейнер выше,
+                     //все очистится
+                     this._container.focus();
+                  }
+               } catch (e) {
+
+               }
                this.popupBeforeDestroyed();
             }
          },
