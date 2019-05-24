@@ -173,7 +173,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
       Mask._private = _private;
 
-      Mask._theme.push('Controls/input');
+      Mask._theme = Base._theme.concat(['Controls/input']);
 
       export = Mask;
    

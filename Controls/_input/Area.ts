@@ -235,7 +235,7 @@ import 'Controls/decorator';
          }
       });
 
-      Area._theme.push('Controls/input');
+      Area._theme = Text._theme.concat(['Controls/input']);
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();
