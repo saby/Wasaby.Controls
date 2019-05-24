@@ -565,14 +565,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                 gridViewModel = new gridMod.GridViewModel(cfg),
                 oldVersion = gridViewModel._model._prefixItemVersion,
-                initialStatus = GridLayoutUtil.isPartialSupport;
+                initialStatus = GridLayoutUtil.isPartialGridSupport;
 
-            GridLayoutUtil.isPartialSupport = true;
+            GridLayoutUtil.isPartialGridSupport = function() { return true; };
 
             gridViewModel._model._notify('onListChange', 'collectionChanged');
             assert.equal(oldVersion + 1, gridViewModel._model._prefixItemVersion);
 
-            GridLayoutUtil.isPartialSupport = initialStatus;
+            GridLayoutUtil.isPartialGridSupport = initialStatus;
          });
 
          it('getItemColumnCellClasses', function() {

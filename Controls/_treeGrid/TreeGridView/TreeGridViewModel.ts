@@ -123,7 +123,7 @@ var
 
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
             // with grid-row and grid-column
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
                 } else {
@@ -147,7 +147,7 @@ var
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
                 }
 
-                if (GridLayoutUtil.isPartialSupport) {
+                if (GridLayoutUtil.isPartialGridSupport()) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
 
@@ -177,9 +177,9 @@ var
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
             if (current.nodeFooter) {
                 current.nodeFooter.columns = current.columns;
-                current.nodeFooter.isPartialSupport = GridLayoutUtil.isPartialSupport;
+                current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
-                if (GridLayoutUtil.isPartialSupport) {
+                if (GridLayoutUtil.isPartialGridSupport()) {
                     current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());
                     current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
                 }
