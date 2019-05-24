@@ -33,6 +33,7 @@
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"
+      multiSelectVisibility="onhover"
       keyProperty="id"
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
