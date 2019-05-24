@@ -2,7 +2,7 @@ define(
    [
       'Controls/popup',
       'Controls/popupTemplate',
-      'Controls/Popup/Previewer/OpenerTemplate',
+      'Controls/_popup/Previewer/OpenerTemplate',
       'Controls/_popupTemplate/InfoBox'
    ],
    (popup, popupTemplate, OpenerTemplate, InfoBoxTemplate) => {
@@ -23,7 +23,7 @@ define(
          });
       });
 
-      describe('Controls/Popup/InfoBox', () => {
+      describe('Controls/_popup/InfoBox', () => {
          it('PopupInfoBox: getConfig', () => {
             let config = {
                floatCloseButton: true,

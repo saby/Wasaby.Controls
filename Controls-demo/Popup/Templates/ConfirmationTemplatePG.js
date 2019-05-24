@@ -19,7 +19,7 @@ define('Controls-demo/Popup/Templates/ConfirmationTemplatePG',
          _template: template,
          _metaData: null,
          _dataOptions: null,
-         _content: 'Controls/Popup/Templates/Dialog/ConfirmationTemplate',
+         _content: 'Controls/popupTemplate:Confirmation',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

@@ -1,6 +1,6 @@
 define(['Controls/popupTemplate'], (popupTemplate) => {
    'use strict';
-   describe('Controls/Popup/Templates/Stack/StackTemplate', () => {
+   describe('Controls/_popupTemplate/Stack/Stack', () => {
       it('maximize button title', () => {
          let Stack = new popupTemplate.Stack();
          Stack._beforeMount({

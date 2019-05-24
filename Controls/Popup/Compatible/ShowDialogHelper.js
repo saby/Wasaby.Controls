@@ -2,15 +2,18 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
    function(require, Deferred, moduleStubs, isNewEnvironment) {
       var _private = {
          prepareDeps: function(config) {
-            var dependencies = ['Controls/Popup/Opener/BaseOpener'];
+            var dependencies = ['Controls/popup'];
             if (config.isStack === true) {
-               dependencies.push('Controls/Popup/Opener/Stack/StackController');
+               dependencies.push('Controls/popupTemplate');
+               config._path = 'StackController';
                config._type = 'stack';
             } else if (config.target) {
-               dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
+               dependencies.push('Controls/popupTemplate');
+               config._path = 'StickyController';
                config._type = 'sticky';
             } else {
-               dependencies.push('Controls/Popup/Opener/Dialog/DialogController');
+               dependencies.push('Controls/popupTemplate');
+               config._path = 'DialogController';
                config._type = 'dialog';
             }
             config._popupComponent = 'floatArea';
@@ -27,13 +30,15 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                   var deps = _private.prepareDeps(config);
                   requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(CompatiblePopup) {
                      CompatiblePopup.load().addCallback(function() {
-                        require(deps, function(BaseOpener, Strategy) {
+                        require(deps, function(popup, Strategy) {
                            var CoreTemplate = require(config.template);
                            config._initCompoundArea = function(compoundArea) {
                               dfr && dfr.callback(compoundArea);
                               dfr = null;
                            };
-                           BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                           popup.BaseOpener.showDialog(
+                              CoreTemplate, config, config._path ? Strategy[config._path] : Strategy
+                           );
                         });
                      });
                   });

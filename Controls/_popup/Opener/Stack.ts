@@ -42,9 +42,9 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
           * Open stack with specified configuration.
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
+          *     <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
           *             <ws:templateOptions key="111"/>
-          *     </Controls.Popup.Opener.Stack>
+          *     </Controls.popup:Stack>
           *
           *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
           *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
@@ -109,9 +109,9 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
  * @example
  * wml
  * <pre>
- *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
+ *     <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
  *             <ws:templateOptions key="111"/>
- *     </Controls.Popup.Opener.Stack>
+ *     </Controls.popup:Stack>
  *
  *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
  *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>

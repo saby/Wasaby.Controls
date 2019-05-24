@@ -1,16 +1,16 @@
 define(
    [
-      'Controls/Popup/Opener/Stack/StackStrategy',
+      'Controls/_popupTemplate/Stack/Opener/StackStrategy',
       'Controls/popup',
       'Controls/popupTemplate',
       'Controls-demo/Popup/TestMaximizedStack',
-      'Controls/Popup/Opener/BaseController',
+      'Controls/_popupTemplate/BaseController',
       'wml!Controls/_popupTemplate/Stack/Opener/StackContent'
    ],
    (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
 
-      describe('Controls/Popup/Opener/Stack', () => {
+      describe('Controls/_popup/Opener/Stack', () => {
          StackStrategy.getMaxPanelWidth = () => 1000;
          let item = {
             popupOptions: {

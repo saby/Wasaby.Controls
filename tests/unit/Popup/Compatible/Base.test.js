@@ -6,7 +6,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Popup.Compatible.Notification.Base', function() {
+      describe('Controls/Popup/Compatible/Notification/Base', function() {
          it('_beforeMount', function() {
             var ctrl = new Base({});
             var options = {};

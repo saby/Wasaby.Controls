@@ -15,7 +15,7 @@
    "scripts": {
       "build": "npm run build:typescript && npm run build:app",
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
-      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json -LLLL",
+      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json --log-level=warning -LLLL",
       "build:app": "npm run builder && node build-app",
       "compile": "tsc",
       "start": "node app",

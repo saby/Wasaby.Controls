@@ -18,7 +18,7 @@ define('Controls-demo/InfoBox/InfoBoxPG',
       var InfoBoxPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Popup/InfoBox',
+         _content: 'Controls/popup:InfoboxTarget',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

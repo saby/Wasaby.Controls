@@ -1,14 +1,14 @@
 define(
    [
-      'Controls/Popup/Opener/Dialog/DialogStrategy',
-      'Controls/Popup/Opener/Dialog/DialogController',
-      'Controls/Popup/Opener/Dialog'
+      'Controls/_popupTemplate/Dialog/Opener/DialogStrategy',
+      'Controls/_popupTemplate/Dialog/Opener/DialogController',
+      'Controls/_popup/Opener/Dialog'
    ],
    (DialogStrategy, DialogController, DialogOpener) => {
       'use strict';
 
 
-      describe('Controls/Popup/Opener/Dialog', () => {
+      describe('Controls/_popup/Opener/Dialog', () => {
          let sizes = {
             width: 200,
             height: 300

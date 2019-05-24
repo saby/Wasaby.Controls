@@ -7,7 +7,7 @@ define(
 
    function (popupMod, collection, randomId) {
       'use strict';
-      describe('Controls/Popup/Manager/Container', function () {
+      describe('Controls/_popup/Manager/Container', function () {
          var
             id,
             items = new collection.List(),
