@@ -1,12 +1,11 @@
 <div class="controls-FilterDropdown">
    <Controls.dropdown:Input
            scope="{{_options}}"
-           style="filter"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()">
       <ws:contentTemplate>
          <ws:if data="{{_options.contentTemplate}}">
-            <ws:partial template="wml!Controls/_dropdown/Input/resources/defaultContentTemplate">
+            <ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate" style="filter">
                   <ws:contentTemplate>
                      <ws:if data="{{_options.contentTemplate}}">
                         <ws:partial template="{{_options.contentTemplate}}" class="controls-FilterDropdown__text"/>
@@ -15,7 +14,7 @@
             </ws:partial>
          </ws:if>
          <ws:else>
-            <ws:partial template="wml!Controls/_dropdown/Input/resources/defaultContentTemplate"/>
+            <ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate" style="filter"/>
          </ws:else>
       </ws:contentTemplate>
    </Controls.dropdown:Input>

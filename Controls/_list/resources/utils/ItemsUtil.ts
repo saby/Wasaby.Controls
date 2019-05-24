@@ -6,16 +6,16 @@ var ItemsUtil = {
 
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
-        projCfg.keyProperty = cfg.keyProperty;
+        projCfg.idProperty = cfg.keyProperty;
         if (cfg.groupMethod) {
             projCfg.group = cfg.groupMethod;
         }
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
         }
-        if (cfg.loadItemsStrategy === 'merge') {
-            projCfg.unique = true;
-        }
+        // todo to support merge strategy replace this code on "projCfg.unique = cfg.loadItemsStrategy === 'merge'".
+        // https://online.sbis.ru/opendoc.html?guid=e070a968-f6dd-486b-bd44-4da47198529e
+        projCfg.unique = true;
         projCfg.filter = filter;
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },

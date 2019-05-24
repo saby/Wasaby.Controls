@@ -524,7 +524,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
          it('should update last item after append items', function () {
             var
-                gridViewModel = new gridMod.GridViewModel(cfg),
+               gridViewModel = new gridMod.GridViewModel(cfg),
                 oldLastIndex = gridViewModel.getCount()-1,
                 firstItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(0)),
                 lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex)),
@@ -552,6 +552,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             newLastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(gridViewModel.getCount()-1));
             assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
+         });
+         
+         it('getItemDataByItem', function() {
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.isFalse(!!data.isFirstInGroup);
          });
 
          it('should update model in old browsers on collection change', function () {

@@ -177,19 +177,12 @@ define([
       });
 
       it('_onClickShowSelector', function() {
-         var
-            lookup = new Lookup(),
-            stopPropagation = false;
+         var lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._onClickShowSelector({
-            stopPropagation: function() {
-               stopPropagation = true;
-            }
-         });
+         lookup._onClickShowSelector();
 
          assert.isFalse(lookup._suggestState);
-         assert.isTrue(stopPropagation);
       });
 
       it('_onClickClearRecords', function() {
@@ -275,7 +268,7 @@ define([
 
          lookup._openInfoBox(null, config);
          assert.deepEqual(config, {
-            maxWidth: 100
+            width: 100
          });
          assert.isFalse(lookup._suggestState);
          assert.isTrue(lookup._infoboxOpened);

@@ -1,18 +1,20 @@
 <div class="controls-PeriodDialog-DateRangeItem">
-   <div class="controls-PeriodDialog-DateRangeItem__months">
-      <ws:for data="month in 12">
-         <div class="controls-PeriodDialog-DateRangeItem__months-btn"
-              on:click="_scrollToMonth(item.id, month)"
-              >
-            {{_formatDate(_getMonth(item.id, month), 'MMMM') }}
+   <ws:if data="{{_isStickySupport}}">
+      <div class="controls-PeriodDialog-DateRangeItem__months">
+         <ws:for data="month in 12">
+            <div class="controls-PeriodDialog-DateRangeItem__months-btn"
+                 on:click="_scrollToMonth(item.id, month)"
+                 >
+               {{ _formatMonth(month) }}
+            </div>
+         </ws:for>
+         <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+              on:click="_scrollToMonth(item.id + 1, 0)"
+               >
+            {{ item.id + 1 }}
          </div>
-      </ws:for>
-      <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
-           on:click="_scrollToMonth(item.id + 1, 0)"
-            >
-         {{ item.id + 1 }}
       </div>
-   </div>
+   </ws:if>
    <div class="controls-PeriodDialog-DateRangeItem__monthList">
       <div
          for="month in 12"
@@ -22,7 +24,7 @@
          <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
                      _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
                on:click="_monthCaptionClick(month)">
-            {{ _formatDate(_getMonth(item.id, month), 'MMMM') }}
+            {{ _formatMonth(month) }}
          </div>
          <Controls.Date.MonthView
             attr:class="controls-DateRangeBigChoose-DateRangePicker__item"

@@ -362,15 +362,15 @@ define([
             },
             itemsViewModel = new list.ItemsViewModel(cfg);
          assert.equal(itemsViewModel._display.getGroup(), cfg.groupingKeyCallback, 'Grouping for display not applied. Error sending to display grouping method.');
-         assert.equal(itemsViewModel._display.getCount(), 9, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
+         assert.equal(itemsViewModel._display.getCount(), 8, 'Grouping for display not applied. Display items count (with groups) not equal 8.');
          itemsViewModel.toggleGroup('group_1');
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');
          itemsViewModel.toggleGroup('group_2');
          assert.equal(itemsViewModel._display.getCount(), 4, 'Invalid display items count after collapsing "group_2".');
          itemsViewModel.toggleGroup('group_1');
-         assert.equal(itemsViewModel._display.getCount(), 7, 'Invalid display items count after expanding "group_1".');
+         assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after expanding "group_1".');
          itemsViewModel.toggleGroup('group_2');
-         assert.equal(itemsViewModel._display.getCount(), 9, 'Invalid display items count after expanding "group_2".');
+         assert.equal(itemsViewModel._display.getCount(), 8, 'Invalid display items count after expanding "group_2".');
          current = itemsViewModel.getCurrent();
          assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
          assert.equal(current.isHiddenGroup, true, 'Invalid value isHiddenGroup for current item.');
@@ -402,6 +402,17 @@ define([
          iv.goToNext();
          condResult = iv.isLast();
          assert.isTrue(condResult);
+      });
+
+      it('getItemDataByItem', function() {
+         let cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+         let model = new list.ItemsViewModel(cfg);
+         let itemData = model.getItemDataByItem({ getContents: () => [] });
+
+         assert.isFalse(!!itemData.isGroup);
       });
    })
 });

@@ -902,7 +902,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (_private.isFieldFocused(this)) {
+               if (_private.isFieldFocused(this) && !field.readOnly) {
                   this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
                }
             }

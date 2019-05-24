@@ -243,10 +243,24 @@ define(
                });
             });
             it('getItemsWithHistory', function() {
+               let newHistoryItem = new entity.Model({
+                  rawData: {
+                     d: ['7', null, 'TEST_HISTORY_ID_V1'],
+                     s: [
+                        { n: 'ObjectId', t: 'Строка'},
+                        { n: 'ObjectData', t: 'Строка'},
+                        { n: 'HistoryId', t: 'Строка'}
+                     ]
+                  },
+                  adapter: new entity.adapter.Sbis()
+               });
+               hSource._history.pinned.add(newHistoryItem);
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
-               assert.equal(historyItems.at(1).get('title'), 'Запись 4');
-               assert.equal(historyItems.at(3).get('title'), 'Запись 8');
+               assert.equal(historyItems.at(1).get('title'), 'Запись 7');
+               assert.equal(historyItems.at(3).get('title'), 'Запись 6');
+               assert.equal(historyItems.at(8).getId(), '7_history');
+               hSource._history.pinned.removeAt(1);
             });
             it('check alphabet', function() {
                historyItems = hSource.getItems();
@@ -416,7 +430,7 @@ define(
             });
 
             it('_private:getRecentIds', function() {
-               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned);
+               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned,  hSource._history.frequent.getCount());
                assert.deepEqual(recentIds, ['7', '8']);
             });
 
@@ -432,7 +446,7 @@ define(
 
                expectedResult = {
                   pinned: ['5'],
-                  frequent: ['6', '4'],
+                  frequent: ['6'],
                   recent: ['8', '1', '2', '3', '7']
                };
                let recentFilteredData = {
@@ -454,6 +468,7 @@ define(
                   ]
                };
                hSource._history.recent = createRecordSet(recentFilteredData);
+               hSource._recentCount = 8;
                actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
             });

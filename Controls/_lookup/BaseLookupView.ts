@@ -179,7 +179,7 @@ var BaseLookupView = Control.extend({
     },
 
     _openInfoBox: function (event, config) {
-        config.maxWidth = this._container.offsetWidth;
+        config.width = this._container.offsetWidth;
         this._suggestState = false;
         this._infoboxOpened = true;
         this._notify('openInfoBox', [config]);
@@ -193,10 +193,6 @@ var BaseLookupView = Control.extend({
     _onClickShowSelector: function (event) {
         this._suggestState = false;
         this._notify('showSelector');
-
-        /* Controls.Suggest:_InputController show suggest after input get focused or clicked, then we need to stopPropagation
-           click on showSelector button, otherwise click event will bubbling to controller from input and suggest will showed. */
-        event.stopPropagation();
     },
 
     _onClickClearRecords: function () {
