@@ -3,7 +3,7 @@ import Model from './RelationController/Model';
 import template = require('wml!Controls/_dateRange/RelationController/RelationController');
 
 /**
- * Controller allows you to link several components for entering periods.
+ * Controller allows you to link several controls for entering periods.
  *
  * @class Controls/_dateRange/RelationController
  * @extends Core/Control
@@ -97,8 +97,8 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 
 /**
  * @name Controls/_dateRange/RelationController#content
- * @cfg {Content} Component contents. The controller set the period and type of relation options on the template.
- * An internal template can contain period selection components. Each of the period selection component
+ * @cfg {Content} Control contents. The controller set the periods and type of relation options on the template.
+ * An internal template can contain period selection controls. Each of the period selection control
  * must be wrapped in {@link Controls/_dateRange/RelationWrapper}. Also the template may contain a {@link Controls/_dateRange/RelationButton}.
  * @example
  * <pre>
@@ -217,10 +217,10 @@ var Component = Control.extend({
         this._model.update(options);
     },
 
-    _onRelationWrapperRangeChanged: function(event, start, end, controlNumber) {
+    _onRelationWrapperRangeChanged: function(event, start, end, controlNumber, bindType) {
         let ranges = this._model.ranges,
             oldBindType = this._model.bindType;
-        this._model.updateRanges(start, end, controlNumber);
+        this._model.updateRanges(start, end, controlNumber, bindType);
         _private.notifyRangeChanged(this, this._model.ranges, ranges);
         if (oldBindType !== this._model.bindType) {
             this._notify('bindTypeChanged', [this._model.bindType]);

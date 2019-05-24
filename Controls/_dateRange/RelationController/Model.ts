@@ -7,7 +7,7 @@ import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 class ModuleClass {
     public ranges: Array<Array<Date>>;
     private _steps: Array<number>;
-    private _bindType: String;
+    private _relationMode: String;
 
     constructor(options) {
         this.update(options);
@@ -20,35 +20,49 @@ class ModuleClass {
     update(options) {
         this.ranges = this._getRangesFromOptions(options);
         this._updateSteps(this.ranges);
-        this._bindType = options.bindType;
+        this._relationMode = options.bindType;
     }
 
-    updateRanges(start, end, changedRangeIndex) {
+    updateRanges(start, end, changedRangeIndex, relationMode) {
         let
-            oldBindType = this._bindType,
+            oldRelationMode,
             newRanges;
-        this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+
+        if (relationMode) {
+            oldRelationMode = relationMode;
+            this._relationMode = relationMode;
+        } else {
+            oldRelationMode = this._relationMode;
+            this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+        }
         newRanges = this._getUpdatedRanges(
             this.ranges,
             changedRangeIndex,
             [start, end],
-            oldBindType,
+            oldRelationMode,
             this._steps
         );
         this.ranges = newRanges;
-        if (oldBindType !== this._bindType && oldBindType === 'normal') {
+        if (oldRelationMode !== this._relationMode && oldRelationMode === 'normal') {
             this._updateSteps(this.ranges);
         }
     }
 
     get bindType() {
-        return this._bindType;
+        return this._relationMode;
     }
 
     set bindType(value) {
-        this._bindType = value;
+        this._relationMode = value;
     }
 
+    get relationMode() {
+        return this._relationMode;
+    }
+
+    set relationMode(value) {
+        this._relationMode = value;
+    }
     shiftForward() {
         this._shift(1);
     }
@@ -69,10 +83,10 @@ class ModuleClass {
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
 
         if (periodType === periodTypes.day || periodType === periodTypes.days) {
-            this._bindType = 'byCapacity';
+            this._relationMode = 'byCapacity';
         }
 
-         if (ranges.length > 2 || this._bindType === 'normal') {
+         if (ranges.length > 2 || this._relationMode === 'normal') {
             return;
          }
 
@@ -100,7 +114,7 @@ class ModuleClass {
                updatedStartValue.getFullYear() !== startValue.getFullYear() &&
                updatedStartValue.getMonth() === startValue.getMonth() &&
                updatedStartValue.getDate() === startValue.getDate())) {
-           this._bindType = 'normal';
+           this._relationMode = 'normal';
 
            // We update steps for calculation of the periods in other controls.
            // If the digit capacity has changed, then adjacent periods are included and the step must be equal to this period.
@@ -162,7 +176,7 @@ class ModuleClass {
         return ranges;
     }
 
-    private _getUpdatedRanges(ranges, rangeIndex, newRange, bindType, steps) {
+    private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
         let selectionType = 'months',
             start = newRange[0],
             end = newRange[1],
@@ -173,7 +187,7 @@ class ModuleClass {
             step, capacityChanged, control, lastDate, i;
 
         let getStep = function (number) {
-            var s = bindType === 'byCapacity' ? periodLength : steps[number] || periodLength;
+            var s = relationMode === 'byCapacity' ? periodLength : steps[number] || periodLength;
             if (selectionType === 'days') {
                 return periodLength;
             }
@@ -204,7 +218,7 @@ class ModuleClass {
         for (i = 1; i <= rangeIndex; i++) {
             step += getStep(rangeIndex - i);
             control = ranges[rangeIndex - i];
-            if (bindType === 'byCapacity' && !capacityChanged && lastDate > control[1]) {
+            if (relationMode === 'byCapacity' && !capacityChanged && lastDate > control[1]) {
                 respRanges[rangeIndex - i] = ranges[rangeIndex - i];
             } else {
                 respRanges[rangeIndex - i] = [
@@ -223,7 +237,7 @@ class ModuleClass {
         for (i = 1; i < ranges.length - rangeIndex; i++) {
             step += getStep(rangeIndex + i - 1);
             control = ranges[rangeIndex + i];
-            if (bindType === 'byCapacity' && !capacityChanged && lastDate < control[0]) {
+            if (relationMode === 'byCapacity' && !capacityChanged && lastDate < control[0]) {
                 respRanges[rangeIndex + i] = ranges[rangeIndex + i];
             } else {
                 respRanges[rangeIndex + i] = [
