@@ -170,9 +170,11 @@ var _private = {
       filteredHistory = this.getFilterHistory(self, self._history);
       historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
-      // Нужно чтобы не потерялся формат https://online.sbis.ru/opendoc.html?guid=e76fca5b-3bda-401d-9eed-ead8f8a0d469
-      items.getFormat();
       items.clear();
+       let format = oldItems.getFormat();
+       chain.factory(format).each(function(field) {
+           _private.addProperty(items, field.getName(), field.getType(), field.getDefaultValue());
+       });
       this.addProperty(items, 'pinned', 'boolean', false);
       this.addProperty(items, 'recent', 'boolean', false);
       this.addProperty(items, 'frequent', 'boolean', false);
