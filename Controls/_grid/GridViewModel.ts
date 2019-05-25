@@ -1,10 +1,10 @@
-import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
+import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import {calcFooterRowIndex} from './utils/RowIndexUtil';
+import { calcFooterRowIndex, calcResultsRowIndex } from './utils/RowIndexUtil';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
@@ -349,7 +349,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
+            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
         },
 
         getFooterStyles: function (self): string {
