@@ -1,4 +1,4 @@
-import {ListViewModel, ItemsUtil, TreeItemsUtil, RowIndexUtil} from 'Controls/list';
+import {ListViewModel, ItemsUtil, TreeItemsUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -206,11 +206,6 @@ var
                 _private.collapseChildNodes(self, itemId);
             });
         },
-        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column.
-        // Using util for calculating real rows' index on display considering footers, headers, results
-        calcNodeFooterIndex: function(self, parentKey) {
-            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage);
-        },
 
         collapseNode: function (self, nodeId) {
             delete self._expandedItems[nodeId];
@@ -350,10 +345,14 @@ var
             TreeViewModel.superclass._onBeginCollectionChange.apply(this, arguments);
             _private.onBeginCollectionChange(this, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         },
-
+    
         setNodeFooterTemplate: function(nodeFooterTemplate) {
             this._options.nodeFooterTemplate = nodeFooterTemplate;
             this._nextModelVersion();
+        },
+    
+        getNodeFooterTemplate: function() {
+            return this._options.nodeFooterTemplate;
         },
 
         setExpanderDisplayMode: function(expanderDisplayMode) {
@@ -412,8 +411,7 @@ var
                           item: current.dispItem.getContents(),
                           dispItem: current.dispItem,
                           multiSelectVisibility: current.multiSelectVisibility,
-                          level: current.dispItem.getLevel(),
-                          rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                          level: current.dispItem.getLevel()
                       };
                       if (this._options.nodeFooterTemplate) {
                           current.nodeFooter.template = this._options.nodeFooterTemplate;
@@ -430,8 +428,7 @@ var
                        item: itemParent.getContents(),
                        dispItem: itemParent,
                        multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel(),
-                       rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                       level: itemParent.getLevel()
                     };
                     if (this._options.nodeFooterTemplate) {
                        current.nodeFooter.template = this._options.nodeFooterTemplate;
