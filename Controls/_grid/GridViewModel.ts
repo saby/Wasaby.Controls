@@ -1,11 +1,15 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import {calcFooterRowIndex} from './utils/RowIndexUtil';
+import {
+    getFooterIndex,
+    getIndexByDisplayIndex, getIndexById, getIndexByItem,
+    getResultsIndex
+} from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -882,12 +886,26 @@ var
 
         _calcRowIndex: function(current) {
             if (current.isGroup) {
-                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
             } else if (current.index !== -1) {
-                return RowIndexUtil.calcRowIndexByKey(current.key,
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexById(current.key);
             }
+        },
+    
+        _getRowIndexHelper() {
+            let
+                display = this.getDisplay(),
+                hasHeader = !!this.getHeader(),
+                resultsPosition = this.getResultsPosition(),
+                hasEmptyTemplate = !!this._options.emptyTemplate;
+            
+            return {
+                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
+                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
+            };
         },
 
         getItemDataByItem: function(dispItem) {

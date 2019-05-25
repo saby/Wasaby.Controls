@@ -1,6 +1,7 @@
-import {GridViewModel} from 'Controls/grid';
-import {GridLayoutUtil, RowIndexUtil} from 'Controls/list';
-import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
+import {GridViewModel} from 'Controls/grid'
+import {GridLayoutUtil} from 'Controls/list'
+import { getIndexByDisplayIndex, getIndexById, getIndexByItem } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
+import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
 
 function isLastColumn(
    itemData: object,
@@ -16,7 +17,7 @@ var _private = {
 
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = RowIndexUtil.calcRowIndexByItem.apply(null, _private.getArgsForRowIndexUtil(self, self._model.getDisplay().at(current.index)));
+        current.rowIndex = self._getRowIndexHelper().getIndexByDisplayIndex(current.index);
         current.gridGroupStyles = GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',
@@ -26,18 +27,6 @@ var _private = {
                 name: '-ms-grid-row',
                 value: current.rowIndex+1
             }
-        ]);
-    },
-
-    getArgsForRowIndexUtil: function(self, item) {
-        return [item].concat([
-            self._model.getDisplay(),
-            !!self.getHeader(),
-            self.getResultsPosition(),
-            self._model.getHierarchyRelation(),
-            self._model.getHasMoreStorage(),
-            self._options.nodeFooterTemplate,
-            self.getExpandedItems()
         ]);
     },
 
@@ -180,7 +169,7 @@ var
                 current.nodeFooter.isPartialSupport = GridLayoutUtil.isPartialSupport;
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
                 if (GridLayoutUtil.isPartialSupport) {
-                    current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());
+                    current.nodeFooter.rowIndex = current.rowIndex + 1;
                     current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
                 }
             }
@@ -190,24 +179,35 @@ var
         _onNodeRemoved: function (event, nodeId) {
             this._notify('onNodeRemoved', nodeId);
         },
-
-        _calcRowIndex: function(current):number {
-            var index:number;
-
-            if (current.isGroup) {
-                index = RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index), this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
-            } else if (current.index !== -1) {
-                index = RowIndexUtil.calcRowIndexByKey.apply(null, _private.getArgsForRowIndexUtil(this, current.key));
-            }
-
-            return index;
-        },
+        
         setHasMoreStorage: function (hasMoreStorage) {
             this._model.setHasMoreStorage(hasMoreStorage);
         },
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);
+        },
+    
+        _getRowIndexHelper() {
+            let self = this;
+            
+            function getArgsForRowIndexUtil(unicArgs) {
+                return [unicArgs].concat([
+                    self.getDisplay(),
+                    !!self.getHeader(),
+                    self.getResultsPosition(),
+                    self._model.getHierarchyRelation(),
+                    self._model.getHasMoreStorage(),
+                    self._model.getExpandedItems(),
+                    !!self._model.getNodeFooterTemplate()
+                ]);
+            }
+        
+            return {
+                getIndexByItem: (item) => getIndexByItem.apply(null, getArgsForRowIndexUtil(item)),
+                getIndexById: (id) => getIndexById.apply(null, getArgsForRowIndexUtil(id)),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex.apply(null, getArgsForRowIndexUtil(index)),
+            };
         }
     });
 
