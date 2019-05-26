@@ -1,6 +1,10 @@
 import {GridViewModel} from 'Controls/grid'
 import {GridLayoutUtil} from 'Controls/list'
-import { getIndexByDisplayIndex, getIndexById, getIndexByItem } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
+import {
+    getFooterIndex,
+    getIndexByDisplayIndex, getIndexById, getIndexByItem,
+    getResultsIndex
+} from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
 
 function isLastColumn(
@@ -115,8 +119,6 @@ var
             if (GridLayoutUtil.isPartialSupport) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
-                } else {
-                    current.rowIndex = this._calcRowIndex(current);
                 }
             }
 
@@ -189,13 +191,18 @@ var
         },
     
         _getRowIndexHelper() {
-            let self = this;
+            let
+                self = this,
+                display = this.getDisplay(),
+                hasHeader = !!this.getHeader(),
+                resultsPosition = this.getResultsPosition(),
+                hasEmptyTemplate = !!this._options.emptyTemplate;
             
             function getArgsForRowIndexUtil(unicArgs) {
                 return [unicArgs].concat([
-                    self.getDisplay(),
-                    !!self.getHeader(),
-                    self.getResultsPosition(),
+                    display,
+                    hasHeader,
+                    resultsPosition,
                     self._model.getHierarchyRelation(),
                     self._model.getHasMoreStorage(),
                     self._model.getExpandedItems(),
@@ -207,6 +214,8 @@ var
                 getIndexByItem: (item) => getIndexByItem.apply(null, getArgsForRowIndexUtil(item)),
                 getIndexById: (id) => getIndexById.apply(null, getArgsForRowIndexUtil(id)),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex.apply(null, getArgsForRowIndexUtil(index)),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
             };
         }
     });

@@ -47,8 +47,10 @@ class DeepTree extends Control {
             getItem('1_2_4', {parent: '1_2', title: 'RAM Kingston 32 GB', group: 'Gadgets'}),
             getItem('1_3', {parent: '1', title: 'Mac PRO 2016', group: 'Gadgets'}),
             getItem('1_4', {parent: '1', title: 'Mac Mini 3', group: 'Gadgets'}),
-            
+    
             getItem('2', {nodeType: true, title: 'Tablets', group: 'Gadgets'}),
+            getItem('2_1', {parent: '2', title: 'Android vedro v1', group: 'Gadgets'}),
+            getItem('2_2', {parent: '2', title: 'iPad Air', group: 'Gadgets'}),
             getItem('3', {nodeType: false, title: 'Chairs', group: 'For home'}),
             getItem('4', {title: 'Sofas', group: 'For home'})
         ]

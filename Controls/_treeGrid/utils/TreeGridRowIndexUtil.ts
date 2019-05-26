@@ -1,5 +1,5 @@
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
-import {relation} from 'Types/entity'
+import { relation } from 'Types/entity'
 import { Collection, CollectionItem } from 'Types/display'
 
 
@@ -8,21 +8,43 @@ import { Collection, CollectionItem } from 'Types/display'
  */
 
 
+type DItem = CollectionItem<unknown>;
+type Display = Collection<unknown, DItem>;
+
+
 /**
  * @typedef {String} ResultsPosition
  * @variant top Результаты выводятся сверху таблицы.
  * @variant bottom Результаты выводятся снизу таблицы.
  */
-type ResultsPosition = 'top'|'bottom';
-
-type DItem = CollectionItem<unknown>;
-type Display = Collection<unknown, DItem>;
-
-type HasMoreStorage = {[key: string]: boolean};
-type ExpandedItems = {[key: string]: boolean};
+type ResultsPosition = 'top' | 'bottom';
 
 
+/**
+ * @typedef {Object} HasMoreStorage
+ */
+type HasMoreStorage = { [key: string]: boolean };
 
+
+/**
+ * @typedef {Object} ExpandedItems
+ */
+type ExpandedItems = { [key: string]: boolean };
+
+
+/**
+ * Возвращает номер строки в списке для элемента с указанным id.
+ *
+ * @param {string} id Ключ элемента списка.
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
+ * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
+ * @param {ExpandedItems} expandedItems Объект, содержащий флаги, указывающие какие узлы дерева раскрыты.
+ * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
+ * @return {Number}
+ */
 function getIndexById(id: string,
                       display: Display,
                       hasHeader: boolean = false,
@@ -40,7 +62,19 @@ function getIndexById(id: string,
 }
 
 
-
+/**
+ * Возвращает номер строки в списке для указанного элемента.
+ *
+ * @param {'Types/display:CollectionItem'} item Элемент списка.
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
+ * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
+ * @param {ExpandedItems} expandedItems Объект, содержащий флаги, указывающие какие узлы дерева раскрыты.
+ * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
+ * @return {Number}
+ */
 function getIndexByItem(item: DItem,
                         display: Display,
                         hasHeader: boolean = false,
@@ -57,7 +91,19 @@ function getIndexByItem(item: DItem,
 }
 
 
-
+/**
+ * Возвращает номер строки в списке для элемента с указанным индексом в проекции.
+ *
+ * @param {Number} index Индекс элемента списка в проекции.
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
+ * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
+ * @param {ExpandedItems} expandedItems Объект, содержащий флаги, указывающие какие узлы дерева раскрыты.
+ * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
+ * @return {Number}
+ */
 function getIndexByDisplayIndex(index: number,
                                 display: Display,
                                 hasHeader: boolean = false,
@@ -74,14 +120,80 @@ function getIndexByDisplayIndex(index: number,
 }
 
 
+/**
+ * Возвращает номер строки в списке для строки результатов.
+ *
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
+ * @return {Number}
+ */
+function getResultsIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean) {
+    let index = hasHeader ? 1 : 0;
+    
+    if (resultsPosition === "bottom") {
+        let itemsCount = display.getCount();
+        
+        if (itemsCount) {
+            // Чтобы ради подвала снова не считать индекс последнего элемента на экране,
+            // который кстати сначала нужно найти, просто берем общее количество элементов
+            // и считаем что у каждего есть подвал.
+            // Магическая вещь. Может когда-нибудь сломаться, но пока работает
+            index += itemsCount * 2;
+        } else {
+            index += hasEmptyTemplate ? 1 : 0;
+        }
+    }
+    
+    return index;
+}
+
+
+/**
+ * Возвращает номер строки в списке для строки с подвалом.
+ *
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
+ * @return {Number}
+ */
+function getFooterIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean): number {
+    let
+        hasResults = !!resultsPosition,
+        itemsCount = display.getCount(),
+        index = 0;
+    
+    index += hasHeader ? 1 : 0;
+    index += hasResults ? 1 : 0;
+    
+    if (itemsCount) {
+        index += itemsCount * 2;
+    } else {
+        index += hasEmptyTemplate ? 1 : 0;
+    }
+    
+    return index;
+}
+
+
+export {
+    getIndexById,
+    getIndexByItem,
+    getIndexByDisplayIndex,
+    getResultsIndex,
+    getFooterIndex
+}
+
+
+
+// region private functions
 
 /**
  * Возвращиет отступ сверху для первой записи списка
  *
  * @private
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
  */
 function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
     let
@@ -94,6 +206,12 @@ function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = nul
 }
 
 
+
+/**
+ * Функция расчета номера строки в списке для заданного элемента.
+ *
+ * @private
+ */
 function getItemRealIndex(display: Display,
                           item: DItem,
                           itemId: string,
@@ -119,6 +237,13 @@ function getItemRealIndex(display: Display,
     return realIndex;
 }
 
+
+
+/**
+ * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
+ *
+ * @private
+ */
 function calcNodeFootersBeforeItem(display: Display,
                                    itemId: string,
                                    itemIndex: number,
@@ -129,9 +254,9 @@ function calcNodeFootersBeforeItem(display: Display,
     
     let
         count = 0,
-        itemsFooterStatuses: {[parentId: string]: boolean} = {},
-        elementsChildrenCount: {[parentId: string]: number} = {},
-        idProperty:string = display.getIdProperty() || display.getCollection().getIdProperty();
+        itemsFooterStatuses: { [parentId: string]: boolean } = {},
+        elementsChildrenCount: { [parentId: string]: number } = {},
+        idProperty: string = display.getIdProperty() || display.getCollection().getIdProperty();
     
     if (hasNodeFooterTemplate) {
         for (let id in expandedItems) {
@@ -163,7 +288,7 @@ function calcNodeFootersBeforeItem(display: Display,
             let
                 item = ItemsUtil.getDisplayItemById(display, id, idProperty),
                 childrenCount;
-    
+            
             if (id in elementsChildrenCount) {
                 childrenCount = elementsChildrenCount[id]
             } else {
@@ -177,6 +302,11 @@ function calcNodeFootersBeforeItem(display: Display,
     return count + countTrue(itemsFooterStatuses);
 }
 
+/**
+ * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
+ *
+ * @private
+ */
 // TODO: Переписать на рекурсию с запоминанием
 function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems) {
     
@@ -186,7 +316,7 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
         children = hierarchyRelation.getChildren(id, display.getCollection());
         count = children.length;
         if (children.length !== 0) {
-            children.forEach((item)=>{
+            children.forEach((item) => {
                 count += getChildrenOnDisplayCount(item.getId(), display, hierarchyRelation, expandedItems);
             });
         }
@@ -196,6 +326,11 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
 }
 
 
+/**
+ * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
+ *
+ * @private
+ */
 function countTrue(obj: { [key: string]: boolean } = {}): number {
     let count = 0;
     for (let key in obj) {
@@ -204,8 +339,4 @@ function countTrue(obj: { [key: string]: boolean } = {}): number {
     return count;
 }
 
-export {
-    getIndexById,
-    getIndexByItem,
-    getIndexByDisplayIndex
-}
+// endregion

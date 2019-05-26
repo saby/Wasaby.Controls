@@ -4,7 +4,6 @@ import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import { calcFooterRowIndex, calcResultsRowIndex } from './utils/RowIndexUtil';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
@@ -348,10 +347,6 @@ var
             return styles;
         },
 
-        calcResultsRowIndex: function (self): number {
-            return calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
-        },
-
         getFooterStyles: function (self): string {
             let styles = '';
 
@@ -359,8 +354,7 @@ var
                 let
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
-                    hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
-                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader(), !!self._options.emptyTemplate);
+                    rowIndex = self._getRowIndexHelper().getFooterIndex();
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -694,7 +688,7 @@ var
 
             // For browsers with partial grid support need to set its grid-row and grid-column
             if (GridLayoutUtil.isPartialSupport) {
-                resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
+                resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
 
