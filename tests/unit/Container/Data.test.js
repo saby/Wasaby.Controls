@@ -292,13 +292,13 @@ define(
             var self = getDataWithConfig(config);
             lists.DataContainer._private.resolveOptions(self, {source:source});
 
-            var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
+            var promise = lists.DataContainer._private.createPrefetchSource(self, data, dataLoadErrback);
 
             assert.instanceOf(promise, Promise);
             promise.then(function(result) {
                assert.equal(result.data, data);
-               assert.isFalse(dataLoadErrbackCalled, 'dataLoadErrback was called');
-               assert.isFalse(queryCalled, 'query was called');
+               assert.isFalse(dataLoadErrbackCalled);
+               assert.isFalse(queryCalled);
                done();
             }).catch(function(error) {
                done(error);
