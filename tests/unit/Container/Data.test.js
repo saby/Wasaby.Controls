@@ -231,6 +231,8 @@ define(
                assert.isTrue(dataLoadErrbackCalled);
                assert.isFalse(queryCalled);
                done();
+            }, function(error) {
+                done(error);
             });
          });
 
@@ -262,6 +264,8 @@ define(
                assert.isTrue(dataLoadErrbackCalled);
                assert.isTrue(queryCalled);
                done();
+            }, function(error) {
+                done(error);
             });
          });
 
@@ -293,6 +297,8 @@ define(
                assert.isFalse(dataLoadErrbackCalled);
                assert.isFalse(queryCalled);
                done();
+            }, function(error) {
+                done(error);
             });
          });
 
@@ -324,6 +330,8 @@ define(
                assert.isFalse(dataLoadErrbackCalled);
                assert.isTrue(queryCalled);
                done();
+            }, function(error) {
+                done(error);
             });
          });
 
