@@ -60,11 +60,6 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
-    "Controls/Input/Date/Link",
-    "wml!Controls/Input/Date/Link/Link",
-    "Controls/Input/Date/LinkView",
-    "wml!Controls/Input/Date/LinkView/LinkView",
-    "Controls/Input/Date/interface/ILink",
     "Controls/Input/Money",
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
