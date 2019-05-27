@@ -18,7 +18,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
       var ComboBoxPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/ComboBox',
+         _content: 'Controls/dropdown:Combobox',
          _dataObject: null,
          _componentOptions: null,
          _sourceRegions: null,

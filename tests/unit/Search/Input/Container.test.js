@@ -1,16 +1,16 @@
 define(['Controls/search'], function(searchMod) {
-   
-   describe('Controls.Search.Input.Container', function() {
-   
+
+   describe('Controls/_search/Input/Container', function() {
+
       it('_beforeUpdate', function() {
          var cont = new searchMod.InputContainer();
          cont.saveOptions({});
          cont._value = '';
-   
+
          cont._beforeUpdate({inputSearchValue: 'test'});
          assert.equal(cont._value, 'test');
       });
-      
+
       it('_notifySearch', function() {
          var cont = new searchMod.InputContainer();
          var notifyed = false;
@@ -22,7 +22,7 @@ define(['Controls/search'], function(searchMod) {
          cont._notifySearch('', true);
          assert.isTrue(notifyed);
       });
-      
+
       it('_searchClick', function() {
          var cont = new searchMod.InputContainer();
          var notifyed = false;
@@ -34,7 +34,7 @@ define(['Controls/search'], function(searchMod) {
          cont._searchClick();
          assert.isTrue(notifyed);
       });
-   
+
       it('_keyDown', function() {
          var cont = new searchMod.InputContainer();
          var notifyed = false;
@@ -50,7 +50,7 @@ define(['Controls/search'], function(searchMod) {
          assert.isTrue(notifyed);
          assert.equal(val, 'test');
       });
-      
+
    });
-   
+
 });

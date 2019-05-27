@@ -1,0 +1,16 @@
+<div class="demo-barfortest__column">
+    <h4 class="demo-barfortest__heading">Example 0%</h4>
+    <Controls.progress:Bar value="{{0}}"/>
+    <h4 class="demo-barfortest__heading">Example 100%</h4>
+    <Controls.progress:Bar value="{{100}}"/>
+    <h4 class="demo-barfortest__heading">Example 1%</h4>
+    <Controls.progress:Bar value="{{1}}"/>
+    <h4 class="demo-barfortest__heading">Example 99%</h4>
+    <Controls.progress:Bar value="{{99}}"/>
+    <h4 class="demo-barfortest__heading">Example 50%</h4>
+    <Controls.progress:Bar value="{{50}}"/>
+    <h4 class="demo-barfortest__heading">Example -10%</h4>
+    <Controls.progress:Bar value="{{-10}}"/>
+    <h4 class="demo-barfortest__heading">Example 110%</h4>
+    <Controls.progress:Bar value="{{110}}"/>
+</div>

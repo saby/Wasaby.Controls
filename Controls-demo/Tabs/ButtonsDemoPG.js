@@ -17,7 +17,7 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Tabs/Buttons',
+         _content: 'Controls/tabs:Buttons',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -112,7 +112,7 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'wml!Controls/Tabs/Buttons/ItemTemplate'
+                        template: 'wml!Controls/_tabs/Buttons/ItemTemplate'
                      }
                   ]
                },

@@ -1,27 +1,27 @@
 import {detection} from "Env/Env";
 
-enum SupportStatusesEnum {
-    Full,
-    Partial,
-    None
-}
-
 enum CssTemplatesEnum {
     GridIE = 'GridIE',
     GridChrome = 'GridChrome',
-    Grid = 'Grid',
+    Grid = 'Grid'
 }
 
 type CssRule = {
     name: string;
     value: string | number | Array<string>
+};
+
+function isFullGridSupport(): boolean {
+    return !detection.isNotFullGridSupport;
 }
 
-const supportStatus = _getSupportStatus();
-const isFullSupport = supportStatus === SupportStatusesEnum.Full;
-const isPartialSupport = supportStatus === SupportStatusesEnum.Partial;
-const isNoSupport = supportStatus === SupportStatusesEnum.None;
+function isPartialGridSupport(): boolean {
+    return detection.isModernIE || detection.isMacOSDesktop;
+}
 
+function isNoGridSupport(): boolean {
+    return !isFullGridSupport() && !isPartialGridSupport();
+}
 
 function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 1, colSpan: number = 1): string {
     let rules: Array<CssRule> = [
@@ -67,7 +67,7 @@ function getTemplateColumnsStyle(columnsWidth: Array<string | number>) {
     if (detection.isIE) {
         rules.push({
             name: '-ms-grid-columns',
-            value: widths,
+            value: widths
         });
     }
 
@@ -122,29 +122,16 @@ const _cssTemplatesStyles = {
     ]
 };
 
-function _getSupportStatus(): SupportStatusesEnum {
-    if (!detection.isNotFullGridSupport) {
-        return SupportStatusesEnum.Full;
-    }
-    if (detection.isModernIE || detection.isMacOSDesktop) {
-        return SupportStatusesEnum.Partial;
-    }
-    return SupportStatusesEnum.None
-}
-
 export {
-    SupportStatusesEnum,
     CssRule,
     CssTemplatesEnum,
 
-    supportStatus,
-    isFullSupport,
-    isPartialSupport,
-    isNoSupport,
+    isFullGridSupport,
+    isPartialGridSupport,
+    isNoGridSupport,
 
     getCellStyles,
     getTemplateColumnsStyle,
     getDefaultStylesFor,
     toCssString
-}
-
+};

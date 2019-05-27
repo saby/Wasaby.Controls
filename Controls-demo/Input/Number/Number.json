@@ -1,5 +1,5 @@
 {
-  "Controls/Input/Number": {
+  "Controls/input:Number": {
     "properties": {
       "ws-config": {
         "options": {

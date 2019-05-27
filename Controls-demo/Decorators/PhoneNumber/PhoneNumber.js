@@ -6,8 +6,7 @@ define('Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Core/Control',
       'Controls/decorator',
       'wml!Controls-demo/Decorators/PhoneNumber/PhoneNumber',
-      'Controls/input',
-      'css!Controls-demo/Decorators/PhoneNumber/PhoneNumber'
+      'Controls/input'
    ],
    function(Control, decorator, template) {
 

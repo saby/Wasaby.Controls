@@ -6,7 +6,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Input.Mask.FormatBuilder', function() {
+      describe('Controls/_input/Mask/FormatBuilder', function() {
          var result;
 
          describe('_private.getMaskKeysString', function() {

@@ -20,7 +20,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
       var DropdownPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Dropdown',
+         _content: 'Controls/dropdown:Input',
          _eventType: 'selectedKeysChanged',
          _nameOption: 'selectedKeys',
          _dataObject: null,
