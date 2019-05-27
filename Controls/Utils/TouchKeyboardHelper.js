@@ -34,7 +34,8 @@ define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/help
       },
 
       isPortrait: function() {
-         return window.innerHeight > window.innerWidth;
+         // Высота экрана может уменьшиться на высоту клавиатуры. Для точного определения ориентации учитываю скроллY.
+         return (window.innerHeight + window.scrollY) > window.innerWidth;
       },
 
       getKeyboardAnimation: function() {
