@@ -3,7 +3,14 @@
  */
 import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
 import cMerge = require('Core/core-merge');
-   var INVERTING_CONST = {
+
+interface IPosition {
+    left?: Number,
+    right?: Number,
+    top?: Number,
+    bottom?: Number
+}
+   const INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
       left: 'right',
@@ -85,23 +92,29 @@ import cMerge = require('Core/core-merge');
          return position;
       },
 
-      calculatePosition: function(popupCfg, targetCoords, direction) {
-         var property = direction === 'horizontal' ? 'width' : 'height';
-         var position = _private.getPosition(popupCfg, targetCoords, direction);
-         var resultPosition = position;
-         var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+       isNegativePosition(position:IPosition):Boolean {
+          // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
+          return  position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+       },
 
-         if (positionOverflow > 0) {
+      calculatePosition: function(popupCfg:Object, targetCoords:Object, direction:String):IPosition {
+         let property = direction === 'horizontal' ? 'width' : 'height';
+         let position = _private.getPosition(popupCfg, targetCoords, direction);
+         let resultPosition = position;
+         let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+         let isNegativePos = _private.isNegativePosition(position);
+         if (positionOverflow > 0 || isNegativePos) {
             if (popupCfg.fittingMode === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else if (popupCfg.fittingMode === 'overflow') {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
-               var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
-               var revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-               if (revertPositionOverflow > 0) {
-                  if (positionOverflow < revertPositionOverflow) {
+               let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+               let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+               let isNegativeRevertPosition = _private.isNegativePosition(revertPosition);
+               if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
+                  if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
                      _private.invertPosition(popupCfg, direction);
                      _private.restrictContainer(position, property, popupCfg, positionOverflow);
                      resultPosition = position;

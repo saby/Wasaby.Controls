@@ -1,4 +1,4 @@
-<Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
+<Controls.Application scope="{{_options}}" bodyClass="controls-default-bg" title="kek">
    <ws:head>
       <link data-vdomignore="true" rel="shortcut icon" href="/Controls-demo/wasaby.ico?v=1" type="image/x-icon" />
    </ws:head>
