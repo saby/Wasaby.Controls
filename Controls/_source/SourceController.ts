@@ -1,21 +1,22 @@
 import cInstance = require('Core/core-instance');
-import Env = require('Env/Env');
+import {IoC} from 'Env/Env';
 import Page from 'Controls/_source/QueryParamsController/Page';
 import Position from 'Controls/_source/QueryParamsController/Position';
-import sourceLib = require('Types/source');
+import {Query} from 'Types/source';
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
+import {ICrud} from 'Types/source';
+
+export interface ISourceControllerOptions {
+   source?: ICrud;
+   navigation?: object;
+}
 
 var _private = {
-   prepareSource: function(sourceOpt) {
-      if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
-         Env.IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
-      }
-      return sourceOpt;
-   },
+
 
    getQueryInstance: function(filter, sorting, offset, limit, meta) {
-      var query = new sourceLib.Query();
+      var query = new Query();
       query.where(filter)
          .offset(offset)
          .limit(limit)
@@ -65,14 +66,11 @@ var _private = {
          case 'page':
             cntCtr = Page;
             break;
-         case 'offset':
-            cntCtr = Offset;
-            break;
          case 'position':
             cntCtr = Position;
             break;
          default:
-            Env.IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+            IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
       }
       if (cntCtr) {
          cntInstance = new cntCtr(cfg);
@@ -107,19 +105,28 @@ var _private = {
       return resultParams;
    }
 };
-var SourceController = cExtend.extend({
-   _source: null,
-   _queryParamsController: null,
-   _loader: null,
-   constructor: function(cfg) {
+class SourceController {
+   protected  source: ICrud = null;
+   protected  queryParamsController = null;
+   protected _loader = null;
+   protected _options: ISourceControllerOptions;
+   protected _source: ICrud;
+
+   constructor(cfg: ISourceControllerOptions) {
       this._options = cfg;
-      SourceController.superclass.constructor.apply(this, arguments);
-      this._source = _private.prepareSource(this._options.source);
+      this._source = this._prepareSource(this._options.source);
 
       if (this._options.navigation && this._options.navigation.source) {
          this._queryParamsController = _private.createQueryParamsController(this._options.navigation.source, this._options.navigation.sourceConfig);
       }
-   },
+   }
+
+   private _prepareSource(sourceOpt: ICrud): ICrud {
+      if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
+         IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
+      }
+      return sourceOpt;
+   }
 
    load: function(filter, sorting, direction) {
       var def, queryParams, self, navFilter;
@@ -225,7 +232,7 @@ var SourceController = cExtend.extend({
       this.cancelLoading();
       this._options = null;
    }
-});
+};
 
 //для тестов
 SourceController._private = _private;
