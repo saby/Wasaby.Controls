@@ -20,13 +20,14 @@
  * @author Kraynov D.
  */
 
-import Button = require('Controls/_toggle/Button');
-import Switch = require('Controls/_toggle/Switch');
-import DoubleSwitch = require('Controls/_toggle/DoubleSwitch');
+import {default as Button} from 'Controls/_toggle/Button';
+import {default as Switch} from 'Controls/_toggle/Switch';
+import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
 import RadioGroup = require('Controls/_toggle/RadioGroup');
-import Checkbox = require('Controls/_toggle/Checkbox');
+import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import Separator = require('Controls/_toggle/Separator');
-import BigSeparator = require('Controls/_toggle/BigSeparator');
+import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
+import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
 export {
    Button,
@@ -35,5 +36,6 @@ export {
    RadioGroup,
    Checkbox,
    Separator,
-   BigSeparator
-}
+   BigSeparator,
+   ItemTemplate
+};

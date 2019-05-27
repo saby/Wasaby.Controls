@@ -16,7 +16,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     *
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation

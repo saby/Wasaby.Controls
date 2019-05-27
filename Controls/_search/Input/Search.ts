@@ -17,7 +17,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/interface/ITooltip
+ * @mixes Controls/_interface/ITooltip
  *
  * @ignoreOptions style
  *
@@ -126,7 +126,7 @@ var Search = Base.extend({
    }
 });
 
-Search._theme.push('Controls/search');
+Search._theme = Base._theme.concat(['Controls/search']);
 
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();

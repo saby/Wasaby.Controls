@@ -509,6 +509,7 @@ define([
          };
          selectionInstance = new HierarchySelection(cfg);
          assert.deepEqual({ 2: true }, selectionInstance.getSelectedKeysForRender());
+         assert.equal(1, selectionInstance.getCount());
       });
 
       it('if an item is in selectedKeys, it should get counted even if it is not loaded', function() {

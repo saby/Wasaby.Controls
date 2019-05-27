@@ -14,7 +14,7 @@ define('Controls-demo/Headers/HeaderSeparator/HeadingSeparatorPG',
       var HeadingPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Heading/Separator',
+         _content: 'Controls/heading:Separator',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

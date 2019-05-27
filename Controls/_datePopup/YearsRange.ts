@@ -3,7 +3,7 @@ import DateRangeModel = require('Controls/Date/model/DateRange');
 import rangeSelectionUtils = require('Controls/Date/Utils/RangeSelection');
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/YearsRange');
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods that are multiples of years.

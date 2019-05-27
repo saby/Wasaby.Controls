@@ -13,7 +13,7 @@ define(
    function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
-      describe('Controls.Input.Base', function() {
+      describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
          makeInstanceCompatible(ctrl);
@@ -118,6 +118,36 @@ define(
                }
             ]);
          });
+         describe('calculateValueForTemplate', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+               ctrl._isBrowserPlatform = true;
+
+               ctrl._recalculateLocationVisibleArea = ProxyCall.apply(ctrl._recalculateLocationVisibleArea, 'recalculateLocationVisibleArea', calls, true);
+            });
+            it('Edit field', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._viewModel.value = 'Test';
+               ctrl._getField().readOnly = false;
+               ctrl._calculateValueForTemplate();
+
+               assert.equal(calls.length, 1);
+            });
+            it('Read only field', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._viewModel.value = 'Test';
+               ctrl._getField().readOnly = true;
+               ctrl._calculateValueForTemplate();
+
+               assert.equal(calls.length, 0);
+            });
+         })
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
                ctrl._options.readOnly = false;

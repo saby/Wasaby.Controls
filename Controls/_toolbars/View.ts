@@ -12,8 +12,8 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  *
  * @class Controls/_toolbars/View
  * @extends Core/Control
- * @mixes Controls/interface/ITooltip
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_list/interface/IHierarchy
  * @control
@@ -298,18 +298,22 @@ var Toolbar = Control.extend({
         this._parentProperty = newOptions.parentProperty;
     },
     _onItemClick: function (event, item) {
-        if (item.get(this._nodeProperty)) {
-            var config = _private.generateItemPopupConfig(item, event, this);
-            _private.openPopup(config, this);
+        if (item.get('readOnly')) {
+            event.stopPropagation();
+        } else {
+            if (item.get(this._nodeProperty)) {
+                var config = _private.generateItemPopupConfig(item, event, this);
+                _private.openPopup(config, this);
 
-            // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-            // TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+                // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+                // TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
 
-            this._notify('menuOpened', [], {bubbling: true});
+                this._notify('menuOpened', [], {bubbling: true});
+            }
+            event.stopPropagation();
+            this._notify('itemClick', [item]);
+            item.handler && item.handler(item);
         }
-        event.stopPropagation();
-        this._notify('itemClick', [item]);
-        item.handler && item.handler(item);
     },
 
     _showMenu: function () {

@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-import lists = require('Controls/list');
+import {ItemsViewModel, BaseViewModel, ItemsUtil, getStyle} from 'Controls/list';
 import entity = require('Types/entity');
       var _private = {
          filterHierarchy: function(item) {
@@ -49,7 +49,7 @@ import entity = require('Types/entity');
          }
       };
 
-      var DropdownViewModel = lists.BaseViewModel.extend({
+      var DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 
@@ -57,7 +57,7 @@ import entity = require('Types/entity');
             var self = this;
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
-            this._itemsModel = new lists.ItemsViewModel({
+            this._itemsModel = new ItemsViewModel({
                groupingKeyCallback: cfg.groupingKeyCallback,
                groupMethod: cfg.groupMethod,
                groupTemplate: cfg.groupTemplate,
@@ -85,6 +85,10 @@ import entity = require('Types/entity');
             if (this._options.selectedKeys.indexOf(key) !== -1) {
                var index = this._options.selectedKeys.indexOf(key);
                this._options.selectedKeys.splice(index, 1);
+               // In the dropdown list with a multiselect, emptyText (item with key null) is required.
+               if (!this._options.selectedKeys.length) {
+                  this._options.selectedKeys.push(null);
+               }
             } else {
                if (this._options.selectedKeys[0] === null) {
                   this._options.selectedKeys = [];
@@ -167,7 +171,7 @@ import entity = require('Types/entity');
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
             }
-            itemsModelCurrent.iconStyle = lists.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
+            itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';
@@ -241,7 +245,7 @@ import entity = require('Types/entity');
                });
                emptyItem.item = item;
                emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
-               emptyItem.getPropValue = lists.ItemsUtil.getPropertyValue;
+               emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.spacingClassList = this._options.multiSelect ? 'controls-DropdownList__item-leftPadding-multiSelect' : 'controls-DropdownList__item-leftPadding_default';
                return emptyItem;
@@ -251,4 +255,4 @@ import entity = require('Types/entity');
 
       DropdownViewModel._private = _private;
       export = DropdownViewModel;
-   
+

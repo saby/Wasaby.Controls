@@ -10,7 +10,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods of multiple days.
@@ -68,6 +68,8 @@ var Component = BaseControl.extend([EventProxy], {
 
     _weekdaysCaptions: DateControlsUtils.getWeekdaysCaptions(),
     _formatDate: formatDate,
+
+    _isStickySupport: datePopupUtils.isStickySupport(),
 
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
@@ -163,6 +165,10 @@ var Component = BaseControl.extend([EventProxy], {
 
     _scrollToMonth: function(e, year, month) {
         _private.updateScrollPosition(this, new Date(year, month));
+    },
+
+    _formatMonth: function(month) {
+        return formatDate(new Date(2000, month), 'MMMM');
     }
 
 });

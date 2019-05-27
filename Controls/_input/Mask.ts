@@ -102,17 +102,6 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
          _private = {
             regExpQuantifiers: /\\({.*?}|.)/,
 
-            findLastUserEnteredCharPosition: function(value, replacer) {
-               var position;
-
-               if (replacer) {
-                  position = value.indexOf(replacer);
-
-                  return position === -1 ? value.length : position;
-               }
-               return value.length;
-            },
-
             validateReplacer: function(replacer, mask) {
                var validation;
 
@@ -156,15 +145,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
             _focusInHandler: function() {
                Mask.superclass._focusInHandler.apply(this, arguments);
-               var field = this._getField();
-               var position = _private.findLastUserEnteredCharPosition(this._viewModel.displayValue, this._options.replacer);
-               this._viewModel.selection = {
-                   start: position,
-                   end: position
-               }
-               runDelayed(function() {
-                  field.setSelectionRange(position, position);
-               });
+               this._viewModel.setCarriageDefaultPosition();
             }
          });
 
@@ -192,7 +173,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
       Mask._private = _private;
 
-      Mask._theme.push('Controls/input');
+      Mask._theme = Base._theme.concat(['Controls/input']);
 
       export = Mask;
    

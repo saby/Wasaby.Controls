@@ -14,13 +14,20 @@ define('Controls-demo/Input/Date/PickerPG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Date/Picker',
+         _content: 'Controls/input:Date',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
                   readOnly: true
+               },
+               style: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {

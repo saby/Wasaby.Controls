@@ -284,6 +284,12 @@ define(
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.isTrue(!!newConfig.templateOptions.context);
             assert.equal(newConfig.templateOptions.context.getPrevious(), parentContext);
+            newConfig = {
+               _type : 'stack',
+               minWidth: 300
+            };
+            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            assert.equal(newConfig.width, 300);
          });
 
          it('_getCaption', function() {

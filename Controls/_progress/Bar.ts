@@ -59,6 +59,6 @@ var
       };
    };
 
-Bar._theme = ['Controls/_progress/progress'];
+Bar._theme = ['Controls/progress'];
 Bar._private = _private;
 export default Bar;

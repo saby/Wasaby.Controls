@@ -115,6 +115,26 @@ define(
             assert.equal(pGrid._changedIndex, -1);
          });
 
+         it('_afterMount', function() {
+            let pGrid = getPropertyGrid(config);
+            let newItems = [
+               {
+                  id: 'list',
+                  value: 5,
+                  resetValue: 1
+               }
+            ];
+            let itemsChanged = false;
+            pGrid._notify = () => {
+               itemsChanged = true;
+            };
+
+            pGrid._afterMount({ items: newItems });
+            pGrid._items[0].value = 'test';
+
+            assert.isTrue(itemsChanged);
+         });
+
          it('_isItemVisible', function() {
             var pGrid = getPropertyGrid(config);
             assert.equal(pGrid._isItemVisible(config.items[0]), true);

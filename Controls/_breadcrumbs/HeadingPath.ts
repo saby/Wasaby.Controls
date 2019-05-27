@@ -113,7 +113,7 @@ var _private = {
  * @variant primary
  * @variant secondary
  * @default secondary
- * @see Controls/Heading/Back#style
+ * @see Controls/_heading/Back#style
  */
 
 /**

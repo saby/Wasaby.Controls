@@ -41,7 +41,7 @@ define(
          return hMenu;
       };
 
-      describe('Controls/History/Menu', function() {
+      describe('Controls/_history/Menu', function() {
          it('_private.getMetaPinned', function() {
             var item = new entity.Model({
                rawData: {

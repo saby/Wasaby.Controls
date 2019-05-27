@@ -1,10 +1,10 @@
 define([
-   'Controls/StickyHeader/_StickyHeader',
-   'Controls/StickyHeader/Utils',
+   'Controls/_scroll/StickyHeader/_StickyHeader',
+   'Controls/scroll',
    'Core/core-merge'
 ], function(
    StickyHeader,
-   stickyUtils,
+   scroll,
    coreMerge
 ) {
 
@@ -24,11 +24,11 @@ define([
       options = {
       };
 
-   describe('Controls.StickyHeader._StickyHeader', function() {
+   describe('Controls/_scroll/StickyHeader/_StickyHeader', function() {
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(StickyHeader, options);
-            assert.strictEqual(component._index, stickyUtils._lastId);
+            assert.strictEqual(component._index, scroll.Utils._lastId);
          });
       });
 

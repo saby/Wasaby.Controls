@@ -80,7 +80,8 @@ define(
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._prefetchSource === prefetchSource);
+            assert.isTrue(data._prefetchSource.getOriginal() === memory);
+            assert.isTrue(data._prefetchSource !== prefetchSource);
          });
 
          it('update equal source', function(done) {

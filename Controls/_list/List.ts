@@ -15,7 +15,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @class Controls/_list/List
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped

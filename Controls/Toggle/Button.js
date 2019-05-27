@@ -1,6 +1,6 @@
 define('Controls/Toggle/Button',
-   ['Controls/_toggle/Button'],
-   function(Control) {
+   ['Controls/toggle'],
+   function(toggle) {
       'use strict';
-      return Control;
+      return toggle.Button;
    });

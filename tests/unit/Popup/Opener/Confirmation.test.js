@@ -13,7 +13,7 @@ define([
       var popupOpener;
       var dialog;
 
-      describe('Controls/Popup/Opener/Confirmation', () => {
+      describe('Controls/_popup/Opener/Confirmation', () => {
          beforeEach(() => {
             popupOpener = new popup.Confirmation();
             dialog = new popupTemplate.ConfirmationDialog();

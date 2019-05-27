@@ -14,7 +14,7 @@ define('Controls-demo/Headers/Counter/CounterPG',
       var HeadingPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Heading/Counter',
+         _content: 'Controls/heading:Counter',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

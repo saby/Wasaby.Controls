@@ -28,6 +28,23 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
          });
 
+         it('isFirstInGroup with breadCrumb', function() {
+            var items = new collection.RecordSet({
+               rawData: [{id: 1, title: 'test'}],
+               idProperty: 'id'
+            });
+            var model = new treeGrid.SearchGridViewModel({
+               items: items,
+               searchValue: 'tes',
+               keyProperty: 'id',
+               columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
+               multiSelectVisibility: 'visible'
+            });
+            model._curIndex = 0;
+
+            assert.isFalse(model._isFirstInGroup(model.getCurrent().item));
+         });
+
          it('should not add spacing to first column because multiSelectVisibility is "visible"', function() {
             var items = new collection.RecordSet({
                rawData: [{id: 1, title: 'test'}],

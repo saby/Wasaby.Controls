@@ -902,7 +902,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (_private.isFieldFocused(this)) {
+               if (_private.isFieldFocused(this) && !field.readOnly) {
                   this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
                }
             }
@@ -968,7 +968,14 @@ import 'wml!Controls/_input/Base/Stretcher';
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             inputCallback: entity.descriptor(Function),
-            placeholder: entity.descriptor(String, Function),
+
+            /**
+             * Setting placeholder as HTML in wml, template engine converts it to an array.
+             */
+            /**
+             * https://online.sbis.ru/opendoc.html?guid=af7e16d7-139f-4414-b7af-9e3a1a0dae05
+             * placeholder: entity.descriptor(String, Function, Array),
+             */
             size: entity.descriptor(String).oneOf([
                's',
                'm',

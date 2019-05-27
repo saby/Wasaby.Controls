@@ -11,7 +11,7 @@ import dataSource = require('Controls/dataSource');
     * @category FormController
     * @class Controls/_form/FormController
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IFormController
     * @demo Controls-demo/Popup/Edit/Opener
     * @control
@@ -546,6 +546,7 @@ import dataSource = require('Controls/dataSource');
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);
+         event.stopPropagation(); // FC the notification event by itself
          this._notifyHandler(eventName, args);
       },
 

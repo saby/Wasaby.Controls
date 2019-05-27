@@ -25,6 +25,7 @@ import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils');
+import defaultContentTemplateWithIcon = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon');
 
 export {
     Button,
@@ -35,5 +36,6 @@ export {
     ItemTemplate,
 
     MenuUtils,
-    dropdownHistoryUtils
+    dropdownHistoryUtils,
+    defaultContentTemplateWithIcon
 }

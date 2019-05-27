@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
-import {isPartialSupport} from 'Controls/_grid/utils/GridLayoutUtil'
+import {isPartialGridSupport} from 'Controls/_grid/utils/GridLayoutUtil'
 
 /**
  *
@@ -186,7 +186,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
-        if (isPartialSupport && this._hoveredItem === item) {
+        // todo removed by https://online.sbis.ru/opendoc.html?guid=8f5d1d89-dde4-476d-a100-235b4e4b00b9
+        if (isPartialGridSupport() && this._hoveredItem === item) {
             version = 'HOVERED_' + version;
         }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
@@ -406,7 +407,22 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
-    _onBeginCollectionChange: function() {
+    _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        var
+           self = this;
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+            // TODO KINGO. При удалении элементов очищаем закешированные для них операции над записью. Тем самым:
+            // а) избавляемся от утечек (не храним в памяти лишние ссылки);
+            // б) при создании записи с таким же ID мы сгенерим для неё новые операции над записью, а не переиспользуем старые.
+            // https://online.sbis.ru/opendoc.html?guid=905c3018-384a-4587-845c-aca5dc51944b
+            removedItems.forEach(function(removedItem) {
+                var
+                   removedItemContents = removedItem.getContents();
+                if (removedItemContents.get) {
+                    delete self._actions[removedItemContents.get(self._options.keyProperty)];
+                }
+            });
+        }
         _private.updateIndexes(this, 0, this.getCount());
     },
 

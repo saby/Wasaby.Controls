@@ -23,10 +23,10 @@ var _private = {
  * <a href="/materials/demo-ws4-input-combobox">Demo-example</a>.
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISingleSelectable
+ * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/IInputPlaceholder

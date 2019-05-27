@@ -43,7 +43,7 @@ define([
          ].forEach(function(test) {
             it(`should return ${test.displayValue} if inserted '${test.insert}'
                between before('${test.before}') and after('${test.after}') is passed`, function() {
-               let model = new MaskViewModel.default(cMerge({ mask: test.mask }, options, { preferSource: true }));
+               let model = new MaskViewModel.default(cMerge({ mask: test.mask }, options, { preferSource: true }), options.value);
                model.handleInput({
                   before: test.before,
                   after: test.after,

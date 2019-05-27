@@ -9,7 +9,7 @@ define(
    (popupTemplate, NotificationContent, Notification, NotificationController, collection) => {
       'use strict';
 
-      describe('Controls/Popup/Opener/Notification', () => {
+      describe('Controls/_popup/Opener/Notification', () => {
          const containers = [
             {
                offsetHeight: 10
@@ -97,14 +97,16 @@ define(
             let list = new collection.List();
             list.add({
                id: 1,
-               hasMaximizedPopup: false
+               popupOptions: {}
             });
             let zIndex = NotificationController.getCustomZIndex(list);
             assert.equal(zIndex, 100);
 
             list.add({
                id: 2,
-               hasMaximizePopup: true
+               popupOptions: {
+                  maximize: true,
+               }
             });
 
             zIndex = NotificationController.getCustomZIndex(list);
@@ -112,7 +114,8 @@ define(
 
             let item = {
                id: 3,
-               parentId: 2
+               parentId: 2,
+               popupOptions: {}
             };
             list.add(item);
             zIndex = NotificationController.getCustomZIndex(list, item);

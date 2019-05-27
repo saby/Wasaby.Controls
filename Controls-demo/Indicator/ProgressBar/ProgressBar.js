@@ -13,7 +13,7 @@ define('Controls-demo/Indicator/ProgressBar/ProgressBar',
       return Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Indicator/Progress/Bar',
+         _content: 'Controls/progress:Bar',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

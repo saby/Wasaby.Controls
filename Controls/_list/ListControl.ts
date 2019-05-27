@@ -7,7 +7,7 @@ import Deferred = require('Core/Deferred');
  *
  * @class Controls/_list/ListControl
  * @extends Controls/_list/BaseControl
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped

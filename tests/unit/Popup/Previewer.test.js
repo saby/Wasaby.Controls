@@ -5,7 +5,7 @@ define(
    ],
    (popup, SyntheticEvent) => {
       'use strict';
-      describe('Controls/Popup/Previewer', () => {
+      describe('Controls/_popup/Previewer', () => {
          it('previewerClickHandler', () => {
             let PWInstance = new popup.PreviewerTarget();
             var result;
@@ -30,7 +30,7 @@ define(
          });
       });
 
-      describe('Controls/Popup/Previewer', () => {
+      describe('Controls/_popup/Previewer', () => {
          it('getConfig', () => {
             let PWInstance = new popup.PreviewerTarget();
             let corner = {

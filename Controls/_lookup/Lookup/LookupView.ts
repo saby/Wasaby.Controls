@@ -6,7 +6,6 @@ import Collection = require('Controls/_lookup/SelectedCollection');
 import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import Env = require('Env/Env');
-import inputWml = require('wml!Controls/Input/resources/input');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
@@ -138,7 +137,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         collectionItems = measurer.getElementsByClassName('controls-SelectedCollection__item');
+         collectionItems = measurer.getElementsByClassName('js-controls-SelectedCollection__item');
          itemsCount = collectionItems.length;
 
          // items only from the last line

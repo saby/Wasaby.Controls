@@ -420,6 +420,7 @@ var _private = {
             // Иначе пересчитываем скролл
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
+            self._checkShouldLoadToDirection = true;
         }
     },
 
@@ -904,7 +905,7 @@ var _private = {
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
  * @class Controls/_list/BaseControl
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped
@@ -1331,7 +1332,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setActiveItem(itemData);
         }
         if (direction === 'left') {
-            this._canUpdateItemsActions = true;
+            this._children.itemActions.updateItemActions(itemData.item);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);

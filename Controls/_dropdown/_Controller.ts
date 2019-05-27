@@ -26,10 +26,10 @@ var _private = {
       self._filter = historyUtils.getSourceFilter(options.filter, options.source);
       return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
          self._items = items;
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          if (options.dataLoadCallback) {
             options.dataLoadCallback(items);
          }
+         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          return items;
       });
    },
@@ -76,6 +76,14 @@ var _private = {
       }
    },
 
+   prepareItem: function(item, keyProperty, source) {
+      if (historyUtils.isHistorySource(source)) {
+         return source.resetHistoryFields(item, keyProperty);
+      } else {
+         return item;
+      }
+   },
+
    updateHistory: function (self, items) {
       if (historyUtils.isHistorySource(self._options.source)) {
          self._options.source.update(items, historyUtils.getMetaHistory());
@@ -89,6 +97,7 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClicked':
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
             this._notify('pinClicked', [result.data]);
             this._items = this._options.source.getItems();
             this._open();
@@ -99,6 +108,7 @@ var _private = {
             this._children.DropdownOpener.close();
             break;
          case 'itemClick':
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
             var item = result.data[0];
@@ -146,17 +156,16 @@ var _private = {
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control
