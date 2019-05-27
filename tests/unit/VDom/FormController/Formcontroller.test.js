@@ -96,6 +96,7 @@ define([
          let setRecordCalled = false;
          let readCalled = false;
          let createCalled = false;
+         let createDeferred = new Deferred();
 
          FC._setRecord = () => {
             setRecordCalled = true;
@@ -105,6 +106,8 @@ define([
          };
          FC.create = () => {
             createCalled = true;
+            createDeferred = new Deferred();
+            return createDeferred;
          };
 
          FC._beforeUpdate({
@@ -136,6 +139,9 @@ define([
          assert.equal(setRecordCalled, false);
          assert.equal(readCalled, false);
          assert.equal(createCalled, true);
+         assert.equal(FC._isNewRecord, false);
+
+         createDeferred.callback();
          assert.equal(FC._isNewRecord, true);
 
          createCalled = false;
