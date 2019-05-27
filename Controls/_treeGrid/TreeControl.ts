@@ -288,10 +288,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
         }
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+
+        if (typeof newOptions.expandedItems !== 'undefined' && this._expandedItems !== newOptions.expandedItems) {
+            this._expandedItems = newOptions.expandedItems;
+            this._children.baseControl.getViewModel().setExpandedItems(this._expandedItems);
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            this._children.baseControl.getViewModel().setExpandedItems(this._expandedItems);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
