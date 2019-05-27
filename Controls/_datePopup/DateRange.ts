@@ -69,6 +69,8 @@ var Component = BaseControl.extend([EventProxy], {
     _weekdaysCaptions: DateControlsUtils.getWeekdaysCaptions(),
     _formatDate: formatDate,
 
+    _isStickySupport: datePopupUtils.isStickySupport(),
+
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
 
@@ -163,6 +165,10 @@ var Component = BaseControl.extend([EventProxy], {
 
     _scrollToMonth: function(e, year, month) {
         _private.updateScrollPosition(this, new Date(year, month));
+    },
+
+    _formatMonth: function(month) {
+        return formatDate(new Date(2000, month), 'MMMM');
     }
 
 });

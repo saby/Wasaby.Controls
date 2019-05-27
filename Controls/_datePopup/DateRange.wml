@@ -11,25 +11,43 @@
          </div>
       </div>
    </div>
-
-   <Controls.calendar:MonthList
-      name="monthList"
-      date="{{_year}}"
-      attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
-      calendarSource="{{_options.calendarSource}}"
-      dayTemplate="{{_options.dayTemplate}}"
-      on:itemClick="_onItemClick()"
-      on:scroll="_onScroll()"
-   >
-      <ws:itemTemplate>
-         <ws:partial
-            template="wml!Controls/_datePopup/DateRangeItem"
-            _options="{{_options}}"
-            _formatDate="{{_formatDate}}"
-            _monthSelectionEnabled="{{_monthSelectionEnabled}}"
-            _monthViewModel="{{_monthViewModel}}"
-         />
-      </ws:itemTemplate>
-   </Controls.calendar:MonthList>
-
+   <div class="controls-PeriodDialog-DateRange__body">
+      <ws:if data="{{!_isStickySupport}}">
+         <div class="controls-PeriodDialog-DateRangeItem__months">
+            <ws:for data="month in 12">
+               <div class="controls-PeriodDialog-DateRangeItem__months-btn"
+                    on:click="_scrollToMonth(_month.getFullYear(), month)"
+                    >
+                  {{ _formatMonth(month) }}
+               </div>
+            </ws:for>
+            <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+                 on:click="_scrollToMonth(_month.getFullYear() + 1, 0)"
+                  >
+               {{ _month.getFullYear() + 1 }}
+            </div>
+         </div>
+      </ws:if>
+      <Controls.calendar:MonthList
+         name="monthList"
+         date="{{_year}}"
+         attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
+         calendarSource="{{_options.calendarSource}}"
+         dayTemplate="{{_options.dayTemplate}}"
+         on:itemClick="_onItemClick()"
+         on:scroll="_onScroll()"
+      >
+         <ws:itemTemplate>
+            <ws:partial
+               template="wml!Controls/_datePopup/DateRangeItem"
+               _options="{{_options}}"
+               _isStickySupport="{{_isStickySupport}}"
+               _formatDate="{{_formatDate}}"
+               _formatMonth="{{_formatMonth}}"
+               _monthSelectionEnabled="{{_monthSelectionEnabled}}"
+               _monthViewModel="{{_monthViewModel}}"
+            />
+         </ws:itemTemplate>
+      </Controls.calendar:MonthList>
+   </div>
 </div>

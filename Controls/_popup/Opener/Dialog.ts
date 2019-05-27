@@ -37,9 +37,9 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
           *          <ws:templateOptions key="111"/>
-          *    </Controls.Popup.Opener.Dialog>
+          *    </Controls.popup:Dialog>
           *
           *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
           *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
@@ -113,9 +113,9 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
      * @example
      * wml
      * <pre>
-     *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+     *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
      *          <ws:templateOptions key="111"/>
-     *    </Controls.Popup.Opener.Dialog>
+     *    </Controls.popup:Dialog>
      *
      *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
      *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>

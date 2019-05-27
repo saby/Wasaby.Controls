@@ -464,7 +464,7 @@ define([
                   _options: {
                      value: json,
                      validHtml: validHtml,
-                     tagResolver: decorator.NoOuterTag
+                     tagResolver: decorator.noOuterTag
                   }
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
@@ -509,7 +509,7 @@ define([
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.LinkDecorate), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.linkDecorate), html));
          });
          it('with highlight resolver', function() {
             var json = [
@@ -533,8 +533,8 @@ define([
          it('with noOuterTag resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.NoOuterTag), html));
-            assert.equal(decorator.Converter.jsonToHtml([], decorator.NoOuterTag), '');
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.noOuterTag), html));
+            assert.equal(decorator.Converter.jsonToHtml([], decorator.noOuterTag), '');
          });
       });
    });

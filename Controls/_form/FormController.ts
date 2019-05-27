@@ -546,6 +546,7 @@ import dataSource = require('Controls/dataSource');
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);
+         event.stopPropagation(); // FC the notification event by itself
          this._notifyHandler(eventName, args);
       },
 

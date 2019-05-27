@@ -218,11 +218,26 @@ define([
       });
 
       it('_beforeMount', function() {
-         let cfg = { root: 'rootNode' };
-         let instance = new explorerMod.View(cfg);
+         let instance = new explorerMod.View();
+         let path = new collection.RecordSet({
+            rawData: [
+               { id: 1, title: 'item1' }
+            ],
+            idProperty: 'id'
+         });
+         let cfg = { items: {
+               getMetaData: () => {
+                  return { path: path };
+               }
+            }
+         };
 
          instance._beforeMount(cfg);
-         assert.deepEqual(instance._breadCrumbsItems, []);
+         assert.equal(instance._breadCrumbsItems.length, 1);
+
+         path.clear();
+         instance._beforeMount(cfg);
+         assert.equal(instance._breadCrumbsItems, null);
       });
 
       it('_onBreadCrumbsClick', function() {

@@ -3,7 +3,7 @@
       <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
          <ws:partial
             template="{{_options.template}}"
-            scope="{{_options.templateOptions}}"
+            scope="{{_templateOptions}}"
             on:close="_onCloseHandler()"
             on:controlresize="_onResizeHandler()"
             on:sendresult="_onResultHandler()"

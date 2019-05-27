@@ -5,7 +5,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
-      'Controls/Popup/Opener/Stack/StackStrategy',
+      'Controls/_popupTemplate/Stack/Opener/StackStrategy',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'Vdom/Vdom',
@@ -142,6 +142,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._closeAfterMount = true;
                event.setResult(false);
             } else {
+               try {
+                  if (this._container[0].contains(document.activeElement)) {
+                     //Я не знаю, как это работает, но если фокус будет внутри Wasaby слоя 
+                     //то мы получаем утечку, всех дом элементов внутри.
+                     //если мы просто переведем фокус на контейнер выше,
+                     //все очистится
+                     this._container.focus();
+                  }
+               } catch (e) {
+
+               }
                this.popupBeforeDestroyed();
             }
          },
@@ -315,7 +326,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._isNewOptions = true;
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
-               this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
+               // Если панель стековая, то не скрываем, т.к. позиция окна не изменится.
+               if (this._panel._moduleName !== 'Lib/Control/FloatArea/FloatArea' || this._panel._options.isStack !== true) {
+                  this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
+               }
                this._updateVDOMTemplate(this._options.templateOptions);
             }
          },
@@ -326,7 +340,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _updateVDOMTemplate: function(templateOptions) {
-            this._vDomTemplate._options.templateOptions = templateOptions;
+            this._vDomTemplate.setTemplateOptions(templateOptions);
             this._vDomTemplate._forceUpdate();
          },
 

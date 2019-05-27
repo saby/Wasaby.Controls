@@ -501,12 +501,19 @@ define(
             assert.isFalse(fastFilter._needShowCross(item));
          });
 
-         it('_private::loadNewItems', function() {
+         it('_beforeUpdate loadNewItems by key', function(done) {
             var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeMount(configWithItems).addCallback(function(result) {
                assert.isTrue(!!result.configs);
                assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
                var newConfigItems = Clone(configWithItems);
+               newConfigItems.items[3].value = null;
+               fastFilter._configs[3].emptyText = 'Не выбрано';
+               fastFilter._beforeUpdate(newConfigItems);
+               assert.equal(fastFilter._items.at(3).value, null);
+               assert.equal(fastFilter._items.at(3).textValue, 'Не выбрано');
+
+               newConfigItems = Clone(configWithItems);
                newConfigItems.items[3].value = 'Великобритания';
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');

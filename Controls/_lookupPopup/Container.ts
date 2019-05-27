@@ -7,6 +7,9 @@ import Utils = require('Types/util');
 import {Controller as SourceController} from 'Controls/source';
 import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
 import Deferred = require('Core/Deferred');
+import cInstance = require('Core/core-instance');
+import {adapter} from 'Types/entity'
+import {IData, IDecorator} from "Types/source";
 
 /**
  * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
@@ -121,6 +124,18 @@ import Deferred = require('Core/Deferred');
             return type;
          },
 
+         getSourceAdapter: function(source:IData):adapter.IAdapter {
+            let adapter:adapter.IAdapter;
+
+            if (cInstance.instanceOfMixin(source, 'Types/_source/IDecorator')) {
+               adapter = (<IData>(source as IDecorator).getOriginal()).getAdapter();
+            } else {
+               adapter = source.getAdapter();
+            }
+
+            return adapter;
+         },
+
          prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
             filter = Utils.object.clone(filter);
 
@@ -179,7 +194,7 @@ import Deferred = require('Core/Deferred');
 
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
-               const adapter = source.getAdapter();
+               const adapter = _private.getSourceAdapter(source);
                const sourceController = _private.getSourceController(source, dataOptions.navigation);
                const selection = {
                   selected: this._selectedKeys,

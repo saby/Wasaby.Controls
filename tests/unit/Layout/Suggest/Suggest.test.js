@@ -330,6 +330,18 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var suggestComponent = new suggestMod._InputController();
          var suggestState = false;
 
+         if (!document) {
+            suggestMod._InputController._private.getActiveElement = function() {
+               return {
+                  classList: {
+                     contains: function() {
+                        return false;
+                     }
+                  }
+               }
+            };
+         }
+
          self._options.searchParam = 'searchParam';
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;

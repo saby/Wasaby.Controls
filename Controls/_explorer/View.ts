@@ -49,13 +49,21 @@ import 'Controls/breadcrumbs';
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
          },
-         dataLoadCallback: function(self, data) {
-            var metaData = data.getMetaData();
-            if (metaData.path && metaData.path.getCount() > 0) {
-               self._breadCrumbsItems = factory(metaData.path).toArray();
+
+         getPath: function(data) {
+            let path = data.getMetaData().path;
+            let breadCrumbs;
+
+            if (path && path.getCount() > 0) {
+               breadCrumbs = factory(path).toArray();
             } else {
-               self._breadCrumbsItems = null;
+               breadCrumbs = null;
             }
+
+            return breadCrumbs;
+         },
+         dataLoadCallback: function(self, data) {
+            self._breadCrumbsItems = _private.getPath(data);
             self._forceUpdate();
             if (self._options.dataLoadCallback) {
                self._options.dataLoadCallback(data);
@@ -156,10 +164,10 @@ import 'Controls/breadcrumbs';
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
-         //if root is not null, need to create a crumbs with empty items to take a space.
-         //otherwise a content of the explorer will move down after getting item from source.
-         if (cfg.root !== null) {
-            this._breadCrumbsItems = [];
+         //process items from options to create a path
+         //will be refactor after new scheme of a data receiving
+         if (cfg.items) {
+            this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
          _private.setViewMode(this, cfg.viewMode);
