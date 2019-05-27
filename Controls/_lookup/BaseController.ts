@@ -244,7 +244,10 @@ import {LoadService} from 'Controls/history';
       },
 
       _onShowSelectorHandler: function(event, templateOptions) {
-         this.showSelector(templateOptions);
+         if (this._notify('showSelector') !== false) {
+            this.showSelector(templateOptions);
+         }
+
          return false;
       },
 

@@ -29,7 +29,7 @@ import 'css!theme?Controls/lookup';
 
       _openInfoBox: function(event, config) {
          config.width = this._container.offsetWidth;
-      },
+      }
    });
 
    SelectorButton.getDefaultOptions = function() {
