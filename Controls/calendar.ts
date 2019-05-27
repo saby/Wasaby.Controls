@@ -6,7 +6,13 @@
  * @includes MonthSlider Controls/_calendar/MonthSlider
  * @includes MonthModel Controls/_calendar/Month/Model
  * @includes MonthModel Controls/_calendar/Utils
+ * @includes MonthViewDayTemplate wml!Controls/_calendar/MonthView/dayTemplate
+ * @includes MonthViewTemplate wml!Controls/_calendar/MonthView/MonthView
+ * @includes MonthViewTableBodyTemplate wml!Controls/_calendar/MonthView/MonthViewTableBody
+ * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
+ * @includes MonthView Controls/_calendar/MonthView
  * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
+ * @includes IMonth Controls/_calendar/interface/IMonth
  * @public
  * @author Kraynov D.
  */
@@ -21,6 +27,10 @@ export {default as MonthSlider} from './_calendar/MonthSlider';
 export {Base as MonthSliderBase} from './_calendar/MonthSlider';
 export {default as MonthModel} from './_calendar/Month/Model';
 export {default as Utils} from './_calendar/Utils';
+export {default as MonthViewModel} from './_calendar/MonthView/MonthViewModel';
+export {default as MonthView} from './_calendar/MonthView';
+
+export {default as IMonth} from './_calendar/interfaces/IMonth';
 
 export {
    MonthViewDayTemplate,
