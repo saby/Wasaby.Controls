@@ -123,7 +123,7 @@ var SourceController = cExtend.extend({
       }
    },
 
-   load: function(filter, sorting, direction) {
+   load: function(filter, sorting?, direction?) {
       var def, queryParams, self, navFilter;
 
       queryParams = {
