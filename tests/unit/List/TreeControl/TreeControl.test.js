@@ -297,6 +297,11 @@ define([
                },
                resetExpandedItems: function() {
 
+               },
+               getItems: function() {
+                  return {
+                     at: function () {}
+                  };
                }
             };
          };
@@ -982,6 +987,11 @@ define([
          filter = {};
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
+
+         treeGridViewModel.setExpandedItems([1, 2]);
+         filter = {};
+         treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
+         assert.deepEqual(filter['Раздел'], ['root', 1, 2]);
       });
 
       it('_private.applyReloadedNodes', function() {

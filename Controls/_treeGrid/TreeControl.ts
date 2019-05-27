@@ -5,6 +5,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
 var
     HOT_KEYS = {
@@ -127,16 +128,29 @@ var _private = {
         return  deepReload || deepReloadState;
     },
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
-        var parentProperty = cfg.parentProperty;
-        var baseControl = self._children.baseControl;
-        var nodeSourceControllers = self._nodesSourceControllers;
-        var expandedItemsKeys;
-        var isExpandAll;
-        var viewModel;
+        const parentProperty = cfg.parentProperty;
+        const baseControl = self._children.baseControl;
+
+        let nodeSourceControllers = self._nodesSourceControllers;
+        let expandedItemsKeys: Array[number|string|null] = [];
+        let isExpandAll: boolean;
 
         if (baseControl) {
-            viewModel = baseControl.getViewModel();
-            expandedItemsKeys = Object.keys(viewModel.getExpandedItems());
+            let viewModel = baseControl.getViewModel();
+            let items = viewModel.getItems();
+            let expandedItems = viewModel.getExpandedItems();
+            let typeFunction;
+
+            if (!isEmpty(expandedItems)) {
+                typeFunction = items.at(0) && typeof items.at(0).get(cfg.keyProperty) === 'number' ? Number : String;
+
+                for (var i in expandedItems) {
+                    if (expandedItems.hasOwnProperty(i)) {
+                        expandedItemsKeys.push(typeFunction(i));
+                    }
+                }
+            }
+
             isExpandAll = viewModel.isExpandAll();
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
                 if (expandedItemsKeys.indexOf(node) === -1) {
