@@ -19,7 +19,7 @@ var getDayRange = function(startDate, endDate, quantum) {
 };
 
 /**
- * @class Controls/_calendar/Utils
+ * @class Controls/_dateRange/Utils
  * @public
  */
 var Utils = {

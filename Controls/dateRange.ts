@@ -4,6 +4,7 @@ export {default as LiteSelector} from './_dateRange/LiteSelector';
 export {default as RelationController} from './_dateRange/RelationController';
 export {default as RelationWrapper} from './_dateRange/RelationWrapper';
 export {default as RelationButton} from './_dateRange/RelationButton';
+export {default as Utils} from './_dateRange/Utils';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 
 export {IDateRangeSelectable};
@@ -23,6 +24,7 @@ export {IDateRangeSelectable};
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @includes Utils Controls/_dateRange/Utils
  *
  * @public
  * @author Mironov A.

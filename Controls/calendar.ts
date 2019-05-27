@@ -5,7 +5,6 @@
  * @includes MonthList Controls/_calendar/MonthList
  * @includes MonthSlider Controls/_calendar/MonthSlider
  * @includes MonthModel Controls/_calendar/Month/Model
- * @includes MonthModel Controls/_calendar/Utils
  * @includes MonthViewDayTemplate wml!Controls/_calendar/MonthView/dayTemplate
  * @includes MonthViewTemplate wml!Controls/_calendar/MonthView/MonthView
  * @includes MonthViewTableBodyTemplate wml!Controls/_calendar/MonthView/MonthViewTableBody
@@ -26,7 +25,6 @@ export {default as MonthList} from './_calendar/MonthList';
 export {default as MonthSlider} from './_calendar/MonthSlider';
 export {Base as MonthSliderBase} from './_calendar/MonthSlider';
 export {default as MonthModel} from './_calendar/Month/Model';
-export {default as Utils} from './_calendar/Utils';
 export {default as MonthViewModel} from './_calendar/MonthView/MonthViewModel';
 export {default as MonthView} from './_calendar/MonthView';
 

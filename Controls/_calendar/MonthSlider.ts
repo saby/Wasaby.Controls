@@ -3,7 +3,7 @@ import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import IMonth from './interfaces/IMonth';
 import Slider from './MonthSlider/Slider';
-import calendarUtils from './Utils';
+import {Utils as calendarUtils} from 'Controls/dateRange';
 import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 

@@ -1,4 +1,4 @@
-import calendarUtils from 'Controls/_calendar/Utils';
+import {Utils as calendarUtils} from 'Controls/dateRange';
 import {VersionableMixin} from 'Types/entity';
 import cExtend = require('Core/core-simpleExtend');
 import coreMerge = require('Core/core-merge');

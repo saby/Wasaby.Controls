@@ -3,7 +3,7 @@ import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import DateUtil = require('Controls/Utils/Date');
 
-import calendarUtils from './Utils';
+import {Utils as calendarUtils} from 'Controls/dateRange';
 import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import tableBodyTmpl = require('wml!Controls/_calendar/MonthView/MonthViewTableBody');
