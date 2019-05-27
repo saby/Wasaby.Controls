@@ -49,7 +49,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
 			LocalDateTime start_time = LocalDateTime.now();
 			echo "Время начала сборки: ${start_time}"
 			
-           // start.start(version, workspace, helper, userInput)
+            start.start(version, workspace, helper, userInput)
 			
 			LocalDateTime end_time = LocalDateTime.now();
 			echo "Время конца сборки: ${end_time}"
@@ -57,11 +57,11 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
 			diff_time = Math.abs(duration.toMillis());
 
 			dir("./jenkins_pipeline/platforma/branch/scripts"){
-			def exist_py = fileExists "prometheus.py"
-			if (exist_py){
-				helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
+				def exist_py = fileExists "prometheus.py"
+				if (exist_py){
+					helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
+				}
 			}
-		}
         }
     }
 }
