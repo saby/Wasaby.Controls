@@ -95,8 +95,7 @@
   "output": "controls-render.package.js"
 }, {
   "include": [
-    "Controls/Utils/*",
-    "Controls/Calendar/Utils"
+    "Controls/Utils/*"
   ],
   "exclude": [
     "Controls/Utils/isVDOMTemplate"

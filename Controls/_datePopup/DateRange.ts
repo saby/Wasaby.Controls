@@ -4,7 +4,7 @@ import EventProxy from './Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import {MonthModel} from 'Controls/calendar';
 import quantumUtils = require('Controls/Date/Utils/DateRangeQuantum');
-import DateControlsUtils = require('Controls/Calendar/Utils');
+import {Utils as DateControlsUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';

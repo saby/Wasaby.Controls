@@ -1,12 +1,12 @@
 ﻿import Control = require('Core/Control');
 import Env = require('Env/Env');
 import coreMerge = require('Core/core-merge');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import {Utils as CalendarControlsUtils} from 'Controls/dateRange';
 import Model = require('Controls/_input/DateTime/Model');
 import IDateTimeMask = require('Controls/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
-   
+
 
 /**
  * Control for entering date and time.

@@ -3,7 +3,7 @@ import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import DateRangeModel = require('Controls/Date/model/DateRange');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
 
 /**
