@@ -101,14 +101,13 @@ var
             return result;
         },
         chooseGridTemplate: function (): Function {
-            switch (GridLayoutUtil.supportStatus) {
-                case GridLayoutUtil.SupportStatusesEnum.Full:
-                    return FullGridSupportLayout;
-                case GridLayoutUtil.SupportStatusesEnum.Partial:
-                    return PartialGridSupportLayout;
-                case GridLayoutUtil.SupportStatusesEnum.None:
-                    return NoGridSupportLayout;
+            if (GridLayoutUtil.isFullGridSupport()) {
+                return FullGridSupportLayout;
             }
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                return PartialGridSupportLayout;
+            }
+            return NoGridSupportLayout;
         },
 
         // For partial grid support.
@@ -222,14 +221,14 @@ var
         },
 
         _afterUpdate() {
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
             }
         },
 
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialSupport && (itemData.item !== this._listModel.getHoveredItem())) {
+            if (GridLayoutUtil.isPartialGridSupport() && (itemData.item !== this._listModel.getHoveredItem())) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
@@ -237,7 +236,7 @@ var
 
         _onItemMouseLeave: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
@@ -248,7 +247,7 @@ var
         },
 
         getItemsContainer: function () {
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
                 return this._itemsContainerForPartialSupport;
             } else {

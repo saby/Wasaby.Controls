@@ -46,16 +46,16 @@
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 <ws:template name="colTpl">
-   <ws:if data="{{!itemData.isNoGridSupport && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+   <ws:if data="{{!itemData.isNoGridSupport() && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
    </ws:if>
    <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
+        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
       <ws:partial template="columnContentWrapper"/>
    </div>
 </ws:template>
 <ws:template name="stickyCell">
-   <ws:if data="{{!itemData.isNoGridSupport && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+   <ws:if data="{{!itemData.isNoGridSupport() && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.gridCellStyles}}"/>
    </ws:if>
    <Controls.scroll:StickyHeader position="topbottom"
@@ -63,7 +63,7 @@
                                       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
-                          attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan, itemData.isNotFullGridSupport)}}">
+                          attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
 </ws:template>
@@ -80,7 +80,7 @@
 <Controls._grid.layouts.partialGridSupport.Cell
         eventHandlers="{{itemData.handlersForPartialSupport}}"
         itemData="{{ itemData }}"
-        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}"
+        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode)}}"
         currentColumn="{{ currentColumn }}"
         highlightOnHover="{{ highlightOnHover }}">
    <ws:columnContentTpl>
@@ -90,19 +90,19 @@
 </ws:template>
 
 
-<ws:if data="{{itemData.isNoGridSupport}}">
+<ws:if data="{{itemData.isNoGridSupport()}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(itemData.multiSelectVisibility === 'hidden' ? 1 : 0)); itemData.goToNextColumn();">
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
                          {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}"
              attr:key="{{itemData.getCurrentColumnKey()}}"
-             attr:style="{{itemData.getCellStyle(itemData, itemData.getCurrentColumn(), colspan, itemData.isNotFullGridSupport)}}">
+             attr:style="{{itemData.getCellStyle(itemData, itemData.getCurrentColumn(), colspan)}}">
             <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>
       </ws:for>
    </tr>
 </ws:if>
-<ws:else data="{{itemData.isPartialGridSupport}}">
+<ws:else data="{{itemData.isPartialGridSupport()}}">
 
    <ws:if data="{{itemData.styleLadderHeading}}">
       <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
