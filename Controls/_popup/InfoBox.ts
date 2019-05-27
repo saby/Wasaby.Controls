@@ -125,7 +125,7 @@ import Env = require('Env/Env');
          getCfg: function(self) {
             return {
                opener: self,
-               target: self._container[0] || self._container, //todo: https://online.sbis.ru/doc/7c921a5b-8882-4fd5-9b06-77950cbe2f79
+               target: self._container,
                template: self._options.templateName || self._options.template,
                position: self._options.position,
                targetSide: self._options.targetSide,
