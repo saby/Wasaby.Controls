@@ -31,7 +31,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            branches: [[name: "19.400/feature/bls/change_helper_build_timer"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
@@ -46,7 +46,6 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileControls"
         run_unit = load "./jenkins_pipeline/platforma/branch/run_unit"
         timeout(time: 60, unit: 'MINUTES') {
-
 			LocalDateTime start_time = LocalDateTime.now();
 			echo "Время начала сборки: ${start_time}"
 			try {
