@@ -1,2 +1,2 @@
-import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import {selectionToRecord} from 'Controls/operations';
 export = selectionToRecord;
