@@ -87,7 +87,7 @@ class Button extends Control {
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = this.prepareIconSize(options.icon);
+      this._icon = options.icon ? this.prepareIconSize(options.icon): '';
       this._iconSize = this._iconSize || options.iconSize;
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
    }
