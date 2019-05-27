@@ -34,8 +34,12 @@ import 'css!theme?Controls/filterPopup';
 
    /**
     * @name Controls/_filterPopup/Panel/Lookup#emptyText
-    * @cfg {String} Caption when lookup is hidden.
+    * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
     */
+
+   /* !KONGO
+      Текст ссылки, который отображается до первого выбора записи в контролле - ???
+   */
 
    /**
     * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
