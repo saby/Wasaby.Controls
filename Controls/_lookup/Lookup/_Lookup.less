@@ -23,7 +23,7 @@
 }
 
 .controls-Lookup__inputRender_multiLine .controls-Render__wrapper {
-  display: inline-block;
+  display: block;
   width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup})";
 }
 
@@ -42,17 +42,26 @@
   border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
 }
 
+.controls-Lookup__fieldWrapper {
+  height: @height_Lookup-input-wrapper;
+  line-height: @line-height_Lookup-input-wrapper;
+}
+
 .controls-Lookup__fieldWrapper_content_width_custom {
   display: inline-flex;
 }
 
 .controls-Lookup__fieldWrapper_content_width_default {
-  line-height: @line-height_Lookup-input-wrapper;
   width: auto;
 }
 
 .controls-Lookup__fieldWrapper_hidden {
   display: none;
+}
+
+/* in multiline mode, placeholder is in one line */
+.controls-Lookup__fieldWrapper .controls-Render__placeholder_theme_@{themeName} {
+  .text-overflow();
 }
 
 .controls-Lookup__afterFieldWrapper {

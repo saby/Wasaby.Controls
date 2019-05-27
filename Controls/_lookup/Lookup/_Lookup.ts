@@ -109,7 +109,7 @@ import 'css!theme?Controls/lookup';
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
-               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
+               lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
                inputWidth = _private.getInputWidth(fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
                multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
             } else {
@@ -214,10 +214,15 @@ import 'css!theme?Controls/lookup';
             _contentTemplate: ContentTemplate,
             _crossTemplate: CrossTemplate,
             _counterTemplate: CounterTemplate
-         });
+         }).replace(/&amp;/g, '&');
 
          if (newOptions.multiLine) {
             measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
+
+            // indent for counter
+            if (counterWidth) {
+               measurer.children[0].style.marginLeft = counterWidth + 'px';
+            }
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -255,16 +260,6 @@ import 'css!theme?Controls/lookup';
 
       isShowCounter: function(multiLine, itemsCount, maxVisibleItems) {
          return multiLine && itemsCount > maxVisibleItems || !multiLine && itemsCount > 1;
-      },
-
-      getLastRowCollectionWidth: function(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth) {
-         var lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
-
-         if (isShowCounter && allItemsInOneRow) {
-            lastRowCollectionWidth += counterWidth;
-         }
-
-         return lastRowCollectionWidth;
       },
 
       getInputWidth: function(fieldWrapperWidth, lastRowCollectionWidth, availableWidth) {
@@ -478,6 +473,8 @@ import 'css!theme?Controls/lookup';
          }
       }
    });
+
+   Lookup._theme = ['Controls/lookup'];
 
    Lookup.getDefaultOptions = function() {
       return {
