@@ -25,12 +25,21 @@ define('Controls-demo/Index', [
             this._notify('themeChanged', [theme], {bubbling:true});
          },
          _beforeMount: function() {
+            this._title = 'Wasaby';
             this.linkResolver = new LinkResolver(Env.cookie.get('s3debug') === 'true',
                Env.constants.buildnumber,
                Env.constants.wsRoot,
                Env.constants.appRoot,
                Env.constants.resourceRoot
                );
+         },
+         _afterMount: function() {
+            var reg = /\%2F([^%2F]+)$/;
+            var matchResult = window.location.pathname.match(reg);
+            if (matchResult && matchResult[1] !== 'IndexOld') {
+               this._title = matchResult[1];
+               this._forceUpdate();
+            }
          }
       });
 
