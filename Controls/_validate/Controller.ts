@@ -91,8 +91,8 @@ import 'css!theme?Controls/validate';
             if (!this._isNewEnvironment) {
                // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
                // В том числе инфобоксы.
-               requirejs(['Controls/Popup/Opener/BaseOpener'], function(BaseOpener) {
-                  BaseOpener.getManager();
+               requirejs(['Controls/popup'], function(popup) {
+                   popup.BaseOpener.getManager();
                });
             }
          },

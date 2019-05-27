@@ -1,7 +1,7 @@
 define(
    [
       'Controls/popup',
-      'Controls/Popup/Opener/BaseController',
+      'Controls/_popupTemplate/BaseController',
       'Core/Deferred'
    ],
 
@@ -20,7 +20,7 @@ define(
          BaseController.prototype._checkContainer = () => true;
       });
 
-      describe('Controls/Popup/Manager/ManagerController', () => {
+      describe('Controls/_popup/Manager/ManagerController', () => {
          it('initialize', function() {
             // Manager and container doesn't initialized
             popupMod.Controller._manager = undefined;
@@ -49,7 +49,7 @@ define(
          });
       });
 
-      describe('Controls/Popup/Manager', function() {
+      describe('Controls/_popup/Manager', function() {
          let id, element;
          let Manager = getManager();
 

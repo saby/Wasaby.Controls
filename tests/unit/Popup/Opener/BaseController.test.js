@@ -1,10 +1,10 @@
 define(
    [
-      'Controls/Popup/Opener/BaseController'
+      'Controls/_popupTemplate/BaseController'
    ],
    (BaseController) => {
       'use strict';
-      describe('Controls/Popup/Opener/BaseController', () => {
+      describe('Controls/_popupTemplate/BaseController', () => {
          it('Controller popup sizes', () => {
             let BCInstacne = new BaseController();
             let margins = {
