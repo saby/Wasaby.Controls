@@ -7,7 +7,7 @@
          <Controls.search:Controller searchParam="{{_options.searchParam}}">
             <div class="controls-MoveDialog__content">
                <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
-                  <Controls.Input.Search/>
+                  <Controls.search:Input/>
                </Controls.search:InputContainer>
                <ws:if data="{{_options.showRoot}}">
                   <Controls.buttons:Button attr:class="controls-MoveDialog__root"

@@ -128,7 +128,7 @@ class SourceController {
       return sourceOpt;
    }
 
-   load: function(filter, sorting, direction) {
+   load: function(filter, sorting?, direction?) {
       var def, queryParams, self, navFilter;
 
       queryParams = {
@@ -183,7 +183,7 @@ class SourceController {
 
    getNavigation: function() {
       return this._options.navigation;
-   }
+   },
 
    hasMoreData: function(direction) {
       if (this._queryParamsController) {

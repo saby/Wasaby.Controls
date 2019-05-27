@@ -14,7 +14,7 @@ define('Controls-demo/Input/Date/PickerPG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Date/Picker',
+         _content: 'Controls/input:Date',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

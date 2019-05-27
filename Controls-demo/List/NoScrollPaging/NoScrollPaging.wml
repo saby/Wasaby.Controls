@@ -44,7 +44,7 @@
                         <ws:Object title=""/>
                         <ws:Object>
                            <ws:template name="infoColumn">
-                              <Controls.Input.Dropdown
+                              <Controls.dropdown:Input
                                  keyProperty="key"
                                  displayProperty="title"
                                  multiselect="{{ false }}"

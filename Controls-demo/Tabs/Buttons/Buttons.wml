@@ -33,7 +33,7 @@
                       source="{{_source3}}"
         >
             <ws:itemTemplate>
-                <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
+                <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
                             item="{{itemTemplate.item}}"
                             displayProperty="carambola"
                 ></ws:partial>

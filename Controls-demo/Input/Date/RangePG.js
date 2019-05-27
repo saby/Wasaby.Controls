@@ -14,7 +14,7 @@ define('Controls-demo/Input/Date/RangePG',
       var Component = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Date/Range',
+         _content: 'Controls/dateRange:Input',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

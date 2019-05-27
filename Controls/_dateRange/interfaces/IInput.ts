@@ -60,8 +60,8 @@
  * In the first field, we do it manually using valueChanged event. In the second field we use bind notation.
  * Both fields in this examples will have identical behavior.
  * <pre>
- *    <Controls.Input.Date.Range startValue="_fieldValue" on:startValueChanged="_valueChangedHandler()"/>
- *    <Controls.Input.Date.Range bind:startValue="_anotherFieldValue"/>
+ *    <Controls.dateRange:Input startValue="_fieldValue" on:startValueChanged="_valueChangedHandler()"/>
+ *    <Controls.dateRange:Input bind:startValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -88,8 +88,8 @@
  * In the first field, we do it manually using valueChanged event. In the second field we use bind notation.
  * Both fields in this examples will have identical behavior.
  * <pre>
- *    <Controls.Input.Date.Range endValue="_fieldValue" on:endValueChanged="_valueChangedHandler()"/>
- *    <Controls.Input.Date.Range bind:endValue="_anotherFieldValue"/>
+ *    <Controls.dateRange:Input endValue="_fieldValue" on:endValueChanged="_valueChangedHandler()"/>
+ *    <Controls.dateRange:Input bind:endValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -116,7 +116,7 @@
  * @example
  * In this example, we subscribe to inputCompleted event and save field's value to the first database and field`s display value to the second database.
  * <pre>
- *    <Controls.Input.Date.Range on:inputCompleted="_inputCompletedHandler()" />
+ *    <Controls.dateRange:Input on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
  *    Control.extend({
