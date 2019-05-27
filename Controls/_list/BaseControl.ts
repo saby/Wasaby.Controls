@@ -22,6 +22,7 @@ import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
+import {ICrud} from "Types/source";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -882,6 +883,14 @@ var _private = {
             self.__error = null;
             self._forceUpdate();
         }
+    },
+
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+        return new SourceController({
+            source: source,
+            navigation: navigation,
+            keyProperty: keyProperty
+        })
     }
 };
 
@@ -991,11 +1000,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             if (newOptions.source) {
-                self._sourceController = new SourceController({
-                    source: newOptions.source,
-                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
-                    keyProperty: newOptions.keyProperty
-                });
+                self._sourceController = _private.getSourceController(newOptions);
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
@@ -1144,10 +1149,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
-        var items = this._listViewModel.getItems();
-        var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        var reloadItemDeferred;
-        var filter;
+        const items = this._listViewModel.getItems();
+        const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        const sourceController = _private.getSourceController(this._options);
+
+        let reloadItemDeferred;
+        let filter;
 
         function loadCallback(item):void {
             if (replaceItem) {
@@ -1164,7 +1171,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
-            reloadItemDeferred = this._sourceController.load(filter).addCallback((items) => {
+            reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
                 if (items.getCount() && items.getCount() === 1) {
                     loadCallback(items.at(0));
                 } else {
@@ -1173,7 +1180,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 return items;
             });
         } else {
-            reloadItemDeferred = this._sourceController.read(key, readMeta).addCallback((item) => {
+            reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
                 loadCallback(item);
                 return item;
             });
