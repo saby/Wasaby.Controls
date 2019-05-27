@@ -59,6 +59,14 @@
    .border-radius(@border-radius_Button_size_s);
 }
 
+.controls-Button_viewMode-button_size-default.theme_@{themeName} {
+   height: @height_Button_size_default;
+   font-size: @font-size_Button_size_default;
+   border-style: solid;
+   border-width: @thickness_Button__border;
+   .border-radius(@border-radius_Button_size_default);
+}
+
 .controls-Button_viewMode-button_size-m.theme_@{themeName} {
    height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
@@ -85,6 +93,10 @@
    .justify-content(center);
 }
 
+.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
+      padding: @padding_Button-wrapper_size_default;
+      .justify-content(center);
+}
 .controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
    padding: @padding_Button__wrapper_size_l;
    .justify-content(center);
@@ -238,7 +250,7 @@
 }
 
 .controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
-.controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName} {
+.controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
    justify-content: center;
    user-select: none;
 }
@@ -275,6 +287,10 @@
 .controls-Button_viewMode-toolButton_size-m.theme_@{themeName} {
    height: @height-ToolButton_size-m;
    min-width: @width-ToolButton_size-m;
+}
+.controls-Button_viewMode-toolButton_size-default.theme_@{themeName} {
+      height: @height-ToolButton_size-default;
+      min-width: @width-ToolButton_size-default;
 }
 
 .controls-Button_viewMode-toolButton_size-l.theme_@{themeName} {
@@ -324,6 +340,10 @@
 
 .controls-Button__wrapper_viewMode-link_size-m.theme_@{themeName} {
    font-size: @font-size_Link-m;
+}
+
+.controls-Button__wrapper_viewMode-link_size-default.theme_@{themeName} {
+      font-size: @font-size_Link-default;
 }
 
 .controls-Button__wrapper_viewMode-link_size-l.theme_@{themeName} {
@@ -466,6 +486,12 @@
    height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
    .border-radius(@border-radius_Button_size_m);
+}
+
+.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
+      height: @height_Button_size_default;
+      font-size: @font-size_Button_size_default;
+      .border-radius(@border-radius_Button_size_default);
 }
 
 .controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
