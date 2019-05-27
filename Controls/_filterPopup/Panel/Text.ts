@@ -3,7 +3,8 @@ import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
 import 'css!theme?Controls/filterPopup';
 
    /**
-    * Control text with cross
+    * Контрол, отображающий текст с кнопкой сброса в виде крестика.
+    * Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр.
     * @class Controls/_filterPopup/Panel/Text
     * @extends Core/Control
     * @control
@@ -13,7 +14,19 @@ import 'css!theme?Controls/filterPopup';
 
    /**
     * @name Controls/_filterPopup/Panel/Text#caption
-    * @cfg {Object} Caption
+    * @cfg {String} Caption Control caption text.
+    * @example
+    * <pre>
+    *    <Controls.filterPopup:Text>
+    *        <ws:caption>По удалённым</ws:caption>
+    *    </Controls.filterPopup:Text>
+    * </pre>
+    */
+
+
+   /* KONGO!
+      Контрол, отображающий текст с кнопкой сброса в виде крестика. - Control with caption and reset button.
+      Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр. Control is used for display selected filter. Click on reset button will reset filter.
     */
 
 
