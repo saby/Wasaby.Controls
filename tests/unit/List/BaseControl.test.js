@@ -2623,6 +2623,7 @@ define([
             it('can update itemActions on left swipe', function(done) {
                var
                    cfg = {
+                      itemActions: [1, 2, 3],
                       viewName: 'Controls/List/ListView',
                       viewConfig: {
                          idProperty: 'id'
@@ -2631,15 +2632,11 @@ define([
                          items: [],
                          idProperty: 'id'
                       },
+                      keyProperty: 'id',
                       viewModelConstructor: lists.ListViewModel,
                       source: source
                    },
                    instance = new lists.BaseControl(cfg),
-                   itemData = {
-                      key: 1,
-                      multiSelectStatus: false,
-                      item: {}
-                   },
                    updated = false,
                    childEvent = {
                       nativeEvent: {
@@ -2655,16 +2652,18 @@ define([
                      itemActions: {
                         updateItemActions: () => {
                            updated = true;
-                        }
+                           instance._listViewModel._actions[1] = cfg.itemActions
+                        },
                      },
                      selectionController: {
                         onCheckBoxClick: function () {
                         }
                      }
                   };
-
+                  let itemData = instance._listViewModel.getCurrent();
                   instance._listSwipe({}, itemData, childEvent);
                   assert.isTrue(updated);
+                  assert.deepEqual(itemData.itemActions, cfg.itemActions);
                   done();
                });
                return done;
@@ -2735,6 +2734,7 @@ define([
             var callBackCount = 0;
             var
                 cfg = {
+                   itemActions: [1, 2, 3],
                    viewName: 'Controls/List/ListView',
                    viewConfig: {
                       idProperty: 'id'
@@ -2743,6 +2743,7 @@ define([
                       items: [],
                       idProperty: 'id'
                    },
+                   keyProperty: 'id',
                    viewModelConstructor: lists.ListViewModel,
                    source: source
                 },
@@ -2765,6 +2766,7 @@ define([
                   itemActions: {
                      updateItemActions: () => {
                         updated = true;
+                        instance._listViewModel._actions[2] = cfg.itemActions
                      }
                   },
                   selectionController: {
@@ -2786,6 +2788,7 @@ define([
                   }
                };
                assert.isTrue(updated);
+               assert.deepEqual(itemData.itemActions, cfg.itemActions);
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
