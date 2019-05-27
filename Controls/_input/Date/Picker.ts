@@ -1,3 +1,4 @@
+import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
@@ -60,7 +61,7 @@ import 'css!theme?Controls/input';
                closeButtonEnabled: true
             }
          };
-         if (!this._options.vdomDialog) {
+         if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
             cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
             cfg.isCompoundTemplate = true;
             cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };

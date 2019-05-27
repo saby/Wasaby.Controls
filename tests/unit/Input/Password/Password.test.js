@@ -48,7 +48,6 @@ define(
                'textAlign',
                'fontStyle',
                'revealable',
-               'placeholder',
                'autoComplete',
                'inputCallback',
                'selectOnClick'
