@@ -47,7 +47,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
-import INewLineKey from 'Controls/interface/INewLineKey';
+import INewLineKey from 'Controls/_input/interface/INewLineKey';
 
 const InputCallback = {
     lengthConstraint
