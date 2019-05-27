@@ -118,7 +118,6 @@ class Button extends Control {
          viewMode: 'button',
          size: 'default',
          iconStyle: 'secondary',
-         iconSize: 'default',
          transparent: true,
          theme: 'default'
       };
