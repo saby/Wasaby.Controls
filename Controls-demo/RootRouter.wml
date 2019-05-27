@@ -10,7 +10,7 @@
                                       attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
          </ws:if>
          <ws:else>
-            <div>Не указан шаблон. Может быть перейти на
+            <div>Не указан шаблон. Может быть перейти на&nbsp;
                <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
                   <ws:content><a href="{{ content.href }}">разводящую</a></ws:content>
                </Router.router:Reference> ?
