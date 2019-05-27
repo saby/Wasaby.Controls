@@ -3,7 +3,7 @@ import entity = require('Types/entity');
 /**
  * Interface for date/time inputs mask.
  *
- * @interface Controls/interface/IDateTimeMask
+ * @interface Controls/_input/interface/IDateTimeMask
  * @public
  * @author Миронов А.Ю.
  */
@@ -13,7 +13,7 @@ export = {
         return {
 
             /**
-             * @name Controls/interface/IDateTimeMask#mask
+             * @name Controls/_input/interface/IDateTimeMask#mask
              * @cfg {String} Date format.
              * @variant 'DD.MM.YYYY'
              * @variant 'DD.MM.YY'
