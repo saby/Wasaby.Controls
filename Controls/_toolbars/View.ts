@@ -217,6 +217,7 @@ var _private = {
             }
         }
         return {
+            opener: self,
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
             className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme +' ' + (item.get('popupClassName') || ''),
