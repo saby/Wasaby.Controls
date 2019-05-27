@@ -31,7 +31,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            branches: [[name: "rc-${version}"]],
+            branches: [[name: "19.400/feature/bls/change_helper_build_timer"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
@@ -55,13 +55,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
 				echo "Время конца сборки: ${end_time}"
 				Duration duration = Duration.between(end_time, start_time);
 				diff_time = Math.abs(duration.toMillis());
-
-				dir("./jenkins_pipeline/platforma/branch/scripts"){
-					def exist_py = fileExists "prometheus.py"
-					if (exist_py){
-						helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
-					}
-				}
+				helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
 			}
         }
     }
