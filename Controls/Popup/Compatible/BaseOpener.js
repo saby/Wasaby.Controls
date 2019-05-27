@@ -394,9 +394,9 @@ function(cMerge,
             minimizedWidth: cfg.minimizedWidth
          };
 
-         // if we have width, delete maxWidth, otherwise FloatArea may calculate a different panel size.
-         if (cfg.width) {
-            delete cfg.maxWidth;
+         // FloatArea opens with maxWidth, if maxWidth is set.
+         if (cfg.width && cfg.componentName === 'floatArea') {
+            cfg.maxWidth = cfg.width;
          }
       },
       _getConfigFromTemplate: function(cfg) {
