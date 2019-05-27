@@ -1,5 +1,5 @@
 import libHelper = require("Core/library");
-import IoC = require('Core/IoC');
+import {IoC} from "Env/Env";
 
 let cache = {};
 

@@ -3,7 +3,6 @@ define('Controls/Container/Async',
       'Core/Control',
       'Application/Env',
       'Env/Env',
-      'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
       'Core/library',
@@ -13,7 +12,6 @@ define('Controls/Container/Async',
    function(Base,
       AppEnv,
       Env,
-      constants,
       template,
       ModuleLoader,
       library,
@@ -206,7 +204,7 @@ define('Controls/Container/Async',
          },
 
          _isCompat: function() {
-            return constants.compat;
+            return Env.constants.compat;
          }
       });
 
