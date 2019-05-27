@@ -223,6 +223,7 @@ define(
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
 
             var promise = lists.DataContainer._private.createPrefetchSource(self, error, dataLoadErrback);
             assert.instanceOf(promise, Promise);
@@ -255,6 +256,7 @@ define(
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
 
             var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
 
@@ -288,6 +290,7 @@ define(
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
 
             var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
 
@@ -321,6 +324,7 @@ define(
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
 
             var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
 
