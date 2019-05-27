@@ -46,10 +46,10 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileControls"
         run_unit = load "./jenkins_pipeline/platforma/branch/run_unit"
         timeout(time: 60, unit: 'MINUTES') {
+
+			LocalDateTime start_time = LocalDateTime.now();
+			echo "Время начала сборки: ${start_time}"
 			try {
-				LocalDateTime start_time = LocalDateTime.now();
-				echo "Время начала сборки: ${start_time}"
-				
 				start.start(version, workspace, helper, userInput)
 			} finally {
 				LocalDateTime end_time = LocalDateTime.now();
