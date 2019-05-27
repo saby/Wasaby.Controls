@@ -46,20 +46,22 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileControls"
         run_unit = load "./jenkins_pipeline/platforma/branch/run_unit"
         timeout(time: 60, unit: 'MINUTES') {
-			LocalDateTime start_time = LocalDateTime.now();
-			echo "Время начала сборки: ${start_time}"
-			
-            start.start(version, workspace, helper, userInput)
-			
-			LocalDateTime end_time = LocalDateTime.now();
-			echo "Время конца сборки: ${end_time}"
-			Duration duration = Duration.between(end_time, start_time);
-			diff_time = Math.abs(duration.toMillis());
+			try {
+				LocalDateTime start_time = LocalDateTime.now();
+				echo "Время начала сборки: ${start_time}"
+				
+				start.start(version, workspace, helper, userInput)
+			} finally {
+				LocalDateTime end_time = LocalDateTime.now();
+				echo "Время конца сборки: ${end_time}"
+				Duration duration = Duration.between(end_time, start_time);
+				diff_time = Math.abs(duration.toMillis());
 
-			dir("./jenkins_pipeline/platforma/branch/scripts"){
-				def exist_py = fileExists "prometheus.py"
-				if (exist_py){
-					helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
+				dir("./jenkins_pipeline/platforma/branch/scripts"){
+					def exist_py = fileExists "prometheus.py"
+					if (exist_py){
+						helper.time_stages(diff_time, "${BUILD_URL}", version, "controls")
+					}
 				}
 			}
         }
