@@ -141,6 +141,8 @@ var _private = {
             let expandedItems = viewModel.getExpandedItems();
             let typeFunction;
 
+            //type of id will cast to string after getting id's from expandedItems object
+            //save type of id from record format
             if (!isEmpty(expandedItems)) {
                 typeFunction = items.at(0) && typeof items.at(0).get(cfg.keyProperty) === 'number' ? Number : String;
 
