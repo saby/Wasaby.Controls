@@ -1288,13 +1288,13 @@
       }
     }
   },
-  "Controls/Tabs/Buttons": {
-    "name": "Controls/Tabs/Buttons",
+  "Controls/tabs:Buttons": {
+    "name": "Controls/tabs:Buttons",
     "title": "Buttons for tab switching.",
-    "className": "Controls/Tabs/Buttons",
+    "className": "Controls/tabs:Buttons",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Tabs/Buttons",
+    "fullname": "Controls/tabs:Buttons",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

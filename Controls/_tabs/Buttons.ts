@@ -109,7 +109,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with space template.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       .....
     *       tabSpaceTemplate=".../spaceTemplate'"
     *       .....
@@ -142,7 +142,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs Buttons has style 'secondary'.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
@@ -152,7 +152,7 @@ import Env = require('Env/Env');
     * </pre>
     * Tabs Buttons has default style.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
@@ -169,7 +169,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *              bind:selectedKey='_selectedKey'
     *              keyProperty="key"
     *              source="{{_source}}"
@@ -212,7 +212,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with item template.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *                   bind:selectedKey='SelectedKey3'
     *                   keyProperty="id"
     *                   style="additional"
@@ -222,7 +222,7 @@ import Env = require('Env/Env');
     *                      item="{{itemTemplate.item}}"
     *                      displayProperty="caption"/>
     *       </ws:itemTemplate>
-    *    </Controls.Tabs.Buttons>
+    *    </Controls.tabs:Buttons>
     * </pre>
     */
 
@@ -240,10 +240,10 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with item template.
     * <pre>
-    *    <Controls.Tabs.Buttons itemTemplateProperty="myTemplate"
+    *    <Controls.tabs:Buttons itemTemplateProperty="myTemplate"
     *                           source="{{_source}}
     *                           ...>
-    *    </Controls.Tabs.Buttons>
+    *    </Controls.tabs:Buttons>
     * </pre>
     * myTemplate
     * <pre>
