@@ -2,7 +2,7 @@ define('Controls-demo/Input/Mask/Mask',
    [
       'Core/Control',
       'wml!Controls-demo/Input/Mask/Mask',
-      'Controls/Input/Mask/Formatter',
+      'Controls/_input/Mask/Formatter',
       'Types/source',
       'Controls/input',
       'css!Controls-demo/Input/resources/VdomInputs'

@@ -26,13 +26,13 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                     stringField1: "stringValue1"
                 },
                 source: [
-                        {name: "stringField", editorTemplateName: "Controls/input/Text"},
+                        {name: "stringField", editorTemplateName: "Controls/_input/Text"},
                         {name: "booleanField", editorOptions: {icon: "testIcon"}}
                     ],
             },
             result: [
                 {name: "booleanField", editorOptions: {icon: "testIcon"}, propertyValue: false},
-                {name: "stringField", editorTemplateName: "Controls/input/Text", propertyValue: "stringValue"},
+                {name: "stringField", editorTemplateName: "Controls/_input/Text", propertyValue: "stringValue"},
                 {name: "stringField1", propertyValue: "stringValue1"}
             ],
         };
@@ -44,7 +44,7 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                     stringField: "stringValue",
                 },
                 source: [
-                    {name: "stringField", editorTemplateName: "Controls/input/Text", group: "string"},
+                    {name: "stringField", editorTemplateName: "Controls/_input/Text", group: "string"},
                     {name: "booleanField", editorOptions: {icon: "testIcon"}, group: "boolean"}
                 ],
             }
@@ -74,7 +74,7 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
 
                 /* testing default and custom templates */
                 assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
-                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/input/Text");
+                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/_input/Text");
                 assert.strictEqual(pg.items.at(2).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/String");
             });
 

@@ -91,6 +91,21 @@ define(
             });
          });
 
+         it('dataLoadCallback', (done) => {
+            let newConfig = Clone(config),
+               selectedItems;
+            newConfig.dataLoadCallback = (items) => {items.assign(itemsRecords);};
+            newConfig.selectedItemsChangedCallback = (items) => {selectedItems = items;};
+            newConfig.selectedKeys = ['2'];
+            newConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 1, page: 0, hasMore: false}};
+            let dropdownController = getDropdownController(newConfig);
+            dropdownController._beforeMount(newConfig).addCallback(function(items) {
+               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               assert.deepEqual(selectedItems[0].getRawData(), itemsRecords.at(1).getRawData());
+               done();
+            });
+         });
+
          it('before mount navigation', (done) => {
             let navigationConfig = Clone(config);
             navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};

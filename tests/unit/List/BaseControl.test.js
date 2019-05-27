@@ -2928,21 +2928,34 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             source: source,
-            filter: filter
+            filter: filter,
+            navigation: {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
          };
          var baseCtrl = new lists.BaseControl(cfg);
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
             baseCtrl._beforeMount(cfg).addCallback(function() {
+               assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
+
                baseCtrl.reloadItem(1).addCallback(function(item) {
                   assert.equal(item.get('id'), 1);
                   assert.equal(item.get('title'), 'Первый');
+                  assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
 
                   baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
                      assert.isTrue(!!items.getCount);
                      assert.equal(items.getCount(), 1);
                      assert.equal(items.at(0).get('id'), 1);
+                     assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
                      resolve();
                   });
                });

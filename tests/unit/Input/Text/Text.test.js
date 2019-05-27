@@ -9,7 +9,7 @@ define(
    function(instance, inputMod, ProxyCall, Env, Vdom) {
       'use strict';
 
-      describe('Controls.Input.Text', function() {
+      describe('Controls/_input/Text', function() {
          var ctrl, calls;
 
          beforeEach(function() {

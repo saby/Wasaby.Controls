@@ -9,7 +9,7 @@ define('Controls-demo/Input/Text/TextPG',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Text'
+         CONTENT: 'Controls/input:Text'
       };
 
       var TextPG = Base.extend({

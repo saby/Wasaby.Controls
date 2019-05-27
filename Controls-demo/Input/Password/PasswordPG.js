@@ -9,7 +9,7 @@ define('Controls-demo/Input/Password/PasswordPG',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Password'
+         CONTENT: 'Controls/input:Password'
       };
 
       var PasswordPG = Base.extend({

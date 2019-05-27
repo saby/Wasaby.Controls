@@ -11,7 +11,7 @@ export interface ISourceOptions {
  * @public
  * @author Крайнов Д.О.
  */
-
+export default interface ISource {
 /**
  * @name Controls/_interface/ISource#source
  * @cfg {Types/source:Base} Object that implements ISource interface for working with data.
@@ -77,6 +77,5 @@ export interface ISourceOptions {
  * </pre>
  *
  */
-export default interface ISource {
    readonly '[Controls/_interface/ISource]': boolean;
 }

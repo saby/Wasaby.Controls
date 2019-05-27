@@ -6,7 +6,7 @@ define([
    'Types/source',
    'Types/entity'
 ], function(tabsMod, sourceLib, entity) {
-   describe('Controls.Tabs.Buttons', function() {
+   describe('Controls/_tabs/Buttons', function() {
       it('prepareItemOrder', function() {
          var
             expected = '-ms-flex-order:2; order:2';

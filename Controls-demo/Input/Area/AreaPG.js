@@ -11,7 +11,7 @@ define('Controls-demo/Input/Area/AreaPG',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Area'
+         CONTENT: 'Controls/input:Area'
       };
 
       var AreaPG = Base.extend({

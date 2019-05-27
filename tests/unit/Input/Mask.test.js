@@ -20,7 +20,7 @@ define(
          return cmp;
       };
 
-      describe('Controls.Input.Mask', function() {
+      describe('Controls/_input/Mask', function() {
 
          it('validateReplacer', function() {
             var message = '';
