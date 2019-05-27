@@ -1,11 +1,30 @@
 define(
    [
+      'Env/Env',
       'Controls/_scroll/Scroll/ScrollWidthUtil',
       'Controls/_scroll/Scroll/ScrollHeightFixUtil'
    ],
-   function(ScrollWidthUtil, ScrollHeightFixUtil) {
+   function(Env, ScrollWidthUtil, ScrollHeightFixUtil) {
 
       'use strict';
+
+      var
+         mockEnv = function(envField) {
+            oldEnvValue = Env.detection[envField];
+            if (typeof window === 'undefined') {
+               Env.detection['test::' + envField] = true;
+            } else {
+               Env.detection[envField] = true;
+            }
+         },
+         restoreEnv = function(envField) {
+            if (typeof window === 'undefined') {
+               Env.detection['test::' + envField] = undefined;
+            } else {
+               Env.detection[envField] = oldEnvValue;
+            }
+         },
+         oldEnvValue;
 
       describe('Controls.Container.Scroll.Utils', function() {
          var
@@ -17,27 +36,22 @@ define(
          };
 
          describe('calcOverflow', function() {
-            var container, calcOverflow;
+            var container;
             it('chrome', function() {
-               detection = {
-                  chrome: true
-               };
-               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
+               mockEnv('chrome');
 
-               result = calcOverflow();
+               result = ScrollHeightFixUtil.calcHeightFix();
                assert.equal(result, false);
+               restoreEnv('chrome');
             });
             it('ie', function() {
-               detection = {
-                  isIE: true
-               };
-               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
+               mockEnv('isIE');
 
                container = {
                   scrollHeight: 101,
                   offsetHeight: 100
                };
-               result = calcOverflow(container);
+               result = ScrollHeightFixUtil.calcHeightFix(container);
                if (window) {
                   assert.equal(result, true);
                } else {
@@ -48,24 +62,22 @@ define(
                   scrollHeight: 200,
                   offsetHeight: 100
                };
-               result = calcOverflow(container);
+               result = ScrollHeightFixUtil.calcHeightFix(container);
                if (window) {
                   assert.equal(result, false);
                } else {
                   assert.equal(result, undefined);
                }
+               restoreEnv('isIE');
             });
             it('firefox', function() {
-               detection = {
-                  firefox: true
-               };
-               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
+               mockEnv('firefox');
 
                container = {
                   offsetHeight: 10,
                   scrollHeight: 10
                };
-               result = calcOverflow(container);
+               result = ScrollHeightFixUtil.calcHeightFix(container);
                if (window) {
                   assert.equal(result, true);
                } else {
@@ -76,12 +88,13 @@ define(
                   offsetHeight: 40,
                   scrollHeight: 40
                };
-               result = calcOverflow(container);
+               result = ScrollHeightFixUtil.calcHeightFix(container);
                if (window) {
                   assert.equal(result, false);
                } else {
                   assert.equal(result, undefined);
                }
+               restoreEnv('firefox');
             });
          });
 
