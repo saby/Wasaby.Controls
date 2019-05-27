@@ -232,8 +232,8 @@ define(
                assert.isTrue(dataLoadErrbackCalled);
                assert.isFalse(queryCalled);
                done();
-            }, function(error) {
-                done(error);
+            }).catch(function(error) {
+               done(error);
             });
          });
 
@@ -266,8 +266,8 @@ define(
                assert.isTrue(dataLoadErrbackCalled);
                assert.isTrue(queryCalled);
                done();
-            }, function(error) {
-                done(error);
+            }).catch(function(error) {
+               done(error);
             });
          });
 
@@ -297,11 +297,11 @@ define(
             assert.instanceOf(promise, Promise);
             promise.then(function(result) {
                assert.equal(result.data, data);
-               assert.isFalse(dataLoadErrbackCalled);
-               assert.isFalse(queryCalled);
+               assert.isFalse(dataLoadErrbackCalled, 'dataLoadErrback was called');
+               assert.isFalse(queryCalled, 'query was called');
                done();
-            }, function(error) {
-                done(error);
+            }).catch(function(error) {
+               done(error);
             });
          });
 
@@ -334,8 +334,8 @@ define(
                assert.isFalse(dataLoadErrbackCalled);
                assert.isTrue(queryCalled);
                done();
-            }, function(error) {
-                done(error);
+            }).catch(function(error) {
+               done(error);
             });
          });
 
