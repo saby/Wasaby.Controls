@@ -4,12 +4,12 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.Input.Money bind:value="_value1" class="ControlsDemo-ExampleInput_moneyInputField"/>
+                  <Controls._input.Money bind:value="_value1" class="ControlsDemo-ExampleInput_moneyInputField"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Money textAlign="right" bind:value="_value2"/>
+                  <Controls._input.Money textAlign="right" bind:value="_value2"/>
                </ws:template>
             </ws:Object>
          </ws:Array>

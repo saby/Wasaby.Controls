@@ -11,7 +11,7 @@ define('Controls-demo/Input/Base/Base',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Input/Base'
+         CONTENT: 'Controls/input:Base'
       };
 
       var Base = Control.extend({
