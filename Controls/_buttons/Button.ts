@@ -58,9 +58,19 @@ class Button extends Control {
    private _caption: String | Function;
    private _stringCaption: Boolean;
    private _icon: String;
+   private _iconSize: String;
    private _iconStyle: String;
 
    static _theme: Array<string> = ['Controls/buttons'];
+   private prepareIconSize(icon): String {
+
+      var reg = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
+      return icon.replace(reg, (name, iconSize) => {
+            IoC.resolve('ILogger').warn('Button', 'Размер кнопки устанавливается в опции icon, используйтe опцию iconSize');
+            this._iconSize = iconSize;
+            return '';
+         });
+   }
    private cssStyleGeneration(options) {
       const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
 
@@ -77,7 +87,8 @@ class Button extends Control {
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = options.icon;
+      this._icon = this.prepareIconSize(options.icon);
+      this._iconSize = this._iconSize || options.iconSize;
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
    }
 
@@ -107,6 +118,7 @@ class Button extends Control {
          viewMode: 'button',
          size: 'default',
          iconStyle: 'secondary',
+         iconSize: 'default',
          transparent: true,
          theme: 'default'
       };
