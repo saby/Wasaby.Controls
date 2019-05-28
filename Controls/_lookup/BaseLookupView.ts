@@ -24,6 +24,13 @@ var _private = {
 
     notifyValue: function (self, value) {
         self._notify('valueChanged', [value]);
+    },
+
+    resetInputValue: function(self) {
+        if (self._inputValue !== '') {
+            self._inputValue = '';
+            _private.notifyValue(self, '');
+        }
     }
 };
 
@@ -80,6 +87,10 @@ var BaseLookupView = Control.extend({
             });
         }
 
+        if (currentOptions.items !== newOptions.items) {
+            _private.resetInputValue(this);
+        }
+
         if (isNeedUpdate) {
             this._calculatingSizes(newOptions);
         }
@@ -108,10 +119,7 @@ var BaseLookupView = Control.extend({
     _choose: function (event, item) {
         this._notify('addItem', [item]);
 
-        if (this._inputValue !== '') {
-            this._inputValue = '';
-            _private.notifyValue(this, '');
-        }
+        _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
         if (this._isInputVisible(this._options)) {
