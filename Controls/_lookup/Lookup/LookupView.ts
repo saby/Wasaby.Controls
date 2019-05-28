@@ -113,8 +113,11 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
             itemsSizes = [],
             measurer = document.createElement('div'),
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
+            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems)
 
+         /* toDO !KONGO Шаблонизатор для кавычки возвращяет представление в виде "&amp;quot;", т.е. и сам амперсант представляет в виде "&amp;"
+          * при вставки в innerHTML на выходе мы получаем "&quot;"(т.е одна итерация), для того что бы получить на выходить кавычку
+          * и правильно посчитать ширину элементов, первую итерацию мы делаем сами */
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
                itemTemplate: newOptions.itemTemplate,
@@ -129,10 +132,15 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
             _contentTemplate: ContentTemplate,
             _crossTemplate: CrossTemplate,
             _counterTemplate: CounterTemplate
-         });
+         }).replace(/&amp;/g, '&');
 
          if (newOptions.multiLine) {
             measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
+
+            // indent for counter
+            if (counterWidth) {
+               measurer.children[0].style.marginLeft = counterWidth + 'px';
+            }
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -170,16 +178,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
       isShowCounter: function(multiLine, itemsCount, maxVisibleItems) {
          return multiLine && itemsCount > maxVisibleItems || !multiLine && itemsCount > 1;
-      },
-
-      getLastRowCollectionWidth: function(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth) {
-         var lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
-
-         if (isShowCounter && allItemsInOneRow) {
-            lastRowCollectionWidth += counterWidth;
-         }
-
-         return lastRowCollectionWidth;
       },
 
       getInputWidth: function(fieldWrapperWidth, lastRowCollectionWidth, availableWidth) {
@@ -242,7 +240,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
-               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
+               lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
                inputWidth = _private.getInputWidth(fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
                multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
             } else {
