@@ -12,7 +12,7 @@
     attr:href="{{_options.href}}">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
         <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button__icon {{_icon}} icon-{{_iconSize}}
+            <i attr:class="controls-Button__icon {{_icon}} {{_iconSize ? 'icon-' + _iconSize}}
                             {{_options.readOnly ? '':'controls-Button__icon-' + _iconStyle + _state}}
                             {{_options.readOnly ? '':'controls-Button__icon-' + _buttonStyle + '_iconStyle-' + _iconStyle + '_viewMode-' +_viewMode + _state}}
                             theme_{{_options.theme}}"/>

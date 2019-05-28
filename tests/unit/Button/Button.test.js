@@ -135,25 +135,25 @@ define(['Controls/buttons'], function(buttons) {
             btn.destroy();
          });
 
-         it('icon-medium', function() {
+         it('no IconSize', function() {
             var icon = 'icon-Admin icon-medium';
             var fakeThis = {};
             fakeThis._icon = buttons.Button.prototype.prepareIconSize.call(fakeThis, icon);
-            assert(fakeThis._iconSize === 'medium' && fakeThis._icon === 'icon-Admin ');
+            assert(!fakeThis._iconSize && fakeThis._icon === 'icon-Admin icon-medium');
          });
-         it('icon-large', function() {
-            var icon = 'icon-large icon-Admin';
-            var fakeThis = {};
-            fakeThis._icon = buttons.Button.prototype.prepareIconSize.call(fakeThis, icon);
-            assert(fakeThis._iconSize === 'large' && fakeThis._icon === ' icon-Admin');
-         });
-         it('no icon-size', function() {
-            var icon = 'icon-Admin';
-            var fakeThis = {
-               _iconSize: 'default'
+         it('iconSize', function() {
+            var opt = {
+               icon: 'icon-Admin icon-medium',
+               iconSize: 'large'
             };
-            fakeThis._icon = buttons.Button.prototype.prepareIconSize.call(fakeThis, icon);
-            assert(fakeThis._iconSize === 'default' && fakeThis._icon === 'icon-Admin');
+            var regExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b', 'g');
+            var fakeThis = {
+               _regExp: regExp,
+               prepareIconSize: buttons.Button.prototype.prepareIconSize,
+            };
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._iconSize === 'large');
+            assert(fakeThis._icon === 'icon-Admin ');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {

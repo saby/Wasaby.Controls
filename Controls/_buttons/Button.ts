@@ -60,12 +60,11 @@ class Button extends Control {
    private _icon: String;
    private _iconSize: String;
    private _iconStyle: String;
+   private _regExp: RegExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
 
    static _theme: Array<string> = ['Controls/buttons'];
    private prepareIconSize(icon): String {
-
-      var reg = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
-      return icon.replace(reg, (name, iconSize) => {
+      return icon.replace(this._regExp, (name, iconSize) => {
             this._iconSize = iconSize;
             return '';
          });
@@ -86,8 +85,8 @@ class Button extends Control {
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = options.icon ? this.prepareIconSize(options.icon): '';
-      this._iconSize = this._iconSize || options.iconSize;
+      this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
+      this._iconSize = options.iconSize || this._iconSize;
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
    }
 
