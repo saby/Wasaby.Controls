@@ -193,7 +193,7 @@ import 'css!theme?Controls/validate';
          /**
           * @name Controls/_validate/Controller#validate
           * @description Start the validation
-          * @returns {Function}
+          * @returns {Deferred}
           */
          validate: function validate() {
             var validators = this._options.validators || [];

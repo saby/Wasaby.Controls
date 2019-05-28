@@ -56,6 +56,7 @@ import 'css!theme?Controls/popupTemplate';
           * @cfg {String} Close button display style.
           * @variant default
           * @variant light
+          * @variant primary
           */
 
          /**

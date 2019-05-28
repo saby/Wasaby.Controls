@@ -90,7 +90,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 /**
  * @name Controls/_validate/FormController#submit
  * @description Start the validation
- * @returns {Undefined}
+ * @returns {Deferred}
  * @example
  * wml
  * <pre>
