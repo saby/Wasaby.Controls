@@ -66,7 +66,6 @@ class Button extends Control {
 
       var reg = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
       return icon.replace(reg, (name, iconSize) => {
-            IoC.resolve('ILogger').warn('Button', 'Размер кнопки устанавливается в опции icon, используйтe опцию iconSize');
             this._iconSize = iconSize;
             return '';
          });
