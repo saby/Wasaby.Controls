@@ -189,14 +189,6 @@ define(
 
                assert.equal(ctrl._fieldName, 'test name');
             });
-            it('A random name is generated when auto-complete is disabled.', function() {
-               ctrl._beforeMount({
-                  value: '',
-                  autoComplete: false
-               });
-
-               assert.equal(ctrl._fieldName.indexOf('name-'), 0);
-            });
          });
          describe('Changing options in model.', function() {
             beforeEach(function() {
