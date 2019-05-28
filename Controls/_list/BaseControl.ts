@@ -678,8 +678,8 @@ var _private = {
                 rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
+            self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
@@ -721,6 +721,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
+          self._listViewModel.setMenuState('shown');
           require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
@@ -756,6 +757,7 @@ var _private = {
 
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._actionMenuIsShown = false;

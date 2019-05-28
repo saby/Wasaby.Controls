@@ -2160,7 +2160,7 @@ define([
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
                      assert.equal(itemData, instance._listViewModel._activeItem);
-                     assert.isTrue(itemData.contextEvent);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
                      assert.equal(callBackCount, 3);
                      done();
                   }
@@ -2368,7 +2368,7 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
             setTimeout(function() {
                assert.equal(itemData, instance._listViewModel._activeItem);
-               assert.isFalse(itemData.contextEvent);
+               assert.equal(instance._listViewModel._menuState, 'shown');
                assert.equal(callBackCount, 3);
             }, 100);
          });
@@ -2442,6 +2442,7 @@ define([
                }]
             });
             assert.equal(instance._listViewModel._activeItem, null);
+            assert.equal(instance._listViewModel._menuState, 'hidden');
             assert.equal(callBackCount, 5);
             assert.isFalse(instance._menuIsShown);
          });
