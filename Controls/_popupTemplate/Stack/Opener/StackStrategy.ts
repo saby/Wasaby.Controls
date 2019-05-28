@@ -1,6 +1,16 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
+   import {detection} from 'Env/Env';
+   interface IPosition {
+      right: Number,
+      top: Number,
+      bottom: Number,
+      stackWidth?: Number,
+      stackMinWidth?: Number,
+      stackMaxWidth?: Number,
+      position?: String
+   }
 
    // Minimum popup indentation from the right edge
    var MINIMAL_PANEL_DISTANCE = 20;
@@ -58,16 +68,20 @@
        * @param tCoords Coordinates of the container relative to which the panel is displayed
        * @param item Popup configuration
        */
-      getPosition: function(tCoords, item) {
+      getPosition: function(tCoords, item):IPosition {
          var maxPanelWidth = this.getMaxPanelWidth();
          var width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-         var position = {
+         let position:IPosition = {
             stackWidth: width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
-            bottom: 0,
-            position: 'fixed'
+            bottom: 0
          };
+
+         // on mobile device fixed container proxying scroll on bottom container
+         if (!detection.isMobilePlatform) {
+            position.position = "fixed";
+         }
 
          if (item.popupOptions.minWidth) {
             // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
