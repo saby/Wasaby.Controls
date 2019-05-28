@@ -2667,6 +2667,55 @@ define([
                return done;
             });
 
+            it('can update itemActions on left swipe if they set by itemActionsProperty', function(done) {
+               var
+                   cfg = {
+                      itemActionsProperty: [1, 2, 3],
+                      viewName: 'Controls/List/ListView',
+                      viewConfig: {
+                         idProperty: 'id'
+                      },
+                      viewModelConfig: {
+                         items: [],
+                         idProperty: 'id'
+                      },
+                      keyProperty: 'id',
+                      viewModelConstructor: lists.ListViewModel,
+                      source: source
+                   },
+                   instance = new lists.BaseControl(cfg),
+                   updated = false,
+                   childEvent = {
+                      nativeEvent: {
+                         direction: 'left'
+                      }
+                   };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg).addCallback(function() {
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: () => {}
+                     },
+                     itemActions: {
+                        updateItemActions: () => {
+                           updated = true;
+                           instance._listViewModel._actions[1] = cfg.itemActionsProperty
+                        },
+                     },
+                     selectionController: {
+                        onCheckBoxClick: function () {
+                        }
+                     }
+                  };
+                  let itemData = instance._listViewModel.getCurrent();
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.isTrue(updated);
+                  assert.deepEqual(itemData.itemActions, cfg.itemActionsProperty);
+                  done();
+               });
+               return done;
+            });
+
             it('list doesn\'t handle swipe, event should fire', function() {
                var
                   cfg = {

@@ -1319,7 +1319,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left' && this._options.itemActions) {
+        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
             this._children.itemActions.updateItemActions(itemData.item);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
