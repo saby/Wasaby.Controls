@@ -164,6 +164,8 @@ var _private = {
         if (self._children.baseControl && !_private.isDeepReload(options, self._deepReload)) {
             self._children.baseControl.getViewModel().resetExpandedItems();
         }
+        //reset deepReload after loading data (see reload method or constructor)
+        self._deepReload = false;
     },
 
     beforeLoadToDirectionCallback: function(self, filter, cfg) {
@@ -339,10 +341,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         //otherwise, option changing will work incorrect.
         //option changing may be caused by search or filtering
         self._deepReload = true;
-        return this._children.baseControl.reload().addCallback(function(res) {
-            self._deepReload = false;
-            return res;
-        });
+        return this._children.baseControl.reload();
     },
 
     reloadItem: function(key, readMeta, direction):Deferred {
