@@ -10,7 +10,7 @@ define('Controls/interface/ISelectorDialog', [
 
    /**
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {Function} Items selection panel template.
+    * @cfg {ConfigSelector[]}
     * @example
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
     * WML:
@@ -37,4 +37,12 @@ define('Controls/interface/ISelectorDialog', [
     *    }
     * </pre>
     */
+
+   /**
+    * @typedef {Object} ConfigSelector
+    * @property {Function} templateName Items selection panel template.
+    * @property {Object} templateOptions Popup template options.
+    * @property {Object} popupOptions Stack popup options.
+    */
+
 });
