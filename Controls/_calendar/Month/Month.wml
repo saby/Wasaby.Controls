@@ -1,4 +1,4 @@
-<Controls.Date.Controllers.DateRangeSelectionController
+<Controls.dateRange:DateRangeSelectionController
    name="selectionController"
 
    selectionType="{{_options.selectionType}}"
@@ -23,4 +23,4 @@
       monthViewModel="{{_monthViewModel}}"
       mode="{{_options.mode}}"
    />
-</Controls.Date.Controllers.DateRangeSelectionController>
+</Controls.dateRange:DateRangeSelectionController>
