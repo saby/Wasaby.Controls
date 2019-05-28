@@ -1,7 +1,9 @@
 <div class="controls-FilterPanel__Lookup">
-   <Controls._filterPopup.Panel.Link
-           caption="{{_options.caption}}"
-           on:click="showSelector()"/>
+   <ws:if data="{{_caption}}">
+      <Controls._filterPopup.Panel.Link
+            caption="{{_caption}}"
+            on:click="showSelector()"/>
+   </ws:if>
    <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
       <Controls.event:Register name="controlResize" register="controlResize">
          <ws:partial template="{{_options.lookupTemplateName}}"

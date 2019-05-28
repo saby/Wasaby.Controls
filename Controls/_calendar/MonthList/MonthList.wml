@@ -7,10 +7,11 @@
       name="months"
       keyProperty="id"
       markerVisibility="hidden"
+      on:drawItems="_drawItemsHandler()"
       >
 
       <ws:navigation source="position" view="infinity">
-         <ws:sourceConfig limit="{{1}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
+         <ws:sourceConfig limit="{{2}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
       </ws:navigation>
 
       <ws:itemTemplate>

@@ -679,8 +679,8 @@ var _private = {
                 rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
+            self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
@@ -722,6 +722,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
+          self._listViewModel.setMenuState('shown');
           require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
@@ -757,6 +758,7 @@ var _private = {
 
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._actionMenuIsShown = false;
@@ -1238,10 +1240,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
 
-        //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
-            if (this._options.loading) {
+            if (this._options.loading && this._loadingState === null) {
                 _private.showIndicator(this);
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
@@ -1318,8 +1319,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left') {
+        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
             this._children.itemActions.updateItemActions(itemData.item);
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
+            itemData.itemActions = this.getViewModel().getItemActions(itemData.item);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);

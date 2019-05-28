@@ -58,5 +58,19 @@ define(['Controls/Filter/Button/Panel/Lookup'
          pLookup.showSelector();
          assert.isTrue(isShowSelector);
       });
+
+      it('getCaption', function() {
+         var options = {
+            caption: 'caption',
+            emptyText: 'emptyText',
+            selectedKeys: []
+         };
+
+         assert.equal(PanelLookup._private.getCaption({}, options), 'emptyText');
+         assert.equal(PanelLookup._private.getCaption({_passed: true}, options), 'caption');
+
+         options.selectedKeys = [1];
+         assert.equal(PanelLookup._private.getCaption({}, options), 'caption');
+      });
    });
 });
