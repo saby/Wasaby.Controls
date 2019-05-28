@@ -1,11 +1,9 @@
 define([
    'Core/core-merge',
-   'Controls/Date/model/DateRange',
    'Controls/dateRange',
    'unit/Calendar/Utils'
 ], function(
    cMerge,
-   DateRangeModel,
    dateRange,
    calendarTestUtils
 ) {

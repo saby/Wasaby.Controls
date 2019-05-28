@@ -1,7 +1,7 @@
 import BaseControl = require('Core/Control');
 import {IoC} from 'Env/Env';
 import CalendarControlsUtils from './Utils';
-import DateRangeModel = require('Controls/Date/model/DateRange');
+import DateRangeModel from './DateRangeModel';
 import IDateLinkView = require('Controls/interface/ILinkView');
 import componentTmpl = require('wml!Controls/_dateRange/LinkView/LinkView');
 import 'css!theme?Controls/dateRange';

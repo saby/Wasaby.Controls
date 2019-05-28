@@ -1,15 +1,15 @@
 define([
-   'Controls/Date/model/DateRange'
+   'Controls/dateRange'
 ], function(
-   DateRange
+   dateRange
 ) {
    'use strict';
 
-   describe('Controls/Date/model/DateRange', function() {
+   describe('Controls/dateRange:DateRangeModel', function() {
       describe('.update', function() {
 
          it('should update [start|end]Value and _state.[start|end]Value fields', function() {
-            let model = new DateRange(),
+            let model = new dateRange.DateRangeModel(),
                options = {
                   startValue: new Date(2018, 0, 1),
                   endValue: new Date(2018, 0, 3)
@@ -24,7 +24,7 @@ define([
          });
 
          it('should not update [start|end]Value fields if they were not updated from the outside', function() {
-            let model = new DateRange(),
+            let model = new dateRange.DateRangeModel(),
                options = {
                   startValue: new Date(2018, 0, 1),
                   endValue: new Date(2018, 0, 3)
@@ -42,7 +42,7 @@ define([
       ['startValue', 'endValue'].forEach(function(field) {
          describe(`.${field}`, function() {
             it(`should update ${field} if value changed`, function() {
-               let model = new DateRange(),
+               let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
                   callback = sinon.spy();
 
@@ -55,7 +55,7 @@ define([
             });
 
             it(`should not update ${field} if value did not changed`, function() {
-               let model = new DateRange(),
+               let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
                   callback = sinon.spy(),
                   options = {};
@@ -93,7 +93,7 @@ define([
             }
          ].forEach(function(test) {
             it('should shift period forward', function() {
-               let model = new DateRange();
+               let model = new dateRange.DateRangeModel();
 
                model.update({ startValue: test.start, endValue: test.end });
                model.shiftForward();
@@ -124,7 +124,7 @@ define([
             }
          ].forEach(function(test) {
             it('should shift period back', function() {
-               let model = new DateRange();
+               let model = new dateRange.DateRangeModel();
 
                model.update({ startValue: test.start, endValue: test.end });
                model.shiftBack();
@@ -137,7 +137,7 @@ define([
 
       describe('.setRange', function() {
          it('should make notification about changes of startValue and endValue', function(done) {
-            let model = new DateRange(),
+            let model = new dateRange.DateRangeModel(),
                options = {
                   startValue: new Date(2018, 0, 1),
                   endValue: new Date(2018, 0, 3)

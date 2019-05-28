@@ -1,5 +1,5 @@
 import BaseControl = require('Core/Control');
-import DateRangeModel = require('Controls/Date/model/DateRange');
+import {DateRangeModel} from 'Controls/dateRange';
 import rangeSelectionUtils = require('Controls/Date/Utils/RangeSelection');
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/YearsRange');

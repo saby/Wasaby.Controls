@@ -2,7 +2,7 @@ import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils from './Utils';
-import DateRangeModel = require('Controls/Date/model/DateRange');
+import DateRangeModel from './DateRangeModel';
 import {StringValueConverter} from 'Controls/input';
 import IDateTimeMask from './interfaces/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');

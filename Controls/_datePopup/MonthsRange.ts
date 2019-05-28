@@ -1,8 +1,7 @@
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import DateRangeModel = require('Controls/Date/model/DateRange');
-import {Utils as CalendarControlsUtils} from 'Controls/dateRange';
+import {DateRangeModel, Utils as CalendarControlsUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import MonthsRangeItem from './MonthsRangeItem';
 import datePopupUtils from './Utils';
