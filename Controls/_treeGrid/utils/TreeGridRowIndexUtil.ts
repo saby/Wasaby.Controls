@@ -23,13 +23,13 @@ type ResultsPosition = 'top' | 'bottom';
 /**
  * @typedef {Object} HasMoreStorage
  */
-type HasMoreStorage = { [key: string]: boolean };
+type HasMoreStorage = Record<string, boolean>;
 
 
 /**
  * @typedef {Object} ExpandedItems
  */
-type ExpandedItems = { [key: string]: boolean };
+type ExpandedItems = Record<string, boolean>;
 
 
 /**
@@ -254,8 +254,8 @@ function calcNodeFootersBeforeItem(display: Display,
     
     let
         count = 0,
-        itemsFooterStatuses: { [parentId: string]: boolean } = {},
-        elementsChildrenCount: { [parentId: string]: number } = {},
+        nasNodeFootersStorage: Record<string, boolean> = {},
+        elementsChildCountStorage: Record<string, number> = {},
         idProperty: string = display.getIdProperty() || display.getCollection().getIdProperty();
     
     if (hasNodeFooterTemplate) {
@@ -266,11 +266,11 @@ function calcNodeFootersBeforeItem(display: Display,
                     expandedItemIndex = display.getIndex(expandedItem);
                 
                 if (expandedItemIndex >= itemIndex) {
-                    itemsFooterStatuses[id] = false;
+                    nasNodeFootersStorage[id] = false;
                 } else {
                     let childrenCount = getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems);
-                    elementsChildrenCount[id] = childrenCount;
-                    itemsFooterStatuses[id] = (itemIndex > expandedItemIndex + childrenCount)
+                    elementsChildCountStorage[id] = childrenCount;
+                    nasNodeFootersStorage[id] = (itemIndex > expandedItemIndex + childrenCount)
                 }
             }
         }
@@ -283,23 +283,23 @@ function calcNodeFootersBeforeItem(display: Display,
         //      - раскрытый узел - это узел для которого считаем номер строки;
         //      - узел и так раскрыт, а в дереве установлен шаблон для подвала узлов
         
-        if (id !== itemId && hasMoreStorage[id] === true && !itemsFooterStatuses.hasOwnProperty(id)) {
+        if (id !== itemId && hasMoreStorage[id] === true && !nasNodeFootersStorage.hasOwnProperty(id)) {
             
             let
                 item = ItemsUtil.getDisplayItemById(display, id, idProperty),
                 childrenCount;
             
-            if (id in elementsChildrenCount) {
-                childrenCount = elementsChildrenCount[id]
+            if (id in elementsChildCountStorage) {
+                childrenCount = elementsChildCountStorage[id]
             } else {
                 childrenCount = getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems);
             }
             
-            itemsFooterStatuses[id] = (itemIndex > (display.getIndex(item) + childrenCount));
+            nasNodeFootersStorage[id] = (itemIndex > (display.getIndex(item) + childrenCount));
         }
     }
     
-    return count + countTrue(itemsFooterStatuses);
+    return count + countTrue(nasNodeFootersStorage);
 }
 
 /**
@@ -315,11 +315,10 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
     if (expandedItems[id]) {
         children = hierarchyRelation.getChildren(id, display.getCollection());
         count = children.length;
-        if (children.length !== 0) {
-            children.forEach((item) => {
-                count += getChildrenOnDisplayCount(item.getId(), display, hierarchyRelation, expandedItems);
-            });
-        }
+
+        children.forEach((item) => {
+            count += getChildrenOnDisplayCount(item.getId(), display, hierarchyRelation, expandedItems);
+        });
     }
     
     return count;
@@ -331,12 +330,10 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
  *
  * @private
  */
-function countTrue(obj: { [key: string]: boolean } = {}): number {
-    let count = 0;
-    for (let key in obj) {
-        count += obj[key] ? 1 : 0;
-    }
-    return count;
+function countTrue(obj: Record<string, boolean> = {}): number {
+    return Object.keys(obj).reduce((acc, key) => {
+        return acc + (obj[key] ? 1 : 0);
+    }, 0);
 }
 
 // endregion

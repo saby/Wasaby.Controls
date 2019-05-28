@@ -64,31 +64,13 @@ define([
          return new gridLib.GridViewModel(cfg)
       }
 
-      function getRowIndexHelper(_model) {
-
-         let
-             display = _model.getDisplay(),
-             hasHeader = !!_model.getHeader(),
-             resPosition = _model.getResultsPosition(),
-             hasEmptyTemplate = _model._options.emptyTemplate;
-
-         return {
-            getIndexByItem: (item) => RowUtil.getIndexByItem(display, item, hasHeader, resPosition),
-            getIndexById: (id) => RowUtil.getIndexById(display, id, hasHeader, resPosition),
-            getIndexByDisplayIndex: (index) => RowUtil.getIndexByDisplayIndex(index, hasHeader, resPosition),
-            getResultsIndex: () => RowUtil.getResultsIndex(display, hasHeader, resPosition, hasEmptyTemplate),
-            getFooterIndex: () => RowUtil.getFooterIndex(display, hasHeader, resPosition, hasEmptyTemplate)
-         }
-
-      }
-
 
       describe('Grid with header', function () {
 
          describe('results in top', function () {
             let
                 gridModel = createModel({resultsPosition: 'top'}),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 2);
@@ -120,7 +102,7 @@ define([
          describe('results in bottom', function () {
             let
                 gridModel = createModel({resultsPosition: 'bottom'}),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 1);
@@ -152,7 +134,7 @@ define([
          describe('no results', function () {
             let
                 gridModel = createModel(),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 1);
@@ -184,7 +166,7 @@ define([
          describe('results in top', function () {
             let
                 gridModel = createModel({resultsPosition: 'top', header: null}),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 1);
@@ -217,7 +199,7 @@ define([
          describe('results in bottom', function () {
             let
                 gridModel = createModel({resultsPosition: 'bottom', header: null}),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 0);
@@ -249,7 +231,7 @@ define([
          describe('no results', function () {
             let
                 gridModel = createModel({header: null}),
-                rowIndexHelper = getRowIndexHelper(gridModel);
+                rowIndexHelper = gridModel._getRowIndexHelper();
 
             it('getIndexById', function () {
                assert.equal(rowIndexHelper.getIndexById('1'), 0);
@@ -286,7 +268,7 @@ define([
                describe('results in top', function () {
                   let
                       gridModel = createModel({resultsPosition: 'top', emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 1);
@@ -300,7 +282,7 @@ define([
                describe('results in bottom', function () {
                   let
                       gridModel = createModel({resultsPosition: 'bottom', emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 2);
@@ -314,7 +296,7 @@ define([
                describe('no results', function () {
                   let
                       gridModel = createModel({emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getFooterIndex', function () {
                      assert.equal(rowIndexHelper.getFooterIndex(), 2);
@@ -328,7 +310,7 @@ define([
                describe('results in top', function () {
                   let
                       gridModel = createModel({resultsPosition: 'top', header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 0);
@@ -343,7 +325,7 @@ define([
                describe('results in bottom', function () {
                   let
                       gridModel = createModel({resultsPosition: 'bottom', header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 1);
@@ -357,7 +339,7 @@ define([
                describe('no results', function () {
                   let
                       gridModel = createModel({header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getFooterIndex', function () {
                      assert.equal(rowIndexHelper.getFooterIndex(), 1);
@@ -375,7 +357,7 @@ define([
                describe('results in top', function () {
                   let
                       gridModel = createModel({resultsPosition: 'top'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 1);
@@ -389,7 +371,7 @@ define([
                describe('results in bottom', function () {
                   let
                       gridModel = createModel({resultsPosition: 'bottom'}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 1);
@@ -403,7 +385,7 @@ define([
                describe('no results', function () {
                   let
                       gridModel = createModel({}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getFooterIndex', function () {
                      assert.equal(rowIndexHelper.getFooterIndex(), 1);
@@ -417,7 +399,7 @@ define([
                describe('results in top', function () {
                   let
                       gridModel = createModel({resultsPosition: 'top', header: null}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 0);
@@ -432,7 +414,7 @@ define([
                describe('results in bottom', function () {
                   let
                       gridModel = createModel({resultsPosition: 'bottom', header: null}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getResultsIndex', function () {
                      assert.equal(rowIndexHelper.getResultsIndex(), 0);
@@ -446,7 +428,7 @@ define([
                describe('no results', function () {
                   let
                       gridModel = createModel({header: null}, []),
-                      rowIndexHelper = getRowIndexHelper(gridModel);
+                      rowIndexHelper = gridModel._getRowIndexHelper();
 
                   it('getFooterIndex', function () {
                      assert.equal(rowIndexHelper.getFooterIndex(), 0);

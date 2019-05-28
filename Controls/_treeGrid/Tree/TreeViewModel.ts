@@ -166,9 +166,9 @@ var
 
             return expanderClasses;
         },
-        prepareExpandedItems: function(expandedItems) {
-            var
-                result = {};
+        prepareExpandedItems: function(expandedItems: Array<unknown>): Record<unknown, boolean> {
+            let
+                result: Record<unknown, boolean> = {};
             if (expandedItems) {
                 expandedItems.forEach(function(item) {
                     result[item] = true;
@@ -263,7 +263,7 @@ var
             }
         },
 
-        setExpandedItems: function(expandedItems) {
+        setExpandedItems: function(expandedItems: Array<unknown>) {
             this._expandedItems = _private.prepareExpandedItems(expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));

@@ -85,7 +85,7 @@ var
         isExpandAll: function () {
             return this._model.isExpandAll();
         },
-        setExpandedItems: function (expandedItems) {
+        setExpandedItems: function (expandedItems: Array<unknown>) {
             this._model.setExpandedItems(expandedItems);
         },
         getExpandedItems: function () {

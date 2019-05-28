@@ -25,34 +25,16 @@ class DeepTree extends Control {
     private _viewSource = new Memory({
         idProperty: 'id',
         data: [
-            getItem('1', {nodeType: true, title: 'PC', group: 'Gadgets'}),
-            getItem('1_1', {nodeType: true, parent: '1', title: 'Accessories', group: 'Gadgets'}),
-            getItem('1_1_1', {nodeType: false, parent: '1_1', title: 'Keyboards', group: 'Gadgets'}),
-            getItem('1_1_1_1', {parent: '1_1_1', title: 'Logitech 12-43rs', group: 'Gadgets'}),
-            getItem('1_1_1_2', {parent: '1_1_1', title: 'GEnius K3', group: 'Gadgets'}),
-            getItem('1_1_1_3', {parent: '1_1_1', title: 'HP Bluetooth 4.0', group: 'Gadgets'}),
-            getItem('1_1_1_4', {parent: '1_1_1', title: 'Logitech 15-3ams', group: 'Gadgets'}),
-            getItem('1_1_2', {parent: '1_1', title: 'Apple mouse 2', group: 'Gadgets'}),
-            getItem('1_1_3', {parent: '1_1', title: 'Apple mouse 3', group: 'Gadgets'}),
-            getItem('1_2', {nodeType: false, parent: '1', title: 'Spare parts', group: 'Gadgets'}),
-            getItem('1_2_1', {nodeType: true, parent: '1_2', title: 'Videochips', group: 'Gadgets'}),
-            getItem('1_2_1_1', {nodeType: false, parent: '1_2_1', title: 'NVIDIA', group: 'Gadgets'}),
-            getItem('1_2_1_1_1', {parent: '1_2_1_1', title: 'GForce 1050', group: 'Gadgets'}),
-            getItem('1_2_1_1_2', {parent: '1_2_1_1', title: 'GForce 1060', group: 'Gadgets'}),
-            getItem('1_2_1_1_3', {parent: '1_2_1_1', title: 'GForce 1070', group: 'Gadgets'}),
-            getItem('1_2_1_1_4', {parent: '1_2_1_1', title: 'GForce 1080', group: 'Gadgets'}),
-            getItem('1_2_1_2', {parent: '1_2_1', title: 'Asus 1070-ti', group: 'Gadgets'}),
-            getItem('1_2_2', {parent: '1_2', title: 'Motherboard Gigabyte-2', group: 'Gadgets'}),
-            getItem('1_2_3', {parent: '1_2', title: 'RAM Kingston 16 GB', group: 'Gadgets'}),
-            getItem('1_2_4', {parent: '1_2', title: 'RAM Kingston 32 GB', group: 'Gadgets'}),
-            getItem('1_3', {parent: '1', title: 'Mac PRO 2016', group: 'Gadgets'}),
-            getItem('1_4', {parent: '1', title: 'Mac Mini 3', group: 'Gadgets'}),
-    
-            getItem('2', {nodeType: true, title: 'Tablets', group: 'Gadgets'}),
-            getItem('2_1', {parent: '2', title: 'Android vedro v1', group: 'Gadgets'}),
-            getItem('2_2', {parent: '2', title: 'iPad Air', group: 'Gadgets'}),
-            getItem('3', {nodeType: false, title: 'Chairs', group: 'For home'}),
-            getItem('4', {title: 'Sofas', group: 'For home'})
+            getItem('1', { nodeType: true, parent: null, group: 'group_1'}),
+            getItem('1_1', { nodeType: true, parent: '1', group: 'group_1'}),
+            getItem('1_1_1', { nodeType: null, parent: '1_1', group: 'group_1'}),
+            getItem('1_1_2', { nodeType: null, parent: '1_1', group: 'group_1'}),
+            getItem('1_2', { nodeType: null, parent: '1', group: 'group_1'}),
+            getItem('2', { nodeType: false, parent: null, group: 'group_1'}),
+            getItem('2_1', { nodeType: null, parent: '2', group: 'group_1'}),
+            getItem('3', { nodeType: false, parent: null, group: 'group_2'}),
+            getItem('3_1', { nodeType: null, parent: '3', group: 'group_2'}),
+            getItem('4', { nodeType: null, parent: null, group: 'group_2'})
         ]
     });
     
