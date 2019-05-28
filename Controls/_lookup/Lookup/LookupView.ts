@@ -113,7 +113,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
             itemsSizes = [],
             measurer = document.createElement('div'),
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems)
+            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
          /* toDO !KONGO Шаблонизатор для кавычки возвращяет представление в виде "&amp;quot;", т.е. и сам амперсант представляет в виде "&amp;"
           * при вставки в innerHTML на выходе мы получаем "&quot;"(т.е одна итерация), для того что бы получить на выходить кавычку
