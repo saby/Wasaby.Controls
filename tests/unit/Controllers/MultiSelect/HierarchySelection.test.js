@@ -513,7 +513,7 @@ define([
       });
 
       describe('toggleAll', function() {
-         it('selectedKeys with key, this is not from collection + toggleAll', function() {
+         it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = {
                selectedKeys: [1, 2, 4, 5, 6, 7, 8],
                excludedKeys: [],
