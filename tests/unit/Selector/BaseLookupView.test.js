@@ -63,7 +63,7 @@ define([
             isCalculatingSizes = true;
          };
 
-         lookup._listOfDependentOptions = ['items', 'readOnly'];
+         lookup._listOfDependentOptions = ['multiLine', 'readOnly'];
          lookup._inputValue = lookup._options.value = '';
          lookup._beforeUpdate({value: 'test'});
          assert.equal(lookup._inputValue, 'test');
