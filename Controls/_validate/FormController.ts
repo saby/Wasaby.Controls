@@ -2,7 +2,15 @@ import Base = require('Core/Control');
 import template = require('wml!Controls/_validate/FormController');
 import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
-      
+
+/**
+ * @class Controls/_validate/FormController
+ * @extends Core/Control
+ * @control
+ * @public
+ * @demo Controls-demo/Input/Validate/FormController
+ * @author Красильников А.С.
+ */
 
       var Form = Base.extend({
          _template: template,
@@ -73,4 +81,48 @@ import ParallelDeferred = require('Core/ParallelDeferred');
          }
       });
       export = Form;
-   
+
+/**
+ * @name Controls/_validate/FormController#content
+ * @cfg {Content} The content to which the logic of validation is added.
+ */
+
+/**
+ * @name Controls/_validate/FormController#submit
+ * @description Start the validation
+ * @returns {Undefined}
+ * @example
+ * wml
+ * <pre>
+ *<Controls.validate:Controller name="formController">
+ * <ws:content>
+ *   <Controls.validate:Container>
+ *     <ws:validators>
+ *        <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
+ *     </ws:validators>
+ *      <ws:content>
+ *        <Controls.input:Text bind:value="_value2"/>
+ *      </ws:content>
+ *   </Controls.validate:Container>
+ * </ws:content>
+ *</Controls.validate:Controller>
+ *<Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
+ * </pre>
+ * js
+ * <pre>
+ *     Control.extend({
+ *        ...
+ *
+ *         _clickHandler: function() {
+         this._children.formController.submit();
+      }
+ *        ...
+ *    });
+ * </pre>
+ */
+
+/**
+ * @name Controls/_validate/FormController#isValid
+ * @description Return the result of validation
+ * @returns {Array}
+ */
