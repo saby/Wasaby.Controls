@@ -2,7 +2,7 @@ define('Controls/Date/Controllers/RangeSelectionController', [
    'Core/Control',
    'Core/core-merge',
    'Controls/Date/interface/IRangeSelectable',
-   'wml!Controls/Date/Controllers/RangeSelectionController'
+   'wml!Controls/_dateRange/Controllers/RangeSelectionController'
 ], function(BaseControl, coreMerge, IRangeSelectable, RangeSelectrionControllerTmpl) {
    'use strict';
 
