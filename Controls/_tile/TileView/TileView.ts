@@ -193,7 +193,7 @@ var TileView = ListView.extend({
 
         if (position) {
             documentRect = document.documentElement.getBoundingClientRect();
-            if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP) {
+            if (this._tileScalingMode !== TILE_SCALING_MODE.NONE && this._tileScalingMode !== TILE_SCALING_MODE.OVERLAP) {
                 itemStartPosition = _private.getItemStartPosition(itemContainerRect, documentRect);
             } else {
                 itemStartPosition = null;
@@ -207,7 +207,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
+        return this._tileScalingMode !== TILE_SCALING_MODE.NONE && this._tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {
