@@ -58,9 +58,14 @@ class Button extends Control {
    private _caption: String | Function;
    private _stringCaption: Boolean;
    private _icon: String;
+   private _iconSize: String;
    private _iconStyle: String;
+   private _regExp: RegExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
 
    static _theme: Array<string> = ['Controls/buttons'];
+   private prepareIconSize(icon): String {
+      return icon.replace(this._regExp, '');
+   }
    private cssStyleGeneration(options) {
       const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
 
@@ -77,7 +82,8 @@ class Button extends Control {
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = options.icon;
+      this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
+      this._iconSize = options.iconSize;
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
    }
 
@@ -105,7 +111,7 @@ class Button extends Control {
       return {
          style: 'secondary',
          viewMode: 'button',
-         size: 'm',
+         size: 'default',
          iconStyle: 'secondary',
          transparent: true,
          theme: 'default'
