@@ -200,18 +200,29 @@ import {IData, IDecorator} from "Types/source";
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
+               const items = dataOptions.items;
+               const multiSelect = this._options.multiSelect;
+               const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
-               loadDef = sourceController.load(
-                   _private.prepareFilter(
-                       dataOptions.filter,
-                       selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
-                       self._options.searchParam
-                   )
-               );
+               // toDO В 19.400 вынести в утилиту "Controls/Utils/getItemsBySelection", при multiSelect: true так же не всегда нужен запрос к бл.
+               if (!multiSelect && selectedItem) {
+                  let selectedItems = _private.getEmptyItems(self._items);
 
-               loadDef.addCallback(function(result) {
-                  return prepareResult(result);
-               });
+                  selectedItems.add(selectedItem);
+                  loadDef = Deferred.success(prepareResult(selectedItems));
+               } else {
+                  loadDef = sourceController.load(
+                     _private.prepareFilter(
+                        dataOptions.filter,
+                        selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
+                        self._options.searchParam
+                     )
+                  );
+
+                  loadDef.addCallback(function (result) {
+                     return prepareResult(result);
+                  });
+               }
             } else {
                loadDef = Deferred.success(prepareResult(_private.getEmptyItems(self._items)));
             }
