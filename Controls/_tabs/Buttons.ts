@@ -52,7 +52,7 @@ import Env = require('Env/Env');
             modifyToNewStyle = options.style;
          }
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right') +
-             'controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
+             ' controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + options.theme);
          }
@@ -64,7 +64,7 @@ import Env = require('Env/Env');
             classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected' +
+            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected ' +
                 'controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected_theme_' + options.theme);
             classes.push('controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_' + options.theme);
          } else {
@@ -72,7 +72,7 @@ import Env = require('Env/Env');
          }
          if (item.get('type')) {
             classes.push('controls-Tabs__item_type_' + item.get('type') +
-            'controls-Tabs__item_type_' + item.get('type')+'_theme_' + options.theme);
+            ' controls-Tabs__item_type_' + item.get('type')+'_theme_' + options.theme);
          }
 
          // TODO: по поручению опишут как и что должно сжиматься. Пока сжимаем только те вкладки, которые прикладники явно пометили
