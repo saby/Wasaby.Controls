@@ -6,12 +6,21 @@
                        tagStyle="{{_options.tagStyle}}"
                        fontStyle="{{_options.fontStyle}}"
                        textAlign="{{_options.textAlign}}"
-                       placeholder="{{_options.placeholder}}"
                        on:mouseenter="_mouseEnterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')"
                        beforeFieldWrapper="{{_options.beforeFieldWrapper}}"
                        afterFieldWrapper="{{_options.afterFieldWrapper}}">
+   <ws:placeholder>
+      <ws:if data="{{_options.multiline}}">
+         <div attr:class="controls-Lookup__placeholderWrapper">
+            <ws:partial template="{{_options.placeholder}}"/>
+         </div>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="{{_options.placeholder}}"/>
+      </ws:else>
+   </ws:placeholder>
    <ws:content>
       <!--Always keep input field in layout https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629-->
       <ws:partial type="{{_type}}"
