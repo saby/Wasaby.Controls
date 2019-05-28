@@ -64,10 +64,7 @@ class Button extends Control {
 
    static _theme: Array<string> = ['Controls/buttons'];
    private prepareIconSize(icon): String {
-      return icon.replace(this._regExp, (name, iconSize) => {
-            this._iconSize = iconSize;
-            return '';
-         });
+      return icon.replace(this._regExp, '');
    }
    private cssStyleGeneration(options) {
       const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
@@ -86,7 +83,7 @@ class Button extends Control {
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
       this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
-      this._iconSize = options.iconSize || this._iconSize;
+      this._iconSize = options.iconSize;
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
    }
 
