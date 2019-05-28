@@ -42,7 +42,9 @@ define([
          });
 
          it('open', () => {
+            popupOpener._openPopup = () => {};
             let def = popupOpener.open({});
+
             assert.equal(def instanceof Deferred, true);
          });
       });
