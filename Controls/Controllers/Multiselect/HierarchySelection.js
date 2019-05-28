@@ -204,9 +204,9 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          // 1) Удаляем всех из selectedKeys
          // 2) Удаляем всех детей из excludedKeys
          // 3) Для каждого ключа бежим по всем родителям, как только нашли полностью выделенного родителя, то добавляем в excludedKeys и заканчиваем бежать
-         var
-            childrenIds,
-            parentId;
+         var isAllSelection = this._isAllSelection(this._getParams(null));
+         var childrenIds;
+         var parentId;
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
 
@@ -217,7 +217,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
 
-            if (!this._items.getRecordById(key)) {
+            if (!this._items.getRecordById(key) && !isAllSelection) {
                //There's no point to add this key to excludedKeys because it is either root or this item was removed from the collection
                return;
             }
@@ -229,7 +229,9 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                }
                parentId = _private.getParentId(parentId, this._items, this._hierarchyRelation.getParentProperty());
             }
-            if (parentId === null && this._isAllSelection(this._getParams(null))) {
+
+            //item can be not loaded yet, but anyway he must be in excluded, beacouse method with selection will work incorrect
+            if ((parentId === null || !this._items.getRecordById(key)) && this._isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
             }
          }.bind(this));
