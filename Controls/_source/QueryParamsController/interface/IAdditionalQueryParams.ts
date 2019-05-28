@@ -12,6 +12,6 @@ export default interface IAdditionalQueryParams {
    meta?: IAdditionQueryParamsMeta;
    limit?: number;
    offset?: number;
-   filter?: object;
-   sorting?: any[];
+   filter?: unknown;
+   sorting?: unknown;
 }

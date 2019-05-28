@@ -5,25 +5,25 @@ import Position from 'Controls/_source/QueryParamsController/Position';
 import {Query} from 'Types/source';
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import {ICrud} from 'Types/source';
+import {ICrud, IQueryMeta} from 'Types/source';
+import {Direction, default as IAdditionalQueryParams} from './QueryParamsController/interface/IAdditionalQueryParams';
 
 export interface ISourceControllerOptions {
    source?: ICrud;
-   navigation?: object;
+   navigation?: {
+      source: string,
+      souceConfig: unknown
+   };
 }
+
+// TODO https://online.sbis.ru/opendoc.html?guid=84d4ca7f-dfe9-4948-9979-d951ed316cf2
+type Filter = unknown;
+type Sorting = unknown;
 
 var _private = {
 
 
-   getQueryInstance: function(filter, sorting, offset, limit, meta) {
-      var query = new Query();
-      query.where(filter)
-         .offset(offset)
-         .limit(limit)
-         .orderBy(sorting)
-         .meta(meta);
-      return query;
-   },
+
 
    callQuery: function(dataSource, keyProperty, filter, sorting, offset, limit, meta) {
       var queryDef, queryIns;
@@ -107,7 +107,7 @@ var _private = {
 };
 class SourceController {
    protected  source: ICrud = null;
-   protected  queryParamsController = null;
+   protected  queryParamsController: Position | Page = null;
    protected _loader = null;
    protected _options: ISourceControllerOptions;
    protected _source: ICrud;
@@ -117,8 +117,29 @@ class SourceController {
       this._source = this._prepareSource(this._options.source);
 
       if (this._options.navigation && this._options.navigation.source) {
-         this._queryParamsController = _private.createQueryParamsController(this._options.navigation.source, this._options.navigation.sourceConfig);
+         this._queryParamsController = this._createQueryParamsController(
+            this._options.navigation.source, this._options.navigation.sourceConfig
+         );
       }
+   }
+
+   private _createQueryParamsController(type: string, cfg): Page | Position {
+      var cntCtr, cntInstance;
+
+      switch (type) {
+         case 'page':
+            cntCtr = Page;
+            break;
+         case 'position':
+            cntCtr = Position;
+            break;
+         default:
+            IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+      }
+      if (cntCtr) {
+         cntInstance = new cntCtr(cfg);
+      }
+      return cntInstance;
    }
 
    private _prepareSource(sourceOpt: ICrud): ICrud {
@@ -128,8 +149,24 @@ class SourceController {
       return sourceOpt;
    }
 
-   load: function(filter, sorting?, direction?) {
-      var def, queryParams, self, navFilter;
+   private _getQueryInstance(filter: Filter,
+                             sorting: Sorting,
+                             offset: number | string,
+                             limit: number,
+                             meta: IQueryMeta): Query {
+      const query = new Query();
+      query.where(filter)
+         .offset(offset)
+         .limit(limit)
+         .orderBy(sorting)
+         .meta(meta);
+      return query;
+   }
+
+   load(filter: Filter, sorting?: Sorting, direction?: Direction): cDeferred {
+      let def: cDeferred;
+      let queryParams: IAdditionalQueryParams;
+      let self: SourceController;
 
       queryParams = {
          filter: filter || {},
