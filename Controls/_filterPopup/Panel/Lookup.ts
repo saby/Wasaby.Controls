@@ -33,6 +33,15 @@ import 'css!theme?Controls/filterPopup';
     */
 
    /**
+    * @name Controls/_filterPopup/Panel/Lookup#emptyText
+    * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
+    */
+
+   /* !KONGO
+      Текст ссылки, который отображается до первого выбора записи в контролле - ???
+   */
+
+   /**
     * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
     * @cfg {String} Name of the control with same interface as Lookup.
     * @default Controls/_lookup/Lookup
@@ -51,6 +60,16 @@ import 'css!theme?Controls/filterPopup';
          } else {
             Env.IoC.resolve('ILogger').error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type');
          }
+      },
+
+      getCaption: function(self, options) {
+         var caption = options.caption;
+
+         if (options.emptyText && !self._passed && !options.selectedKeys.length) {
+            caption = options.emptyText;
+         }
+
+         return caption;
       }
    };
 
@@ -58,6 +77,15 @@ import 'css!theme?Controls/filterPopup';
       _template: template,
       _notifyHandler: tmplNotify,
       _passed: false,
+      _caption: '',
+
+      _beforeMount: function(options) {
+         this._caption = _private.getCaption(this, options);
+      },
+
+      _beforeUpdate: function(newOptions) {
+         this._caption = _private.getCaption(this, newOptions);
+      },
 
       _afterUpdate: function(oldOptions) {
          var lookup = _private.getLookup(this);
