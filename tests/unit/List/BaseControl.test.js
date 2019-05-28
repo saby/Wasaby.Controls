@@ -2163,7 +2163,7 @@ define([
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
                      assert.equal(itemData, instance._listViewModel._activeItem);
-                     assert.isTrue(itemData.contextEvent);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
                      assert.equal(callBackCount, 3);
                      done();
                   }
@@ -2371,7 +2371,7 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
             setTimeout(function() {
                assert.equal(itemData, instance._listViewModel._activeItem);
-               assert.isFalse(itemData.contextEvent);
+               assert.equal(instance._listViewModel._menuState, 'shown');
                assert.equal(callBackCount, 3);
             }, 100);
          });
@@ -2445,6 +2445,7 @@ define([
                }]
             });
             assert.equal(instance._listViewModel._activeItem, null);
+            assert.equal(instance._listViewModel._menuState, 'hidden');
             assert.equal(callBackCount, 5);
             assert.isFalse(instance._menuIsShown);
          });
@@ -2623,6 +2624,7 @@ define([
             it('can update itemActions on left swipe', function(done) {
                var
                    cfg = {
+                      itemActions: [1, 2, 3],
                       viewName: 'Controls/List/ListView',
                       viewConfig: {
                          idProperty: 'id'
@@ -2631,15 +2633,11 @@ define([
                          items: [],
                          idProperty: 'id'
                       },
+                      keyProperty: 'id',
                       viewModelConstructor: lists.ListViewModel,
                       source: source
                    },
                    instance = new lists.BaseControl(cfg),
-                   itemData = {
-                      key: 1,
-                      multiSelectStatus: false,
-                      item: {}
-                   },
                    updated = false,
                    childEvent = {
                       nativeEvent: {
@@ -2655,16 +2653,18 @@ define([
                      itemActions: {
                         updateItemActions: () => {
                            updated = true;
-                        }
+                           instance._listViewModel._actions[1] = cfg.itemActions
+                        },
                      },
                      selectionController: {
                         onCheckBoxClick: function () {
                         }
                      }
                   };
-
+                  let itemData = instance._listViewModel.getCurrent();
                   instance._listSwipe({}, itemData, childEvent);
                   assert.isTrue(updated);
+                  assert.deepEqual(itemData.itemActions, cfg.itemActions);
                   done();
                });
                return done;
@@ -2735,6 +2735,7 @@ define([
             var callBackCount = 0;
             var
                 cfg = {
+                   itemActions: [1, 2, 3],
                    viewName: 'Controls/List/ListView',
                    viewConfig: {
                       idProperty: 'id'
@@ -2743,6 +2744,7 @@ define([
                       items: [],
                       idProperty: 'id'
                    },
+                   keyProperty: 'id',
                    viewModelConstructor: lists.ListViewModel,
                    source: source
                 },
@@ -2765,6 +2767,7 @@ define([
                   itemActions: {
                      updateItemActions: () => {
                         updated = true;
+                        instance._listViewModel._actions[2] = cfg.itemActions
                      }
                   },
                   selectionController: {
@@ -2786,6 +2789,7 @@ define([
                   }
                };
                assert.isTrue(updated);
+               assert.deepEqual(itemData.itemActions, cfg.itemActions);
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
@@ -2928,21 +2932,34 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             source: source,
-            filter: filter
+            filter: filter,
+            navigation: {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
          };
          var baseCtrl = new lists.BaseControl(cfg);
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
             baseCtrl._beforeMount(cfg).addCallback(function() {
+               assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
+
                baseCtrl.reloadItem(1).addCallback(function(item) {
                   assert.equal(item.get('id'), 1);
                   assert.equal(item.get('title'), 'Первый');
+                  assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
 
                   baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
                      assert.isTrue(!!items.getCount);
                      assert.equal(items.getCount(), 1);
                      assert.equal(items.at(0).get('id'), 1);
+                     assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
                      resolve();
                   });
                });
