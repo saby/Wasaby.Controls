@@ -3051,5 +3051,34 @@ define([
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
       });
+
+      it('_afterUpdate while loading do not update loadingState', async function() {
+         var cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            };
+         var instance = new lists.BaseControl(cfg);
+         var cfgClone = {...cfg};
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         lists.BaseControl._private.showIndicator(instance, 'down');
+         assert.equal(instance._loadingState, 'down');
+
+         cfgClone.loading = true;
+         instance.saveOptions(cfg);
+         instance._afterUpdate(cfg);
+         assert.equal(instance._loadingState, 'down');
+      });
    });
 });
