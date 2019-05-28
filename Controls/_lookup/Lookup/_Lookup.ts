@@ -279,6 +279,13 @@ import 'css!theme?Controls/lookup';
 
       isNeedUpdate: function(multiSelect, itemsCount, multiLine, readOnly, maxVisibleItems) {
          return multiSelect && (multiLine || !readOnly || itemsCount > maxVisibleItems);
+      },
+
+      resetInputValue: function(self) {
+         if (self._inputValue !== '') {
+            self._inputValue = '';
+            _private.notifyValue(self, '');
+         }
       }
    };
 
@@ -346,6 +353,9 @@ import 'css!theme?Controls/lookup';
             });
          }
 
+         if (currentOptions.items !== newOptions.items) {
+            _private.resetInputValue(this);
+         }
 
          if (isNeedUpdate) {
             _private.calculatingSizes(this, newOptions);
@@ -382,11 +392,7 @@ import 'css!theme?Controls/lookup';
          }
 
          this._notify('addItem', [item]);
-
-         if (this._inputValue !== '') {
-            this._inputValue = '';
-            _private.notifyValue(this, '');
-         }
+         _private.resetInputValue(this);
       },
 
       _crossClick: function(event, item) {
