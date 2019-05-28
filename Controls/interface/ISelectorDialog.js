@@ -19,7 +19,7 @@ define('Controls/interface/ISelectorDialog', [
     *       source="{{_source}}"
     *       searchParam="title"
     *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}"/>
+    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}" popupOptions="{{_popupOptions}}"/>
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -30,6 +30,9 @@ define('Controls/interface/ISelectorDialog', [
     *          handlers: {
     *             onSelectComplete: function() {}
     *          }
+    *       };
+    *       this._popupOptions = {
+    *          width: 400
     *       };
     *    }
     * </pre>
