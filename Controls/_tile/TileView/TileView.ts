@@ -103,7 +103,7 @@ var TileView = ListView.extend({
     _resizeFromSelf: false,
 
     _beforeMount: function(options) {
-        if (options.hasOwnProperty('hoverMode')) {
+        if (options.hasOwnProperty('hoverMode') && !options.hasOwnProperty('tileScalingMode')) {
             IoC.resolve('ILogger').warn(this._moduleName, 'Используется устаревшая опция hoverMode, используйте tileScalingMode');
             this._tileScalingMode = !!options.hoverMode ? TILE_SCALING_MODE.OUTSIDE : TILE_SCALING_MODE.NONE;
         } else {
