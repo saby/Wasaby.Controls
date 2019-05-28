@@ -59,13 +59,10 @@ define(['Controls/treeGrid',
             setFilter: function() {}
          };
          treeGridViewModel.setExpandedItems([]);
-         assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+         assert.deepEqual([], treeGridViewModel._model._expandedItems);
 
          treeGridViewModel.setExpandedItems([1, 2]);
-         assert.deepEqual({
-            1: true,
-            2: true
-         }, treeGridViewModel._model._expandedItems);
+         assert.deepEqual([1,2], treeGridViewModel._model._expandedItems);
       });
       it('notify "onNodeRemoved"', function() {
          var

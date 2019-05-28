@@ -136,7 +136,7 @@ var _private = {
 
         if (baseControl) {
             viewModel = baseControl.getViewModel();
-            expandedItemsKeys = Object.keys(viewModel.getExpandedItems());
+            expandedItemsKeys = viewModel.getExpandedItems();
             isExpandAll = viewModel.isExpandAll();
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
                 if (expandedItemsKeys.indexOf(node) === -1) {
@@ -274,6 +274,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterMount: function() {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
+        this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
     },
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
@@ -334,6 +335,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
+    },
+    _onExpandedItemsChanged(e, expandedItems){
+        this._notify('expandedItemsChanged', [expandedItems]);
     },
     reload: function() {
         var self = this;

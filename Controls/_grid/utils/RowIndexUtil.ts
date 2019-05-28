@@ -14,7 +14,7 @@ function calcRowIndexByKey(
     hierarchyRelation?,
     hasMoreStorage?,
     hasFooterTemplate = false,
-    expandedItems = {}
+    expandedItems = []
 ): number {
 
     let
@@ -113,7 +113,7 @@ function _calcRowIndexByDisplayIndex(
     hierarchyRelation?,
     hasMoreStorage?,
     hasFooterTemplate: boolean = false,
-    expandedItems = {}
+    expandedItems = []
 ): number {
     let rowTopOffset: number = calcTopOffset(hasHeader, resultsPosition);
 
@@ -124,7 +124,7 @@ function _calcRowIndexByDisplayIndex(
     return rowTopOffset + index + _calcHasMoreButtonsBefore(index, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems);
 }
 
-function _calcHasMoreButtonsBefore(itemIndex: number, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems = {}): number {
+function _calcHasMoreButtonsBefore(itemIndex: number, display, hierarchyRelation, hasMoreStorage, hasFooterTemplate, expandedItems = []): number {
     let
         count = 0,
         keyProperty: string = display.getCollection().getIdProperty();
@@ -132,7 +132,7 @@ function _calcHasMoreButtonsBefore(itemIndex: number, display, hierarchyRelation
     if (hierarchyRelation && hasFooterTemplate) {
         for (let i = 0; i < itemIndex; i++) {
             let item = display.at(1).getContents();
-            if (item.get && hierarchyRelation.isNode(item) && expandedItems[item.getId()]) {
+            if (item.get && hierarchyRelation.isNode(item) && expandedItems.indexOf(item.getId()) !== -1) {
                 count++;
             }
         }

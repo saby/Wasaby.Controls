@@ -110,7 +110,7 @@ var
         },
 
         removeNodeFromExpandedIfNeed: function(self, nodeId) {
-            if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
+            if (self._expandedItems && self._expandedItems.indexOf(nodeId) !== -1 && !_private.hasChildItem(self, nodeId)) {
                 // If it is necessary to delete only the nodes deleted from the items, add this condition:
                 // if (!self._items.getRecordById(nodeId)) {
                 _private.removeNodeFromExpanded(self, nodeId);
@@ -118,10 +118,15 @@ var
         },
 
         removeNodeFromExpanded: function(self, nodeId) {
-            delete self._expandedItems[nodeId];
+            _private.removeFromArray(self._expandedItems, nodeId);
             self._notify('onNodeRemoved', nodeId);
         },
 
+        removeFromArray: function(array, elem) {
+            if (array.indexOf(elem) !== -1) {
+                array.splice(array.indexOf(elem), 1);
+            }
+        },
 
         checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
@@ -180,20 +185,20 @@ var
             if (_private.isExpandAll(expandedItems) && collapsedItems) {
                 return cClone(collapsedItems);
             }
-            return {};
+            return [];
         },
         isExpandAll: function(expandedItems) {
-            return expandedItems && !!expandedItems[null];
+            return (expandedItems instanceof Array && (expandedItems.indexOf(null) !== -1)) ||
+                (expandedItems && !!expandedItems[null]);
         },
 
         resetExpandedItems: function(self) {
             if (_private.isExpandAll(self._expandedItems)) {
-                self._expandedItems = { null: true };
+                self._expandedItems = [];
+                self._expandedItems.push(null);
             } else {
-                for (var itemId in self._expandedItems) {
-                    if (self._expandedItems.hasOwnProperty(itemId)) {
-                        _private.removeNodeFromExpanded(self, itemId);
-                    }
+                while (self._expandedItems.length > 0) {
+                    self._expandedItems = [];
                 }
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
@@ -202,7 +207,7 @@ var
             self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
                 var
                     itemId = item.getId();
-                delete self._expandedItems[itemId];
+                _private.removeFromArray(self._expandedItems, itemId);
                 _private.collapseChildNodes(self, itemId);
             });
         },
@@ -213,7 +218,7 @@ var
         },
 
         collapseNode: function (self, nodeId) {
-            delete self._expandedItems[nodeId];
+            _private.removeFromArray(self._expandedItems, nodeId);
             _private.collapseChildNodes(self, nodeId);
         },
 
@@ -229,20 +234,19 @@ var
 
         toggleSingleExpanded: function (self, itemId, parentId): void {
             let
-                hasNoExpanded = Object.keys(self._expandedItems).length === 0;
+                hasNoExpanded = self._expandedItems.length === 0;
 
             if (hasNoExpanded) {
-                self._expandedItems[itemId] = true;
+                self._expandedItems.push(itemId);
                 return;
             }
 
-            if (self._expandedItems[itemId]) {
+            if (self._expandedItems && self._expandedItems.indexOf(itemId) !== -1) {
                 _private.collapseNode(self, itemId);
             } else {
-                self.setExpandedItems(_private.getExpandedParents(self,self.getItemById(itemId)));
-                self._expandedItems[itemId] = true;
+                self.setExpandedItems(_private.getExpandedParents(self, self.getItemById(itemId)));
+                self._expandedItems.push(itemId);
             }
-
         }
 
     },
@@ -255,7 +259,7 @@ var
 
         constructor: function(cfg) {
             this._options = cfg;
-            this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
+            this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new _entity.relation.Hierarchy({
                 idProperty: cfg.keyProperty || 'id',
@@ -269,7 +273,7 @@ var
         },
 
         setExpandedItems: function(expandedItems) {
-            this._expandedItems = _private.prepareExpandedItems(expandedItems);
+            this._expandedItems = expandedItems ? cClone(expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextModelVersion();
@@ -290,8 +294,8 @@ var
         isExpanded: function(dispItem) {
             var
                 itemId = dispItem.getContents().getId();
-            return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
-                : !!this._expandedItems[itemId];
+            return _private.isExpandAll(this._expandedItems) ? (this._collapsedItems.indexOf(itemId) === -1)
+                : (this._expandedItems && this._expandedItems.indexOf(itemId) !== -1);
         },
 
         isExpandAll: function() {
@@ -307,22 +311,23 @@ var
             if (expanded !== currentExpanded || expanded === undefined) {
                 if (_private.isExpandAll(this._expandedItems)) {
                     if (expanded) {
-                        delete this._collapsedItems[itemId];
+                        _private.removeFromArray(_collapsedItems,itemId);
                     } else {
-                        this._collapsedItems[itemId] = true;
+                        this._collapsedItems.push(itemId);
                     }
                 } else if (this._options.singleExpand) {
                     _private.toggleSingleExpanded(this, itemId, parentId);
 
                 } else {
-                    if (this._expandedItems[itemId]) {
+                    if (this._expandedItems && this._expandedItems.indexOf(itemId) !== -1) {
                         _private.collapseNode(this, itemId);
                     } else {
-                        this._expandedItems[itemId] = true;
+                        this._expandedItems.push(itemId);
                     }
                 }
                 this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
                 this._nextModelVersion();
+                this._notify('expandedItemsChanged', this._expandedItems);
             }
         },
 
@@ -339,7 +344,7 @@ var
             var
                 data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
             data.keyProperty = this._options.keyProperty;
-            data.expandedItems = this._expandedItems;
+            data.expandedItems = _private.prepareExpandedItems(this._expandedItems);
             data.collapsedItems = this._collapsedItems;
             data.isExpandAll = _private.isExpandAll;
             data.hasChildItem = _private.hasChildItem.bind(null, this);
@@ -507,7 +512,7 @@ var
             var
                 result,
                 startPosition,
-                afterExpandedNode = position === 'after' && this._expandedItems[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)];
+                afterExpandedNode = position === 'after' && this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)) !== -1;
 
             //The position should not change if the record is dragged from the
             //bottom/top to up/down and brought to the bottom/top of the folder.
@@ -577,7 +582,7 @@ var
         },
 
         setRoot: function(root) {
-            this._expandedItems = {};
+            this._expandedItems = [];
             this._display.setRoot(root);
             this.updateMarker(this._markedKey);
             this._nextModelVersion();
