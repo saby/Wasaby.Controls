@@ -886,6 +886,10 @@ var
             }
         },
 
+        setMenuState(state: string): void {
+            this._model.setMenuState(state);
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
@@ -965,6 +969,7 @@ var
                     currentColumn = {
                         item: current.item,
                         style: current.style,
+                        isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
