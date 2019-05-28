@@ -188,10 +188,6 @@ import {IData, IDecorator} from "Types/source";
 
             let loadDef;
 
-            function prepareResult(result) {
-               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
-            }
-
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
                const adapter = _private.getSourceAdapter(source);
@@ -204,12 +200,11 @@ import {IData, IDecorator} from "Types/source";
                const multiSelect = this._options.multiSelect;
                const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
-               // toDO В 19.400 вынести в утилиту "Controls/Utils/getItemsBySelection", при multiSelect: true так же не всегда нужен запрос к бл.
                if (!multiSelect && selectedItem) {
                   let selectedItems = _private.getEmptyItems(self._items);
 
                   selectedItems.add(selectedItem);
-                  loadDef = Deferred.success(prepareResult(selectedItems));
+                  loadDef = Deferred.success(selectedItems);
                } else {
                   loadDef = sourceController.load(
                      _private.prepareFilter(
@@ -218,14 +213,14 @@ import {IData, IDecorator} from "Types/source";
                         self._options.searchParam
                      )
                   );
-
-                  loadDef.addCallback(function (result) {
-                     return prepareResult(result);
-                  });
                }
             } else {
-               loadDef = Deferred.success(prepareResult(_private.getEmptyItems(self._items)));
+               loadDef = Deferred.success(_private.getEmptyItems(self._items));
             }
+
+            loadDef.addCallback(function(result) {
+               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
+            });
 
             this._notify('selectionLoad', [loadDef], {bubbling: true});
          },
