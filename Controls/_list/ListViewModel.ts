@@ -208,7 +208,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         this._markedKey = key;
         this._updateMarker(key);
-        this._nextModelVersion(true);
+        this._nextModelVersion(true, 'markedKeyChanged');
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
@@ -299,7 +299,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
-            this._nextModelVersion(true);
+            this._nextModelVersion(true, 'activeItemChanged');
         }
     },
 
