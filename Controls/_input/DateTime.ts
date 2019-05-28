@@ -1,12 +1,20 @@
 ﻿import Control = require('Core/Control');
 import Env = require('Env/Env');
 import coreMerge = require('Core/core-merge');
-import {Utils as CalendarControlsUtils} from 'Controls/dateRange';
 import Model = require('Controls/_input/DateTime/Model');
 import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
 
+//TODO Копипаста из модуля Controls/_dateRange/Utils, чтобы убрать закчиливание библиотек.
+// https://online.sbis.ru/opendoc.html?guid=33a2d809-9c38-4dd4-bb3a-054afbf49bcc
+function proxyModelEvents(component, model, eventNames) {
+   eventNames.forEach(function(eventName) {
+      model.subscribe(eventName, function(event, value) {
+         component._notify(eventName, value);
+      });
+   });
+}
 
 /**
  * Control for entering date and time.
@@ -51,7 +59,7 @@ var Component = Control.extend([], {
 
    _beforeMount: function(options) {
       this._model = new Model(options);
-      CalendarControlsUtils.proxyModelEvents(this, this._model, ['valueChanged']);
+      proxyModelEvents(this, this._model, ['valueChanged']);
    },
 
    _beforeUpdate: function(options) {
