@@ -5,7 +5,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
 import 'css!theme?Controls/lookup';
 
-
    /**
     * Link for use in Selector/Lookup
     *
@@ -17,7 +16,7 @@ import 'css!theme?Controls/lookup';
     * @author Капустин И.А.
     */
 
-   export = Control.extend({
+   const Link = Control.extend({
       _template: template,
 
       _keyUpHandler: function(e) {
@@ -33,3 +32,4 @@ import 'css!theme?Controls/lookup';
       }
    });
 
+export = Link;
