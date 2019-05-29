@@ -1,4 +1,4 @@
-import Selection from  'Controls/_operations/MultiSelector/Selection';
+import Selection from 'Controls/_operations/MultiSelector/Selection';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {relation} from 'Types/entity';
 

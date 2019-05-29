@@ -520,7 +520,7 @@ define([
                items: allData,
                keyProperty: 'id'
             };
-            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.toggleAll();
             selection = selectionInstance.getSelection();
 
