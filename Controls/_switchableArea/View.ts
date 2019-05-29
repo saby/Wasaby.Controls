@@ -7,7 +7,7 @@ import defaultItemTemplate = require('Controls/_SwitchableArea/ItemTpl');
    /**
     * SwitchableArea
     *
-    * @class Controls/SwitchableArea
+    * @class Controls/View
     * @extends Core/Control
     * @control
     * @public
@@ -21,21 +21,21 @@ import defaultItemTemplate = require('Controls/_SwitchableArea/ItemTpl');
     */
 
    /**
-    * @name Controls/SwitchableArea#items
+    * @name Controls/View#items
     * @cfg {Array.<SwitchableAreaItem>}
     */
 
    /**
-    * @name Controls/SwitchableArea#selectedKey
+    * @name Controls/View#selectedKey
     * @cfg {String} Key of selected item.
     */
 
    /**
-    * @name Controls/SwitchableArea#itemTemplate
+    * @name Controls/View#itemTemplate
     * @cfg {Function} Template for item render.
     */
 
-   var SwitchableArea = Control.extend({
+   var View = Control.extend({
       _template: template,
 
       _beforeMount: function(options) {
@@ -56,11 +56,11 @@ import defaultItemTemplate = require('Controls/_SwitchableArea/ItemTpl');
       }
    });
 
-   SwitchableArea.getDefaultOptions = function() {
+   View.getDefaultOptions = function() {
       return {
          itemTemplate: defaultItemTemplate
       };
    };
 
-   export = SwitchableArea;
+   export = View;
 
