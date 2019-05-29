@@ -17,7 +17,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/DateTime', function() {
+   describe('Controls/_input/DateTime', function() {
       describe('Initialisation', function() {
          it('should create correct model', function() {
             const component = calendarTestUtils.createComponent(input.DateBase, options);

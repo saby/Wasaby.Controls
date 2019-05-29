@@ -66,7 +66,6 @@ import {parse as parserLib, load} from 'Core/library';
          },
          open: function(popupOptions, controller) {
             var cfg = this._getConfig(popupOptions || {});
-            this._actionOnScroll = cfg.actionOnScroll;
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -218,6 +217,9 @@ import {parse as parserLib, load} from 'Core/library';
                if(baseCfg.targetTracking) {
                   baseCfg.actionOnScroll = 'track';
                }
+            }
+            if(baseCfg.actionOnScroll) {
+              this._actionOnScroll = baseCfg.actionOnScroll;
             }
 
             if (baseCfg.hasOwnProperty('isModal')) {
@@ -393,6 +395,14 @@ import {parse as parserLib, load} from 'Core/library';
                }
 
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
+
+               // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
+               // Нужно для открытия окон на старых страницах'.
+               if (opener && opener._options.theme) {
+                  newCfg.templateOptions = newCfg.templateOptions || {};
+                  newCfg.templateOptions.theme = newCfg.templateOptions.theme || opener._options.theme;
+               }
+
                var action;
                if (!opener || !opener._action) {
                   action = new Action({

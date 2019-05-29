@@ -8,6 +8,13 @@ import getZIndex = require('Controls/Utils/getZIndex');
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
+/**
+ * @class Controls/_validate/Controller
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Красильников А.С.
+ */
 
       var _private = {
 
@@ -91,8 +98,8 @@ import 'css!theme?Controls/validate';
             if (!this._isNewEnvironment) {
                // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
                // В том числе инфобоксы.
-               requirejs(['Controls/Popup/Opener/BaseOpener'], function(BaseOpener) {
-                  BaseOpener.getManager();
+               requirejs(['Controls/popup'], function(popup) {
+                   popup.BaseOpener.getManager();
                });
             }
          },
@@ -184,8 +191,9 @@ import 'css!theme?Controls/validate';
          },
 
          /**
-          * Запустить валидацию
-          * @returns {*}
+          * @name Controls/_validate/Controller#validate
+          * @description Start the validation
+          * @returns {Deferred}
           */
          validate: function validate() {
             var validators = this._options.validators || [];
@@ -194,7 +202,8 @@ import 'css!theme?Controls/validate';
          },
 
          /**
-          * Позволяет установить результат валидации извне
+          * @name Controls/_validate/Controller#setValidationResult
+          * @description Set the validationResult from the outside
           * @param validationResult
           */
          setValidationResult: function(validationResult) {
@@ -247,8 +256,9 @@ import 'css!theme?Controls/validate';
          },
 
          /**
-          * Получить результат валидации
-          * @returns {undefined|*}
+          * @name Controls/_validate/Controller#isValid
+          * @description Get the validationResult
+          * @returns {undefined|Array}
           */
 
          isValid: function() {
@@ -263,3 +273,17 @@ import 'css!theme?Controls/validate';
       });
       export = Validate;
 
+/**
+ * @name Controls/_validate/Controller#content
+ * @cfg {Content} The content to which the logic of validation is added.
+ */
+
+/**
+ * @name Controls/_validate/Controller#validators
+ * @cfg {Function} The function of validation.
+ */
+
+/**
+ * @name Controls/_validate/Controller#readOnly
+ * @cfg {Boolean} Validate field in read mode.
+ */

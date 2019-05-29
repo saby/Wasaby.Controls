@@ -1,13 +1,13 @@
 define(
    [
       'Core/Control',
-      'Controls/Input/Number/ViewModel'
+      'Controls/_input/Number/ViewModel'
    ],
    function(Control, NumberViewModel) {
 
       'use strict';
 
-      describe('Controls.Input.Number.ViewModel', function() {
+      describe('Controls/_input/Number/ViewModel', function() {
          var
             testCases = [
                {

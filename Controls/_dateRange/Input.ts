@@ -1,3 +1,4 @@
+import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
@@ -60,6 +61,7 @@ var Component = Control.extend([], {
             className: 'controls-PeriodDialog__picker',
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
+            fittingMode: 'overflow',
             eventHandlers: {
                onResult: this._onResult.bind(this)
             },
@@ -73,7 +75,7 @@ var Component = Control.extend([], {
                rangeselect: true
             }
         };
-        if (!this._options.vdomDialog) {
+        if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
             cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
             cfg.isCompoundTemplate = true;
             cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };

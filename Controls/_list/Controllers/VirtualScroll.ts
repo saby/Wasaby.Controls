@@ -1,6 +1,5 @@
 import uDimension = require("Controls/Utils/getDimensions");
-import IoC = require("Core/IoC");
-
+import {IoC} from "Env/Env";
 /**
  * TODO: Сделать правильные экспорты, чтобы можно было и в js писать просто new VirtualScroll() и в TS файле использовать типы
  */

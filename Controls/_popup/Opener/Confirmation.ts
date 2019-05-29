@@ -136,8 +136,8 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Confirmation name="confirmationOpener">
-          *    </Controls.Popup.Opener.Confirmation>
+          *    <Controls.popup:Confirmation name="confirmationOpener">
+          *    </Controls.popup:Confirmation>
           *
           *    <Controls.Button name="openConfirmation" caption="open confirmation" on:click="_open()"/>
           * </pre>

@@ -23,6 +23,14 @@
    }
 }
 
+.ws-is-ie {
+   // In IE hovered item overflows separator between master and detail
+   // https://online.sbis.ru/opendoc.html?guid=1b3f1c99-6d0c-47c2-af1b-621d81c6bab9
+   .controls-MasterDetail_master::before {
+      z-index: 1;
+   }
+}
+
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {
    .controls-MasterDetail_master .controls-Scroll__content {

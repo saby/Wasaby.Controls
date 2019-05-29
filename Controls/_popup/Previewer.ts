@@ -12,23 +12,8 @@ import 'css!theme?Controls/popup';
        * @control
        * @public
        * @author Красильников А.С.
-       *
-       * @name Controls/_popup/Previewer#content
-       * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
-       *
-       * @name Controls/_popup/Previewer#template
-       * @cfg {Content} Mini card contents.
        */
 
-      /**
-       * @name Controls/_popup/Previewer#trigger
-       * @cfg {String} Event name trigger the opening or closing of the template.
-       * @variant click Opening by click on the content. Closing by click not on the content or template.
-       * @variant demand Closing by click not on the content or template.
-       * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
-       * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
-       * @default hoverAndClick
-       */
       var CALM_DELAY = 300; // During what time should not move the mouse to start opening the popup.
 
       var _private = {
@@ -238,5 +223,25 @@ import 'css!theme?Controls/popup';
       };
 
       export = Previewer;
+
+/**
+ * @name Controls/_popup/Previewer#content
+ * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
+ */
+
+/**
+ * @name Controls/_popup/Previewer#template
+ * @cfg {Content} Mini card contents.
+ */
+
+/**
+ * @name Controls/_popup/Previewer#trigger
+ * @cfg {String} Event name trigger the opening or closing of the template.
+ * @variant click Opening by click on the content. Closing by click not on the content or template.
+ * @variant demand Closing by click not on the content or template.
+ * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
+ * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
+ * @default hoverAndClick
+ */
 
 

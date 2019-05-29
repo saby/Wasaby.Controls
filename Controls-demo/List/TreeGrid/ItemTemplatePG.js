@@ -7,8 +7,8 @@ define('Controls-demo/List/TreeGrid/ItemTemplatePG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/cfg',
 
-      'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/ExpanderIconSizeSmall',
-      'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/ExpanderIconSizeLarge',
+      'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/expanderIconSizeSmall',
+      'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/expanderIconSizeLarge',
       'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/expanderIconNone',
       'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/expanderIconNode',
       'wml!Controls-demo/List/TreeGrid/resources/ItemTemplatePG/expanderIconHiddenNode'

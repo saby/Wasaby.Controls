@@ -42,7 +42,7 @@ define(
 
          it('get template', () => {
             let opener = getOpener(config);
-            let controllerName = 'Controls/Popup/Opener/Sticky/StickyController';
+            let controllerName = 'Controls/popupTemplate:StickyController';
 
             // первый раз загрузка
             opener._requireModules(config, controllerName).addCallback(() => {

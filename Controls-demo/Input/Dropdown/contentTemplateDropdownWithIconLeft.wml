@@ -1,4 +1,4 @@
-<ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate">
+<ws:partial template="wml!Controls/_dropdown/Input/resources/defaultContentTemplate">
    <ws:contentTemplate>
       <div class="ControlsDemo-InputDropdown-contentTemplate">
          <div class="controls-Dropdown__icon ControlsDemo-DropdownPG-contentTemplate_icon"><div class="{{icon}}"></div></div>

@@ -1,5 +1,5 @@
 {
-  "Controls/Input/Text": {
+  "Controls/input:Text": {
     "properties": {
       "ws-config": {
         "options": {

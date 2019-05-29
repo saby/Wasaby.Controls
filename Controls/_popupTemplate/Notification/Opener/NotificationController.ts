@@ -90,7 +90,7 @@ import NotificationContent = require('Controls/_popupTemplate/Notification/Opene
             let count = popupItems.getCount();
             for (let i = 0; i < count; i++) {
                // if popups are linked, then notification must be higher then parent
-               if (popupItems.at(i).hasMaximizePopup && !_private.isLinkedPopup(popupItems, popupItems.at(i), item)) {
+               if (popupItems.at(i).popupOptions.maximize && !_private.isLinkedPopup(popupItems, popupItems.at(i), item)) {
                   let maximizedPopupZIndex = (i + 1) * 10;
                   return maximizedPopupZIndex - 1;
                }

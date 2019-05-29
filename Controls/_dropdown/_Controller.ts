@@ -26,10 +26,10 @@ var _private = {
       self._filter = historyUtils.getSourceFilter(options.filter, options.source);
       return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
          self._items = items;
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          if (options.dataLoadCallback) {
             options.dataLoadCallback(items);
          }
+         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          return items;
       });
    },
@@ -162,7 +162,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon

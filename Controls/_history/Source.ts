@@ -170,13 +170,22 @@ var _private = {
       filteredHistory = this.getFilterHistory(self, self._history);
       historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
-      // Нужно чтобы не потерялся формат https://online.sbis.ru/opendoc.html?guid=e76fca5b-3bda-401d-9eed-ead8f8a0d469
-      items.getFormat();
       items.clear();
+
+      // Clear может стереть исходный формат. Поэтому восстанавливаем его из исходного рекордсета.
+      // https://online.sbis.ru/opendoc.html?guid=21e24eb1-8beb-46c8-acc0-43ec7286b2d4
+      if (!oldItems.hasDecalredFormat()) {
+         let format = oldItems.getFormat();
+         chain.factory(format).each(function (field) {
+            _private.addProperty(items, field.getName(), field.getType(), field.getDefaultValue());
+         });
+      }
+
       this.addProperty(items, 'pinned', 'boolean', false);
       this.addProperty(items, 'recent', 'boolean', false);
       this.addProperty(items, 'frequent', 'boolean', false);
       this.addProperty(items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
+      this.addProperty(items, 'originalId', 'string', '');
       this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
       this.fillFrequentItems(self, filteredHistory, oldItems, items);
       this.fillItems(self, filteredHistory, 'recent', oldItems, items);
@@ -211,6 +220,7 @@ var _private = {
       let origItem = item.clone();
       if (item.get && item.get('originalId')) {
          origItem.set(keyProperty, item.get('originalId'));
+         origItem.removeField('originalId');
       }
       return origItem;
    },
