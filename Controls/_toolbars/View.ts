@@ -24,6 +24,17 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
+ * @typedef {Object} Item
+ * @property {Boolean} [item.readOnly] Determine item readOnly state.
+ * @property {Boolean} [item.buttonCaption] Caption of toolbar element.
+ * @property {Boolean} [item.buttonTransparent] Transparent of toolbar element.
+ * @property {Boolean} [item.iconStyle] Icon style of toolbar element.
+ * @property {Boolean} [item.icon] Icon of toolbar element.
+ * @property {Boolean} [item.buttonStyle] Button style of toolbar element.
+ * @property {Boolean} [item.buttonViewMode] Button style of toolbar element.
+ */
+
+/**
  * @name Controls/_toolbars/View#source
  * @cfg {Types/source:Base} Object that implements ISource interface for data access.
  * @default undefined
