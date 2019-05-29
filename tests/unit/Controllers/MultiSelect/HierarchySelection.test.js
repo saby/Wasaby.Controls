@@ -512,6 +512,23 @@ define([
          assert.equal(1, selectionInstance.getCount());
       });
 
+      describe('toggleAll', function() {
+         it('selectedKeys with key, that is not from collection + toggleAll', function() {
+            cfg = {
+               selectedKeys: [1, 2, 4, 5, 6, 7, 8],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id'
+            };
+            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([null], selection.selected);
+            assert.deepEqual([1, 2, 4, 5, 6, 7, 8], selection.excluded);
+         });
+      });
+
       it('if an item is in selectedKeys, it should get counted even if it is not loaded', function() {
          cfg = {
             selectedKeys: [8], //item with this key doesn't exist in recordset

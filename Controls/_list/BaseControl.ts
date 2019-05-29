@@ -1260,10 +1260,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
 
-        //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
-            if (this._options.loading) {
+            if (this._options.loading && this._loadingState === null) {
                 _private.showIndicator(this);
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
@@ -1340,7 +1339,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left' && this._options.itemActions) {
+        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
             this._children.itemActions.updateItemActions(itemData.item);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8

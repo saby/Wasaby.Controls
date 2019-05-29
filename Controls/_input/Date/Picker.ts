@@ -49,6 +49,7 @@ import 'css!theme?Controls/input';
             className: 'controls-PeriodDialog__picker-withoutModeBtn',
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
+            fittingMode: 'overflow',
             eventHandlers: {
                onResult: this._onResult.bind(this)
             },

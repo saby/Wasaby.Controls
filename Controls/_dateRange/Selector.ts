@@ -53,6 +53,7 @@ var Component = BaseControl.extend({
             isCompoundTemplate: true,
             horizontalAlign: {side: 'right'},
             corner: {horizontal: 'left'},
+            fittingMode: 'overflow',
             eventHandlers: {
                 onResult: this._onResult.bind(this)
             },
