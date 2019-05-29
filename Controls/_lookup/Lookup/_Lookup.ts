@@ -368,7 +368,7 @@ import 'css!theme?Controls/lookup';
 
             /* focus can be moved in choose event */
             if (this._active) {
-               this.activate();
+               this.activate({enableScreenKeyboard: true});
             }
          }
 
@@ -388,7 +388,7 @@ import 'css!theme?Controls/lookup';
          * !!! activate must called before changing the collection of selected items,
          * because user can change focus in itemsChanged event. */
          if (this._options.multiSelect) {
-            this.activate();
+            this.activate({enableScreenKeyboard: true});
          }
 
          this._notify('addItem', [item]);
@@ -462,7 +462,7 @@ import 'css!theme?Controls/lookup';
          this._notify('updateItems', [[]]);
 
          // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
-         this.activate();
+         this.activate({enableScreenKeyboard: true});
       },
 
       _itemClick: function(event, item) {
