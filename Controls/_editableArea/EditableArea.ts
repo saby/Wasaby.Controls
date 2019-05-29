@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
-import template = require('wml!Controls/_EditableArea/EditableArea');
+import template = require('wml!Controls/_editableArea/EditableArea');
 import 'css!theme?Controls/_EditableArea/EditableArea';
 import 'css!theme?Controls/list';
 
@@ -161,4 +161,4 @@ EditableArea.getDefaultOptions = function () {
    };
 };
 
-export = EditableArea;
+export default EditableArea;

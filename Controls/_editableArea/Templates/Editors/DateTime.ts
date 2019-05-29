@@ -13,4 +13,4 @@ var DateTime = Base.extend({
    }
 });
 
-export = DateTime;
+export default DateTime;

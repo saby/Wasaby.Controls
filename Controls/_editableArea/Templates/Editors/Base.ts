@@ -36,4 +36,4 @@ var Base = Control.extend({
    }
 });
 
-export = Base;
+export default Base;
