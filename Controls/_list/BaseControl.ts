@@ -897,7 +897,7 @@ var _private = {
 
     checkRequiredOptions: function(options) {
         if (options.keyProperty === undefined) {
-            IoC.resolve('ILogger').error('BaseControl', 'Option "keyProperty" is required.');
+            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
     }
 };
