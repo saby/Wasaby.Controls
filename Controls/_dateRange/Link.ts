@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import ILinkView = require('Controls/interface/ILinkView');
+import ILinkView from './interfaces/ILinkView';
 import IRangeSelectable from './interfaces/IInputSelectable';
 import componentTmpl = require('wml!Controls/_dateRange/Link/Link');
 import 'css!theme?Controls/dateRange';
