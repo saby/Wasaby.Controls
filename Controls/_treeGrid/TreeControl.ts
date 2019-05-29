@@ -136,12 +136,23 @@ var _private = {
         let isExpandAll: boolean;
 
         if (baseControl) {
-            viewModel = baseControl.getViewModel();
-            expandedItemsKeys = viewModel.getExpandedItems();
+            let viewModel = baseControl.getViewModel();
+            let items = viewModel.getItems();
+            let expandedItems = viewModel.getExpandedItems();
+            let typeFunction = items.at(0) && typeof items.at(0).get(cfg.keyProperty) === 'number' ? Number : String;
 
+            if (!isEmpty(expandedItems)) {
+
+
+                for (var i in expandedItems) {
+                    if (expandedItems.hasOwnProperty(i)) {
+                        expandedItemsKeys.push((expandedItems[i]));
+                    }
+                }
+            }
             isExpandAll = viewModel.isExpandAll();
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
-                if (expandedItemsKeys.indexOf(node) === -1) {
+                if (expandedItemsKeys.indexOf(typeFunction(node)) === -1) {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
@@ -294,12 +305,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = true;
         }
 
-        if (typeof newOptions.expandedItems !== 'undefined' && this._expandedItems !== newOptions.expandedItems) {
-            this._expandedItems = newOptions.expandedItems;
-            this._children.baseControl.getViewModel().setExpandedItems(this._expandedItems);
+        if (typeof newOptions.expandedItems !== 'undefined' && this._receivedExpandedItems !== newOptions.expandedItems) {
+            this._receivedExpandedItems = newOptions.expandedItems;
+            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            this._children.baseControl.getViewModel().setExpandedItems(this._expandedItems);
+            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);

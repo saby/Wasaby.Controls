@@ -194,12 +194,9 @@ var
 
         resetExpandedItems: function(self) {
             if (_private.isExpandAll(self._expandedItems)) {
-                self._expandedItems = [];
-                self._expandedItems.push(null);
+                self._expandedItems = [null];
             } else {
-                while (self._expandedItems.length > 0) {
-                    self._expandedItems = [];
-                }
+                self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
         },
