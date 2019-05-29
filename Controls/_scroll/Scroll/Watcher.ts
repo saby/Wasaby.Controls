@@ -349,9 +349,9 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                for (let i in this._observers) {
                   if (this._observers.hasOwnProperty(i)) {
                      this._observers[i].disconnect();
-                     this._observers[i] = null;
                   }
                }
+               this._observers = null;
             }
             this._notify('unregister', ['controlResize', this], {bubbling: true});
             this._registrar.destroy();
