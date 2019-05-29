@@ -10,7 +10,7 @@ var showSelector = function (self, popupOptions, multiSelect) {
         }, selectorTemplate.popupOptions || {});
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
-        defaultpopupOptions.templateOptions = merge({
+        defaultPopupOptions.templateOptions = merge({
             selectedItems: self._getItems(),
             multiSelect: multiSelect,
             handlers: {
