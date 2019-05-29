@@ -57,6 +57,41 @@
             <ws:Object>
                <ws:template>
                   <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled number input field</div>
+                     <Controls.input:Text fontStyle="default"
+                                          textAlign="right"
+                                          placeholder="Tooltip"
+                                          bind:value="_filledNumberValue1"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
+                     <div class="example-Base__specify">Filled number input field in read mode</div>
+                     <Controls.input:Text fontStyle="default"
+                                          textAlign="right"
+                                          placeholder="Tooltip"
+                                          readOnly="{{true}}"
+                                          bind:value="_filledNumberValueRM"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput>
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field</div>
                      <Controls.Input.Money fontStyle="default"
                                            textAlign="right"
