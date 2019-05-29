@@ -170,11 +170,13 @@ define([
             eip._beforeMount({
                listModel: listModel,
                editingConfig: {
-                  item: newItem
+                  item: newItem,
+                  toolbarVisibility: true
                }
             });
             assert.equal(newItem, eip._editingItem);
             assert.isTrue(eip._isAdd);
+            assert.isTrue(eip._editingItemData.drawActions);
          });
       });
 
