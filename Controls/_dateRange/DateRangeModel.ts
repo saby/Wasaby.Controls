@@ -5,7 +5,6 @@ import DateUtil = require('Controls/Utils/Date');
 
 /**
  * Model for date range controls.
- * @class Controls/_dateRange/DateRangeModel
  * @author Александр Миронов
  * @public
  * @noShow
@@ -32,37 +31,19 @@ var _private = {
 var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _startValue: null,
    _endValue: null,
-   _state: null,
 
    constructor: function() {
       ModuleClass.superclass.constructor.apply(this, arguments);
-      this._state = {};
    },
 
    update: function(options) {
       var changed = false;
-      if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
-         var oldValue = this._startValue;
+      if (options.hasOwnProperty('startValue') && !DateUtil.isDatesEqual(options.startValue, this._startValue)) {
          this._startValue = options.startValue;
-
-         // если ничего не поменялось - не надо изменять версию
-         if (oldValue !== options.startValue) {
-            this._nextVersion();
-         }
-
-         this._state.startValue = options.startValue;
          changed = true;
       }
-      if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
-         var oldValue2 = this._endValue;
+      if (options.hasOwnProperty('endValue') && !DateUtil.isDatesEqual(options.endValue, this._endValue)) {
          this._endValue = options.endValue;
-
-         // если ничего не поменялось - не надо изменять версию
-         if (oldValue2 !== options.endValue) {
-            this._nextVersion();
-         }
-
-         this._state.endValue = options.endValue;
          changed = true;
       }
       return changed;
