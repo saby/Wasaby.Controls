@@ -5,7 +5,7 @@
       style="withoutBorder"
    >
       <div class="ControlsDemo-EditableArea__eapWrapper">
-         <Controls._EditableArea.Templates.Editors.Base
+         <Controls.editableArea:Base
             bind:value="content.editObject.name"
             attr:class="ControlsDemo-EditableArea__tabEditor"
             size="l"
@@ -16,7 +16,7 @@
                                     size="l"
                                     fontStyle="secondary" />
             </ws:editorTemplate>
-         </Controls._EditableArea.Templates.Editors.Base>
+         </Controls.editableArea:Base>
       </div>
    </Controls.editableArea:View>
 </div>

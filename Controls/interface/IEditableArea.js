@@ -171,14 +171,14 @@ define('Controls/interface/IEditableArea', [
     * @remark
     * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/_EditableArea/Templates/Editors/Base Controls/_EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
-    * Using Controls._EditableArea.Templates.Editors.Base:
+    * Using Controls.editableArea:Base:
     * <pre>
     *     <Controls.editableArea:View editObject="{{_editObject}}">
-    *        <Controls._EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
+    *        <Controls.editableArea:Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
     *              <Controls.input:Text />
     *           </ws:editorTemplate>
-    *        </Controls._EditableArea.Templates.Editors.Base>
+    *        </Controls.editableArea:Base>
     *     </Controls.editableArea:View>
     * </pre>
     * Using custom template:
