@@ -455,58 +455,7 @@ define([
             SETVM.toggleExpanded(SETVM.getItemById('2', cfg.keyProperty), true);
             assert.deepEqual({'2': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
          });
-
-         it('calcNodeFooterIndex', function () {
-            var cfg = {
-               keyProperty: 'id',
-               displayProperty: 'title',
-               parentProperty: 'parent',
-               nodeProperty: 'itemType',
-               expandedItems: [1, 2],
-               nodeFooterTemplate: 'asas',
-               items: new collection.RecordSet({
-                  rawData: [
-                     {
-                        'id': 1,
-                        'parent': null,
-                        'itemType': true,
-                        'title': '1'
-                     },
-                     {
-                        'id': 2,
-                        'parent': 1,
-                        'itemType': true,
-                        'title': '2'
-                     },
-                     {
-                        'id': 11,
-                        'parent': 1,
-                        'itemType': null,
-                        'title': '11'
-                     },
-                     {
-                        'id': 21,
-                        'parent': 2,
-                        'itemType': null,
-                        'title': '21'
-                     },
-                     {
-                        'id': 3,
-                        'parent': null,
-                        'itemType': null,
-                        'title': '21'
-                     }
-                  ],
-                  idProperty: 'id'
-               })
-            };
-            let model = new treeGrid.TreeViewModel(cfg);
-            model._hasMoreStorage = {};
-
-            assert.equal(5, treeGrid.TreeViewModel._private.calcNodeFooterIndex(model, 21));
-
-         });
-
+         
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
@@ -525,7 +474,6 @@ define([
                key: treeViewModel._items.at(0).getId(),
                template: "footer",
                level: 1,
-               rowIndex: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[1].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
@@ -536,7 +484,6 @@ define([
                template: "footer",
                key: treeViewModel._items.at(1).getId(),
                level: 2,
-               rowIndex: 6,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter, {
@@ -545,7 +492,6 @@ define([
                template: "footer",
                key: treeViewModel._items.at(5).getId(),
                level: 1,
-               rowIndex: 8,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[5].');
          });

@@ -53,7 +53,6 @@ import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapp
 import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
-import RowIndexUtil = require('Controls/_grid/utils/RowIndexUtil');
 import BaseControl = require('Controls/_list/BaseControl');
 import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
@@ -91,7 +90,6 @@ export {
     ItemOutput,
     ItemsUtil,
     TreeItemsUtil,
-    RowIndexUtil,
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,

@@ -150,7 +150,7 @@ function(cMerge,
          cfg.templateOptions.width = cfg.width;
          cfg.templateOptions.height = cfg.height;
 
-         if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
+         if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;
             cfg.minWidth += 100; // minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
