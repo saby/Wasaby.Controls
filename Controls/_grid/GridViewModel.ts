@@ -7,7 +7,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex
+    getResultsIndex, getTopOffset
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
@@ -317,32 +317,8 @@ var
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         },
 
-        // For partial grid support only. Calculates valid grid styles for edit at place in old browsers
-        getEditingRowStyles: function (self, rowIndex) {
-
-            // display: grid with prefixes
-            let styles = GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
-
-            // value 'auto' will break alignment in subgrid(editing row).
-            let columnsWidths: Array<string|number> = [];
-
-            self._columns.forEach(column => {
-                if (self.getCount() > 1 && ((column.width && column.width === 'auto') || !column.width)) {
-                    columnsWidths.push(column.realWidth || '1fr')
-                } else {
-                    columnsWidths.push(column.width || '1fr');
-                }
-            });
-
-            // grid column template with prefixes
-            styles += GridLayoutUtil.getTemplateColumnsStyle(columnsWidths) + ' ';
-
-            let colspan = self._columns.length + (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0);
-
-            // grid-row and grid-column with prefixes
-            styles += GridLayoutUtil.getCellStyles(rowIndex, 0, null, colspan);
-
-            return styles;
+        calcResultsRowIndex: function (self): number {
+            return self._getRowIndexHelper().getResultsIndex();
         },
 
         getFooterStyles: function (self): string {
@@ -376,6 +352,25 @@ var
 
             return styles;
         },
+
+        prepareColumnsWidth: function (self, itemData): Array<string> {
+            let
+                columns: Array<{ width: string }> = self._columns,
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                columnsWidth = hasMultiselect ? ['auto'] : [],
+                hasAutoWidth = !!columns.find((column) => {
+                    return column.width === 'auto';
+                });
+
+            if (!hasAutoWidth) {
+                columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
+            } else {
+                columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
+            }
+
+            return columnsWidth;
+        },
+
         prepareItemDataForPartialSupport(self, itemData): void {
 
             /* When using a custom item template, the scope of the base template becomes the same as the scope of custom template.
@@ -390,17 +385,22 @@ var
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
 
-                // If index of item is equal -1, tis item is recently added. It has no any data about like key or parent key.
-                // In such case styles for partial support set on setting editingItemData into model.
-                if (itemData.isEditing && itemData.index !== -1) {
-                    itemData.editingRowStyles = _private.getEditingRowStyles(self, itemData.rowIndex);
+                itemData.getEditingRowStyles = function () {
+                    let
+                        columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
+                        editingRowStyles = '';
+
+                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.GridIE) + ' ';
+                    editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
+                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
+
+                    return editingRowStyles;
                 }
             } else {
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
                     {name: '-ms-grid-row', value: itemData.rowIndex + 1}
                 ]);
-                return;
             }
 
         }
@@ -894,7 +894,8 @@ var
                 getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
                 getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
             };
         },
 
@@ -1101,12 +1102,8 @@ var
         },
 
         _setEditingItemData: function(itemData) {
-            let data = itemData ? itemData : this._model._editingItemData;
-            if (GridLayoutUtil.isPartialGridSupport() && data) {
-                if (!data.rowIndex) {
-                    data.rowIndex = data.index + 1;
-                }
-                data.editingRowStyles = _private.getEditingRowStyles(this, data.rowIndex);
+           if (GridLayoutUtil.isPartialGridSupport() && itemData) {
+               itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
             }
             this._model._setEditingItemData(itemData);
         },
@@ -1240,35 +1237,6 @@ var
             return GridLayoutUtil.isNoGridSupport();
         },
 
-        getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {
-            let
-                column,
-                columnsWidths: Array<string|number> = [];
-
-            for (let i = 0; i<this._columns.length; i++) {
-                column = this._columns[i];
-
-                // Если отрисовано больше одной записи, то необходимо руками считать ширину, т.к. редактируемая строка
-                // это сабгрид и ширина колонок у этой строки будет считаться относительно ее содержимого, а не всей таблицы.
-                if (column.width && column.width === 'auto' && this.getCount() > 1) {
-
-                    let referenceRowIndex = rowIndex !== 0 ? 0 : 1;
-                    columnsWidths.push(gridCells[referenceRowIndex].getBoundingClientRect().width);
-                } else {
-                    columnsWidths.push(column.width || '1fr');
-                }
-            }
-
-            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
-        },
-
-        // Only for browsers with partial grid support. Explicit grid cell styles with grid row and grid column
-        setCurrentColumnsWidth: function (cells: Array<HTMLElement>): void {
-            for (let i = 0; i< this._columns.length; i++){
-                this._columns[i].realWidth = cells[i].getBoundingClientRect().width + 'px';
-            }
-        },
-
         // Only for browsers with partial grid support. Explicit grid styles for footer with grid row and grid column
         getFooterStyles: function (): string {
             // Can't calc grid-row classes for old browser without display
@@ -1280,15 +1248,15 @@ var
             return _private.getEmptyTemplateStyles(this);
         },
 
-        setHandlersForPartialSupport: function(handlersList: {[key: string]: Function}): void {
+        setHandlersForPartialSupport: function(handlersList: Record<string, Function>): void {
             this._eventHandlersForPartialSupport = handlersList;
         },
 
-        getHandlersForPartialSupport: function(): {[key: string]: Function} {
+        getHandlersForPartialSupport: function(): Record<string, Function> {
             return this._eventHandlersForPartialSupport;
         },
 
-        _isFirstInGroup: function(item):boolean {
+        _isFirstInGroup: function(item): boolean {
             var display = this._model._display,
                 groupingKeyCallback = this._options.groupingKeyCallback,
                 currentItemGroup,
