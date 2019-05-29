@@ -1,6 +1,6 @@
 <div class="ws-align-items-baseline ws-inline-flexbox">
    <div class="ControlsDemo-EditableArea__header ControlsDemo-EditableArea__tabEditor">{{item[displayProperty]}}</div>
-   <Controls.EditableArea
+   <Controls.editableArea:View
       editObject="{{item}}"
       readOnly="{{!selected}}"
       style="withoutBorder"
@@ -26,5 +26,5 @@
             </ws:editorTemplate>
          </Controls._EditableArea.Templates.Editors.Base>
       </div>
-   </Controls.EditableArea>
+   </Controls.editableArea:View>
 </div>

@@ -1,6 +1,6 @@
 <div class="ControlsDemo-EditableArea">
    <div class="ControlsDemo-EditableArea__title">Пример 1 - на подложке</div>
-   <Controls.EditableArea
+   <Controls.editableArea:View
       name="edit"
       editObject="{{_record}}"
       style="withBackground"
@@ -18,7 +18,7 @@
             </ws:editorTemplate>
          </Controls._EditableArea.Templates.Editors.Base>
       </div>
-   </Controls.EditableArea>
+   </Controls.editableArea:View>
    <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
    <ws:partial template="Controls/popupTemplate:Stack"
                showMaximizedButton="{{true}}"
