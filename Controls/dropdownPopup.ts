@@ -9,12 +9,14 @@
  */
 
 import Template = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
+import GroupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate');
 import List = require('Controls/_dropdownPopup/DropdownList');
 import _ForTemplate = require('wml!Controls/_dropdownPopup/For');
 import MoreButton = require('Controls/_dropdownPopup/MoreButton');
 
 export {
     Template,
+    GroupTemplate,
     List,
     _ForTemplate,
     MoreButton
