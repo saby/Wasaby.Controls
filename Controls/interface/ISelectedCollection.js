@@ -185,11 +185,11 @@ define('Controls/interface/ISelectedCollection', [
     *       ...
     *    },
     *
-    *    _showSelectorHandler: function(e, templateOptions) {
+    *    _showSelectorHandler: function(e, popupOptions) {
     *       var self = this;
     *
-    *       this._loadParams(templateOptions).addCallback(function(newTemplateOptions) {
-    *          self.showSelector(newTemplateOptions);
+    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
+    *          self.showSelector(newPopupOptions);
     *       });
     *
     *       // cancel the opening of the selector

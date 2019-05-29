@@ -371,30 +371,27 @@ define([
          var
             templateOptions,
             isShowSelector = false,
-            selectedCollection = new scroll._CollectionController(),
-            items = new collection.List(),
-            selectedItems,
+            selectedCollectionContoller = new scroll._CollectionController(),
             opener;
 
-         selectedCollection._options.selectorTemplate = {};
-         selectedCollection._items = items;
-         selectedCollection._children.selectorOpener = {
-            open: function(config) {
+         selectedCollectionContoller._options.selectorTemplate = {};
+         selectedCollectionContoller._children.selectorOpener = {
+            open: function(popupOptions) {
                isShowSelector = true;
-               templateOptions = config.templateOptions;
-               opener = config.opener;
-               selectedItems = config.selectedItem;
+               templateOptions = popupOptions.templateOptions;
+               opener = popupOptions.opener;
             }
          };
 
-         selectedCollection.showSelector({
-            selectedTab: 'Employees'
+         selectedCollectionContoller.showSelector({
+            templateOptions: {
+               selectedTab: 'Employees'
+            }
          });
 
          assert.isTrue(isShowSelector);
-         assert.isTrue(items !== selectedItems);
          assert.equal(templateOptions.selectedTab, 'Employees');
-         assert.equal(opener, selectedCollection);
+         assert.equal(opener, selectedCollectionContoller);
       });
    });
 });

@@ -97,10 +97,10 @@ import 'css!theme?Controls/filterPopup';
          }
       },
 
-      showSelector: function() {
+      showSelector: function(popupOptions) {
          var lookup = _private.getLookup(this);
 
-         lookup && lookup.showSelector();
+         lookup && lookup.showSelector(popupOptions);
       },
 
       _selectedKeysChanged: function(event, keys) {
