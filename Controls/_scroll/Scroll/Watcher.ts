@@ -348,8 +348,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             if (this._observers) {
                for (let i in this._observers) {
                   if (this._observers.hasOwnProperty(i)) {
-                     this._observer[i].disconnect();
-                     this._observer[i] = null;
+                     this._observers[i].disconnect();
+                     this._observers[i] = null;
                   }
                }
             }
