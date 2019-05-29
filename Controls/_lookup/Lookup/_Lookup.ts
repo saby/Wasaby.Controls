@@ -200,9 +200,8 @@ import 'css!theme?Controls/lookup';
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
             visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
-         /* toDO !KONGO Шаблонизатор для кавычки возвращает представление в виде "&amp;quot;", т.е. и сам амперсанд представляет в виде "&amp;"
-         * при вставке в innerHTML на выходе мы получаем "&quot;"(т.е одна итерация), для того что бы получить на выход кавычку
-         * и правильно посчитать ширину элементов, первую итерацию мы делаем сами */
+         /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
+         * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить на кавычку и правильно посчитать ширину элементов, первую итерацию мы делаем сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
                itemTemplate: newOptions.itemTemplate,
