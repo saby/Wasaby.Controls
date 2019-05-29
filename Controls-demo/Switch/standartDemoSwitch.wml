@@ -75,7 +75,7 @@
            direction="vertical"
            readOnly="{{false}}">
             <ws:itemTemplate>
-                <ws:partial template="wml!Controls/Toggle/RadioGroup/resources/ItemTemplate"
+                <ws:partial template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate"
                             attr:class="controls-RadioGroup_defaultItem_{{_options.direction}}"
                             item="{{item}}"
                             readOnly="{{readOnly}}"

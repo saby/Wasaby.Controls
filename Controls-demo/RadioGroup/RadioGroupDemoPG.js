@@ -17,7 +17,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/RadioGroup',
+         _content: 'Controls/toggle:RadioGroup',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -112,7 +112,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                        template: 'wml!Controls/_toggle/RadioGroup/resources/ItemTemplate'
                      }
                   ]
                },
