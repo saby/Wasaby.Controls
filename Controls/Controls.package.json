@@ -60,7 +60,6 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
-    "Controls/Input/Money",
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
