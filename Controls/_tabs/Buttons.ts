@@ -78,9 +78,9 @@ import Env = require('Env/Env');
          // TODO: по поручению опишут как и что должно сжиматься. Пока сжимаем только те вкладки, которые прикладники явно пометили
          // https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
          if (item.get('isMainTab')) {
-            classes.push('controls-Tabs__item_canShrink controls-Tabs__item_canShrink_theme_'+ options.theme);
+            classes.push('controls-Tabs__item_canShrink');
          } else {
-            classes.push('controls-Tabs__item_notShrink controls-Tabs__item_notShrink_theme_'+ options.theme);
+            classes.push('controls-Tabs__item_notShrink');
          }
          return classes.join(' ');
       }
