@@ -36,7 +36,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 
 /**
  * @typedef {Object} SourceCfg
- * @property {Item} [item.readOnly] Determine item readOnly state.
+ * @property {Item} [SourceCfg.item] Record of source.
  */
 
 /**
