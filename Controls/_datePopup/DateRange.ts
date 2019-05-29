@@ -1,9 +1,8 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
 import EventProxy from './Mixin/EventProxy';
-import {DateRangeModel, Utils as DateControlsUtils} from 'Controls/dateRange';
+import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
 import {MonthModel} from 'Controls/calendar';
-import quantumUtils = require('Controls/Date/Utils/DateRangeQuantum');
 import dateUtils = require('Controls/Utils/Date');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';
