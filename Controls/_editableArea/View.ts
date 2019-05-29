@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
 import template = require('wml!Controls/_editableArea/View');
-import 'css!theme?Controls/_editableArea/View';
+import 'css!theme?Controls/editableArea';
 import 'css!theme?Controls/list';
 
 'use strict';

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_editableArea/Templates/Editors/Base/Base');
-import 'css!theme?Controls/_editableArea/Templates/Editors/Base';
+import 'css!theme?Controls/editableArea';
 
 'use strict';
 
