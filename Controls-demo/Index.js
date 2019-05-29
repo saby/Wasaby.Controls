@@ -68,9 +68,17 @@ define('Controls-demo/Index', [
          _getTemplateName: function() {
             var location = this._getLocation();
             if (location) {
-               return location.pathname.replace('/Controls-demo/app/', '').replace(/%2F/g, '/');
+               var controlName = location.pathname.replace('/Controls-demo/app/', '').replace(/%2F/g, '/');
+               return this._replaceLastChar(controlName);
             }
             return '';
+         },
+
+         _replaceLastChar: function(controlName) {
+            if (controlName[controlName.length - 1] === '/') {
+               return controlName.slice(0, -1);
+            }
+            return controlName;
          },
 
          _getTitle: function() {
@@ -79,7 +87,8 @@ define('Controls-demo/Index', [
                var splitter = '%2F';
                var index = location.pathname.lastIndexOf(splitter);
                if (index > -1) {
-                  return location.pathname.slice(index + splitter.length);
+                  var controlName = location.pathname.slice(index + splitter.length);
+                  return this._replaceLastChar(controlName);
                }
             }
             return 'Wasaby';
