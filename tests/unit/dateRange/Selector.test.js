@@ -10,7 +10,7 @@ define([
    'use strict';
 
    const options = {
-      rangeModel: new dateRange.DateRange(),
+      rangeModel: new dateRange.DateRangeModel(),
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
       replacer: ' ',
