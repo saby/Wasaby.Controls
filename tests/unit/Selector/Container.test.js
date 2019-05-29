@@ -145,6 +145,47 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.isTrue(eventFired);
       });
 
+      it('_selectComplete', function() {
+         let
+            container = new lookupPopup.Container(),
+            loadDef,
+            isSelectionLoad = false,
+            items = getItems(),
+            recordSet = new collection.List({items: items}),
+            clearRecordSet = new collection.List({items: items.slice()});
+
+         recordSet.getRecordById = function(id) {
+            return items[id];
+         };
+
+         clearRecordSet.clear();
+         container._items = new collection.List({items: items});
+         container._selectedKeys = [];
+         container._excludedKeys = [];
+         container.context = {
+            get: function() {
+               return {
+                  source: new sourceLib.Memory(),
+                  items: recordSet
+               };
+            }
+         };
+
+         container._notify = function(eventName, result) {
+            if (eventName === 'selectionLoad') {
+               isSelectionLoad = true;
+               loadDef = result[0];
+            }
+         };
+
+         container._selectComplete();
+         assert.isTrue(isSelectionLoad);
+         assert.deepEqual(loadDef.getResult().resultSelection, clearRecordSet);
+
+         container._selectedKeys = [1];
+         container._selectComplete();
+         assert.equal(loadDef.getResult().resultSelection.at(0), items[1]);
+      });
    });
 
 });
