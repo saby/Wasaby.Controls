@@ -25,9 +25,9 @@ define('Controls/interface/ILookup', [
     *           keyProperty="id">
     *        <ws:placeholder>
     *           Specify the
-    *           <Controls.Selector.Lookup.Link caption="department" on:click="showSelector('department')"/>
+    *           <Controls.lookup:Link caption="department" on:click="showSelector('department')"/>
     *           and
-    *           <Controls.Selector.Lookup.Link caption="company" on:click="showSelector('company')"/>
+    *           <Controls.lookup:Link caption="company" on:click="showSelector('company')"/>
     *        </ws:placeholder>
     *        <ws:selectorTemplate templateName="Engine-demo/Selector/FlatListSelectorWithTabs/FlatListSelectorWithTabs"/>
     *        <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
