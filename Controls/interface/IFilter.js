@@ -72,7 +72,7 @@ define('Controls/interface/IFilter', [
     * @see filter
     */
 
-   /**
+   /*
     * @event Controls/interface/IFilter#filterChangedENG Occurs when filter were changed.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} new filter
