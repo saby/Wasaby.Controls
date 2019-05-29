@@ -146,6 +146,21 @@ var
          };
       },
 
+      calcPagingStateBtn: function (self) {
+         const {scrollTop, clientHeight, scrollHeight} = self._children.content;
+
+         if (scrollTop <= 0) {
+            self._pagingState.stateUp = 'disabled';
+            self._pagingState.stateDown = 'normal';
+         } else if (scrollTop + clientHeight >= scrollHeight) {
+            self._pagingState.stateUp = 'normal';
+            self._pagingState.stateDown = 'disabled';
+         } else {
+            self._pagingState.stateUp = 'normal';
+            self._pagingState.stateDown = 'normal';
+         }
+      },
+
       updateDisplayState: function(self, displayState) {
          self._displayState.hasScroll = displayState.hasScroll;
          self._displayState.heightFix = displayState.heightFix;
@@ -358,6 +373,7 @@ var
 
       _resizeHandler: function() {
          this._displayState = _private.calcDisplayState(this);
+         _private.calcPagingStateBtn(this);
       },
 
       _scrollHandler: function(ev) {
