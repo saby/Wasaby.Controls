@@ -1,16 +1,16 @@
 import merge = require('Core/core-merge');
 
-var showSelector = function (self, config, multiSelect) {
+var showSelector = function (self, popupOptions, multiSelect) {
     var
         selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
-        defaultConfig = {
+        defaultPopupOptions = merge({
             opener: self,
             isCompoundTemplate: self._options.isCompoundTemplate
-        };
+        }, selectorTemplate.popupOptions || {});
 
-    if (config && config.template || selectorTemplate) {
-        defaultConfig.templateOptions = merge({
+    if (popupOptions && popupOptions.template || selectorTemplate) {
+        defaultpopupOptions.templateOptions = merge({
             selectedItems: self._getItems(),
             multiSelect: multiSelect,
             handlers: {
@@ -21,7 +21,7 @@ var showSelector = function (self, config, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        selectorOpener.open(merge(defaultConfig, config || {}));
+        selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
     }
 };
 
