@@ -201,7 +201,7 @@ import 'css!theme?Controls/lookup';
             visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
          /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
-         * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить на кавычку и правильно посчитать ширину элементов, первую итерацию мы делаем сами &amp заменяем на &*/
+         * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
                itemTemplate: newOptions.itemTemplate,
