@@ -2670,6 +2670,55 @@ define([
                return done;
             });
 
+            it('can update itemActions on left swipe if they set by itemActionsProperty', function(done) {
+               var
+                   cfg = {
+                      itemActionsProperty: [1, 2, 3],
+                      viewName: 'Controls/List/ListView',
+                      viewConfig: {
+                         idProperty: 'id'
+                      },
+                      viewModelConfig: {
+                         items: [],
+                         idProperty: 'id'
+                      },
+                      keyProperty: 'id',
+                      viewModelConstructor: lists.ListViewModel,
+                      source: source
+                   },
+                   instance = new lists.BaseControl(cfg),
+                   updated = false,
+                   childEvent = {
+                      nativeEvent: {
+                         direction: 'left'
+                      }
+                   };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg).addCallback(function() {
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: () => {}
+                     },
+                     itemActions: {
+                        updateItemActions: () => {
+                           updated = true;
+                           instance._listViewModel._actions[1] = cfg.itemActionsProperty
+                        },
+                     },
+                     selectionController: {
+                        onCheckBoxClick: function () {
+                        }
+                     }
+                  };
+                  let itemData = instance._listViewModel.getCurrent();
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.isTrue(updated);
+                  assert.deepEqual(itemData.itemActions, cfg.itemActionsProperty);
+                  done();
+               });
+               return done;
+            });
+
             it('list doesn\'t handle swipe, event should fire', function() {
                var
                   cfg = {
@@ -3071,6 +3120,35 @@ define([
          };
          newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
          assert.equal(newKnownPagesCount, 3);
+      });
+
+      it('_afterUpdate while loading do not update loadingState', async function() {
+         var cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            };
+         var instance = new lists.BaseControl(cfg);
+         var cfgClone = {...cfg};
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         lists.BaseControl._private.showIndicator(instance, 'down');
+         assert.equal(instance._loadingState, 'down');
+
+         cfgClone.loading = true;
+         instance.saveOptions(cfg);
+         instance._afterUpdate(cfg);
+         assert.equal(instance._loadingState, 'down');
       });
    });
 });

@@ -1,1 +1,0 @@
-<ws:partial template="Controls/toggle:ItemTemplate" scope="{{_options}}" />

@@ -15,7 +15,7 @@ import 'css!theme?Controls/toggle';
     * @control
     * @public
     * @author Михайловский Д.С.
-    * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/_toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
     *

@@ -12,46 +12,45 @@ export interface ISingleSelectableOptions {
  * @see Controls/interface/IPromisedSelectable
  */
 export default interface ISingleSelectable {
-
-   /**
-    * @name Controls/_interface/ISingleSelectable#selectedKey
-    * @cfg {Number|String} Selected item key.
-    * @default Undefined
-    * @example
-    * The following example creates RadioGroup and selects first item. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
-    * <pre>
-    *    <Controls.toggle:RadioGroup bind:selectedKey="_selectedKey"/>
-    * </pre>
-    * <pre>
-    *    _beforeMount: function() {
+   readonly '[Controls/_interface/ISingleSelectable]': boolean;
+}
+/**
+ * @name Controls/_interface/ISingleSelectable#selectedKey
+ * @cfg {Number|String} Selected item key.
+ * @default Undefined
+ * @example
+ * The following example creates RadioGroup and selects first item. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
+ * <pre>
+ *    <Controls.toggle:RadioGroup bind:selectedKey="_selectedKey"/>
+ * </pre>
+ * <pre>
+ *    _beforeMount: function() {
     *       this._selectedKeys = '1';
     *    }
-    * </pre>
-    * @see selectedKeyChanged
-    * @see keyProperty
-    */
+ * </pre>
+ * @see selectedKeyChanged
+ * @see keyProperty
+ */
 
-   /**
-    * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
-    * @param {Number|String} key Selected item key.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @example
-    * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
-    * <pre>
-    *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
-    *       <Controls.operations:Panel source="{{ _panelSource }} />
-    *    </Controls.Container.RadioGroup>
-    * </pre>
-    * <pre>
-    *    _beforeMount: function() {
+/**
+ * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
+ * @param {Number|String} key Selected item key.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @example
+ * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
+ * <pre>
+ *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
+ *       <Controls.operations:Panel source="{{ _panelSource }} />
+ *    </Controls.Container.RadioGroup>
+ * </pre>
+ * <pre>
+ *    _beforeMount: function() {
     *       this._selectedKey = undefined;
     *    },
-    *    onSelectedKeysChanged: function(e, selectedKey) {
+ *    onSelectedKeysChanged: function(e, selectedKey) {
     *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
     *       this._panelSource = this._getPanelSource(selectedKey);
     *    }
-    * </pre>
-    * @see selectedKey
-    */
-   readonly '[Controls/_interface/ISingleSelectable]': boolean;
-}
+ * </pre>
+ * @see selectedKey
+ */
