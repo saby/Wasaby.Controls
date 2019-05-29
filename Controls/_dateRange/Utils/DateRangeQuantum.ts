@@ -1,21 +1,14 @@
-define('Controls/Date/Utils/DateRangeQuantum', [
-   'Core/helpers/Object/isEmpty'
-], function(
-   isEmpty
-) {
-   'use strict';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
+var Utils = {
 
-   var Utils = {
+   /**
+    * Returns the list of days of the week
+    * @returns {Boolean}
+    */
+   monthSelectionEnabled: function(quantum) {
+      return !quantum || isEmpty(quantum) || ('months' in quantum && quantum.months.indexOf(1) !== -1);
+   }
+};
 
-      /**
-        * Returns the list of days of the week
-        * @returns {Boolean}
-        */
-      monthSelectionEnabled: function(quantum) {
-         return !quantum || isEmpty(quantum) || ('months' in quantum && quantum.months.indexOf(1) !== -1);
-      }
-   };
-
-   return Utils;
-});
+export default Utils;

@@ -9,7 +9,9 @@ export {default as Link} from './_dateRange/Link';
 export {default as LinkView} from './_dateRange/LinkView';
 export {default as RangeSelectionController} from './_dateRange/Controllers/RangeSelectionController';
 export {default as DateRangeSelectionController} from './_dateRange/Controllers/DateRangeSelectionController';
-export {default as DateRangeModel} from 'Controls/_dateRange/DateRangeModel';
+export {default as DateRangeModel} from './_dateRange/DateRangeModel';
+export {default as rangeSelection} from './_dateRange/Utils/RangeSelection';
+export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 
 export {IDateRangeSelectable};
