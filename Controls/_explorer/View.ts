@@ -235,6 +235,11 @@ import 'Controls/breadcrumbs';
       reload: function() {
          return this._children.treeControl.reload();
       },
+      // todo removed or documented by task:
+      // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
+      toggleExpanded: function(id) {
+         this._children.treeControl.toggleExpanded(id);
+      },
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter
    });
