@@ -79,13 +79,6 @@ define([
          assert.isFalse(Lookup._private.isShowCounter(false, 1));
       });
 
-      it('getLastRowCollectionWidth', function() {
-         var itemsSizes = [10, 20, 30, 40];
-
-         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, false, false, 20), 100);
-         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, true, true, 20), 120);
-      });
-
       it('getInputWidth', function() {
          assert.equal(Lookup._private.getInputWidth(400, 200, 100), undefined);
          assert.equal(Lookup._private.getInputWidth(400, 200, 300), 200);
