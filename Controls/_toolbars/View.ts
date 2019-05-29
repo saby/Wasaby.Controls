@@ -35,8 +35,13 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
+ * @typedef {Object} SourceCfg
+ * @property {Item} [item.readOnly] Determine item readOnly state.
+ */
+
+/**
  * @name Controls/_toolbars/View#source
- * @cfg {Types/source:Base} Object that implements ISource interface for data access.
+ * @cfg {SourceCfg} Object that implements ISource interface for data access.
  * @default undefined
  * @remark
  * The item can have an property 'title' and 'showType'. 'Title' determine item caption. 'ShowType' determine where display item, 0 - show in menu,
