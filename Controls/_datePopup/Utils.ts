@@ -54,7 +54,7 @@ export default {
     },
     dataStringToDate: function (str) {
         var d = str.split('.');
-        return new Date(d[0], d[1]);
+        return new Date(d[0], parseInt(d[1], 10) - 1);
     },
 
     isStickySupport: function() {

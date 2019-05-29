@@ -61,6 +61,24 @@ define([
 
       });
 
+      describe('_wheelHandler', function() {
+         beforeEach(function() {
+            sandbox.stub(DateRange._private, '_scrollToMonth');
+         });
+         it('should should increase the year.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { month: year });
+            component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: 1 } });
+            sinon.assert.calledWith(
+               DateRange._private._scrollToMonth, component, new Date(year.getFullYear() + 1, 0, 1));
+         });
+         it('should should decrease the year.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { month: year });
+            component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: -1 } });
+            sinon.assert.calledWith(
+               DateRange._private._scrollToMonth, component, new Date(year.getFullYear() - 1, 0, 1));
+         });
+      });
+
       describe('_formatMonth', function() {
          [
             { month: 0, text: 'Январь' },

@@ -178,8 +178,9 @@ define([
          assert.equal(lookup._counterWidth, undefined);
          assert.equal(lookup._inputValue, 'test');
 
+         lookup._options.items = items;
          lookup._beforeUpdate({
-            items: new collection.List(),
+            items: items,
             multiLine: true,
             value: ''
          });
@@ -189,7 +190,7 @@ define([
 
          lookup._options.value = 'diff with new value';
          lookup._beforeUpdate({
-            items: new collection.List(),
+            items: items,
             maxVisibleItems: 10,
             value: ''
          });
@@ -529,6 +530,27 @@ define([
          lookup._closeInfoBox();
          assert.isFalse(lookup._infoboxOpened);
          assert.isTrue(isNotifyClosePopup);
+      });
+
+      it('resetInputValue', function() {
+         var
+            isValueChanged = false,
+            self = {
+            _inputValue: '',
+            _notify: function(eventName) {
+               if (eventName === 'valueChanged') {
+                  isValueChanged = true;
+               }
+            }
+         };
+
+         Lookup._private.resetInputValue(self);
+         assert.isFalse(isValueChanged);
+
+         self._inputValue = 'notEmpty';
+         Lookup._private.resetInputValue(self);
+         assert.equal(self._inputValue, '');
+         assert.isTrue(isValueChanged);
       });
    });
 });
