@@ -1,12 +1,10 @@
 define([
    'Core/core-merge',
-   'Controls/Date/model/DateRange',
-   'Controls/Input/Date/Link',
+   'Controls/dateRange',
    'unit/Calendar/Utils'
 ], function(
    cMerge,
-   DateRangeModel,
-   DateLink,
+   dateRange,
    calendarTestUtils
 ) {
    'use strict';
@@ -21,7 +19,7 @@ define([
 
       describe('_openDialog', function() {
          it('should open opener', function() {
-            const component = calendarTestUtils.createComponent(DateLink, options);
+            const component = calendarTestUtils.createComponent(dateRange.Link, options);
             component._children.opener = {
                open: sinon.fake()
             };
@@ -34,7 +32,7 @@ define([
          it('should generate valueChangedEvent and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateLink, options),
+               component = calendarTestUtils.createComponent(dateRange.Link, options),
                value = new Date(2018, 11, 10);
 
             component._children.opener = {
@@ -54,7 +52,7 @@ define([
          it('should generate valueChangedEvent and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateLink, options),
+               component = calendarTestUtils.createComponent(dateRange.Link, options),
                value = new Date(2018, 11, 10);
 
             component._children.opener = {
@@ -73,7 +71,7 @@ define([
          it('should generate valueChangedEvent', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DateLink, options),
+               component = calendarTestUtils.createComponent(dateRange.Link, options),
                value = new Date(2018, 11, 10);
 
             component._children.opener = {

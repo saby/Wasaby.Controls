@@ -1,11 +1,11 @@
 define([
    'Core/core-merge',
-   'Controls/Date/MonthView/MonthViewModel',
+   'Controls/calendar',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'unit/Calendar/Utils'
 ], function(
    coreMerge,
-   MonthViewModel,
+   calendar,
    DateUtil,
    calendarTestUtils
 ) {
@@ -15,13 +15,13 @@ define([
       month: new Date(2017, 0, 1)
    };
 
-   describe('Controls/Date/MonthView/MonthViewModel', function() {
+   describe('Controls/calendar:MonthViewModel', function() {
       describe('Initialisation', function() {
 
          it('should create the correct model for the month when creating', function() {
             let mvm, weeks;
 
-            mvm = new MonthViewModel(config);
+            mvm = new calendar.MonthViewModel(config);
             weeks = mvm.getMonthArray();
 
             assert.equal(weeks.length, 6);
@@ -41,7 +41,7 @@ define([
             let extData = 'some data',
                mvm, dayObj;
 
-            mvm = new MonthViewModel(config);
+            mvm = new calendar.MonthViewModel(config);
             dayObj = mvm._getDayObject(
                new Date(2018, 0, 1),
                coreMerge({ daysData: [extData] }, state, { preferSource: true })
@@ -53,12 +53,12 @@ define([
       });
       describe('_isStateChanged', function() {
          it('should return true if new state the same', function() {
-            let mvm = new MonthViewModel(config);
+            let mvm = new calendar.MonthViewModel(config);
             assert.isFalse(mvm._isStateChanged(config));
          });
 
          it('should return false if new state contain changed daysData', function() {
-            let mvm = new MonthViewModel(config);
+            let mvm = new calendar.MonthViewModel(config);
             assert.isTrue(mvm._isStateChanged(
                coreMerge({ daysData: [2] }, config, { preferSource: true })
             ));

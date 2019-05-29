@@ -1,24 +1,24 @@
 define('Controls/EditAtPlace', [
-   'Controls/EditableArea',
+   'Controls/editableArea',
    'Env/Env'
 ], function(
-   EditableArea,
+   editableArea,
    Env
 ) {
    'use strict';
 
    var _private = {
       beginEdit: function(self, event) {
-         Env.IoC.resolve('ILogger').warn('Событие beforeEdit компонента Controls/EditAtPlace было переименовано и будет удалено в версию 3.19.110. Используйте событие beforeBeginEdit компонента Controls/EditableArea.');
+         Env.IoC.resolve('ILogger').warn('Событие beforeEdit компонента Controls/EditAtPlace было переименовано и будет удалено в версию 3.19.110. Используйте событие beforeBeginEdit компонента Controls/editableArea:View.');
          EditAtPlace.superclass.beginEdit.call(self, event, self._notify('beforeEdit', [self._options.editObject], {
             bubbling: true
          }));
       }
    };
 
-   var EditAtPlace = EditableArea.extend({
+   var EditAtPlace = editableArea.View.extend({
       _beforeMount: function() {
-         Env.IoC.resolve('ILogger').warn('Компонент Controls/EditAtPlace был перенесён и будет удалён в версию 3.19.110. Используйте компонент Controls/EditableArea.');
+         Env.IoC.resolve('ILogger').warn('Компонент Controls/EditAtPlace был перенесён и будет удалён в версию 3.19.110. Используйте компонент Controls/editableArea:View.');
          EditAtPlace.superclass._beforeMount.apply(this, arguments);
       },
 

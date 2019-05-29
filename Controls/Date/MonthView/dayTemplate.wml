@@ -1,11 +1,2 @@
-<ws:if data="{{value.isCurrentMonth || mode === 'extended'}}">
-   <div if="{{value.today}}" class="controls-MonthViewVDOM__item-today-background {{_themeCssClass}}"></div>
-   <div class="controls-MonthViewVDOM__item-title {{_themeCssClass}}">
-      <ws:if data="{{!!contentTemplate}}">
-         <ws:partial template="{{contentTemplate}}" _options="{{_options}}" value="{{value}}"/>
-      </ws:if>
-      <ws:else>
-         {{value.day}}
-      </ws:else>
-   </div>
-</ws:if>
+// Created in 19.400
+<ws:partial template="Controls/calendar:MonthViewDayTemplate" scope="{{_options}}" />

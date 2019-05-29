@@ -1,5 +1,5 @@
 import {descriptor} from 'Types/entity';
-import dateControlsUtils = require('Controls/Calendar/Utils');
+import dateControlsUtils from './../Utils';
 
 /**
  * mixin Controls/_dateRange/interfaces/ILinkView

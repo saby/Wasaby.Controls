@@ -34,7 +34,6 @@
     "wml!Controls/Container/Input/Search/Search",
     "Controls/Container/List",
     "wml!Controls/Container/List/List",
-    "Controls/Container/MultiSelector/selectionToRecord",
     "Controls/Container/Search",
     "wml!Controls/Container/Search/Search",
     "Controls/Container/Search/SearchContextField",
@@ -61,12 +60,6 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
-    "Controls/Input/Date/Link",
-    "wml!Controls/Input/Date/Link/Link",
-    "Controls/Input/Date/LinkView",
-    "wml!Controls/Input/Date/LinkView/LinkView",
-    "Controls/Input/Date/interface/ILink",
-    "Controls/Input/Money",
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
@@ -96,8 +89,7 @@
   "output": "controls-render.package.js"
 }, {
   "include": [
-    "Controls/Utils/*",
-    "Controls/Calendar/Utils"
+    "Controls/Utils/*"
   ],
   "exclude": [
     "Controls/Utils/isVDOMTemplate"
@@ -109,19 +101,5 @@
     "wml!Controls/Selector/Suggest/Suggest"
   ],
   "output": "controls-selector.package.js"
-}, {
-  "include": [
-    "Controls/SwitchableArea",
-    "Controls/_SwitchableArea/*",
-    "Controls/SwitchableArea/*"
-  ],
-  "output": "controls-switchable-area.package.js"
-},
-  {
-    "include": [
-      "Controls/EditableArea",
-      "Controls/_EditableArea/*"
-    ],
-    "output": "controls-editable-area.package.js"
-  }
+}
 ]

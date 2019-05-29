@@ -5,7 +5,7 @@ import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import {Controller as SourceController} from 'Controls/source';
-import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
+import {selectionToRecord} from 'Controls/operations';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import {adapter} from 'Types/entity'
