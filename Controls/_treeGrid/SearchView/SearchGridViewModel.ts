@@ -1,6 +1,5 @@
 import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import SearchViewModel = require('Controls/_treeGrid/SearchView/SearchViewModel');
-import {RowIndexUtil} from 'Controls/list';
 import {Record} from "../../../application/Types/entity";
 
 var SearchGridViewModel = TreeGridViewModel.extend({
@@ -9,8 +8,7 @@ var SearchGridViewModel = TreeGridViewModel.extend({
     },
     _calcRowIndex(current) {
         if (current.breadCrumbs) {
-            return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
-               this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+            return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
         }
         return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
     },
