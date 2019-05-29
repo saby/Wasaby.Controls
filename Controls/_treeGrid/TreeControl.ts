@@ -138,12 +138,11 @@ var _private = {
         if (baseControl) {
             let viewModel = baseControl.getViewModel();
             let items = viewModel.getItems();
+            let item = items && items.at(0);
             let expandedItems = viewModel.getExpandedItems();
-            let typeFunction = items.at(0) && typeof items.at(0).get(cfg.keyProperty) === 'number' ? Number : String;
+            let typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
 
             if (!isEmpty(expandedItems)) {
-
-
                 for (var i in expandedItems) {
                     if (expandedItems.hasOwnProperty(i)) {
                         expandedItemsKeys.push((expandedItems[i]));

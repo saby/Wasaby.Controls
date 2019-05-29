@@ -60,6 +60,8 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
             parentProperty: entity.descriptor(String).required()
          };
       },
+      // todo removed or documented by task:
+      // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
          this._children.listControl.toggleExpanded(id);
       }

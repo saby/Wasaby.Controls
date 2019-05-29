@@ -1,4 +1,4 @@
-import {ListViewModel, ItemsUtil, TreeItemsUtil, RowIndexUtil} from 'Controls/list';
+import {ListViewModel, ItemsUtil, TreeItemsUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -171,9 +171,9 @@ var
 
             return expanderClasses;
         },
-        prepareExpandedItems: function(expandedItems) {
-            var
-                result = {};
+        prepareExpandedItems: function(expandedItems: Array<unknown>): Record<unknown, boolean> {
+            let
+                result: Record<unknown, boolean> = {};
             if (expandedItems) {
                 expandedItems.forEach(function(item) {
                     result[item] = true;
@@ -207,11 +207,6 @@ var
                 _private.removeFromArray(self._expandedItems, itemId);
                 _private.collapseChildNodes(self, itemId);
             });
-        },
-        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column.
-        // Using util for calculating real rows' index on display considering footers, headers, results
-        calcNodeFooterIndex: function(self, parentKey) {
-            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage, self._options.nodeFooterTemplate, self.getExpandedItems());
         },
 
         collapseNode: function (self, nodeId) {
@@ -269,7 +264,7 @@ var
             }
         },
 
-        setExpandedItems: function(expandedItems) {
+        setExpandedItems: function(expandedItems: Array<unknown>) {
             this._expandedItems = expandedItems ? cClone(expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
@@ -357,6 +352,10 @@ var
             this._options.nodeFooterTemplate = nodeFooterTemplate;
             this._nextModelVersion();
         },
+    
+        getNodeFooterTemplate: function() {
+            return this._options.nodeFooterTemplate;
+        },
 
         setExpanderDisplayMode: function(expanderDisplayMode) {
             this._options.expanderDisplayMode = expanderDisplayMode;
@@ -414,8 +413,7 @@ var
                           item: current.dispItem.getContents(),
                           dispItem: current.dispItem,
                           multiSelectVisibility: current.multiSelectVisibility,
-                          level: current.dispItem.getLevel(),
-                          rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                          level: current.dispItem.getLevel()
                       };
                       if (this._options.nodeFooterTemplate) {
                           current.nodeFooter.template = this._options.nodeFooterTemplate;
@@ -432,8 +430,7 @@ var
                        item: itemParent.getContents(),
                        dispItem: itemParent,
                        multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel(),
-                       rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                       level: itemParent.getLevel()
                     };
                     if (this._options.nodeFooterTemplate) {
                        current.nodeFooter.template = this._options.nodeFooterTemplate;

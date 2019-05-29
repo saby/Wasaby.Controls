@@ -1,6 +1,12 @@
 import Controller = require('Controls/_validate/Controller');
 import template = require('wml!Controls/_validate/Input');
-
+/**
+ * @class Controls/_validate/Input
+ * @extends Controls/_validate/Controller
+ * @control
+ * @public
+ * @author Красильников А.С.
+ */
 
       export = Controller.extend({
          _template: template,
@@ -28,4 +34,3 @@ import template = require('wml!Controls/_validate/Input');
             }
          }
       });
-   

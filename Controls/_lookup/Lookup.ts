@@ -38,8 +38,8 @@ var Lookup = Control.extend({
       }
    },
 
-   showSelector: function (templateOptions) {
-      this._children.controller.showSelector(templateOptions);
+   showSelector: function (popupOptions) {
+      this._children.controller.showSelector(popupOptions);
    }
 });
 

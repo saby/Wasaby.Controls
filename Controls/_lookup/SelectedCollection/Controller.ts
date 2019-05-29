@@ -225,30 +225,30 @@ import {LoadService} from 'Controls/history';
          _private.setSelectedKeys(this, selectedKeys);
       },
 
-      showSelector: function(templateOptions) {
+      showSelector: function(popupOptions) {
          var
             self = this,
             multiSelect = this._options.multiSelect,
             selectorOpener = this._children.selectorOpener,
-            selectorTemplate = this._options.selectorTemplate;
+            selectorTemplate = this._options.selectorTemplate,
+            defaultPopupOptions = merge({
+               opener: this,
+               isCompoundTemplate: this._options.isCompoundTemplate
+            }, selectorTemplate.popupOptions || {});
 
-         if (selectorTemplate) {
-            templateOptions = merge(templateOptions || {}, {
+         if (popupOptions && popupOptions.template || selectorTemplate) {
+            defaultPopupOptions.templateOptions = merge({
                selectedItems: _private.getItems(this).clone(),
                multiSelect: multiSelect,
                handlers: {
-                  onSelectComplete: function(event, result) {
+                  onSelectComplete: function (event, result) {
                      self._selectCallback(result);
                      selectorOpener.close();
                   }
                }
-            }, {clone: true});
+            }, selectorTemplate.templateOptions || {});
 
-            selectorOpener.open({
-               opener: self,
-               isCompoundTemplate: this._options.isCompoundTemplate,
-               templateOptions: merge(selectorTemplate.templateOptions || {}, templateOptions, {clone: true})
-            });
+            selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
          }
       },
 
@@ -267,9 +267,9 @@ import {LoadService} from 'Controls/history';
          }
       },
 
-      _onShowSelectorHandler: function(event, templateOptions) {
+      _onShowSelectorHandler: function(event, popupOptions) {
          if (this._notify('showSelector') !== false) {
-            this.showSelector(templateOptions);
+            this.showSelector(popupOptions);
          }
 
          return false;
