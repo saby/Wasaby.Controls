@@ -13,6 +13,7 @@
                        afterFieldWrapper="{{_options.afterFieldWrapper}}">
    <ws:placeholder>
       <ws:if data="{{_options.multiline}}">
+         <!-- in multiline mode, placeholder is in one line -->
          <div attr:class="controls-Lookup__placeholderWrapper">
             <ws:partial template="{{_options.placeholder}}"/>
          </div>
