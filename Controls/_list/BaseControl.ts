@@ -893,6 +893,12 @@ var _private = {
             navigation: navigation,
             keyProperty: keyProperty
         })
+    },
+
+    checkRequiredOptions: function(options) {
+        if (options.keyProperty === undefined) {
+            IoC.resolve('ILogger').error('BaseControl', 'Option "keyProperty" is required.');
+        }
     }
 };
 
@@ -970,6 +976,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
+        _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
