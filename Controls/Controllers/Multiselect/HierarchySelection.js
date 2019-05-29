@@ -237,6 +237,15 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          }.bind(this));
       },
 
+      selectAll: function(rootId) {
+         if (rootId !== undefined) {
+            this._selectedKeys = [rootId];
+            this._excludedKeys = [];
+         } else {
+            HierarchySelection.superclass.selectAll.apply(this, arguments);
+         }
+      },
+
       getCount: function() {
          return (
             _private.getSelectedCount(
