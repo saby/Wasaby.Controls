@@ -36,7 +36,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 
 /**
  * @typedef {Object} SourceCfg
- * @property {Item} [SourceCfg.item] Record of source.
+ * @property {Item} [SourceCfg.item] Format of source record.
  */
 
 /**
