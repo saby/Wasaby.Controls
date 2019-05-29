@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_EditableArea/Templates/Editors/Base/Base');
-import 'css!theme?Controls/_EditableArea/Templates/Editors/Base';
+import template = require('wml!Controls/_editableArea/Templates/Editors/Base/Base');
+import 'css!theme?Controls/_editableArea/Templates/Editors/Base';
 
 'use strict';
 
@@ -8,7 +8,7 @@ import 'css!theme?Controls/_EditableArea/Templates/Editors/Base';
  * Base template for editing of input fields. Mimicks styles of {@link Controls/input:Text Text}.
  * <a href="/materials/demo-ws4-editable-area">Demo</a>.
  *
- * @class Controls/_EditableArea/Templates/Editors/Base
+ * @class Controls/_editableArea/Templates/Editors/Base
  * @extends Core/Control
  * @author Авраменко А.С.
  * @public
@@ -19,7 +19,7 @@ import 'css!theme?Controls/_EditableArea/Templates/Editors/Base';
  * @css @font-weight_EditableAreaTemplate-Base_style_accentHeader Font weight of the input field with the style option set to "accentHeader".
  * @css @color_EditableAreaTemplate-Base_style_accentHeader Text color of the input field with the style option set to "accentHeader".
  *
- * @see Controls/_EditableArea/Templates/Editors/DateTime
+ * @see Controls/_editableArea/Templates/Editors/DateTime
  *
  * @demo Controls-demo/EditableArea/EditableAreaPG
  */

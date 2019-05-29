@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
-import template = require('wml!Controls/_editableArea/EditableArea');
-import 'css!theme?Controls/_EditableArea/EditableArea';
+import template = require('wml!Controls/_editableArea/View');
+import 'css!theme?Controls/_editableArea/View';
 import 'css!theme?Controls/list';
 
 'use strict';
@@ -67,7 +67,7 @@ var
  * Controller for editing of input fields.
  * <a href="/materials/demo-ws4-editable-area">Demo</a>.
  *
- * @class Controls/EditableArea
+ * @class Controls/_editableArea/View
  * @extends Core/Control
  * @mixes Controls/interface/IEditableArea
  * @author Авраменко А.С.
@@ -79,7 +79,7 @@ var
  * @demo Controls-demo/EditableArea/EditableAreaPG
  */
 
-var EditableArea = Control.extend( /** @lends Controls/List/EditableArea.prototype */ {
+var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _template: template,
    _isEditing: false,
 
@@ -155,10 +155,10 @@ var EditableArea = Control.extend( /** @lends Controls/List/EditableArea.prototy
    }
 });
 
-EditableArea.getDefaultOptions = function () {
+View.getDefaultOptions = function () {
    return {
       style: 'withoutBackground'
    };
 };
 
-export default EditableArea;
+export default View;

@@ -2,12 +2,12 @@ define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
-    * Interface for lists that have editing. The difference between this interface and {@link Controls/EditableArea Controls/EditableArea} is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
+    * Interface for lists that have editing. The difference between this interface and {@link Controls/View Controls/EditableArea} is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
     *
     * @interface Controls/interface/IEditableList
     * @public
     * @author Авраменко А.С.
-    * @see Controls/EditableArea
+    * @see Controls/View
     */
 
    /**
