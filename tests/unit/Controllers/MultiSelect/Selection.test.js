@@ -237,6 +237,18 @@ define([
          assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
          assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
          assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
+
+         cfg = {
+            selectedKeys: [1, 2, 3],
+            excludedKeys: [],
+            items: items,
+            keyProperty: 'id'
+         };
+         selectionInstance = new Selection(cfg);
+         selectionInstance.selectAll('rootId');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual(['rootId'], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
       });
 
       it('toggleAll', function() {

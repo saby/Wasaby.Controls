@@ -69,7 +69,7 @@ var _private = {
     },
 
     selectedTypeChangedHandler: function (typeName) {
-        this._multiselection[typeName]();
+        this._multiselection[typeName](this._options.root);
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 

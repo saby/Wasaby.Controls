@@ -33,7 +33,6 @@ define('Controls/Controllers/Multiselect/Selection', [
     */
 
    var
-      ALLSELECTION_VALUE = [null],
       SELECTION_STATUS = {
          NOT_SELECTED: false,
          SELECTED: true
@@ -86,10 +85,9 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       /**
        * Select all items.
-       * @remark Sets selectedKeys to [null].
        */
-      selectAll: function() {
-         this._selectedKeys = ALLSELECTION_VALUE;
+      selectAll: function(root) {
+         this._selectedKeys = [root || null];
          this._excludedKeys = [];
       },
 
@@ -104,7 +102,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       /**
        * Invert selection.
        */
-      toggleAll: function() {
+      toggleAll: function(root) {
          var swap;
 
          if (this._isAllSelection(this._getParams())) {
@@ -113,7 +111,7 @@ define('Controls/Controllers/Multiselect/Selection', [
             this.select(swap);
          } else {
             swap = this._selectedKeys;
-            this.selectAll();
+            this.selectAll(root);
             this.unselect(swap);
          }
       },
