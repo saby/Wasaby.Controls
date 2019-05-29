@@ -14,7 +14,7 @@ define('Controls-demo/Switch/SwitchDemoPG',
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/Switch',
+         _content: 'Controls/toggle:Switch',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

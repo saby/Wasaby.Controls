@@ -43,11 +43,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with one icon.
  * <pre>
- *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
  * </pre>
  * Toggle button with two icons.
  * <pre>
- *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
  * </pre>
  */
 
@@ -59,11 +59,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with two captions.
  * <pre>
- *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
  * </pre>
  * Toggle button with one caption.
  * <pre>
- *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
  * </pre>
  */
 
@@ -77,15 +77,15 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with 'link' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Toggle button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
  * </pre>
  * Toggle button with 'pushButton' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
  * </pre>
  */
 const stickyButton = [
