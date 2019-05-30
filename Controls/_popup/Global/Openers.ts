@@ -1,6 +1,8 @@
 import * as Control from 'Core/Control';
 import template = require('wml!Controls/_popup/Global/Openers');
-import {Dialog as DialogOpener, Infobox as InfoboxOpener, Previewer as PreviewerOpener} from 'Controls/popup';
+import DialogOpener from './../Opener/Dialog';
+import InfoBoxOpener from './../Opener/InfoBox';
+import PreviewerOpener from './../Opener/Previewer';
 
 class Openers extends Control {
 
@@ -8,7 +10,7 @@ class Openers extends Control {
 
     private _children: {
         previewerOpener: PreviewerOpener,
-        infoBoxOpener: InfoboxOpener,
+        infoBoxOpener: InfoBoxOpener,
         dialogOpener: DialogOpener
     };
  protected _template: Function = template;
@@ -16,7 +18,7 @@ class Openers extends Control {
     protected getPreviewer(): PreviewerOpener {
         return this._children.previewerOpener;
     };
-    protected getInfoBox(): InfoboxOpener {
+    protected getInfoBox(): InfoBoxOpener {
         return this._children.infoBoxOpener;
     };
     protected getDialog(): DialogOpener {
