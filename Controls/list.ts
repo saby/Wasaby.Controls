@@ -14,7 +14,6 @@
  * @includes DataContainer Controls/_list/Data
  * @includes AddButtonStyles Controls/_list/AddButton/Styles
  * @includes IDraggable Controls/_list/interface/IDraggable
- * @includes IExplorer Controls/_list/interface/IExplorer
  * @includes IHierarchy Controls/_list/interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ListStyles Controls/_list/ListStyles

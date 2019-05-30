@@ -140,7 +140,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
-    * @mixes Controls/_list/interface/IExplorer
+    * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_list/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @control
