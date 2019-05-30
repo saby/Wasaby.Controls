@@ -452,6 +452,7 @@ define([
                stopImmediatePropagation: function() {
                   stopImmediateCalled = true;
                },
+               target: {closest() { return false; }},
                nativeEvent: {
                   keyCode: Env.constants.key.right
                }
@@ -463,6 +464,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.left
                   }
