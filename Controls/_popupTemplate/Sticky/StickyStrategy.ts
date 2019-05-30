@@ -22,7 +22,7 @@ interface IPosition {
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight()
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -137,7 +137,7 @@ interface IPosition {
 
       fixPosition: function(position, targetCoords) {
          if (position.bottom) {
-            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight();
+            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight(true);
             position.bottom += keyboardHeight;
 
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
