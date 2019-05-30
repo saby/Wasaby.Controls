@@ -91,7 +91,7 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
-            this._notify('optionsChanged', [this._options]);
+            this._forceUpdate();
          },
          reset: function() {
             this.myEvent = '';
