@@ -3,7 +3,7 @@ define('Controls/Input/Date/interface/ILink', [
    'use strict';
 
    /**
-       * @event Controls/Input/Date/Link#valueChanged Occurs when value was changed.
+       * @event Controls/dateRange:Link#valueChanged Occurs when value was changed.
        * @param {Date} The number that will be projected to the text in the field.
        * @param {String} Value of the field.
        * @remark This event should be used to react to changes user makes in the field.
