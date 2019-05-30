@@ -1479,6 +1479,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.down
                   }
@@ -1495,6 +1496,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.space
                   },
@@ -1509,6 +1511,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.up
                   }
