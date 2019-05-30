@@ -14,7 +14,7 @@ import 'css!theme?Controls/popupTemplate';
     * @public
     * @author Михайловский Д.С.
     * @demo Controls-demo/Buttons/Close/CloseDemo
-    * @mixes Controls/interface/IClick
+    * @mixes Controls/_buttons/interface/IClick
     *
     */
 

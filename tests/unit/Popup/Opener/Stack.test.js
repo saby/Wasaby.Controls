@@ -37,6 +37,16 @@ define(
             assert.isTrue(position.position === 'fixed');
          });
 
+         it('stack getAvailableMaxWidth', () => {
+            let itemMaxWidth = null;
+            let maxPanelWidth = 100;
+            assert.equal(StackStrategy._private.getAvailableMaxWidth(itemMaxWidth, maxPanelWidth), 100);
+            itemMaxWidth = 10;
+            assert.equal(StackStrategy._private.getAvailableMaxWidth(itemMaxWidth, maxPanelWidth), 10);
+            itemMaxWidth = 110;
+            assert.equal(StackStrategy._private.getAvailableMaxWidth(itemMaxWidth, maxPanelWidth), 100);
+         });
+
          it('stack shadow', () => {
             let baseGetItemPosition = popupTemplate.StackController._private.getItemPosition;
             popupTemplate.StackController._private.getItemPosition = items => (items.position);
