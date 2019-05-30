@@ -61,8 +61,7 @@
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
-    "Controls/Input/OldText/OldViewModel",
-    "Controls/Input/Search/Styles"
+    "Controls/Input/OldText/OldViewModel"
   ],
   "output": "controls-input.package.js"
 }, {
