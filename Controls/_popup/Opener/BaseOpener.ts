@@ -15,11 +15,13 @@ import {parse as parserLib, load} from 'Core/library';
                popupIds.length = 0;
             }
          },
-         compatibleOpen: function(self, cfg, controller) {
-            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
-               Layer.load().addCallback(function() {
-                  self._openPopup(cfg, controller);
-               });
+         compatibleOpen: function(self, cfg, controller): Promise<string | undefined> {
+            return new Promise((resolve) => {
+                requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(Layer) {
+                    Layer.load().addCallback(function() {
+                        self._openPopup(cfg, controller).then(popupId => resolve(popupId));
+                    });
+                });
             });
          }
       };
@@ -64,41 +66,47 @@ import {parse as parserLib, load} from 'Core/library';
                }
             }
          },
-         open: function(popupOptions, controller) {
-            var cfg = this._getConfig(popupOptions || {});
-            _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-            this._toggleIndicator(true);
-            if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-               _private.compatibleOpen(this, cfg, controller);
-            } else {
-               this._openPopup(cfg, controller);
-            }
+         open: function(popupOptions, controller): Promise<string | undefined> {
+            return new Promise((resolve => {
+                var cfg = this._getConfig(popupOptions || {});
+                _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
+                this._toggleIndicator(true);
+                if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+                    _private.compatibleOpen(this, cfg, controller).then(popupId => resolve(popupId));
+                } else {
+                    this._openPopup(cfg, controller).then(popupId => resolve(popupId));
+                }
+            }));
          },
 
-         _openPopup: function(cfg, controller) {
-            var self = this;
-            this._requireModules(cfg, controller).addCallback((result) => {
-               var
-                  popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
+         _openPopup: function(cfg, controller): Promise<string | undefined> {
+            return new Promise((resolve => {
+                var self = this;
+                this._requireModules(cfg, controller).addCallback((result) => {
+                    var
+                        popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
-               cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                  self._toggleIndicator(false);
-                  if (self._useVDOM()) {
-                     if (self._popupIds.indexOf(result) === -1) {
-                        self._popupIds.push(result);
-                     }
+                    cfg._vdomOnOldPage = self._options._vdomOnOldPage;
+                    Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
+                        self._toggleIndicator(false);
+                        if (self._useVDOM()) {
+                            if (self._popupIds.indexOf(result) === -1) {
+                                self._popupIds.push(result);
+                            }
 
-                     // Call redraw to create emitter on scroll after popup opening
-                     self._forceUpdate();
-                  } else {
-                     self._action = result;
-                  }
-               });
-               return result;
-            }).addErrback(()=> {
-               self._toggleIndicator(false);
-            });
+                            // Call redraw to create emitter on scroll after popup opening
+                            self._forceUpdate();
+                        } else {
+                            self._action = result;
+                        }
+
+                        resolve(result);
+                    });
+                }).addErrback(()=> {
+                    self._toggleIndicator(false);
+                    resolve();
+                });
+            }));
          },
 
          // Lazy load template
@@ -282,11 +290,11 @@ import {parse as parserLib, load} from 'Core/library';
           * Closes a popup
           * @function Controls/_popup/Opener/Base#close
           */
-         close: function() {
+         close: function(id: string) {
             var self = this;
-            var popupId = this._getCurrentPopupId();
-            if (this._getCurrentPopupId()) {
-               ManagerController.remove(this._getCurrentPopupId()).addCallback(function() {
+            var popupId = id || this._getCurrentPopupId();
+            if (popupId) {
+               ManagerController.remove(popupId).addCallback(function() {
                   // todo: Перейти с массива на collection.list
                   if (self._popupIds.indexOf(popupId) > -1) {
                      self._popupIds.splice(self._popupIds.indexOf(popupId), 1);
