@@ -1,4 +1,4 @@
-import * as Control from 'Core/Control';
+import {Control, IControlOptions} from 'UI/Base';
 import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 import DoubleSwitchTemplate = require('wml!Controls/_toggle/DoubleSwitch/DoubleSwitch');
 import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchToggle');
@@ -6,13 +6,7 @@ import textTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/Doubl
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions} from 'Controls/interface';
-import {ICheckboxOptions} from "./Checkbox";
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-   readOnly?: boolean;
-   theme?: string;
-}
 export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions {
    captions?: string[];
    orientation?: string;
@@ -52,16 +46,16 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @variant vertical Vertical orientation.
  */
 const CAPTIONS_LENGTH = 2;
-class DoubleSwitch extends Control implements ICheckable, ITooltip {
+class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, ITooltip {
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = DoubleSwitchTemplate;
    protected _theme: string[] = ['Controls/toggle'];
-   protected _options: IDoubleSwitchOptions;
 
    protected _toggleTemplate: Function = toggleTemplate;
    protected _textTemplate: Function = textTemplate;
    protected _toggleHoverState: boolean = false;
+
    private _checkCaptions(captions: string[]): void {
       if (captions.length !== CAPTIONS_LENGTH) {
          throw new Error('You must set 2 captions.');
