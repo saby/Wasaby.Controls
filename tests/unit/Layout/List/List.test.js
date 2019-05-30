@@ -210,7 +210,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          var searchController = List._private.getSearchController(listLayout);
 
          assert.isTrue(!!listLayout._searchController);
-         assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
+         assert.equal(searchController._moduleName, 'Controls/search:_SearchController');
          assert.equal(searchController._options.searchParam, listSearchParam);
          assert.equal(searchController._options.source, listSource);
 

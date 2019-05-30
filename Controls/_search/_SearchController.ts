@@ -67,7 +67,7 @@ var _private = {
 
 /**
  * Отслеживает изменение value.
- * При необходимости загружает Controls/Controllers/_Search и делает запрос за данными.
+ * При необходимости загружает Controls/search:_Search и делает запрос за данными.
  * @author Герасимов Александр
  * @class Controls/_search/_SearchController
  * @mixes Controls/interface/ISearch

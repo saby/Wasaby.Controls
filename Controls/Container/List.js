@@ -3,7 +3,7 @@ define('Controls/Container/List',
       'Core/Control',
       'wml!Controls/Container/List/List',
       'Types/source',
-      'Controls/Controllers/_SearchController',
+      'Controls/search',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Search/SearchContextField',
@@ -12,22 +12,22 @@ define('Controls/Container/List',
       'Controls/history',
       'Core/core-instance'
    ],
-   
-   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, historyMod, cInstance) {
-      
+
+   function(Control, template, sourceLib, searchLib, merge, isEqual, SearchContextField, FilterContextField, Deferred, historyMod, cInstance) {
+
       'use strict';
-      
+
       var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
       var SEARCH_VALUE_FIELD = 'searchValue';
       var FILTER_CONTEXT_FIELD = 'filterLayoutField';
       var FILTER_VALUE_FIELD = 'filter';
-      
+
       var _private = {
          getSearchController: function(self) {
             var options = self._options;
-            
+
             if (!self._searchController) {
-               self._searchController = new SearchController({
+               self._searchController = new searchLib.SearchController({
                   filter: merge({}, options.filter),
                   searchParam: options.searchParam,
                   minSearchLength: options.minSearchLength,
@@ -41,17 +41,17 @@ define('Controls/Container/List',
                   abortCallback: _private.abortCallback.bind(self, self)
                });
             }
-            
+
             return self._searchController;
          },
-         
+
          resolveOptions: function(self, options) {
             self._options = options;
             self._filter = options.filter;
             self._source = options.source;
             self._navigation = options.navigation;
          },
-         
+
          cachedSourceFix: function(self) {
             /* Пока не cached source не используем навигацию и фильтрацию,
              просто отдаём данные в список, иначе memorySource данные не вернёт,
@@ -62,7 +62,7 @@ define('Controls/Container/List',
 
          updateSource: function(self, data) {
             var source = _private.getOriginSource(self._options.source);
-            
+
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new sourceLib.Memory({
@@ -72,19 +72,19 @@ define('Controls/Container/List',
                adapter: source.getAdapter()
             });
          },
-         
+
          updateFilter: function(self, resultFilter) {
             /* Копируем объект, чтобы порвать ссылку и опция у списка изменилась*/
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
             _private.getSearchController(self).setFilter(self._filter);
          },
-         
+
          abortCallback: function(self, filter) {
             if (self._options.searchEndCallback) {
                self._options.searchEndCallback(null, filter);
             }
-   
+
             if (!isEqual(filter, _private.getFilterFromContext(self, self._context))) {
                _private.updateFilter(self, filter);
             }
@@ -93,13 +93,13 @@ define('Controls/Container/List',
             self._navigation = self._options.navigation;
             self._forceUpdate();
          },
-   
+
          searchErrback: function(self, error) {
             var source = _private.getOriginSource(self._options.source);
             if (self._options.searchErrback) {
                self._options.searchErrback(error);
             }
-            
+
             //if query returned an error, the list should be empty
             //but if error was called by query abort (error property 'canceled'),
             //the list should not change
@@ -110,7 +110,7 @@ define('Controls/Container/List',
                });
             }
          },
-         
+
          searchCallback: function(self, result, filter) {
             if (self._options.searchEndCallback) {
 
@@ -123,7 +123,7 @@ define('Controls/Container/List',
                   self._options.searchEndCallback(result, filter);
                });
             }
-   
+
             if (!isEqual(filter, _private.getFilterFromContext(self, self._context)) || !isEqual(filter, self._filter)) {
                _private.updateFilter(self, filter);
             }
@@ -133,12 +133,12 @@ define('Controls/Container/List',
             self._searchDeferred.callback();
             self._forceUpdate();
          },
-         
+
          searchValueChanged: function(self, value, filter) {
             var searchController = _private.getSearchController(self);
-   
+
             _private.cancelSearchDeferred(self);
-            
+
             if (filter) {
                searchController.setFilter(filter);
             }
@@ -146,14 +146,14 @@ define('Controls/Container/List',
             self._searchValue = value;
             searchController.search(value);
          },
-         
+
          cancelSearchDeferred: function(self) {
             if (self._searchDeferred && self._searchDeferred.isReady()) {
                self._searchDeferred.cancel();
                self._searchDeferred = null;
             }
          },
-         
+
          getValueFromContext: function(context, contextField, valueField) {
             if (context && context[contextField]) {
                return context[contextField][valueField];
@@ -161,12 +161,12 @@ define('Controls/Container/List',
                return null;
             }
          },
-         
+
          isFilterChanged: function(self, context) {
             var oldValue = this.getFilterFromContext(self, self._context),
                newValue = this.getFilterFromContext(self, context),
                changed = false;
-            
+
             if (newValue) {
                if (self._searchMode) {
                   /* if search mode on, filter will be changed after search */
@@ -177,27 +177,27 @@ define('Controls/Container/List',
             }
             return changed;
          },
-         
+
          isSearchValueChanged: function(self, context) {
             var oldValue = self._searchValue || this.getSearchValueFromContext(self, self._context),
                newValue = this.getSearchValueFromContext(self, context);
             return !isEqual(oldValue, newValue);
          },
-         
+
          getFilterFromContext: function(self, context) {
             return this.getValueFromContext(context, FILTER_CONTEXT_FIELD, FILTER_VALUE_FIELD);
          },
-         
+
          getSearchValueFromContext: function(self, context) {
             return this.getValueFromContext(context, SEARCH_CONTEXT_FIELD, SEARCH_VALUE_FIELD);
          },
-         
+
          checkContextValues: function(self, context) {
             var filterChanged = this.isFilterChanged(self, context);
             var searchChanged = this.isSearchValueChanged(self, context);
             var searchValue = this.getSearchValueFromContext(self, context);
             var filterValue = this.getFilterFromContext(self, context);
-            
+
             if (searchChanged && filterChanged) {
                this.searchValueChanged(self, searchValue, filterValue);
             } else if (searchChanged) {
@@ -210,14 +210,14 @@ define('Controls/Container/List',
                }
             }
          },
-         
+
          destroySearchController: function(self) {
             if (self._searchController) {
                self._searchController.abort();
                self._searchController = null;
             }
          },
-         
+
          getOriginSource: function(source) {
             //костыль до перевода Suggest'a на Search/Controller,
             //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
@@ -233,13 +233,13 @@ define('Controls/Container/List',
             return source;
          }
       };
-      
+
       var List = Control.extend({
-         
+
          _template: template,
          _searchDeferred: null,
          _searchMode: false,
-         
+
          _beforeMount: function(options, context) {
             this._source = options.source;
 
@@ -266,42 +266,42 @@ define('Controls/Container/List',
             /***********************/
 
          },
-         
+
          _beforeUpdate: function(newOptions, context) {
             if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
                var currentFilter = this._searchController ? this._searchController.getFilter() : _private.getFilterFromContext(this, this._context);
                var source = this._source;
-               
+
                _private.resolveOptions(this, newOptions);
-               
+
                if (this._searchMode) {
                   _private.cachedSourceFix(this);
-                  
+
                   /* back memory source if now searchMode is on. (Will used cached source by task https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63) */
                   this._source = source;
                }
-               
+
                /* create searchController with new options */
                this._searchController = null;
                _private.getSearchController(this).setFilter(currentFilter);
             }
             _private.checkContextValues(this, context);
          },
-         
+
          _beforeUnmount: function() {
             _private.cancelSearchDeferred(this);
             _private.destroySearchController(this);
          }
-         
+
       });
-      
+
       List.contextTypes = function() {
          return {
             searchLayoutField: SearchContextField,
             filterLayoutField: FilterContextField
          };
       };
-      
+
       List.getDefaultOptions = function() {
          return {
             searchDelay: 500,
@@ -309,9 +309,9 @@ define('Controls/Container/List',
             filter: {}
          };
       };
-      
+
       /* For tests */
       List._private = _private;
       return List;
-      
+
    });
