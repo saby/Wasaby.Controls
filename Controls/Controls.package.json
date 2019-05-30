@@ -49,15 +49,6 @@
   "output": "controls-container.package.js"
 }, {
   "include": [
-    "Controls/Controllers/*"
-  ],
-  "exclude": [
-    "Controls/Controllers/QueryParamsController/*",
-    "Controls/Controllers/SourceController"
-  ],
-  "output": "controls-controllers.package.js"
-}, {
-  "include": [
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
