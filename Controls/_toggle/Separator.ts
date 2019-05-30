@@ -47,7 +47,6 @@ class Separator extends Control<ISeparatorOptions> {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = SeparatorTemplate;
    protected _theme: string[] = ['Controls/toggle'];
-   protected _options: ISeparatorOptions;
    protected _icon: String;
 
    private _clickHandler(e: SyntheticEvent): void {
