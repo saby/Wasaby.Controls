@@ -463,7 +463,7 @@ var _private = {
         //TODO сейчас нельзя зарегистрироваться через IntersectionObserver двум разным контролам
         //без IO работает нормально, под опцией даю возможность зарегистрироваться без IO
         //удалить по задаче https://online.sbis.ru/opendoc.html?guid=1ff70209-bf8d-47a4-b452-435f80cb28f3
-        if (this._options._fix1177210255) {
+        if (self._options._fix1177210255) {
            self._children.ScrollEmitter.startRegister();
         }
         else {
