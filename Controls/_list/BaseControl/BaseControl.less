@@ -22,6 +22,8 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 .controls-BaseControl__pagingContainer {
    pointer-events: none;
    position: absolute;
+   position: -webkit-sticky;
+   position: sticky;
    bottom: 0;
    right: 0;
    top: auto;
@@ -29,6 +31,10 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    display: flex;
    justify-content: flex-end;
 }
+.ws-is-ie .controls-BaseControl__pagingContainer {
+   pisition: absolute;
+}
+
 .controls-BaseControl__scrollPaging {
    pointer-events: auto;
    border: 0 solid @border-color_BaseControl-scrollPaging;
