@@ -21,6 +21,9 @@ define('Controls/Application',
     *
     * @class Controls/Application
     * @extends Core/Control
+    *
+    * @mixes Controls/Application/BlockLayout/Styles
+    *
     * @control
     * @public
     * @author Зуев Д.В.

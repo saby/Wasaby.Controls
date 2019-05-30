@@ -37,7 +37,7 @@
                         on:mouseleave="_onMonthTitleMouseLeave(month)">
                         {{ _formatDate(month, 'MMMM') }}
                      </div>
-                     <Controls.Date.MonthView
+                     <Controls.calendar:MonthView
                         attr:class="controls-PeriodDialog-MonthsRange__month {{
                                     _options.monthClickable && !_options.selectionProcessing ? 'controls-PeriodDialog-MonthsRange__month_clickable'
                                     }}"

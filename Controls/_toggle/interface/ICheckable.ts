@@ -10,13 +10,13 @@ export interface ICheckableOptions {
  * @author Михайловский Д.С.
  */
 export interface ICheckable {
-   /**
-    * @name Controls/_toggle/interface/ICheckable#value
-    * @cfg {boolean} Current state.
-    */
-   /**
-    * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
-    * @param {boolean} value New value.
-    */
    readonly '[Controls/_toggle/interface/ICheckable]': boolean;
 }
+/**
+ * @name Controls/_toggle/interface/ICheckable#value
+ * @cfg {boolean} Current state.
+ */
+/**
+ * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
+ * @param {boolean} value New value.
+ */
