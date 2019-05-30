@@ -8,6 +8,7 @@
  * @includes Input Controls/_search/Input/Search
  * @includes _Search Controls/_search/_Search
  * @includes _SearchController Controls/_search/_SearchController
+ * @includes Styles Controls/_search/Styles
  * @public
  * @author Kraynov D.
  */
