@@ -66,12 +66,6 @@
   "output": "controls-input.package.js"
 }, {
   "include": [
-    "Controls/Popup/Global",
-    "wml!Controls/Popup/Global/Global"
-  ],
-  "output": "controls-popup.package.js"
-}, {
-  "include": [
     "Controls/Popup/Compatible/*"
   ],
   "exclude": [

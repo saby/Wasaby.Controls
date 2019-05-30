@@ -1,5 +1,5 @@
 import * as Control from 'Core/Control';
-import template = require('wml!Controls/Popup/Global/Openers');
+import template = require('wml!Controls/_popup/Global/Openers');
 import {Dialog as DialogOpener, Infobox as InfoboxOpener, Previewer as PreviewerOpener} from 'Controls/popup';
 
 class Openers extends Control {
@@ -24,4 +24,4 @@ class Openers extends Control {
     };
 }
 
-export = Openers;
+export default Openers;
