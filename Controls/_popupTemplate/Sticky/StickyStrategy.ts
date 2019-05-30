@@ -3,6 +3,7 @@
  */
 import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
 import cMerge = require('Core/core-merge');
+import Env = require('Env/Env');
 
 interface IPosition {
     left?: Number,
@@ -92,10 +93,13 @@ interface IPosition {
          return position;
       },
 
-       isNegativePosition(position:IPosition, targetCoords): Boolean {
+       isNegativePosition(position: IPosition, targetCoords): Boolean {
           // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
-          _private._fixBottomPositionForIos(position, targetCoords);
-          return  position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+          if (Env.detection.isMobileIOS) {
+             _private._fixBottomPositionForIos(position, targetCoords);
+             return position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+          }
+          return false;
        },
 
       calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
