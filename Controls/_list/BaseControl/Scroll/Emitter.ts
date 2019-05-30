@@ -8,8 +8,9 @@ var ScrollEmitter = Control.extend({
     _template: template,
 
 
-    startRegister: function (triggers) {
-        this._notify('register', ['listScroll', this, this.handleScroll, triggers], {bubbling: true});
+    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+    startRegister: function (triggers, isTask123456789) {
+        this._notify('register', ['listScroll', this, this.handleScroll, triggers, isTask123456789], {bubbling: true});
     },
 
     _beforeUnmount: function () {
