@@ -932,7 +932,9 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            current.rowIndex = this._calcRowIndex(current);
+            if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
+                current.rowIndex = this._calcRowIndex(current);
+            }
 
             if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.prepareItemDataForPartialSupport(this, current);
