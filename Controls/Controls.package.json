@@ -44,9 +44,7 @@
     "Controls/Container/Suggest/__PopupContent",
     "wml!Controls/Container/Suggest/__PopupContent",
     "Controls/Container/Suggest/__PopupLayer",
-    "wml!Controls/Container/Suggest/__PopupLayer",
-    "Controls/Container/Adapter/SelectedKey",
-    "wml!Controls/Container/Adapter/SelectedKey/SelectedKey"
+    "wml!Controls/Container/Suggest/__PopupLayer"
   ],
   "output": "controls-container.package.js"
 }, {

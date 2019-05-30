@@ -63,14 +63,14 @@
 </ws:template>
 
 <ws:template name="own">
-<Controls.Container.Adapter.SelectedKey bind:selectedKey="item.value">
+<Controls.source:SelectedKey bind:selectedKey="item.value">
    <Controls.filterPopup:Dropdown
            emptyText="Not selected"
            keyProperty="key"
            source="{{item.source}}"
            showCross="{{true}}"
            bind:textValue="item.textValue"/>
-</Controls.Container.Adapter.SelectedKey>
+</Controls.source:SelectedKey>
 </ws:template>
 
 <ws:template name="our organisation">

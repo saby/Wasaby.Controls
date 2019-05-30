@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Container/Adapter/SelectedKey',
+      'Controls/source',
       'Types/collection'
    ],
-   function(SelectedKeyContainer, collection) {
+   function(source, collection) {
       'use strict';
 
-      describe('Controls.Container.Adapter.SelectedKey', function() {
+      describe('Controls.source:SelectedKey', function() {
          let items = new collection.RecordSet({
             idProperty: 'id',
             rawData: [
@@ -16,14 +16,14 @@ define(
             ]
          });
          it('_beforeMount', function() {
-            let sKeyContainer = new SelectedKeyContainer();
+            let sKeyContainer = new source.SelectedKey();
             sKeyContainer._beforeMount({selectedKey: 'testKey'});
             assert.deepEqual(sKeyContainer._selectedKeys, ['testKey']);
             sKeyContainer._beforeMount({selectedKey: null});
             assert.deepEqual(sKeyContainer._selectedKeys, []);
          });
          it('_beforeUpdate', function() {
-            let sKeyContainer = new SelectedKeyContainer();
+            let sKeyContainer = new source.SelectedKey();
             sKeyContainer.saveOptions({selectedKey: 'testKey'});
             sKeyContainer._beforeUpdate({selectedKey: 'newTestKey'});
             assert.deepEqual(sKeyContainer._selectedKeys, ['newTestKey']);
@@ -33,7 +33,7 @@ define(
             assert.deepEqual(sKeyContainer._selectedKeys, [null]);
          });
          it('_selectedKeysChanged', function() {
-            let sKeyContainer = new SelectedKeyContainer(),
+            let sKeyContainer = new source.SelectedKey(),
                key, isStopped;
             sKeyContainer.saveOptions({ selectedKey: '1' });
             sKeyContainer._notify = function(event, data) {
@@ -57,15 +57,15 @@ define(
             assert.isTrue(isStopped);
          });
          it('_private::getSelectedKeys', function() {
-            let resultKeys = SelectedKeyContainer._private.getSelectedKeys(null);
+            let resultKeys = source.SelectedKey._private.getSelectedKeys(null);
             assert.deepEqual(resultKeys, []);
-            resultKeys = SelectedKeyContainer._private.getSelectedKeys('testKey');
+            resultKeys = source.SelectedKey._private.getSelectedKeys('testKey');
             assert.deepEqual(resultKeys, ['testKey']);
-            resultKeys = SelectedKeyContainer._private.getSelectedKeys(null, items);
+            resultKeys = source.SelectedKey._private.getSelectedKeys(null, items);
             assert.deepEqual(resultKeys, [null]);
          });
          it('_private::dataLoadCallbackHandler', function() {
-            let sKeyContainer = new SelectedKeyContainer(),
+            let sKeyContainer = new source.SelectedKey(),
                options = {dataLoadCallback: () => { dataLoaded = true; }},
                dataLoaded = false;
             sKeyContainer._beforeMount(options);
