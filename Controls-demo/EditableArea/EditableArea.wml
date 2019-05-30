@@ -1,6 +1,6 @@
 <div class="ControlsDemo-EditableArea">
    <div class="ControlsDemo-EditableArea__title">Пример 1 - на подложке</div>
-   <Controls.EditableArea
+   <Controls.editableArea:View
       name="edit"
       editObject="{{_record}}"
       style="withBackground"
@@ -9,16 +9,16 @@
    >
       <div class="ControlsDemo-EditableArea__firstExampleWrapper">
          <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
-         <Controls._EditableArea.Templates.Editors.Base
+         <Controls.editableArea:Base
               bind:value="content.editObject.text1"
               style="asLink"
          >
             <ws:editorTemplate>
                <Controls.input:Text selectOnClick="{{ false }}" />
             </ws:editorTemplate>
-         </Controls._EditableArea.Templates.Editors.Base>
+         </Controls.editableArea:Base>
       </div>
-   </Controls.EditableArea>
+   </Controls.editableArea:View>
    <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
    <ws:partial template="Controls/popupTemplate:Stack"
                showMaximizedButton="{{true}}"

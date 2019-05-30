@@ -4,14 +4,16 @@ define([
    'Types/collection',
    'Types/chain',
    'Controls/dragnDrop',
-   'Types/entity'
+   'Types/entity',
+   'Types/source'
 ], function(
    explorerMod,
    Deferred,
    collection,
    chain,
    dragnDrop,
-   entityLib
+   entityLib,
+   sourceLib
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -215,6 +217,22 @@ define([
          assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.isFalse(rootChanged);
+      });
+
+      it('toggleExpanded', function() {
+         var
+            explorer = new explorerMod.View({
+               viewMode: 'tree'
+            }),
+            toggleExpandedCalled = false;
+         explorer._children.treeControl = {
+            toggleExpanded: function(id) {
+               toggleExpandedCalled = true;
+               assert.equal(id, 'id_toggled_item', 'Invalid key of toggled item.');
+            }
+         };
+         explorer.toggleExpanded('id_toggled_item');
+         assert.isTrue(toggleExpandedCalled, 'TreeControl::toggleExpanded not called.');
       });
 
       it('_beforeMount', function() {

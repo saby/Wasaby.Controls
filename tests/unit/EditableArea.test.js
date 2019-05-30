@@ -1,17 +1,17 @@
 define([
-   'Controls/EditableArea',
+   'Controls/editableArea',
    'Types/entity',
    'Core/Deferred',
    'Controls/Constants'
 ], function(
-   EditableArea,
+   editableArea,
    entity,
    Deferred,
    Constants
 ) {
    'use strict';
 
-   describe('Controls.EditableArea', function() {
+   describe('Controls.editableArea:View', function() {
       var
          eventQueue,
          instance,
@@ -19,7 +19,7 @@ define([
          cfg2;
       beforeEach(function() {
          eventQueue = [];
-         instance = new EditableArea();
+         instance = new editableArea.View();
          cfg = {
             editWhenFirstRendered: true,
             editObject: entity.Model.fromObject({

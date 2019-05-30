@@ -144,7 +144,8 @@ var _private = {
             //type of id will cast to string after getting id's from expandedItems object
             //save type of id from record format
             if (!isEmpty(expandedItems)) {
-                typeFunction = items.at(0) && typeof items.at(0).get(cfg.keyProperty) === 'number' ? Number : String;
+                let item = items && items.at(0);
+                typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
 
                 for (var i in expandedItems) {
                     if (expandedItems.hasOwnProperty(i)) {

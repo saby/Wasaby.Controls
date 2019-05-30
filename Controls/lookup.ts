@@ -36,6 +36,6 @@ export {
    ItemTemplate,
    Opener,
    ButtonItemTemplate,
-   PlaceholderChooser
+   PlaceholderChooser,
    Link
-}
+};

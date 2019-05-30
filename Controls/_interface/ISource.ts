@@ -55,7 +55,7 @@ export default interface ISource {
  * <pre>
  *    <Controls.list:View
  *       source = "{{_source}}"
- *       keyProperty="id">
+ *       keyProperty="key">
  *    </Controls.list:View>
  * </pre>
  * <pre>

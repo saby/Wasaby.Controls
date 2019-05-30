@@ -1,13 +1,13 @@
 define([
-   'Controls/_EditableArea/Templates/Editors/Base'
+   'Controls/editableArea'
 ], function(
-   EditAtPlaceTemplate
+   editableArea
 ) {
    'use strict';
 
    describe('Controls.EditAtPlace', function() {
       it('_editorValueChangeHandler', function() {
-         var instance = new EditAtPlaceTemplate();
+         var instance = new editableArea.Base();
          instance._notify = function(eventName, eventArgs, eventOptions) {
             assert.equal(eventName, 'valueChanged');
             assert.instanceOf(eventArgs, Array);

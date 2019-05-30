@@ -30,7 +30,7 @@ var MoreButton = Control.extend([], {
             }
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
-        selectorOpener.open({
+        selectorOpener.open(Merge({
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate,
@@ -42,7 +42,7 @@ var MoreButton = Control.extend([], {
                 }
             },
             opener: this
-        });
+        }, selectorTemplate.popupOptions || {}));
     },
 
     _selectorDialogResult: function(event, items) {
