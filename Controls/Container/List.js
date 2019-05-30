@@ -31,7 +31,7 @@ define('Controls/Container/List',
                   filter: merge({}, options.filter),
                   searchParam: options.searchParam,
                   minSearchLength: options.minSearchLength,
-                  source: _private.getOriginSource(options.source),
+                  source: _private.getCorrectSource(options.source),
                   navigation: options.navigation,
                   sorting: options.sorting,
                   searchDelay: options.searchDelay,
@@ -217,8 +217,8 @@ define('Controls/Container/List',
                self._searchController = null;
             }
          },
-         
-         getOriginSource: function(source) {
+
+         getCorrectSource: function(source) {
             //костыль до перевода Suggest'a на Search/Controller,
             //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
             //После этого этот модуль можно будет удалить.
@@ -226,11 +226,16 @@ define('Controls/Container/List',
                return source._$target;
             }
 
+            return source;
+         },
+         
+         getOriginSource: function(source) {
             // In Selector/Suggest as source can be set historySource, in this case history should work differently
             if (source instanceof historyMod.Source) {
                return source.originSource;
             }
-            return source;
+
+            return _private.getCorrectSource(source);
          }
       };
       
