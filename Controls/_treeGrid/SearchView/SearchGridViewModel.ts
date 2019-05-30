@@ -7,7 +7,7 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         return new SearchViewModel(cfg);
     },
     _calcRowIndex(current) {
-        if (current.breadCrumbs) {
+        if (current.breadCrumbs && current.index !== -1) {
             return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
         }
         return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
