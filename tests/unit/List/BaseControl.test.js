@@ -3006,7 +3006,11 @@ define([
                      assert.equal(items.getCount(), 1);
                      assert.equal(items.at(0).get('id'), 1);
                      assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
-                     resolve();
+
+                     baseCtrl.reloadItem('noRecordWithThisKey', null, true, 'query').addCallback(function (items) {
+                        assert.isTrue(items.getCount() === 0);
+                        resolve();
+                     });
                   });
                });
             });
