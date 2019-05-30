@@ -1,15 +1,15 @@
-define('Controls/interface/IClick', [
+define('Controls/_buttons/interface/IClick', [
 ], function() {
 
    /**
     * Click event interface.
     *
-    * @interface Controls/interface/IClick
+    * @interface Controls/_buttons/interface/IClick
     * @public
     */
 
    /**
-    * @event Controls/interface/IClick#click Occurs when item was clicked.
+    * @event Controls/_buttons/interface/IClick#click Occurs when item was clicked.
     * @remark If button with readOnly set to true then event does not bubble.
     * @example
     * Button with style 'primary' viewMode 'button' and icon 'icon-Send'. If user click to button then document send.
