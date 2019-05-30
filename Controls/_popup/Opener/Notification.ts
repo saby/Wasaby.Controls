@@ -109,11 +109,15 @@ import {parse as load} from 'Core/library';
           * @see close
           */
          open: function(popupOptions) {
-            if (isNewEnvironment()) {
-               Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/popupTemplate:NotificationController');
-            } else {
-               _private.compatibleOpen(this, popupOptions);
-            }
+            return new Promise((resolve) => {
+                if (isNewEnvironment()) {
+                    Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/popupTemplate:NotificationController')
+                        .then(popupId => resolve(popupId));
+                } else {
+                    _private.compatibleOpen(this, popupOptions);
+                    resolve();
+                }
+            });
          },
          close: function() {
             Notification.superclass.close.apply(this, arguments);
