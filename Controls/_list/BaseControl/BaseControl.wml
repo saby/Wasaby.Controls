@@ -108,7 +108,7 @@
     <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger" style="{{_options.task123456789 ? ('bottom: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger" style="{{_options.task1177135045 ? ('bottom: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
             <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
             <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
         </ws:if>
@@ -160,7 +160,7 @@
         <ws:if data="{{_needScrollCalculation}}">
             <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
             <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger" style="{{_options.task123456789 ? ('top: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger" style="{{_options.task1177135045 ? ('top: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">

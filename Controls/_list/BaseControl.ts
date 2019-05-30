@@ -153,7 +153,7 @@ var _private = {
                     self._virtualScroll.ItemsCount = listModel.getCount();
 
                     // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-                    if (!self._options.task123456789) {
+                    if (!self._options.task1177135045) {
                         self._virtualScroll.updateItemsIndexes('down');
                     }
                     _private.applyVirtualScroll(self);
@@ -392,7 +392,7 @@ var _private = {
     },
 
     onScrollLoadEdgeStart: function(self, direction) {
-        if (self._options.task123456789) {
+        if (self._options.task1177135045) {
             if (self._virtualScroll) {
                 _private.updateVirtualWindow(self, direction)
             }
@@ -421,7 +421,7 @@ var _private = {
     updateVirtualWindow: function(self, direction) {
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        if (self._options.task123456789) {
+        if (self._options.task1177135045) {
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
             self._checkShouldLoadToDirection = true;
@@ -448,7 +448,7 @@ var _private = {
     onScrollLoadEdge: function(self, direction) {
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        if (self._options.task123456789) {
+        if (self._options.task1177135045) {
             if (self._options.navigation && self._options.navigation.view === 'infinity') {
                 _private.loadToDirectionIfNeed(self, direction);
                 if (self._virtualScroll) {
@@ -467,14 +467,14 @@ var _private = {
     },
 
     onScrollListEdge: function(self, direction) {
-        if (self._options.task123456789) {
+        if (self._options.task1177135045) {
             self._loadTriggerVisibility[direction] = true;
             _private.onScrollLoadEdge(self, direction);
         }
     },
 
     onScrollListEdgeStop: function (self, direction) {
-        if (self._options.task123456789) {
+        if (self._options.task1177135045) {
             self._loadTriggerVisibility[direction] = false;
         }
     },
@@ -505,8 +505,9 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-// https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        self._children.ScrollEmitter.startRegister(triggers, self._options.task123456789);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
     },
 
     onScrollShow: function(self) {
