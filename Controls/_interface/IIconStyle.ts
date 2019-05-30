@@ -8,7 +8,9 @@ export interface IIconStyleOptions {
  * @interface Controls/_interface/IIconStyle
  * @public
  */
-
+export default interface IIIconStyle {
+   readonly '[Controls/_interface/IIIconStyle]': boolean;
+}
 /**
  * @name Controls/_interface/IIconStyle#iconStyle
  * @cfg {Enum} Icon display style.
@@ -31,6 +33,3 @@ export interface IIconStyleOptions {
  * </pre>
  * @see Icon
  */
-export default interface IIIconStyle {
-   readonly '[Controls/_interface/IIIconStyle]': boolean;
-}

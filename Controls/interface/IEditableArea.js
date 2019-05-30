@@ -30,7 +30,7 @@ define('Controls/interface/IEditableArea', [
     * The following example creates EditableArea and shows how to handle the event.
     * WML:
     * <pre>
-    *    <Controls.EditableArea on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -60,7 +60,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to cancel the end of the editing if certain condition is met.
     * WML:
     * <pre>
-    *    <Controls.EditableArea on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -77,7 +77,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to handle the event asynchronously.
     * WML:
     * <pre>
-    *    <Controls.EditableArea on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -100,7 +100,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to hide and show an image based on the state of editing.
     * WML:
     * <pre>
-    *    <Controls.EditableArea on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
     *    <ws:if data="{{_imgVisible}}">
     *       <img src="/media/examples/frog.png" alt="Frog"/>
     *    </ws:if>
@@ -125,7 +125,7 @@ define('Controls/interface/IEditableArea', [
     * @default false
     * @example
     * <pre>
-    *    <Controls.EditableArea toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -139,7 +139,7 @@ define('Controls/interface/IEditableArea', [
     * You are not limited to these 2 styles, you can pass your own string. Then we will set class 'controls-EditableArea_isEditing_style_<your_class>' on the container of EditableArea and you can use it to write your own CSS.
     * @example
     * <pre>
-    *    <Controls.EditableArea style="withBackground" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View style="withBackground" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -148,7 +148,7 @@ define('Controls/interface/IEditableArea', [
     * @cfg {Types/entity:Record} Record with initial data.
     * @example
     * <pre>
-    *    <Controls.EditableArea editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View editObject="{{_editObject}}" />
     * </pre>
     * @see editObjectChanged
     */
@@ -161,7 +161,7 @@ define('Controls/interface/IEditableArea', [
     * This option is useful when you want to start editing immediately and do not want to wait for the component to mount. For example, if you want to open modal window and edit something in it, this option will help you avoid blinking.
     * @example
     * <pre>
-    *    <Controls.EditableArea editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -171,15 +171,15 @@ define('Controls/interface/IEditableArea', [
     * @remark
     * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/_EditableArea/Templates/Editors/Base Controls/_EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
-    * Using Controls._EditableArea.Templates.Editors.Base:
+    * Using Controls.editableArea:Base:
     * <pre>
-    *     <Controls.EditableArea editObject="{{_editObject}}">
-    *        <Controls._EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
+    *     <Controls.editableArea:View editObject="{{_editObject}}">
+    *        <Controls.editableArea:Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
     *              <Controls.input:Text />
     *           </ws:editorTemplate>
-    *        </Controls._EditableArea.Templates.Editors.Base>
-    *     </Controls.EditableArea>
+    *        </Controls.editableArea:Base>
+    *     </Controls.editableArea:View>
     * </pre>
     * Using custom template:
     * <pre>
@@ -193,9 +193,9 @@ define('Controls/interface/IEditableArea', [
     *          </ws:else>
     *       </div>
     *    </ws:template>
-    *    <Controls.EditableArea editObject="{{_editObject}}">
+    *    <Controls.editableArea:View editObject="{{_editObject}}">
     *       <ws:partial template="editingTemplate" scope="{{content}}" />
-    *    </Controls.EditableArea>
+    *    </Controls.editableArea:View>
     * </pre>
     * @see Controls/_EditableArea/Templates/Editors/Base
     */
@@ -207,7 +207,7 @@ define('Controls/interface/IEditableArea', [
     * The following example creates EditableArea and shows how to start editing.
     * WML:
     * <pre>
-    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -226,7 +226,7 @@ define('Controls/interface/IEditableArea', [
     * The following example creates EditableArea and shows how to end editing and discard changes.
     * WML:
     * <pre>
-    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -245,7 +245,7 @@ define('Controls/interface/IEditableArea', [
     * The following example creates EditableArea and shows how to end editing and commit changes.
     * WML:
     * <pre>
-    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
+    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>

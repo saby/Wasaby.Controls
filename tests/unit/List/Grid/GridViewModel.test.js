@@ -139,14 +139,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             }, 1, 1), '1_1_0');
          });
-         it('calcResultsRowIndex', function() {
-            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
-               resultsPosition: 'top'
-            }, cfg))), 1, 'Invalid results row index than "resultsPosition" equals "top".');
-            assert.equal(gridMod.GridViewModel._private.calcResultsRowIndex(new gridMod.GridViewModel(cMerge({
-               resultsPosition: 'bottom'
-            }, cfg))), 6, 'Invalid results row index than "resultsPosition" equals "bottom".');
-         });
+
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -565,14 +558,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                 gridViewModel = new gridMod.GridViewModel(cfg),
                 oldVersion = gridViewModel._model._prefixItemVersion,
-                initialStatus = GridLayoutUtil.isPartialSupport;
+                initialStatus = GridLayoutUtil.isPartialGridSupport;
 
-            GridLayoutUtil.isPartialSupport = true;
+            GridLayoutUtil.isPartialGridSupport = function() { return true; };
 
             gridViewModel._model._notify('onListChange', 'collectionChanged');
             assert.equal(oldVersion + 1, gridViewModel._model._prefixItemVersion);
 
-            GridLayoutUtil.isPartialSupport = initialStatus;
+            GridLayoutUtil.isPartialGridSupport = initialStatus;
          });
 
          it('getItemColumnCellClasses', function() {
@@ -1060,9 +1053,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             let
                 called = false,
                 nativeFn = gridViewModel._model._setEditingItemData,
-                initialStatus = GridLayoutUtil.isPartialSupport;
+                initialStatus = GridLayoutUtil.isPartialGridSupport;
 
-            GridLayoutUtil.isPartialSupport = true;
+            GridLayoutUtil.isPartialGridSupport = function() { return true };
 
             gridViewModel._model._setEditingItemData = (iData) => {
                called = true;
@@ -1074,7 +1067,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             assert.isTrue(called);
 
-            GridLayoutUtil.isPartialSupport = initialStatus;
+            GridLayoutUtil.isPartialGridSupport = initialStatus;
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 

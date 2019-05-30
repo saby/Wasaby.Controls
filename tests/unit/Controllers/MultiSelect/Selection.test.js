@@ -2,13 +2,13 @@
  * Created by kraynovdo on 21.03.2018.
  */
 define([
-   'Controls/Controllers/Multiselect/Selection',
-   'Types/collection'
+   'Types/collection',
+   'Controls/operations'
 ], function(
-   Selection,
-   collection
+   collection,
+   operations
 ) {
-   describe('Controls.Controllers.Multiselect.Selection', function() {
+   describe('Controls.operations:Selection', function() {
       var
          cfg,
          selection,
@@ -40,7 +40,7 @@ define([
             items: items,
             keyProperty: 'qwerty'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selection = selectionInstance.getSelection();
          assert.equal(cfg.selectedKeys, selection.selected);
          assert.equal(cfg.excludedKeys, selection.excluded);
@@ -52,7 +52,7 @@ define([
             excludedKeys: [],
             items: items
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selection = selectionInstance.getSelection();
          assert.equal(cfg.selectedKeys, selection.selected);
          assert.equal(cfg.excludedKeys, selection.excluded);
@@ -63,7 +63,7 @@ define([
             excludedKeys: [2],
             items: items
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selection = selectionInstance.getSelection();
          assert.equal(cfg.selectedKeys, selection.selected);
          assert.equal(cfg.excludedKeys, selection.excluded);
@@ -74,7 +74,7 @@ define([
             excludedKeys: [2],
             items: items
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selection = selectionInstance.getSelection();
          assert.equal(cfg.selectedKeys, selection.selected);
          assert.equal(cfg.excludedKeys, selection.excluded);
@@ -88,7 +88,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.select([1, 2, 3]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
@@ -102,7 +102,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.select([4, 5, 6, 7]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selection.selected, 'Constructor: wrong field values');
@@ -116,7 +116,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.select([2, 4]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([1, 2, 3, 4], selection.selected, 'Constructor: wrong field values');
@@ -130,7 +130,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.select([2, 4]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -144,7 +144,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.select([null]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -160,7 +160,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.unselect([1, 3]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([2], selection.selected, 'Constructor: wrong field values');
@@ -174,7 +174,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.unselect([1, 2, 3]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
@@ -188,7 +188,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.unselect([1, 2, 3]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -202,7 +202,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.unselect([1, 2]);
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -218,7 +218,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.selectAll();
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -231,7 +231,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.unselectAll();
          selection = selectionInstance.getSelection();
          assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
@@ -246,7 +246,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.toggleAll();
          selection = selectionInstance.getSelection();
          assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
@@ -259,7 +259,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.toggleAll();
          selection = selectionInstance.getSelection();
          assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
@@ -272,7 +272,7 @@ define([
             items: items,
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.toggleAll();
          selection = selectionInstance.getSelection();
          assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
@@ -290,7 +290,7 @@ define([
             }),
             keyProperty: 'id'
          };
-         selectionInstance = new Selection(cfg);
+         selectionInstance = new operations.Selection(cfg);
          selectionInstance.setItems(items);
          assert.equal(selectionInstance._items, items);
       });

@@ -12,7 +12,7 @@
       />
    <!--</div>-->
    <div if="{{ _headerType === _HEADER_TYPES.link }}" class="controls-PeriodDialog__header-period">
-      <Controls.Input.Date.LinkView
+      <Controls.dateRange:LinkView
          startValue="{{_headerRangeModel.startValue}}"
          endValue="{{_headerRangeModel.endValue}}"
          emptyCaption="{{_options.emptyCaption}}"

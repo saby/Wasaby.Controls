@@ -22,6 +22,7 @@ import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
+import {ICrud} from "Types/source";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -463,7 +464,7 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-
+        
         self._children.ScrollEmitter.startRegister(triggers);
     },
 
@@ -683,8 +684,8 @@ var _private = {
                 rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
+            self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
@@ -726,6 +727,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
+          self._listViewModel.setMenuState('shown');
           require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
@@ -761,6 +763,7 @@ var _private = {
 
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._actionMenuIsShown = false;
@@ -898,6 +901,20 @@ var _private = {
             if (self._currentPage === self._knownPagesCount)
                 return self._knownPagesCount + 1;
         }
+    },
+
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+        return new SourceController({
+            source: source,
+            navigation: navigation,
+            keyProperty: keyProperty
+        })
+    },
+
+    checkRequiredOptions: function(options) {
+        if (options.keyProperty === undefined) {
+            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
+        }
     }
 };
 
@@ -980,6 +997,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
+        _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
@@ -1013,11 +1031,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             if (newOptions.source) {
-                self._sourceController = new SourceController({
-                    source: newOptions.source,
-                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
-                    keyProperty: newOptions.keyProperty
-                });
+                self._sourceController = _private.getSourceController(newOptions);
 
 
                 if (receivedData) {
@@ -1164,10 +1178,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
-        var items = this._listViewModel.getItems();
-        var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        var reloadItemDeferred;
-        var filter;
+        const items = this._listViewModel.getItems();
+        const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        const sourceController = _private.getSourceController(this._options);
+
+        let reloadItemDeferred;
+        let filter;
+        let itemsCount;
 
         function loadCallback(item):void {
             if (replaceItem) {
@@ -1184,17 +1201,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
-            reloadItemDeferred = this._sourceController.load(filter).addCallback((items) => {
-                if (items.getCount() && items.getCount() === 1) {
+            reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
+                itemsCount = items.getCount();
+
+                if (itemsCount === 1) {
                     loadCallback(items.at(0));
+                } else if (itemsCount > 1) {
+                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    throw new Error('BaseControl::reloadItem query returns wrong amount of items for reloadItem call with key: ' + key);
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
         } else {
-            reloadItemDeferred = this._sourceController.read(key, readMeta).addCallback((item) => {
-                loadCallback(item);
+            reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
+                if (item) {
+                    loadCallback(item);
+                } else {
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                }
                 return item;
             });
         }
@@ -1251,10 +1276,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
 
-        //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
-            if (this._options.loading) {
+            if (this._options.loading && this._loadingState === null) {
                 _private.showIndicator(this);
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
@@ -1331,8 +1355,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left') {
+        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
             this._children.itemActions.updateItemActions(itemData.item);
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
+            itemData.itemActions = this.getViewModel().getItemActions(itemData.item);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);

@@ -1,10 +1,8 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
 import EventProxy from './Mixin/EventProxy';
-import DateRangeModel = require('Controls/Date/model/DateRange');
+import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
 import {MonthModel} from 'Controls/calendar';
-import quantumUtils = require('Controls/Date/Utils/DateRangeQuantum');
-import DateControlsUtils = require('Controls/Calendar/Utils');
 import dateUtils = require('Controls/Utils/Date');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';
@@ -55,7 +53,21 @@ const _private = {
 
         if (displayedContainer) {
             scrollToElement(displayedContainer);
-        } else {
+            return true;
+        }
+        return false;
+    },
+
+    updateScrollAfterViewModification: function(self) {
+        if (self._monthScrollTo) {
+            if (_private.updateScrollPosition(self, self._monthScrollTo)) {
+                self._monthScrollTo = null;
+            }
+        }
+    },
+
+    _scrollToMonth: function(self, month) {
+        if (!_private.updateScrollPosition(self, month)) {
             self._notify('monthChanged', [month]);
         }
     }
@@ -92,10 +104,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _afterMount: function(options) {
-        if (this._monthScrollTo) {
-            _private.updateScrollPosition(this, this._monthScrollTo);
-            this._monthScrollTo = null;
-        }
+        _private.updateScrollAfterViewModification(this);
     },
 
     _beforeUpdate: function (options) {
@@ -103,10 +112,11 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _afterUpdate: function(options) {
-        if (this._monthScrollTo) {
-            _private.updateScrollPosition(this, this._monthScrollTo);
-            this._monthScrollTo = null;
-        }
+        _private.updateScrollAfterViewModification(this);
+    },
+
+    _drawItemsHandler: function() {
+        _private.updateScrollAfterViewModification(this);
     },
 
     _beforeUnmount: function () {
@@ -159,12 +169,24 @@ var Component = BaseControl.extend([EventProxy], {
         _private.setMonth(this, date);
     },
 
+    _wheelHandler: function(event) {
+        let year;
+
+        if (event.nativeEvent.deltaY > 0) {
+            year = this._month.getFullYear() + 1;
+        } else {
+            year = this._month.getFullYear() - 1;
+        }
+        _private._scrollToMonth(this, new Date(year, 0, 1));
+        event.preventDefault();
+    },
+
     _dateToString: function(date) {
         return datePopupUtils.dateToDataString(date);
     },
 
     _scrollToMonth: function(e, year, month) {
-        _private.updateScrollPosition(this, new Date(year, month));
+        _private._scrollToMonth(this, new Date(year, month));
     },
 
     _formatMonth: function(month) {

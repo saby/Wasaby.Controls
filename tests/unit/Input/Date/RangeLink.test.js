@@ -2,25 +2,23 @@ define([
    'Core/core-clone',
    'Core/core-merge',
    'Controls/dateRange',
-   'Controls/Date/model/DateRange',
    'unit/Calendar/Utils'
 ], function(
    cClone,
    cMerge,
    dateRange,
-   DateRange,
    calendarTestUtils
 ) {
    'use strict';
 
    const options = {
-      rangeModel: new DateRange(),
+      rangeModel: new dateRange.DateRangeModel(),
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/RangeLink', function() {
+   describe('Controls/_dateRange/Selector', function() {
       describe('_openDialog', function() {
          it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(dateRange.Selector, options);

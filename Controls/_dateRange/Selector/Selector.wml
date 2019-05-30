@@ -1,5 +1,5 @@
 <div class="controls-DateRangeSelector">
-      <Controls.Input.Date.LinkView
+      <Controls._dateRange.LinkView
          scope="{{_options}}"
          startValue="{{ _rangeModel.startValue }}"
          endValue="{{ _rangeModel.endValue }}"

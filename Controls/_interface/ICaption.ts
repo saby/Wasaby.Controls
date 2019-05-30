@@ -9,7 +9,9 @@ export interface ICaptionOptions {
  * @public
  * @author Михайловский Д.С.
  */
-
+export default interface ICaption {
+   readonly '[Controls/_interface/ICaption]': boolean;
+}
 /**
  * @name Controls/_interface/ICaption#caption
  * @cfg {String} Control caption text.
@@ -30,6 +32,3 @@ export interface ICaptionOptions {
  *    </span>
  * </pre>
  */
-export default interface ICaption {
-   readonly '[Controls/_interface/ICaption]': boolean;
-}

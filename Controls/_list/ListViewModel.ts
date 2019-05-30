@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
-import {isPartialSupport} from 'Controls/_grid/utils/GridLayoutUtil'
+import {isPartialGridSupport} from 'Controls/_grid/utils/GridLayoutUtil'
 
 /**
  *
@@ -67,6 +67,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
+    _menuState: '',
 
     constructor: function(cfg) {
         var self = this;
@@ -112,11 +113,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
     },
+    setMenuState(state: string): void {
+        this._menuState = state;
+    },
     getItemDataByItem: function() {
         var
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
             drawnActions;
+        itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -186,7 +191,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
-        if (isPartialSupport && this._hoveredItem === item) {
+        // todo removed by https://online.sbis.ru/opendoc.html?guid=8f5d1d89-dde4-476d-a100-235b4e4b00b9
+        if (isPartialGridSupport() && this._hoveredItem === item) {
             version = 'HOVERED_' + version;
         }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
@@ -202,7 +208,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         this._markedKey = key;
         this._updateMarker(key);
-        this._nextModelVersion(true);
+        this._nextModelVersion(true, 'markedKeyChanged');
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
@@ -293,7 +299,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
-            this._nextModelVersion(true);
+            this._nextModelVersion(true, 'activeItemChanged');
         }
     },
 

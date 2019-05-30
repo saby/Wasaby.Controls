@@ -1,9 +1,9 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
-import IMonth = require('Controls/Date/interface/IMonth');
+import IMonth from './interfaces/IMonth';
 import Slider from './MonthSlider/Slider';
-import calendarUtils = require('Controls/Calendar/Utils');
+import {Utils as calendarUtils} from 'Controls/dateRange';
 import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 

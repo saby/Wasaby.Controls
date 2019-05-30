@@ -1,11 +1,14 @@
-import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
+import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import {calcFooterRowIndex} from './utils/RowIndexUtil';
+import {
+    getFooterIndex,
+    getIndexByDisplayIndex, getIndexById, getIndexByItem,
+    getResultsIndex
+} from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -21,7 +24,7 @@ var
                 (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
                 colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
         },
-        getCellStyle: function(itemData, currentColumn, colspan, isNotFullGridSupport) {
+        getCellStyle: function(itemData, currentColumn, colspan) {
            var
                style = '';
            if (currentColumn.styleForLadder) {
@@ -31,7 +34,6 @@ var
                 style += _private.getColspan(
                    itemData.multiSelectVisibility,
                    currentColumn.columnIndex,
-                   isNotFullGridSupport,
                    itemData.columns.length
                 );
            }
@@ -40,7 +42,6 @@ var
         getColspan(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
-           isNotFullGridSupport: boolean,
            columnsLength: number,
 
            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -51,17 +52,17 @@ var
 
           if (columnIndex === multiselectOffset) {
               if (isBreadCrumbs) {
-                 if (GridLayoutUtil.isNoSupport) {
+                 if (GridLayoutUtil.isNoGridSupport()) {
                     return ' colspan: 1;';
-                 } else if (GridLayoutUtil.isPartialSupport) {
+                 } else if (GridLayoutUtil.isPartialGridSupport()) {
                         return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
                  } else {
                     return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
               } else {
-                 if (GridLayoutUtil.isNoSupport) {
+                 if (GridLayoutUtil.isNoGridSupport()) {
                     return ` colspan: ${columnsLength - multiselectOffset};`;
-                 } else if (GridLayoutUtil.isPartialSupport) {
+                 } else if (GridLayoutUtil.isPartialGridSupport()) {
                     return ` -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
                  } else {
                     return ` grid-column: ${multiselectOffset+1} / ${columnsLength + 1};`;
@@ -344,19 +345,14 @@ var
             return styles;
         },
 
-        calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
-        },
-
         getFooterStyles: function (self): string {
             let styles = '';
 
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 let
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
-                    hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
-                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader(), !!self._options.emptyTemplate);
+                    rowIndex = self._getRowIndexHelper().getFooterIndex();
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -368,7 +364,7 @@ var
             let
                 styles = '';
 
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 let
                     multiselectOffset = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
                     rowIndex = 0;
@@ -440,7 +436,7 @@ var
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
-                if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialSupport){
+                if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialGridSupport()){
                     this._nextModelVersion();
                 }
                 this._nextVersion();
@@ -483,7 +479,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i], GridLayoutUtil.isNoSupport));
+                result.push(this._prepareCrossBrowserColumn(columns[i], GridLayoutUtil.isNoGridSupport()));
             }
             return result;
         },
@@ -592,14 +588,13 @@ var
                headerColumn.style = _private.getColspan(
                   this._options.multiSelectVisibility,
                   columnIndex,
-                  Env.detection.isNotFullGridSupport,
                   this._headerColumns.length,
                   true
                );
             }
 
             // For browsers with partial grid support need to set its grid-row and grid-column
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
             }
 
@@ -633,7 +628,6 @@ var
             return _private.getColspan(
                this._options.multiSelectVisibility,
                0,
-               Env.detection.isNotFullGridSupport,
                this._columns.length
             );
         },
@@ -689,8 +683,8 @@ var
             resultsColumn.cellClasses = cellClasses;
 
             // For browsers with partial grid support need to set its grid-row and grid-column
-            if (GridLayoutUtil.isPartialSupport) {
-                resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
 
@@ -882,12 +876,30 @@ var
 
         _calcRowIndex: function(current) {
             if (current.isGroup) {
-                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
             } else if (current.index !== -1) {
-                return RowIndexUtil.calcRowIndexByKey(current.key,
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexById(current.key);
             }
+        },
+
+        _getRowIndexHelper() {
+            let
+                display = this.getDisplay(),
+                hasHeader = !!this.getHeader(),
+                resultsPosition = this.getResultsPosition(),
+                hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            return {
+                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
+                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
+            };
+        },
+
+        setMenuState(state: string): void {
+            this._model.setMenuState(state);
         },
 
         getItemDataByItem: function(dispItem) {
@@ -900,9 +912,9 @@ var
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isFullGridSupport = GridLayoutUtil.isFullSupport;
-            current.isPartialGridSupport = GridLayoutUtil.isPartialSupport;
-            current.isNoGridSupport = GridLayoutUtil.isNoSupport;
+            current.isFullGridSupport = GridLayoutUtil.isFullGridSupport;
+            current.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+            current.isNoGridSupport = GridLayoutUtil.isNoGridSupport;
 
             current.columnScroll = this._options.columnScroll;
 
@@ -922,7 +934,7 @@ var
 
             current.rowIndex = this._calcRowIndex(current);
 
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.prepareItemDataForPartialSupport(this, current);
             }
 
@@ -969,6 +981,7 @@ var
                     currentColumn = {
                         item: current.item,
                         style: current.style,
+                        isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
@@ -1009,7 +1022,7 @@ var
                 }
 
                 // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-                if (GridLayoutUtil.isPartialSupport || current.columnScroll) {
+                if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 } else {
                     currentColumn.gridCellStyles = '';
@@ -1089,7 +1102,7 @@ var
 
         _setEditingItemData: function(itemData) {
             let data = itemData ? itemData : this._model._editingItemData;
-            if (GridLayoutUtil.isPartialSupport && data) {
+            if (GridLayoutUtil.isPartialGridSupport() && data) {
                 if (!data.rowIndex) {
                     data.rowIndex = data.index + 1;
                 }
@@ -1216,15 +1229,15 @@ var
         },
 
         isFullGridSupport: function():boolean{
-            return GridLayoutUtil.isFullSupport;
+            return GridLayoutUtil.isFullGridSupport();
         },
 
         isPartialGridSupport: function():boolean{
-            return GridLayoutUtil.isPartialSupport;
+            return GridLayoutUtil.isPartialGridSupport();
         },
 
         isNoGridSupport: function():boolean{
-            return GridLayoutUtil.isNoSupport;
+            return GridLayoutUtil.isNoGridSupport();
         },
 
         getEditingRowStyles: function (gridCells: Array<HTMLElement>, rowIndex): string {

@@ -249,11 +249,11 @@ define([
          [{
             wheelDelta: 1,
             options: {},
-            year: currentYear - 1
+            year: currentYear + 1
          }, {
             wheelDelta: -1,
             options: {},
-            year: currentYear + 1
+            year: currentYear - 1
          }, {
             wheelDelta: 1,
             options: yearOnlyOptions,

@@ -30,6 +30,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @remark
  * The item can have an property 'title' and 'showType'. 'Title' determine item caption. 'ShowType' determine where display item, 0 - show in menu,
  * 1 - show on menu and toolbar, 2 - show in toolbar.
+ * For readOnly item, set value true at field readOnly.
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
  * <pre>
@@ -217,6 +218,7 @@ var _private = {
             }
         }
         return {
+            opener: self,
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
             className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme +' ' + (item.get('popupClassName') || ''),

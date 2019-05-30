@@ -1,6 +1,6 @@
 <div>
    <div class="demo-wrapper">
-      <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+      <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
          <ws:content>
             <Controls.list:View
                   stickyFooter = "{{true}}"
@@ -17,13 +17,13 @@
                </ws:navigation>
             </Controls.list:View>
          </ws:content>
-      </Controls.Container.Scroll>
+      </Controls.scroll:Container>
    </div>
 
    <div class = "demo-separator"></div>
 
    <div class="demo-wrapper">
-         <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+         <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
             <ws:content>
                <Controls.grid:View
                        keyProperty="id"
@@ -44,7 +44,7 @@
                         <ws:Object title=""/>
                         <ws:Object>
                            <ws:template name="infoColumn">
-                              <Controls.Input.Dropdown
+                              <Controls.dropdown:Input
                                  keyProperty="key"
                                  displayProperty="title"
                                  multiselect="{{ false }}"
@@ -58,6 +58,6 @@
                   </ws:header>
                </Controls.grid:View>
             </ws:content>
-         </Controls.Container.Scroll>
+         </Controls.scroll:Container>
    </div>
 </div>

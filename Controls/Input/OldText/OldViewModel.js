@@ -1,6 +1,6 @@
 define('Controls/Input/OldText/OldViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/_input/resources/InputRender/BaseViewModel'
    ],
    function(
       BaseViewModel

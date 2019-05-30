@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Input/resources/RenderHelper'
+      'Controls/_input/resources/RenderHelper'
    ],
    function(RenderHelper) {
-      
+
       'use strict';
-      
+
       describe('Controls.Input.RenderHelper', function() {
          var
             value = '0123456789',
@@ -23,51 +23,51 @@ define(
             inputType, splitInputValue;
 
          it('getAdaptiveInputType', function() {
-            
+
             //Ввод с клавиатуры.
             inputType = RenderHelper.getAdaptiveInputType('insertText', emptySelection);
             assert.equal(inputType, 'insert');
-            
+
             //Вставка из буфера.
             inputType = RenderHelper.getAdaptiveInputType('insertFromPaste', emptySelection);
             assert.equal(inputType, 'insert');
-            
+
             //Перемещение.
             inputType = RenderHelper.getAdaptiveInputType('insertFromDrop', emptySelection);
             assert.equal(inputType, 'insertFromDrop');
-            
+
             //Удаление с помощью клавиши backspace.
             inputType = RenderHelper.getAdaptiveInputType('deleteContentBackward', emptySelection);
             assert.equal(inputType, 'deleteBackward');
-            
+
             //Удаление с помощью клавиши delete.
             inputType = RenderHelper.getAdaptiveInputType('deleteContentForward', emptySelection);
             assert.equal(inputType, 'deleteForward');
-            
+
             //Удаление с помощью сочетания клавиш ctrl + backspace.
             inputType = RenderHelper.getAdaptiveInputType('deleteWordBackward', emptySelection);
             assert.equal(inputType, 'deleteBackward');
-            
+
             //Удаление с помощью сочетания клавиш ctrl + delete.
             inputType = RenderHelper.getAdaptiveInputType('deleteWordForward', emptySelection);
             assert.equal(inputType, 'deleteForward');
-            
+
             //Удаление с помощью клавиши backspace c выделением.
             inputType = RenderHelper.getAdaptiveInputType('deleteContentBackward', testSelection);
             assert.equal(inputType, 'delete');
-            
+
             //Удаление с помощью клавиши delete c выделением.
             inputType = RenderHelper.getAdaptiveInputType('deleteContentForward', testSelection);
             assert.equal(inputType, 'delete');
-            
+
             //Удаление с помощью сочетания клавиш ctrl + backspace c выделением.
             inputType = RenderHelper.getAdaptiveInputType('deleteWordBackward', testSelection);
             assert.equal(inputType, 'delete');
-            
+
             //Удаление с помощью сочетания клавиш ctrl + delete c выделением.
             inputType = RenderHelper.getAdaptiveInputType('deleteWordForward', testSelection);
             assert.equal(inputType, 'delete');
-            
+
          });
 
          it('getInputType', function() {

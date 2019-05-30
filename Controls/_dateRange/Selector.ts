@@ -2,8 +2,8 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
 import IInputSelectable from './interfaces/IInputSelectable';
-import DateRangeModel = require('Controls/Date/model/DateRange');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import DateRangeModel from './DateRangeModel';
+import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
 
 /**
@@ -53,6 +53,7 @@ var Component = BaseControl.extend({
             isCompoundTemplate: true,
             horizontalAlign: {side: 'right'},
             corner: {horizontal: 'left'},
+            fittingMode: 'overflow',
             eventHandlers: {
                 onResult: this._onResult.bind(this)
             },

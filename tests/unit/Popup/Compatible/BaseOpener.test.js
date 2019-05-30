@@ -302,7 +302,8 @@ define(
             let newConfig = {
                width: 800,
                maxWidth: 1200,
-               minWidth: 800
+               minWidth: 800,
+               componentName: 'floatArea'
             };
             newConfig.templateOptions = config.templateOptions;
             newConfig.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
@@ -324,7 +325,7 @@ define(
             assert.equal(newConfig.componentOptions.templateOptions.stackMinWidth, newConfig.minWidth);
             assert.equal(newConfig.componentOptions.templateOptions.stackMaxWidth, 1200);
             assert.equal(newConfig.componentOptions.templateOptions.stackWidth, newConfig.width);
-            assert.isFalse(newConfig.hasOwnProperty('maxWidth'));
+            assert.equal(newConfig.maxWidth, 800);
          });
 
          it('_prepareConfigFromNewToOld', function() {

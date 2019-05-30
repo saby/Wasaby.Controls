@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Input/Suggest/SuggestStyles'
+      'Controls/_suggest/Input/Styles'
    ],
    function() {}
 );
