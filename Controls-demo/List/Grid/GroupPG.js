@@ -32,7 +32,7 @@ define('Controls-demo/List/Grid/GroupPG',
                     groupTemplate: {
                         value: 'default',
                         items: [
-                            {id: 1, title: 'default', template: 'Controls/grids:GroupTemplate'},
+                            {id: 1, title: 'default', template: 'Controls/grid:GroupTemplate'},
                             {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'},
                             {id: 3, title: 'without expander', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander'},
                         ]
@@ -51,7 +51,7 @@ define('Controls-demo/List/Grid/GroupPG',
                     displayProperty: 'title',
                     groupingKeyCallback: this._groupByGenre,
                     dataLoadCallback: this._dataLoadCallback,
-                    groupTemplate: 'Controls/grids:GroupTemplate'
+                    groupTemplate: 'Controls/grid:GroupTemplate'
                 };
                 this._metaData = config[this._content].properties['ws-config'].options;
             },

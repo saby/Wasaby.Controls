@@ -1,11 +1,11 @@
 define('Controls-demo/Input/Date/RangeLinkLiteCustom', [
    'Core/Control',
-   'Controls/Calendar/Utils',
+   'Controls/dateRange',
    'wml!Controls-demo/Input/Date/RangeLinkLiteCustom',
    'wml!Controls-demo/Input/Date/RangeLinkLiteCustomMonth'
 ], function(
    BaseControl,
-   dateControlsUtils,
+   dateRange,
    template
 ) {
    'use strict';
@@ -17,7 +17,7 @@ define('Controls-demo/Input/Date/RangeLinkLiteCustom', [
       _endValue: new Date(2017, 1, 0),
 
       captionFormatter: function(startValue, endValue, emptyCaption) {
-         return dateControlsUtils.formatDateRangeCaption(startValue, endValue, emptyCaption) + ' !';
+         return dateRange.Utils.formatDateRangeCaption(startValue, endValue, emptyCaption) + ' !';
       }
    });
    return ModuleClass;
