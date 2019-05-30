@@ -145,7 +145,7 @@ var _private = {
             if (!isEmpty(expandedItems)) {
                 for (var i in expandedItems) {
                     if (expandedItems.hasOwnProperty(i)) {
-                        expandedItemsKeys.push((expandedItems[i]));
+                        expandedItemsKeys.push(typeFunction(expandedItems[i]));
                     }
                 }
             }
