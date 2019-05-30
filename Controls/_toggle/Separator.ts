@@ -41,7 +41,7 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  * @cfg {Boolean} Determines the double separator thickness.
  */
 
-class Separator extends Control<ISeparatorOptions> {
+class Separator extends Control<ISeparatorOptions> implements ICheckable {
    '[Controls/_toggle/interface/ICheckable]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
