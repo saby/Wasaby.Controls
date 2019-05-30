@@ -192,15 +192,150 @@ define(
             var dataLoadErrbackCalled = false;
             var dataLoadErrback = function() {
                dataLoadErrbackCalled = true;
-            }
+            };
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var data = getDataWithConfig(config);
 
             data._beforeMount(config).addCallback(function() {
-               assert.isFalse(!!data._dataOptionsContext.prefetchSource);
+               assert.isTrue(!!data._dataOptionsContext.prefetchSource);
                assert.equal(data._dataOptionsContext.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
+            });
+         });
+
+         it('_private.createPrefetchSource with error data', function(done) {
+            var queryCalled = false;
+            var source = {
+               query: function() {
+                  queryCalled = true;
+                  return Deferred.fail(error);
+               },
+               _mixins: [],
+               "[Types/_source/ICrud]": true
+            };
+
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            };
+            var error = new Error('test');
+
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
+            var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
+
+            var promise = lists.DataContainer._private.createPrefetchSource(self, error, dataLoadErrback);
+            assert.instanceOf(promise, Promise);
+            promise.then(function(result) {
+               assert.equal(result.error, error);
+               assert.isTrue(dataLoadErrbackCalled);
+               assert.isFalse(queryCalled);
+               done();
+            }).catch(function(error) {
+               done(error);
+            });
+         });
+
+         it('_private.createPrefetchSource with error query result', function(done) {
+            var error = new Error('test');
+            var queryCalled = false;
+
+            var source = {
+               query: function() {
+                  queryCalled = true;
+                  return Deferred.fail(error);
+               },
+               _mixins: [],
+               "[Types/_source/ICrud]": true
+            };
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            };
+
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
+            var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
+
+            var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
+
+            assert.instanceOf(promise, Promise);
+            promise.then(function(result) {
+               assert.equal(result.error, error);
+               assert.isTrue(dataLoadErrbackCalled);
+               assert.isTrue(queryCalled);
+               done();
+            }).catch(function(error) {
+               done(error);
+            });
+         });
+
+         it('_private.createPrefetchSource with data', function(done) {
+            var data = {test: true};
+            var queryCalled = false;
+
+            var source = {
+               query: function() {
+                  queryCalled = true;
+                  return Deferred.success(data);
+               },
+               _mixins: [],
+               "[Types/_source/ICrud]": true
+            };
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            };
+
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
+            var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
+
+            var promise = lists.DataContainer._private.createPrefetchSource(self, data, dataLoadErrback);
+
+            assert.instanceOf(promise, Promise);
+            promise.then(function(result) {
+               assert.equal(result.data, data);
+               assert.isFalse(dataLoadErrbackCalled);
+               assert.isFalse(queryCalled);
+               done();
+            }).catch(function(error) {
+               done(error);
+            });
+         });
+
+         it('_private.createPrefetchSource with data query result', function(done) {
+            var data = {test: true};
+            var queryCalled = false;
+
+            var source = {
+               query: function() {
+                  queryCalled = true;
+                  return Deferred.success(data);
+               },
+               _mixins: [],
+               "[Types/_source/ICrud]": true
+            };
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            };
+
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
+            var self = getDataWithConfig(config);
+            lists.DataContainer._private.resolveOptions(self, {source:source});
+
+            var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
+
+            assert.instanceOf(promise, Promise);
+            promise.then(function(result) {
+               assert.equal(result.data, data);
+               assert.isFalse(dataLoadErrbackCalled);
+               assert.isTrue(queryCalled);
+               done();
+            }).catch(function(error) {
+               done(error);
             });
          });
 
