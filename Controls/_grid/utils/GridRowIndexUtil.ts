@@ -140,7 +140,6 @@ function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = nul
 /**
  * Функция расчета номера строки в списке для элемента с указанным индексом в проекции.
  *
- * @private
  * @param {Number} displayIndex Индекс элемента списка в проекции.
  * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
  * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
@@ -156,5 +155,6 @@ export {
     getIndexByItem,
     getIndexByDisplayIndex,
     getResultsIndex,
-    getFooterIndex
+    getFooterIndex,
+    getTopOffset
 }
