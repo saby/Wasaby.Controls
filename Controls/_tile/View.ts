@@ -34,7 +34,7 @@ import {TreeControl} from 'Controls/treeGrid';
  *
  * @mixes Controls/_MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
- * @mixes Controls/_list/DigitButtonsStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.

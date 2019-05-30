@@ -34,7 +34,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @mixes Controls/_list/Mover/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
- * @mixes Controls/_list/DigitButtonsStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.
