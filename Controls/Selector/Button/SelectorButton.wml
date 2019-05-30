@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_lookup/Button/SelectorButton" scope="{{_options}}" />

@@ -21,7 +21,7 @@ import 'css!theme?Controls/filterPopup';
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/interface/IInputText
-    * @mixes Controls/Selector/Lookup/LookupStyles
+    * @mixes Controls/_lookup/Lookup/LookupStyles
     * @control
     * @public
     * @author Герасимов А.М.
@@ -44,7 +44,7 @@ import 'css!theme?Controls/filterPopup';
    /**
     * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
     * @cfg {String} Name of the control with same interface as Lookup.
-    * @default Controls/Selector/Lookup
+    * @default Controls/_lookup/Lookup
     * @example
     * <pre>
     *   <Controls._filterPopup.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
@@ -97,10 +97,10 @@ import 'css!theme?Controls/filterPopup';
          }
       },
 
-      showSelector: function() {
+      showSelector: function(popupOptions) {
          var lookup = _private.getLookup(this);
 
-         lookup && lookup.showSelector();
+         lookup && lookup.showSelector(popupOptions);
       },
 
       _selectedKeysChanged: function(event, keys) {

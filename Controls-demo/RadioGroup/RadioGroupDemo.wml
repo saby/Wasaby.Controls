@@ -11,7 +11,7 @@
                 readOnly="{{_readOnly}}"
                 itemTemplateProperty="{{_itemTemplatePropertyFlag ? 'templateTwo' : ''}}">
             <ws:itemTemplate>
-                <ws:partial template='wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                <ws:partial template='wml!Controls/_toggle/RadioGroup/resources/ItemTemplate'
                     item="{{item}}"
                     readOnly="{{readOnly}}"
                     selected="{{selected}}"
@@ -22,10 +22,10 @@
         </Controls.toggle:RadioGroup>
     </div>
     <div attr:class="optionsBlock">
-        <Controls.toggle:Checkbox 
+        <Controls.toggle:Checkbox
             attr:class="ControlsDemo__readOnly"
             readOnly="{{false}}"
-            bind:value="_readOnly" 
+            bind:value="_readOnly"
             caption="ReadOnly"
         />
         <br/>
@@ -50,7 +50,7 @@
             on:selectedKeyChanged="changeSource()"
         />
         <br/>
-        <Controls.toggle:Checkbox 
+        <Controls.toggle:Checkbox
             attr:class="ControlsDemo-RadioGroupDemo__item_tmpl"
             readOnly="{{false}}"
             bind:value="_itemTemplatePropertyFlag"
@@ -68,10 +68,10 @@
             on:selectedKeyChanged="changeContentTemplate()"
         />
         <Controls.input:Label caption="Display property:"/>
-        <Controls.toggle:DoubleSwitch 
+        <Controls.toggle:DoubleSwitch
             attr:class="ControlsDemo-RadioGroupDemo__displayProperty"
-            on:valueChanged="changedDisplayProperty()" 
-            captions="{{['caption', 'title']}}" 
+            on:valueChanged="changedDisplayProperty()"
+            captions="{{['caption', 'title']}}"
             bind:value="_displayPropertyValue"
         />
         <Controls.input:Label caption="Selected key:"/>
@@ -84,7 +84,7 @@
             direction="horizontal"
             readOnly="{{false}}">
             <ws:itemTemplate>
-                <ws:partial template='wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                <ws:partial template='wml!Controls/_toggle/RadioGroup/resources/ItemTemplate'
                     item="{{item}}"
                     readOnly="{{readOnly}}"
                     selected="{{selected}}"
@@ -95,10 +95,10 @@
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
-        <Controls.buttons:Button 
-            attr:class="demo-ResetButton" 
-            on:click="reset()" 
-            style="linkMain3" 
+        <Controls.buttons:Button
+            attr:class="demo-ResetButton"
+            on:click="reset()"
+            style="linkMain3"
             caption="reset"
         />
         <br/>

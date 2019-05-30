@@ -31,7 +31,7 @@ var
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
-            self._setEditingItemData(self._editingItem, self._options.listModel);
+            self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
 
             /**
              * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
@@ -103,7 +103,7 @@ var
         afterEndEdit: function (self) {
             self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
             _private.resetVariables(self);
-            self._setEditingItemData(null, self._options.listModel);
+            self._setEditingItemData(null, self._options.listModel, self._options);
         },
 
         createModel: function (self, options) {
@@ -309,7 +309,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         if (newOptions.editingConfig) {
             if (newOptions.editingConfig.item) {
                 this._editingItem = newOptions.editingConfig.item;
-                this._setEditingItemData(this._editingItem, newOptions.listModel);
+                this._setEditingItemData(this._editingItem, newOptions.listModel, newOptions);
                 if (!this._isAdd) {
                     this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.keyProperty), newOptions.listModel._options.keyProperty).getContents();
                 }
@@ -473,7 +473,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         }
     },
 
-    _setEditingItemData: function (item, listModel) {
+    _setEditingItemData: function (item, listModel, options) {
         if (!item) {
             listModel._setEditingItemData(null);
             this._editingItemData = null;
@@ -495,7 +495,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         this._editingItemData.item = this._editingItem;
         if (this._isAdd) {
             this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel);
-            this._editingItemData.drawActions = this._options.editingConfig && this._options.editingConfig.toolbarVisibility;
+            this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
         }
         listModel._setEditingItemData(this._editingItemData);
         listModel.subscribe('onCollectionChange', this._updateIndex);

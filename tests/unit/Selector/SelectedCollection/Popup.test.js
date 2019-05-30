@@ -3,7 +3,7 @@ define(['Controls/lookupPopup',
    'Types/collection'
 ], function(lookupPopup, entity, collection) {
 
-   describe('Controls/Selector/SelectedCollection/Popup', function() {
+   describe('Controls/_lookupPopup/SelectedCollection/Popup', function() {
       it('_crossClick', function() {
          var
             item = new entity.Model({
