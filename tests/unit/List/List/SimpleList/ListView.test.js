@@ -169,7 +169,7 @@ define([
          assert.isTrue(stub.calledOnce);
       });
 
-      it('should not notify about resize by hoveredItemChanged', function() {
+      it('should not notify about resize by hoveredItemChanged, activeItemChanged or markedKeyChanged', function() {
          var
             cfg = {
                listModel: new lists.ListViewModel({
@@ -184,6 +184,8 @@ define([
          var stubControlResize = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
 
          listView._listModel._notify('onListChange', 'hoveredItemChanged');
+         listView._listModel._notify('onListChange', 'activeItemChanged');
+         listView._listModel._notify('onListChange', 'markedKeyChanged');
          listView._beforeUpdate(cfg);
          listView._afterUpdate();
          assert.isTrue(stubControlResize.notCalled);

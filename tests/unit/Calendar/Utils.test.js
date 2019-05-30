@@ -1,9 +1,9 @@
 /* global define, describe, it, assert */
 define([
-   'Controls/Calendar/Utils',
+   'Controls/dateRange',
    'SBIS3.CONTROLS/Utils/DateUtil'
 ], function(
-   Utils,
+   dateRange,
    DateUtil
 ) {
    describe('Controls.Calendar.Utils', function() {
@@ -11,7 +11,7 @@ define([
       describe('.formatDateRangeCaption', function() {
          it('should return emptyCaption option value if options passed as parameter and range dont specified.', function () {
             let emptyStr = '...';
-            assert.equal(Utils.formatDateRangeCaption(null, null, emptyStr), emptyStr);
+            assert.equal(dateRange.Utils.formatDateRangeCaption(null, null, emptyStr), emptyStr);
          });
          [
             { start: new Date(2017, 0, 1), end: new Date(2017, 0, 1), ret: '1 января\'17' },
@@ -43,30 +43,30 @@ define([
             { start: new Date(2017, 0, 1), end: null, ret: '01.01.17 - ...' }
          ].forEach(function(test) {
             it('should return correct range string value.', function () {
-               assert.equal(Utils.formatDateRangeCaption(test.start, test.end, '...'), test.ret);
+               assert.equal(dateRange.Utils.formatDateRangeCaption(test.start, test.end, '...'), test.ret);
             });
          });
 
       });
 
       it('getFirstDayOffset', function() {
-         assert.equal(Utils.getFirstDayOffset(2017, 12), 4);
-         assert.equal(Utils.getFirstDayOffset(2017, null), 6);
+         assert.equal(dateRange.Utils.getFirstDayOffset(2017, 12), 4);
+         assert.equal(dateRange.Utils.getFirstDayOffset(2017, null), 6);
       });
 
       it('getDaysInMonth', function() {
-         assert.equal(Utils.getDaysInMonth(2017, 12), 31);
-         assert.equal(Utils.getDaysInMonth(2017, 2), 28);
-         assert.equal(Utils.getDaysInMonth(2016, 2), 29);
+         assert.equal(dateRange.Utils.getDaysInMonth(2017, 12), 31);
+         assert.equal(dateRange.Utils.getDaysInMonth(2017, 2), 28);
+         assert.equal(dateRange.Utils.getDaysInMonth(2016, 2), 29);
       });
 
       it('getWeeksInMonth', function() {
-         assert.equal(Utils.getWeeksInMonth(2017, 12), 5);
-         assert.equal(Utils.getWeeksInMonth(2018, 4), 6);
+         assert.equal(dateRange.Utils.getWeeksInMonth(2017, 12), 5);
+         assert.equal(dateRange.Utils.getWeeksInMonth(2018, 4), 6);
       });
 
       it('getWeeksArray', function() {
-         let weeks = Utils.getWeeksArray(new Date(2017, 0, 1));
+         let weeks = dateRange.Utils.getWeeksArray(new Date(2017, 0, 1));
          assert.equal(weeks.length, 6);
          for (let week of weeks) {
             assert.equal(week.length, 7);
@@ -75,8 +75,8 @@ define([
       });
 
       it('getWeekdaysCaptions should return the same array if locale has not changed', function() {
-         const result1 = Utils.getWeekdaysCaptions();
-         const result2 = Utils.getWeekdaysCaptions();
+         const result1 = dateRange.Utils.getWeekdaysCaptions();
+         const result2 = dateRange.Utils.getWeekdaysCaptions();
          assert.equal(result1, result2);
       })
 
@@ -124,7 +124,7 @@ define([
          }];
          tests.forEach(function(test) {
             it(`updateRangeByQuantum(${test.baseDate}, ${test.date}, ${test.quantum})`, function() {
-               assert.deepEqual(Utils.updateRangeByQuantum(test.baseDate, test.date, test.quantum), test.ret);
+               assert.deepEqual(dateRange.Utils.updateRangeByQuantum(test.baseDate, test.date, test.quantum), test.ret);
             });
          });
       });

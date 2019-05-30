@@ -1,6 +1,7 @@
 <div class="controls-operationsPanelV{{ _initialized ? ' controls-operationsPanelV_initialized' : ' controls-operationsPanelV_notInitialized' }}">
    <Controls._operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                       excludedKeys="{{ _options.excludedKeys }}"
+                                       size="{{_options.multiSelectSize}}"
                                       selectedKeysCount="{{ _options.selectedKeysCount }}"
                                       attr:class="{{ _initialized ? '' : 'ws-invisible' }}" />
    <div class="controls-operationsPanelV__actions{{ _initialized ? '' : ' controls-operationsPanelV__actions_notInitialized' }}" name="toolbarBlock">

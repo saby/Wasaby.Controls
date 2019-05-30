@@ -31,7 +31,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                      {
                         id: '1',
                         title: 'default',
-                        value: 'Controls/grids:ItemTemplate'
+                        value: 'Controls/grid:ItemTemplate'
                      },
                      {
                         id: '2',
@@ -69,7 +69,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                header: data.fullHeader,
                markedKey: 4,
                displayProperty: 'title',
-               itemTemplate: 'Controls/grids:ItemTemplate',
+               itemTemplate: 'Controls/grid:ItemTemplate',
                itemTemplateProperty: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;

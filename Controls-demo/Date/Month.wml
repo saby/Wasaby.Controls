@@ -36,7 +36,7 @@
    <div class="PageBlock">
       <div class="PageBlock__title">With selected items</div>
       <div class="PageBlock__componentWrap">
-         <Controls.Date.MonthView
+         <Controls.calendar:MonthView
                month="{{_month}}"
                startValue="{{_startValue2}}"
                endValue="{{_endValue2}}"

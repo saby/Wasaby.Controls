@@ -1,21 +1,21 @@
-define(['Controls/buttons'], function (buttons) {
+define(['Controls/buttons'], function(buttons) {
    'use strict';
 
    var btn;
 
-   describe('Controls.Button', function () {
-      describe('private cssStyleGeneration', function () {
-         beforeEach(function () {
+   describe('Controls.Button', function() {
+      describe('private cssStyleGeneration', function() {
+         beforeEach(function() {
             btn = new buttons.Button({
                style: 'buttonDefault'
             });
          });
 
-         afterEach(function () {
+         afterEach(function() {
             btn.destroy();
          });
 
-         it('style linkMain',function () {
+         it('style linkMain', function() {
             var opt = {
                style: 'linkMain',
                size: 'xl'
@@ -25,7 +25,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkMain2',function () {
+         it('style linkMain2', function() {
             var opt = {
                style: 'linkMain2',
                size: 'l'
@@ -35,7 +35,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkMain3',function () {
+         it('style linkMain3', function() {
             var opt = {
                style: 'linkMain3',
                size: 'default'
@@ -45,7 +45,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkAdditional',function () {
+         it('style linkAdditional', function() {
             var opt = {
                style: 'linkAdditional',
                size: 's'
@@ -55,7 +55,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkAdditional2',function () {
+         it('style linkAdditional2', function() {
             var opt = {
                style: 'linkAdditional2',
                size: 'xl'
@@ -65,7 +65,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'default' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkAdditional3',function () {
+         it('style linkAdditional3', function() {
             var opt = {
                style: 'linkAdditional3',
                size: 'xl'
@@ -75,7 +75,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'danger' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkAdditional4',function () {
+         it('style linkAdditional4', function() {
             var opt = {
                style: 'linkAdditional4',
                size: 'xl'
@@ -85,7 +85,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'success' && fakeThis._viewMode === 'link');
          });
 
-         it('style linkAdditional5',function () {
+         it('style linkAdditional5', function() {
             var opt = {
                style: 'linkAdditional5',
                size: 'xl'
@@ -95,7 +95,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'magic' && fakeThis._viewMode === 'link');
          });
 
-         it('style buttonPrimary',function () {
+         it('style buttonPrimary', function() {
             var opt = {
                style: 'buttonPrimary',
                size: 'default'
@@ -105,7 +105,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
          });
 
-         it('style buttonDefault',function () {
+         it('style buttonDefault', function() {
             var opt = {
                style: 'buttonDefault',
                size: 'big'
@@ -115,7 +115,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'button');
          });
 
-         it('style buttonAdd',function () {
+         it('style buttonAdd', function() {
             var opt = {
                style: 'buttonAdd',
                size: 'default'
@@ -123,6 +123,37 @@ define(['Controls/buttons'], function (buttons) {
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
             assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
+         });
+      });
+      describe('private prepareIconSize', function() {
+         beforeEach(function() {
+            btn = new buttons.Button({
+               style: 'buttonDefault'
+            });
+         });
+         afterEach(function() {
+            btn.destroy();
+         });
+
+         it('no IconSize', function() {
+            var icon = 'icon-Admin icon-medium';
+            var fakeThis = {};
+            fakeThis._icon = buttons.Button.prototype.prepareIconSize.call(fakeThis, icon);
+            assert(!fakeThis._iconSize && fakeThis._icon === 'icon-Admin icon-medium');
+         });
+         it('iconSize', function() {
+            var opt = {
+               icon: 'icon-Admin icon-medium',
+               iconSize: 'large'
+            };
+            var regExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b', 'g');
+            var fakeThis = {
+               _regExp: regExp,
+               prepareIconSize: buttons.Button.prototype.prepareIconSize,
+            };
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._iconSize === 'large');
+            assert(fakeThis._icon === 'icon-Admin ');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {
@@ -157,23 +188,23 @@ define(['Controls/buttons'], function (buttons) {
             assert(optionsCorrect);
          });
 
-         afterEach(function () {
+         afterEach(function() {
             buttons.Button.prototype.cssStyleGeneration = buttons.Button.prototype.cssStyleGeneration.original;
          });
       });
-      describe('click', function () {
+      describe('click', function() {
          var customEvent = {}, eventBublle = true;
 
          function initButton() {
-            customEvent.stopPropagation = function () {
+            customEvent.stopPropagation = function() {
                eventBublle = false;
             };
             btn = new buttons.Button({
                style: 'buttonDefault'
             });
          }
-         
-         it('click to enabled button', function () {
+
+         it('click to enabled button', function() {
             initButton();
             var opt = {
                readOnly: false
@@ -183,7 +214,7 @@ define(['Controls/buttons'], function (buttons) {
             assert(eventBublle);
          });
 
-         it('click to disabled button', function () {
+         it('click to disabled button', function() {
             initButton();
             var opt = {
                readOnly: true

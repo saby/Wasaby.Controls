@@ -353,7 +353,7 @@ import 'Controls/Container/Data/ContextOptions';
       /**
        * @name Controls/_filter/Controller#filterButtonSource
        * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
-       * @remark if the historyId option is setted, function will recive filter history
+       * @remark if the historyId option is setted, function will receive filter history
        * @example
        * TMPL:
        * <pre>

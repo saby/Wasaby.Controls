@@ -12,6 +12,8 @@ export interface ISourceOptions {
  * @author Крайнов Д.О.
  */
 export default interface ISource {
+   readonly '[Controls/_interface/ISource]': boolean;
+}
 /**
  * @name Controls/_interface/ISource#source
  * @cfg {Types/source:Base} Object that implements ISource interface for working with data.
@@ -53,7 +55,7 @@ export default interface ISource {
  * <pre>
  *    <Controls.list:View
  *       source = "{{_source}}"
- *       keyProperty="id">
+ *       keyProperty="key">
  *    </Controls.list:View>
  * </pre>
  * <pre>
@@ -77,5 +79,3 @@ export default interface ISource {
  * </pre>
  *
  */
-   readonly '[Controls/_interface/ISource]': boolean;
-}

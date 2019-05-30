@@ -1,11 +1,14 @@
-import {ListViewModel, BaseViewModel, GridLayoutUtil, RowIndexUtil, ItemsUtil} from 'Controls/list';
+import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
-import {calcFooterRowIndex} from './utils/RowIndexUtil';
+import {
+    getFooterIndex,
+    getIndexByDisplayIndex, getIndexById, getIndexByItem,
+    getResultsIndex
+} from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -342,10 +345,6 @@ var
             return styles;
         },
 
-        calcResultsRowIndex: function (self): number {
-            return RowIndexUtil.calcResultsRowIndex(self._model.getDisplay(), self.getResultsPosition(), !!self.getHeader(), !!self._options.emptyTemplate);
-        },
-
         getFooterStyles: function (self): string {
             let styles = '';
 
@@ -353,8 +352,7 @@ var
                 let
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
-                    hasResults = self.getResultsPosition() === 'top' || self.getResultsPosition() === 'bottom',
-                    rowIndex = calcFooterRowIndex(self._model.getDisplay(), hasResults, !!self.getHeader(), !!self._options.emptyTemplate);
+                    rowIndex = self._getRowIndexHelper().getFooterIndex();
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -686,7 +684,7 @@ var
 
             // For browsers with partial grid support need to set its grid-row and grid-column
             if (GridLayoutUtil.isPartialGridSupport()) {
-                resultsColumn.rowIndex = _private.calcResultsRowIndex(this);
+                resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
 
@@ -878,12 +876,30 @@ var
 
         _calcRowIndex: function(current) {
             if (current.isGroup) {
-                return RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index),
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
             } else if (current.index !== -1) {
-                return RowIndexUtil.calcRowIndexByKey(current.key,
-                   this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
+                return this._getRowIndexHelper().getIndexById(current.key);
             }
+        },
+
+        _getRowIndexHelper() {
+            let
+                display = this.getDisplay(),
+                hasHeader = !!this.getHeader(),
+                resultsPosition = this.getResultsPosition(),
+                hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            return {
+                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
+                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
+            };
+        },
+
+        setMenuState(state: string): void {
+            this._model.setMenuState(state);
         },
 
         getItemDataByItem: function(dispItem) {
@@ -965,6 +981,7 @@ var
                     currentColumn = {
                         item: current.item,
                         style: current.style,
+                        isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
