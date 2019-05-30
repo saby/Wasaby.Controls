@@ -1044,72 +1044,68 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
+            const headerRow = gridViewModel.getCurrentHeaderRow();
             assert.deepEqual({
                column: {},
-               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox controls-Grid__header-cell_halign_center',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
                cellStyles:'',
-               cellContentStyles:'',
+               height:'',
                shadowVisibility: 'visible',
                stickyTop: 0,
-            }, gridViewModel.getCurrentHeaderColumn(0, 0), 'Incorrect value first call "getCurrentHeaderColumn()".');
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
-            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
-            // // gridViewModel.goToNextHeaderColumn();
-            //
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
 
             assert.deepEqual({
                column: gridHeader[0],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__header-cell_halign_center',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1,
-               cellContentStyles: "",
+               height: "",
                shadowVisibility: "visible",
                stickyTop: 0,
                cellContentClasses: "",
                cellStyles: "",
-            }, gridViewModel.getCurrentHeaderColumn(1, 0), 'Incorrect value second call "getCurrentHeaderColumn()".');
-            //
-            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
-            // // gridViewModel.goToNextHeaderColumn();
-            // console.log(gridViewModel.getCurrentHeaderColumn(gridHeader[0][2], 2, 0));
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+
             assert.deepEqual({
                column: gridHeader[1],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__header-cell_halign_right',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
                sortingDirection: 'DESC',
-               cellContentClasses: "",
+               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: "",
-               cellContentStyles: "",
+               height: "",
                shadowVisibility: "visible",
                stickyTop: 0
-            }, gridViewModel.getCurrentHeaderColumn(2, 0), 'Incorrect value third call "getCurrentHeaderColumn()".');
-            //
-            // // assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
-            // // gridViewModel.goToNextHeaderColumn();
-            //
-            console.log(gridViewModel.getCurrentHeaderColumn(3, 0));
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+
             assert.deepEqual({
                column: gridHeader[2],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default ' +
-                  'controls-Grid__header-cell_halign_right',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
-               cellContentClasses: "",
+               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: "",
-               cellContentStyles: "",
+               height: "",
                shadowVisibility: "visible",
                stickyTop: 0
-            }, gridViewModel.getCurrentHeaderColumn(3, 0), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
-            //
-            // //    assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
-            // //
-            // //    gridViewModel.goToNextHeaderColumn();
-            // //    assert.equal(false, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
-            // //
-            // //    assert.equal(4, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
-            // //    gridViewModel.resetHeaderColumns();
-            // //    assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+            }, headerRow.getCurrentHeaderColumn(0, 3), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+            assert.equal(false, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
+
+            assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
+            headerRow.resetHeaderColumns();
+            assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
             });
             it('getResultsPosition()', function() {
                assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');

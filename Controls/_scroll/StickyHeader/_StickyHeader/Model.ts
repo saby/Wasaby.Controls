@@ -50,6 +50,7 @@ export = simpleExtend.extend({
       this._bottomTarget = config.bottomTarget;
       this._position = config.position;
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
+      this._title = config.title;
    },
 
    update: function(entries) {
@@ -68,6 +69,7 @@ export = simpleExtend.extend({
     */
    _updateStateIntersection: function(entry) {
       var target = this._getTarget(entry);
+      if (this._title === 'Цена') console.log('topbot', entry, target);
 
       this._intersection[target] = entry.isIntersecting;
    },
@@ -97,6 +99,7 @@ export = simpleExtend.extend({
     */
    _getFixedPosition: function() {
       var result = '';
+      // if (this._title === 'Цена') console.log('topbot', this._intersection.top, this._intersection.bottom);
 
       if (this._position.indexOf('top') !== -1 && !this._intersection.top && this._intersection.bottom) {
          result = 'top';

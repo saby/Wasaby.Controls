@@ -77,12 +77,12 @@ var StickyHeader = Control.extend({
          position: this._options.position,
          mode: this._options.mode
       }, true], { bubbling: true });
-
       this._observer = new IntersectionObserver(this._observeHandler);
       this._model = new Model({
          topTarget: children.observationTargetTop,
          bottomTarget: children.observationTargetBottom,
-         position: this._options.position
+         position: this._options.position,
+         title: this._options.curentTitle
       });
 
       this._observer.observe(children.observationTargetTop);
@@ -254,9 +254,12 @@ var StickyHeader = Control.extend({
    _isShadowVisible: function(shadowPosition) {
       //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
       var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
-
+      let fp = '';
+      if (this._model && this._options.bottomShadowVisible) {
+         fp = 'top';
+      }
       return (!this._context.stickyHeader || this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
-         this._model && this._model.fixedPosition === fixedPosition && this._options.shadowVisibility === 'visible' &&
+         ((this._model && this._model.fixedPosition === fixedPosition) || fp === fixedPosition) && this._options.shadowVisibility === 'visible' &&
          (this._options.mode === 'stackable' || this._shadowVisible);
    }
 });

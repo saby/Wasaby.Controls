@@ -354,7 +354,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return self._getRowIndexHelper().getResultsIndex();
+            return self._getRowIndexHelper().getResultsIndex() + self._resultOffset;
         },
 
         getFooterStyles: function (self): string {
@@ -364,7 +364,7 @@ var
                 let
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
-                    rowIndex = self._getRowIndexHelper().getFooterIndex();
+                    rowIndex = self._getRowIndexHelper().getFooterIndex() + self._resultOffset;
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -383,6 +383,7 @@ var
 
                 rowIndex += self.getHeader() ? 1 : 0;
                 rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
+                rowIndex += self._resultOffset;
                 styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
             }
 
@@ -454,6 +455,8 @@ var
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
         _maxEndRow: 0,
+        _curHeaderRowIndex: 0,
+        _resultOffset: 0,
 
         _resultsColumns: [],
         _curResultsColumnIndex: 0,
@@ -558,17 +561,48 @@ var
             } else {
                 this._headerRows = [];
             }
+            this._resultOffset = this._maxEndRow ? this._maxEndRow - 2 : 0;
             // if (multiSelectVisibility) {
             //     this._headerColumns = [{}].concat(columns);
             // } else {
             //     this._headerColumns = columns;
             // }
-            // this.resetHeaderColumns();
+            this.resetHeaderRows();
         },
 
-        // resetHeaderColumns: function() {
-        //     this._curHeaderColumnIndex = 0;
-        // },
+        resetHeaderRows: function() {
+            this._curHeaderRowIndex = 0;
+        },
+
+        goToNextHeaderRow: function() {
+            this._curHeaderRowIndex++;
+        },
+
+        getCurrentHeaderRow: function() {
+            const self = this;
+            let obj = {
+                curHeaderColumnIndex: 0,
+                curRowIndex: this._curHeaderRowIndex,
+                headerCells: this._headerRows[this._curHeaderRowIndex],
+                getCurrentHeaderColumn: function() {
+                    return self.getCurrentHeaderColumn(this.curRowIndex, this.curHeaderColumnIndex);
+                }
+            };
+            obj.resetHeaderColumns = function() {
+                this.curHeaderColumnIndex = 0;
+            };
+            obj.goToNextHeaderColumn = function() {
+                this.curHeaderColumnIndex++;
+            };
+            obj.isEndHeaderColumn = function() {
+                return this.curHeaderColumnIndex < this.headerCells.length;
+            };
+            return obj;
+        },
+
+        isEndHeaderRow: function() {
+            return this._curHeaderRowIndex < this._headerRows.length;
+        },
 
         getColumnsVersion: function() {
             return this._columnsVersion;
@@ -583,7 +617,7 @@ var
            return this._options.stickyHeader && !this.isNotFullGridSupport();
         },
 
-        getCurrentHeaderColumn: function(columnIndex, rowIndex) {
+        getCurrentHeaderColumn: function(rowIndex, columnIndex) {
             const cell = this._headerRows[rowIndex][columnIndex];
             let
                 cellClasses = 'controls-Grid__header-cell',
@@ -643,7 +677,6 @@ var
             // if (GridLayoutUtil.isPartialSupport) {
             //     headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
             // }
-
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -655,6 +688,7 @@ var
             let height = '';
             let stickyTop = 0;
             let shadowVisibility = 'visible';
+
             if (cell.startRow) {
                 const { endRow, startRow, endColumn, startColumn } = cell;
                 if (this.isNoGridSupport()) {
@@ -662,11 +696,12 @@ var
                     headerColumn.rowSpan = endRow - startRow;
                     headerColumn.colSpan = endColumn - startColumn;
                 } else {
-                    if (!this.isStickyHeader()) {
-                    } else {
+                    if (this.isStickyHeader()) {
                         stickyTop = startRow ? (startRow - 1 ) * 20 : 0;
-                        shadowVisibility = rowIndex === this._headerRows.length - 1 ? 'visible' : 'hidden';
+                        shadowVisibility = rowIndex === this._headerRows.length - 1 || endRow === this._maxEndRow ? 'visible' : 'hidden';
                     }
+
+
 
                     const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
                     const gridStyles = [
@@ -708,17 +743,9 @@ var
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
-
             return headerColumn;
         },
 
-        // goToNextHeaderColumn: function() {
-        //     this._curHeaderColumnIndex++;
-        // },
-        //
-        // isEndHeaderColumn: function() {
-        //     return this._curHeaderColumnIndex < this._headerColumns.length;
-        // },
 
         // -----------------------------------------------------------
         // ---------------------- resultColumns ----------------------
@@ -745,6 +772,7 @@ var
             } else {
                 this._resultsColumns = columns;
             }
+
             this.resetResultsColumns();
         },
 
@@ -796,7 +824,6 @@ var
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
-            // resultsColumn.stickyTop = stickyTop;
             return resultsColumn;
         },
 
@@ -1047,7 +1074,7 @@ var
             }
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
-                current.rowIndex = this._calcRowIndex(current);
+                current.rowIndex = this._calcRowIndex(current) + this._resultOffset;
             }
 
             if (GridLayoutUtil.isPartialGridSupport()) {

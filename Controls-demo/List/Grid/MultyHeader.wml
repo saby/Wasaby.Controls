@@ -11,15 +11,15 @@
                             <Controls.grid:View
                                     attr:class="demo-Grid__control test_grid_1"
                                     displayProperty="title"
-
-                                    stickyHeader="{{true}}"
                                     resultsPosition="top"
+                                    stickyHeader="{{true}}"
                                     rowSeparatorVisibility="{{true}}"
                                     header="{{gridHeader}}"
                                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                                     multiSelectVisibility="visible"
                                     columns="{{gridColumns}}"
                                     bind:sorting="_sorting">
+
                             </Controls.grid:View>
                         </Controls.operations:Container>
                     </Controls.list:Container>
@@ -38,9 +38,9 @@
                             <Controls.grid:View
                                     attr:class="demo-Grid__control test_grid_1"
                                     displayProperty="title"
-
+                                    multiSelectVisibility="visible"
                                     stickyHeader="{{false}}"
-                                    resultsPosition="top"
+                                    resultsPosition="bottom"
                                     rowSeparatorVisibility="{{true}}"
                                     header="{{gridHeader}}"
                                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"

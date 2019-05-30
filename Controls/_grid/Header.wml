@@ -1,12 +1,13 @@
 <ws:template name="headContent">
       <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
       <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
-<!--      {{ listModel.resetHeaderColumns() }}-->
-      <ws:for data="index, headerColumn in headerRow">
+      {{ headerRow.resetHeaderColumns() }}
+      <ws:for data="headerRow.resetHeaderColumns(); headerRow.isEndHeaderColumn(); headerRow.goToNextHeaderColumn();">
+<!--         {{debug()}}-->
          <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
                      defaultHeaderContent="{{defaultHeaderContent}}"
                      listModel="{{listModel}}"
-                     headerColumn="{{ listModel.getCurrentHeaderColumn(index, rowIndex) }}"
+                     headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
                      class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
                      multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
       </ws:for>
@@ -45,9 +46,8 @@
       </th>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <div attr:style="{{headerColumn.gridCellStyles}} {{headerColumn.cellStyles}} {{headerColumn.height}}" attr:class="{{headerColumn.cellClasses}}">
+      <div attr:style="{{headerColumn.cellStyles}} {{headerColumn.height}}" attr:class="{{headerColumn.cellClasses}}">
          <ws:partial template="cellContent" />
-
       </div>
    </ws:else>
    <ws:else>
@@ -65,6 +65,8 @@
            fixedZIndex="{{headerColumn.zIndex}}"
            offsetTop="{{headerColumn.stickyTop}}"
            shadowVisibility="{{headerColumn.shadowVisibility}}"
+           bottomShadowVisible="{{headerColumn.column.endRow === listModel._maxEndRow}}"
+
    >
       <!-- Set the listModel option only in order for the update of the internal templates to update -->
       <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
@@ -81,22 +83,23 @@
 <ws:template name="header">
    <ws:if data="{{listModel.isNoGridSupport()}}">
       <thead class="controls-Grid__header">
-         <ws:for data="i, row in listModel._headerRows">
+         <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
            <tr>
-               <ws:partial template="headContent" headerRow="{{row}}" rowIndex="{{i}}" />
+               <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}" />
            </tr>
          </ws:for>
       </thead>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <ws:for data="i, row in listModel._headerRows">
-         <ws:partial template="headContent" headerRow="{{row}}" rowIndex="{{i}}"/>
+      <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
+         <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}"/>
       </ws:for>
    </ws:else>
    <ws:else>
       <div class="controls-Grid__header">
-         <ws:for data="i, row in listModel._headerRows">
-            <ws:partial template="headContent" headerRow="{{row}}" rowIndex="{{i}}"/>
+         {{ listModel.resetHeaderRows() }}
+         <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
+            <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}"/>
          </ws:for>
       </div>
    </ws:else>
