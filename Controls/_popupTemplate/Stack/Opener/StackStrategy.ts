@@ -13,15 +13,15 @@
    }
 
    // Minimum popup indentation from the right edge
-   var MINIMAL_PANEL_DISTANCE = 20;
+   const MINIMAL_PANEL_DISTANCE = 20;
 
-   var _private = {
+   const _private = {
       getPanelWidth: function(item, tCoords, maxPanelWidth) {
-         var panelWidth;
-         var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
-         var minWidth = parseInt(item.popupOptions.minWidth, 10);
-         var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
-         var availableMaxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+         let panelWidth;
+         let maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
+         let minWidth = parseInt(item.popupOptions.minWidth, 10);
+         let maxWidth = parseInt(item.popupOptions.maxWidth, 10);
+         let availableMaxWidth = _private.getAvailableMaxWidth(item.popupOptions.maxWidth, maxPanelWidth);
 
          if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             if (!_private.isMaximizedState(item)) {
@@ -44,6 +44,11 @@
          } 
          return panelWidth;
       },
+
+      getAvailableMaxWidth (itemMaxWidth:number, maxPanelWidth:number):number {
+         return itemMaxWidth ? Math.min(itemMaxWidth, maxPanelWidth) : maxPanelWidth;
+      },
+
       isMaximizedPanel: function(item) {
          return !!item.popupOptions.minimizedWidth;
       },
