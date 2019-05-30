@@ -144,7 +144,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             } else {
                try {
                   if (this._container[0].contains(document.activeElement)) {
-                     //Я не знаю, как это работает, но если фокус будет внутри Wasaby слоя 
+                     //Я не знаю, как это работает, но если фокус будет внутри Wasaby слоя
                      //то мы получаем утечку, всех дом элементов внутри.
                      //если мы просто переведем фокус на контейнер выше,
                      //все очистится
@@ -302,10 +302,52 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._isVDomTemplateMounted = true;
             this.getContainer().unbind('keydown', this._keydownHandler);
             if (this._vDomTemplate) {
-               var Sync = require('Vdom/Vdom').Synchronizer;
+               var
+                  self = this,
+                  Sync = require('Vdom/Vdom').Synchronizer;
+
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
+
+               // Временное решение для очистки памяти. Вдомные контролы при вызове unMountControlFromDOM
+               // уничтожаются (destroy) синхронно, но удаляются из DOM через инферно асинхронно.
+               // При этом CompoundArea лежит внутри FloatArea на старой странице. Когда FloatArea
+               // уничтожается, она уничтожает CompoundArea, и чистит свой контейнер через remove.
+               // Соответственно инферно нечего удалять из DOM, так как удалены родители корневой
+               // vdom-ноды. Из-за этого не чистятся различные вдомные свойства контейнеров: controlNodes,
+               // eventProperties, ...
+               //
+               // У нас нет ссылок на эти элементы, но сборщик мусора хрома все равно не собирает их
+               // (либо профилировщик показывает, что они не собраны). Для того, чтобы этот мусор собрался,
+               // нужно почистить все добавленные vdom-ом свойства на элементах.
+               //
+               // Более правильное решение будет придумываться по ошибке:
+               // https://online.sbis.ru/opendoc.html?guid=37e1cf9f-913d-4c96-b73a-effc3a5fba92
+               setTimeout(function() {
+                  self._clearVdomProperties(self._vDomTemplate._container);
+                  self._vdomTemplate = null;
+               }, 3000);
             }
          },
+         _clearVdomProperties: function(container) {
+            var children = container.getElementsByTagName('*');
+
+            for (var i = 0; i < children.length; i++) {
+               var c = children[i];
+
+               delete c.controlNodes;
+               delete c.eventProperties;
+               delete c.eventPropertiesCnt;
+               delete c.$EV;
+               delete c.$V;
+            }
+
+            delete container.controlNodes;
+            delete container.eventProperties;
+            delete container.eventPropertiesCnt;
+            delete container.$EV;
+            delete container.$V;
+         },
+
          _modifyOptions: function(cfg) {
             var cfg = moduleClass.superclass._modifyOptions.apply(this, arguments);
             require([cfg.template]);
