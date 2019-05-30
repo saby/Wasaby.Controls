@@ -45,7 +45,7 @@
          return panelWidth;
       },
 
-      getAvailableMaxWidth (itemMaxWidth:number, maxPanelWidth:number):number {
+      getAvailableMaxWidth (itemMaxWidth: number, maxPanelWidth: number): number {
          return itemMaxWidth ? Math.min(itemMaxWidth, maxPanelWidth) : maxPanelWidth;
       },
 
