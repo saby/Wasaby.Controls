@@ -464,7 +464,7 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-
+        
         self._children.ScrollEmitter.startRegister(triggers);
     },
 
