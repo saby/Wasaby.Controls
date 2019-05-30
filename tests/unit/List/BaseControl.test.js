@@ -3009,7 +3009,16 @@ define([
                      assert.equal(items.getCount(), 1);
                      assert.equal(items.at(0).get('id'), 1);
                      assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
-                     resolve();
+
+                     let recordSet = new collection.RecordSet({
+                        idProperty: 'id',
+                        rawData: [{ id: 'test' }]
+                     });
+                     baseCtrl._listViewModel.setItems(recordSet);
+                     baseCtrl.reloadItem('test', null, true, 'query').addCallback(function (reloadedItems) {
+                        assert.isTrue(reloadedItems.getCount() === 0);
+                        resolve();
+                     });
                   });
                });
             });
