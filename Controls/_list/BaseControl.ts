@@ -464,7 +464,7 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-        
+
         self._children.ScrollEmitter.startRegister(triggers);
     },
 
@@ -687,17 +687,28 @@ var _private = {
             self._listViewModel.setActiveItem(itemData);
             self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
+                const defaultMenuConfig = {
+                   items: rs,
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   showClose: true
+                }
+
+                if (self._options.contextMenuConfig) {
+                   if (typeof self._options.contextMenuConfig === 'object') {
+                      cMerge(defaultMenuConfig, self._options.contextMenuConfig);
+                   } else {
+                      IoC.resolve('ILogger').error('CONTROLS.ListView',
+                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                   }
+                }
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: {
-                        items: rs,
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        showClose: true
-                    },
+                    templateOptions: defaultMenuConfig,
                     eventHandlers: {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
@@ -710,6 +721,8 @@ var _private = {
                 });
                 self._menuIsShown = true;
                 self._forceUpdate();
+            }, function(){
+                debugger;
             });
         }
     },
