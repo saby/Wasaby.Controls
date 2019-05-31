@@ -34,7 +34,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       },
       _private = {
          getParentId: function(key, items, parentProperty) {
-            var item = _private.getRecordById(items, key);
+            var item = items.getRecordById(key);
 
             if (item) {
                return item.get(parentProperty);
@@ -167,20 +167,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             return hasExcludedChildren;
          },
 
-         getRecordById: function(items, key) {
-            var
-               item = items.getRecordById(key),
-               path = items.getMetaData().path;
-
-            if (!item && path) {
-               item = path.getRecordById(key);
-            }
-
-            return item;
-         },
-
          getIntersection: function(firstCollection, secondCollection) {
-            return firstCollection.slice().filter(function(key) {
+            return firstCollection.filter(function(key) {
                return secondCollection.indexOf(key) !== -1;
             });
          },
@@ -235,7 +223,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
 
-            if (!_private.getRecordById(this._items, key) && !isAllSelection) {
+            if (!this._items.getRecordById(key) && !isAllSelection) {
                //There's no point to add this key to excludedKeys because it is either root or this item was removed from the collection
                return;
             }
@@ -249,47 +237,34 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }
 
             //item can be not loaded yet, but anyway he must be in excluded, beacouse method with selection will work incorrect
-            if ((parentId === null || !_private.getRecordById(this._items, key)) && this._isAllSelection(this._getParams(null))) {
+            if ((parentId === null || !this._items.getRecordById(key)) && this._isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
             }
          }.bind(this));
       },
 
-      selectAll: function(rootId) {
-         if (rootId !== undefined) {
-            this.select([rootId]);
-         } else {
-            HierarchySelection.superclass.selectAll.apply(this, arguments);
-         }
+      selectAll: function() {
+         this.select([this._getRoot()]);
       },
 
-      unselectAll: function(rootId) {
-         if (rootId !== undefined) {
-            this.unselect([rootId]);
-         } else {
-            HierarchySelection.superclass.unselectAll.apply(this, arguments);
-         }
+      unselectAll: function() {
+         this.unselect([this._getRoot()]);
       },
 
-      toggleAll: function(rootId) {
+      toggleAll: function() {
          var
-            childrensRoot,
+            rootId = this._getRoot(),
             selectedKeys = this._selectedKeys.slice(),
-            excludedKeys = this._excludedKeys.slice();
+            excludedKeys = this._excludedKeys.slice(),
+            childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
-         if (rootId !== undefined) {
-            childrensRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
+         if (this._isAllSelection(this._getParams(rootId))) {
+            this.unselectAll(rootId);
+            this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
 
-            if (this._isAllSelection(this._getParams(rootId))) {
-               this.unselectAll(rootId);
-               this.select(_private.getIntersection(childrensRoot, excludedKeys));
-
-            } else {
-               this.selectAll(rootId);
-               this.unselect(_private.getIntersection(childrensRoot, selectedKeys));
-            }
          } else {
-            HierarchySelection.superclass.toggleAll.apply(this, arguments);
+            this.selectAll(rootId);
+            this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
          }
       },
 
@@ -350,6 +325,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             isParentSelected = _private.isParentSelected(this._hierarchyRelation, rootId, selectedKeys, excludedKeys, items);
 
          return isParentSelected && excludedKeys.indexOf(rootId) === -1 || selectedKeys.indexOf(rootId) !== -1;
+      },
+
+      _getRoot: function() {
+         return this._options.listModel.getRoot().getContents();
       }
    });
 

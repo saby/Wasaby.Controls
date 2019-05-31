@@ -69,7 +69,7 @@ var _private = {
     },
 
     selectedTypeChangedHandler: function (typeName) {
-        this._multiselection[typeName](this._options.root);
+        this._multiselection[typeName]();
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 
@@ -83,7 +83,8 @@ var _private = {
                     items: options.items,
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty
+                    nodeProperty: options.nodeProperty,
+                    listModel: options.listModel
                 }));
             });
         } else {

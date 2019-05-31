@@ -573,6 +573,10 @@ var
             return this._hierarchyRelation;
         },
 
+        getRoot: function() {
+            return this._display.getRoot();
+        },
+
         setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);

@@ -176,7 +176,6 @@
                 name="selectionController"
                 keyProperty="{{ _options.keyProperty }}"
                 parentProperty="{{ _options.parentProperty }}"
-                root="{{ _options.root }}"
                 items="{{ _items }}"
                 nodeProperty="{{ _options.nodeProperty }}"
                 selectedKeys="{{ _options.selectedKeys }}"
