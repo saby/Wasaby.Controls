@@ -177,7 +177,13 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }
 
             return item;
-         }
+         },
+
+         getIntersection: function(firstCollection, secondCollection) {
+            return firstCollection.slice().filter(function(key) {
+               return secondCollection.indexOf(key) !== -1;
+            });
+         },
       };
 
    var HierarchySelection = Selection.extend({
@@ -276,11 +282,11 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
             if (this._isAllSelection(this._getParams(rootId))) {
                this.unselectAll(rootId);
-               this.select(childrensRoot.filter(value => -1 !== excludedKeys.indexOf(value)));
+               this.select(_private.getIntersection(childrensRoot, excludedKeys));
 
             } else {
                this.selectAll(rootId);
-               this.unselect(childrensRoot.filter(value => -1 !== selectedKeys.indexOf(value)));
+               this.unselect(_private.getIntersection(childrensRoot, selectedKeys));
             }
          } else {
             HierarchySelection.superclass.toggleAll.apply(this, arguments);
