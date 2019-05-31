@@ -6,7 +6,7 @@ define(
       'Types/entity',
       'Controls/history'
    ],
-   (suggest, Clone, sourceLib, entity, history) => {
+   (suggesLib, Clone, sourceLib, entity, history) => {
       describe('Selector.Suggest', () => {
          let items = [
             {
@@ -38,7 +38,7 @@ define(
 
 
          let getSuggest = function(config) {
-            let suggest = new suggest.Selector(config);
+            let suggest = new suggesLib.Selector(config);
             suggest.saveOptions(config);
             return suggest;
          };
@@ -187,7 +187,7 @@ define(
                rawData: {id: '1', title: 'Запись 1'}
             });
             let self = {};
-            suggest.Selector._private.setValue(self, item, 'title');
+            suggesLib.Selector._private.setValue(self, item, 'title');
             assert.equal(self._value, 'Запись 1');
          });
       });
