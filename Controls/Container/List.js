@@ -27,7 +27,7 @@ define('Controls/Container/List',
             var options = self._options;
 
             if (!self._searchController) {
-               self._searchController = new searchLib.SearchController({
+               self._searchController = new searchLib._SearchController({
                   filter: merge({}, options.filter),
                   searchParam: options.searchParam,
                   minSearchLength: options.minSearchLength,

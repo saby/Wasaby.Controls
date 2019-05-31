@@ -46,7 +46,7 @@ define(
 
          it('setFilter', function() {
             var filter = {test: 'test'};
-            var searchController = new search._SearchController({});
+            var searchController = new searchLib._SearchController({});
 
             searchController.setFilter(filter);
             assert.deepEqual(filter, {test: 'test'});
@@ -55,7 +55,7 @@ define(
 
          it('getFilter', function() {
             var filter = {test: 'test'};
-            var searchController = new search._SearchController({});
+            var searchController = new searchLib._SearchController({});
 
             searchController.setFilter(filter);
             assert.deepEqual(searchController.getFilter(), {test: 'test'});
@@ -65,7 +65,7 @@ define(
             var filter = {};
             var aborted = false;
             var searchStarted = false;
-            var searchController = new search._SearchController({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
                navigation: navigation,
@@ -99,7 +99,7 @@ define(
 
          it('search with sorting', function(done) {
             var filter = {};
-            var searchController = new search._SearchController({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 0,
                source: source,
                sorting: sorting,
@@ -119,13 +119,13 @@ define(
          });
 
          it('search forced', function(done) {
-            var searchController = new search._SearchController({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
                filter: {}
             });
 
-            search._SearchController._private.getSearch(searchController).addCallback(function(search) {
+            searchLib._SearchController._private.getSearch(searchController).addCallback(function(search) {
                var searched = false;
                var forced = false;
 

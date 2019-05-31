@@ -22,6 +22,7 @@ import Input = require('Controls/_search/Input/Search');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 
 export {default as _Search} from './_search/_Search';
+export {default as _SearchController} from './_search/_SearchController';
 
 export {
    InputContainer,
@@ -31,4 +32,4 @@ export {
    Input,
 
    getSwitcherStrFromData
-}
+};

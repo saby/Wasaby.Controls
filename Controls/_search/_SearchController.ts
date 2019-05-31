@@ -10,7 +10,7 @@ var _private = {
    getSearch: function(self) {
       return moduleStubs.require('Controls/search').addCallback(function(requireRes) {
          if (!self._search) {
-            self._search = new requireRes._Search[0]({
+            self._search = new requireRes[0]._Search({
                source: self._options.source,
                filter: self._options.filter,
                sorting: self._options.sorting,
