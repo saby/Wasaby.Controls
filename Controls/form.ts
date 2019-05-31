@@ -11,9 +11,9 @@
 import Controller = require('Controls/_form/FormController');
 import Crud = require('Controls/_form/Crud');
 
-export {default as PrimaryAction} from './_form/PrimaryAction'
+export {default as PrimaryAction} from './_form/PrimaryAction';
 
 export {
     Controller,
     Crud
-}
+};
