@@ -1420,6 +1420,11 @@ define([
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._context = {
+            isTouch: {
+               isTouch: false
+            }
+         };
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._itemMouseEnter({});
@@ -1427,6 +1432,9 @@ define([
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
+         lnBaseControl._context.isTouch.isTouch = true;
+         lnBaseControl._itemMouseEnter({});
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
