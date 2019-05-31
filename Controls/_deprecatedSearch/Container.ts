@@ -1,36 +1,28 @@
-define('Controls/Container/Search',
-   [
-      'Core/Control',
-      'wml!Controls/Container/Search/Search',
-      'Controls/Container/Search/SearchContextField',
-      'Env/Env'
-   ],
+import Control = require('Core/Control');
+import template = require('wml!Controls/_deprecatedSearch/Container');
+import SearchContextField = require('Controls/Container/Search/SearchContextField');
+import {IoC} from 'Env/Env';
 
-   function(Control, template, SearchContextField, Env) {
+var Search = Control.extend({
 
-      'use strict';
+   _searchValue: null,
+   _template: template,
 
-      var Search = Control.extend({
+   constructor: function() {
+      IoC.resolve('ILogger').error('Controls/deprecatedSearch:Container', 'Component is deprecated and will be deleted in 3.18.600, use Controls/search:Controller instead.');
+      Search.superclass.constructor.apply(this, arguments);
+   },
 
-         _searchValue: null,
-         _template: template,
+   _changeValueHandler: function(event, value) {
+      this._searchValue = value;
+   },
 
-         constructor: function() {
-            Env.IoC.resolve('ILogger').error('Controls/Container/Search', 'Component is deprecated and will be deleted in 3.18.600, use Controls/search:Controller instead.');
-            Search.superclass.constructor.apply(this, arguments);
-         },
+   _getChildContext: function() {
+      return {
+         searchLayoutField: new SearchContextField(this._searchValue)
+      };
+   }
 
-         _changeValueHandler: function(event, value) {
-            this._searchValue = value;
-         },
+});
 
-         _getChildContext: function() {
-            return {
-               searchLayoutField: new SearchContextField(this._searchValue)
-            };
-         }
-
-      });
-
-      return Search;
-   });
+export default Search;
