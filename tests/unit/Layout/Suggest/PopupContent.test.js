@@ -83,7 +83,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
       it('showContent:false', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></div><div></div></div></div>';
 
-         getMarkup(popupContentTemplate.default, {_options: {showContent: false, target: {offsetWidth: ''}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
+         getMarkup(popupContentTemplate, {_options: {showContent: false, target: {offsetWidth: ''}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
             done();
          });
@@ -92,7 +92,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
       it('showContent:true', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></div><div></div></div></div>';
 
-         getMarkup(popupContentTemplate.default, {_options: {showContent: true, target: {offsetWidth: ''},  content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
+         getMarkup(popupContentTemplate, {_options: {showContent: true, target: {offsetWidth: ''},  content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
             done();
          });
@@ -101,7 +101,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
       it('target.offsetWidth:300px', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></div><div></div></div></div>';
 
-         getMarkup(popupContentTemplate.default, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
+         getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
             done();
          });
@@ -110,7 +110,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
       it('verticalAling', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_top controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></div><div></div></div></div>';
 
-         getMarkup(popupContentTemplate.default, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: 'top'}}}}).addCallback(function(res) {
+         getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: 'top'}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
             done();
          });
