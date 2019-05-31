@@ -549,7 +549,7 @@ define([
                keyProperty: 'id',
                listModel: getListModel(2)
             };
-            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.toggleAll();
             selection = selectionInstance.getSelection();
 
