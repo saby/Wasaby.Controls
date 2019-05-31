@@ -1139,6 +1139,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 * to first element.
                 */
 
+                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
+                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
+                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
+                if (self._options.task1177182277) {
+                    return;
+                }
+
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 // FIXME self._options.task46390860
