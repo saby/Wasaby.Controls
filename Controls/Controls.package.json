@@ -77,11 +77,5 @@
     "Controls/Utils/isVDOMTemplate"
   ],
   "output": "controls-utils.package.js"
-}, {
-  "include": [
-    "Controls/Selector/Suggest",
-    "wml!Controls/Selector/Suggest/Suggest"
-  ],
-  "output": "controls-selector.package.js"
 }
 ]
