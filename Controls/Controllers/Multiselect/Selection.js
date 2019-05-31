@@ -113,7 +113,7 @@ define('Controls/Controllers/Multiselect/Selection', [
             this.select(swap);
          } else {
             swap = this._selectedKeys;
-            this.selectAll.apply(this, arguments);
+            this.selectAll();
             this.unselect(swap);
          }
       },

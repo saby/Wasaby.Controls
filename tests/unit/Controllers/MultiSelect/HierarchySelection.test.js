@@ -208,20 +208,6 @@ define([
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
             });
 
-            it('select section', function() {
-               cfg = {
-                  selectedKeys: [],
-                  excludedKeys: [],
-                  items: allData,
-                  keyProperty: 'id'
-               };
-               selectionInstance = new HierarchySelection(cfg);
-               selectionInstance.select(['rootId']);
-               selection = selectionInstance.getSelection();
-               assert.deepEqual(['rootId'], selection.selected);
-               assert.deepEqual([], selection.excluded);
-            });
-
             it('select previously excluded child', function() {
                cfg = {
                   selectedKeys: [null],
@@ -540,6 +526,29 @@ define([
 
             assert.deepEqual([null], selection.selected);
             assert.deepEqual([1, 2, 4, 5, 6, 7, 8], selection.excluded);
+         });
+
+         it('toggleAll with root', function() {
+            cfg = {
+               selectedKeys: [1, 4, 6],
+               excludedKeys: [2, 5],
+               items: allData,
+               keyProperty: 'id'
+            };
+            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance.toggleAll(2);
+            selection = selectionInstance.getSelection();
+
+            // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
+            assert.deepEqual([1, 6], selection.selected);
+            assert.deepEqual([5, 4], selection.excluded);
+
+            selectionInstance.toggleAll(2);
+            selection = selectionInstance.getSelection();
+
+            // Вернулись к начальному
+            assert.deepEqual([1, 6, 4], selection.selected);
+            assert.deepEqual([5, 2], selection.excluded);
          });
       });
 
