@@ -27,6 +27,15 @@ var _private = {
 
     afterItemsRemove: function (self, items, result) {
         self._notify('afterItemsRemove', [items, result]);
+
+        //According to the standard, after moving the items, you need to unselect all in the table view.
+        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+        //You need a schema in which Mover will not work directly with the selection.
+        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+        self._notify('selectedTypeChanged', ['unselectAll'], {
+            bubbling: true
+        });
     },
 
     updateDataOptions: function (self, dataOptions) {

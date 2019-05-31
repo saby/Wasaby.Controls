@@ -366,7 +366,7 @@ define(
                topScroll: 0
             };
             let position = StickyStrategy.getPosition(popupCfg, targetC);
-            assert.equal(position.right, 1670);
+            assert.equal(position.left, 0);
          });
 
          it('Centered sticky', () => {
