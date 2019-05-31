@@ -3,7 +3,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
 import DataOptions = require('Controls/Container/Data/ContextOptions');
 import clone = require('Core/core-clone');
-import {_SearchController} from 'Controls/search';
+import _SearchController from './_SearchController';
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
