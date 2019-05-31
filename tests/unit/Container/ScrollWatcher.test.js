@@ -308,11 +308,12 @@ define([
 
          global.IntersectionObserver = savedIO;
 
+         ins._unRegisterIt({}, 'listScroll', control1);
+         assert.equal(null, observer1._callback, 'Observers weren\'t disconnect after unregister');
 
          ins._beforeUnmount();
          assert.equal(null, ins._observers, 'Observers weren\'t destroyed');
-         assert.equal(null, observer1._callback, 'Observers weren\'t destroyed');
-         assert.equal(null, observer2._callback, 'Observers weren\'t destroyed');
+         assert.equal(null, observer2._callback, 'Observers weren\'t disconnect after umount');
       });
    })
 });
