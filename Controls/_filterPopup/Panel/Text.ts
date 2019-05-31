@@ -25,7 +25,7 @@ import 'css!theme?Controls/filterPopup';
 
    /**
     * @name Controls/_filterPopup/Panel/Text#caption
-    * @cfg {String} Текст, который будет отображаться рядом с кнопкой сброса.
+    * @cfg {String} Caption Текст, который будет отображаться рядом с кнопкой сброса.
     * @example
     * <pre>
     *    <Controls.filterPopup:Text>
