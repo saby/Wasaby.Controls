@@ -82,7 +82,6 @@ var StickyHeader = Control.extend({
          topTarget: children.observationTargetTop,
          bottomTarget: children.observationTargetBottom,
          position: this._options.position,
-         title: this._options.curentTitle
       });
 
       this._observer.observe(children.observationTargetTop);
@@ -240,7 +239,12 @@ var StickyHeader = Control.extend({
       // The top observer has a height of 1 pixel. In order to track when it is completely hidden
       // beyond the limits of the scrollable container, taking into account round-off errors,
       // it should be located with an offset of -3 pixels from the upper border of the container.
-      return position + ': -' + (this._stickyHeadersHeight[position] + 3) + 'px;';
+      let coord = this._stickyHeadersHeight[position] + 3;
+      if (position === 'top' && this._options.offsetTop && this._options.shadowVisibility === 'visible') {
+         coord += this._options.offsetTop;
+      }
+      return position + ': -' + coord + 'px;';
+
    },
 
    _updateStickyShadow: function(e, ids) {
@@ -254,13 +258,10 @@ var StickyHeader = Control.extend({
    _isShadowVisible: function(shadowPosition) {
       //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
       var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
-      let fp = '';
-      if (this._model && this._options.bottomShadowVisible) {
-         fp = 'top';
-      }
+
       return (!this._context.stickyHeader || this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
-         ((this._model && this._model.fixedPosition === fixedPosition) || fp === fixedPosition) && this._options.shadowVisibility === 'visible' &&
-         (this._options.mode === 'stackable' || this._shadowVisible);
+          (this._model && this._model.fixedPosition === fixedPosition) && this._options.shadowVisibility === 'visible' &&
+          (this._options.mode === 'stackable' || this._shadowVisible);
    }
 });
 

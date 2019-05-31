@@ -457,6 +457,7 @@ var
         _maxEndRow: 0,
         _curHeaderRowIndex: 0,
         _resultOffset: 0,
+        _headerCellMinHeight: null,
 
         _resultsColumns: [],
         _curResultsColumnIndex: 0,
@@ -562,6 +563,8 @@ var
                 this._headerRows = [];
             }
             this._resultOffset = this._maxEndRow ? this._maxEndRow - 2 : 0;
+            this._headerCellMinHeight = this._headerRows.length > 1 ? 20 : 23;
+            this.headerHeight = (this._maxEndRow - 1) * this._headerCellMinHeight;
             // if (multiSelectVisibility) {
             //     this._headerColumns = [{}].concat(columns);
             // } else {
@@ -683,25 +686,26 @@ var
             // -----------------------------------------------------------
             // ---------------------- multyHeader ------------------------
             // -----------------------------------------------------------
+            const { endRow, startRow, endColumn, startColumn } = cell;
             let cellContentClasses = '';
             let cellStyles = '';
             let height = '';
             let stickyTop = 0;
             let shadowVisibility = 'visible';
 
+            cellContentClasses += ' controls-Grid__cell_header-content';
+            height = endRow ? `max-height:${(endRow - startRow) * this._headerCellMinHeight}px;` : `max-height:${this._headerCellMinHeight}px;`;
+
             if (cell.startRow) {
-                const { endRow, startRow, endColumn, startColumn } = cell;
                 if (this.isNoGridSupport()) {
 
                     headerColumn.rowSpan = endRow - startRow;
                     headerColumn.colSpan = endColumn - startColumn;
                 } else {
                     if (this.isStickyHeader()) {
-                        stickyTop = startRow ? (startRow - 1 ) * 20 : 0;
-                        shadowVisibility = rowIndex === this._headerRows.length - 1 || endRow === this._maxEndRow ? 'visible' : 'hidden';
+                        stickyTop = startRow ? (startRow - 1 ) * this._headerCellMinHeight : 0;
+                        shadowVisibility = (rowIndex === this._headerRows.length - 1 || endRow === this._maxEndRow) && this.getResultsPosition() !== 'top' ? 'visible' : 'hidden';
                     }
-
-
 
                     const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
                     const gridStyles = [
@@ -718,8 +722,6 @@ var
                     cellStyles += GridLayoutUtil.toCssString(gridStyles);
 
                 }
-                cellContentClasses += ' controls-Grid__cell_header-content';
-                height = `max-height:${(endRow - startRow) * 20}px;`;
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             }
@@ -728,6 +730,7 @@ var
                 cellStyles = `grid-row:1/${this._maxEndRow};grid-column:1/2;`;
                 headerColumn.rowSpan = this._maxEndRow - 1;
                 headerColumn.colSpan = 1;
+                height = '';
             }
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
@@ -824,6 +827,7 @@ var
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
+            resultsColumn.stickyTop = this._maxEndRow ? (this._maxEndRow - 1 ) * this._headerCellMinHeight : 0;
             return resultsColumn;
         },
 
