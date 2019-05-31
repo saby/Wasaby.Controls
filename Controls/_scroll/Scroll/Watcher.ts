@@ -341,6 +341,9 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
                this._registrar.unregister(event, component);
+               if (this._observers && this._observers[component.getInstanceId()]) {
+                  this._observers[component.getInstanceId()].disconnect();
+               }
             }
          },
 
