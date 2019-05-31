@@ -16,7 +16,8 @@ define([
             start: function(eType) {
                evType.push(eType);
             },
-            destroy: function(){}
+            destroy: function(){},
+            unregister: function(){}
          };
 
       });
