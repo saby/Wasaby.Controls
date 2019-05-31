@@ -4,6 +4,7 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Layer/__PopupLayer');
+import templateContent from './__PopupContent';
 import getZIndex = require('Controls/Utils/getZIndex');
 import 'css!theme?Controls/suggest';
 
@@ -13,7 +14,7 @@ var _private = {
    openPopup: function(self, opener, options) {
       opener.open({
          target: options.target,
-         template: 'Controls/Container/Suggest/__PopupContent',
+         template: templateContent,
          opener: self,
          zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
          templateOptions: {

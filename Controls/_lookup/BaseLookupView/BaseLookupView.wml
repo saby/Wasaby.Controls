@@ -19,7 +19,7 @@
       filter="{{_options.filter}}"
       sorting="{{_options.sorting}}"
       autoDropDown="{{_determineAutoDropDown()}}"
-      layerName="Controls/Container/Suggest/__PopupLayer"
+      layerName="Controls/suggest:__PopupLayer"
       value="{{_inputValue}}"
       attr:class="controls-Lookup__suggest">
    <Controls._lookup.BaseLookupView.InputRender
