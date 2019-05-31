@@ -6,10 +6,11 @@ define('Controls/Container/Suggest/__PopupLayer',
       'Core/Control',
       'wml!Controls/Container/Suggest/__PopupLayer',
       'Controls/Utils/getZIndex',
+      'Env/Env',
       'css!Controls/Container/Suggest/PopupLayer'
    ],
 
-   function(Control, template, getZIndex) {
+   function(Control, template, getZIndex, Env) {
 
       'use strict';
 
@@ -21,6 +22,7 @@ define('Controls/Container/Suggest/__PopupLayer',
                target: options.target,
                template: 'Controls/Container/Suggest/__PopupContent',
                opener: self,
+               actionOnScroll: Env.detection.isMobileIOS ? 'none' : 'close',
                zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
                templateOptions: {
                   target: options.target,
