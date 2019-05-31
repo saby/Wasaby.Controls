@@ -102,7 +102,7 @@ var BaseLookupView = Control.extend({
 
             /* focus can be moved in choose event */
             if (this._active) {
-                this.activate();
+                this.activate({enableScreenKeyboard: true});
             }
         }
 
@@ -123,7 +123,7 @@ var BaseLookupView = Control.extend({
 
         // move focus to input after select, because focus will be lost after closing popup
         if (this._isInputVisible(this._options)) {
-            this.activate();
+            this.activate({enableScreenKeyboard: true});
         }
     },
 
@@ -207,7 +207,7 @@ var BaseLookupView = Control.extend({
         this._notify('updateItems', [[]]);
 
         // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
-        this.activate();
+        this.activate({enableScreenKeyboard: true});
     },
 
     _itemClick: function (event, item) {
