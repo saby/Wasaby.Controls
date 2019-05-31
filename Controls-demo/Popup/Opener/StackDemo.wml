@@ -2,8 +2,7 @@
     <Controls.popup:Dialog name="dialog"
                                   template="Controls-demo/Popup/Opener/resources/DialogTpl">
     </Controls.popup:Dialog>
-    <Controls.popup:Stack name="stack"
-                                 template="Controls-demo/Popup/Opener/resources/StackTemplate">
+    <Controls.popup:Stack name="stack">
     </Controls.popup:Stack>
     <Controls.popup:Sticky name="sticky"
                            template="Controls-demo/Popup/Opener/resources/DialogTpl">
@@ -20,6 +19,9 @@
     </div>
     <div>
         <Controls.buttons:Button name="button4" caption="Open Modal Stack" on:click="openModalStack()"/>
+    </div>
+    <div>
+        <Controls.buttons:Button name="button6" caption="Open Stack with headerTemplate" on:click="openStackCustomHeader()"/>
     </div>
     <div>
         <Controls.buttons:Button name="button3" caption="Open Dialog" on:click="openDialog()"/>

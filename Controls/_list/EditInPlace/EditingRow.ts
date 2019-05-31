@@ -18,7 +18,15 @@ var EditingRow = Control.extend({
 
     _onKeyDown: function (event) {
         this._notify('editingRowKeyDown', [event.nativeEvent], {bubbling: true});
-        event.stopPropagation();
+
+        // Так как наша система событий ловит события на стадии capture,
+        // а подписки в БТРе на стадии bubbling, то не нужно звать stopPropagation
+        // так как обработчики БТРа в таком случае не отработают, потому что
+        // у события не будет bubbling фазы
+        // TODO: Нужно поправить после исправления https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
+        if (!event.target.closest('.richEditor_TinyMCE')) {
+            event.stopPropagation();
+        }
     },
 
     _onClickHandler: function (e) {
