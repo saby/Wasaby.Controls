@@ -1,52 +1,61 @@
-<div class="validateDemo">
-      <span id="info_focusout" class="validateDemo_header">
-          Validate/Input (Валидация происходит по focusOut)
-      </span>
-      <div class="validateDemo_content">
-                <Controls.validate:InputContainer name="InputValidate" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
-                    <ws:validators>
-                        <ws:Function value="{{_valueEmail}}">Controls/validate:isEmail</ws:Function>
-                    </ws:validators>
-                    <ws:content>
-                        <Controls.input:Text
-                                name="textBox"
-                                bind:value="_valueEmail"
-                                placeholder="Введите Email"/>
-                    </ws:content>
-                </Controls.validate:InputContainer>
-                <Controls.validate:InputContainer name="InputValidate2" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
-                    <ws:validators>
-                        <ws:Function value="{{_valueInn}}">Controls/validate:isInn</ws:Function>
-                    </ws:validators>
-                    <ws:content>
-                        <Controls.input:Number
-                                name="textBox"
-                                precision="{{0}}"
-                                bind:value="_valueInn"
-                                placeholder="Введите ИНН"/>
-                    </ws:content>
-                </Controls.validate:InputContainer>
-                 <Controls.validate:InputContainer name="InputValidate3" attr:class="ControlsDemo-ValidateInfobox_inputValidate3">
-                    <ws:validators>
-                         <ws:Function value="{{_value6 }}">Controls-demo/Input/Validate/Validator</ws:Function>
-                    </ws:validators>
-                    <ws:content>
-                        <Controls.input:Text
-                                name="textBox"
-                                bind:value="_value6"
-                                placeholder="Введите код"/>
-                    </ws:content>
-                </Controls.validate:InputContainer>
-      </div>
-    <span id="info_focusout" class="validateDemo_header">Валидация на стековой панели</span>
-    <div class="validateDemo_content">
-                <Controls.buttons:Button name="Panel"
-                                         on:click="_openPanel()"
-                                         caption="Открыть StackPanel"
-                                         attr:class="ControlsDemo-ValidateInfobox_panel"/>
-                <Controls.popup:Stack name="opener"
-                                             template="Controls-demo/Input/Validate/Text">
-                </Controls.popup:Stack>
-    </div>
-  <Controls-demo.Input.Validate.FormController/>
+<div>
+   <div id="info_focusout" class="validateDemo_header validateDemo">
+       Простой валидатор поля ввода. Значение валидируется по событию focusout.
+   </div>
+   <div class="validateDemo_header_description validateDemo">
+      В данном примере показано:
+      <ul style="margin-left: 20px;">
+         <li>как задать валидатор на поле ввода</li>
+         <li>как задать несколько валидаторов на поле ввода</li>
+         <li>как задать пользовательский шаблон для вывода ошибки</li>
+      </ul>
+   </div>
+   <div class="validateDemo_content">
+      <Controls.validate:InputContainer name="InputValidate" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
+         <ws:validators>
+            <ws:Function value="{{_valueEmail}}">Controls/validate:isEmail</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <div class="validate_item">
+               <div class="validate_item_text">Требуется ввести валидный email адрес:</div>
+               <Controls.input:Text
+                  name="textBox"
+                  bind:value="_valueEmail"
+                  placeholder="Введите Email"/>
+            </div>
+
+         </ws:content>
+      </Controls.validate:InputContainer>
+      <Controls.validate:InputContainer name="InputValidate2" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
+         <ws:validators>
+            <ws:Function value="{{_valueInn}}">Controls/validate:isInn</ws:Function>
+            <ws:Function value="{{_valueInn}}">Controls/validate:isRequired</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <div class="validate_item">
+               <div class="validate_item_text">Поле обязательно для заполнения. Ожидается вадиный инн.</div>
+               <Controls.input:Number
+                  name="textBox"
+                  precision="{{0}}"
+                  bind:value="_valueInn"
+                  placeholder="Введите ИНН"/>
+            </div>
+         </ws:content>
+      </Controls.validate:InputContainer>
+      <Controls.validate:InputContainer name="InputValidate3" attr:class="ControlsDemo-ValidateInfobox_inputValidate3">
+         <ws:validators>
+            <ws:Function value="{{_value6 }}">Controls-demo/Input/Validate/Validator</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <div class="validate_item">
+               <div class="validate_item_text">Ожидается код больше 3 символов. Ошибка с пользовательским шаблоном</div>
+               <Controls.input:Text
+                  name="textBox"
+                  bind:value="_value6"
+                  placeholder="Введите код"/>
+            </div>
+         </ws:content>
+      </Controls.validate:InputContainer>
+   </div>
+   <Controls-demo.Input.Validate.FormController/>
 </div>
