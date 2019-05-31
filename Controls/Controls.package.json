@@ -25,8 +25,6 @@
 }, {
   "include": [
     "Controls/Container/Data/ContextOptions",
-    "wml!Controls/Container/Data/Data",
-    "Controls/Container/Data/getPrefetchSource",
     "Controls/Container/Filter",
     "wml!Controls/Container/Filter/Filter",
     "Controls/Container/Filter/FilterContextField",
