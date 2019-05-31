@@ -36,15 +36,7 @@
     "wml!Controls/Container/List/List",
     "Controls/Container/Search",
     "wml!Controls/Container/Search/Search",
-    "Controls/Container/Search/SearchContextField",
-    "Controls/Container/Suggest/ContentLayer/Styles",
-    "Controls/Container/Suggest/__BaseLayer",
-    "Controls/Container/Suggest/__ContentLayer",
-    "wml!Controls/Container/Suggest/__ContentLayer",
-    "Controls/Container/Suggest/__PopupContent",
-    "wml!Controls/Container/Suggest/__PopupContent",
-    "Controls/Container/Suggest/__PopupLayer",
-    "wml!Controls/Container/Suggest/__PopupLayer"
+    "Controls/Container/Search/SearchContextField"
   ],
   "output": "controls-container.package.js"
 }, {
