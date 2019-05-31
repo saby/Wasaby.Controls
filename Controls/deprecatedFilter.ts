@@ -1,1 +1,1 @@
-export {Container} from './_deprecatedFilter/Container';
+export {default as Container} from './_deprecatedFilter/Container';
