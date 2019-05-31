@@ -13,12 +13,12 @@
  * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
  * @includes DataContainer Controls/_list/Data
  * @includes AddButtonStyles Controls/_list/AddButton/Styles
- * @includes IDraggable Controls/_list/interface/IDraggable
  * @includes IHierarchy Controls/_list/interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ListStyles Controls/_list/ListStyles
  * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
+ * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @public
  * @author Kraynov D.
  */
