@@ -6,7 +6,6 @@
                _itemTemplate="{{_itemTemplate}}"
                _groupTemplate="{{_groupTemplate}}"
                _getGridTemplateColumns="{{ _getGridTemplateColumns }}"
-               _getEditingRowStyles="{{ _getEditingRowStyles }}"
                _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
                _resultsTemplate="{{_resultsTemplate}}"
                _options="{{_options}}"/>

@@ -3,7 +3,7 @@ import {GridLayoutUtil} from 'Controls/list'
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex
+    getResultsIndex, getTopOffset
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
 
@@ -219,7 +219,8 @@ var
                 getIndexById: (id) => getIndexById.apply(null, getArgsForRowIndexUtil(id)),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex.apply(null, getArgsForRowIndexUtil(index)),
                 getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate)
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
             };
         }
     });

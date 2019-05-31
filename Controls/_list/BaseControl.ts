@@ -893,6 +893,12 @@ var _private = {
             navigation: navigation,
             keyProperty: keyProperty
         })
+    },
+
+    checkRequiredOptions: function(options) {
+        if (options.keyProperty === undefined) {
+            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
+        }
     }
 };
 
@@ -970,6 +976,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
+        _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
@@ -1157,6 +1164,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         let reloadItemDeferred;
         let filter;
+        let itemsCount;
 
         function loadCallback(item):void {
             if (replaceItem) {
@@ -1174,16 +1182,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
             reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
-                if (items.getCount() && items.getCount() === 1) {
+                itemsCount = items.getCount();
+
+                if (itemsCount === 1) {
                     loadCallback(items.at(0));
+                } else if (itemsCount > 1) {
+                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    throw new Error('BaseControl::reloadItem query returns wrong amount of items for reloadItem call with key: ' + key);
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
         } else {
             reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
-                loadCallback(item);
+                if (item) {
+                    loadCallback(item);
+                } else {
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                }
                 return item;
             });
         }

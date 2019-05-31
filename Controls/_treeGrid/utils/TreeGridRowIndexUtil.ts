@@ -177,23 +177,8 @@ function getFooterIndex(display: Display, hasHeader: boolean, resultsPosition: R
     return index;
 }
 
-
-export {
-    getIndexById,
-    getIndexByItem,
-    getIndexByDisplayIndex,
-    getResultsIndex,
-    getFooterIndex
-}
-
-
-
-// region private functions
-
 /**
  * Возвращиет отступ сверху для первой записи списка
- *
- * @private
  */
 function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
     let
@@ -205,7 +190,18 @@ function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = nul
     return topOffset;
 }
 
+export {
+    getIndexById,
+    getIndexByItem,
+    getIndexByDisplayIndex,
+    getResultsIndex,
+    getFooterIndex,
+    getTopOffset
+}
 
+
+
+// region private functions
 
 /**
  * Функция расчета номера строки в списке для заданного элемента.

@@ -13,7 +13,7 @@ var ScrollEmitter = Control.extend({
     },
 
     _beforeUnmount: function () {
-        this._notify('unregister', [this._options.event, this], {bubbling: true});
+        this._notify('unregister', ['listScroll', this], {bubbling: true});
     },
     handleScroll: function () {
         this._notify('emitListScroll', Array.prototype.slice.call(arguments));

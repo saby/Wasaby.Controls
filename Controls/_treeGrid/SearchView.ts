@@ -13,7 +13,9 @@ var
             e.stopPropagation();
         },
         _onSearchPathClick: function (e, item) {
-            this._notify('itemClick', [item, e], {bubbling: true});
+           if (!this._options.readOnly) {
+              this._notify('itemClick', [item, e], {bubbling: true});
+           }
         },
         getDefaultOptions: function () {
             return {
