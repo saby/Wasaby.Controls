@@ -96,7 +96,7 @@ define('Controls/Selector/Suggest',
          },
 
          _choose: function(event, item) {
-            this.activate();
+            this.activate({enableScreenKeyboard: true});
             _private.updateValue(this, item.get(this._options.displayProperty) || '');
             if (this._options.historyId && item.get(this._options.keyProperty) !== undefined) {
                this._historySource.update(item, { $_history: true });
