@@ -158,6 +158,12 @@ var
             }
          }
          return hasExcludedChildren;
+      },
+
+      getIntersection: function(firstCollection, secondCollection) {
+         return firstCollection.filter(function(key) {
+            return secondCollection.indexOf(key) !== -1;
+         });
       }
    };
 
@@ -230,6 +236,31 @@ var HierarchySelection = Selection.extend({
       }.bind(this));
    },
 
+   selectAll: function() {
+      this.select([this._getRoot()]);
+   },
+
+   unselectAll: function() {
+      this.unselect([this._getRoot()]);
+   },
+
+   toggleAll: function() {
+      var
+         rootId = this._getRoot(),
+         selectedKeys = this._selectedKeys.slice(),
+         excludedKeys = this._excludedKeys.slice(),
+         childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
+
+      if (this._isAllSelection(this._getParams(rootId))) {
+         this.unselectAll(rootId);
+         this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
+
+      } else {
+         this.selectAll(rootId);
+         this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
+      }
+   },
+
    getCount: function() {
       return (
          _private.getSelectedCount(
@@ -286,7 +317,11 @@ var HierarchySelection = Selection.extend({
          items = options.items,
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, rootId, selectedKeys, excludedKeys, items);
 
-      return isParentSelected || selectedKeys.indexOf(rootId) !== -1;
+      return isParentSelected && excludedKeys.indexOf(rootId) === -1 || selectedKeys.indexOf(rootId) !== -1;
+   },
+
+   _getRoot: function() {
+      return this._options.listModel.getRoot().getContents();
    }
 });
 
