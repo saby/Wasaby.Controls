@@ -5,6 +5,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Layer/__PopupLayer');
 import templateContent from './__PopupContent';
+import {detection} from 'Env/Env';
 import getZIndex = require('Controls/Utils/getZIndex');
 import 'css!theme?Controls/suggest';
 
@@ -16,6 +17,7 @@ var _private = {
          target: options.target,
          template: templateContent,
          opener: self,
+         actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
          zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
          templateOptions: {
             target: options.target,
