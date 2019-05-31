@@ -5,7 +5,7 @@
  * @includes InputStyles Controls/_suggest/Input/Styles
  * @includes _InputController Controls/_suggest/_InputController
  * @includes SearchInput Controls/_suggest/Input/Search/Suggest
- * @includes LayerStyles Controls/_suggest/Layer/ContentLayer/Styles
+ * @includes ContentLayerStyles Controls/_suggest/Layer/ContentLayer/Styles
  * @includes Selector Controls/_suggest/Selector
  *
  * @public
