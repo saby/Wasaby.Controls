@@ -34,15 +34,16 @@ define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/help
       },
 
       isPortrait: function() {
-         return window.innerHeight > window.innerWidth;
+         // Высота экрана может уменьшиться на высоту клавиатуры. Для точного определения ориентации учитываю скроллY.
+         return (window.innerHeight + window.scrollY) > window.innerWidth;
       },
 
       getKeyboardAnimation: function() {
          return this._keyboardAnimation;
       },
 
-      getKeyboardHeight: function() {
-         if (this.isKeyboardVisible()) {
+      getKeyboardHeight: function(notConsiderFocusPosition) {
+         if (this.isKeyboardVisible(notConsiderFocusPosition)) {
             if (Env.detection.isMobileIOS) {
                // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!!!) клавиатура при своем показе
                // уменьшает высоту экрана(как это и должно быть). в этом случае хэлпер должен вернуть высоту 0, чтобы
@@ -57,15 +58,15 @@ define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/help
          return 0;
       },
 
-      isKeyboardVisible: function() {
+      isKeyboardVisible: function(notConsiderFocusPosition) {
          var isVisible = this._keyboardVisible;
 
          // Отдельно проверяем, есть ли фокус в полях ввода, т.к. клавиатура показана только в этом случае.
          // Можно обкатать механизм на этих правках и впоследствии избавиться от нотифая глобального события в полях ввода.
          // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
          // Куда пришел фокус, если это input/textarea/contenteditable, то через emitter/listener сообщать
-         // об этом дочерним компонентам. Костыль актуален только для старой страницы, на вдом отключил.
-         if (!isNewEnvironment() && !isVisible && document && document.activeElement) {
+         // об этом дочерним компонентам. Костыль актуален только для старых контролов, на вдом отключил.
+         if (!isNewEnvironment() && !notConsiderFocusPosition && !isVisible && document && document.activeElement) {
             var isInput = document.activeElement.tagName === 'INPUT';
             var isTextArea = document.activeElement.tagName === 'TEXTAREA';
             var isContentEditable = document.activeElement.getAttribute('contenteditable') === 'true';

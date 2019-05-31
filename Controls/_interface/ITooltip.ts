@@ -9,7 +9,9 @@ export interface ITooltipOptions {
  * @public
  * @author Красильников А.С.
  */
-
+export default interface ITooltip {
+   readonly '[Controls/_interface/ITooltip]': boolean;
+}
 /**
  * @name Controls/_interface/ITooltip#tooltip
  * @cfg {String} Text of the tooltip shown when the control is hovered over.
@@ -21,6 +23,3 @@ export interface ITooltipOptions {
  *    <ControlsDirectory.Control tooltip=”Add”/>
  * </pre>
  */
-export default interface ITooltip {
-   readonly '[Controls/_interface/ITooltip]': boolean;
-}

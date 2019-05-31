@@ -26,7 +26,7 @@ define('Controls-demo/Input/Suggest/SuggestPG', [
 
    return Control.extend({
       _template: template,
-      _content: 'Controls/Input/Suggest',
+      _content: 'Controls/suggest:Input',
       _dataObject: null,
       _componentOptions: null,
 

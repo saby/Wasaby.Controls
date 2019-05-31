@@ -2,8 +2,8 @@ define(
    [
       'Env/Env',
       'Controls/Utils/hasHorizontalScroll',
-      'Controls/Input/resources/InputRender/InputRender',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/_input/resources/InputRender/InputRender',
+      'Controls/_input/resources/InputRender/BaseViewModel'
    ],
    function(Env, hasHorizontalScroll, Render, BaseViewModel) {
       'use strict';
@@ -12,7 +12,7 @@ define(
          return;
       }
 
-      describe('Controls.Input.Render', function() {
+      describe('Controls/_input/Render', function() {
          var render, viewModel, result;
          var saveFn = getComputedStyle;
 

@@ -4,10 +4,15 @@ define('Controls/Utils/FontLoadUtil', [
 ], function(Deferred) {
    'use strict';
 
+   var LOADED_FONTS_FOR_CLASS = {};
    var
       fallbackFontWidth,
       _private = {
          isLoaded: function(className) {
+            if (LOADED_FONTS_FOR_CLASS[className]) {
+               return true;
+            }
+
             var
                measurer = document.createElement('div'),
                loadedFontWidth;
@@ -30,10 +35,16 @@ define('Controls/Utils/FontLoadUtil', [
       };
 
    return {
+      __loadedFonts: LOADED_FONTS_FOR_CLASS,
       waitForFontLoad: function(className) {
-         var
-            def = new Deferred(),
-            checkFontLoad;
+         var def = new Deferred();
+         var checkFontLoad;
+
+         def.addCallback(function(res) {
+            LOADED_FONTS_FOR_CLASS[className] = true;
+            return res;
+         });
+
          if (_private.isLoaded(className)) {
             def.callback();
          } else {

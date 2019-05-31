@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone'], function(List, sourceLib, collection, Deferred, clone) {
+define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone', 'Controls/history'], function(List, sourceLib, collection, Deferred, clone, history) {
 
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -208,6 +208,12 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          assert.isFalse(!!listLayout._searchController);
 
          var searchController = List._private.getSearchController(listLayout);
+         var historySource = new history.Source({
+            originSource: listSource,
+            historySource: new history.Service({
+               historyId: 'historyField'
+            })
+         });
 
          assert.isTrue(!!listLayout._searchController);
          assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
@@ -218,6 +224,11 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          searchController = List._private.getSearchController(listLayoutWithPrefetch);
 
          assert.isTrue(searchController._options.source instanceof sourceLib.Memory);
+
+         listLayoutWithPrefetch._searchController = undefined;
+         listLayoutWithPrefetch._options.source = historySource;
+         searchController = List._private.getSearchController(listLayoutWithPrefetch);
+         assert.isTrue(searchController._options.source instanceof history.Source);
       });
 
       it('._beforeUnmount', function(done) {

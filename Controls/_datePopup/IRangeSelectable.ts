@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 
 /**
  * Интерфейс контролов позволяющих выделять интервалы от одного значения до другого
- * mixin Controls/Calendar/interface/IRangeSelectable
+ * mixin Controls/_datePopup/IRangeSelectable
  */
 var selectionTypes = {
     range: 'range',
@@ -17,7 +17,7 @@ export default {
             // TODO: имеет ли смысл оставлять опуию selectionType? selectionType: 'single', это частный случай quantum: {days: [1]}
             // Возможно стоит оставить, но ввести selectionType: 'quantum' и сделать что бы опция quantum работала только в этом случае.
             /**
-             * @name Controls/Calendar/interface/IRangeSelectable#selectionType
+             * @name Controls/_datePopup/IRangeSelectable#selectionType
              * @cfg {String} Определяет режим выделения диапазано
              * @variant 'range' режим выделения произвольного диапазона
              * @variant 'single' режим выделения одного элемента

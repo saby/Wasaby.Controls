@@ -1,15 +1,11 @@
-import * as Control from 'Core/Control';
+import {Control, IControlOptions} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions} from 'Controls/interface';
 // убрать после https://online.sbis.ru/opendoc.html?guid=39d8fd32-5701-4e7f-b022-3ef5893977e8
 import 'css!theme?Controls/_toggle/Checkbox/Checkbox';
+import {IToggleButtonOptions} from "./Button";
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-   readOnly?: boolean;
-   theme?: string;
-}
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions {
    triState?: boolean;
    value?: boolean | null;
@@ -45,7 +41,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Checkbox with enabled triState.
  * <pre>
- *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -71,7 +67,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Checkbox regulate theme in control.
  * <pre>
- *    <Controls.Toggle.Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -85,7 +81,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * </pre>
  * Checkbox value when triState option is true.
  * <pre>
- *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -107,7 +103,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @example
  * Example description.
  * <pre>
- *    <Controls.Toggle.Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
+ *    <Controls.toggle:Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -125,12 +121,11 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
 const mapTriState = {false: true, true: null, null: false};
 const mapBoolState = {true: false, false: true};
 
-class Checkbox extends Control implements ICaption, IIcon, ITooltip {
+class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITooltip {
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = checkBoxTemplate;
    protected _theme: string[] = ['Controls/toggle'];
-   protected _options: ICheckboxOptions;
 
    private _notifyChangeValue(value: boolean | null): void {
       this._notify('valueChanged', [value]);

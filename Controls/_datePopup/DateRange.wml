@@ -36,6 +36,7 @@
          dayTemplate="{{_options.dayTemplate}}"
          on:itemClick="_onItemClick()"
          on:scroll="_onScroll()"
+         on:drawItems="_drawItemsHandler()"
       >
          <ws:itemTemplate>
             <ws:partial

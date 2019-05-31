@@ -5,7 +5,7 @@ import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import {Controller as SourceController} from 'Controls/source';
-import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
+import {selectionToRecord} from 'Controls/operations';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import {adapter} from 'Types/entity'
@@ -188,10 +188,6 @@ import {IData, IDecorator} from "Types/source";
 
             let loadDef;
 
-            function prepareResult(result) {
-               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
-            }
-
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
                const adapter = _private.getSourceAdapter(source);
@@ -200,21 +196,31 @@ import {IData, IDecorator} from "Types/source";
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
+               const items = dataOptions.items;
+               const multiSelect = this._options.multiSelect;
+               const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
-               loadDef = sourceController.load(
-                   _private.prepareFilter(
-                       dataOptions.filter,
-                       selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
-                       self._options.searchParam
-                   )
-               );
+               if (!multiSelect && selectedItem) {
+                  let selectedItems = _private.getEmptyItems(self._items);
 
-               loadDef.addCallback(function(result) {
-                  return prepareResult(result);
-               });
+                  selectedItems.add(selectedItem);
+                  loadDef = Deferred.success(selectedItems);
+               } else {
+                  loadDef = sourceController.load(
+                     _private.prepareFilter(
+                        dataOptions.filter,
+                        selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
+                        self._options.searchParam
+                     )
+                  );
+               }
             } else {
-               loadDef = Deferred.success(prepareResult(_private.getEmptyItems(self._items)));
+               loadDef = Deferred.success(_private.getEmptyItems(self._items));
             }
+
+            loadDef.addCallback(function(result) {
+               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
+            });
 
             this._notify('selectionLoad', [loadDef], {bubbling: true});
          },

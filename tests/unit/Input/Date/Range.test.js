@@ -15,7 +15,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/Range', function() {
+   describe('Controls/_dateRange/Input', function() {
 
       describe('_openDialog', function() {
          it('should open opener', function() {

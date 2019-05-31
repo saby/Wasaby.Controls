@@ -297,6 +297,11 @@ define([
                },
                resetExpandedItems: function() {
 
+               },
+               getItems: function() {
+                  return {
+                     at: function () {}
+                  };
                }
             };
          };
@@ -447,6 +452,7 @@ define([
                stopImmediatePropagation: function() {
                   stopImmediateCalled = true;
                },
+               target: {closest() { return false; }},
                nativeEvent: {
                   keyCode: Env.constants.key.right
                }
@@ -458,6 +464,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.left
                   }
@@ -922,6 +929,32 @@ define([
          });
       });
 
+      it('check deepReload after load', function() {
+         let source = new sourceLib.Memory({
+            data: [{ id: 0, 'Раздел@': false, "Раздел": null }],
+            idProperty: 'id'
+         });
+         let cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            expandedItems: [0],
+            filter: {}
+         };
+
+         let treeControl = correctCreateTreeControl(cfg);
+
+         return new Promise(function(resolve) {
+            treeControl._children.baseControl._beforeMount(cfg).addCallback(function(res) {
+               assert.isFalse(treeControl._deepReload);
+               resolve();
+               return res;
+            });
+         });
+      });
+
       it('_private.getReloadableNodes', function() {
          var source = new sourceLib.Memory({
             rawData: getHierarchyData(),
@@ -945,26 +978,45 @@ define([
       });
 
       it('_private.beforeReloadCallback', function() {
-         var cfg = {
-            columns: [],
-            keyProperty: 'id',
-            parentProperty: 'Раздел',
-            nodeProperty: 'Раздел@',
-            expandedItems: [null]
-         };
-         var treeGridViewModel = new treeGrid.ViewModel(cfg);
-         var self = {
+         function getDefaultCfg() {
+            return {
+               columns: [],
+               keyProperty: 'id',
+               parentProperty: 'Раздел',
+               nodeProperty: 'Раздел@',
+               expandedItems: [null]
+            };
+         }
+         let cfg = getDefaultCfg();
+         let treeGridViewModel = new treeGrid.ViewModel(cfg);
+
+         let emptyCfg = getDefaultCfg();
+         emptyCfg.expandedItems = [1, 2];
+         let emptyTreeGridViewModel = new treeGrid.ViewModel(emptyCfg);
+
+         let self = {
             _deepReload: true,
             _children: {},
             _root: 'root'
          };
-         var selfWithBaseControl = {
+         let selfWithBaseControl = {
             _deepReload: true,
             _root: 'root',
             _children: {
                baseControl: {
                   getViewModel: function() {
                      return treeGridViewModel;
+                  }
+               }
+            }
+         };
+         let selfWithBaseControlAndEmptyModel = {
+            _deepReload: true,
+            _root: 'root',
+            _children: {
+               baseControl: {
+                  getViewModel: function() {
+                     return emptyTreeGridViewModel;
                   }
                }
             }
@@ -982,6 +1034,15 @@ define([
          filter = {};
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
+
+         treeGridViewModel.setExpandedItems([1, 2]);
+         filter = {};
+         treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
+         assert.deepEqual(filter['Раздел'], ['root', 1, 2]);
+
+         filter = {};
+         treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControlAndEmptyModel, filter, null, null, emptyCfg);
+         assert.deepEqual(filter['Раздел'], ['root', '1', '2']);
       });
 
       it('_private.applyReloadedNodes', function() {

@@ -12,7 +12,7 @@ define('Controls-demo/Buttons/SelectorButtonPG', [
    return Control.extend({
       _selectedKeys: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       _template: template,
-      _content: 'Controls/Selector/Button',
+      _content: 'Controls/lookup:Selector',
       _dataObject: null,
       _sourceNames: null,
       _sourceCars: null,

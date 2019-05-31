@@ -565,12 +565,6 @@ import 'wml!Controls/_input/Base/Stretcher';
                      this._fieldName = options.name;
                   }
                }
-            } else {
-               /**
-                * To disable auto-complete in a field, its name attribute must have a value that
-                * the browser does not remember. To do this, generate a random name.
-                */
-               this._fieldName = randomName('name-');
             }
          },
 

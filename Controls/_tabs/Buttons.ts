@@ -40,7 +40,7 @@ import Env = require('Env/Env');
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item_theme_'+ options.theme],
+            classes = ['controls-Tabs__item controls-Tabs__item_theme_'+ options.theme],
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
@@ -51,33 +51,36 @@ import Env = require('Env/Env');
          } else {
             modifyToNewStyle = options.style;
          }
-         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
+         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right') +
+             ' controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
          if (order === 1 || order === lastRightOrder) {
-            classes.push('controls-Tabs__item_extreme_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + options.theme);
          }
          if (order === 1) {
-            classes.push('controls-Tabs__item_extreme_first_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_' + options.theme);
          } else if (order === lastRightOrder) {
-            classes.push('controls-Tabs__item_extreme_last_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + options.theme);
          } else {
-            classes.push('controls-Tabs__item_default_theme_' + options.theme);
+            classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected_theme_' + options.theme);
-            classes.push('controls-Tabs__item_state_selected_theme_' + options.theme);
+            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected ' +
+                'controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected_theme_' + options.theme);
+            classes.push('controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_' + options.theme);
          } else {
-            classes.push('controls-Tabs__item_state_default_theme_' + options.theme);
+            classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
          }
          if (item.get('type')) {
-            classes.push('controls-Tabs__item_type_' + item.get('type')+'_theme_' + options.theme);
+            classes.push('controls-Tabs__item_type_' + item.get('type') +
+            ' controls-Tabs__item_type_' + item.get('type')+'_theme_' + options.theme);
          }
 
          // TODO: по поручению опишут как и что должно сжиматься. Пока сжимаем только те вкладки, которые прикладники явно пометили
          // https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
          if (item.get('isMainTab')) {
-            classes.push('controls-Tabs__item_canShrink_theme_'+ options.theme);
+            classes.push('controls-Tabs__item_canShrink');
          } else {
-            classes.push('controls-Tabs__item_notShrink_theme_'+ options.theme);
+            classes.push('controls-Tabs__item_notShrink');
          }
          return classes.join(' ');
       }
@@ -109,7 +112,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with space template.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       .....
     *       tabSpaceTemplate=".../spaceTemplate'"
     *       .....
@@ -142,7 +145,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs Buttons has style 'secondary'.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
@@ -152,7 +155,7 @@ import Env = require('Env/Env');
     * </pre>
     * Tabs Buttons has default style.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
@@ -169,7 +172,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *              bind:selectedKey='_selectedKey'
     *              keyProperty="key"
     *              source="{{_source}}"
@@ -212,7 +215,7 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with item template.
     * <pre>
-    *    <Controls.Tabs.Buttons
+    *    <Controls.tabs:Buttons
     *                   bind:selectedKey='SelectedKey3'
     *                   keyProperty="id"
     *                   style="additional"
@@ -222,7 +225,7 @@ import Env = require('Env/Env');
     *                      item="{{itemTemplate.item}}"
     *                      displayProperty="caption"/>
     *       </ws:itemTemplate>
-    *    </Controls.Tabs.Buttons>
+    *    </Controls.tabs:Buttons>
     * </pre>
     */
 
@@ -240,10 +243,10 @@ import Env = require('Env/Env');
     * @example
     * Tabs buttons with item template.
     * <pre>
-    *    <Controls.Tabs.Buttons itemTemplateProperty="myTemplate"
+    *    <Controls.tabs:Buttons itemTemplateProperty="myTemplate"
     *                           source="{{_source}}
     *                           ...>
-    *    </Controls.Tabs.Buttons>
+    *    </Controls.tabs:Buttons>
     * </pre>
     * myTemplate
     * <pre>

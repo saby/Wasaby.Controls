@@ -1,14 +1,9 @@
-import * as Control from 'Core/Control';
+import {Control, IControlOptions} from 'UI/Base';
 import Classes from './Button/Classes';
 import {buttonTemplate, iconsUtil} from 'Controls/buttons';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IButton, IButtonOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-   readOnly?: boolean;
-   theme?: string;
-}
 export interface IToggleButtonOptions extends
    IControlOptions, ICheckableOptions, ITooltipOptions, IButtonOptions, IIconStyleOptions {
    icons: string[];
@@ -43,11 +38,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with one icon.
  * <pre>
- *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
  * </pre>
  * Toggle button with two icons.
  * <pre>
- *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
  * </pre>
  */
 
@@ -59,11 +54,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with two captions.
  * <pre>
- *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
  * </pre>
  * Toggle button with one caption.
  * <pre>
- *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
  * </pre>
  */
 
@@ -77,15 +72,15 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with 'link' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Toggle button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
  * </pre>
  * Toggle button with 'pushButton' viewMode.
  * <pre>
- *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
  * </pre>
  */
 const stickyButton = [
@@ -93,11 +88,10 @@ const stickyButton = [
    'toolButton'
 ];
 
-class ToggleButton extends Control implements ICheckable {
+class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = buttonTemplate;
    protected _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
-   protected _options: IToggleButtonOptions;
    protected _icon: string;
    protected _buttonStyle: string;
    protected _transparent: boolean;

@@ -46,7 +46,7 @@ define([
             }
          };
 
-   describe('Controls.StickyHeader.Controller', function() {
+   describe('Controls/_scroll/StickyHeader/Controller', function() {
       let component, result;
 
       beforeEach(function() {

@@ -80,7 +80,7 @@ import 'Controls/breadcrumbs';
             var currentRoot = _private.getRoot(self);
             var dataRoot = _private.getDataRoot(self);
 
-            if (viewMode === 'search' && dataRoot !== currentRoot) {
+            if (viewMode === 'search' && self._options.searchMode === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
@@ -235,6 +235,11 @@ import 'Controls/breadcrumbs';
       reload: function() {
          return this._children.treeControl.reload();
       },
+      // todo removed or documented by task:
+      // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
+      toggleExpanded: function(id) {
+         this._children.treeControl.toggleExpanded(id);
+      },
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter
    });
@@ -252,7 +257,8 @@ import 'Controls/breadcrumbs';
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
          backButtonStyle: 'secondary',
-         stickyHeader: true
+         stickyHeader: true,
+         searchMode: 'root'
       };
    };
 

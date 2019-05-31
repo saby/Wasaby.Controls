@@ -16,7 +16,7 @@ define('Controls-demo/Switch/DoubleSwitchPG',
          _items: null,
          _itemsSimple: null,
          _metaData: null,
-         _content: 'Controls/Toggle/DoubleSwitch',
+         _content: 'Controls/toggle:DoubleSwitch',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

@@ -8,7 +8,9 @@ export interface IIconOptions {
  * @interface Controls/_interface/IIcon
  * @public
  */
-
+export default interface IIcon {
+   readonly '[Controls/_interface/IIcon]': boolean;
+}
 /**
  * @name Controls/_interface/IIcon#icon
  * @cfg {String} Button icon.
@@ -22,6 +24,3 @@ export interface IIconOptions {
  * </pre>
  * @see iconStyle
  */
-export default interface IIcon {
-   readonly '[Controls/_interface/IIcon]': boolean;
-}

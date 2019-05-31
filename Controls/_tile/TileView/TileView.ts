@@ -90,7 +90,8 @@ var
 var TILE_SCALING_MODE = {
     NONE: 'none',
     OUTSIDE: 'outside',
-    INSIDE: 'inside'
+    INSIDE: 'inside',
+    OVERLAP: 'overlap'
 };
 
 
@@ -192,7 +193,11 @@ var TileView = ListView.extend({
 
         if (position) {
             documentRect = document.documentElement.getBoundingClientRect();
-            itemStartPosition = this._options.tileScalingMode !== TILE_SCALING_MODE.NONE ? _private.getItemStartPosition(itemContainerRect, documentRect) : null;
+            if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP) {
+                itemStartPosition = _private.getItemStartPosition(itemContainerRect, documentRect);
+            } else {
+                itemStartPosition = null;
+            }
             this._mouseMoveTimeout = setTimeout(function () {
                 self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition);
             }, ZOOM_DELAY);
@@ -202,7 +207,7 @@ var TileView = ListView.extend({
     },
 
     _getZoomCoefficient: function () {
-        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE ? ZOOM_COEFFICIENT : 1;
+        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
     },
 
     _setHoveredItem: function (itemData, position, startPosition) {

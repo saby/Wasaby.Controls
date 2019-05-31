@@ -15,7 +15,7 @@
       bind:selectionBaseValue="_selectionBaseValue"
    >
       <ws:dayTemplate>
-         <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
+         <ws:partial template="Controls/calendar:MonthViewDayTemplate"
                      value="{{dayTemplate.value}}"
          >
             <ws:contentTemplate>

@@ -1,7 +1,7 @@
 define(['Controls/toggle'], function (toggleMod) {
    'use strict';
    var SW, switcherClickedFlag;
-   describe('Controls.Toggle.DoubleSwitch', function () {
+   describe('Controls/_toggle/DoubleSwitch', function () {
       afterEach(function () {
          if (SW) {
             SW.destroy();

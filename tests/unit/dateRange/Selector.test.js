@@ -1,18 +1,16 @@
 define([
    'Core/core-merge',
    'Controls/dateRange',
-   'Controls/Date/model/DateRange',
    'unit/Calendar/Utils'
 ], function(
    cMerge,
-   dateRangeMod,
-   DateRange,
+   dateRange,
    calendarTestUtils
 ) {
    'use strict';
 
    const options = {
-      rangeModel: new DateRange(),
+      rangeModel: new dateRange.DateRangeModel(),
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
       replacer: ' ',
@@ -24,7 +22,7 @@ define([
          it('should set range on model', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRangeMod.Selector, options),
+               component = calendarTestUtils.createComponent(dateRange.Selector, options),
                startValue = new Date(2018, 11, 10),
                endValue = new Date(2018, 11, 13);
 

@@ -6,7 +6,7 @@ define(
    function(Control, searchMod) {
       'use strict';
 
-      describe('Controls/Input/Search', function() {
+      describe('Controls/_search/Input/Search', function() {
          var valueSearch;
 
 

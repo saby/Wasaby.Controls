@@ -1,15 +1,15 @@
 define([
-   'Controls/Date/model/DateRange'
+   'Controls/dateRange'
 ], function(
-   DateRange
+   dateRange
 ) {
    'use strict';
 
-   describe('Controls/Date/model/DateRange', function() {
+   describe('Controls/dateRange:DateRangeModel', function() {
       describe('.update', function() {
 
-         it('should update [start|end]Value and _state.[start|end]Value fields', function() {
-            let model = new DateRange(),
+         it('should update [start|end]Value fields', function() {
+            let model = new dateRange.DateRangeModel(),
                options = {
                   startValue: new Date(2018, 0, 1),
                   endValue: new Date(2018, 0, 3)
@@ -18,31 +18,27 @@ define([
             model.update(options);
 
             assert.strictEqual(model.startValue, options.startValue);
-            assert.strictEqual(model._state.startValue, options.startValue);
             assert.strictEqual(model.endValue, options.endValue);
-            assert.strictEqual(model._state.endValue, options.endValue);
          });
 
          it('should not update [start|end]Value fields if they were not updated from the outside', function() {
-            let model = new DateRange(),
-               options = {
-                  startValue: new Date(2018, 0, 1),
-                  endValue: new Date(2018, 0, 3)
-               };
+            let
+               model = new dateRange.DateRangeModel(),
+               startValue = new Date(2018, 0, 1),
+               endValue = new Date(2018, 0, 3);
 
-            model._state.startValue = options.startValue;
-            model._state.endValue = options.endValue;
-            model.update(options);
+            model.setRange(startValue, endValue);
+            model.update({});
 
-            assert.isNull(model.startValue);
-            assert.isNull(model.endValue);
+            assert.strictEqual(model.startValue, startValue);
+            assert.strictEqual(model.endValue, endValue);
          });
       });
 
       ['startValue', 'endValue'].forEach(function(field) {
          describe(`.${field}`, function() {
             it(`should update ${field} if value changed`, function() {
-               let model = new DateRange(),
+               let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
                   callback = sinon.spy();
 
@@ -51,11 +47,10 @@ define([
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
-               assert.isUndefined(model._state[field]);
             });
 
             it(`should not update ${field} if value did not changed`, function() {
-               let model = new DateRange(),
+               let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
                   callback = sinon.spy(),
                   options = {};
@@ -68,7 +63,6 @@ define([
 
                assert.strictEqual(model[field], value);
                assert(callback.notCalled, `${field}Changed callback called ${callback.callCount} times`);
-               assert.strictEqual(model._state[field], value);
             });
          });
       });
@@ -93,7 +87,7 @@ define([
             }
          ].forEach(function(test) {
             it('should shift period forward', function() {
-               let model = new DateRange();
+               let model = new dateRange.DateRangeModel();
 
                model.update({ startValue: test.start, endValue: test.end });
                model.shiftForward();
@@ -124,7 +118,7 @@ define([
             }
          ].forEach(function(test) {
             it('should shift period back', function() {
-               let model = new DateRange();
+               let model = new dateRange.DateRangeModel();
 
                model.update({ startValue: test.start, endValue: test.end });
                model.shiftBack();
@@ -137,7 +131,7 @@ define([
 
       describe('.setRange', function() {
          it('should make notification about changes of startValue and endValue', function(done) {
-            let model = new DateRange(),
+            let model = new dateRange.DateRangeModel(),
                options = {
                   startValue: new Date(2018, 0, 1),
                   endValue: new Date(2018, 0, 3)

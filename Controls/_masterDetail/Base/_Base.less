@@ -23,6 +23,17 @@
    }
 }
 
+.ws-is-ie,
+.ws-is-mobile-safari,
+.ws-is-desktop-safari {
+   // stack of z-index on safari and ie work differently, then in chrome and ff
+   // https://online.sbis.ru/opendoc.html?guid=1b3f1c99-6d0c-47c2-af1b-621d81c6bab9
+   // https://online.sbis.ru/opendoc.html?guid=06db74da-222c-48f8-9843-42263175d973
+   .controls-MasterDetail_master::before {
+      z-index: 1;
+   }
+}
+
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {
    .controls-MasterDetail_master .controls-Scroll__content {

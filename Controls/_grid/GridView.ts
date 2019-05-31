@@ -50,18 +50,12 @@ var
                 Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
             }
         },
-        getGridTemplateColumns: function(columns, multiselect): string {
-            let columnsWidths: Array<string> = [];
 
-            if (multiselect === 'visible' || multiselect === 'onhover') {
-                columnsWidths.push('auto');
-            }
-            columns.forEach(function(column) {
-                columnsWidths.push(column.width || '1fr');
-            });
-
+        getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
+            let columnsWidths: Array<string> = (hasMultiselect ? ['auto'] : []).concat(columns.map((column => column.width || '1fr')));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
+
         prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
                 resultsPadding,
@@ -85,6 +79,7 @@ var
                 });
             }
         },
+
         calcFooterPaddingClass: function(params) {
             var
                 paddingLeft,
@@ -101,26 +96,15 @@ var
             }
             return result;
         },
-        chooseGridTemplate: function (): Function {
-            switch (GridLayoutUtil.supportStatus) {
-                case GridLayoutUtil.SupportStatusesEnum.Full:
-                    return FullGridSupportLayout;
-                case GridLayoutUtil.SupportStatusesEnum.Partial:
-                    return PartialGridSupportLayout;
-                case GridLayoutUtil.SupportStatusesEnum.None:
-                    return NoGridSupportLayout;
-            }
-        },
 
-        // For partial grid support.
-        // Need to remember true width of columns for right alignment editing row.
-        // Editing row is subgrid and need to set width of its columns in px.
-        setCurrentColumnsWidth: function (self, container: HTMLElement) {
-            //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            let cells = (container[0] || container).getElementsByClassName('controls-Grid__row-cell');
-            if (cells.length > 0) {
-                self._listModel.setCurrentColumnsWidth(cells);
+        chooseGridTemplate: function (): Function {
+            if (GridLayoutUtil.isFullGridSupport()) {
+                return FullGridSupportLayout;
             }
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                return PartialGridSupportLayout;
+            }
+            return NoGridSupportLayout;
         },
 
         /*
@@ -159,7 +143,32 @@ var
             }
 
             itemsContainer.children = items;
+        },
 
+        getColumnsWidthForEditingRow: function (self, itemData): Array<string> {
+            let
+                container = (self._container[0] || self._container),
+                hasHeader = !!self._listModel.getHeader(),
+                hasItems = self._listModel.getCount(),
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                cells,
+                columnsWidths = [];
+
+            if (!hasItems && !hasHeader) {
+                return self._options.columns.map((column) => column.width || '1fr');
+            }
+
+            cells = container.getElementsByClassName(hasHeader ? 'controls-Grid__header-cell' : 'controls-Grid__row-cell');
+
+            self._options.columns.forEach((column, index: number) => {
+                let
+                    realIndex = index + (hasMultiselect ? 1 : 0),
+                    cWidth = column.width === 'auto' ? (cells[realIndex].getBoundingClientRect().width + 'px') : column.width;
+
+                columnsWidths.push(cWidth || '1fr');
+            });
+
+            return columnsWidths;
         }
     },
     GridView = ListView.extend({
@@ -179,9 +188,12 @@ var
             GridView.superclass._beforeMount.apply(this, arguments);
             _private.registerHandlersForPartialSupport(this, this._listModel);
             this._listModel.setColumnTemplate(ColumnTpl);
-            this._itemsContainerForPartialSupport = {
-                children: null
-            };
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                this._listModel.getColumnsWidthForEditingRow = this._getColumnsWidthForEditingRow.bind(this);
+                this._itemsContainerForPartialSupport = {
+                    children: null
+                };
+            }
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
         },
 
@@ -193,16 +205,12 @@ var
                 this._listModel.setColumns(newCfg.columns);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                } else if (this._listModel.getEditingItemData()) {
-                    _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
             if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                } else if (this._listModel.getEditingItemData()) {
-                    _private.setCurrentColumnsWidth(this, this._container);
                 }
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
@@ -223,14 +231,14 @@ var
         },
 
         _afterUpdate() {
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
             }
         },
 
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialSupport && (itemData.item !== this._listModel.getHoveredItem())) {
+            if (GridLayoutUtil.isPartialGridSupport() && (itemData.item !== this._listModel.getHoveredItem())) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
@@ -238,7 +246,7 @@ var
 
         _onItemMouseLeave: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
@@ -249,7 +257,7 @@ var
         },
 
         getItemsContainer: function () {
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
                 return this._itemsContainerForPartialSupport;
             } else {
@@ -261,9 +269,11 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-            } else if (this._listModel.getEditingItemData()) {
-                _private.setCurrentColumnsWidth(this, this._container);
             }
+        },
+
+        _getColumnsWidthForEditingRow: function (itemData) {
+            return _private.getColumnsWidthForEditingRow(this, itemData);
         }
     });
 
