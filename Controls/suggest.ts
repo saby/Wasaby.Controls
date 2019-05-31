@@ -18,6 +18,7 @@ import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
 import InputRender = require('Controls/_suggest/Input/Render');
 
 export {default as Selector} from './_suggest/Selector';
+export {default as __PopupLayer} from './_suggest/Layer/__PopupLayer';
 
 export {
    Input,
