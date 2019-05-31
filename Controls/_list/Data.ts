@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
-import template = require('wml!Controls/Container/Data/Data');
+import template = require('wml!Controls/_list/Data');
 import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
 import ContextOptions = require('Controls/Container/Data/ContextOptions');
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
 
-import {RecordSet} from 'Types/collection'
+import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 
 type GetSourceResult = {
