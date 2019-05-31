@@ -22,9 +22,9 @@ var
                 if (contents) {
                     key = contents.get(keyProperty);
                     if (isExpandAll) {
-                        expanded = !collapsedItems[key] && hasChildItem(key);
+                        expanded = collapsedItems.indexOf(key) === -1 && hasChildItem(key);
                     } else {
-                        expanded = expandedItems[key];
+                        expanded = expandedItems.indexOf(key) !== -1;
                     }
                 }
                 return expanded;
@@ -110,7 +110,7 @@ var
         },
 
         removeNodeFromExpandedIfNeed: function(self, nodeId) {
-            if (self._expandedItems && self._expandedItems.indexOf(nodeId) !== -1 && !_private.hasChildItem(self, nodeId)) {
+            if (self._expandedItems.indexOf(nodeId) !== -1 && !_private.hasChildItem(self, nodeId)) {
                 // If it is necessary to delete only the nodes deleted from the items, add this condition:
                 // if (!self._items.getRecordById(nodeId)) {
                 _private.removeNodeFromExpanded(self, nodeId);
@@ -171,16 +171,6 @@ var
 
             return expanderClasses;
         },
-        prepareExpandedItems: function(expandedItems: Array<unknown>): Record<unknown, boolean> {
-            let
-                result: Record<unknown, boolean> = {};
-            if (expandedItems) {
-                expandedItems.forEach(function(item) {
-                    result[item] = true;
-                });
-            }
-            return result;
-        },
         prepareCollapsedItems: function(expandedItems, collapsedItems) {
             if (_private.isExpandAll(expandedItems) && collapsedItems) {
                 return cClone(collapsedItems);
@@ -188,8 +178,7 @@ var
             return [];
         },
         isExpandAll: function(expandedItems) {
-            return (expandedItems instanceof Array && (expandedItems.indexOf(null) !== -1)) ||
-                (expandedItems && !!expandedItems[null]);
+            return expandedItems.indexOf(null) !== -1;
         },
 
         resetExpandedItems: function(self) {
@@ -233,7 +222,7 @@ var
                 return;
             }
 
-            if (self._expandedItems && self._expandedItems.indexOf(itemId) !== -1) {
+            if (self._expandedItems.indexOf(itemId) !== -1) {
                 _private.collapseNode(self, itemId);
             } else {
                 self.setExpandedItems(_private.getExpandedParents(self, self.getItemById(itemId)));
@@ -252,7 +241,7 @@ var
         constructor: function(cfg) {
             this._options = cfg;
             this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
-            this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
+            this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new _entity.relation.Hierarchy({
                 idProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
@@ -287,7 +276,7 @@ var
             var
                 itemId = dispItem.getContents().getId();
             return _private.isExpandAll(this._expandedItems) ? (this._collapsedItems.indexOf(itemId) === -1)
-                : (this._expandedItems && this._expandedItems.indexOf(itemId) !== -1);
+                : (this._expandedItems.indexOf(itemId) !== -1);
         },
 
         isExpandAll: function() {
@@ -311,7 +300,7 @@ var
                     _private.toggleSingleExpanded(this, itemId, parentId);
 
                 } else {
-                    if (this._expandedItems && this._expandedItems.indexOf(itemId) !== -1) {
+                    if (this._expandedItems.indexOf(itemId) !== -1) {
                         _private.collapseNode(this, itemId);
                     } else {
                         this._expandedItems.push(itemId);
@@ -336,7 +325,7 @@ var
             var
                 data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
             data.keyProperty = this._options.keyProperty;
-            data.expandedItems = _private.prepareExpandedItems(this._expandedItems);
+            data.expandedItems = this._expandedItems;
             data.collapsedItems = this._collapsedItems;
             data.isExpandAll = _private.isExpandAll;
             data.hasChildItem = _private.hasChildItem.bind(null, this);
@@ -352,7 +341,7 @@ var
             this._options.nodeFooterTemplate = nodeFooterTemplate;
             this._nextModelVersion();
         },
-    
+
         getNodeFooterTemplate: function() {
             return this._options.nodeFooterTemplate;
         },
