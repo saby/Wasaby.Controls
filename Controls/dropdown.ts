@@ -12,7 +12,7 @@
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
  * @includes Styles Controls/_dropdown/Input/Styles
- * @includes inputDefaultContentTemplate Controls/_dropdown/Input/resources/defaultContentTemplate
+ * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Kraynov D.
  */
