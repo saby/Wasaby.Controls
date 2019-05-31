@@ -30,8 +30,6 @@
     "wml!Controls/Container/Input/Search/Search",
     "Controls/Container/List",
     "wml!Controls/Container/List/List",
-    "Controls/Container/Search",
-    "wml!Controls/Container/Search/Search",
     "Controls/Container/Search/SearchContextField"
   ],
   "output": "controls-container.package.js"
