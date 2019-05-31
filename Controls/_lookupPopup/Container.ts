@@ -200,8 +200,7 @@ import {IData, IDecorator} from "Types/source";
                const multiSelect = this._options.multiSelect;
                const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
-               // toDo Кастыль для .320 https://online.sbis.ru/opendoc.html?guid=bad8e0ed-e436-4dd3-ae75-071cdfc6372f
-               if (!multiSelect && selectedItem && !this._options._loadSelectedItem) {
+               if (!multiSelect && selectedItem) {
                   let selectedItems = _private.getEmptyItems(self._items);
 
                   selectedItems.add(selectedItem);
