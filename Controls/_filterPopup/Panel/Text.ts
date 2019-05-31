@@ -12,9 +12,20 @@ import 'css!theme?Controls/filterPopup';
     * @author Герасимов А.М.
     */
 
+   /*
+    * Control with caption and reset button.
+    * Is used for demonstration of selected filter, click on cross will reset filter
+    * @class Controls/_filterPopup/Panel/Text
+    * @extends Core/Control
+    * @control
+    * @public
+    * @author Герасимов А.М.
+    */
+
+
    /**
     * @name Controls/_filterPopup/Panel/Text#caption
-    * @cfg {String} Caption Control caption text.
+    * @cfg {String} Текст, который будет отображаться рядом с кнопкой сброса.
     * @example
     * <pre>
     *    <Controls.filterPopup:Text>
@@ -23,10 +34,15 @@ import 'css!theme?Controls/filterPopup';
     * </pre>
     */
 
-
-   /* KONGO!
-      Контрол, отображающий текст с кнопкой сброса в виде крестика. - Control with caption and reset button.
-      Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр. Control is used for display selected filter. Click on reset button will reset filter.
+   /*
+    * @name Controls/_filterPopup/Panel/Text#caption
+    * @cfg {String} Caption Control caption text.
+    * @example
+    * <pre>
+    *    <Controls.filterPopup:Text>
+    *        <ws:caption>По удалённым</ws:caption>
+    *    </Controls.filterPopup:Text>
+    * </pre>
     */
 
 
