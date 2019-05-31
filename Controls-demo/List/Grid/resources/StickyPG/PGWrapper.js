@@ -4,7 +4,7 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
       'Core/Deferred',
       'Core/core-clone',
       'Core/core-merge',
-
+      'Core/library',
       'Controls-demo/PropertyGrid/propertyGridUtil',
       'wml!Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
@@ -26,7 +26,7 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cClone, cMerge, libHelper, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
             datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
@@ -56,7 +56,7 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
-               require([opts.content], function() {
+               libHelper.load(opts.content).then(function() {
                   def.callback();
                });
                return def;
@@ -91,7 +91,7 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
-            this._notify('optionsChanged', [this._options]);
+            this._forceUpdate();
          },
          reset: function() {
             this.myEvent = '';

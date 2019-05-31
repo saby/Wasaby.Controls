@@ -5,7 +5,7 @@
  * @property {string} dialog в диалоговом окне
  * @property {string} page во всю страницу
  * @property {string} include в области контрола
- * @private
+ * @public
  * @author Заляев А.В.
  */
 enum Mode {
