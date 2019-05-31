@@ -66,35 +66,52 @@ export default interface ISource {
  */
 /*
  * @name Controls/_interface/ISource#source
- * @cfg {Types/source:Base} Object that implements ISource interface for working with data.
+ * @cfg {Types/source:ICrud} Object that implements {@link Types/source:ICrud} interface for working with data.
+ * More information about sources you can read <a href='doc/platform/developmentapl/interface-development/data-sources/'>here</a>.
  * @example
  * The list will be rendered data from _source
+ *
+ * WML:
  * <pre>
- *    <Controls.list:View
- *       source = "{{_source}}"
- *       keyProperty="key">
+ *    <Controls.list:View source="{{_source}}" keyProperty="key">
+ *        <ws:itemTemplate>
+ *            <ws:partial template="Controls/list:ItemTemplate">
+ *                <ws:contentTemplate>
+ *                    <span>{{contentTemplate.itemData.item.title}}</span>
+ *                </ws:contentTemplate>
+ *            </ws:partial>
+ *        </ws:itemTemplate>
  *    </Controls.list:View>
  * </pre>
+ *
+ * JS:
  * <pre>
- *    _source: new Memory({
- *       idProperty: 'key',
- *       data: [
- *       {
- *          key: '1',
- *          title: 'Yaroslavl'
- *       },
- *       {
- *          key: '2',
- *          title: 'Moscow'
- *       },
- *       {
- *          key: '3',
- *          title: 'St-Petersburg'
- *       }
- *       ]
- *    })
+ *     import {Memory} from "Types/source";
+ *
+ *     _source: null,
+ *     _beforeMount: function() {
+ *         this._source = new Memory({
+ *             idProperty: 'key',
+ *             data: [
+ *                {
+ *                   key: '1',
+ *                   title: 'Yaroslavl'
+ *                },
+ *                {
+ *                   key: '2',
+ *                   title: 'Moscow'
+ *                },
+ *                {
+ *                   key: '3',
+ *                   title: 'St-Petersburg'
+ *                }
+ *             ]
+ *          })
+ *     }
  * </pre>
- * @see link to source paper
+ * @see https://wi.sbis.ru/docs/js/Types/source/ICrudPlus/
+ * @see https://wi.sbis.ru/docs/js/Types/source/ICrud/
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/
  */
 
 /**
