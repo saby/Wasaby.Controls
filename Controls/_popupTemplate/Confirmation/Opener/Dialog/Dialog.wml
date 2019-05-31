@@ -1,4 +1,3 @@
-<Controls.form:PrimaryAction on:triggered="_onTriggerHandler()">
    <Controls._popupTemplate.Confirmation
       on:keydown="_keyDown()"
       on:keyup="_keyPressed()" ws-tab-cycling="true"
@@ -26,4 +25,3 @@
          </ws:partial>
       </ws:footerContentTemplate>
    </Controls._popupTemplate.Confirmation>
-</Controls.form:PrimaryAction>
