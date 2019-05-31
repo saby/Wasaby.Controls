@@ -62,7 +62,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
             this._children.popupOpener.open(cfg);
          },
          _sendResult: function() {
-            this._notify('sendResult', [`Цена ${this._record.get('price') || 0}`, `Ост. ${this._record.get('balance') || 0}`], { bubbling: true });
+            this._notify('sendResult', ['Цена ' + (this._record.get('price') || 0), 'Ост. ' + (this._record.get('balance') || 0)], { bubbling: true });
          },
          openTestStack: function() {
             this._children.stack.open();
