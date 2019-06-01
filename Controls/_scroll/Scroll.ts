@@ -347,6 +347,12 @@ var
       },
 
       _shadowVisible: function(position) {
+         // Костыль для 320. Разобраться почему стало падать по
+         // https://online.sbis.ru/opendoc.html?guid=cd7105de-9c05-4f91-964a-36c7f08765ad
+         if (typeof this._displayState.shadowPosition !== 'string') {
+            return false;
+         }
+
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
       },
 
