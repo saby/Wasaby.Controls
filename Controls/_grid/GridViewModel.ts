@@ -794,6 +794,10 @@ var
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
+        hasItemById: function(id, keyProperty) {
+            return this._model.hasItemById(id, keyProperty);
+        },
+
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
