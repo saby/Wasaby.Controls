@@ -18,6 +18,7 @@
            selectedKeys="{{_listModel.getSelectedKeys()}}"
            selectorTemplate="{{_options.selectorTemplate}}"
            isCompoundTemplate="{{_options.isCompoundTemplate}}"
-           on:selectorResult="_selectorDialogResult()"/>
+           selectorOpener="{{_options.selectorOpener}}"
+           on:click="_moreButtonClick()"/>
    </ws:if>
 </div>

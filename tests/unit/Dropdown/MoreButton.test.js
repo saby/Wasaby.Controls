@@ -37,9 +37,9 @@ define(
          it('_openSelectorDialog', function() {
             let actualOptions;
             let button = getButton(defaultConfig);
-            button._children = {selectorDialog: {open: (popupOptions) => {
+            button._options.selectorOpener = {open: (popupOptions) => {
                actualOptions = popupOptions;
-            }}};
+            }};
             button._openSelectorDialog();
 
             assert.strictEqual(actualOptions.template, defaultConfig.selectorTemplate.templateName);
@@ -53,24 +53,6 @@ define(
             button._openSelectorDialog();
             assert.deepStrictEqual(actualOptions.templateOptions.selectedItems.getCount(), 0);
 
-         });
-
-         it('_selectorDialogResult', function() {
-            let actualResult;
-            let items = ['items1', 'items2', 'items3'],
-               expectedResult = {
-               action: 'selectorResult',
-               event: 'selectorResultEvent',
-               data: items
-            };
-            let button = getButton(defaultConfig);
-            button._notify = (event, data) => {
-               if (event === 'selectorResult') {
-                  actualResult = data[0];
-               }
-            };
-            button._selectorDialogResult('selectorResultEvent', items);
-            assert.deepStrictEqual(actualResult, expectedResult);
          });
       });
    }

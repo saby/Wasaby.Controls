@@ -21,4 +21,7 @@
               showClose="{{true}}">
       </ws:templateOptions>
    </Controls.dropdown:Opener>
+   <ws:if data="{{_hasSelectorTemplate}}">
+      <Controls.lookup:Opener name="selectorOpener" on:result="_onSelectorTemplateResult()"/>
+   </ws:if>
 </div>

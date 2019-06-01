@@ -505,6 +505,70 @@ define(
             dropdownController._open();
          });
 
+         it('_onSelectorTemplateResult', () => {
+            let dropdownController = getDropdownController(config),
+               opened;
+            dropdownController._onResult = dropdown._Controller._private.onResult.bind(dropdownController);
+            dropdownController._children.DropdownOpener = {
+               close: function() {
+                  opened = false;
+               }
+            };
+            let curItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            dropdownController._items = curItems;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+
+            dropdownController._onSelectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, dropdownController._items.getRawData());
+         });
+
          it('mousedown', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);

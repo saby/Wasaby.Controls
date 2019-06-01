@@ -8,7 +8,7 @@ import collection = require('Types/collection');
 import merge = require('Core/core-merge');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
-import {LoadService} from 'Controls/history';
+import LoadService from 'Controls/suggest';
 
    var _private = {
       loadItems: function(self, options, selectedKeys, sourceIsChanged) {

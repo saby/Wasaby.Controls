@@ -9,7 +9,7 @@ var MoreButton = Control.extend([], {
 
     _openSelectorDialog: function() {
         const self = this;
-        const selectorOpener = this._children.selectorDialog;
+        const selectorOpener = this._options.selectorOpener;
         const selectorTemplate = this._options.selectorTemplate;
         let selectedItems = [];
 
@@ -43,15 +43,7 @@ var MoreButton = Control.extend([], {
             },
             opener: this
         }, selectorTemplate.popupOptions || {}));
-    },
-
-    _selectorDialogResult: function(event, items) {
-        var result = {
-            action: 'selectorResult',
-            event: event,
-            data: items
-        };
-        this._notify('selectorResult', [result]);
+        this._notify('close', [], {bubbling: true});
     }
 });
 
