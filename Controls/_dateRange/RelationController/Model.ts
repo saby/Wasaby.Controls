@@ -187,15 +187,25 @@ class ModuleClass {
             step, capacityChanged, control, lastDate, i;
 
         let getStep = function (number) {
-            var s = relationMode === 'byCapacity' ? periodLength : steps[number] || periodLength;
+            let s;
             if (selectionType === 'days') {
                 return periodLength;
             }
+            // In the capacity mode we move the periods as adjacent.
+            // In the normal mode, if the capacity has changed and the step is not a multiple of the year
+            // and the month of the periods differ, then we also set adjacent periods.
+            if (relationMode === 'byCapacity' ||
+                    (capacityChanged && steps[number] % 12 !== 0 && start.getMonth() !== oldStart.getMonth())) {
+                s = periodLength;
+            } else {
+                s = steps[number] || periodLength;
+            }
+
             if (s < periodLength) {
                 s = periodLength;
             }
             return s;
-        }.bind(this);
+        };
 
         if (!start || !end) {
             return;
