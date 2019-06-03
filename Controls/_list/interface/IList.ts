@@ -177,6 +177,11 @@
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Callback function that will be called when list data instance is ready.
+ * @remark
+ * ARGUMENTS:
+ * <ul>
+ * <li>RecordSet of loaded items</li>
+ * </ul>
  * @example
  * <pre class="brush:js">
  * _myItemsReadyCallback = function(items) {
@@ -193,7 +198,10 @@
  * @name Controls/_list/interface/IList#dataLoadCallback
  * @cfg {Function} Callback function that will be called when list data loaded by source
  * @remark
- * dataLoadCallback takes to first argument the collection of loaded items.
+ * ARGUMENTS:
+ * <ul>
+ * <li>RecordSet of loaded items</li>
+ * </ul>
  * dataLoadCallback can be used for setting metadata or adjusting loaded items.
  * @example
  * <pre class="brush:js">
