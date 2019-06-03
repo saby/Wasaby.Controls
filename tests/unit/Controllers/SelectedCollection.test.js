@@ -367,31 +367,60 @@ define([
          assert.isTrue(item._isUpdateHistory);
       });
 
-      it('showSelector', function() {
+      describe('showSelector', function() {
          var
-            templateOptions,
+            lastPopupOptions,
             isShowSelector = false,
-            selectedCollectionContoller = new scroll._CollectionController(),
-            opener;
+            selectedCollectionContoller = new scroll._CollectionController();
 
-         selectedCollectionContoller._options.selectorTemplate = {};
+         selectedCollectionContoller._options.selectorTemplate = {
+            templateOptions: {
+               selectedTab: 'defaultTab'
+            },
+            popupOptions: {
+               width: 100
+            }
+         };
          selectedCollectionContoller._children.selectorOpener = {
             open: function(popupOptions) {
                isShowSelector = true;
-               templateOptions = popupOptions.templateOptions;
-               opener = popupOptions.opener;
+               lastPopupOptions = popupOptions;
             }
          };
 
-         selectedCollectionContoller.showSelector({
-            templateOptions: {
-               selectedTab: 'Employees'
-            }
+         it('showSelector without params', function() {
+            selectedCollectionContoller.showSelector();
+            assert.isTrue(isShowSelector);
+            assert.deepEqual(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
+            assert.deepEqual(lastPopupOptions.width, 100);
+            assert.deepEqual(lastPopupOptions.opener, selectedCollectionContoller);
+            assert.deepEqual(lastPopupOptions.multiSelect, undefined);
          });
 
-         assert.isTrue(isShowSelector);
-         assert.equal(templateOptions.selectedTab, 'Employees');
-         assert.equal(opener, selectedCollectionContoller);
+         it('showSelector with templateOptions', function() {
+            isShowSelector = false;
+            selectedCollectionContoller.showSelector({
+               templateOptions: {
+                  selectedTab: 'Employees'
+               }
+            });
+            assert.isTrue(isShowSelector);
+            assert.deepEqual(lastPopupOptions.templateOptions.selectedTab, 'Employees');
+            assert.deepEqual(lastPopupOptions.width, 100);
+            assert.deepEqual(lastPopupOptions.opener, selectedCollectionContoller);
+         });
+
+         it('showSelector with popupOptions', function() {
+            isShowSelector = false;
+            selectedCollectionContoller.showSelector({
+               width: 50,
+               height: 20
+            });
+            assert.isTrue(isShowSelector);
+            assert.deepEqual(lastPopupOptions.width, 50);
+            assert.deepEqual(lastPopupOptions.height, 20);
+            assert.deepEqual(lastPopupOptions.opener, selectedCollectionContoller);
+         });
       });
    });
 });
