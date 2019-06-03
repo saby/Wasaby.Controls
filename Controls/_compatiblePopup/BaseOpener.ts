@@ -9,9 +9,10 @@ import randomId = require('Core/helpers/Number/randomId');
 import OpenDialogUtil = require('SBIS3.CONTROLS/Action/Utils/OpenDialogUtil');
 import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
 
-
 /**
  * Слой совместимости для базового опенера для открытия старых шаблонов
+ * @class Controls/_compatiblePopup/BaseOpener
+ * @public
  */
 const BaseOpener = {
    _prepareConfigForOldTemplate: function(cfg, templateClass) {
