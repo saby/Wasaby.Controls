@@ -20,6 +20,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _openRecordByNewKey: false,
 
          _beforeMount: function(opt, context) {
+            this._itemPadding = { left: 'S', right: 'M', bottom: 'M' };
             this._viewSource = new source.Memory({
                idProperty: 'id',
                data: GridData.catalog.slice(0, 10)
@@ -110,7 +111,7 @@ define('Controls-demo/Popup/Edit/Opener',
          },
 
          _openHandler: function(event) {
-           this._eventText = event.type;
+            this._eventText = event.type;
          },
 
          _closeHandler: function(event) {
@@ -119,7 +120,7 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _resultHandler: function(event) {
             var args = Array.prototype.slice.call(arguments, 1);
-            this._eventText = event.type + ' ' + args.toString();
+            this._eventText = event.type + '. Аргументы: ' + args.toString();
          },
 
          _beforeSyncRecord: function(event, action, record, additionaData) {
