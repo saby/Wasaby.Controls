@@ -1,29 +1,26 @@
-define('Controls/Popup/Compatible/Notification/Base',
-   [
-      'Controls/popupTemplate',
-      'wml!Controls/Popup/Compatible/Notification/Base'
-   ],
-   function(popupTemplate, template) {
-      var Notification = popupTemplate.Notification.extend({
-         _template: template,
+import {Notification} from 'Controls/popupTemplate';
+import template = require('wml!Controls/_compatiblePopup/Notification/Base') ;
+import {Notification} from '../../popupTemplate';
 
-         _beforeMount: function(options) {
-            var _this = this;
+var NotificationPopup = Notification.extend({
+   _template: template,
 
-            _this._contentTemplateOptions = options.contentTemplateOptions;
+   _beforeMount: function(options) {
+      var _this = this;
 
-            /**
-             * После показа размеры контента изменяться, нужно сказать об этом потомкам.
-             */
-            _this._contentTemplateOptions.handlers = {
-               onAfterShow: function() {
-                  _this._notify('controlResize', [], { bubbling: true });
-               }
-            };
+      _this._contentTemplateOptions = options.contentTemplateOptions;
 
-            return Notification.superclass._beforeMount.apply(_this, arguments);
+      /**
+       * После показа размеры контента изменяться, нужно сказать об этом потомкам.
+       */
+      _this._contentTemplateOptions.handlers = {
+         onAfterShow: function() {
+            _this._notify('controlResize', [], { bubbling: true });
          }
-      });
+      };
 
-      return Notification;
-   });
+      return NotificationPopup.superclass._beforeMount.apply(_this, arguments);
+   }
+});
+
+export default NotificationPopup;
