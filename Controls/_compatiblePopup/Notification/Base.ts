@@ -1,6 +1,5 @@
 import {Notification} from 'Controls/popupTemplate';
-import template = require('wml!Controls/_compatiblePopup/Notification/Base') ;
-import {Notification} from '../../popupTemplate';
+import template = require('wml!Controls/_compatiblePopup/Notification/Base');
 
 var NotificationPopup = Notification.extend({
    _template: template,
