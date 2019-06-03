@@ -695,7 +695,7 @@ var _private = {
                    nodeProperty: 'parent@',
                    dropdownClassName: 'controls-itemActionsV__popup',
                    showClose: true
-                }
+                };
 
                 if (self._options.contextMenuConfig) {
                    if (typeof self._options.contextMenuConfig === 'object') {
@@ -722,8 +722,6 @@ var _private = {
                 });
                 self._menuIsShown = true;
                 self._forceUpdate();
-            }, function(){
-                debugger;
             });
         }
     },
