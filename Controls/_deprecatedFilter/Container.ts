@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedFilter/Container');
-import FilterContextField = require('Controls/Container/Filter/FilterContextField');
+import {FilterContextField} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import {factory} from 'Types/chain';
 import Utils = require('Types/util');

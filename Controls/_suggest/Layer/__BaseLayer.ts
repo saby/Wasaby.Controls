@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
-import SearchContextField = require('Controls/Container/Search/SearchContextField');
-import FilterContextField = require('Controls/Container/Filter/FilterContextField');
+import {SearchContextField, FilterContextField} from 'Controls/context';
 
 var __LayerBase = Control.extend({
 

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedSearch/Container');
-import SearchContextField = require('Controls/Container/Search/SearchContextField');
+import {SearchContextField} from 'Controls/context';
 import {IoC} from 'Env/Env';
 
 var Search = Control.extend({
