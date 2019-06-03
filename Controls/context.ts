@@ -1,10 +1,13 @@
 /**
  * context library
  * @library Controls/context
- * @includes Path Controls/_breadcrumbs/Path
- * @includes HeadingPath Controls/_breadcrumbs/HeadingPath
- * @includes BreadCrumbsStyles Controls/_breadcrumbs/BreadCrumbsStyles
+ * @includes ContextOptions Controls/_context/ContextOptions
+ * @includes FilterContextField Controls/_context/FilterContextField
+ * @includes SearchContextField Controls/_context/SearchContextField
  * @deprecated
  * @author Kraynov D.
  */
 
+export {default as ContextOptions} from 'Controls/_context/ContextOptions';
+export {default as FilterContextField} from 'Controls/_context/FilterContextField';
+export {default as SearchContextField} from 'Controls/_context/SearchContextField';
