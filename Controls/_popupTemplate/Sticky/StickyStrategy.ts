@@ -97,7 +97,10 @@ interface IPosition {
           // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
           if (Env.detection.isMobileIOS) {
              _private._fixBottomPositionForIos(position, targetCoords);
-             return position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+
+             // Protection against incorrect page design
+             let minValue = -10;
+             return position.left < minValue || position.right < minValue || position.top < minValue || position.bottom < minValue;
           }
           return false;
        },
@@ -158,7 +161,7 @@ interface IPosition {
 
       _fixBottomPositionForIos: function(position, targetCoords) {
          if (position.bottom) {
-            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight(true);
+            let keyboardHeight = _private.getKeyboardHeight();
             position.bottom += keyboardHeight;
 
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
@@ -167,8 +170,25 @@ interface IPosition {
             // only for this case consider a scrollTop
             if (keyboardHeight === 0) {
                position.bottom += _private.getTopScroll(targetCoords);
+            } else {
+               let win = _private.getWindow();
+               if ((win.innerHeight + win.scrollY) > win.innerWidth) {
+                  // fix for positioning with keyboard on vertical ios orientation
+                  let dif = win.innerHeight - targetCoords.boundingClientRect.top;
+                  if (position.bottom > dif) {
+                     position.bottom = dif;
+                  }
+               }
             }
          }
+      },
+
+      getKeyboardHeight: function() {
+         return TouchKeyboardHelper.getKeyboardHeight(true);
+      },
+
+      getWindow: function() {
+         return window;
       },
 
       getTopScroll: function(targetCoords) {
