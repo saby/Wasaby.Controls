@@ -20,7 +20,7 @@ import _stickyHeaderController from 'Controls/_scroll/StickyHeader/Controller';
 
 import Group = require('Controls/_scroll/StickyHeader/Group');
 import Utils = require('Controls/_scroll/StickyHeader/Utils');
-import KeyHook = require('Controls/_scroll/KeyHook');
+import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 
 export {
@@ -33,5 +33,5 @@ export {
    _stickyHeaderController,
    Group,
    Utils,
-   KeyHook
+   HotKeysContainer
 }

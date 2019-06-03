@@ -58,7 +58,7 @@ import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
-import KeyHook = require('Controls/_list/KeyHook');
+import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 
 import {Paging} from 'Controls/paging';
 
@@ -96,5 +96,5 @@ export {
     SearchItemsUtil,
     getStyle,
     ItemsViewModel,
-    KeyHook
+    HotKeysContainer
 };
