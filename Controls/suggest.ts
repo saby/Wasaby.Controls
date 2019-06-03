@@ -17,6 +17,7 @@ import _InputController = require('Controls/_suggest/_InputController');
 import _InputControllerEmptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
 import InputRender = require('Controls/_suggest/Input/Render');
+import LoadService from 'Controls/_suggest/LoadService';
 
 export {default as Selector} from './_suggest/Selector';
 export {default as __PopupLayer} from './_suggest/Layer/__PopupLayer';
@@ -27,5 +28,6 @@ export {
    _InputController,
    _InputControllerEmptyTemplate,
    SearchInput,
-   InputRender
+   InputRender,
+   LoadService
 };

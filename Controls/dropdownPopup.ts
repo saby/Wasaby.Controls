@@ -14,6 +14,7 @@ import GroupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate
 import List = require('Controls/_dropdownPopup/DropdownList');
 import _ForTemplate = require('wml!Controls/_dropdownPopup/For');
 import MoreButton = require('Controls/_dropdownPopup/MoreButton');
+import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
 import itemTemplate = require('tmpl!Controls/_dropdownPopup/itemTemplate');
 
 export {
@@ -22,5 +23,6 @@ export {
     List,
     _ForTemplate,
     MoreButton,
+    DropdownViewModel,
     itemTemplate
 }

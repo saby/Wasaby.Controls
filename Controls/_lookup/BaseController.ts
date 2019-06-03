@@ -7,7 +7,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import collection = require('Types/collection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
-import {LoadService} from 'Controls/history';
+import LoadService from 'Controls/suggest';
 
    var _private = {
       loadItems: function(self, options, selectedKeys, sourceIsChanged) {
