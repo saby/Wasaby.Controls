@@ -9,6 +9,7 @@ import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import {isEqual} from "Types/object";
 import 'wml!Controls/_list/resources/ItemOutput';
 import 'css!theme?Controls/list';
 
@@ -74,7 +75,11 @@ var ListView = BaseControl.extend(
             ListView.superclass.constructor.apply(this, arguments);
             let pendingRedraw = false;
             this._onListChangeFnc = (event, changesType) => {
-               if (changesType !== 'hoveredItemChanged' && !pendingRedraw) {
+               // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
+               if (changesType !== 'hoveredItemChanged' &&
+                  changesType !== 'activeItemChanged' &&
+                  changesType !== 'markedKeyChanged' &&
+                  !pendingRedraw) {
                   pendingRedraw = true;
                   scheduleCallbackAfterRedraw(
                      this,
@@ -111,7 +116,7 @@ var ListView = BaseControl.extend(
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
             }
-            if (this._options.itemPadding !== newOptions.itemPadding) {
+            if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
             }
 

@@ -82,6 +82,17 @@ define([
                }
             };
             bc._onItemClick({}, itemData);
+
+            // check notify itemClick in readOnly mode
+            var notifyClickCalled = false;
+            bc._options.readOnly = true;
+            bc._notify = function(e, args) {
+               if (e === 'itemClick') {
+                  notifyClickCalled = true;
+               }
+            };
+            bc._onItemClick({}, itemData);
+            assert.isFalse(notifyClickCalled, 'itemClick notified in readOnly mode.');
          });
          it('dots', function() {
             var itemData = {

@@ -12,7 +12,9 @@ export interface IButtonOptions {
  * @public
  * @author Михайловский Д.С.
  */
-
+export default interface IButton {
+   readonly '[Controls/_interface/IButton]': boolean;
+}
 /**
  * @name Controls/_interface/IButton#style
  * @cfg {Enum} Button display style.
@@ -101,6 +103,3 @@ export interface IButtonOptions {
  * </pre>
  * @see style
  */
-export default interface IButton {
-   readonly '[Controls/_interface/IButton]': boolean;
-}

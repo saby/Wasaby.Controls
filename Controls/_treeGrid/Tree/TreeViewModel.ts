@@ -1,4 +1,4 @@
-import {ListViewModel, ItemsUtil, TreeItemsUtil, RowIndexUtil} from 'Controls/list';
+import {ListViewModel, ItemsUtil, TreeItemsUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -22,9 +22,9 @@ var
                 if (contents) {
                     key = contents.get(keyProperty);
                     if (isExpandAll) {
-                        expanded = !collapsedItems[key] && hasChildItem(key);
+                        expanded = collapsedItems.indexOf(key) === -1 && hasChildItem(key);
                     } else {
-                        expanded = expandedItems[key];
+                        expanded = expandedItems.indexOf(key) !== -1;
                     }
                 }
                 return expanded;
@@ -110,7 +110,7 @@ var
         },
 
         removeNodeFromExpandedIfNeed: function(self, nodeId) {
-            if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
+            if (self._expandedItems.indexOf(nodeId) !== -1 && !_private.hasChildItem(self, nodeId)) {
                 // If it is necessary to delete only the nodes deleted from the items, add this condition:
                 // if (!self._items.getRecordById(nodeId)) {
                 _private.removeNodeFromExpanded(self, nodeId);
@@ -118,10 +118,15 @@ var
         },
 
         removeNodeFromExpanded: function(self, nodeId) {
-            delete self._expandedItems[nodeId];
+            _private.removeFromArray(self._expandedItems, nodeId);
             self._notify('onNodeRemoved', nodeId);
         },
 
+        removeFromArray: function(array, elem) {
+            if (array.indexOf(elem) !== -1) {
+                array.splice(array.indexOf(elem), 1);
+            }
+        },
 
         checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
@@ -166,35 +171,21 @@ var
 
             return expanderClasses;
         },
-        prepareExpandedItems: function(expandedItems) {
-            var
-                result = {};
-            if (expandedItems) {
-                expandedItems.forEach(function(item) {
-                    result[item] = true;
-                });
-            }
-            return result;
-        },
         prepareCollapsedItems: function(expandedItems, collapsedItems) {
             if (_private.isExpandAll(expandedItems) && collapsedItems) {
                 return cClone(collapsedItems);
             }
-            return {};
+            return [];
         },
         isExpandAll: function(expandedItems) {
-            return expandedItems && !!expandedItems[null];
+            return expandedItems.indexOf(null) !== -1;
         },
 
         resetExpandedItems: function(self) {
             if (_private.isExpandAll(self._expandedItems)) {
-                self._expandedItems = { null: true };
+                self._expandedItems = [null];
             } else {
-                for (var itemId in self._expandedItems) {
-                    if (self._expandedItems.hasOwnProperty(itemId)) {
-                        _private.removeNodeFromExpanded(self, itemId);
-                    }
-                }
+                self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
         },
@@ -202,18 +193,13 @@ var
             self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
                 var
                     itemId = item.getId();
-                delete self._expandedItems[itemId];
+                _private.removeFromArray(self._expandedItems, itemId);
                 _private.collapseChildNodes(self, itemId);
             });
         },
-        // Only for browsers with partial grid support. Explicit grid styles with grid row and grid column.
-        // Using util for calculating real rows' index on display considering footers, headers, results
-        calcNodeFooterIndex: function(self, parentKey) {
-            return 1 + RowIndexUtil.calcRowIndexByKey(parentKey, self._display, false, null, self._hierarchyRelation, self._hasMoreStorage, self._options.nodeFooterTemplate, self.getExpandedItems());
-        },
 
         collapseNode: function (self, nodeId) {
-            delete self._expandedItems[nodeId];
+            _private.removeFromArray(self._expandedItems, nodeId);
             _private.collapseChildNodes(self, nodeId);
         },
 
@@ -229,20 +215,19 @@ var
 
         toggleSingleExpanded: function (self, itemId, parentId): void {
             let
-                hasNoExpanded = Object.keys(self._expandedItems).length === 0;
+                hasNoExpanded = self._expandedItems.length === 0;
 
             if (hasNoExpanded) {
-                self._expandedItems[itemId] = true;
+                self._expandedItems.push(itemId);
                 return;
             }
 
-            if (self._expandedItems[itemId]) {
+            if (self._expandedItems.indexOf(itemId) !== -1) {
                 _private.collapseNode(self, itemId);
             } else {
-                self.setExpandedItems(_private.getExpandedParents(self,self.getItemById(itemId)));
-                self._expandedItems[itemId] = true;
+                self.setExpandedItems(_private.getExpandedParents(self, self.getItemById(itemId)));
+                self._expandedItems.push(itemId);
             }
-
         }
 
     },
@@ -255,8 +240,8 @@ var
 
         constructor: function(cfg) {
             this._options = cfg;
-            this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
-            this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
+            this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
+            this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new _entity.relation.Hierarchy({
                 idProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
@@ -268,8 +253,8 @@ var
             }
         },
 
-        setExpandedItems: function(expandedItems) {
-            this._expandedItems = _private.prepareExpandedItems(expandedItems);
+        setExpandedItems: function(expandedItems: Array<unknown>) {
+            this._expandedItems = expandedItems ? cClone(expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextModelVersion();
@@ -290,8 +275,8 @@ var
         isExpanded: function(dispItem) {
             var
                 itemId = dispItem.getContents().getId();
-            return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
-                : !!this._expandedItems[itemId];
+            return _private.isExpandAll(this._expandedItems) ? (this._collapsedItems.indexOf(itemId) === -1)
+                : (this._expandedItems.indexOf(itemId) !== -1);
         },
 
         isExpandAll: function() {
@@ -307,22 +292,23 @@ var
             if (expanded !== currentExpanded || expanded === undefined) {
                 if (_private.isExpandAll(this._expandedItems)) {
                     if (expanded) {
-                        delete this._collapsedItems[itemId];
+                        _private.removeFromArray(_collapsedItems,itemId);
                     } else {
-                        this._collapsedItems[itemId] = true;
+                        this._collapsedItems.push(itemId);
                     }
                 } else if (this._options.singleExpand) {
                     _private.toggleSingleExpanded(this, itemId, parentId);
 
                 } else {
-                    if (this._expandedItems[itemId]) {
+                    if (this._expandedItems.indexOf(itemId) !== -1) {
                         _private.collapseNode(this, itemId);
                     } else {
-                        this._expandedItems[itemId] = true;
+                        this._expandedItems.push(itemId);
                     }
                 }
                 this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
                 this._nextModelVersion();
+                this._notify('expandedItemsChanged', this._expandedItems);
             }
         },
 
@@ -354,6 +340,10 @@ var
         setNodeFooterTemplate: function(nodeFooterTemplate) {
             this._options.nodeFooterTemplate = nodeFooterTemplate;
             this._nextModelVersion();
+        },
+
+        getNodeFooterTemplate: function() {
+            return this._options.nodeFooterTemplate;
         },
 
         setExpanderDisplayMode: function(expanderDisplayMode) {
@@ -412,8 +402,7 @@ var
                           item: current.dispItem.getContents(),
                           dispItem: current.dispItem,
                           multiSelectVisibility: current.multiSelectVisibility,
-                          level: current.dispItem.getLevel(),
-                          rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                          level: current.dispItem.getLevel()
                       };
                       if (this._options.nodeFooterTemplate) {
                           current.nodeFooter.template = this._options.nodeFooterTemplate;
@@ -430,8 +419,7 @@ var
                        item: itemParent.getContents(),
                        dispItem: itemParent,
                        multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel(),
-                       rowIndex: _private.calcNodeFooterIndex(this, current.key)
+                       level: itemParent.getLevel()
                     };
                     if (this._options.nodeFooterTemplate) {
                        current.nodeFooter.template = this._options.nodeFooterTemplate;
@@ -507,7 +495,7 @@ var
             var
                 result,
                 startPosition,
-                afterExpandedNode = position === 'after' && this._expandedItems[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)];
+                afterExpandedNode = position === 'after' && this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)) !== -1;
 
             //The position should not change if the record is dragged from the
             //bottom/top to up/down and brought to the bottom/top of the folder.
@@ -577,7 +565,7 @@ var
         },
 
         setRoot: function(root) {
-            this._expandedItems = {};
+            this._expandedItems = [];
             this._display.setRoot(root);
             this.updateMarker(this._markedKey);
             this._nextModelVersion();

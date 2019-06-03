@@ -26,10 +26,10 @@ var _private = {
       self._filter = historyUtils.getSourceFilter(options.filter, options.source);
       return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
          self._items = items;
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          if (options.dataLoadCallback) {
             options.dataLoadCallback(items);
          }
+         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          return items;
       });
    },
@@ -162,7 +162,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IMenu
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
@@ -250,7 +249,8 @@ var _Controller = Control.extend({
                items: self._items,
                //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down')
+               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down'),
+               selectorOpener: self._children.selectorOpener
             },
             target: self._container,
             corner: self._options.corner,
@@ -279,6 +279,10 @@ var _Controller = Control.extend({
       } else if (this._items) {
          itemsLoadCallback(this._items);
       }
+   },
+
+   _onSelectorTemplateResult: function(event, items) {
+      this._onResult(event, {action: 'selectorResult', data: items});
    },
 
    _mousedown: function () {

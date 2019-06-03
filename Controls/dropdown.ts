@@ -12,6 +12,7 @@
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
  * @includes Styles Controls/_dropdown/Input/Styles
+ * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Kraynov D.
  */
@@ -25,6 +26,7 @@ import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils');
+import inputDefaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import defaultContentTemplateWithIcon = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon');
 
 export {
@@ -37,5 +39,6 @@ export {
 
     MenuUtils,
     dropdownHistoryUtils,
+    inputDefaultContentTemplate,
     defaultContentTemplateWithIcon
 }

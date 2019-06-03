@@ -11,7 +11,9 @@ export interface ISingleSelectableOptions {
  * @see Controls/interface/IMultiSelectable
  * @see Controls/interface/IPromisedSelectable
  */
-
+export default interface ISingleSelectable {
+   readonly '[Controls/_interface/ISingleSelectable]': boolean;
+}
 /**
  * @name Controls/_interface/ISingleSelectable#selectedKey
  * @cfg {Number|String} Selected item key.
@@ -23,8 +25,8 @@ export interface ISingleSelectableOptions {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
- *       this._selectedKeys = '1';
- *    }
+    *       this._selectedKeys = '1';
+    *    }
  * </pre>
  * @see selectedKeyChanged
  * @see keyProperty
@@ -43,16 +45,12 @@ export interface ISingleSelectableOptions {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
- *       this._selectedKey = undefined;
- *    },
+    *       this._selectedKey = undefined;
+    *    },
  *    onSelectedKeysChanged: function(e, selectedKey) {
- *
- *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
- *       this._panelSource = this._getPanelSource(selectedKey);
- *    }
+    *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    *       this._panelSource = this._getPanelSource(selectedKey);
+    *    }
  * </pre>
  * @see selectedKey
  */
-export default interface ISingleSelectable {
-   readonly '[Controls/_interface/ISingleSelectable]': boolean;
-}

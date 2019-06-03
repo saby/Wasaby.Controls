@@ -11,10 +11,11 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/demo-ws4-tree-singleexpand">Tree with singleExpand option</a>.</li>
     * </ul>
     *
     * @class Controls/_treeGrid/View
-    * @extends Controls/_grid/View
+    * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
@@ -60,6 +61,8 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
             parentProperty: entity.descriptor(String).required()
          };
       },
+      // todo removed or documented by task:
+      // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
          this._children.listControl.toggleExpanded(id);
       }

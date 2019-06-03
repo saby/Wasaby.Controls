@@ -17,7 +17,7 @@ import 'Controls/decorator';
        *
        * @class Controls/_input/Area
        * @extends Controls/_input/Text
-       * @mixes Controls/interface/INewLineKey
+       * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
@@ -235,7 +235,7 @@ import 'Controls/decorator';
          }
       });
 
-      Area._theme.push('Controls/input');
+      Area._theme = Text._theme.concat(['Controls/input']);
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();

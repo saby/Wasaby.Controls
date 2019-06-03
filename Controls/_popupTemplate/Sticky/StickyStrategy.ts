@@ -3,7 +3,15 @@
  */
 import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
 import cMerge = require('Core/core-merge');
-   var INVERTING_CONST = {
+import Env = require('Env/Env');
+
+interface IPosition {
+    left?: Number,
+    right?: Number,
+    top?: Number,
+    bottom?: Number
+}
+   const INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
       left: 'right',
@@ -15,7 +23,7 @@ import cMerge = require('Core/core-merge');
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight()
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -85,23 +93,36 @@ import cMerge = require('Core/core-merge');
          return position;
       },
 
-      calculatePosition: function(popupCfg, targetCoords, direction) {
-         var property = direction === 'horizontal' ? 'width' : 'height';
-         var position = _private.getPosition(popupCfg, targetCoords, direction);
-         var resultPosition = position;
-         var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+       isNegativePosition(position: IPosition, targetCoords): Boolean {
+          // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
+          if (Env.detection.isMobileIOS) {
+             _private._fixBottomPositionForIos(position, targetCoords);
 
-         if (positionOverflow > 0) {
+             // Protection against incorrect page design
+             let minValue = -10;
+             return position.left < minValue || position.right < minValue || position.top < minValue || position.bottom < minValue;
+          }
+          return false;
+       },
+
+      calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
+         let property = direction === 'horizontal' ? 'width' : 'height';
+         let position = _private.getPosition(popupCfg, targetCoords, direction);
+         let resultPosition = position;
+         let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+         let isNegativePos = _private.isNegativePosition(position, targetCoords);
+         if (positionOverflow > 0 || isNegativePos) {
             if (popupCfg.fittingMode === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else if (popupCfg.fittingMode === 'overflow') {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
-               var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
-               var revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-               if (revertPositionOverflow > 0) {
-                  if (positionOverflow < revertPositionOverflow) {
+               let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+               let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+               let isNegativeRevertPosition = _private.isNegativePosition(revertPosition, targetCoords);
+               if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
+                  if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
                      _private.invertPosition(popupCfg, direction);
                      _private.restrictContainer(position, property, popupCfg, positionOverflow);
                      resultPosition = position;
@@ -123,19 +144,7 @@ import cMerge = require('Core/core-merge');
       },
 
       fixPosition: function(position, targetCoords) {
-         if (position.bottom) {
-            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight();
-            position.bottom += keyboardHeight;
-
-            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
-            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
-            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
-            // only for this case consider a scrollTop
-            if (keyboardHeight === 0) {
-               position.bottom += _private.getTopScroll(targetCoords);
-            }
-         }
-
+         _private._fixBottomPositionForIos(position, targetCoords);
          if (position.bottom) {
             position.bottom = Math.max(position.bottom, 0);
          }
@@ -148,6 +157,38 @@ import cMerge = require('Core/core-merge');
          if (position.right) {
             position.right = Math.max(position.right, 0);
          }
+      },
+
+      _fixBottomPositionForIos: function(position, targetCoords) {
+         if (position.bottom) {
+            let keyboardHeight = _private.getKeyboardHeight();
+            position.bottom += keyboardHeight;
+
+            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
+            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
+            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
+            // only for this case consider a scrollTop
+            if (keyboardHeight === 0) {
+               position.bottom += _private.getTopScroll(targetCoords);
+            } else {
+               let win = _private.getWindow();
+               if ((win.innerHeight + win.scrollY) > win.innerWidth) {
+                  // fix for positioning with keyboard on vertical ios orientation
+                  let dif = win.innerHeight - targetCoords.boundingClientRect.top;
+                  if (position.bottom > dif) {
+                     position.bottom = dif;
+                  }
+               }
+            }
+         }
+      },
+
+      getKeyboardHeight: function() {
+         return TouchKeyboardHelper.getKeyboardHeight(true);
+      },
+
+      getWindow: function() {
+         return window;
       },
 
       getTopScroll: function(targetCoords) {

@@ -69,8 +69,7 @@
 }
 
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
-   //Set the value to more than scrollContainer, so that when you increase the tiles appear above the shadows and scrollbar.
-   z-index: @z-index_Scroll-contentEnvironment + 1;
+   z-index: 1;
 
    .controls-TileView__title {
       background-color: @background-color_TileView-title;
@@ -84,6 +83,8 @@
 }
 
 .controls-TileView__item_fixed {
+   //Set the value to more than scrollContainer, so that when you increase the tiles appear above the shadows and scrollbar.
+   z-index: @z-index_Scroll-contentEnvironment + 1;
    position: fixed;
 }
 

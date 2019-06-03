@@ -64,6 +64,10 @@ define('Controls/Utils/RecordSynchronizer', [
          var newRecord = _private.createRecord(editRecord, items);
          var at = additionalData.at || 0;
 
+         if (at > items.getCount()) {
+            at = items.getCount();
+         }
+
          if (additionalData.isNewRecord) {
             newRecord.set(items.getIdProperty(), additionalData.key);
          }

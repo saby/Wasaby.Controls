@@ -71,6 +71,7 @@ var _private = {
                 popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
                 if (item.editorOptions.source) {
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
+                    popupItem.selectorOpener = self._children.selectorOpener;
                 }
                 popupItems.push(popupItem);
             }
@@ -228,6 +229,37 @@ var _private = {
             selectedKeys.push(object.getPropertyValue(item, config.keyProperty));
         });
         return selectedKeys;
+    },
+
+    hasSelectorTemplate: function(configs) {
+        let hasSelectorTemplate;
+        factory(configs).each((config) => {
+            if (config.selectorTemplate) {
+                hasSelectorTemplate = true;
+            }
+        });
+        return !!hasSelectorTemplate;
+    },
+
+    itemClick: function(result) {
+        _private.setValue(this, result.selectedKeys, result.id);
+        _private.updateText(this, this._filterSource, this._configs);
+    },
+
+    applyClick: function(result) {
+        _private.selectItems(this, result.selectedKeys);
+    },
+
+    selectorResult: function(result) {
+        var curConfig = this._configs[result.id],
+            newItems = _private.getNewItems(this, result.data, curConfig);
+        curConfig.items.prepend(newItems);
+        _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+        _private.updateText(this, this._filterSource, this._configs);
+    },
+
+    moreButtonClick: function(result) {
+        this._idOpenSelector = result.id;
     }
 };
 
@@ -236,10 +268,13 @@ var Filter = Control.extend({
     _displayText: null,
     _configs: null,
     _filterSource: null,
+    _idOpenSelector: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
         this._displayText = {};
+
+        let resultDef;
 
         if (receivedState) {
             this._configs = receivedState.configs;
@@ -248,8 +283,10 @@ var Filter = Control.extend({
             _private.updateText(this, this._filterSource, this._configs);
         } else if (options.filterSource) {
             _private.prepareItems(this, options.filterSource);
-            return _private.reload(this);
+            resultDef = _private.reload(this);
         }
+        this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
+        return resultDef;
     },
 
     _beforeUpdate: function(newOptions) {
@@ -310,23 +347,17 @@ var Filter = Control.extend({
             var filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.prepareItems(this, filterSource);
             _private.updateText(this, filterSource, this._configs);
+        } else {
+            _private[result.action].call(this, result);
         }
-        if (result.action === 'itemClick') {
-            _private.setValue(this, result.selectedKeys, result.id);
-            _private.updateText(this, this._filterSource, this._configs);
+        if (result.action !== 'moreButtonClick') {
+            _private.notifyChanges(this, this._filterSource);
+            this._children.DropdownOpener.close();
         }
-        if (result.action === 'applyClick') {
-            _private.selectItems(this, result.selectedKeys);
-        }
-        if (result.action === 'selectorResult') {
-            var curConfig = this._configs[result.id],
-                newItems = _private.getNewItems(this, result.data, curConfig);
-            curConfig.items.prepend(newItems);
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-            _private.updateText(this, this._filterSource, this._configs);
-        }
-        _private.notifyChanges(this, this._filterSource);
-        this._children.DropdownOpener.close();
+    },
+
+    _onSelectorTemplateResult: function(event, items) {
+        this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: items});
     },
 
     _isFastReseted: function() {

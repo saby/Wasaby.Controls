@@ -1,0 +1,29 @@
+<div class="itemActionsDemo">
+     <h2>contextMenuConfig</h2>
+    <Controls.list:View
+            source = "{{_viewSource}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            keyProperty="id"
+            itemActions="{{_itemActions}}"
+            on:actionClick="_onActionClick()"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
+
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+                <ws:contentTemplate>
+                    <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
+                        <div>{{itemTemplate.itemData.item.title}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.description}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+        <ws:contextMenuConfig groupingKeyCallback="{{_groupingKeyCallback}}">
+            <ws:groupTemplate>
+                <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}"/>
+            </ws:groupTemplate>
+        </ws:contextMenuConfig>
+    </Controls.list:View>
+</div>

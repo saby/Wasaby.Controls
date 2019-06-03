@@ -31,7 +31,7 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
 
    var EditableAreaPG = Control.extend({
       _template: template,
-      _content: 'Controls/EditableArea',
+      _content: 'Controls/editableArea:View',
 
       _beforeMount: function() {
          this._key = 0;

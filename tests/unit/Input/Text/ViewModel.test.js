@@ -5,7 +5,7 @@ define(
    function(input) {
       'use strict';
 
-      describe('Controls.Input.Text.ViewModel', function() {
+      describe('Controls/_input/Text/ViewModel', function() {
          var ctrl;
 
          beforeEach(function() {

@@ -8,6 +8,7 @@ import dataSource = require('Controls/dataSource');
 
    /**
     * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
     * @category FormController
     * @class Controls/_form/FormController
     * @extends Core/Control
@@ -194,17 +195,15 @@ import dataSource = require('Controls/dataSource');
          this._isMount = true;
       },
       _beforeUpdate: function(newOptions) {
+         let self = this;
          if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
          }
-         if (newOptions.hasOwnProperty('isNewRecord')) {
-            this._isNewRecord = newOptions.isNewRecord;
-         }
+
          if (newOptions.record && this._options.record !== newOptions.record) {
             this._setRecord(newOptions.record);
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            var self = this;
             if (newOptions.record && newOptions.record.isChanged()) {
                this._showConfirmPopup('yesno').addCallback(function(answer) {
                   if (answer === true) {
@@ -220,8 +219,18 @@ import dataSource = require('Controls/dataSource');
                self.read(newOptions.key, newOptions.readMetaData);
             }
          }
+         // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
+         // Иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится
          if (newOptions.key === undefined && !newOptions.record) {
-            this.create(newOptions.initValues || newOptions.createMetaData);
+            this.create(newOptions.initValues || newOptions.createMetaData).addCallback(function() {
+               if (newOptions.hasOwnProperty('isNewRecord')) {
+                  self._isNewRecord = newOptions.isNewRecord;
+               }
+            });
+         } else {
+            if (newOptions.hasOwnProperty('isNewRecord')) {
+               this._isNewRecord = newOptions.isNewRecord;
+            }
          }
       },
       _afterUpdate: function() {
@@ -546,6 +555,7 @@ import dataSource = require('Controls/dataSource');
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);
+         event.stopPropagation(); // FC the notification event by itself
          this._notifyHandler(eventName, args);
       },
 

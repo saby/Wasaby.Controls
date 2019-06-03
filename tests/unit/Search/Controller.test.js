@@ -22,7 +22,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
    var memorySource = new sourceLib.Memory({
       data: data
    });
-   
+
    var getDefaultOptions = function() {
       return {
          searchParam: 'test',
@@ -42,7 +42,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          }
       };
    };
-   
+
    var defaultOptions = getDefaultOptions();
 
    var getSearchController = function(additionalOptions) {
@@ -52,7 +52,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       return controller;
    };
 
-   describe('Controls.Search.Controller', function() {
+   describe('Controls/_search/Controller', function() {
 
       it('_private.searchCallback', function() {
          var controller = getSearchController();
@@ -174,6 +174,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchMod.Controller._private.searchStartCallback(controller, filter);
          assert.isTrue(controller._loading);
          assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
+
+         //case 3. With root and searchMode='current'
+         controller._options.searchMode = 'current';
+         controller._root = 'testRootNode';
+         controller._loading = false;
+         searchMod.Controller._private.searchStartCallback(controller, filter);
+         assert.isTrue(controller._loading);
+         assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full', 'test': 'testRootNode' });
       });
 
       it('_private.needUpdateSearchController', function() {
@@ -186,7 +194,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       it('_private.getSearchController', function() {
          var searchController = getSearchController();
          var controller;
-         
+
          searchController._dataOptions = defaultOptions;
          controller = searchMod.Controller._private.getSearchController(searchController);
          assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
@@ -210,22 +218,23 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(value, 'test');
          assert.equal(searchController._inputSearchValue, 'test');
       });
-   
+
       it('_beforeMount', function() {
          var searchController = getSearchController(defaultOptions);
-         searchController._beforeMount({searchValue: 'test'}, {dataOptions: defaultOptions});
+         searchController._beforeMount({ searchValue: 'test', root: 'test' }, {dataOptions: defaultOptions});
 
          assert.equal(searchController._inputSearchValue, 'test');
+         assert.equal(searchController._root, 'test');
       });
-   
+
       it('_beforeUpdate', function() {
          var searchController = getSearchController(defaultOptions);
          searchController._beforeMount({}, {dataOptions: defaultOptions});
-   
+
          searchMod.Controller._private.getSearchController(searchController);
          searchController._beforeUpdate({}, {dataOptions: defaultOptions});
          assert.isNull(searchController._searchController);
-   
+
          searchMod.Controller._private.getSearchController(searchController);
          var options = getDefaultOptions();
          options.filter = {test: 'testValue'};
@@ -246,9 +255,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
+         assert.equal(searchController._root, null);
 
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);
+         assert.equal(searchController._root, 'test');
       });
 
    });

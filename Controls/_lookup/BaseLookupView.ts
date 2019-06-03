@@ -4,7 +4,6 @@ import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Env = require('Env/Env');
-import inputWml = require('wml!Controls/Input/resources/input');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 
@@ -25,6 +24,13 @@ var _private = {
 
     notifyValue: function (self, value) {
         self._notify('valueChanged', [value]);
+    },
+
+    resetInputValue: function(self) {
+        if (self._inputValue !== '') {
+            self._inputValue = '';
+            _private.notifyValue(self, '');
+        }
     }
 };
 
@@ -81,6 +87,10 @@ var BaseLookupView = Control.extend({
             });
         }
 
+        if (currentOptions.items !== newOptions.items) {
+            _private.resetInputValue(this);
+        }
+
         if (isNeedUpdate) {
             this._calculatingSizes(newOptions);
         }
@@ -92,7 +102,7 @@ var BaseLookupView = Control.extend({
 
             /* focus can be moved in choose event */
             if (this._active) {
-                this.activate();
+                this.activate({enableScreenKeyboard: true});
             }
         }
 
@@ -109,14 +119,11 @@ var BaseLookupView = Control.extend({
     _choose: function (event, item) {
         this._notify('addItem', [item]);
 
-        if (this._inputValue !== '') {
-            this._inputValue = '';
-            _private.notifyValue(this, '');
-        }
+        _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
         if (this._isInputVisible(this._options)) {
-            this.activate();
+            this.activate({enableScreenKeyboard: true});
         }
     },
 
@@ -200,7 +207,7 @@ var BaseLookupView = Control.extend({
         this._notify('updateItems', [[]]);
 
         // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
-        this.activate();
+        this.activate({enableScreenKeyboard: true});
     },
 
     _itemClick: function (event, item) {

@@ -13,7 +13,7 @@ define(
    function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
-      describe('Controls.Input.Base', function() {
+      describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
          makeInstanceCompatible(ctrl);
@@ -191,14 +191,6 @@ define(
                });
 
                assert.equal(ctrl._fieldName, 'test name');
-            });
-            it('A random name is generated when auto-complete is disabled.', function() {
-               ctrl._beforeMount({
-                  value: '',
-                  autoComplete: false
-               });
-
-               assert.equal(ctrl._fieldName.indexOf('name-'), 0);
             });
          });
          describe('Changing options in model.', function() {

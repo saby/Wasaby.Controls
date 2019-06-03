@@ -44,7 +44,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @example
     * RadioGroup with iteemTemplate and contentTemplate.
     * <pre>
-    *    <Controls.Toggle.RadioGroup ... >
+    *    <Controls.toggle:RadioGroup ... >
     *       <ws:itemTemplate>
     *          <ws:partial
     *             template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate" >
@@ -54,7 +54,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     *             </ws:contentTemplate>
     *          </ws:partial>
     *       </ws:itemTemplate>
-    *    </Controls.Toggle.RadioGroup>
+    *    </Controls.toggle:RadioGroup>
     * </pre>
     * @see itemTemplateProperty
     */
@@ -81,8 +81,8 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @example
     * Example description.
     * <pre>
-    *    <Controls.Toggle.RadioGroup itemTemplateProperty="myTemplate" source="{{_source}}...>
-    *    </Controls.Toggle.RadioGroup>
+    *    <Controls.toggle:RadioGroup itemTemplateProperty="myTemplate" source="{{_source}}...>
+    *    </Controls.toggle:RadioGroup>
     * </pre>
     * myTemplate
     * <pre>
@@ -117,7 +117,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @example
     * Vertical orientation.
     * <pre>
-    *    <Controls.Toggle.RadioGroup direction="horizontal"/>
+    *    <Controls.toggle:RadioGroup direction="horizontal"/>
     * </pre>
     */
 

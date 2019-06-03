@@ -6,11 +6,12 @@
          <Controls.search:Controller searchParam="title" minSearchLength="{{3}}">
             <div class="ws-fragment">
                <Controls.search:InputContainer>
-                  <Controls.Input.Search/>
+                  <Controls.search:Input/>
                </Controls.search:InputContainer>
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.explorer:View
+                             readOnly="{{true}}"
                         attr:class="demo-Explorer"
                         multiSelectVisibility="visible"
                         displayProperty="title"

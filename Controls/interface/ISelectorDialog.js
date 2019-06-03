@@ -10,7 +10,7 @@ define('Controls/interface/ISelectorDialog', [
 
    /**
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {Function} Items selection panel template.
+    * @cfg {ConfigSelector[]}
     * @example
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
     * WML:
@@ -19,7 +19,7 @@ define('Controls/interface/ISelectorDialog', [
     *       source="{{_source}}"
     *       searchParam="title"
     *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}"/>
+    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}" popupOptions="{{_popupOptions}}"/>
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -31,7 +31,18 @@ define('Controls/interface/ISelectorDialog', [
     *             onSelectComplete: function() {}
     *          }
     *       };
+    *       this._popupOptions = {
+    *          width: 400
+    *       };
     *    }
     * </pre>
     */
+
+   /**
+    * @typedef {Object} ConfigSelector
+    * @property {Function} templateName Items selection panel template.
+    * @property {Object} templateOptions Popup template options.
+    * @property {Object} popupOptions Stack popup options.
+    */
+
 });

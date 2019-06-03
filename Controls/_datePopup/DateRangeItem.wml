@@ -1,6 +1,7 @@
 <div class="controls-PeriodDialog-DateRangeItem">
    <ws:if data="{{_isStickySupport}}">
-      <div class="controls-PeriodDialog-DateRangeItem__months">
+      <div class="controls-PeriodDialog-DateRangeItem__months"
+         on:wheel="_wheelHandler()">
          <ws:for data="month in 12">
             <div class="controls-PeriodDialog-DateRangeItem__months-btn"
                  on:click="_scrollToMonth(item.id, month)"
@@ -26,7 +27,7 @@
                on:click="_monthCaptionClick(month)">
             {{ _formatMonth(month) }}
          </div>
-         <Controls.Date.MonthView
+         <Controls.calendar:MonthView
             attr:class="controls-DateRangeBigChoose-DateRangePicker__item"
             monthViewModel="{{_monthViewModel}}"
             selectionType="{{_options.selectionType}}"

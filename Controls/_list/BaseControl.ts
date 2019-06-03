@@ -22,6 +22,8 @@ import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
+import {ICrud} from "Types/source";
+import TouchContextField = require('Controls/Context/TouchContextField');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -150,7 +152,11 @@ var _private = {
                 if (self._virtualScroll) {
                     self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-                    self._virtualScroll.updateItemsIndexes('down');
+
+                    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+                    if (!self._options.task1177135045) {
+                        self._virtualScroll.updateItemsIndexes('down');
+                    }
                     _private.applyVirtualScroll(self);
                 }
 
@@ -387,8 +393,14 @@ var _private = {
     },
 
     onScrollLoadEdgeStart: function(self, direction) {
-        self._loadTriggerVisibility[direction] = true;
-        _private.onScrollLoadEdge(self, direction);
+        if (self._options.task1177135045) {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction)
+            }
+        } else {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
     },
 
     onScrollLoadEdgeStop: function(self, direction) {
@@ -408,33 +420,64 @@ var _private = {
 
     // Метод, в котором опеределяется необходимость догрузки данных
     updateVirtualWindow: function(self, direction) {
-        var indexes = self._virtualScroll.ItemsIndexes;
 
-        // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
-        if (self._listViewModel.getCount() <= indexes.stop) {
-            if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                _private.loadToDirectionIfNeed(self, direction);
-            }
-        } else {
-
-            // Иначе пересчитываем скролл
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
             self._checkShouldLoadToDirection = true;
+        } else {
+            let
+                indexes = self._virtualScroll.ItemsIndexes;
+
+            // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
+            if (self._listViewModel.getCount() <= indexes.stop) {
+                if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                    _private.loadToDirectionIfNeed(self, direction);
+                }
+            } else {
+
+                // Иначе пересчитываем скролл
+                self._virtualScroll.updateItemsIndexes(direction);
+                _private.applyVirtualScroll(self);
+                self._checkShouldLoadToDirection = true;
+            }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
     onScrollLoadEdge: function(self, direction) {
-        if (self._virtualScroll) {
-            _private.updateVirtualWindow(self, direction);
-        } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            _private.loadToDirectionIfNeed(self, direction);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
+            if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+                if (self._virtualScroll) {
+                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
+                    self._virtualScroll.updateItemsIndexes(direction);
+                    _private.applyVirtualScroll(self);
+                }
+            }
+        } else {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction);
+            } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+            }
         }
     },
 
     onScrollListEdge: function(self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
+    },
 
+    onScrollListEdgeStop: function (self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = false;
+        }
     },
 
     scrollToEdge: function(self, direction) {
@@ -464,7 +507,8 @@ var _private = {
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
 
-        self._children.ScrollEmitter.startRegister(triggers);
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
     },
 
     onScrollShow: function(self) {
@@ -683,20 +727,31 @@ var _private = {
                 rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
+            self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
+                const defaultMenuConfig = {
+                   items: rs,
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   showClose: true
+                };
+
+                if (self._options.contextMenuConfig) {
+                   if (typeof self._options.contextMenuConfig === 'object') {
+                      cMerge(defaultMenuConfig, self._options.contextMenuConfig);
+                   } else {
+                      IoC.resolve('ILogger').error('CONTROLS.ListView',
+                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                   }
+                }
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: {
-                        items: rs,
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        showClose: true
-                    },
+                    templateOptions: defaultMenuConfig,
                     eventHandlers: {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
@@ -726,6 +781,7 @@ var _private = {
        const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
+          self._listViewModel.setMenuState('shown');
           require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
@@ -761,6 +817,7 @@ var _private = {
 
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._actionMenuIsShown = false;
@@ -898,6 +955,20 @@ var _private = {
             if (self._currentPage === self._knownPagesCount)
                 return self._knownPagesCount + 1;
         }
+    },
+
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+        return new SourceController({
+            source: source,
+            navigation: navigation,
+            keyProperty: keyProperty
+        })
+    },
+
+    checkRequiredOptions: function(options) {
+        if (options.keyProperty === undefined) {
+            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
+        }
     }
 };
 
@@ -980,6 +1051,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
+        _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
@@ -1013,11 +1085,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             if (newOptions.source) {
-                self._sourceController = new SourceController({
-                    source: newOptions.source,
-                    navigation: newOptions.navigation, // TODO возможно не всю навигацию надо передавать а только то, что касается source
-                    keyProperty: newOptions.keyProperty
-                });
+                self._sourceController = _private.getSourceController(newOptions);
 
 
                 if (receivedData) {
@@ -1136,6 +1204,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 * to first element.
                 */
 
+                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
+                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
+                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
+                if (self._options.task1177182277) {
+                    return;
+                }
+
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 // FIXME self._options.task46390860
@@ -1164,10 +1239,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
-        var items = this._listViewModel.getItems();
-        var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        var reloadItemDeferred;
-        var filter;
+        const items = this._listViewModel.getItems();
+        const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        const sourceController = _private.getSourceController(this._options);
+
+        let reloadItemDeferred;
+        let filter;
+        let itemsCount;
 
         function loadCallback(item):void {
             if (replaceItem) {
@@ -1184,17 +1262,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
-            reloadItemDeferred = this._sourceController.load(filter).addCallback((items) => {
-                if (items.getCount() && items.getCount() === 1) {
+            reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
+                itemsCount = items.getCount();
+
+                if (itemsCount === 1) {
                     loadCallback(items.at(0));
+                } else if (itemsCount > 1) {
+                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    throw new Error('BaseControl::reloadItem query returns wrong amount of items for reloadItem call with key: ' + key);
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
         } else {
-            reloadItemDeferred = this._sourceController.read(key, readMeta).addCallback((item) => {
-                loadCallback(item);
+            reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
+                if (item) {
+                    loadCallback(item);
+                } else {
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                }
                 return item;
             });
         }
@@ -1251,10 +1337,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
 
-        //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
-            if (this._options.loading) {
+            if (this._options.loading && this._loadingState === null) {
                 _private.showIndicator(this);
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
@@ -1279,7 +1364,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
+            case 'listTopStop': _private.onScrollListEdgeStop(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
+            case 'listBottomStop': _private.onScrollListEdgeStop(self, 'down'); break;
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
@@ -1331,8 +1418,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left') {
+        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
             this._children.itemActions.updateItemActions(itemData.item);
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
+            itemData.itemActions = this.getViewModel().getItemActions(itemData.item);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
             this._notify('itemSwipe', [itemData.item, childEvent]);
@@ -1574,7 +1664,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
-        this._canUpdateItemsActions = true;
+
+        // do not need to update itemAction on touch devices, if mouseenter event was fired,
+        // otherwise actions will updated and redraw, because of this click on action will not work.
+        // actions on touch devices drawing on swipe.
+        if (!this._context.isTouch.isTouch) {
+            this._canUpdateItemsActions = true;
+        }
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
@@ -1625,6 +1721,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
  }
  }; */
 BaseControl._private = _private;
+
+BaseControl.contextTypes = function contextTypes() {
+    return {
+        isTouch: TouchContextField
+    };
+};
+
 BaseControl.getDefaultOptions = function() {
     return {
         uniqueKeys: true,

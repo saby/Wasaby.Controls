@@ -91,6 +91,21 @@ define(
             });
          });
 
+         it('dataLoadCallback', (done) => {
+            let newConfig = Clone(config),
+               selectedItems;
+            newConfig.dataLoadCallback = (items) => {items.assign(itemsRecords);};
+            newConfig.selectedItemsChangedCallback = (items) => {selectedItems = items;};
+            newConfig.selectedKeys = ['2'];
+            newConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 1, page: 0, hasMore: false}};
+            let dropdownController = getDropdownController(newConfig);
+            dropdownController._beforeMount(newConfig).addCallback(function(items) {
+               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               assert.deepEqual(selectedItems[0].getRawData(), itemsRecords.at(1).getRawData());
+               done();
+            });
+         });
+
          it('before mount navigation', (done) => {
             let navigationConfig = Clone(config);
             navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
@@ -488,6 +503,70 @@ define(
                open: setTrue.bind(this, assert)
             };
             dropdownController._open();
+         });
+
+         it('_onSelectorTemplateResult', () => {
+            let dropdownController = getDropdownController(config),
+               opened;
+            dropdownController._onResult = dropdown._Controller._private.onResult.bind(dropdownController);
+            dropdownController._children.DropdownOpener = {
+               close: function() {
+                  opened = false;
+               }
+            };
+            let curItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            dropdownController._items = curItems;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+
+            dropdownController._onSelectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
          it('mousedown', () => {

@@ -118,7 +118,7 @@ define([
          it('removeNodeFromExpanded', function() {
             var removed = false;
             var self = {
-               _expandedItems: {'test': true}
+               _expandedItems: ['test']
             };
             self._notify = function(event) {
                if (event === 'onNodeRemoved') {
@@ -133,10 +133,10 @@ define([
 
          it('resetExpandedItems', function() {
             treeViewModel.setExpandedItems(['123', '234', '1']);
-            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 3);
+            assert.equal(treeViewModel.getExpandedItems().length, 3);
 
             treeViewModel.resetExpandedItems();
-            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 0);
+            assert.equal(treeViewModel.getExpandedItems().length, 0);
          });
 
          it('isVisibleItem', function() {
@@ -370,11 +370,11 @@ define([
                }),
                preparedExpandedItems = { 1: true, 2: true, 3: true },
                preparedExpandedAllItems = { null: true };
-            assert.deepEqual(preparedExpandedItems, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
+            assert.deepEqual(baseExpandedItems, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
             treeViewModel.setExpandedItems([null]);
-            assert.deepEqual(preparedExpandedAllItems, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
+            assert.deepEqual([null], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
             treeViewModel.setExpandedItems(baseExpandedItems);
-            assert.deepEqual(preparedExpandedItems, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
+            assert.deepEqual(baseExpandedItems, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems".');
          });
       });
       describe('public methods', function() {
@@ -385,31 +385,31 @@ define([
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            assert.isTrue(treeViewModel.getExpandedItems()['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, true)".');
+            assert.isTrue(treeViewModel.getExpandedItems().indexOf('123') !== -1, 'Invalid value "_expandedItems" after call "toggleExpanded(123, true)".');
             assert.isTrue(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, false);
-            assert.equal(undefined, treeViewModel.getExpandedItems()['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, false)".');
+            assert.isTrue(treeViewModel.getExpandedItems().indexOf('123') === -1, 'Invalid value "_expandedItems" after call "toggleExpanded(123, false)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, false)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
             treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
-            assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
+            assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
-            assert.deepEqual({}, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after collapse "123".');
+            assert.deepEqual([], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after collapse "123".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty));
-            assert.deepEqual({ '123': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after toggle "123".');
+            assert.deepEqual(['123'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after toggle "123".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty));
-            assert.deepEqual({}, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after toggle "123".');
+            assert.deepEqual([], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after toggle "123".');
 
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
             treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
-            assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
+            assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.setItems(new collection.RecordSet({
                rawData: treeData,
                idProperty: 'id'
             }));
-            assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
+            assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
          });
 
          it('singleExpand toggleExpanded', function() {
@@ -422,26 +422,26 @@ define([
                items: new collection.RecordSet({
                   rawData: [
                      {
-                        'id': 1,
+                        'id': '1',
                         'parent': null,
                         'parent@': true,
                         'title': '1'
                      },
                      {
-                        'id': 2,
+                        'id': '2',
                         'parent': null,
                         'parent@': true,
                         'title': '2'
                      },
                      {
-                        'id': 11,
-                        'parent': 1,
+                        'id': '11',
+                        'parent': '1',
                         'parent@': true,
                         'title': '11'
                      },
                      {
-                        'id': 21,
-                        'parent': 2,
+                        'id': '21',
+                        'parent': '2',
                         'parent@': true,
                         'title': '21'
                      },
@@ -451,62 +451,11 @@ define([
             };
             var SETVM = new treeGrid.TreeViewModel(singleExpangConfig);
             SETVM.toggleExpanded(SETVM.getItemById('1', cfg.keyProperty), true);
-            assert.deepEqual({'1': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 1.');
+            assert.deepEqual(['1'], SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 1.');
             SETVM.toggleExpanded(SETVM.getItemById('2', cfg.keyProperty), true);
-            assert.deepEqual({'2': true}, SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
+            assert.deepEqual(['2'], SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
          });
-
-         it('calcNodeFooterIndex', function () {
-            var cfg = {
-               keyProperty: 'id',
-               displayProperty: 'title',
-               parentProperty: 'parent',
-               nodeProperty: 'itemType',
-               expandedItems: [1, 2],
-               nodeFooterTemplate: 'asas',
-               items: new collection.RecordSet({
-                  rawData: [
-                     {
-                        'id': 1,
-                        'parent': null,
-                        'itemType': true,
-                        'title': '1'
-                     },
-                     {
-                        'id': 2,
-                        'parent': 1,
-                        'itemType': true,
-                        'title': '2'
-                     },
-                     {
-                        'id': 11,
-                        'parent': 1,
-                        'itemType': null,
-                        'title': '11'
-                     },
-                     {
-                        'id': 21,
-                        'parent': 2,
-                        'itemType': null,
-                        'title': '21'
-                     },
-                     {
-                        'id': 3,
-                        'parent': null,
-                        'itemType': null,
-                        'title': '21'
-                     }
-                  ],
-                  idProperty: 'id'
-               })
-            };
-            let model = new treeGrid.TreeViewModel(cfg);
-            model._hasMoreStorage = {};
-
-            assert.equal(5, treeGrid.TreeViewModel._private.calcNodeFooterIndex(model, 21));
-
-         });
-
+         
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
@@ -525,7 +474,6 @@ define([
                key: treeViewModel._items.at(0).getId(),
                template: "footer",
                level: 1,
-               rowIndex: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[1].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
@@ -536,7 +484,6 @@ define([
                template: "footer",
                key: treeViewModel._items.at(1).getId(),
                level: 2,
-               rowIndex: 6,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter, {
@@ -545,7 +492,6 @@ define([
                template: "footer",
                key: treeViewModel._items.at(5).getId(),
                level: 1,
-               rowIndex: 8,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[5].');
          });
@@ -600,13 +546,10 @@ define([
 
          it('setExpandedItems', function() {
             treeViewModel.setExpandedItems([]);
-            assert.deepEqual({}, treeViewModel.getExpandedItems());
+            assert.deepEqual([], treeViewModel.getExpandedItems());
 
             treeViewModel.setExpandedItems([1, 2]);
-            assert.deepEqual({
-               1: true,
-               2: true
-            }, treeViewModel.getExpandedItems());
+            assert.deepEqual([1, 2], treeViewModel.getExpandedItems());
          });
          it('onCollectionChange', function() {
             var
@@ -615,16 +558,16 @@ define([
                removedItems2 = [
                   new MockedDisplayItem({ id: 'mi2', isNode: true }), new MockedDisplayItem({ id: 'mi4', isNode: false })],
                notifiedOnNodeRemoved = false;
-            treeViewModel._expandedItems = { 'mi1': true, 'mi2': true };
+            treeViewModel.setExpandedItems(['mi1', 'mi2']);
             treeViewModel._notify = function(eventName) {
                if (eventName === 'onNodeRemoved') {
                   notifiedOnNodeRemoved = true;
                }
             };
             treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems1, null);
-            assert.deepEqual(treeViewModel.getExpandedItems(), { 'mi2': true }, 'Invalid value "_expandedItems" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel.getExpandedItems(), ['mi2'], 'Invalid value "_expandedItems" after "onCollectionChange".');
             treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems2, null);
-            assert.deepEqual(treeViewModel.getExpandedItems(), {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel.getExpandedItems(), [], 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
       });

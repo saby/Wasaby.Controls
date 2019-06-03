@@ -1,6 +1,11 @@
-import {GridViewModel} from 'Controls/grid';
-import {GridLayoutUtil, RowIndexUtil} from 'Controls/list';
-import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
+import {GridViewModel} from 'Controls/grid'
+import {GridLayoutUtil} from 'Controls/list'
+import {
+    getFooterIndex,
+    getIndexByDisplayIndex, getIndexById, getIndexByItem,
+    getResultsIndex, getTopOffset
+} from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
+import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
 
 function isLastColumn(
    itemData: object,
@@ -16,7 +21,7 @@ var _private = {
 
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = RowIndexUtil.calcRowIndexByItem.apply(null, _private.getArgsForRowIndexUtil(self, self._model.getDisplay().at(current.index)));
+        current.rowIndex = self._getRowIndexHelper().getIndexByDisplayIndex(current.index);
         current.gridGroupStyles = GridLayoutUtil.toCssString([
             {
                 name: 'grid-row',
@@ -26,18 +31,6 @@ var _private = {
                 name: '-ms-grid-row',
                 value: current.rowIndex+1
             }
-        ]);
-    },
-
-    getArgsForRowIndexUtil: function(self, item) {
-        return [item].concat([
-            self._model.getDisplay(),
-            !!self.getHeader(),
-            self.getResultsPosition(),
-            self._model.getHierarchyRelation(),
-            self._model.getHasMoreStorage(),
-            self._options.nodeFooterTemplate,
-            self.getExpandedItems()
         ]);
     },
 
@@ -79,6 +72,10 @@ var
             TreeGridViewModel.superclass.constructor.apply(this, arguments);
             this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
             this._model.subscribe('onNodeRemoved', this._onNodeRemovedFn);
+            this._model.subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+        },
+        _onExpandedItemsChanged: function(e, expandedItems) {
+            this._notify('expandedItemsChanged', expandedItems);
         },
         _createModel: function (cfg) {
             return new TreeViewModel(cfg);
@@ -92,7 +89,7 @@ var
         isExpandAll: function () {
             return this._model.isExpandAll();
         },
-        setExpandedItems: function (expandedItems) {
+        setExpandedItems: function (expandedItems: Array<unknown>) {
             this._model.setExpandedItems(expandedItems);
         },
         getExpandedItems: function () {
@@ -123,11 +120,9 @@ var
 
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
             // with grid-row and grid-column
-            if (GridLayoutUtil.isPartialSupport) {
+            if (GridLayoutUtil.isPartialGridSupport()) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
-                } else {
-                    current.rowIndex = this._calcRowIndex(current);
                 }
             }
 
@@ -147,7 +142,7 @@ var
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
                 }
 
-                if (GridLayoutUtil.isPartialSupport) {
+                if (GridLayoutUtil.isPartialGridSupport()) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
                 }
 
@@ -177,10 +172,10 @@ var
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
             if (current.nodeFooter) {
                 current.nodeFooter.columns = current.columns;
-                current.nodeFooter.isPartialSupport = GridLayoutUtil.isPartialSupport;
+                current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
                 current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
-                if (GridLayoutUtil.isPartialSupport) {
-                    current.nodeFooter.rowIndex += RowIndexUtil.calcTopOffset(!!this.getHeader(), this.getResultsPosition());
+                if (GridLayoutUtil.isPartialGridSupport()) {
+                    current.nodeFooter.rowIndex = current.rowIndex + 1;
                     current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
                 }
             }
@@ -191,23 +186,42 @@ var
             this._notify('onNodeRemoved', nodeId);
         },
 
-        _calcRowIndex: function(current):number {
-            var index:number;
-
-            if (current.isGroup) {
-                index = RowIndexUtil.calcRowIndexByItem(this._model.getDisplay().at(current.index), this._model.getDisplay(), !!this.getHeader(), this.getResultsPosition());
-            } else if (current.index !== -1) {
-                index = RowIndexUtil.calcRowIndexByKey.apply(null, _private.getArgsForRowIndexUtil(this, current.key));
-            }
-
-            return index;
-        },
         setHasMoreStorage: function (hasMoreStorage) {
             this._model.setHasMoreStorage(hasMoreStorage);
         },
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);
+        },
+
+        _getRowIndexHelper() {
+            let
+                self = this,
+                display = this.getDisplay(),
+                hasHeader = !!this.getHeader(),
+                resultsPosition = this.getResultsPosition(),
+                hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            function getArgsForRowIndexUtil(unicArgs) {
+                return [unicArgs].concat([
+                    display,
+                    hasHeader,
+                    resultsPosition,
+                    self._model.getHierarchyRelation(),
+                    self._model.getHasMoreStorage(),
+                    self._model.getExpandedItems(),
+                    !!self._model.getNodeFooterTemplate()
+                ]);
+            }
+
+            return {
+                getIndexByItem: (item) => getIndexByItem.apply(null, getArgsForRowIndexUtil(item)),
+                getIndexById: (id) => getIndexById.apply(null, getArgsForRowIndexUtil(id)),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex.apply(null, getArgsForRowIndexUtil(index)),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
+                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
+            };
         }
     });
 

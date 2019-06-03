@@ -15,7 +15,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/Picker', function() {
+   describe('Controls/_input/Date/Picker', function() {
 
       describe('_openDialog', function() {
          it('should open opener', function() {

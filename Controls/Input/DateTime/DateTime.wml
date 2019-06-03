@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_input/DateTime/DateTime" scope="{{_options}}" />

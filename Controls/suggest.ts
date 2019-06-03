@@ -12,10 +12,16 @@
 
 import Input = require('Controls/_suggest/Input');
 import _InputController = require('Controls/_suggest/_InputController');
+import _InputControllerEmptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
+import InputRender = require('Controls/_suggest/Input/Render');
+import LoadService from 'Controls/_suggest/LoadService';
 
 export {
    Input,
    _InputController,
-   SearchInput
+   _InputControllerEmptyTemplate,
+   SearchInput,
+   InputRender,
+   LoadService
 };
