@@ -58,7 +58,7 @@
  * @property {String} [caption] Header cell caption text.
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
- * @property {String} [template] Template for the header cell.
+ * @property {String} [template] Template for the header cell. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
  * @property {String} [sortingProperty] Property by which doing sorting.
  */
 
