@@ -149,6 +149,19 @@ import 'Controls/breadcrumbs';
     * @author Авраменко А.С.
     */
 
+   /**
+    * @name Controls/_exploer/View#displayProperty
+    * @cfg {string} sets the property to be displayed in search results
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
