@@ -13,7 +13,7 @@ var
             e.stopPropagation();
         },
         _onSearchPathClick: function (e, item) {
-            this._notify('itemClick', [item, e], {bubbling: true});
+           this._notify('itemClick', [item, e], {bubbling: true});
         },
         getDefaultOptions: function () {
             return {

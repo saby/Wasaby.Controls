@@ -9,7 +9,6 @@
                                templateName="wml!Controls-demo/PropertyGrid/PropertyGridTemplate"
                                on:itemsChanged="_valueChangedHandler()">
         </Controls-demo.PropertyGridForDemo.PropertyGrid>
-
     </div>
     <div class="controls-demo_event-example__wrapper " >
         <div class="controls-demo_example-wrapper">

@@ -1,4 +1,4 @@
-define('Controls/Input/Date/interface/ILink', [
+define('Controls/_dateRange/interfaces/ILink', [
 ], function() {
    'use strict';
 

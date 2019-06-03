@@ -23,6 +23,7 @@ import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
+import TouchContextField = require('Controls/Context/TouchContextField');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1163,6 +1164,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 * to first element.
                 */
 
+                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
+                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
+                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
+                if (self._options.task1177182277) {
+                    return;
+                }
+
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 // FIXME self._options.task46390860
@@ -1197,6 +1205,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         let reloadItemDeferred;
         let filter;
+        let itemsCount;
 
         function loadCallback(item):void {
             if (replaceItem) {
@@ -1214,16 +1223,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
             reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
-                if (items.getCount() && items.getCount() === 1) {
+                itemsCount = items.getCount();
+
+                if (itemsCount === 1) {
                     loadCallback(items.at(0));
+                } else if (itemsCount > 1) {
+                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    throw new Error('BaseControl::reloadItem query returns wrong amount of items for reloadItem call with key: ' + key);
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
         } else {
             reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
-                loadCallback(item);
+                if (item) {
+                    loadCallback(item);
+                } else {
+                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                }
                 return item;
             });
         }
@@ -1605,7 +1622,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
-        this._canUpdateItemsActions = true;
+
+        // do not need to update itemAction on touch devices, if mouseenter event was fired,
+        // otherwise actions will updated and redraw, because of this click on action will not work.
+        // actions on touch devices drawing on swipe.
+        if (!this._context.isTouch.isTouch) {
+            this._canUpdateItemsActions = true;
+        }
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
@@ -1656,6 +1679,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
  }
  }; */
 BaseControl._private = _private;
+
+BaseControl.contextTypes = function contextTypes() {
+    return {
+        isTouch: TouchContextField
+    };
+};
+
 BaseControl.getDefaultOptions = function() {
     return {
         uniqueKeys: true,

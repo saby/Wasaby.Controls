@@ -8,6 +8,7 @@ import dataSource = require('Controls/dataSource');
 
    /**
     * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
     * @category FormController
     * @class Controls/_form/FormController
     * @extends Core/Control

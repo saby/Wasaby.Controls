@@ -451,10 +451,14 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._editingItemData;
     },
 
+    hasItemById: function(id, keyProperty) {
+        return !!this.getItemById(id, keyProperty);
+    },
+
     setItemActions: function(item, actions) {
         if (item.get) {
             const id = item.get(this._options.keyProperty);
-            if (this.getItemById(id, this._options.keyProperty)) {
+            if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;
             }
         }

@@ -8,7 +8,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
- * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
+ * <a href="/materials/demo/demo-ws4-toolbar">Demo-example</a>.
  *
  * @class Controls/_toolbars/View
  * @extends Core/Control
@@ -24,8 +24,24 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  */
 
 /**
+ * @typedef {Object} Item
+ * @property {Boolean} [item.readOnly] Determine item readOnly state.
+ * @property {Boolean} [item.buttonCaption] Caption of toolbar element.
+ * @property {Boolean} [item.buttonTransparent] Transparent of toolbar element.
+ * @property {Boolean} [item.iconStyle] Icon style of toolbar element.
+ * @property {Boolean} [item.icon] Icon of toolbar element.
+ * @property {Boolean} [item.buttonStyle] Button style of toolbar element.
+ * @property {Boolean} [item.buttonViewMode] Button style of toolbar element.
+ */
+
+/**
+ * @typedef {Object} SourceCfg
+ * @property {Item} [SourceCfg.item] Format of source record.
+ */
+
+/**
  * @name Controls/_toolbars/View#source
- * @cfg {Types/source:Base} Object that implements ISource interface for data access.
+ * @cfg {SourceCfg} Object that implements ISource interface for data access.
  * @default undefined
  * @remark
  * The item can have an property 'title' and 'showType'. 'Title' determine item caption. 'ShowType' determine where display item, 0 - show in menu,
