@@ -86,7 +86,7 @@ var _private = {
       if (self._options.parentProperty && self._viewMode !== 'search') {
          _private.assignServiceFilters(filter);
       }
-      if (self._root !== undefined && self._options.parentProperty && self._options.searchMode === 'current') {
+      if (self._root !== undefined && self._options.parentProperty && self._options.startingWith === 'current') {
          filter[self._options.parentProperty] = self._root;
       }
       self._loading = true;
@@ -229,7 +229,7 @@ Container.getDefaultOptions = function () {
    return {
       minSearchLength: 3,
       searchDelay: 500,
-      searchMode: 'root'
+      startingWith: 'root'
    };
 };
 
