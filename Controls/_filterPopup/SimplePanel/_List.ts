@@ -49,8 +49,8 @@ var List = Control.extend({
         }
     },
 
-    _selectorDialogResult: function(event, result) {
-        this._notify('selectorResult', [result]);
+    _moreButtonClick: function(event) {
+        this._notify('moreButtonClick');
     },
 
     _itemMouseEnter: function() {

@@ -7,6 +7,7 @@
  * @includes isInn Controls/_validate/Validators/IsINN
  * @includes isEmail Controls/_validate/Validators/IsEmail
  * @includes isRequired Controls/_validate/Validators/IsRequired
+ * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @public
  * @author Kraynov D.
@@ -18,6 +19,7 @@ import InputContainer = require('Controls/_validate/Input');
 import isInn = require('Controls/_validate/Validators/IsINN');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
+import isValidDate = require('Controls/_validate/Validators/IsValidDate');
 import Selection = require('Controls/_validate/Selection');
 
 export {
@@ -27,5 +29,6 @@ export {
     isInn,
     isEmail,
     isRequired,
+    isValidDate,
     Selection
 }
