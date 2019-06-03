@@ -20,6 +20,9 @@ import MonthViewDayTemplate = require('wml!Controls/_calendar/MonthView/dayTempl
 import MonthViewTemplate = require('wml!Controls/_calendar/MonthView/MonthView');
 import MonthViewTableBodyTemplate = require('wml!Controls/_calendar/MonthView/MonthViewTableBody');
 
+import MonthListYearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
+import MonthListMonthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
+
 export {default as Month} from './_calendar/Month';
 export {default as MonthList} from './_calendar/MonthList';
 export {default as MonthSlider} from './_calendar/MonthSlider';
@@ -33,5 +36,7 @@ export {default as IMonth} from './_calendar/interfaces/IMonth';
 export {
    MonthViewDayTemplate,
    MonthViewTemplate,
-   MonthViewTableBodyTemplate
+   MonthViewTableBodyTemplate,
+   MonthListYearTemplate,
+   MonthListMonthTemplate
 }

@@ -47,7 +47,7 @@
                  mask="{{mask}}"
                  calendarSource="{{_source}}">
             <ws:dayTemplate>
-               <ws:partial template="Controls/calendar:MonthViewDayTemplate"
+               <ws:partial template="{{_dayTemplateWrapper}}"
                            value="{{dayTemplate.value}}"
                >
                   <ws:contentTemplate>
