@@ -13,7 +13,7 @@
                     scope="{{item}}"
                     on:itemClick="_itemClickHandler(item)"
                     on:checkBoxClick="_checkBoxClickHandler(index)"
-                    on:selectorResult="_selectorResultHandler(item)"
+                    on:moreButtonClick="_moreButtonClick(item)"
             />
          </ws:for>
       </div>
