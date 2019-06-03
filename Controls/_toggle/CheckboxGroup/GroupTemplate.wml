@@ -1,0 +1,23 @@
+<div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? 'controls-CheckboxGroup__childGroup'}}">
+   <ws:for data="index, item in groups[parent]">
+      <Controls._toggle.Checkbox on:valueChanged="_valueChangedHandler(item)"
+                                 caption="{{item[displayProperty || 'title']}}"
+                                 triState="{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
+                                 value="{{isSelected(item)}}"/>
+      <ws:if data="{{item[nodeProperty]}}">
+         <ws:partial template="{{groupTemplate}}"
+                     groupTemplate="{{groupTemplate}}"
+                     groups="{{groups}}"
+                     isChildGroup="{{true}}"
+                     parent="{{item[keyProperty]}}"
+                     direction="{{direction}}"
+                     selectedKeys="{{selectedKeys}}"
+                     triStateKeys="{{triStateKeys}}"
+                     isSelected="{{isSelected}}"
+                     keyProperty="{{keyProperty}}"
+                     parentProperty="{{parentProperty}}"
+                     nodeProperty="{{nodeProperty}}"
+                     displayProperty="{{displayProperty}}" />
+      </ws:if>
+   </ws:for>
+</div>
