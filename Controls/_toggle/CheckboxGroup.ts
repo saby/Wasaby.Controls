@@ -4,6 +4,18 @@ import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate
 import 'css!theme?Controls/_toggle/CheckboxGroup/CheckboxGroup';
 import {Controller as SourceController} from "../source";
 import isEqual from 'Types/_object/isEqual';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
+
+// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
+interface IControlOptions {
+    readOnly?: boolean;
+    theme?: string;
+}
+export interface ICheckboxOptions extends IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
+    triState?: boolean;
+    value?: boolean | null;
+}
 
 class CheckboxGroup extends Control<IControlOptions> {
     protected _template: Function = template;
@@ -13,6 +25,8 @@ class CheckboxGroup extends Control<IControlOptions> {
     protected _selectedKeys: number[]|string[];
     protected _triStateKeys: number[]|string[];
     protected _groups: object;
+
+    protected _theme: Array<string> = ['Controls/toggle'];
 
     protected _beforeMount(options, context, receivedState) {
         this._isSelected = this._isSelected.bind(this);
@@ -35,7 +49,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _initItems(source) {
+    private _initItems(source: any): any {
         let self = this;
         self._sourceController = new SourceController({
             source: source
@@ -50,7 +64,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         });
     }
 
-    private sortGroup(self, items) {
+    private sortGroup(self: any, items: any): void {
         self._groups = {};
         items.each((item) => {
             let parentProperty = self._options.parentProperty;
@@ -62,7 +76,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         });
     }
 
-    private _prepareSelected(options) {
+    private _prepareSelected(options: any): void {
         this._selectedKeys = options.selectedKeys ? [...options.selectedKeys] : [];
         this._triStateKeys = [];
         if (this._options.parentProperty) {
@@ -75,7 +89,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _isSelected(item) {
+    private _isSelected(item: any): boolean | null {
         if (this._selectedKeys.indexOf(this._getItemKey(item)) > -1) {
             return true;
         }
@@ -85,7 +99,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         return false;
     }
 
-    private _addKey(key) {
+    private _addKey(key: string | number): void {
         this._removeTriStateKey(key);
         if (this._selectedKeys.indexOf(key) < 0) {
             this._selectedKeys.push(key);
@@ -93,19 +107,19 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _addTriStateKey(key) {
+    private _addTriStateKey(key: string | number): void {
         if (this._triStateKeys.indexOf(key) < 0) {
             this._triStateKeys.push(key);
         }
     }
-    private _removeTriStateKey(key) {
+    private _removeTriStateKey(key: string | number): void {
         let index = this._triStateKeys.indexOf(key);
         if (index > -1) {
             this._triStateKeys.splice(index, 1);
         }
     }
 
-    private _removeKey(key) {
+    private _removeKey(key: string | number): void {
         this._removeTriStateKey(key);
         let index = this._selectedKeys.indexOf(key);
         if (index > -1) {
@@ -113,7 +127,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _updateItemChildSelection(itemKey, value) {
+    private _updateItemChildSelection(itemKey: any, value: boolean | null): void {
         let child = this._groups[itemKey];
         if (child) {
             child.map((childItem) => {
@@ -136,7 +150,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _setItemsSelection(item) {
+    private _setItemsSelection(item: any): boolean | null {
         let itemKey = this._getItemKey(item);
         let isItemInSelectedKeys = this._selectedKeys.indexOf(itemKey) > -1;
         if (isItemInSelectedKeys) {
@@ -179,11 +193,11 @@ class CheckboxGroup extends Control<IControlOptions> {
         return false;
     }
 
-    private _getItemKey(item) {
+    private _getItemKey(item: any): string | number {
         return item.get(this._options.keyProperty);
     }
 
-    private _valueChangedHandler(e, item, value) {
+    private _valueChangedHandler(e: any, item: any, value: boolean | null): void {
         let key = this._getItemKey(item);
         if (value) {
             this._addKey(key);
@@ -194,16 +208,20 @@ class CheckboxGroup extends Control<IControlOptions> {
         this._notifySelectedKeys();
     }
 
-    private _notifySelectedKeys() {
+    private _notifySelectedKeys(): void {
         this._notify('selectedKeysChanged', [this._selectedKeys]);
     }
 
     static getDefaultOptions(): object {
         return {
+            direction: 'vertical',
+            keyProperty: 'id'
         };
     }
     static getOptionTypes(): object {
         return {
+            direction: EntityDescriptor(String),
+            keyProperty: EntityDescriptor(String)
         };
     }
 }
