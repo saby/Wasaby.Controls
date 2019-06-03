@@ -97,7 +97,10 @@ interface IPosition {
           // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
           if (Env.detection.isMobileIOS) {
              _private._fixBottomPositionForIos(position, targetCoords);
-             return position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+
+             // Protection against incorrect page design
+             let minValue = -10;
+             return position.left < minValue || position.right < minValue || position.top < minValue || position.bottom < minValue;
           }
           return false;
        },
@@ -167,6 +170,14 @@ interface IPosition {
             // only for this case consider a scrollTop
             if (keyboardHeight === 0) {
                position.bottom += _private.getTopScroll(targetCoords);
+            } else {
+               if ((window.innerHeight + window.scrollY) > window.innerWidth) {
+                  // fix for positioning with keyboard on vertical ios orientation
+                  let dif = window.innerHeight - targetCoords.boundingClientRect.top;
+                  if (position.bottom > dif) {
+                     position.bottom = dif;
+                  }
+               }
             }
          }
       },
