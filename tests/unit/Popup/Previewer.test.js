@@ -34,6 +34,7 @@ define(
             PWInstance._cancel = function(event, args) {
                cancel = true;
             };
+            var event = new SyntheticEvent(null, {});
             PWInstance._options.trigger = 'hover';
             PWInstance._isOpened = false;
             PWInstance._contentMouseenterHandler(event);
