@@ -10,7 +10,7 @@ import * as template from 'wml!Controls/_dataSource/_error/DefaultTemplate';
  * @class Controls/_dataSource/_error/DefaultTemplate
  * @extends Core/Control
  * @control
- * @private
+ * @public
  */
 export default class DefaultTemplate extends Control {
     _template = template;

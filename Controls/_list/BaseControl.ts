@@ -23,6 +23,7 @@ import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
+import TouchContextField = require('Controls/Context/TouchContextField');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1150,6 +1151,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 * to first element.
                 */
 
+                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
+                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
+                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
+                if (self._options.task1177182277) {
+                    return;
+                }
+
                 //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
                 //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
                 // FIXME self._options.task46390860
@@ -1601,7 +1609,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         event.blockUpdate = true;
-        this._canUpdateItemsActions = true;
+
+        // do not need to update itemAction on touch devices, if mouseenter event was fired,
+        // otherwise actions will updated and redraw, because of this click on action will not work.
+        // actions on touch devices drawing on swipe.
+        if (!this._context.isTouch.isTouch) {
+            this._canUpdateItemsActions = true;
+        }
     },
 
     _itemMouseMove(event, itemData, nativeEvent){
@@ -1652,6 +1666,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
  }
  }; */
 BaseControl._private = _private;
+
+BaseControl.contextTypes = function contextTypes() {
+    return {
+        isTouch: TouchContextField
+    };
+};
+
 BaseControl.getDefaultOptions = function() {
     return {
         uniqueKeys: true,
