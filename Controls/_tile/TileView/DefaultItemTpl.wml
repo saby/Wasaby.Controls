@@ -16,9 +16,9 @@
                {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
                {{itemData.isHovered ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}}">
-      <ws:partial if="{{itemData.multiSelectVisibility !== 'hidden'}}"
+      <ws:partial if="{{itemData.hasMultiSelect}}"
                   template="{{multiSelectTpl}}"
-                  attr:class="controls-TileView__checkbox controls-TileView__checkbox_{{itemData.multiSelectVisibility}} controls-TileView__checkbox_top js-controls-TileView__withoutZoom">
+                  attr:class="{{itemData.multiSelectClassList}}">
          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
       </ws:partial>
       <ws:if data="{{contentTemplate}}">

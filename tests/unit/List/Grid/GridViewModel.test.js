@@ -546,12 +546,46 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
          });
-         
+
          it('getItemDataByItem', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
 
             assert.isFalse(!!data.isFirstInGroup);
+         });
+
+         it('getMultiSelectClassList visible', function() {
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._options.multiSelectVisibility = 'visible';
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox');
+         });
+
+         it('getMultiSelectClassList hidden', function() {
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._options.multiSelectVisibility = 'hidden';
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.equal(data.multiSelectClassList, '');
+         });
+
+         it('getMultiSelectClassList onhover selected', function() {
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._options.multiSelectVisibility = 'onhover';
+            gridViewModel._model._selectedKeys = {'123': true};
+            let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
+
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox');
+         });
+
+         it('getMultiSelectClassList onhover unselected', function() {
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._options.multiSelectVisibility = 'onhover';
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox');
+            gridViewModel._options.multiSelectVisibility = 'visible';
          });
 
          it('should update model in old browsers on collection change', function () {

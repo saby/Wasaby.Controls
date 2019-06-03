@@ -15,7 +15,7 @@
    </ws:else>
 </ws:template>
 <ws:template name="cellPartialTemplate">
-   <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 1 || itemData.multiSelectVisibility === 'hidden' && currentColumn.columnIndex === 0}}">
+   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 1 || !itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
       <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
          <ws:for data="i in itemData.level - 1">
             <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
@@ -42,10 +42,8 @@
    </ws:if>
 </ws:template>
 <ws:template name="columnContent">
-   <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
-      <ws:partial template="{{multiSelectTpl}}"
-                  attr:class="controls-GridView__checkbox
-                     {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
+   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
+      <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
          <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
@@ -108,7 +106,7 @@
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
-         <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
+         <ws:if data="{{itemData.hasMultiSelect}}">
             <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>
@@ -139,7 +137,7 @@
 
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
       {{itemData.resetColumnIndex();}}
-      <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
+      <ws:if data="{{itemData.hasMultiSelect}}">
          <ws:partial template="partialGridSupportItem"
                      currentColumn="{{itemData.getCurrentColumn()}}"
                      attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
@@ -185,7 +183,7 @@
          <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
          <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
             {{itemData.resetColumnIndex();}}
-            <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
+            <ws:if data="{{itemData.hasMultiSelect}}">
                <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}"/>
                {{itemData.goToNextColumn();}}
             </ws:if>
@@ -203,7 +201,7 @@
    <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
-         <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
+         <ws:if data="{{itemData.hasMultiSelect}}">
             <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>

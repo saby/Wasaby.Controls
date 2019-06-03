@@ -13,9 +13,6 @@
    position: relative;
    flex-grow: 1;
    margin: @spacing_TileView-between-items / 2;
-   &:hover .controls-TileView__checkbox_onhover {
-      display: inline-block;
-   }
 }
 
 .controls-TileView__itemContent {
@@ -95,9 +92,7 @@
 .controls-TileView__checkbox {
    position: absolute;
    z-index: 1;
-   &_onhover.controls-Checkbox {
-      display: none;
-   }
+
    .controls-Checkbox__iconWrapper:before {
       background-color: @background-color_TileView-checkbox;
    }
