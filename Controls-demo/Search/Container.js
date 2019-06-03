@@ -30,7 +30,7 @@ define('Controls-demo/Search/Container', [
             }
          };
          this._source = new sourceLib.Memory({
-            data: memorySourceData,
+            data: memorySourceData.departments,
             filter: this._filterFunc,
             idProperty: 'id'
          });

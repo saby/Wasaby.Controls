@@ -23,6 +23,10 @@ import 'Controls/search';
  * @category Input
  */
 
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
 
 var Suggest = Control.extend({
 
