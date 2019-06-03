@@ -100,9 +100,8 @@ var Panel = Control.extend({
         this._notify('sendResult', [result]);
     },
 
-    _selectorResultHandler: function(event, item, result) {
-        result.id = item.id;
-        this._notify('sendResult', [result]);
+    _moreButtonClick: function(event, item) {
+        this._notify('sendResult', [{action: 'moreButtonClick', id: item.id}]);
     }
 });
 
