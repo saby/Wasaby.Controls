@@ -1127,43 +1127,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
          });
 
-
-         it('prepare editing row for partial support', function () {
-            let
-                handlers = {
-                   wewe: ()=> {}
-                },
-                gv = {
-                   getHandlersForPartialSupport: ()=>{return handlers},
-                   _columns: [
-                      { width: '1fr' },
-                      { width: 'auto',realWidth: '15px' }
-                   ],
-                   getCount:()=>2,
-                   _options: {
-                      multiSelectVisibility: 'hidden'
-                   }
-                },
-                iData = {
-                   isEditing: true,
-                   isGroup: false,
-                   rowIndex: 1
-                },
-            saveFunc = gridMod.GridViewModel._private.calcRowIndexByKey;
-            gridMod.GridViewModel._private.calcRowIndexByKey = ()=>{return 1};
-
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gv, iData);
-
-            assert.deepEqual(handlers, iData.handlersForPartialSupport);
-            assert.equal(
-                iData.editingRowStyles,
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 15px; grid-column: 1 / 3; grid-row: 2;'
-            );
-
-            gridMod.GridViewModel._private.calcRowIndexByKey = saveFunc;
-         });
-
-
          it('_prepareResultsColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
             gridViewModel._prepareResultsColumns([], false);
