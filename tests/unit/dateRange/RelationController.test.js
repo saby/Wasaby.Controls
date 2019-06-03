@@ -179,6 +179,26 @@ define([
          });
       });
 
+      describe('period = 1 quarter', function () {
+         [{
+            componentOptions: [new Date(2019, 0, 1), 3, {}, 2],
+            updateToRange: [new Date(2019, 6, 1), new Date(2019, 11, 31)],
+            updatedRangesOptions: [new Date(2019, 6, 1), 6, 6],
+            relationType: 'normal'
+         }].forEach(function(test, testNumber) {
+            it(`Test ${testNumber}`, function() {
+               let
+                  options = getOptions.apply(null, test.componentOptions),
+                  component = calendarTestUtils.createComponent(RelationController, options);
+               component._onRelationWrapperRangeChanged(null, test.updateToRange[0], test.updateToRange[1], 0, test.relationType);
+               let dates = createMonths.apply(null, test.updatedRangesOptions);
+               for (let [i, range] of component._model.ranges.entries()) {
+                  assert.deepEqual(range, dates[i]);
+               }
+            });
+         });
+      });
+
       describe('Auto update relation type', function() {
          [{
             title: 'should update relation type if period type is month and onlyByCapacity = true and checked related periods',
