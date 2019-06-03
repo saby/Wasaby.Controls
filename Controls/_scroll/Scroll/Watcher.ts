@@ -165,7 +165,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          },
 
-         initIntersectionObserver: function(self, elements) {
+          // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+         initIntersectionObserver: function(self, elements, task1177135045) {
             var eventName;
             self._observer = new IntersectionObserver(function(changes) {
                for (var i = 0; i < changes.length; i++) {
@@ -187,11 +188,15 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                      case elements.topListTrigger:
                         if (changes[i].isIntersecting) {
                            eventName = 'listTop';
+                        } else if (task1177135045) {
+                            eventName = 'listTopStop';
                         }
                         break;
                      case elements.bottomListTrigger:
                         if (changes[i].isIntersecting) {
                            eventName = 'listBottom';
+                        } else if (task1177135045) {
+                            eventName = 'listBottomStop';
                         }
                         break;
                   }
@@ -305,7 +310,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
-         _registerIt: function(event, registerType, component, callback, triggers) {
+          // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+         _registerIt: function(event, registerType, component, callback, triggers, task1177135045) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
@@ -313,7 +319,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
                if (global && global.IntersectionObserver && triggers && !Env.detection.isIE && !Env.detection.isIE12 && !Env.detection.firefox) {
                   if (!this._observer) {
-                     _private.initIntersectionObserver(this, triggers);
+                     _private.initIntersectionObserver(this, triggers, task1177135045);
                   }
                }
 
