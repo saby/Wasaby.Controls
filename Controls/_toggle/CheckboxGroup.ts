@@ -5,7 +5,7 @@ import 'css!theme?Controls/_toggle/CheckboxGroup/CheckboxGroup';
 import {Controller as SourceController} from "../source";
 import isEqual from 'Types/_object/isEqual';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
+import {ISource, ISourceOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
 
 // TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
 interface IControlOptions {
