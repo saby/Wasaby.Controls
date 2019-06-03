@@ -390,7 +390,7 @@ var
                         columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
                         editingRowStyles = '';
 
-                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.GridIE) + ' ';
+                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
                     editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
 

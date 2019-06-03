@@ -152,7 +152,11 @@ var _private = {
                 if (self._virtualScroll) {
                     self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-                    self._virtualScroll.updateItemsIndexes('down');
+
+                    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+                    if (!self._options.task1177135045) {
+                        self._virtualScroll.updateItemsIndexes('down');
+                    }
                     _private.applyVirtualScroll(self);
                 }
 
@@ -389,8 +393,14 @@ var _private = {
     },
 
     onScrollLoadEdgeStart: function(self, direction) {
-        self._loadTriggerVisibility[direction] = true;
-        _private.onScrollLoadEdge(self, direction);
+        if (self._options.task1177135045) {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction)
+            }
+        } else {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
     },
 
     onScrollLoadEdgeStop: function(self, direction) {
@@ -410,33 +420,64 @@ var _private = {
 
     // Метод, в котором опеределяется необходимость догрузки данных
     updateVirtualWindow: function(self, direction) {
-        var indexes = self._virtualScroll.ItemsIndexes;
 
-        // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
-        if (self._listViewModel.getCount() <= indexes.stop) {
-            if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                _private.loadToDirectionIfNeed(self, direction);
-            }
-        } else {
-
-            // Иначе пересчитываем скролл
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
             self._checkShouldLoadToDirection = true;
+        } else {
+            let
+                indexes = self._virtualScroll.ItemsIndexes;
+
+            // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
+            if (self._listViewModel.getCount() <= indexes.stop) {
+                if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                    _private.loadToDirectionIfNeed(self, direction);
+                }
+            } else {
+
+                // Иначе пересчитываем скролл
+                self._virtualScroll.updateItemsIndexes(direction);
+                _private.applyVirtualScroll(self);
+                self._checkShouldLoadToDirection = true;
+            }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
     onScrollLoadEdge: function(self, direction) {
-        if (self._virtualScroll) {
-            _private.updateVirtualWindow(self, direction);
-        } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            _private.loadToDirectionIfNeed(self, direction);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
+            if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+                if (self._virtualScroll) {
+                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
+                    self._virtualScroll.updateItemsIndexes(direction);
+                    _private.applyVirtualScroll(self);
+                }
+            }
+        } else {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction);
+            } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+            }
         }
     },
 
     onScrollListEdge: function(self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
+    },
 
+    onScrollListEdgeStop: function (self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = false;
+        }
     },
 
     scrollToEdge: function(self, direction) {
@@ -465,8 +506,9 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-        
-        self._children.ScrollEmitter.startRegister(triggers);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
     },
 
     onScrollShow: function(self) {
@@ -688,17 +730,28 @@ var _private = {
             self._listViewModel.setActiveItem(itemData);
             self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
+                const defaultMenuConfig = {
+                   items: rs,
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   showClose: true
+                };
+
+                if (self._options.contextMenuConfig) {
+                   if (typeof self._options.contextMenuConfig === 'object') {
+                      cMerge(defaultMenuConfig, self._options.contextMenuConfig);
+                   } else {
+                      IoC.resolve('ILogger').error('CONTROLS.ListView',
+                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                   }
+                }
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: {
-                        items: rs,
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        showClose: true
-                    },
+                    templateOptions: defaultMenuConfig,
                     eventHandlers: {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
@@ -1311,7 +1364,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
+            case 'listTopStop': _private.onScrollListEdgeStop(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
+            case 'listBottomStop': _private.onScrollListEdgeStop(self, 'down'); break;
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;

@@ -35,4 +35,7 @@
               typeShadow="{{_options.typeShadow}}"
               theme="{{_options.theme}}"/>
    </Controls._dropdown.Opener>
+   <ws:if data="{{_options.selectorTemplate}}">
+      <Controls.lookup:Opener name="selectorOpener" on:result="_onSelectorTemplateResult()"/>
+   </ws:if>
 </div>

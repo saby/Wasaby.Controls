@@ -2,20 +2,20 @@
    <div>
       <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
 
-         <Controls.buttons:Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
-         Вставить в позицию <Controls.input:Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
-         <br />
-         События окна <Controls.input:Text bind:value="_eventText" class="demo-PopupEditOpener__eventText"/>
+         <div style="margin: 8px">
+            <Controls.buttons:Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
+            <br />
+            <div style="display: inline-block; width: 300px;">Позиция, в которую добавится запись в списке</div> <Controls.input:Number attr:style="width:250px" bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
+            <br />
+            <div style="display: inline-block; width: 300px;">События, которые произошли в окне</div> <Controls.input:Text attr:style="width:250px" bind:value="_eventText" readOnly="{{true}}" class="demo-PopupEditOpener__eventText"/>
+         </div>
 
          <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
             <Controls.list:Container>
                <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
-                  leftPadding="S"
-                  rightPadding="M"
-                  rowSpacing="M"
+                  itemPadding="{{ _itemPadding }}"
                   displayProperty="title"
-                  markedKey="{{448390}}"
                   rowSeparatorVisibility="{{true}}"
                   header="{{gridHeader}}"
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
@@ -32,7 +32,7 @@
 
       <Controls.popup:EditContainer on:beforeItemEndEdit="_beforeSyncRecord()">
          <Controls.popup:Edit name="EditOpener" on:close="_closeHandler()" on:open="_openHandler()" on:result="_resultHandler()" template="Controls-demo/Popup/Edit/MyFormController">
-            <ws:templateOptions source="{{_viewSource}}" />
+            <ws:templateOptions source="{{_viewSource}}" width="{{400}}" isFormControllerDemo="{{true}}"/>
          </Controls.popup:Edit>
       </Controls.popup:EditContainer>
    </div>
