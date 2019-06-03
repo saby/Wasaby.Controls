@@ -1,9 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/_List/List');
-import defaultItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
+import {ItemTemplate as defaultItemTemplate} from 'Controls/dropdown';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 
-import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
+import {DropdownViewModel} from 'Controls/dropdownPopup';
 
 var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item,) {
