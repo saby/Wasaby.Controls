@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_list/Container');
-import DataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as DataOptions} from 'Controls/context';
 
 /**
  * Container component for List. Pass options from context to list.

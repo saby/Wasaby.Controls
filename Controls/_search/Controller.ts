@@ -1,7 +1,7 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
-import DataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
 import _SearchController from './_SearchController';
 import isEqual = require('Core/helpers/Object/isEqual');

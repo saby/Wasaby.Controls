@@ -24,11 +24,8 @@
   "output": "controls-context.package.js"
 }, {
   "include": [
-    "Controls/Container/Data/ContextOptions",
-    "Controls/Container/Filter/FilterContextField",
     "Controls/Container/Input/Search",
-    "wml!Controls/Container/Input/Search/Search",
-    "Controls/Container/Search/SearchContextField"
+    "wml!Controls/Container/Input/Search/Search"
   ],
   "output": "controls-container.package.js"
 }, {

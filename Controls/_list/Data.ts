@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
 import template = require('wml!Controls/_list/Data');
 import getPrefetchSource from './getPrefetchSource';
-import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
