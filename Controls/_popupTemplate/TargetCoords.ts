@@ -41,7 +41,8 @@ import getDimensions = require('Controls/Utils/getDimensions');
                width: box.width,
                height: box.height,
                topScroll: fullTopOffset,
-               leftScroll: fullLeftOffset
+               leftScroll: fullLeftOffset,
+               boundingClientRect: box
             };
          }
       };
