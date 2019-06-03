@@ -138,25 +138,20 @@ var _private = {
         if (baseControl) {
             let viewModel = baseControl.getViewModel();
             let items = viewModel.getItems();
+            let item = items && items.at(0);
             let expandedItems = viewModel.getExpandedItems();
-            let typeFunction;
+            let typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
 
-            //type of id will cast to string after getting id's from expandedItems object
-            //save type of id from record format
             if (!isEmpty(expandedItems)) {
-                let item = items && items.at(0);
-                typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
-
                 for (var i in expandedItems) {
                     if (expandedItems.hasOwnProperty(i)) {
-                        expandedItemsKeys.push(typeFunction(i));
+                        expandedItemsKeys.push(typeFunction(expandedItems[i]));
                     }
                 }
             }
-
             isExpandAll = viewModel.isExpandAll();
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
-                if (expandedItemsKeys.indexOf(node) === -1) {
+                if (expandedItemsKeys.indexOf(typeFunction(node)) === -1) {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
@@ -293,6 +288,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterMount: function() {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
+        this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
     },
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
@@ -307,10 +303,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
         }
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+
+        if (typeof newOptions.expandedItems !== 'undefined' && this._receivedExpandedItems !== newOptions.expandedItems) {
+            this._receivedExpandedItems = newOptions.expandedItems;
+            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
@@ -350,6 +349,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
+    },
+    _onExpandedItemsChanged(e, expandedItems){
+        this._notify('expandedItemsChanged', [expandedItems]);
     },
     reload: function() {
         var self = this;
