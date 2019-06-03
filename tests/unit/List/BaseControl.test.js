@@ -1420,6 +1420,11 @@ define([
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._context = {
+            isTouch: {
+               isTouch: false
+            }
+         };
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._itemMouseEnter({});
@@ -1427,6 +1432,9 @@ define([
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
+         lnBaseControl._context.isTouch.isTouch = true;
+         lnBaseControl._itemMouseEnter({});
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
@@ -1476,6 +1484,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.down
                   }
@@ -1492,6 +1501,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.space
                   },
@@ -1506,6 +1516,7 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  target: {closest() { return false; }},
                   nativeEvent: {
                      keyCode: Env.constants.key.up
                   }
@@ -3006,7 +3017,16 @@ define([
                      assert.equal(items.getCount(), 1);
                      assert.equal(items.at(0).get('id'), 1);
                      assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
-                     resolve();
+
+                     let recordSet = new collection.RecordSet({
+                        idProperty: 'id',
+                        rawData: [{ id: 'test' }]
+                     });
+                     baseCtrl._listViewModel.setItems(recordSet);
+                     baseCtrl.reloadItem('test', null, true, 'query').addCallback(function (reloadedItems) {
+                        assert.isTrue(reloadedItems.getCount() === 0);
+                        resolve();
+                     });
                   });
                });
             });

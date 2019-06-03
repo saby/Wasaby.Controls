@@ -177,35 +177,31 @@ function getFooterIndex(display: Display, hasHeader: boolean, resultsPosition: R
     return index;
 }
 
+/**
+ * Возвращиет отступ сверху для первой записи списка
+ */
+function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
+    let
+        topOffset = 0;
+
+    topOffset += hasHeader ? 1 : 0;
+    topOffset += resultsPosition === "top" ? 1 : 0;
+
+    return topOffset;
+}
 
 export {
     getIndexById,
     getIndexByItem,
     getIndexByDisplayIndex,
     getResultsIndex,
-    getFooterIndex
+    getFooterIndex,
+    getTopOffset
 }
 
 
 
 // region private functions
-
-/**
- * Возвращиет отступ сверху для первой записи списка
- *
- * @private
- */
-function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
-    let
-        topOffset = 0;
-    
-    topOffset += hasHeader ? 1 : 0;
-    topOffset += resultsPosition === "top" ? 1 : 0;
-    
-    return topOffset;
-}
-
-
 
 /**
  * Функция расчета номера строки в списке для заданного элемента.

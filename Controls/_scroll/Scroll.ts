@@ -146,6 +146,21 @@ var
          };
       },
 
+      calcPagingStateBtn: function (self) {
+         const {scrollTop, clientHeight, scrollHeight} = self._children.content;
+
+         if (scrollTop <= 0) {
+            self._pagingState.stateUp = 'disabled';
+            self._pagingState.stateDown = 'normal';
+         } else if (scrollTop + clientHeight >= scrollHeight) {
+            self._pagingState.stateUp = 'normal';
+            self._pagingState.stateDown = 'disabled';
+         } else {
+            self._pagingState.stateUp = 'normal';
+            self._pagingState.stateDown = 'normal';
+         }
+      },
+
       updateDisplayState: function(self, displayState) {
          self._displayState.hasScroll = displayState.hasScroll;
          self._displayState.heightFix = displayState.heightFix;
@@ -332,6 +347,12 @@ var
       },
 
       _shadowVisible: function(position) {
+         // Костыль для 320. Разобраться почему стало падать по
+         // https://online.sbis.ru/opendoc.html?guid=cd7105de-9c05-4f91-964a-36c7f08765ad
+         if (typeof this._displayState.shadowPosition !== 'string') {
+            return false;
+         }
+
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
       },
 
@@ -358,6 +379,7 @@ var
 
       _resizeHandler: function() {
          this._displayState = _private.calcDisplayState(this);
+         _private.calcPagingStateBtn(this);
       },
 
       _scrollHandler: function(ev) {

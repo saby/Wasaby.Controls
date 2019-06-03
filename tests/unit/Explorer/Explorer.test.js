@@ -217,6 +217,19 @@ define([
          assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.isFalse(rootChanged);
+
+         instance._breadCrumbsItems = new collection.RecordSet({
+            rawData: [
+               { id: 1, title: 'item1' }
+            ],
+            idProperty: 'id'
+         });
+         instance._options.searchMode = 'root';
+         instance._options.root = 'test';
+         instance._options.parentProperty = 'id';
+         instance._viewMode = 'tree';
+         instance._beforeUpdate(newCfg);
+         assert.isFalse(rootChanged);
       });
 
       it('toggleExpanded', function() {

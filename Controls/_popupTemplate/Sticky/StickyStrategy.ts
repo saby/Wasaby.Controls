@@ -3,6 +3,7 @@
  */
 import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
 import cMerge = require('Core/core-merge');
+import Env = require('Env/Env');
 
 interface IPosition {
     left?: Number,
@@ -22,7 +23,7 @@ interface IPosition {
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight()
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -92,17 +93,21 @@ interface IPosition {
          return position;
       },
 
-       isNegativePosition(position:IPosition):Boolean {
+       isNegativePosition(position: IPosition, targetCoords): Boolean {
           // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
-          return  position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+          if (Env.detection.isMobileIOS) {
+             _private._fixBottomPositionForIos(position, targetCoords);
+             return position.left < 0 || position.right < 0 || position.top < 0 || position.bottom < 0;
+          }
+          return false;
        },
 
-      calculatePosition: function(popupCfg:Object, targetCoords:Object, direction:String):IPosition {
+      calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
          let property = direction === 'horizontal' ? 'width' : 'height';
          let position = _private.getPosition(popupCfg, targetCoords, direction);
          let resultPosition = position;
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
-         let isNegativePos = _private.isNegativePosition(position);
+         let isNegativePos = _private.isNegativePosition(position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
             if (popupCfg.fittingMode === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
@@ -112,7 +117,7 @@ interface IPosition {
                _private.invertPosition(popupCfg, direction);
                let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-               let isNegativeRevertPosition = _private.isNegativePosition(revertPosition);
+               let isNegativeRevertPosition = _private.isNegativePosition(revertPosition, targetCoords);
                if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
                   if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
                      _private.invertPosition(popupCfg, direction);
@@ -136,19 +141,7 @@ interface IPosition {
       },
 
       fixPosition: function(position, targetCoords) {
-         if (position.bottom) {
-            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight();
-            position.bottom += keyboardHeight;
-
-            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
-            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
-            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
-            // only for this case consider a scrollTop
-            if (keyboardHeight === 0) {
-               position.bottom += _private.getTopScroll(targetCoords);
-            }
-         }
-
+         _private._fixBottomPositionForIos(position, targetCoords);
          if (position.bottom) {
             position.bottom = Math.max(position.bottom, 0);
          }
@@ -160,6 +153,21 @@ interface IPosition {
          }
          if (position.right) {
             position.right = Math.max(position.right, 0);
+         }
+      },
+
+      _fixBottomPositionForIos: function(position, targetCoords) {
+         if (position.bottom) {
+            let keyboardHeight = TouchKeyboardHelper.getKeyboardHeight(true);
+            position.bottom += keyboardHeight;
+
+            // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
+            // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
+            // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
+            // only for this case consider a scrollTop
+            if (keyboardHeight === 0) {
+               position.bottom += _private.getTopScroll(targetCoords);
+            }
          }
       },
 

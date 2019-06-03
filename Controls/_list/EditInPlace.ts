@@ -381,7 +381,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this.cancelEdit();
                 break;
         }
-        nativeEvent.stopPropagation();
     },
 
     _onItemClick: function (e, record, originalEvent) {

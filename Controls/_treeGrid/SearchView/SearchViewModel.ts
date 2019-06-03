@@ -24,8 +24,8 @@ var
          }
          return SearchViewModel.superclass.getItemActions.call(this, item);
       },
-      getItemById(id) {
-         return this._items.getRecordById(id);
+      hasItemById(id) {
+         return !!this._items.getRecordById(id);
       },
       getItemDataByItem() {
          var
