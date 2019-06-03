@@ -361,8 +361,8 @@ import {parse as parserLib, load} from 'Core/library';
             } else if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
                Base._openPopup(popupId, cfg, controller, def);
             } else {
-               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+               requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
+                  compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                   Base._openPopup(popupId, cfg, controller, def);
                });
             }
@@ -376,7 +376,7 @@ import {parse as parserLib, load} from 'Core/library';
                proto = proto.__proto__;
             }
 
-            var deps = ['Controls/Popup/Compatible/BaseOpener'];
+            var deps = ['Controls/compatiblePopup'];
 
             if (isFormController) {
                deps.push('SBIS3.CONTROLS/Action/List/OpenEditDialog');
@@ -390,7 +390,7 @@ import {parse as parserLib, load} from 'Core/library';
                deps.push(libInfo.name);
             }
 
-            requirejs(deps, function(CompatibleOpener, Action, Tpl) {
+            requirejs(deps, function(compatiblePopup, Action, Tpl) {
                if (opener && opener._options.closeOnTargetScroll) {
                   cfg.closeOnTargetScroll = true;
                }
@@ -402,7 +402,7 @@ import {parse as parserLib, load} from 'Core/library';
                   });
                }
 
-               var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
+               var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
 
                // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
                // Нужно для открытия окон на старых страницах'.
@@ -426,7 +426,7 @@ import {parse as parserLib, load} from 'Core/library';
                // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
                if (compoundArea && compoundArea._moduleName === 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
                   // Redraw template with new options
-                  CompatibleOpener._prepareConfigForNewTemplate(newCfg);
+                  compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                   dialog.setTarget && dialog.setTarget($(newCfg.target));
                } else {
