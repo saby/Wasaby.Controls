@@ -318,7 +318,7 @@ var moduleClass = CompoundControl.extend({
       }
    },
    _clearVdomProperties: function(container) {
-      var children = container.getElementsByTagName('*');
+      var children = (container[0] || container).getElementsByTagName('*');
 
       for (var i = 0; i < children.length; i++) {
          var c = children[i];
