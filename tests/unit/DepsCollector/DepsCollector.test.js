@@ -14,7 +14,8 @@ define([
       "css": [],
       "ccc/bbb": [],
       "xxx/aaa": [],
-      "tmpl!xxx/aaa": []
+      "tmpl!xxx/aaa": [],
+      "moduleWithLang/test": ["moduleWithLang2/test2"]
    };
    var modInfo = {
       "css!aaa/ddd": {path: "resources/aaa/ddd.min.css"},
@@ -97,10 +98,27 @@ define([
       });
       it('Localization enabled', function() {
          var depsCollectorWithLocalization = new DepsCollector(modDeps, modInfo, bundlesRoute, true, true);
-         depsCollectorWithLocalization.getLang = function() { return 'ru-RU'; };
-         depsCollectorWithLocalization.getAvailableDictList = function() { return { 'bdl/lang/ru-RU/ru-RU.json' : true }; };
-         var deps = depsCollectorWithLocalization.collectDependencies(["aaa/aaa"]);
-         assert.deepEqual(deps.js, [ "bdl/lang/ru-RU/ru-RU.json", "bdl/aaa.package" ]);
+         depsCollectorWithLocalization.getLang = function() {
+            return 'ru-RU';
+         };
+         depsCollectorWithLocalization.getAvailableDictList = function() {
+            return {
+               'moduleWithLang/lang/ru-RU/ru-RU.json': true,
+               'moduleWithLang2/lang/ru-RU/ru-RU.json': true
+            };
+         };
+         depsCollectorWithLocalization.getModules = function() {
+            return {
+               'moduleWithLang': {dict: ['ru-RU.json', 'ru-RU.css']},
+               'moduleWithLang2': {dict: ['ru-RU.css', 'ru-RU.json']}
+            };
+         };
+         var deps = depsCollectorWithLocalization.collectDependencies(["moduleWithLang/test"]);
+         assert.deepEqual(deps.js, ["moduleWithLang/lang/ru-RU/ru-RU.json",
+            "moduleWithLang2/lang/ru-RU/ru-RU.json",
+            "moduleWithLang/test",
+            "moduleWithLang2/test2"]);
+         assert.deepEqual(deps.css.simpleCss, ["moduleWithLang/lang/ru-RU/ru-RU", "moduleWithLang2/lang/ru-RU/ru-RU"]);
       });
       it('missing optional dep', function() {
          var deps = depsCollectorWithThemes.collectDependencies(["optional!nosuchdep", "tmpl!ppp/ppp"]);
