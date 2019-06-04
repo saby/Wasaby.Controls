@@ -14,6 +14,25 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
+ * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию
+ * В качестве ключей можно использовать следующие свойства
+ * - items - для смены набора элементов
+ * - groupingKeyCallback, groupingTemplate для установки группировки
+ * - itemTemplate - шаблон элемента меню
+ * - footerTamplate - шаблон футера
+ * - headerTemplate - шаблон шапки
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Determines whether context menu should be shown on right-click.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @default true
+ */
+
+/**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.

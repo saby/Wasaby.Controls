@@ -94,6 +94,28 @@ define(
             StickyController._private.isTargetVisible = () => true;
          });
 
+         it('fixBottomPositionForIos', () => {
+            let tCoords = {
+               boundingClientRect: {
+                  top: 800
+               }
+            };
+            let windowData = {
+               innerHeight: 850,
+               scrollY: 350,
+               innerWidth: 1000
+            };
+            let position = {
+               bottom: 200
+            };
+            StickyStrategy._private.getWindow = () => windowData;
+            StickyStrategy._private.getKeyboardHeight = () => 50;
+            StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
+            assert.equal(position.bottom, 50);
+            position.bottom = 200;
+            StickyStrategy._private.getKeyboardHeight = () => 0;
+            assert.equal(position.bottom, 200);
+         });
 
          it('Sticky with option fittingMode=overflow', () => {
             let left = 1700;
@@ -304,7 +326,7 @@ define(
                height: 1040
             });
             let popupCfg = { ...getPositionConfig() };
-            let tCoords = { ...targetCoords};
+            let tCoords = { ...targetCoords };
             let position = { right: 0 };
             let overflow = StickyStrategy._private.checkOverflow(popupCfg, tCoords, position, 'horizontal');
             assert.equal(overflow, 0);
