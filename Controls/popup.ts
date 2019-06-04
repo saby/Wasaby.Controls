@@ -9,42 +9,45 @@
  * @includes Sticky Controls/_popup/Opener/Sticky
  * @includes InfoboxTarget Controls/_popup/InfoBox
  * @includes PreviewerTarget Controls/_popup/Previewer
+ * @includes Global Controls/_popup/Global
+ * @includes GlobalTemplate wml!Controls/_popup/Global/Global
  * @public
  * @author Kraynov D.
  */
 
 import Confirmation = require('Controls/_popup/Opener/Confirmation');
-import Dialog = require('Controls/_popup/Opener/Dialog');
 import Stack = require('Controls/_popup/Opener/Stack');
 import Edit = require('Controls/_popup/Opener/Edit');
-import Infobox = require('Controls/_popup/Opener/InfoBox');
 import Notification = require('Controls/_popup/Opener/Notification');
-import Previewer = require('Controls/_popup/Opener/Previewer');
 import Sticky = require('Controls/_popup/Opener/Sticky');
 import InfoboxTarget = require('Controls/_popup/InfoBox');
 import PreviewerTarget = require('Controls/_popup/Previewer');
 import Manager = require('Controls/_popup/Manager');
 import Controller = require('Controls/_popup/Manager/ManagerController');
 import Container = require('Controls/_popup/Manager/Container');
+import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
+export {default as Global} from './_popup/Global';
+export {default as Dialog} from './_popup/Opener/Dialog';
+export {default as Infobox} from './_popup/Opener/InfoBox';
+export {default as Previewer} from './_popup/Opener/Previewer';
+
 export {
     Confirmation,
-    Dialog,
     Stack,
     Edit,
-    Infobox,
     Notification,
-    Previewer,
     Sticky,
     InfoboxTarget,
     PreviewerTarget,
     Manager,
     Controller,
     Container,
+    GlobalTemplate,
 
     BaseOpener,
     EditContainer
-}
+};

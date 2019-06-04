@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
-import dataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as dataOptions} from 'Controls/context';
 
 var _private = {
     removeFromSource: function (self, items) {

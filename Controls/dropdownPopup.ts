@@ -4,6 +4,7 @@
  * @includes Template wml!Controls/_dropdownPopup/defaultHeadTemplate
  * @includes List Controls/_dropdownPopup/DropdownList
  * @includes ListStyles Controls/_dropdownPopup/DropdownListStyles
+ * @includes itemTemplate tmpl!Controls/_dropdownPopup/itemTemplate
  * @public
  * @author Kraynov D.
  */
@@ -14,6 +15,7 @@ import List = require('Controls/_dropdownPopup/DropdownList');
 import _ForTemplate = require('wml!Controls/_dropdownPopup/For');
 import MoreButton = require('Controls/_dropdownPopup/MoreButton');
 import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
+import itemTemplate = require('tmpl!Controls/_dropdownPopup/itemTemplate');
 
 export {
     Template,
@@ -21,5 +23,6 @@ export {
     List,
     _ForTemplate,
     MoreButton,
-    DropdownViewModel
+    DropdownViewModel,
+    itemTemplate
 }

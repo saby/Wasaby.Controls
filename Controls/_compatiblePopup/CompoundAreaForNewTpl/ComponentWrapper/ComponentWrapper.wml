@@ -1,5 +1,5 @@
 <Controls.dragnDrop:Controller attr:class="controls-CompoundArea__dragContainer">
-   <Controls.Popup.Global>
+   <Controls.popup:Global>
       <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
          <ws:partial
             template="{{_options.template}}"
@@ -12,5 +12,5 @@
             on:maximized="_onMaximizedHandler()"
          ></ws:partial>
       </Controls.Pending>
-   </Controls.Popup.Global>
+   </Controls.popup:Global>
 </Controls.dragnDrop:Controller>

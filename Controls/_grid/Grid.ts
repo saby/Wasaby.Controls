@@ -24,7 +24,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/_list/interface/IDraggable
+    * @mixes Controls/_tile/interface/IDraggable
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
@@ -34,7 +34,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_list/DigitButtonsStyles
+    * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
     *
     * @control
