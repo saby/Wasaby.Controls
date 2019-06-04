@@ -639,6 +639,13 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._notify('mouseenter', [event]);
          },
 
+         _keyDownHandler: function(e) {
+            // поле ввода само обрабатывает нажатия home и end (перевод карретки), нужно стопнуть,
+            // чтобы не было обработано действием по умолчанию (не было прокрутки скроллконтейнера)
+            if (e.nativeEvent.keyCode === Env.constants.key.home || e.nativeEvent.keyCode === Env.constants.key.end) {
+               e.stopPropagation();
+            }
+         },
          /**
           * Event handler key up in native field.
           * @param {Object} event Event descriptor.
