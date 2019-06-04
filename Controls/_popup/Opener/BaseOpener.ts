@@ -493,8 +493,8 @@ import {parse as parserLib, load} from 'Core/library';
             managerContainer.classList.add('controls-PopupContainer');
             document.body.insertBefore(managerContainer, document.body.firstChild);
 
-            require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
-               var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
+            require(['Core/Control', 'Controls/compatiblePopup'], function(control, compatiblePopup) {
+               var wrapper = control.createControl(compatiblePopup.ManagerWrapper, {}, managerContainer);
 
                // wait until the Manager is added to the DOM
                if (!wrapper._mounted) {

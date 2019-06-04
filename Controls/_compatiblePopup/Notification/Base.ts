@@ -1,7 +1,7 @@
 import {Notification} from 'Controls/popupTemplate';
 import template = require('wml!Controls/_compatiblePopup/Notification/Base');
 
-var NotificationPopup = Notification.extend({
+var NotificationBase = Notification.extend({
    _template: template,
 
    _beforeMount: function(options) {
@@ -18,8 +18,8 @@ var NotificationPopup = Notification.extend({
          }
       };
 
-      return NotificationPopup.superclass._beforeMount.apply(_this, arguments);
+      return NotificationBase.superclass._beforeMount.apply(_this, arguments);
    }
 });
 
-export default NotificationPopup;
+export default NotificationBase;
