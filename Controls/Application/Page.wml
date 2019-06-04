@@ -34,7 +34,8 @@
                              stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <body
+                              <UI.HotKeys:Dispatcher>
+                                 <body
                                  class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
@@ -124,6 +125,7 @@
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
                               </body>
+                              </UI.HotKeys:Dispatcher>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>
