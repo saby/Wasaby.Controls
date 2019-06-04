@@ -37,5 +37,17 @@ define(
             assert.isTrue(activated);
             assert.strictEqual(value, '');
          });
+
+         it('_choose', function() {
+            let input = getSuggest({});
+
+            input.activate = () => {};
+            input._notify = (event, value) => {
+               assert.equal(event, 'valueChanged');
+               assert.equal(value[0], 'test');
+            };
+
+            input._choose(null, {get: () => 'test'});
+         });
       });
 });
