@@ -230,6 +230,12 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Control styling
+ * @variant master Stylizes control as MasterDetail
+ */
+
+/**
  * Reloads list data and view.
  * @function Controls/_list/interface/IList#reload
  */
