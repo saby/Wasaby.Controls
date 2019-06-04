@@ -28,7 +28,7 @@ define(
          parent: 'testParent',
          opener: 'testOpener',
          newRecord: 'newTestRecord',
-         handlers: 'testHandlers',
+         handlers: {},
          linkedContext: 'testLinkedContext',
          closeButtonStyle: 'testStyle',
          border: false,
@@ -169,7 +169,7 @@ define(
                }
             };
             compatiblePopup.BaseOpener.prepareNotificationConfig(config);
-            assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
+            assert.equal(config.template, 'Controls/compatiblePopup:OldNotification');
             assert.equal(config.componentOptions.template, template);
             assert.equal(config.componentOptions.templateOptions, config.templateOptions);
             assert.equal(config.componentOptions.className, 'myClass');
@@ -243,7 +243,7 @@ define(
             assert.isFalse(config.templateOptions.autoShow);
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
-            assert.equal(config.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.equal(config.template, 'Controls/compatiblePopup:CompoundArea');
             assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
@@ -316,7 +316,7 @@ define(
             assert.equal(newConfig.componentOptions.catchFocus, true);
             assert.equal(newConfig.componentOptions.templateOptions, config.templateOptions);
             assert.equal(newConfig.componentOptions.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
-            assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
+            assert.equal(newConfig.template, 'Controls/compatiblePopup:CompoundAreaNewTpl');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
             assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);

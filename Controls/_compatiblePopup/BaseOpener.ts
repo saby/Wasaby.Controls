@@ -6,8 +6,20 @@ import cMerge = require('Core/core-merge');
 import Context = require('Core/Context');
 import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
+import library = require('Core/library');
 import OpenDialogUtil = require('SBIS3.CONTROLS/Action/Utils/OpenDialogUtil');
 import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
+
+function loadTemplate(name: string) {
+   const libraryInfo = library.parse(name);
+   let template = require(libraryInfo.name);
+
+   libraryInfo.path.forEach((property) => {
+      template = template[property];
+   });
+
+   return template;
+}
 
 /**
  * Слой совместимости для базового опенера для открытия старых шаблонов
@@ -127,7 +139,7 @@ const BaseOpener = {
       // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
       cfg.templateOptions.ignoreTabCycles = false;
 
-      cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
+      cfg.template = 'Controls/compatiblePopup:CompoundArea';
       this._setSizes(cfg, templateClass);
 
       // поддерживаем такое поведение для старых панелей, на VDOM его убрали
@@ -154,10 +166,10 @@ const BaseOpener = {
    },
 
    prepareNotificationConfig: function(config) {
-      var template = typeof config.template === 'string' ? requirejs(config.template) : config.template;
+      var template = typeof config.template === 'string' ? loadTemplate(config.template) : config.template;
       config.opener = null;
       config.isVDOM = true;
-      config.template = 'Controls/Popup/Compatible/OldNotification';
+      config.template = 'Controls/compatiblePopup:OldNotification';
       config.componentOptions = {
          template: template,
          templateOptions: config.templateOptions,
@@ -335,11 +347,11 @@ const BaseOpener = {
       /**
        * Let's protect ourselves from the case when the template was not loaded. In theory, this should not be.
        */
-      if (requirejs.defined(cfg.template)) {
+      if (require.defined(library.parse(cfg.template).name)) {
          /**
           * Determine the 'compound' or 'VDOM' template build.
           */
-         cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
+         cfg.isCompoundTemplate = !isVDOMTemplate(loadTemplate(cfg.template));
       } else {
          cfg.isCompoundTemplate = true;
       }
@@ -348,7 +360,7 @@ const BaseOpener = {
       cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
 
       cfg.componentOptions.template = cfg.template;
-      cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
+      cfg.template =  'Controls/compatiblePopup:CompoundAreaNewTpl';
       cfg.animation = 'off';
       cfg.border = false;
 
@@ -396,7 +408,7 @@ const BaseOpener = {
    },
    _getConfigFromTemplate: function(cfg) {
       // get options from template.getDefaultOptions
-      var templateClass = typeof cfg === 'string' ? require(cfg) : cfg;
+      var templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
       return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
    },
    _prepareConfigFromNewToOld: function(cfg, template) {
