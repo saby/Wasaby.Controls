@@ -72,8 +72,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 
       Dialog._private = _private;
 
-      export = Dialog;
-
+export default Dialog;
 
     /**
      * @name Controls/_popup/Opener/Dialog#height

@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
-import dataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as dataOptions} from 'Controls/context';
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');

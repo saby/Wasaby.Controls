@@ -97,5 +97,4 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
          return baseOptions;
       };
 
-      export = Previewer;
-
+export default Previewer;

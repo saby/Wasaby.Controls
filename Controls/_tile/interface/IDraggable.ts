@@ -2,13 +2,13 @@
  * Interface to move elements of the list by using drag'n'drop.
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  *
- * @interface Controls/_list/interface/IDraggable
+ * @interface Controls/_tile/interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/_list/interface/IDraggable#itemsDragNDrop
+ * @name Controls/_tile/interface/IDraggable#itemsDragNDrop
  * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
  * @variant none Dragging items is not allowed.
  * @variant allow Dragging items is allowed.
@@ -34,7 +34,7 @@
  */
 
 /**
- * @name Controls/_list/interface/IDraggable#draggingTemplate
+ * @name Controls/_tile/interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
  * @default Controls/dragnDrop:DraggingTemplate
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
@@ -76,7 +76,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
+ * @event Controls/_tile/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
  * @returns {Controls/_dragnDrop/Entity/Items)
@@ -121,7 +121,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
+ * @event Controls/_tile/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
@@ -159,7 +159,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
+ * @event Controls/_tile/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
@@ -204,7 +204,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
+ * @event Controls/_tile/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.

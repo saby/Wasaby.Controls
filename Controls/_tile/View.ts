@@ -22,7 +22,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/_treeGrid/interface/ITreeControl
- * @mixes Controls/_list/interface/IDraggable
+ * @mixes Controls/_tile/interface/IDraggable
  * @mixes Controls/List/interface/ITile
  *
  * @mixes Controls/_list/interface/IVirtualScroll
@@ -34,7 +34,7 @@ import {TreeControl} from 'Controls/treeGrid';
  *
  * @mixes Controls/_MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
- * @mixes Controls/_list/DigitButtonsStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.

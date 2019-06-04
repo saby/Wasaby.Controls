@@ -1,13 +1,4 @@
-
-define('Controls/Container/Search/SearchContextField', ['Core/DataContext'], function(DataContext) {
-   'use strict';
-      
-   return DataContext.extend({
-      searchValue: '',
-         
-      constructor: function(searchValue) {
-         this.searchValue = searchValue;
-      }
-   });
-}
-);
+// Created in 19.400
+define('Controls/Container/Search/SearchContextField', ['Controls/context'], function(Control) {
+   return Control.SearchContextField;
+});

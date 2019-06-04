@@ -27,7 +27,7 @@
             <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.Popup.Global>
+                     <Controls.popup:Global>
                      <Controls.popup:Manager
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
@@ -127,7 +127,7 @@
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>
-                     </Controls.Popup.Global>
+                     </Controls.popup:Global>
                   </Controls.event:Register>
                </Controls.event:Register>
             </Controls.event:Register>

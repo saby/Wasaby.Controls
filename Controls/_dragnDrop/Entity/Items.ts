@@ -1,5 +1,5 @@
 import Entity = require('Controls/_dragnDrop/Entity');
-   
+
 
    /**
     * The base class for the inheritors of the drag'n'drop entity in the list.
@@ -15,7 +15,7 @@ import Entity = require('Controls/_dragnDrop/Entity');
     * @name Controls/_dragnDrop/Entity/Items#items
     * @cfg {Array.<String>} The list of items to move.
     * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
-    * @see Controls/_list/interface/IDraggable#dragStart
+    * @see Controls/_tile/interface/IDraggable#dragStart
     */
 
     var Items = Entity.extend({

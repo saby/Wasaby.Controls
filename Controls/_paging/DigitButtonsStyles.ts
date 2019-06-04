@@ -1,6 +1,6 @@
 /**
  * @author Родионов Е.А.
- * @mixin Controls/_list/DigitButtonsStyles
+ * @mixin Controls/_paging/DigitButtonsStyles
  * @public
  *
  *

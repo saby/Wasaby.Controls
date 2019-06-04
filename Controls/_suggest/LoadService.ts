@@ -14,8 +14,8 @@ export default function (config) {
    if (HistoryService) {
       createHistoryService(historyServiceLoad, config);
    } else {
-      require(['Controls/_history/Service'], function (service) {
-         HistoryService = service;
+      require(['Controls/history'], function (history) {
+         HistoryService = history.Service;
          createHistoryService(historyServiceLoad, config);
       });
    }

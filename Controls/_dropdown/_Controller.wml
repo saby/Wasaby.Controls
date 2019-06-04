@@ -36,6 +36,8 @@
               theme="{{_options.theme}}"/>
    </Controls._dropdown.Opener>
    <ws:if data="{{_options.selectorTemplate}}">
-      <Controls.lookup:Opener name="selectorOpener" on:result="_onSelectorTemplateResult()"/>
+      <Controls.Container.Async templateName="Controls/lookup:Opener">
+            <ws:partial template="{{ content.resolvedTemplate }}" name="selectorOpener" on:result="_onSelectorTemplateResult()"/>
+      </Controls.Container.Async>
    </ws:if>
 </div>
