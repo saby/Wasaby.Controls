@@ -1,4 +1,4 @@
-define(['Controls/toggle', 'Types/source',], function(toggles, sourceLib) {
+define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
    'use strict';
 
    var btn;
@@ -32,7 +32,7 @@ define(['Controls/toggle', 'Types/source',], function(toggles, sourceLib) {
                fakeSelf._setItemsSelection = function(item) {
                   assert.equal(this._items.indexOf(item) !== -1, false, '_prepareSelected uncorrect');
                };
-               toggles.CheckboxGroup.prototype._prepareSelected.call(fakeSelf, {selectedKeys: [1]});
+               toggles.CheckboxGroup.prototype._prepareSelected.call(fakeSelf, { selectedKeys: [1] });
                done();
             });
          });
@@ -122,9 +122,8 @@ define(['Controls/toggle', 'Types/source',], function(toggles, sourceLib) {
             fakeItem.get = function(arg) {
                if (arg !== 1) {
                   return true;
-               } else {
-                  return false;
                }
+               return false;
             };
             fakeSelf._addKey = function() {
                result += '_addKey';
@@ -154,7 +153,7 @@ define(['Controls/toggle', 'Types/source',], function(toggles, sourceLib) {
                   return fakeItem;
                }
             };
-            fakeSelf._options = {keyProperty: true};
+            fakeSelf._options = { keyProperty: true };
             toggles.CheckboxGroup.prototype._updateItemChildSelection.call(fakeSelf, '3', true);
             assert.equal(result, '_addKey_removeKey_setItemsSelection', '_updateItemChildSelection, unselected item has uncorrect result');
             result = '';
@@ -172,7 +171,7 @@ define(['Controls/toggle', 'Types/source',], function(toggles, sourceLib) {
             toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem);
             assert.equal(result, '_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
             fakeSelf._nodeProperty = 2;
-            fakeSelf._options = {parentProperty: 1};
+            fakeSelf._options = { parentProperty: 1 };
             toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem);
             assert.equal(result, '_setItemsSelection_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
          });
