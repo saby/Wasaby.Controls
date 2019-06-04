@@ -4,6 +4,7 @@ import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate
 import {Controller as SourceController} from "../source";
 import {isEqual} from "Types/object";
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ICrud} from 'Types/source';
 import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
 
 // TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
@@ -47,7 +48,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _initItems(source: any): any {
+    private _initItems(source: ICrud): any {
         let self = this;
         self._sourceController = new SourceController({
             source: source
@@ -74,7 +75,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         });
     }
 
-    private _prepareSelected(options: any): void {
+    private _prepareSelected(options: ICheckboxGroupOptions): void {
         this._selectedKeys = options.selectedKeys ? [...options.selectedKeys] : [];
         this._triStateKeys = [];
         if (this._options.parentProperty) {
