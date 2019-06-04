@@ -12,9 +12,8 @@ interface IControlOptions {
     readOnly?: boolean;
     theme?: string;
 }
-export interface ICheckboxOptions extends IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
-    triState?: boolean;
-    value?: boolean | null;
+export interface ICheckboxGroupOptions extends IControlOptions, ISourceOptions {
+    direction?: string;
 }
 
 class CheckboxGroup extends Control<IControlOptions> {
