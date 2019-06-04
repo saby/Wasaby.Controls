@@ -54,6 +54,7 @@ import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import BaseControl = require('Controls/_list/BaseControl');
 import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
+import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
@@ -93,6 +94,7 @@ export {
     ScrollEmitter,
     SearchItemsUtil,
     getStyle,
+    ItemsView,
     ItemsViewModel,
     HotKeysContainer
 };
