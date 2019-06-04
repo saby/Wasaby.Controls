@@ -30,7 +30,7 @@
    </ws:if>
 </ws:template>
 
-<Controls.Controllers.PrimaryAction on:triggered="_applyFilter()">
+<Controls.form:PrimaryAction on:triggered="_applyFilter()">
     <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
                                                     headingStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
@@ -72,4 +72,4 @@
           </Controls.scroll:Container>
        </ws:bodyContentTemplate>
     </Controls.popupTemplate:Dialog>
-</Controls.Controllers.PrimaryAction>
+</Controls.form:PrimaryAction>

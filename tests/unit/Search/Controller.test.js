@@ -197,7 +197,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._dataOptions = defaultOptions;
          controller = searchMod.Controller._private.getSearchController(searchController);
-         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
+         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/search:_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
       });
 

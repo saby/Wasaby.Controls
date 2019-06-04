@@ -29,4 +29,4 @@ export {
    FastContainer,
    Controller,
    HistoryUtils
-}
+};

@@ -4,7 +4,7 @@ import 'css!theme?Controls/filterPopup';
    /**
     * Input for selection from the list of options with cross.
     *
-    * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
+    * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
     *
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Controls/_dropdown/Input

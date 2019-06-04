@@ -4,17 +4,17 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/Controllers/_Search',
+      'Controls/search',
       'Types/source',
       'Core/Deferred',
       'Types/entity',
       'Types/collection'
    ],
-   function (Search, sourceLib, Deferred) {
+   function (searchLib, sourceLib, Deferred) {
 
       'use strict';
 
-      describe('Controls/Controllers/_Search', function () {
+      describe('Controls/search:_Search', function () {
          var data = [
                {
                   name: 'Sasha'
@@ -52,7 +52,7 @@ define(
 
          it('.search', function(done) {
             var searchStarted = false;
-            var search = new Search({
+            var search = new searchLib._Search({
                source: source,
                searchDelay: 50,
                navigation: navigation,
@@ -60,7 +60,7 @@ define(
                   searchStarted = true;
                }
             });
-            var searchWithSorting = new Search({
+            var searchWithSorting = new searchLib._Search({
                source: source,
                searchDelay: 50,
                navigation: navigation,
@@ -84,7 +84,7 @@ define(
          });
 
          it('.search forced', function(done) {
-            var search = new Search({
+            var search = new searchLib._Search({
                source: source,
                searchDelay: 1000,
                navigation: navigation
@@ -99,7 +99,7 @@ define(
          });
 
          it('abort Search', function(done) {
-            var search  = new Search(
+            var search  = new searchLib._Search(
                {
                   source: source,
                   searchDelay: 50,
@@ -118,7 +118,7 @@ define(
          });
 
          it('double Search', function(done) {
-            var search = new Search(
+            var search = new searchLib._Search(
                {
                   source: source,
                   searchDelay: 50,
@@ -145,7 +145,7 @@ define(
             sourceErr.query = function() {
                return Deferred.fail();
             };
-            var search  = new Search(
+            var search  = new searchLib._Search(
                {
                   source: sourceErr,
                   searchDelay: 50,
@@ -161,7 +161,7 @@ define(
          });
 
          it('check search navigation', function(done) {
-            var search  = new Search(
+            var search  = new searchLib._Search(
                {
                   source: source,
                   navigation: navigationSmallPageSize,
@@ -178,7 +178,7 @@ define(
 
          it('check wrong params', function(done) {
             try {
-               new Search({});
+               new searchLib._Search({});
             } catch (e) {
                done();
             }

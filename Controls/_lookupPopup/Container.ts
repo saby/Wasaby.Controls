@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
-import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions} from 'Controls/context';
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import {Controller as SourceController} from 'Controls/source';
