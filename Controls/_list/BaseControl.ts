@@ -1606,6 +1606,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
+        // activate list when marker is moving. It let us press enter and open current row
+        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
+            // must check mounted to avoid fails on unit tests
+            if (this._mounted) {
+               this.activate();
+            }
+        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {
