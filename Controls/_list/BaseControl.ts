@@ -1472,7 +1472,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         this._listViewModel.setMarkedKey(newKey);
-        e.blockUpdate = true;
 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
@@ -1580,7 +1579,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             });
         }
-        event.blockUpdate = true;
     },
 
     _onLoadMoreClick: function() {
@@ -1663,7 +1661,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.setDragTargetPosition(dragPosition);
             }
         }
-        event.blockUpdate = true;
 
         // do not need to update itemAction on touch devices, if mouseenter event was fired,
         // otherwise actions will updated and redraw, because of this click on action will not work.

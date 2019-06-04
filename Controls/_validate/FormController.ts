@@ -19,7 +19,6 @@ import ParallelDeferred = require('Core/ParallelDeferred');
             this._validates = [];
          },
          onValidateCreated: function(e, control) {
-            e.blockUpdate = true;
             this._validates.push(control);
          },
          onValidateDestroyed: function(e, control) {
