@@ -2,7 +2,6 @@ import entity = require('Types/entity');
 import Env = require('Env/Env');
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
-import Vdom = require('Vdom/Vdom');
 
 
 /**
@@ -117,6 +116,7 @@ var Search = Base.extend({
       // move focus from search button to input
       this.activate();
    },
+
    _keyUpHandler: function(event) {
       if (event.nativeEvent.which === Env.constants.key.enter) {
          this._searchClick();
