@@ -23,7 +23,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
    function(Control, sourceLib, chain, template) {
 
       /**
-       * @class Controls/Container/Search
+       * @class Controls/deprecatedSearch:Container
        * @extends Controls/Control
        * @control
        * @public

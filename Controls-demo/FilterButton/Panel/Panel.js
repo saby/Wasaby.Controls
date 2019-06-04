@@ -16,7 +16,7 @@ define('Controls-demo/FilterButton/Panel/Panel',
    function(Control, source, template) {
 
       /**
-       * @class Controls/Container/Search
+       * @class Controls/deprecatedSearch:Container
        * @extends Controls/Control
        * @control
        * @public
