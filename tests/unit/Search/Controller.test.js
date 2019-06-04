@@ -175,8 +175,8 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isTrue(controller._loading);
          assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
 
-         //case 3. With root and searchMode='current'
-         controller._options.searchMode = 'current';
+         //case 3. With root and startingWith='current'
+         controller._options.startingWith = 'current';
          controller._root = 'testRootNode';
          controller._loading = false;
          searchMod.Controller._private.searchStartCallback(controller, filter);
