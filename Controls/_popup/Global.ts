@@ -30,7 +30,7 @@ const Global = Control.extend({
       // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
       // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
       var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
-      var ManagerWrapperController = requirejs.defined(ManagerWrapperControllerModule) ? requirejs(ManagerWrapperControllerModule) : null;
+      var ManagerWrapperController = requirejs.defined(ManagerWrapperControllerModule) ? requirejs(ManagerWrapperControllerModule).default : null;
 
       // COMPATIBLE: В слое совместимости для каждого окна с vdom шаблоном создается Global.js. Это нужно для работы событий по
       // открытию глобальный окон (openInfobox, etc). Но глобальные опенеры должны быть одни для всех из созданных Global.js

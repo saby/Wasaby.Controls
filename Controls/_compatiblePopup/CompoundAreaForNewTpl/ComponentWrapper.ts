@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_compatiblePopup/CompoundAreaForNewTpl/ComponentWrapper/ComponentWrapper');
 import 'css!theme?Controls/compatiblePopup';
 
-const ComponentWrapper Control.extend({
+const ComponentWrapper = Control.extend({
    _template: template,
    _fillCallbacks: function(cfg) {
       this._onCloseHandler = cfg.templateOptions._onCloseHandler;
