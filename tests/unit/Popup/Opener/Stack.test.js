@@ -59,6 +59,11 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 200, popupState: 'destroying', popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 200, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
@@ -71,6 +76,11 @@ define(
             assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
             assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(9).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(10).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(11).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(12).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
             popupTemplate.StackController._private.getItemPosition = baseGetItemPosition;
          });
