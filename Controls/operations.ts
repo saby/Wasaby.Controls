@@ -14,7 +14,7 @@ import Button = require('Controls/_operations/Button');
 import Controller = require('Controls/_operations/Controller');
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
-import SimplyMultiSelector = require('Controls/_operations/__MultiSelector');
+import SimpleMultiSelector = require('Controls/_operations/__MultiSelector');
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
 
@@ -24,5 +24,5 @@ export {
    Controller,
    Container,
    selectionToRecord,
-   SimplyMultiSelector
+   SimpleMultiSelector
 }
