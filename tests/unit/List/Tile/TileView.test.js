@@ -494,7 +494,6 @@ define(['Controls/_tile/TileView/TileView',
          tileView._listModel.setHoveredItem({key: 1});
          isTouch = false;
          tileView._onItemMouseMove(event, {key: 1});
-         assert.isTrue(event.blockUpdate);
          assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
 
@@ -531,7 +530,6 @@ define(['Controls/_tile/TileView/TileView',
          //active
          tileView._onItemMouseLeave(event, {key: 2, isActive: true});
          assert.equal(tileView._listModel.getHoveredItem().key, 2);
-         assert.isTrue(event.blockUpdate);
 
          //another
          tileView._onItemMouseLeave({}, {key: 1});
