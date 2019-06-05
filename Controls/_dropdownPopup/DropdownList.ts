@@ -12,6 +12,7 @@ import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
 
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -371,6 +372,11 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
             this._mousemoveHandler = null;
             this._openSubDropdown = null;
             this._headConfig = null;
+         },
+         _getChildContext: function() {
+            return {
+               ScrollData: new ScrollData({pagingVisible: false})
+            };
          }
       });
 
