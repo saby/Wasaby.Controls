@@ -7,6 +7,22 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICrud} from 'Types/source';
 import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
 
+/**
+ * Controls are designed to give users a multichoice among two or more settings.
+ *
+ * @class Controls/_toggle/CheckboxGroup
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_interface/IToggleGroup
+ * @control
+ * @public
+ * @author Михайловский Д.С.
+ * @category Toggle
+ * @demo Controls-demo/Checkbox/Group
+ */
+
 // TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
 interface IControlOptions {
     readOnly?: boolean;
