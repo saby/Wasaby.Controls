@@ -17,7 +17,7 @@ export interface IToggleGroup {
      * @cfg {string} Arrangement of elements in the container.
      * @variant horizontal Elements are located one after another.
      * @variant vertical Elements are located one under another.
-     * @default Horizontal
+     * @default horizontal
      * @example
      * Vertical orientation.
      * <pre>
