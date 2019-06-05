@@ -146,7 +146,10 @@ import 'css!theme?Controls/popup';
 
          _contentMouseenterHandler: function(event) {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               this._cancel(event, 'closing');
+               //We will cancel closing of the popup, if it is already open
+               if (this._isOpened) {
+                  this._cancel(event, 'closing');
+               }
             }
          },
 
