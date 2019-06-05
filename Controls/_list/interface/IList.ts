@@ -180,7 +180,7 @@
  * @remark
  * ARGUMENTS:
  * <ul>
- * <li>RecordSet of loaded items</li>
+ * <li>items {@link Types/collection:RecordSet RecordSet} of loaded items</li>
  * </ul>
  * @example
  * <pre class="brush:js">
@@ -200,7 +200,7 @@
  * @remark
  * ARGUMENTS:
  * <ul>
- * <li>RecordSet of loaded items</li>
+ * <li>items {@link Types/collection:RecordSet RecordSet} of loaded items</li>
  * </ul>
  * dataLoadCallback can be used for setting metadata or adjusting loaded items.
  * @example
