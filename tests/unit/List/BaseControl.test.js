@@ -3065,7 +3065,7 @@ define([
          lists.BaseControl._private.updateVirtualWindow(instance, 'up');
 
          assert.isTrue(instance._checkShouldLoadToDirection);
-         instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isFalse(instance._checkShouldLoadToDirection);
       });
 
