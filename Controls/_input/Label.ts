@@ -16,7 +16,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 }
 
 /**
- * Label.
+ * Represents the text label for a control.
  *
  * @class Controls/_input/Label
  * @extends Core/Control
