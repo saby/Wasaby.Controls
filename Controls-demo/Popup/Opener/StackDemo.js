@@ -4,7 +4,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
-      'css!Controls-demo/Popup/PopupPageOld'
+      'css!Controls-demo/Popup/PopupPageOld',
+      'css!Controls-demo/Popup/Opener/resources/StackHeader'
    ],
    function(Control, template) {
       'use strict';
@@ -15,7 +16,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.stack.open({
                opener: this._children.button1,
                closeOnOutsideClick: true,
-               template: "Controls-demo/Popup/Opener/resources/StackTemplate",
+               template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
                width: 600
             });
          },
@@ -23,7 +24,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.stack.open({
                opener: this._children.button4,
                isModal: true,
-               template: "Controls-demo/Popup/Opener/resources/StackTemplate",
+               template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
                width: 600
             });
          },
@@ -71,18 +72,25 @@ define('Controls-demo/Popup/Opener/StackDemo',
                minWidth: 600,
                width: 600,
                maxWidth: 800,
-               template: "Controls-demo/Popup/Opener/resources/StackTemplate",
+               template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
                templateOptions: {
                   maximized: true,
                   maximizedButtonVisibility: true
                }
             });
          },
-         openStackCustomHeader: function(){
+         openStackCustomHeader: function() {
             this._children.stack.open({
                opener: this._children.button6,
                width: 800,
-               template: "Controls-demo/Popup/Opener/resources/StackTemplateHeader",
+               template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader',
+            });
+         },
+         openStackWithoutHead: function() {
+            this._children.stack.open({
+               opener: this._children.button7,
+               width: 800,
+               template: 'Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
             });
          }
       });
