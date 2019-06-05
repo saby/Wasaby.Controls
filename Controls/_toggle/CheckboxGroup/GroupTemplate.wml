@@ -1,4 +1,4 @@
-<div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? 'controls-CheckboxGroup__childGroup'}} theme_{{_options.theme}}">
+<div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup_theme_' + _options.theme)}}">
    <ws:for data="index, item in groups[parent]">
       <Controls._toggle.Checkbox on:valueChanged="_valueChangedHandler(item)"
                                  caption="{{item[displayProperty || 'title']}}"
