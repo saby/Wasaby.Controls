@@ -1,5 +1,5 @@
 define('Controls/History/LoadService',
-   ['Controls/history'], 
+   ['Controls/suggest'],
    function(Control) {
       'use strict';
       return Control.LoadService;

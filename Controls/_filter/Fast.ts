@@ -238,6 +238,15 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                }
             });
             return pDef.done().getResult();
+         },
+
+         hasSelectorTemplate: function(configs) {
+            let hasSelectorTemplate = configs.find((config) => {
+               if (config.selectorTemplate) {
+                  return true;
+               }
+            });
+            return !!hasSelectorTemplate;
          }
       };
 
@@ -268,6 +277,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                   return _private.reload(self);
                });
             }
+            this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             return resultDef;
          },
 
@@ -302,7 +312,8 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: _private.getSourceController(this._configs[index],
-                  getPropValue(this._items.at(index), 'properties')).hasMoreData('down')
+                  getPropValue(this._items.at(index), 'properties')).hasMoreData('down'),
+               selectorOpener: this._children.selectorOpener
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
@@ -315,6 +326,10 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             // Save the index of the last open list. To get the list in method selectItem
             this.lastOpenIndex = index;
             this._children.DropdownOpener.open(config, this);
+         },
+
+         _onSelectorTemplateResult: function(event, items) {
+            this._onResult(event, {action: 'selectorResult', data: items});
          },
 
          _setText: function() {

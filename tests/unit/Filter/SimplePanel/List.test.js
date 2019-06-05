@@ -94,17 +94,16 @@ define(
             assert.deepStrictEqual(checkBoxClickResult, ['2', '1', '5']);
          });
 
-         it('_selectorDialogResult', function() {
+         it('_moreButtonClick', function() {
             let list = getList(defaultConfig);
-            let dialogResult = 'selectorDialogResult',
-               result;
-            list._notify = (event, data) => {
-               if (event === 'selectorResult') {
-                  result = data[0];
+            let isNotified;
+            list._notify = (event) => {
+               if (event === 'moreButtonClick') {
+                  isNotified = true;
                }
             };
-            list._selectorDialogResult('selectorResult', dialogResult);
-            assert.strictEqual(dialogResult, result);
+            list._moreButtonClick('moreButtonClick');
+            assert.isTrue(isNotified);
          });
 
       });

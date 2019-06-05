@@ -56,4 +56,7 @@
            closeOnOutsideClick="{{true}}"
            on:result="_resultHandler()">
    </Controls.popup:Sticky>
+   <wS:if data="{{_hasSelectorTemplate}}">
+      <Controls.lookup:Opener name="selectorOpener" on:result="_onSelectorTemplateResult()" />
+   </wS:if>
 </div>

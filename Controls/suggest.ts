@@ -13,9 +13,11 @@
 import Input = require('Controls/_suggest/Input');
 import _InputController = require('Controls/_suggest/_InputController');
 import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
+import LoadService from 'Controls/_suggest/LoadService';
 
 export {
    Input,
    _InputController,
-   SearchInput
+   SearchInput,
+   LoadService
 };

@@ -8,7 +8,7 @@ function createHistoryService(historyServiceLoad, config) {
    return historyServiceLoad.callback(new HistoryService(config));
 }
 
-export = function (config) {
+export default function (config) {
    var historyServiceLoad = new Deferred();
 
    if (HistoryService) {

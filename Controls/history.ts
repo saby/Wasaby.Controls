@@ -17,7 +17,6 @@ import Service = require('Controls/_history/Service');
 import Source = require('Controls/_history/Source');
 
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
-import LoadService = require('Controls/_history/LoadService');
 
 export {
     Constants,
@@ -26,6 +25,5 @@ export {
     Service,
     Source,
 
-    itemTemplate,
-    LoadService
+    itemTemplate
 };
