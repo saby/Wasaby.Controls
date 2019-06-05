@@ -30,7 +30,7 @@ import Base = require('Controls/_input/Base');
 import Area = require('Controls/_input/Area');
 import Number = require('Controls/_input/Number');
 import Text = require('Controls/_input/Text');
-import Label = require('Controls/_input/Label');
+import {default as Label} from 'Controls/_input/Label';
 import Mask = require('Controls/_input/Mask');
 import Phone = require('Controls/_input/Phone');
 import Password = require('Controls/_input/Password');
