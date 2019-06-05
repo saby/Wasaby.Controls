@@ -234,7 +234,7 @@ import {LoadService} from 'Controls/history';
             defaultPopupOptions = merge({
                opener: this,
                isCompoundTemplate: this._options.isCompoundTemplate
-            }, selectorTemplate.popupOptions || {});
+            }, selectorTemplate && selectorTemplate.popupOptions || {});
 
          if (popupOptions && popupOptions.template || selectorTemplate) {
             defaultPopupOptions.templateOptions = merge({
