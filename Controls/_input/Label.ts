@@ -1,8 +1,13 @@
-import Env = require('Env/Env');
-import Control = require('Core/Control');
-import entity = require('Types/entity');
-import template = require('wml!Controls/_input/Label/Label');
+import {IoC} from 'Env/Env';
+import {Control, IControlOptions} from 'UI/Base';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ICaption, ICaptionOptions} from 'Controls/interface';
+import LabelTemplate = require('wml!Controls/_input/Label/Label');
 
+export interface ILabelOptions extends IControlOptions, ICaptionOptions {
+   required?: boolean;
+   underline?: string | null;
+}
       /**
        * Label.
        *
@@ -51,9 +56,12 @@ import template = require('wml!Controls/_input/Label/Label');
          }
       };
 
-      var Label = Control.extend({
-         _template: template,
+class Label extends Control<ILabelOptions> implements ICaption{
+   protected _template: Function = LabelTemplate;
+   protected _theme: string[] = ['Controls/input'];
+   readonly '[Controls/_interface/ICaption]': true;
 
+   private _warn(container: HTMLElement, className: string, )
          _afterMount: function() {
             var container = _private.getDOMContainer(this._container);
 
@@ -66,7 +74,7 @@ import template = require('wml!Controls/_input/Label/Label');
             _private.warn(container, 'controls-Label_underline-hovered', 'hovered');
             _private.warn(container, 'controls-Label_underline_color-hovered', 'fixed');
          }
-      });
+      };
 
       Label.getDefaultOptions = function() {
          return {
@@ -87,7 +95,6 @@ import template = require('wml!Controls/_input/Label/Label');
          };
       };
 
-      Label._theme = ['Controls/input'];
 
       export = Label;
 
