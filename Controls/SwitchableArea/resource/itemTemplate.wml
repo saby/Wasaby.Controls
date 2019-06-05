@@ -1,2 +1,0 @@
-<!-- Used by wml!Layout/Browser/Tabs/Tabs -->
-<ws:partial template="Controls/switchableArea:itemTemplate" scope="{{_options}}" />
