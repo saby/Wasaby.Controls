@@ -1,8 +1,8 @@
-<div class="controls-PeriodDialog-MonthsRange" data-date="{{ _formatDate(_options.date, 'YYYY.M') }}">
+<div class="controls-PeriodDialog-MonthsRange" data-date="{{ _formatDate(_options.item.months[0], 'YYYY.M') }}">
    <div class="controls-PeriodDialog-MonthsRange__header">
-      {{ _formatDate(_options.date, 'YYYY') }}
+      {{ _formatDate(_options.item.months[0], 'YYYY') }}
    </div>
-   <div class="controls-PeriodDialog-MonthsRange__body" data-date="{{ _formatDate(_options.date, 'YYYY.M') }}">
+   <div class="controls-PeriodDialog-MonthsRange__body" data-date="{{ _formatDate(_options.item.months[0], 'YYYY.M') }}">
       <div class="controls-PeriodDialog-MonthsRange__halfYears">
          <div
             for="halfYearIndex as halfYear in _yearStructure"
@@ -17,13 +17,13 @@
 
                   <div class="controls-PeriodDialog-MonthsRange__quarterButton{{
                               _quarterSelectionEnabled ? ' controls-PeriodDialog__cursor-pointer' }}"
-                     on:click="_onQuarterClick(_months[quarter.startMonth])"
+                     on:click="_onQuarterClick(_options.item.months[quarter.startMonth])"
                      on:mouseenter="_onQuarterMouseEnter(halfYearIndex*2 + quarterIndex)"
                      on:mouseleave="_onQuarterMouseLeave()">
                      {{ quarter.name }}
                   </div>
                   <div
-                        for="monthIndex as month in _months.slice(quarter.startMonth, quarter.startMonth + 3)"
+                        for="monthIndex as month in _options.item.months.slice(quarter.startMonth, quarter.startMonth + 3)"
                         class="{{_prepareItemClass(month)}}"
                         on:click="_onMonthClick(month)"
                         on:mouseenter="_onMonthMouseEnter(month)"
@@ -57,7 +57,7 @@
             </div>
             <div class="controls-PeriodDialog-MonthsRange__halfYearsPanel-button{{
                         _quarterSelectionEnabled ? ' controls-PeriodDialog__cursor-pointer' }}"
-               on:click="_onHalfYearClick(_months[halfYear.startMonth])"
+               on:click="_onHalfYearClick(_options.item.months[halfYear.startMonth])"
                on:mouseenter="_onHalfYearMouseEnter(halfYearIndex)"
                on:mouseleave="_onHalfYearMouseLeave()">
                {{ halfYear.name }}
