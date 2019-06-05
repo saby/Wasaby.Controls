@@ -1,6 +1,8 @@
 /**
  * @interface Controls/Application/BlockLayout/Styles
  *
+ * @demo Controls-demo/Example/BlockLayout
+ *
  * @css controls-BlockLayout Container for block groups.
  * @css controls-BlockLayout__blockGroup Container for blocks.
  * @css controls-BlockLayout__block Container for user content.
