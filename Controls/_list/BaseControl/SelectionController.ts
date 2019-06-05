@@ -83,7 +83,8 @@ var _private = {
                     items: options.items,
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty
+                    nodeProperty: options.nodeProperty,
+                    listModel: options.listModel
                 }));
             });
         } else {
