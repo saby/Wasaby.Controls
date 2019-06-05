@@ -12,7 +12,8 @@
                            keyProperty="{{_options.keyProperty}}"
                            source="{{_toolbarSource}}"
                            on:itemClick="_toolbarItemClick()"
-                           itemTemplate="{{ _options.itemTemplate }}">
+                           itemTemplate="{{ _options.itemTemplate }}"
+                           itemTemplateProperty="{{ _options.itemTemplateProperty }}">
          </Controls.toolbars:View>
       </ws:if>
    </div>
