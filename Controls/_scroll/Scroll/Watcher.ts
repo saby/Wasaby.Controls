@@ -165,47 +165,60 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          },
 
-         initIntersectionObserver: function(self, elements) {
-            var eventName;
-            self._observer = new IntersectionObserver(function(changes) {
-               for (var i = 0; i < changes.length; i++) {
-                  switch (changes[i].target) {
-                     case elements.topLoadTrigger:
-                        if (changes[i].isIntersecting) {
-                           eventName = 'loadTopStart';
-                        } else {
-                           eventName = 'loadTopStop';
-                        }
-                        break;
-                     case elements.bottomLoadTrigger:
-                        if (changes[i].isIntersecting) {
-                           eventName = 'loadBottomStart';
-                        } else {
-                           eventName = 'loadBottomStop';
-                        }
-                        break;
-                     case elements.topListTrigger:
-                        if (changes[i].isIntersecting) {
-                           eventName = 'listTop';
-                        }
-                        break;
-                     case elements.bottomListTrigger:
-                        if (changes[i].isIntersecting) {
-                           eventName = 'listBottom';
-                        }
-                        break;
-                  }
-                  if (eventName) {
-                     _private.sendByRegistrar(self, eventName);
-                     eventName = null;
-                  }
-               }
-            }, {root: self._container[0] || self._container});//FIXME self._container[0] remove after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            self._observer.observe(elements.topLoadTrigger);
-            self._observer.observe(elements.bottomLoadTrigger);
+         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+         initIntersectionObserver: function(self, elements, component, task1177135045) {
+            if (!self._observers[component.getInstanceId()]) {
+               let eventName;
+               let curObserver: IntersectionObserver;
 
-            self._observer.observe(elements.topListTrigger);
-            self._observer.observe(elements.bottomListTrigger);
+
+               curObserver = new IntersectionObserver(function (changes) {
+                  for (var i = 0; i < changes.length; i++) {
+                     switch (changes[i].target) {
+                        case elements.topLoadTrigger:
+                           if (changes[i].isIntersecting) {
+                              eventName = 'loadTopStart';
+                           } else {
+                              eventName = 'loadTopStop';
+                           }
+                           break;
+                        case elements.bottomLoadTrigger:
+                           if (changes[i].isIntersecting) {
+                              eventName = 'loadBottomStart';
+                           } else {
+                              eventName = 'loadBottomStop';
+                           }
+                           break;
+                        case elements.topListTrigger:
+                           if (changes[i].isIntersecting) {
+                              eventName = 'listTop';
+                           } else if (task1177135045) {
+                               eventName = 'listTopStop';
+                           }
+                           break;
+                        case elements.bottomListTrigger:
+                           if (changes[i].isIntersecting) {
+                              eventName = 'listBottom';
+                           } else if (task1177135045) {
+                               eventName = 'listBottomStop';
+                           }
+                           break;
+                     }
+                     if (eventName) {
+                        self._registrar.startOnceTarget(component, eventName);
+                        self._notify(eventName);
+                        eventName = null;
+                     }
+                  }
+               }, {root: self._container[0] || self._container});//FIXME self._container[0] remove after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+               curObserver.observe(elements.topLoadTrigger);
+               curObserver.observe(elements.bottomLoadTrigger);
+
+               curObserver.observe(elements.topListTrigger);
+               curObserver.observe(elements.bottomListTrigger);
+
+               self._observers[component.getInstanceId()] = curObserver;
+            }
          },
 
          onRegisterNewComponent: function(self, container, component, withObserver) {
@@ -263,7 +276,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
       var Scroll = Control.extend({
          _template: template,
-         _observer: null,
+         _canObserver: false,
+         _observers: null,
          _registrar: null,
          _sizeCache: null,
          _scrollTopCache: 0,
@@ -275,6 +289,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
             this._sizeCache = {};
+            this._observers = {};
          },
 
          _beforeMount: function() {
@@ -297,27 +312,27 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
 
          _scrollHandler: function(e) {
-            _private.onScrollContainer(this, _private.getDOMContainer(this._container), !!this._observer);
+            _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
          },
 
          _resizeHandler: function(e) {
-            var withObserver = !!this._observer;
+            var withObserver = this._canObserver;
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
-         _registerIt: function(event, registerType, component, callback, triggers) {
+          // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+         _registerIt: function(event, registerType, component, callback, triggers, task1177135045) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
                if (global && global.IntersectionObserver && triggers && !Env.detection.isIE && !Env.detection.isIE12 && !Env.detection.firefox) {
-                  if (!this._observer) {
-                     _private.initIntersectionObserver(this, triggers);
-                  }
+                  this._canObserver = true;
+                  _private.initIntersectionObserver(this, triggers, component, task1177135045);
                }
 
-               _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, !!this._observer);
+               _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, this._canObserver);
             }
          },
 
@@ -332,13 +347,20 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
                this._registrar.unregister(event, component);
+               if (this._observers && this._observers[component.getInstanceId()]) {
+                  this._observers[component.getInstanceId()].disconnect();
+               }
             }
          },
 
          _beforeUnmount: function() {
-            if (this._observer) {
-               this._observer.disconnect();
-               this._observer = null;
+            if (this._observers) {
+               for (let i in this._observers) {
+                  if (this._observers.hasOwnProperty(i)) {
+                     this._observers[i].disconnect();
+                  }
+               }
+               this._observers = null;
             }
             this._notify('unregister', ['controlResize', this], {bubbling: true});
             this._registrar.destroy();

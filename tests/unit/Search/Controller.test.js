@@ -174,6 +174,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchMod.Controller._private.searchStartCallback(controller, filter);
          assert.isTrue(controller._loading);
          assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
+
+         //case 3. With root and searchMode='current'
+         controller._options.searchMode = 'current';
+         controller._root = 'testRootNode';
+         controller._loading = false;
+         searchMod.Controller._private.searchStartCallback(controller, filter);
+         assert.isTrue(controller._loading);
+         assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full', 'test': 'testRootNode' });
       });
 
       it('_private.needUpdateSearchController', function() {
@@ -189,7 +197,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._dataOptions = defaultOptions;
          controller = searchMod.Controller._private.getSearchController(searchController);
-         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
+         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/search:_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
       });
 
@@ -213,9 +221,10 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
       it('_beforeMount', function() {
          var searchController = getSearchController(defaultOptions);
-         searchController._beforeMount({searchValue: 'test'}, {dataOptions: defaultOptions});
+         searchController._beforeMount({ searchValue: 'test', root: 'test' }, {dataOptions: defaultOptions});
 
          assert.equal(searchController._inputSearchValue, 'test');
+         assert.equal(searchController._root, 'test');
       });
 
       it('_beforeUpdate', function() {
@@ -246,9 +255,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
+         assert.equal(searchController._root, null);
 
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);
+         assert.equal(searchController._root, 'test');
       });
 
    });

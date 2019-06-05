@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone'], function(List, sourceLib, collection, Deferred, clone) {
+define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone', 'Controls/history'], function(deprecatedList, sourceLib, collection, Deferred, clone, history) {
 
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -7,7 +7,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
    }
 
 
-   describe('Controls.Container.List', function () {
+   describe('Controls.deprecatedList:Container', function () {
       var listLayout, listLayoutWithPrefetch, listOptions, getListOptionsWithPrefetch, listSource, listSourceData, listSearchParam, listPrefetchSource, listOptionsWithPrefetch;
 
       var getFilledContext = function() {
@@ -90,18 +90,18 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             };
          };
          listOptionsWithPrefetch = getListOptionsWithPrefetch();
-         listLayout = new List(listOptions);
+         listLayout = new deprecatedList.Container(listOptions);
          listLayout.saveOptions(listOptions);
 
-         listLayoutWithPrefetch = new List(listOptionsWithPrefetch);
+         listLayoutWithPrefetch = new deprecatedList.Container(listOptionsWithPrefetch);
          listLayoutWithPrefetch.saveOptions(listOptionsWithPrefetch);
       });
 
       it('.updateFilter', function() {
-         List._private.updateFilter(listLayout, {testKey: 'testFilter'});
+         deprecatedList.Container._private.updateFilter(listLayout, {testKey: 'testFilter'});
          assert.deepEqual(listLayout._filter, {testKey: 'testFilter'});
 
-         List._private.updateFilter(listLayout, {testKey: 'testFilter2'});
+         deprecatedList.Container._private.updateFilter(listLayout, {testKey: 'testFilter2'});
          assert.deepEqual(listLayout._filter, {testKey: 'testFilter2'});
       });
 
@@ -112,13 +112,13 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                { id: 2, title: 'Dmitry' }
                ]
          });
-         List._private.updateSource(listLayout, recordSet);
+         deprecatedList.Container._private.updateSource(listLayout, recordSet);
 
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
       });
 
       it('.abortCallback', function() {
-         List._private.abortCallback(listLayout, {});
+         deprecatedList.Container._private.abortCallback(listLayout, {});
          assert.deepEqual(listSourceData, listLayout._source._$data);
       });
 
@@ -133,22 +133,22 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          };
          listLayoutWithPrefetch._options.source = listSource;
 
-         List._private.searchErrback(listLayout, {canceled: true});
+         deprecatedList.Container._private.searchErrback(listLayout, {canceled: true});
          assert.isTrue(!!listLayout._source._$data);
 
-         List._private.searchErrback(listLayout, {});
+         deprecatedList.Container._private.searchErrback(listLayout, {});
 
          assert.deepEqual(null, listLayout._source._$data);
          assert.isTrue(errbackCalled);
 
-         List._private.searchErrback(listLayoutWithPrefetch, {});
+         deprecatedList.Container._private.searchErrback(listLayoutWithPrefetch, {});
 
          assert.deepEqual(null, listLayoutWithPrefetch._source._$data);
          assert.isTrue(errbackCalledWithPrefetch);
       });
 
       it('_beforeMount', function() {
-         var listLayout = new List(getListOptionsWithPrefetch());
+         var listLayout = new deprecatedList.Container(getListOptionsWithPrefetch());
          listLayout._searchMode = true;
          listLayout._beforeMount(getListOptionsWithPrefetch());
 
@@ -163,7 +163,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             ]
          });
          listLayout._searchDeferred = new Deferred();
-         List._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
+         deprecatedList.Container._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
          //FIXME вернуть как будет cached source
          //assert.deepEqual(listLayout._filter, {testField: 'testValue'});
@@ -176,9 +176,9 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          opts.searchStartCallback = function() {
             searchStarted = true;
          };
-         var listLayout = new List(opts);
+         var listLayout = new deprecatedList.Container(opts);
          listLayout._beforeMount(opts);
-         List._private.searchValueChanged(listLayout, 'Sasha');
+         deprecatedList.Container._private.searchValueChanged(listLayout, 'Sasha');
          assert.equal(listLayout._searchValue, 'Sasha');
          assert.isFalse(searchStarted);
 
@@ -191,7 +191,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                { id: 5, title: 'Sasha' }
                ]);
             assert.isTrue(searchStarted);
-            List._private.searchValueChanged(listLayout, '');
+            deprecatedList.Container._private.searchValueChanged(listLayout, '');
             assert.equal(listLayout._searchValue, '');
             setTimeout(function() {
                assert.deepEqual(listLayout._filter, {});
@@ -207,28 +207,39 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
 
          assert.isFalse(!!listLayout._searchController);
 
-         var searchController = List._private.getSearchController(listLayout);
+         var searchController = deprecatedList.Container._private.getSearchController(listLayout);
+         var historySource = new history.Source({
+            originSource: listSource,
+            historySource: new history.Service({
+               historyId: 'historyField'
+            })
+         });
 
          assert.isTrue(!!listLayout._searchController);
-         assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
+         assert.equal(searchController._moduleName, 'Controls/search:_SearchController');
          assert.equal(searchController._options.searchParam, listSearchParam);
          assert.equal(searchController._options.source, listSource);
 
          listLayoutWithPrefetch._searchController = undefined;
-         searchController = List._private.getSearchController(listLayoutWithPrefetch);
+         searchController = deprecatedList.Container._private.getSearchController(listLayoutWithPrefetch);
 
          assert.isTrue(searchController._options.source instanceof sourceLib.Memory);
+
+         listLayoutWithPrefetch._searchController = undefined;
+         listLayoutWithPrefetch._options.source = historySource;
+         searchController = deprecatedList.Container._private.getSearchController(listLayoutWithPrefetch);
+         assert.isTrue(searchController._options.source instanceof history.Source);
       });
 
       it('._beforeUnmount', function(done) {
          /* To reset source */
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          var context = getFilledContext();
          var aborted = false;
          listLayout._beforeMount(listOptions);
          listLayout._saveContextObject(getEmptyContext());
 
-         List._private.abortCallback(listLayout, {});
+         deprecatedList.Container._private.abortCallback(listLayout, {});
 
          listLayout._beforeUpdate(listOptions, context);
 
@@ -265,7 +276,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                searchValue: ''
             }
          };
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          listLayout._saveContextObject({
             filterLayoutField: {filter: {}},
             searchLayoutField: {searchValue: ''}
@@ -273,7 +284,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
 
          /* emulate _beforeMount */
          listLayout.saveOptions(listOptions);
-         List._private.resolveOptions(listLayout, listOptions);
+         deprecatedList.Container._private.resolveOptions(listLayout, listOptions);
          listLayout._source = listOptions.source;
 
          listLayout._beforeUpdate(listOptions, context);
@@ -299,7 +310,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                filterLayoutField: {filter: {title: 'Sasha'}},
                searchLayoutField: {searchValue: 'Sasha'}
             });
-            List._private.abortCallback(listLayout, {});
+            deprecatedList.Container._private.abortCallback(listLayout, {});
             /* check reset */
             assert.deepEqual(listLayout._filter, {});
             assert.deepEqual(listLayout._source._$data, listSourceData);
@@ -360,65 +371,65 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
       });
 
       it('Container/List::_private.isFilterChanged', function() {
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          var context = getFilledContext();
 
          listLayout._saveContextObject(getEmptyContext());
-         assert.isTrue(List._private.isFilterChanged(listLayout, context));
+         assert.isTrue(deprecatedList.Container._private.isFilterChanged(listLayout, context));
 
          listLayout._saveContextObject(getFilledContext());
-         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+         assert.isFalse(deprecatedList.Container._private.isFilterChanged(listLayout, context));
 
          listLayout._filter = getFilledContext().filterLayoutField.filter;
-         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+         assert.isFalse(deprecatedList.Container._private.isFilterChanged(listLayout, context));
 
          listLayout._filter = getEmptyContext().filterLayoutField.filter;
-         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+         assert.isFalse(deprecatedList.Container._private.isFilterChanged(listLayout, context));
 
          listLayout._saveContextObject(getEmptyContext());
          listLayout._filter = getEmptyContext().filterLayoutField.filter;
-         assert.isTrue(List._private.isFilterChanged(listLayout, context));
+         assert.isTrue(deprecatedList.Container._private.isFilterChanged(listLayout, context));
 
          listLayout._saveContextObject(getEmptyContext());
          listLayout._filter = getFilledContext().filterLayoutField.filter;
-         assert.isTrue(List._private.isFilterChanged(listLayout, context));
+         assert.isTrue(deprecatedList.Container._private.isFilterChanged(listLayout, context));
       });
 
       it('Container/List::_private.isSearchValueChanged', function() {
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          listLayout._beforeMount(listOptions);
          var context = getFilledContext();
 
          listLayout._saveContextObject(getEmptyContext());
-         assert.isTrue(List._private.isSearchValueChanged(listLayout, context));
+         assert.isTrue(deprecatedList.Container._private.isSearchValueChanged(listLayout, context));
 
          listLayout._saveContextObject(getFilledContext());
-         assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
+         assert.isFalse(deprecatedList.Container._private.isSearchValueChanged(listLayout, context));
 
          listLayout._searchValue = getFilledContext().searchLayoutField.searchValue;
-         assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
+         assert.isFalse(deprecatedList.Container._private.isSearchValueChanged(listLayout, context));
 
          listLayout._searchValue = getEmptyContext().searchLayoutField.searchValue;
-         assert.isTrue(List._private.isSearchValueChanged(listLayout, getEmptyContext()));
+         assert.isTrue(deprecatedList.Container._private.isSearchValueChanged(listLayout, getEmptyContext()));
 
       });
 
       it('Container/List::_private.getSearchValueFromContext', function () {
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          var context = getFilledContext();
          var emptyContext = getEmptyContext();
 
-         assert.equal('Sasha', List._private.getSearchValueFromContext(listLayout, context));
-         assert.equal('', List._private.getSearchValueFromContext(listLayout, emptyContext));
+         assert.equal('Sasha', deprecatedList.Container._private.getSearchValueFromContext(listLayout, context));
+         assert.equal('', deprecatedList.Container._private.getSearchValueFromContext(listLayout, emptyContext));
       });
 
       it('Container/List::_private.getFilterFromContext', function () {
-         var listLayout = new List(listOptions);
+         var listLayout = new deprecatedList.Container(listOptions);
          var context = getFilledContext();
          var emptyContext = getEmptyContext();
 
-         assert.deepEqual({title: 'Sasha'}, List._private.getFilterFromContext(listLayout, context));
-         assert.deepEqual({title: ''}, List._private.getFilterFromContext(listLayout, emptyContext));
+         assert.deepEqual({title: 'Sasha'}, deprecatedList.Container._private.getFilterFromContext(listLayout, context));
+         assert.deepEqual({title: ''}, deprecatedList.Container._private.getFilterFromContext(listLayout, emptyContext));
       });
 
    });

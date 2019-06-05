@@ -1,6 +1,6 @@
 import coreMerge = require('Core/core-merge');
 import entity = require('Types/entity');
-import IRangeSelectable = require('Controls/Date/interface/IRangeSelectable');
+import IRangeSelectable from './IInputSelectable';
 'use strict';
 
 /**

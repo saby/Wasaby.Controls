@@ -174,7 +174,7 @@ import getZIndex = require('Controls/Utils/getZIndex');
          },
          _open: function(cfg) {
             InfoBox.superclass.open.call(this, {
-               target: cfg.target,
+               target: cfg.target && cfg.target[0] || cfg.target, //todo: https://online.sbis.ru/doc/7c921a5b-8882-4fd5-9b06-77950cbe2f79
                position: cfg.position,
                autofocus: false,
                maxWidth: cfg.maxWidth,
@@ -226,5 +226,4 @@ import getZIndex = require('Controls/Utils/getZIndex');
          return options;
       };
 
-      export = InfoBox;
-
+export default InfoBox;

@@ -3,7 +3,8 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Opener/Edit/Container');
-import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions} from 'Controls/context';
+
       /**
        * edit container
        * @class Controls/_popup/Opener/Edit/Container
@@ -33,4 +34,4 @@ import ContextOptions = require('Controls/Container/Data/ContextOptions');
       };
 
       export = Container;
-   
+

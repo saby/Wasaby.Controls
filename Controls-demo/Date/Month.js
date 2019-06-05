@@ -1,7 +1,7 @@
 define('Controls-demo/Date/Month', [
    'Core/Control',
    'wml!Controls-demo/Date/Month',
-   'Controls/Date/MonthView'
+   'Controls/calendar'
 ], function (
    BaseControl,
    template

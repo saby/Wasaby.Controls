@@ -34,10 +34,10 @@
 </ws:template>
 
 <ws:template name="scrollTpl">
-<div class="controls-Scroll ws-flexbox ws-flex-column">
-   <ws:partial template="content"
+<div class="controls-Scroll ws-flexbox ws-flex-column" on:keydown="_keydownHandler()">
+      <ws:partial template="content"
                attr:class="{{_pagingState.visible ? 'controls-Scroll__content_paging'}}"
-               on:scrollMove="_scrollMoveHandler()"/>
+                  on:scrollMove="_scrollMoveHandler()"/>
 
    <ws:if data="{{_scrollbarVisibility()}}">
       <Controls._scroll.Scroll.Scrollbar

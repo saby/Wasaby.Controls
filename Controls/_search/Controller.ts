@@ -1,9 +1,9 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
-import DataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
-import _SearchController = require('Controls/Controllers/_SearchController');
+import _SearchController from './_SearchController';
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
@@ -86,6 +86,9 @@ var _private = {
       if (self._options.parentProperty && self._viewMode !== 'search') {
          _private.assignServiceFilters(filter);
       }
+      if (self._root !== undefined && self._options.parentProperty && self._options.searchMode === 'current') {
+         filter[self._options.parentProperty] = self._root;
+      }
       self._loading = true;
    },
 
@@ -100,6 +103,7 @@ var _private = {
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
          _private.getSearchController(this).abort();
+         this._root = root;
       }
    },
 
@@ -134,6 +138,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
  * @control
  * @public
@@ -148,6 +153,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _viewMode: null,
    _searchValue: null,
    _misspellValue: null,
+   _root: undefined,
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
@@ -161,6 +167,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._search(null, options.searchValue);
+      }
+
+      if (options.root !== undefined) {
+         this._root = options.root;
       }
    },
 
@@ -218,7 +228,8 @@ Container.contextTypes = function () {
 Container.getDefaultOptions = function () {
    return {
       minSearchLength: 3,
-      searchDelay: 500
+      searchDelay: 500,
+      searchMode: 'root'
    };
 };
 

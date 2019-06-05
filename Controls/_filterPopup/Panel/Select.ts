@@ -4,7 +4,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
    /**
     * Control that displays items through delimiter.
     *
-    * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
+    * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
     * @extends Core/Control
     * @control

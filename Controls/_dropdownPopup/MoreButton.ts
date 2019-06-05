@@ -9,7 +9,7 @@ var MoreButton = Control.extend([], {
 
     _openSelectorDialog: function() {
         const self = this;
-        const selectorOpener = this._children.selectorDialog;
+        const selectorOpener = this._options.selectorOpener;
         const selectorTemplate = this._options.selectorTemplate;
         let selectedItems = [];
 
@@ -30,7 +30,7 @@ var MoreButton = Control.extend([], {
             }
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
-        selectorOpener.open({
+        selectorOpener.open(Merge({
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate,
@@ -42,16 +42,8 @@ var MoreButton = Control.extend([], {
                 }
             },
             opener: this
-        });
-    },
-
-    _selectorDialogResult: function(event, items) {
-        var result = {
-            action: 'selectorResult',
-            event: event,
-            data: items
-        };
-        this._notify('selectorResult', [result]);
+        }, selectorTemplate.popupOptions || {}));
+        this._notify('close', [], {bubbling: true});
     }
 });
 

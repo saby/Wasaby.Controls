@@ -13,6 +13,29 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          assert.deepEqual(searchViewModel.getDisplayFilter(null, {itemsFilterMethod: itemsFilterMethod}), result);
          assert.deepEqual(searchViewModel._display.getRoot().getContents(), 'myTestRoot');
       });
+      it('hasItemById', function() {
+         var
+            searchViewModel = new SearchViewModel({
+               items: new Collection.RecordSet({
+                  rawData: [{
+                     id: 1,
+                     type: true,
+                     parent: null
+                  }, {
+                     id: 2,
+                     type: null,
+                     parent: 1
+                  }],
+                  idProperty: 'id'
+               }),
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               keyProperty: 'id'
+            });
+         assert.equal(searchViewModel.hasItemById(1), true);
+         assert.equal(searchViewModel.hasItemById(2), true);
+         assert.equal(searchViewModel.hasItemById(3), false);
+      });
       it('itemTemplate', function() {
          var
             itemData,

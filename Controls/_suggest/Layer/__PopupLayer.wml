@@ -1,0 +1,1 @@
+<Controls.popup:Sticky name="suggestPopup" _vdomOnOldPage="{{true}}" scope="{{_popupOptions}}"/>

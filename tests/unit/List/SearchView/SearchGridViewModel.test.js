@@ -86,6 +86,7 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
                parentProperty: 'parent',
                nodeProperty: 'nodeType',
                columns: [{}],
+               columnScroll: true,
                groupingKeyCallback: function() {
                   return 'test_group';
                }

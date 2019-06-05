@@ -58,14 +58,13 @@ var Suggest = Control.extend({
 
    _choose: function(event, item) {
       /* move focus to input after select, because focus will be lost after closing popup  */
-      this.activate();
-      this._notify('choose', [item]);
+      this.activate({enableScreenKeyboard: true});
       this._notify('valueChanged', [item.get(this._options.displayProperty || '')]);
    },
 
    _clearClick: function() {
       /* move focus to input after clear text, because focus will be lost after hiding cross  */
-      this.activate();
+      this.activate({enableScreenKeyboard: true});
       if (!this._options.autoDropDown) {
          this._suggestState = false;
       }

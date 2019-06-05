@@ -1,3 +1,5 @@
+@import "Controls/Application/BlockLayout/_BlockLayout";
+
 /* сброс стилей. copy normilize.less*/
 * {
    margin: 0;
@@ -241,8 +243,11 @@ html>body .clearfix {
 .icon-small, .icon-16  {
    .icon-size(@size_icon_s, @font-family_icon_size-s);
 }
-.icon-medium, .icon-24  {
+.icon-medium, .icon-24 {
    .icon-size(@size_icon_m, @font-family_icon_size-m);
+}
+.icon-default {
+   .icon-size(@size_icon_default, @font-family_icon_size-default);
 }
 .icon-large, .icon-32 {
    .icon-size(@size_icon_l, @font-family_icon_size-l);

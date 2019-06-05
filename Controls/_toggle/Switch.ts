@@ -1,15 +1,11 @@
-import * as Control from 'Core/Control';
+import {Control, IControlOptions} from 'UI/Base';
 import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions} from 'Controls/interface';
+import {ICheckboxOptions} from "./Checkbox";
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-   readOnly?: boolean;
-   theme?: string;
-}
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions {
    caption: string;
    captionPosition: string;
@@ -45,11 +41,10 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @variant right Toggle before caption. It is default value.
  */
 
-class Switch extends Control implements ITooltip, ICheckable {
+class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: Function = SwitchTemplate;
    protected _theme: string[] = ['Controls/toggle'];
-   protected _options: ISwitchOptions;
 
    private _clickHandler(e: SyntheticEvent): void {
       if (!this._options.readOnly) {

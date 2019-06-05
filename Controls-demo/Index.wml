@@ -1,10 +1,10 @@
 <Controls-demo.ContainerTheme>
-   <Controls.Application scope="{{_options}}" theme="{{content.theme}}" bodyClass="controls-default-bg">
+   <Controls.Application scope="{{_options}}" theme="{{content.theme}}" bodyClass="controls-default-bg" title="{{_title}}">
       <ws:head>
          <link data-vdomignore="true" rel="shortcut icon" href="/Controls-demo/wasaby.ico?v=1" type="image/x-icon"/>
       </ws:head>
       <ws:content>
-         <Controls-demo.RootRouter/>
+         <Controls-demo.RootRouter correctTemplate="{{_correctTemplate}}"/>
       </ws:content>
    </Controls.Application>
 </Controls-demo.ContainerTheme>

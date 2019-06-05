@@ -11,7 +11,7 @@ import 'css!theme?Controls/heading';
     * @class Controls/_heading/Back
     * @extends Core/Control
     * @mixes Controls/_interface/ICaption
-    * @mixes Controls/interface/IClick
+    * @mixes Controls/_buttons/interface/IClick
     * @mixes Controls/_interface/ITooltip
     * @mixes Controls/_heading/Back/BackStyles
     * @control

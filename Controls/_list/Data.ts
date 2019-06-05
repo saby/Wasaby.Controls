@@ -1,18 +1,19 @@
 import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
-import template = require('wml!Controls/Container/Data/Data');
-import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
-import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import template = require('wml!Controls/_list/Data');
+import getPrefetchSource from './getPrefetchSource';
+import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
 
-import {RecordSet} from 'Types/collection'
+import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 
 type GetSourceResult = {
-   data: RecordSet,
-   source: ICrud
+   data?: RecordSet;
+   error?: Error;
+   source: ICrud;
 }
 
       /**
@@ -38,8 +39,6 @@ type GetSourceResult = {
        * @name Controls/_list/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
-
-      
 
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
@@ -72,29 +71,23 @@ type GetSourceResult = {
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
 
-         createPrefetchSource: function(self, data:RecordSet|void, dataLoadErrback: Function|void): Deferred<GetSourceResult|null> {
-            var resultDef = new Deferred();
-
-            getPrefetchSource({
+         createPrefetchSource(
+            self,
+            data: RecordSet | void,
+            dataLoadErrback: Function | void
+         ): Promise<GetSourceResult> {
+            return getPrefetchSource({
                source: self._source,
                navigation: self._navigation,
                sorting: self._sorting,
                filter: self._filter,
                keyProperty: self._keyProperty
-            }, data)
-               .addCallback(function(result) {
-                  resultDef.callback(result);
-                  return result;
-               })
-               .addErrback(function(error) {
-                  if (dataLoadErrback instanceof Function) {
-                     dataLoadErrback(error);
-                  }
-                  resultDef.callback(null);
-                  return error;
-               });
-
-            return resultDef;
+            }, data).then((result: GetSourceResult) => {
+               if (result.error && dataLoadErrback instanceof Function) {
+                  dataLoadErrback(result.error);
+               }
+               return result;
+            });
          },
 
          resolveOptions: function(self, options) {
@@ -111,24 +104,24 @@ type GetSourceResult = {
                }
             }
          },
-         
-         resolvePrefetchSourceResult: function(self, result) {
-            if (result) {
+
+         resolvePrefetchSourceResult: function(self, result: GetSourceResult) {
+            if (result.data) {
                if (_private.isEqualItems(self._items, result.data)) {
                   self._items.assign(result.data);
                } else {
                   self._items = result.data;
                }
-               self._prefetchSource = result.source;
             }
+            self._prefetchSource = result.source;
          },
-   
+
          /**
           * @typedef {Object} prefetchSourceResult
           * @property data Data that loaded from original source
           * @property source prefetchSource that contains original source
           */
-         
+
          /**
           * @param self control instance
           * @param result {prefetchSourceResult}
@@ -137,7 +130,7 @@ type GetSourceResult = {
             _private.resolvePrefetchSourceResult(self, result);
             self._dataOptionsContext = _private.getDataContext(self);
          },
-         
+
          getDataContext: function(self) {
             return new ContextOptions(_private.updateDataOptions(self, {}));
          }
@@ -165,7 +158,7 @@ type GetSourceResult = {
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
-                  return result ? result.data : null;
+                  return result.data;
                });
             } else {
                self._dataOptionsContext = _private.getDataContext(self);
@@ -197,7 +190,7 @@ type GetSourceResult = {
          _filterChanged: function(event, filter) {
             this._filter = filter;
             _private.updateDataOptions(this, this._dataOptionsContext);
-            
+
             /* If filter changed, prefetchSource should return data not from cache,
                will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
             this._dataOptionsContext.prefetchSource = this._options.source;
@@ -225,4 +218,4 @@ type GetSourceResult = {
 
       Data._private = _private;
       export = Data;
-   
+

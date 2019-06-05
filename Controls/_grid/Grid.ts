@@ -11,7 +11,6 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
-    *    <li><a href="/materials/demo-ws4-edit-in-place-row-editor">How to configure editing in your list with row editor template.</a>.</li>
     * </ul>
     *
     * @class Controls/_grid/Grid
@@ -25,7 +24,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/_list/interface/IDraggable
+    * @mixes Controls/_tile/interface/IDraggable
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
@@ -35,10 +34,8 @@ import {ListControl as viewTemplate} from 'Controls/list';
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_list/DigitButtonsStyles
+    * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
-    *
-    * @cssModifier controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields
     *
     * @control
     * @public

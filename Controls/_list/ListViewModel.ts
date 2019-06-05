@@ -67,6 +67,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
+    _menuState: '',
 
     constructor: function(cfg) {
         var self = this;
@@ -112,11 +113,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
     },
+    setMenuState(state: string): void {
+        this._menuState = state;
+    },
     getItemDataByItem: function() {
         var
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
             drawnActions;
+        itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -203,7 +208,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         this._markedKey = key;
         this._updateMarker(key);
-        this._nextModelVersion(true);
+        this._nextModelVersion(true, 'markedKeyChanged');
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
@@ -294,7 +299,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
-            this._nextModelVersion(true);
+            this._nextModelVersion(true, 'activeItemChanged');
         }
     },
 
@@ -446,10 +451,14 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._editingItemData;
     },
 
+    hasItemById: function(id, keyProperty) {
+        return !!this.getItemById(id, keyProperty);
+    },
+
     setItemActions: function(item, actions) {
         if (item.get) {
             const id = item.get(this._options.keyProperty);
-            if (this.getItemById(id, this._options.keyProperty)) {
+            if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;
             }
         }

@@ -1,4 +1,4 @@
-import dateControlsUtils = require('Controls/Calendar/Utils');
+import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
 import {descriptor} from 'Types/entity';
 

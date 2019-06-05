@@ -9,9 +9,14 @@
  * @css @padding_Button-wrapper_size_s Padding from content to border of button with options viewMode 'button' and size 's'.
  *
  * @css @height_Button_size_m Height of button with options viewMode 'button' and size 'm'.
- * @css @font-size_Button_size_m Font size of button with options viewMode 'button' and size 'm''.
+ * @css @font-size_Button_size_m Font size of button with options viewMode 'button' and size 'm'.
  * @css @border-radius_Button_size_m Border radius of button with options viewMode 'button' and size 'm'.
  * @css @padding_Button-wrapper_size_m Padding from content to border of button with options viewMode 'button' and size 'm'.
+ *
+ * @css @height_Button_size_default Height of button with options viewMode 'button' and size 'default'.
+ * @css @font-size_Button_size_default Font size of button with options viewMode 'button' and size 'default'.
+ * @css @border-radius_Button_size_default Border radius of button with options viewMode 'button' and size 'default'.
+ * @css @padding_Button-wrapper_size_default Padding from content to border of button with options viewMode 'button' and size 'default'.
  *
  * @css @height_Button_size_l Height of button with options viewMode 'button' and size 'l'.
  * @css @font-size_Button_size_l Font size of button with options viewMode 'button' and size 'l'.
@@ -51,6 +56,9 @@
  * @css @height-ToolButton_size-m Height of button with options viewMode 'toolButton' and size 'm'.
  * @css @width-ToolButton_size-m Minimum width of button with options viewMode 'toolButton' and size 'm'.
  *
+ * @css @height-ToolButton_size-default Height of button with options viewMode 'toolButton' and size 'default'.
+ * @css @width-ToolButton_size-default Minimum width of button with options viewMode 'toolButton' and size 'default'.
+ *
  * @css @height-ToolButton_size-l Height of button with options viewMode 'toolButton' and size 'l'.
  * @css @width-ToolButton_size-l Minimum width of button with options viewMode 'toolButton' and size 'l'.
  *
@@ -73,6 +81,7 @@
  *
  * @css @font-size_Link-s Font size of button with options size 's' and viewMode 'link'.
  * @css @font-size_Link-m Font size of button with options size 'm' and viewMode 'link'.
+ * @css @font-size_Link-default Font size of button with options size 'default' and viewMode 'link'.
  * @css @font-size_Link-l Font size of button with options size 'l' and viewMode 'link'.
  * @css @font-size_Link-xl Font size of button with options size 'xl' and viewMode 'link'.
  *

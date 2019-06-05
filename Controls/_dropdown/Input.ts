@@ -31,7 +31,7 @@ var _private = {
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
  *
- * To work with single selectedKeys option you can use control with {@link Controls/Container/Adapter/SelectedKey}.
+ * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/_interface/ISource

@@ -36,8 +36,8 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 var Lookup = Control.extend({
    _template: template,
 
-   showSelector: function (templateOptions) {
-      this._children.controller.showSelector(templateOptions);
+   showSelector: function (popupOptions) {
+      this._children.controller.showSelector(popupOptions);
    }
 });
 

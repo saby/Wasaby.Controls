@@ -25,7 +25,7 @@ import {default as Switch} from 'Controls/_toggle/Switch';
 import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
 import RadioGroup = require('Controls/_toggle/RadioGroup');
 import {default as Checkbox} from 'Controls/_toggle/Checkbox';
-import Separator = require('Controls/_toggle/Separator');
+import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 

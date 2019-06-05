@@ -152,7 +152,7 @@
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isEditing}}">
-         <div attr:style="{{itemData.editingRowStyles}}">
+         <div attr:style="{{itemData.getEditingRowStyles()}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
                <ws:partial template="partialGridSupportItem"
                            attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"

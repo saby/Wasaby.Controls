@@ -14,6 +14,25 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
+ * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию
+ * В качестве ключей можно использовать следующие свойства
+ * - items - для смены набора элементов
+ * - groupingKeyCallback, groupingTemplate для установки группировки
+ * - itemTemplate - шаблон элемента меню
+ * - footerTamplate - шаблон футера
+ * - headerTemplate - шаблон шапки
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Determines whether context menu should be shown on right-click.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @default true
+ */
+
+/**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -89,8 +108,8 @@
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
  * @property {String} icon Operation icon.
- * @property {Number} showType Location of operation.
- * @property {String} style Operation style.
+ * @property {Number} showType Location of operation. (1 - menu | 2 - toolbar and menu | 3 - toolbar).
+ * @property {String} style Operation style. (secondary | warning | danger | success).
  * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
  * @property {Function} handler Operation handler.
  * @property {String} parent Key of the action's parent.
@@ -112,7 +131,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IList#actionClick
+ * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
@@ -177,11 +196,32 @@
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Callback function that will be called when list data instance is ready.
+ * @example
+ * <pre class="brush:js">
+ * _myItemsReadyCallback = function(items) {
+ *    this._myItems = items;
+ * }
+ * ...
+ * deleteButtonClickHandler: function{
+ *    this._myItems.removeAt(0);
+ * }
+ * </pre>
  */
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
  * @cfg {Function} Callback function that will be called when list data loaded by source
+ * @remark
+ * dataLoadCallback takes to first argument the collection of loaded items.
+ * dataLoadCallback can be used for setting metadata or adjusting loaded items.
+ * @example
+ * <pre class="brush:js">
+ * _myDataLoadCallback = function(items) {
+ *    items.each(function(item){
+ *       item.set(field, value);
+ *    });
+ * }
+ * </pre>
  */
 
 /**

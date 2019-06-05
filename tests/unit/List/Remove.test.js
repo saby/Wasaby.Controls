@@ -52,7 +52,8 @@ define([
       it('afterItemsRemove notify event with params', function(done) {
          var
             items = [2, 3],
-            result = 'custom_result';
+            result = 'custom_result',
+            unselectAllNotified = false;
          remover._source.destroy = function() {
             return Deferred.success(result);
          };
@@ -62,9 +63,14 @@ define([
                assert.equal(args[1], result);
                done();
             }
+            if (event === 'selectedTypeChanged') {
+               assert.equal(args[0], 'unselectAll');
+               unselectAllNotified = true;
+            }
          };
 
          remover.removeItems(items);
+         assert.isTrue(unselectAllNotified);
       });
 
       it('beforeItemsRemove return false', function() {

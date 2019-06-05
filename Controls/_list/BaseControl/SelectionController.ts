@@ -76,8 +76,8 @@ var _private = {
     getMultiselection: function (options) {
         var def = new Deferred();
         if (options.parentProperty) {
-            require(['Controls/Controllers/Multiselect/HierarchySelection'], function (HierarchySelection) {
-                def.callback(new HierarchySelection({
+            require(['Controls/operations'], function (operations) {
+                def.callback(new operations.HierarchySelection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
                     items: options.items,
@@ -87,8 +87,8 @@ var _private = {
                 }));
             });
         } else {
-            require(['Controls/Controllers/Multiselect/Selection'], function (Selection) {
-                def.callback(new Selection({
+            require(['Controls/operations'], function (operations) {
+                def.callback(new operations.Selection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
                     items: options.items,

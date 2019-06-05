@@ -1,8 +1,8 @@
 define([
-   'Controls/Input/Date/LinkView',
+   'Controls/dateRange',
    'unit/Calendar/Utils'
 ], function(
-   LinkView,
+   dateRange,
    calendarTestUtils
 ) {
    'use strict';
@@ -12,10 +12,10 @@ define([
       endValue: new Date(2018, 1, 0)
    };
 
-   describe('Controls/Input/Date/LinkView', function() {
+   describe('Controls/dateRange:LinkView', function() {
       describe('Initialisation', function() {
          it('should create correct model', function() {
-            const component = calendarTestUtils.createComponent(LinkView, config);
+            const component = calendarTestUtils.createComponent(dateRange.LinkView, config);
 
             assert.strictEqual(component._caption, "Январь'18");
             assert.equal(component._rangeModel.startValue, config.startValue);
@@ -45,7 +45,7 @@ define([
                styleClass: null
             }].forEach(function(test, testNumber) {
                const component = calendarTestUtils.createComponent(
-                  LinkView, {});
+                  dateRange.LinkView, {});
                component._beforeUpdate({ viewMode: test.viewMode, styleMode: test.styleMode})
                assert.equal(component._styleClass, test.styleClass);
             })
@@ -56,7 +56,7 @@ define([
       describe('shiftBack', function() {
          it('should update model', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(LinkView, config),
+               component = calendarTestUtils.createComponent(dateRange.LinkView, config),
                startValue = new Date(2017, 11, 1),
                endValue = new Date(2018, 0, 0);
 
@@ -77,7 +77,7 @@ define([
       describe('shiftForward', function() {
          it('should update model', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(LinkView, config),
+               component = calendarTestUtils.createComponent(dateRange.LinkView, config),
                startValue = new Date(2018, 1, 1),
                endValue = new Date(2018, 2, 0);
 
@@ -98,7 +98,7 @@ define([
       describe('_onClick', function() {
          it('should generate "linkClick" event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(LinkView, config);
+               component = calendarTestUtils.createComponent(dateRange.LinkView, config);
 
             sandbox.stub(component, '_notify');
             component._onClick();
@@ -110,7 +110,7 @@ define([
       describe('_clearDate', function() {
          it('should clear startValue and endValue', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(LinkView, config);
+               component = calendarTestUtils.createComponent(dateRange.LinkView, config);
 
             sandbox.stub(component, '_notify');
             component._clearDate();
