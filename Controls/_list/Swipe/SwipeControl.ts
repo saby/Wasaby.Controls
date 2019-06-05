@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
-import TouchContextField = require('Controls/Context/TouchContextField');
+import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
