@@ -3,7 +3,8 @@
    scrollbarVisible="{{false}}">
    <Controls._calendar.MonthList.List
       source="{{_viewSource}}"
-      sourceExt="{{_options.calendarSource}}"
+      sourceExt="{{_options.source}}"
+      viewMode="{{_options.viewMode}}"
       name="months"
       keyProperty="id"
       markerVisibility="hidden"
@@ -17,33 +18,17 @@
       <ws:itemTemplate>
          <ws:partial template="Controls/list:ItemTemplate"
                      itemData="{{itemTemplate.itemData}}"
-         >
+                     highlightOnHover="{{false}}">
             <ws:contentTemplate>
-               <!--<ws:for data="monthIndex, month in itemTemplate.itemData.item['months']">-->
-                  <!--<Controls.Date.Month-->
-
-                     <!--startValue="{{_options.startValue}}"-->
-                     <!--endValue="{{_options.endValue}}"-->
-
-                     <!--bind:selectionProcessing="_selectionProcessing"-->
-                     <!--bind:selectionBaseValue="_selectionBaseValue"-->
-                     <!--bind:selectionHoveredValue="_selectionHoveredValue"-->
-
-                     <!--on:startValueChanged="startValueChangedHandler()"-->
-                     <!--on:endValueChanged="endValueChangedHandler()"-->
-
-                     <!--className="controls-DateRangeBigChoose-DateRangePicker__item"-->
-                     <!--showWeekdays="{{false}}"-->
-                     <!--month="{{month}}"-->
-                  <!--/>-->
-               <!--</ws:for>-->
                <ws:partial
-                  template="{{_options.itemTemplate}}"
-                  item="{{itemTemplate.itemData.item}}"
+                  template="{{_itemTemplate}}"
+                  date="{{itemTemplate.itemData.item.date}}"
+                  extData="{{itemTemplate.itemData.item.extData}}"
+                  monthTemplate="{{_options.monthTemplate}}"
+                  dayTemplate="{{_options.dayTemplate}}"
                   _options="{{_options}}"
                   _getMonth="{{_getMonth}}"
-               >
-               </ws:partial>
+               />
             </ws:contentTemplate>
          </ws:partial>
       </ws:itemTemplate>
