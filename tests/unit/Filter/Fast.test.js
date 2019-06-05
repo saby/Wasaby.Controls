@@ -514,7 +514,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
-            let result = filterMod.Fast._private.getNewItems(fastData2, selectedItems);
+            let result = filterMod.Fast._private.getNewItems(fastData2._configs[0], selectedItems);
             assert.deepEqual(result[0], selectedItems.at(2));
          });
 
@@ -540,10 +540,13 @@ define(
                assert.equal(fastFilter._items.at(3).value, null);
                assert.equal(fastFilter._items.at(3).textValue, 'Не выбрано');
 
+               let isCallback = false;
                newConfigItems = Clone(configWithItems);
                newConfigItems.items[3].value = 'Великобритания';
+               newConfigItems.items[3].properties.dataLoadCallback = () => {isCallback = true};
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                  assert.isFalse(isCallback);
                   done();
                });
             });
