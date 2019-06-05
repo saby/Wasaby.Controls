@@ -7,7 +7,7 @@ var showSelector = function (self, popupOptions, multiSelect) {
         defaultPopupOptions = merge({
             opener: self,
             isCompoundTemplate: self._options.isCompoundTemplate
-        }, selectorTemplate.popupOptions || {});
+        }, selectorTemplate && selectorTemplate.popupOptions || {});
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
         defaultPopupOptions.templateOptions = merge({
