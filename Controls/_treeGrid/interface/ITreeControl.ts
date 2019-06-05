@@ -61,3 +61,35 @@
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Occurs after node collapse.
  */
+
+/**
+ * Reloads tree data
+ * @function Controls/_treeGrid/interface/ITreeControl#reload
+ * @remark
+ * 1. deepReload это перезагрузка с сохранением раскрытых узлов.
+ * 2. deepReload выполняется при вызове прикладниками метода reload(). При смене фильтра/навигации/source все раскрытые узлы будут закрыты.
+ * 3. В parentProperty уходит массив раскрытых узлов, и, если для них вернутся дочерние элементы, то тогда они после перезагрузки останутся раскрытыми.
+ * 4. постраничная навигация сейчас передается только для корня. Таким образом, для остальных узлов необходимо отдавать количество записей, соответствующее переданному в параметрах навигации
+ * @example
+ * Пример списочного метода БЛ
+ * <pre>
+ * def Test.MultiRoot(ДопПоля, Фильтр, Сортировка, Навигация):
+ *      rs = RecordSet(CurrentMethodResultFormat())
+ *      if Навигация.Type() == NavigationType.ntMULTI_ROOT:
+ *          nav_result = {}
+ *          for id, nav in Навигация.Roots().items():
+ *              # Запрашиваем данные по одному разделу.
+ *              Фильтр.Раздел = id
+ *              tmp_rs = Test.MultiRoot(ДопПоля, Фильтр, Сортировка, nav)
+ *              # Склеиваем результаты.
+ *              for rec in tmp_rs:
+ *                  rs.AddRow(rec)
+ *              # Формируем общий результа навигации по всем разделам.
+ *              nav_result[ id ] = tmp_rs.nav_result
+ *          rs.nav_result = NavigationResult(nav_result)
+ *      else:
+ *          # Тут обработка обычной навигации, например, вызов декларативного списка.
+ *          rs = Test.DeclList(ДопПоля, Фильтр, Сортировка, Навигация)
+ *      return rs
+ *</pre>
+ */
