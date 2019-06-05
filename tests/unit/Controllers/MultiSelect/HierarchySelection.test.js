@@ -513,19 +513,56 @@ define([
       });
 
       describe('toggleAll', function() {
+         function getListModel(rootId) {
+            return {
+               getRoot: function() {
+                  return {
+                     getContents: function() {
+                        return rootId || null;
+                     }
+                  }
+               }
+            }
+         }
+
          it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = {
-               selectedKeys: [1, 2, 4, 5, 6, 7, 8],
+               selectedKeys: [1, 2, 4, 5, 6, 7],
                excludedKeys: [],
                items: allData,
-               keyProperty: 'id'
+               keyProperty: 'id',
+               listModel: getListModel()
             };
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.toggleAll();
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([1, 2, 4, 5, 6, 7, 8], selection.excluded);
+            assert.deepEqual([1, 6, 7], selection.excluded);
+         });
+
+         it('toggleAll with root', function() {
+            cfg = {
+               selectedKeys: [1, 4, 6],
+               excludedKeys: [2, 5],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(2)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
+            assert.deepEqual([1, 6], selection.selected);
+            assert.deepEqual([5, 4], selection.excluded);
+
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // Вернулись к начальному
+            assert.deepEqual([1, 6, 4], selection.selected);
+            assert.deepEqual([5, 2], selection.excluded);
          });
       });
 
