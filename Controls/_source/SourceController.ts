@@ -1,29 +1,29 @@
+import cExtend = require('Core/core-simpleExtend');
 import cInstance = require('Core/core-instance');
-import {IoC} from 'Env/Env';
+import Env = require('Env/Env');
 import Page from 'Controls/_source/QueryParamsController/Page';
 import Position from 'Controls/_source/QueryParamsController/Position';
-import {Query} from 'Types/source';
+import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import {ICrud, IQueryMeta} from 'Types/source';
-import {Direction, default as IAdditionalQueryParams} from './QueryParamsController/interface/IAdditionalQueryParams';
-
-export interface ISourceControllerOptions {
-   source?: ICrud;
-   navigation?: {
-      source: string,
-      souceConfig: unknown
-   };
-}
-
-// TODO https://online.sbis.ru/opendoc.html?guid=84d4ca7f-dfe9-4948-9979-d951ed316cf2
-type Filter = unknown;
-type Sorting = unknown;
 
 var _private = {
+   prepareSource: function(sourceOpt) {
+      if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
+         Env.IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
+      }
+      return sourceOpt;
+   },
 
-
-
+   getQueryInstance: function(filter, sorting, offset, limit, meta) {
+      var query = new sourceLib.Query();
+      query.where(filter)
+         .offset(offset)
+         .limit(limit)
+         .orderBy(sorting)
+         .meta(meta);
+      return query;
+   },
 
    callQuery: function(dataSource, keyProperty, filter, sorting, offset, limit, meta) {
       var queryDef, queryIns;
@@ -66,11 +66,14 @@ var _private = {
          case 'page':
             cntCtr = Page;
             break;
+         case 'offset':
+            cntCtr = Offset;
+            break;
          case 'position':
             cntCtr = Position;
             break;
          default:
-            IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+            Env.IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
       }
       if (cntCtr) {
          cntInstance = new cntCtr(cfg);
@@ -105,68 +108,22 @@ var _private = {
       return resultParams;
    }
 };
-class SourceController {
-   protected  source: ICrud = null;
-   protected  queryParamsController: Position | Page = null;
-   protected _loader = null;
-   protected _options: ISourceControllerOptions;
-   protected _source: ICrud;
-
-   constructor(cfg: ISourceControllerOptions) {
+var SourceController = cExtend.extend({
+   _source: null,
+   _queryParamsController: null,
+   _loader: null,
+   constructor: function(cfg) {
       this._options = cfg;
-      this._source = this._prepareSource(this._options.source);
+      SourceController.superclass.constructor.apply(this, arguments);
+      this._source = _private.prepareSource(this._options.source);
 
       if (this._options.navigation && this._options.navigation.source) {
-         this._queryParamsController = this._createQueryParamsController(
-            this._options.navigation.source, this._options.navigation.sourceConfig
-         );
+         this._queryParamsController = _private.createQueryParamsController(this._options.navigation.source, this._options.navigation.sourceConfig);
       }
-   }
+   },
 
-   private _createQueryParamsController(type: string, cfg): Page | Position {
-      var cntCtr, cntInstance;
-
-      switch (type) {
-         case 'page':
-            cntCtr = Page;
-            break;
-         case 'position':
-            cntCtr = Position;
-            break;
-         default:
-            IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
-      }
-      if (cntCtr) {
-         cntInstance = new cntCtr(cfg);
-      }
-      return cntInstance;
-   }
-
-   private _prepareSource(sourceOpt: ICrud): ICrud {
-      if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
-         IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
-      }
-      return sourceOpt;
-   }
-
-   private _getQueryInstance(filter: Filter,
-                             sorting: Sorting,
-                             offset: number | string,
-                             limit: number,
-                             meta: IQueryMeta): Query {
-      const query = new Query();
-      query.where(filter)
-         .offset(offset)
-         .limit(limit)
-         .orderBy(sorting)
-         .meta(meta);
-      return query;
-   }
-
-   load(filter: Filter, sorting?: Sorting, direction?: Direction): cDeferred {
-      let def: cDeferred;
-      let queryParams: IAdditionalQueryParams;
-      let self: SourceController;
+   load: function(filter, sorting?, direction?) {
+      var def, queryParams, self, navFilter;
 
       queryParams = {
          filter: filter || {},
@@ -269,7 +226,7 @@ class SourceController {
       this.cancelLoading();
       this._options = null;
    }
-};
+});
 
 //для тестов
 SourceController._private = _private;
