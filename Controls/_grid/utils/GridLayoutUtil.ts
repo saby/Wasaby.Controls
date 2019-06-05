@@ -16,7 +16,7 @@ function isFullGridSupport(): boolean {
 }
 
 function isPartialGridSupport(): boolean {
-    return detection.isModernIE || detection.isMacOSDesktop;
+    return detection.isNotFullGridSupport;
 }
 
 function isNoGridSupport(): boolean {
