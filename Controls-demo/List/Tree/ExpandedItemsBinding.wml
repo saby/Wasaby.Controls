@@ -28,7 +28,7 @@
                        attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                        parentProperty="Раздел"
                        nodeProperty="Раздел@"
-                       expandedItems = "{{[2246]}}"
+                       expandedItems = "{{_expandedItems}}"
                        columns="{{gridColumns}}"
                        multiSelectVisibility="visible">
                </Controls.treeGrid:View>
@@ -47,7 +47,7 @@
                        attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                        parentProperty="Раздел"
                        nodeProperty="Раздел@"
-                       bind:expandedItems = "_myExpandedItems"
+                       bind:expandedItems = "_expandedItemsForBind"
                        columns="{{gridColumns}}"
                        multiSelectVisibility="visible">
                </Controls.treeGrid:View>

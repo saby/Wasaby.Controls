@@ -271,7 +271,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
-    _receivedExpandedItems: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -280,7 +279,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
         if (cfg.expandedItems && cfg.expandedItems.length > 0) {
             this._deepReload = true;
-            this._receivedExpandedItems = cfg.expandedItems;
         }
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
@@ -289,9 +287,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _afterMount: function() {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        if (this._receivedExpandedItems) {
-            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
-        }
         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
         this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
     },
@@ -309,12 +304,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = true;
         }
 
-        if (typeof newOptions.expandedItems !== 'undefined' && this._receivedExpandedItems !== newOptions.expandedItems) {
-            this._receivedExpandedItems = newOptions.expandedItems;
-            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        }
-        if (this._receivedExpandedItems) {
-            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
+        if (newOptions.expandedItems) {
+            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
@@ -357,6 +348,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpandedItemsChanged(e, expandedItems){
         this._notify('expandedItemsChanged', [expandedItems]);
+        this._forceUpdate();
     },
     reload: function() {
         var self = this;
