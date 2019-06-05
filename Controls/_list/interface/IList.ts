@@ -76,6 +76,44 @@
  * @name Controls/_list/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
+ * You must set the sortingProperty property in the header of the column:
+ * <pre>
+ * _header = [
+ *      {
+ *          title: ''
+ *      },
+ *      {
+ *          title: 'Цена',
+ *          sortingProperty: 'price'
+ *      },
+ *      {
+ *          title: 'Остаток',
+ *          sortingProperty: 'balance'
+ *      }
+ * ];
+ * _columns = [
+ *      {
+ *          displayProperty: 'name'
+ *      },
+ *      {
+ *          displayProperty: 'price'
+ *      },
+ *      {
+ *          displayProperty: 'balance'
+ *      }
+ * ];
+ * </pre>
+ * And bind the sorting option or subscribe on sortingChanged event and change sorting manually.
+ * <pre>
+ *  <Controls.grid:View
+ *      displayProperty="title"
+ *      header="{{_header}}"
+ *      columns="{{_columns}}"
+ *      bind:sorting="_sorting">
+ *  </Controls.grid:View>
+ * </pre>
+ *
+ * Configuration of sorting array:
  * <pre>
  * [
  *    { price: 'desc' },
