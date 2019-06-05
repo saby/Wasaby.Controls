@@ -8,7 +8,7 @@
 interface IHierarchySearch {
     readonly _options: {
         /**
-         * @name Controls/interface/ISearch#searchMode
+         * @name Controls/interface/ISearch#startingWith
          * @cfg {String} Режим поиска в иерархическом списке.
          * @variant root Поиск происходит в корне
          * @variant current Поиск происходит в текущем резделе
@@ -30,7 +30,7 @@ interface IHierarchySearch {
          *
          * WML:
          * <pre>
-         *    <Layout.Browser parentProperty='Раздел' searchMode='root' searchParam='city' source='_source'>
+         *    <Layout.Browser parentProperty='Раздел' startingWith='root' searchParam='city' source='_source'>
          *        <ws:search>
          *            <Controls.search:Input/>
          *        </ws:search>
@@ -42,7 +42,7 @@ interface IHierarchySearch {
          *    </Layout.Browser>
          * </pre>
          */
-        searchMode: string;
+        startingWith: string;
     };
 }
 
