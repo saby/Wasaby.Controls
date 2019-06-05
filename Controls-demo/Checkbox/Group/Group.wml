@@ -1,0 +1,27 @@
+<div class="ControlsDemo-CheckboxGroup">
+   <div class="ControlsDemo-CheckboxGroup__block">
+      <div class="ControlsDemo-CheckboxGroup__block_caption">Уведомлять о следующих событиях</div>
+      <Controls.toggle:CheckboxGroup source="{{_sourceVertical}}"
+                                     direction="vertical"
+                                     bind:selectedKeys="_selectedKeysVertical"
+                                     keyProperty="{{_keyProperty}}"/>
+   </div>
+   <div class="ControlsDemo-CheckboxGroup__block">
+      <div class="ControlsDemo-CheckboxGroup__block_caption">Получать уведомления о следующих событиях</div>
+      <Controls.toggle:CheckboxGroup source="{{_sourceHorizontal}}"
+                                     direction="horizontal"
+                                     bind:selectedKeys="_selectedKeysHorizontal"
+                                     keyProperty="{{_keyProperty}}"/>
+   </div>
+
+   <div class="ControlsDemo-CheckboxGroup__block">
+      <div class="ControlsDemo-CheckboxGroup__block_caption">Получать уведомления о следующих событиях</div>
+      <Controls.toggle:CheckboxGroup source="{{_sourceHierarchy}}"
+                                     direction="vertical"
+                                     bind:selectedKeys="_selectedKeysHierarchy"
+                                     keyProperty="{{_keyProperty}}"
+                                     nodeProperty="{{_nodeProperty}}"
+                                     parentProperty="{{_parentProperty}}"/>
+   </div>
+
+</div>
