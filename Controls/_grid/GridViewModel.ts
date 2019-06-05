@@ -924,6 +924,8 @@ var
             current.columnScroll = this._options.columnScroll;
 
             current.style = this._options.style;
+            current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+            
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {

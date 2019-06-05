@@ -9,6 +9,7 @@ import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import {isPartialGridSupport} from 'Controls/_grid/utils/GridLayoutUtil'
+import { CssClassList } from "../Utils/CssClassList";
 
 /**
  *
@@ -55,7 +56,17 @@ var _private = {
             return;
         }
         return self.getItemById(markedKey, self._options.keyProperty);
-    }
+    },
+    getMultiSelectClassList: function (current): string {
+        let
+            checkboxOnHover = current.multiSelectVisibility === 'onhover',
+            isSelected = current.multiSelectStatus !== undefined;
+        
+        return CssClassList.add('js-controls-ListView__checkbox')
+                           .add('js-controls-ListView__notEditable')
+                           .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
+                           .compile();
+    },
 };
 
 var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
@@ -135,6 +146,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
+        itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
+        itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
