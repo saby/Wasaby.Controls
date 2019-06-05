@@ -1,17 +1,16 @@
 import Deferred = require('Core/Deferred');
 import {Memory} from 'Types/source';
 import dateUtils = require('Controls/Utils/Date');
-import monthListUtils from './Utils';
 
 /**
  * Источник данных который возвращает данные для построения календарей в списочных контролах.
  * Каждый элемент это год содержащий массив месяцев.
  *
- * @class Controls/_calendar/MonthList/YearsSource
+ * @class Controls/_calendar/MonthList/CalendarSource
  * @extends Types/source:Base
  * @author Миронов А.Ю.
  */
-var YearsSource = Memory.extend({
+var CalendarSource = Memory.extend({
     _moduleName: 'Controls._calendar.MonthList.CalendarSource',
     $protected: {
         _dataSetItemsProperty: 'items',
@@ -40,8 +39,6 @@ var YearsSource = Memory.extend({
 
             if (dateUtils.isValidDate(year)) {
                 year = year.getFullYear();
-            } else if (typeof year === 'string') {
-                year = monthListUtils.idToDate(year).getFullYear();
             } else if (!year) {
                 year = 1900;
             }
@@ -56,12 +53,19 @@ var YearsSource = Memory.extend({
 
             for (var i = 0; i < limit; i++) {
                 months = [];
+
+                // weeksArray = [];
                 for (var j = 0; j < 12; j++) {
                     months.push(new Date(year + i, j, 1));
+
+                    // weeksArray.push(CalendarUtils.getWeeksArray(new Date(year + i, j, 1)));
                 }
                 items.push({
-                    id: monthListUtils.dateToId(new Date(year + i, 0)),
-                    date: new Date(year + i, 0)
+                    id: year + i,
+                    year: new Date(year + i, 0),
+                    months: months
+
+                    // weeksArray: weeksArray,
                 });
             }
 
@@ -87,4 +91,4 @@ var YearsSource = Memory.extend({
     }
 });
 
-export default YearsSource;
+export default CalendarSource;
