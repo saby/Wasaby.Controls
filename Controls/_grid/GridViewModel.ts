@@ -695,7 +695,9 @@ var
 
             cellContentClasses += ' controls-Grid__cell_header-content';
             height = endRow ? `max-height:${(endRow - startRow) * this._headerCellMinHeight}px;` : `max-height:${this._headerCellMinHeight}px;`;
-
+            if (this._headerRows.length > 1) {
+                cellContentClasses += ' controls-Grid__header-cell_align_items_center';
+            }
             if (cell.startRow) {
                 if (this.isNoGridSupport()) {
 
@@ -1176,6 +1178,7 @@ var
                 }
                 return currentColumn;
             };
+
             return current;
         },
 

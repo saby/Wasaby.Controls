@@ -99,6 +99,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
            endColumn:     2,
            startRow:      1,
            endRow:        3,
+
         },
         {
            title: 'Цена',
@@ -163,6 +164,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
               endColumn:     2,
               startRow:      1,
               endRow:        4,
+              align: 'center'
           },
           {
               title: 'Общие',
@@ -170,6 +172,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
               endColumn:     7,
               startRow:      1,
               endRow:        2,
+              align: 'center'
           },
           {
               title: 'Цена',
@@ -210,6 +213,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
               endColumn:     5,
               startRow:      2,
               endRow:        3,
+              align: 'center'
           },
           {
               title: 'Склад',
@@ -217,6 +221,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
               endColumn:     7,
               startRow:      2,
               endRow:        3,
+              align: 'center',
           },
           {
               title: 'Сумма остатка',
