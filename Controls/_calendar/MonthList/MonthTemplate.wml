@@ -1,9 +1,0 @@
-<div class="controls-MonthList__month">
-   <Controls.Date.MonthView
-      showWeekdays="{{false}}"
-      showCaption="{{true}}"
-      month="{{date}}"
-      daysData="{{extData}}"
-      dayTemplate="{{dayTemplate}}"
-   />
-</div>
