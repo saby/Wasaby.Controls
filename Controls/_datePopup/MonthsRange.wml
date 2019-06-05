@@ -4,7 +4,7 @@
    on:itemClick="_onItemClick()"
    on:scroll="_onScroll()"
 >
-   <ws:yearTemplate>
+   <ws:itemTemplate>
       <Controls._datePopup.MonthsRangeItem
          monthClickable="_options.monthClickable"
          quantum="{{_options.quantum}}"
@@ -29,5 +29,5 @@
          on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
          on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
       />
-   </ws:yearTemplate>
+   </ws:itemTemplate>
 </Controls.calendar:MonthList>
