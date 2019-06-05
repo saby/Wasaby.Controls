@@ -17,7 +17,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/DateTime', function() {
+   describe('Controls/_input/DateTime', function() {
       describe('Initialisation', function() {
          it('should create correct model', function() {
             const component = calendarTestUtils.createComponent(input.DateBase, options);
@@ -117,23 +117,6 @@ define([
             const model = component._model;
             const converter = new input.StringValueConverter();
             assert.deepEqual(model.value, converter.getCurrentDate(model._lastValue, model._mask));
-            sandbox.restore();
-         });
-
-         it('should generate "inputCompleted" event after  insert key pressed and focus out.', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(input.DateBase, options),
-               event = {
-                  nativeEvent: {
-                     keyCode: constants.key.insert
-                  },
-                  stopImmediatePropagation: sinon.fake()
-               };
-            sandbox.stub(component, '_notify');
-            component._onKeyDown(event);
-            sinon.assert.neverCalledWith(component._notify, 'inputCompleted');
-            component._onDeactivated();
-            sinon.assert.calledWith(component._notify, 'inputCompleted');
             sandbox.restore();
          });
 

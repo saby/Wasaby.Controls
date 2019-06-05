@@ -1,5 +1,5 @@
 define([
-   'Controls/List/EditInPlace',
+   'Controls/_list/EditInPlace',
    'Types/collection',
    'Types/entity',
    'Core/Deferred',

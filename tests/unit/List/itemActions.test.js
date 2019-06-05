@@ -7,7 +7,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Types/display',
-   'Controls/List/ItemActions/Utils/Actions',
+   'Controls/_list/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
 ], function(lists, source, entity, collection, display, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
@@ -335,7 +335,6 @@ define([
          const notifyStub = sandbox.stub(instance, '_notify');
 
          instance._onItemActionsClick(fakeEvent, action, fakeItemData);
-         assert.isTrue(notifyStub.withArgs('itemActionsClick', [action, fakeItemData.item, fakeHTMLElement, fakeEvent]).calledOnce);
          assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
          assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
          assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
@@ -495,7 +494,6 @@ define([
          };
 
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, fakeListModel, false);
-         assert.isTrue(instance._notify.withArgs('itemActionsClick', [action, itemData.item, fakeHTMLElement, fakeEvent]).calledOnce);
          assert.isTrue(instance._notify.withArgs('actionClick', [action, itemData.item, fakeHTMLElement]).calledOnce);
          assert.isTrue(fakeEvent.stopPropagation.calledOnce);
       });

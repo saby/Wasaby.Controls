@@ -21,8 +21,11 @@
     margin-right: 0;
   }
 }
-.controls-Toolbar_item:before {
+.controls-Toolbar_item:before, .controls-Toolbar_item_readOnly:before {
   content: "\200b";
+}
+.controls-Toolbar_item_readOnly {
+  cursor: auto;
 }
 .controls-Toolbar_content {
   width: 100%;
@@ -40,6 +43,10 @@
   white-space: nowrap;
   color: @color_Toolbar-text;
 }
+.controls-Toolbar__item_title_readOnly_theme-@{themeName} {
+  white-space: nowrap;
+  color: @color_Toolbar-text_readOnly;
+}
 .controls-Toolbar__item_title_theme-@{themeName}:active {
   color: @color_Toolbar-text_active;
 }
@@ -50,9 +57,12 @@
 .controls-Toolbar__item_icon_secondary_theme-@{themeName} {
   color: @color_secondary;
 }
+.controls-Toolbar__item_icon_readOnly_theme-@{themeName} {
+  color: @color_Toolbar-icon_readOnly;
+}
 //TODO выпилить старые вариант iconStyle когда пмо и ддл поддержат новые iconStyle'ы
 .controls-Toolbar__item_icon_hover_theme-@{themeName}, .controls-Toolbar__item_icon_primary_theme-@{themeName} {
-  color: @color_primaryV;
+  color: @color_primary;
 }
 .controls-Toolbar__item_icon_error_theme-@{themeName}, .controls-Toolbar__item_icon_danger_theme-@{themeName} {
   color: @color_danger;

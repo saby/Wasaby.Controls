@@ -7,7 +7,5 @@
  * @author Колесов В.А.
  */
 
-import 'css!theme?Controls/_slider/slider';
-
 export {default as Base} from './_slider/Base';
 export {default as Range} from './_slider/Range';

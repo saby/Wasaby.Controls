@@ -50,7 +50,7 @@ var HistoryMenu = Menu.extend({
             self._children.notificationOpener.open({
                template: 'Controls/popupTemplate:NotificationSimple',
                templateOptions: {
-                  style: 'error',
+                  style: 'danger',
                   text: 'Невозможно закрепить более 10 пунктов',
                   icon: 'Alert'
                }

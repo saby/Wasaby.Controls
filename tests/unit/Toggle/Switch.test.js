@@ -1,7 +1,7 @@
 define(['Controls/toggle'], function (toggle) {
    'use strict';
    var SW, changeValue;
-   describe('Controls.Toggle.Switch', function () {
+   describe('Controls/_toggle/Switch', function () {
       beforeEach(function(){
          SW = new toggle.Switch({
             captions: ['capt1']

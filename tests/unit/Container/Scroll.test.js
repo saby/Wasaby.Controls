@@ -48,6 +48,51 @@ define(
             }
          });
 
+         describe('_resizeHandler. Paging buttons.', function() {
+            it('Content at the top', function() {
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 0,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._resizeHandler();
+               assert.deepEqual(scroll._pagingState, {
+                  stateUp: 'disabled',
+                  stateDown: 'normal'
+               });
+            });
+            it('Content at the middle', function() {
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 50,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._resizeHandler();
+               assert.deepEqual(scroll._pagingState, {
+                  stateUp: 'normal',
+                  stateDown: 'normal'
+               });
+            });
+            it('Content at the bottom', function() {
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 100,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._resizeHandler();
+               assert.deepEqual(scroll._pagingState, {
+                  stateUp: 'normal',
+                  stateDown: 'disabled'
+               });
+            });
+         });
+
          describe('_scrollbarTaken', function() {
             it('Should generate scrollbarTaken event if scrollbar displayed', function() {
                const sandbox = sinon.sandbox.create();

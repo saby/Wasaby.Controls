@@ -143,7 +143,10 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel'));
+            assert.isTrue(
+               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
+               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
+            );
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -1420,6 +1423,11 @@ define([
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._context = {
+            isTouch: {
+               isTouch: false
+            }
+         };
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._itemMouseEnter({});
@@ -1427,6 +1435,9 @@ define([
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
+         lnBaseControl._context.isTouch.isTouch = true;
+         lnBaseControl._itemMouseEnter({});
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
@@ -3054,7 +3065,7 @@ define([
          lists.BaseControl._private.updateVirtualWindow(instance, 'up');
 
          assert.isTrue(instance._checkShouldLoadToDirection);
-         instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isFalse(instance._checkShouldLoadToDirection);
       });
 
@@ -3111,6 +3122,24 @@ define([
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('calculation paging state', function(){
+         var pageSize = 5,
+            hasMore = 10,
+            self = {
+               _currentPage: 1,
+               _knownPagesCount: 1
+            };
+         var newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
+         assert.equal(newKnownPagesCount, 2);
+         hasMore = true;
+         self = {
+            _currentPage: 2,
+            _knownPagesCount: 2
+         };
+         newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
+         assert.equal(newKnownPagesCount, 3);
       });
 
       it('_afterUpdate while loading do not update loadingState', async function() {

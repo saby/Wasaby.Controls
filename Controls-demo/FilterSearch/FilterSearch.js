@@ -8,7 +8,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/FilterSearch/FilterSearch',
-   'Controls/Container/List',
+   'Controls/deprecatedList',
    'Controls/search',
    'Controls/filter'
 ], function(Control, template, sourceLib, memorySourceData, memorySourceFilter) {

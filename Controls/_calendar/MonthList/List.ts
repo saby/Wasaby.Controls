@@ -1,5 +1,5 @@
 import {View as List} from 'Controls/list';
-import viewTemplate from 'Controls/_calendar/MonthList/ListControl';
+import ListControl from 'Controls/_calendar/MonthList/ListControl';
 
 /**
  * Plain list with custom item template. Can load data from data source.
@@ -10,8 +10,8 @@ import viewTemplate from 'Controls/_calendar/MonthList/ListControl';
  * @author Миронов А.Ю.
  */
 
-var ModuleControl = List.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{
-    _viewTemplate: viewTemplate
+const ModuleControl = List.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{
+    _viewTemplate: ListControl
 });
 
 export default ModuleControl;

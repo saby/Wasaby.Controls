@@ -11,12 +11,9 @@
        template="{{content}}"/>
 </ws:template>
 <ws:template name="itemContentTpl">
-    <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
-        <ws:partial template="{{multiSelectTpl}}"
-                    attr:class="controls-ListView__checkbox js-controls-ListView__notEditable
-                                {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined) ? 'controls-ListView__checkbox-onhover'}}">
-            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
-                                key="{{itemData.key}}"/>
+    <ws:if data="{{itemData.hasMultiSelect}}">
+        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox">
+            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
         </ws:partial>
     </ws:if>
 

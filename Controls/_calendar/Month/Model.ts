@@ -1,4 +1,4 @@
-import MonthViewModel = require('Controls/Date/MonthView/MonthViewModel');
+import MonthViewModel from './../MonthView/MonthViewModel';
 import DateUtil = require('Controls/Utils/Date');
 
 /**

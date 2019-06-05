@@ -24,11 +24,6 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/_list/interface/IList#dataLoadCallback
-    * @cfg {Function} Callback function that will be called when list data loaded by source
-    */
-
-   /**
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @remark
@@ -132,6 +127,13 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
+    * @event Controls/interface/ISelectedCollection#selectorCallback Occurs when selected items with selector.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {RecordSet} currentItems Current list of items in Lookup.
+    * @param {RecordSet} newItems List of items selected from selector.
+    */
+
+   /**
     * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} config Config on which popup will be built.
@@ -167,7 +169,7 @@ define('Controls/interface/ISelectedCollection', [
    /**
     * @event Controls/interface/ISelectedCollection#showSelector Occurs before opening the selector through the interface.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Object} templateOptions Template parameters by which the selector will be built.
+    * @param {PopupOptions[]} popupOptions Stack popup options.
     * @example
     * The following example creates Controls/lookup:Input and shows how to handle the event.
     * WML:
@@ -196,5 +198,19 @@ define('Controls/interface/ISelectedCollection', [
     *       return false;
     *    }
     * </pre>
+    */
+
+   /**
+    * @typedef {Object} PopupOptions
+    * @description Stack popup options.
+    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+    * @property {Boolean} modal Determines whether the window is modal.
+    * @property {String} className Class names of popup.
+    * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+    * @property {function|String} template Template inside popup.
+    * @property {function|String} templateOptions Template options inside popup.
+    * @property {Number} minWidth The minimum width of popup.
+    * @property {Number} maxWidth The maximum width of popup.
+    * @property {Number} width Width of popup.
     */
 });

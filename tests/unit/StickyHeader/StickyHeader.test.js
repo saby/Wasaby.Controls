@@ -1,5 +1,5 @@
 define([
-   'Controls/StickyHeader/_StickyHeader',
+   'Controls/_scroll/StickyHeader/_StickyHeader',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
@@ -24,7 +24,7 @@ define([
       options = {
       };
 
-   describe('Controls.StickyHeader._StickyHeader', function() {
+   describe('Controls/_scroll/StickyHeader/_StickyHeader', function() {
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(StickyHeader, options);

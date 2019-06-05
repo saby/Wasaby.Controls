@@ -38,17 +38,17 @@ import 'css!theme?Controls/popupTemplate';
 
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style error, используйте danger');
+               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style error, используйте danger');
             }
             if (options.style === 'done') {
-               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
+               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style done, используйте success');
             }
             this._style = _private.prepareDisplayStyle(options.style);
             if (options.iconClose) {
-               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
+               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
             }
             if (options.contentTemplate) {
-               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
             }
          },
          _beforeUpdate: function(options) {

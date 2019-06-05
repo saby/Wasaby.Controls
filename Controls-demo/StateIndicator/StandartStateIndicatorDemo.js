@@ -69,8 +69,9 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
          },
          _mouseEnterHandler: function(e, _item){
             var config = {
-         	     target: _item,
-               position: 'tl',
+         	   target: _item,
+               targetSide: 'top',
+               alignment: 'start',
                showDelay: 1000,
                template: popupTemplate,
                templateOptions: {data: this._datas[_item.parentElement.parentElement.getAttribute("index")]}

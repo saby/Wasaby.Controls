@@ -1,6 +1,6 @@
-define(['Controls/Filter/Button/Panel/Lookup'
+define(['Controls/_filterPopup/Panel/Lookup'
 ], function(PanelLookup) {
-   describe('Controls/Filter/Button/Panel/Lookup', function() {
+   describe('Controls/_filterPopup/Panel/Lookup', function() {
       it('_afterUpdate', function() {
          var
             isActivate = false,

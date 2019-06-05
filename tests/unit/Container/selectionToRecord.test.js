@@ -1,9 +1,9 @@
 define(
    [
-      'Controls/Container/MultiSelector/selectionToRecord',
+      'Controls/operations',
       'Types/source'
    ],
-   function(selectionToRecord, sourceLib) {
+   function(operations, sourceLib) {
       'use strict';
 
       describe('Controls.Container.MultiSelector.selectionToRecord', function() {
@@ -20,7 +20,7 @@ define(
             };
             selectionType = 'leaf';
 
-            selectionRec = selectionToRecord(selection, source.getAdapter(), selectionType);
+            selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType);
             assert.deepEqual(selectionRec.get('excluded'), ['1', '2']);
             assert.deepEqual(selectionRec.get('marked'), ['1', '2']);
             assert.equal(selectionRec.get('type'), 'leaf');
@@ -32,13 +32,13 @@ define(
             };
             selectionType = 'node';
 
-            selectionRec = selectionToRecord(selection, source.getAdapter(), selectionType);
+            selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType);
             assert.deepEqual(selectionRec.get('excluded'), ['2']);
             assert.deepEqual(selectionRec.get('marked'), ['2']);
             assert.equal(selectionRec.get('type'), 'node');
 
             selectionType = undefined;
-            selectionRec = selectionToRecord(selection, source.getAdapter(), selectionType);
+            selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType);
             assert.equal(selectionRec.get('type'), 'all');
          });
 

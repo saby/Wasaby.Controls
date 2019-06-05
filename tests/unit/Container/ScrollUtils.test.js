@@ -1,8 +1,8 @@
 define(
    [
       'Env/Env',
-      'Controls/Container/Scroll/ScrollWidthUtil',
-      'Controls/Container/Scroll/ScrollHeightFixUtil'
+      'Controls/_scroll/Scroll/ScrollWidthUtil',
+      'Controls/_scroll/Scroll/ScrollHeightFixUtil'
    ],
    function(Env, ScrollWidthUtil, ScrollHeightFixUtil) {
 

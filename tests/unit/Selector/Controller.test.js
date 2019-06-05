@@ -16,7 +16,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       return items;
    };
 
-   describe('Controls.Selector.Controller', function() {
+   describe('Controls/_lookupPopup/Controller', function() {
 
       it('prepareItems', function() {
          var itemList = new collection.List({items: [1, 2]});

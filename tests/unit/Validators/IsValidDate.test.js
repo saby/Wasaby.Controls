@@ -1,5 +1,5 @@
 define([
-   'Controls/Validate/Validators/IsValidDate'
+   'Controls/_validate/Validators/IsValidDate'
 ], function (
    isValidDate
 ) {

@@ -106,7 +106,7 @@
    <h2>MenuButton</h2>
    <div test_name="capture_menu">
       <div style="padding: 5px;">Меню с дополнительными данными
-         <Controls.Button.MenuButton
+         <Controls.dropdown:Button
             name="myMenuButton11"
             attr:test_name="dop_menu"
             keyProperty="id"
@@ -117,10 +117,10 @@
             icon="icon-medium icon-Author"
             menuStyle="cross"
             source="{{_getAdditionalData()}}">
-         </Controls.Button.MenuButton>
+         </Controls.dropdown:Button>
       </div>
 	   <div style="padding: 5px;">
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 on:onMenuItemActivate="_clickItemsChangedHandler()"
 			 attr:test_name="plain_menu"
 			 name="myMenuButton1"
@@ -134,7 +134,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton12"
 			 attr:test_name="custom_menu"
 			 keyProperty="id"
@@ -148,7 +148,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton2"
 			 attr:test_name="link_menu"
 			 keyProperty="id"
@@ -161,7 +161,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton3"
 			 attr:test_name="link_small_menu"
 			 keyProperty="id"
@@ -174,7 +174,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">Кнопка-иконка small
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton4"
 			 attr:test_name="icon_small_menu"
 			 keyProperty="id"
@@ -186,7 +186,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">Кнопка-иконка medium
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton5"
 			 attr:test_name="icon_medium_menu"
 			 keyProperty="id"
@@ -198,7 +198,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton6"
 			 keyProperty="id"
 			 style="buttonDefault"
@@ -211,7 +211,7 @@
 		  />
 	   </div>
 	   <div style="padding: 5px;">Дублирование малой иконки
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton8"
 			 attr:test_name="mirror_small_menu"
 			 keyProperty="id"
@@ -221,10 +221,10 @@
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
 			 <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
-		  </Controls.Button.MenuButton>
+		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">Дублирование большой иконки
-		  <Controls.Button.MenuButton
+		  <Controls.dropdown:Button
 			 name="myMenuButton9"
 			 attr:test_name="dupl_big_icon_menu"
 			 keyProperty="id"
@@ -234,11 +234,11 @@
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
 			 <ws:headConfig menuStyle="duplicateHead" />
-		  </Controls.Button.MenuButton>
+		  </Controls.dropdown:Button>
 	   </div>
   </div>
    <div style="padding: 5px;"> Группировка в меню
-      <Controls.Button.MenuButton
+      <Controls.dropdown:Button
               name="myMenuButton11"
               attr:test_name="cross_menu"
               keyProperty="id"
@@ -246,6 +246,6 @@
               icon="icon-medium icon-Author"
               source="{{_getDefaultMemory()}}"
               itemsGroup="{{_itemsGroup}}">
-      </Controls.Button.MenuButton>
+      </Controls.dropdown:Button>
    </div>
 </div>

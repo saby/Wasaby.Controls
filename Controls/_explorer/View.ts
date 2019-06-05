@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
-import 'css!theme?Controls/_explorer/View/View';
+import 'css!theme?Controls/explorer';
 import 'Types/entity';
 import 'Controls/breadcrumbs';
 
@@ -129,7 +129,7 @@ import 'Controls/breadcrumbs';
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
@@ -140,13 +140,26 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
-    * @mixes Controls/_list/interface/IExplorer
-    * @mixes Controls/_list/interface/IDraggable
+    * @mixes Controls/_explorer/interface/IExplorer
+    * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @control
     * @public
     * @category List
     * @author Авраменко А.С.
+    */
+
+   /**
+    * @name Controls/_exploer/View#displayProperty
+    * @cfg {string} sets the property to be displayed in search results
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
     */
 
    var Explorer = Control.extend({

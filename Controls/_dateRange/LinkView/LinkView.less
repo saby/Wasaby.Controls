@@ -1,0 +1,88 @@
+.controls-DateLinkView {
+   display: inline-block;
+   .user-select();
+   white-space: nowrap;
+}
+
+.controls-DateLinkView-wrapper {
+   width: 100%;
+   display: inline-flex;
+   align-items: baseline;
+   justify-content: center;
+}
+
+.controls-DateLinkView__prev:before {
+   content: "\e008 ";
+}
+.controls-DateLinkView__next:before {
+   content: "\e007";
+}
+
+.controls-DateLinkView__clear,
+.controls-DateLinkView__prev,
+.controls-DateLinkView__next {
+   display: inline-block;
+   font-size: @font-size_DateLinkView-prev-next-buttons;
+   font-weight: normal;
+   text-align: center;
+   width: @width_DateLinkView-prev-next-buttons;
+}
+
+.controls-DateLinkView__style-secondary {
+   color: @color_DateLinkView-secondaryStyle;
+   cursor: pointer;
+   &:hover {
+      color: @color_DateLinkView-secondaryStyle_hover;
+   }
+}
+
+.controls-DateLinkView__style-info {
+   color: @color_DateLinkView-infoStyle;
+   cursor: pointer;
+}
+
+.controls-DateLinkView__value-enabled {
+   &:hover {
+      text-decoration: underline;
+   }
+}
+
+.controls-DateLinkView__style-secondary_readOnly,
+.controls-DateLinkView__style-info_readOnly {
+   color: @color_DateLinkView_readOnly;
+}
+
+.controls-DateLinkView__value-wrapper {
+   display: inline-block;
+   flex-grow: 1;
+   text-align: center;
+}
+
+.controls-DateLinkView__value-wrapper-minWidth {
+   min-width: @min-width_DateLinkView-value;
+}
+.controls-DateLinkView__yearState {
+   .controls-DateLinkView__value-wrapper-withArrow {
+      min-width: @width_DateLinkView-year-state - @width_DateLinkView-prev-next-buttons*2;
+   }
+}
+
+.controls-DateLinkView__value {
+   font-size: @font-size_DateLinkView;
+   font-weight: @font-weight_DateLinkView-value;
+   padding-top: @padding_DateLinkView-value;
+}
+
+.controls-DateLinkView__clear {
+   color: @color_CloseButton-light-icon;
+   font-family: @font-family_icon_size-s;
+   cursor: pointer;
+}
+
+.controls-DateLinkView__clear:before {
+   content: "\ea27";
+}
+
+.controls-DateLinkView__clear:hover {
+   color: @color_CloseButton-light-icon_hover;
+}

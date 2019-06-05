@@ -9,11 +9,9 @@ import { ISwipeConfig } from './interface/ISwipeConfig';
 import {
    ISwipeContext,
    ISwipeControlOptions,
-   ISwipeEvent,
-   IDeprecatedOptions
+   ISwipeEvent
 } from './interface/ISwipeControl';
-import { PickOptionalProperties, Omit } from 'Controls/Utils/Types';
-import { IoC } from 'Env/Env';
+import { PickOptionalProperties} from 'Controls/Utils/Types';
 // @ts-ignore
 import { descriptor } from 'Types/entity';
 import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
@@ -31,8 +29,6 @@ export default class SwipeControl extends Control {
    private _measurer: IMeasurer;
    private _swipeConfig: ISwipeConfig;
    private _animationState: 'close' | 'open' = 'close';
-   private _actionAlignment: ISwipeControlOptions['actionAlignment'];
-   private _actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'];
 
    constructor(options: ISwipeControlOptions) {
       super();
@@ -119,7 +115,7 @@ export default class SwipeControl extends Control {
          this._swipeConfig = this._measurer.getSwipeConfig(
             itemData.itemActions.all,
             actionsHeight,
-            this._actionCaptionPosition
+            this._options.actionCaptionPosition
          );
          listModel.setItemActions(itemData.item, this._swipeConfig.itemActions);
       }
@@ -142,37 +138,15 @@ export default class SwipeControl extends Control {
       this.closeSwipe();
    }
 
-   private _checkDeprecated(oldOptions: IDeprecatedOptions, newOptions: IDeprecatedOptions): void {
-      const logger = IoC.resolve('ILogger');
-      if (oldOptions.swipeDirection !== newOptions.swipeDirection) {
-         logger.warn('Option "swipeDirection" is deprecated and will be removed in 19.400. Use option "actionAlignment".');
-         this._actionAlignment = newOptions.swipeDirection === 'row' ? 'horizontal' : 'vertical';
-      }
-      if (oldOptions.titlePosition !== newOptions.titlePosition) {
-         logger.warn('Option "titlePosition" is deprecated and will be removed in 19.400. Use option "actionCaptionPosition".');
-         this._actionCaptionPosition = newOptions.titlePosition;
-      }
-   }
-
    _beforeMount(newOptions: ISwipeControlOptions): void {
-      this._actionAlignment = newOptions.actionAlignment;
-      this._actionCaptionPosition = newOptions.actionCaptionPosition;
-      this._checkDeprecated({}, newOptions);
       this._updateModel(newOptions);
-      this._measurer = MEASURER_NAMES[this._actionAlignment];
+      this._measurer = MEASURER_NAMES[newOptions.actionAlignment];
    }
 
    _beforeUpdate(
       newOptions: ISwipeControlOptions,
       context: ISwipeContext
    ): void {
-      if (this._options.actionAlignment !== newOptions.actionAlignment) {
-         this._actionAlignment = newOptions.actionAlignment;
-      }
-      if (this._options.actionCaptionPosition !== newOptions.actionCaptionPosition) {
-         this._actionCaptionPosition = newOptions.actionCaptionPosition;
-      }
-      this._checkDeprecated(this._options, newOptions);
       if (
          this._swipeConfig &&
          context &&
@@ -194,8 +168,8 @@ export default class SwipeControl extends Control {
          this._updateModel(newOptions);
       }
 
-      if (this._options.actionAlignment !== newOptions.actionAlignment || this._options.swipeDirection !== newOptions.swipeDirection) {
-         this._measurer = MEASURER_NAMES[this._actionAlignment];
+      if (this._options.actionAlignment !== newOptions.actionAlignment) {
+         this._measurer = MEASURER_NAMES[newOptions.actionAlignment];
       }
    }
 
@@ -224,8 +198,6 @@ export default class SwipeControl extends Control {
           */
          itemActions: descriptor(Array),
          itemActionsPosition: descriptor(String).oneOf(['inside', 'outside']),
-         swipeDirection: descriptor(String).oneOf(['row', 'column']),
-         titlePosition: descriptor(String).oneOf(['right', 'bottom', 'none']),
          actionAlignment: descriptor(String).oneOf(['horizontal', 'vertical']),
          actionCaptionPosition: descriptor(String).oneOf(['right', 'bottom', 'none'])
       };
@@ -237,7 +209,7 @@ export default class SwipeControl extends Control {
       };
    }
 
-   static getDefaultOptions(): Omit<PickOptionalProperties<ISwipeControlOptions>, keyof IDeprecatedOptions> {
+   static getDefaultOptions(): PickOptionalProperties<ISwipeControlOptions> {
       return {
          itemActionsPosition: 'inside',
          actionAlignment: 'horizontal',

@@ -2,7 +2,7 @@
  * Created by dv.zuev on 17.01.2018.
  *
  * Вставляем в tmpl:
- * <Controls.Event.Listener event="scroll" callback="myScrollCallback()" />
+ * <Controls/event:Listener event="scroll" callback="myScrollCallback()" />
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_event/Listener');

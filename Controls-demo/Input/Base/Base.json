@@ -1,5 +1,5 @@
 {
-  "Controls/Input/Base": {
+  "Controls/input:Base": {
     "properties": {
       "ws-config": {
         "options": {

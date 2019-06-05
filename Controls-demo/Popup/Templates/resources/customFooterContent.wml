@@ -1,4 +1,4 @@
 <div attr:style="display: flex;align-items: center; justify-content: flex-end;">
-    <Controls._buttons.Button viewMode ='link'
+    <Controls.buttons:Button viewMode ='link'
                               icon="icon-EmptyMessage icon-medium" attr:style="margin-right: 18px"/>
 </div>

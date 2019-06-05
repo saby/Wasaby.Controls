@@ -1,13 +1,13 @@
 define([
-   'Controls/List/BaseControl/SelectionController',
+   'Controls/_list/BaseControl/SelectionController',
    'Types/collection',
    'Types/entity',
-   'Controls/Controllers/Multiselect/Selection'
+   'Controls/operations'
 ], function(
    SelectionController,
    collection,
    entity,
-   Selection
+   operations
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionController', function() {
@@ -85,7 +85,7 @@ define([
          };
          var inst = new SelectionController();
          await inst._beforeMount(flatListCfg);
-         assert.isTrue(inst._multiselection instanceof Selection);
+         assert.isTrue(inst._multiselection instanceof operations.Selection);
       });
 
       it('_afterMount', async function() {

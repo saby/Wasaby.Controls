@@ -7,7 +7,7 @@ define(
    ],
    function(toggle, entity, sourceLib, collection) {
       'use strict';
-      describe('Controls/Toggle/RadioGroup', function () {
+      describe('Controls/_toggle/RadioGroup', function () {
          it('change selected key', function() {
             var radio = new toggle.RadioGroup();
             var keyChanged = false;

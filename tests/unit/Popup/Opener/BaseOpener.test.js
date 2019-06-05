@@ -5,7 +5,7 @@ define(
    (popup) => {
       'use strict';
 
-      describe('Controls/Popup/Opener/BaseOpener', () => {
+      describe('Controls/_popup/Opener/BaseOpener', () => {
          it('clearPopupIds', () => {
             let clearPopupIds = popup.BaseOpener._private.clearPopupIds;
             let popupIds = [1, 2, 3];

@@ -5,7 +5,7 @@ define(
    ],
    (popup, SyntheticEvent) => {
       'use strict';
-      describe('Controls/Popup/Previewer', () => {
+      describe('Controls/_popup/Previewer', () => {
          it('previewerClickHandler', () => {
             let PWInstance = new popup.PreviewerTarget();
             var result;
@@ -28,9 +28,25 @@ define(
             assert.deepEqual(result, true);
             PWInstance.destroy();
          });
+         it('contentMouseenterHandler', () => {
+            let PWInstance = new popup.PreviewerTarget();
+            var cancel = false;
+            PWInstance._cancel = function(event, args) {
+               cancel = true;
+            };
+            var event = new SyntheticEvent(null, {});
+            PWInstance._options.trigger = 'hover';
+            PWInstance._isOpened = false;
+            PWInstance._contentMouseenterHandler(event);
+            assert.deepEqual(cancel, false);
+            PWInstance._isOpened = true;
+            PWInstance._contentMouseenterHandler(event);
+            assert.deepEqual(cancel, true);
+            PWInstance.destroy();
+         });
       });
 
-      describe('Controls/Popup/Previewer', () => {
+      describe('Controls/_popup/Previewer', () => {
          it('getConfig', () => {
             let PWInstance = new popup.PreviewerTarget();
             let corner = {

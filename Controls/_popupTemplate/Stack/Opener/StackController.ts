@@ -192,25 +192,29 @@ import 'css!theme?Controls/popupTemplate';
          },
 
          _update: function() {
-            var maxPanelWidth = StackStrategy.getMaxPanelWidth();
-            var maxWidth = 0;
-            var cache = {};
+            let maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            let maxWidth = 0;
+            let cache = {};
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.stackWidth;
+                  let currentWidth = item.containerWidth || item.position.stackWidth;
 
                   if (currentWidth) {
-                     // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
-                     if (currentWidth > maxWidth) {
-                        maxWidth = currentWidth;
-                        cache = {};
-                     }
                      if (!cache[currentWidth]) {
                         cache[currentWidth] = 1;
                         _private.addShadowClass(item);
                      } else {
                         _private.removeShadowClass(item);
+                     }
+
+                     // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
+                     if (currentWidth >= maxWidth) {
+                        if (maxWidth) {
+                           cache = {};
+                           cache[currentWidth] = 1;
+                        }
+                        maxWidth = currentWidth;
                      }
                   }
 

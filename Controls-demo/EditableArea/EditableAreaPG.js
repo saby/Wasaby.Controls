@@ -6,7 +6,7 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
    'json!Controls-demo/EditableArea/EAPConfig',
    'wml!Controls-demo/EditableArea/resources/oneField',
    'wml!Controls-demo/EditableArea/resources/twoFields',
-   'Controls/EditableArea/Templates/Editors/Base',
+   'Controls/_EditableArea/Templates/Editors/Base',
    'css!Controls-demo/EditableArea/EditableAreaPG'
 ], function(
    Control,
@@ -31,7 +31,7 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
 
    var EditableAreaPG = Control.extend({
       _template: template,
-      _content: 'Controls/EditableArea',
+      _content: 'Controls/editableArea:View',
 
       _beforeMount: function() {
          this._key = 0;

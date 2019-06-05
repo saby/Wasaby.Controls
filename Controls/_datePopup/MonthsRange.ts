@@ -1,13 +1,12 @@
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import DateRangeModel = require('Controls/Date/model/DateRange');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import {DateRangeModel, Utils as CalendarControlsUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import MonthsRangeItem from './MonthsRangeItem';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select a period of multiple months.

@@ -24,7 +24,21 @@ define('Controls-demo/Example/Input',
       'use strict';
 
       return Control.extend({
-         _template: template
+         _template: template,
+
+         headJson: null,
+
+         _beforeMount: function() {
+            this.headJson = [
+               ['link',
+                  {
+                     rel: 'stylesheet',
+                     type: 'text/css',
+                     href: '/materials/resources/SBIS3.CONTROLS/themes/online/online.css'
+                  }
+               ]
+            ];
+         }
       });
    }
 );

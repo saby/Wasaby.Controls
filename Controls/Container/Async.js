@@ -147,6 +147,7 @@ define('Controls/Container/Async',
                var headData = AppEnv.getStore('HeadData');
                return headData;
             } catch (e) {
+               Env.IoC.resolve('ILogger').error('Couldn\'t get HeadData store', e);
                return null;
             }
          },

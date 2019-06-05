@@ -16,6 +16,12 @@ var TileViewModel = ListViewModel.extend({
         }
         this._itemsHeight = this._options.tileHeight || this._options.itemsHeight || DEFAULT_ITEM_HEIGHT;
     },
+    
+    getItemDataByItem: function (dispItem) {
+        let current = TileViewModel.superclass.getItemDataByItem.apply(this, arguments);
+        current.multiSelectClassList += current.hasMultiSelect ? ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom' : '';
+        return current;
+    },
 
     getCurrent: function () {
         var current = TileViewModel.superclass.getCurrent.apply(this, arguments);

@@ -6,20 +6,6 @@ import {format} from 'Controls/_input/Number/format';
 import {decimalSplitter} from 'Controls/_input/Number/constant';
 
 class ViewModel extends BaseViewModel {
-    constructor(options, value) {
-        super(options, value);
-
-        /**
-         * Поменяли формат опции value у поля ввода денег. Чтобы не ломать прикладникам
-         * сценарии(если есть) где они затачиваются на текущий формат перед выпуском, делаем новое поведение по опции.
-         * В 400 правок уже не будет, сделано в одном реквесте.
-         */
-        if (!this._options._newValueBehavior) {
-            this._convertToValue = BaseViewModel.prototype._convertToValue;
-            this._convertToDisplayValue = BaseViewModel.prototype._convertToDisplayValue;
-        }
-    }
-
     protected _convertToValue(displayValue: string): string {
         return ViewModel.removeTrailingZeros(
             ViewModel.removeSpaces(displayValue)

@@ -12,8 +12,8 @@
            needIcon="{{_needIcon}}"
            needTitle="{{_needTitle}}"
            needSeparator="{{_needSeparator}}"
-           actionAlignment="{{ _actionAlignment }}"
-           actionCaptionPosition="{{ _actionCaptionPosition }}"
+           actionAlignment="{{ _options.actionAlignment }}"
+           actionCaptionPosition="{{ _options.actionCaptionPosition }}"
            animationState="{{_animationState}}"
            itemActionsPosition="{{_options.itemActionsPosition}}"/>
     </ws:swipeTemplate>

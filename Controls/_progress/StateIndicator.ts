@@ -185,7 +185,7 @@ StateIndicator.getOptionTypes = function getOptionTypes() {
    };
 };
 
-StateIndicator._theme = ['Controls/_progress/progress'];
+StateIndicator._theme = ['Controls/progress'];
 
 StateIndicator._private = _private;
 export default StateIndicator;

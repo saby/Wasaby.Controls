@@ -1,12 +1,20 @@
 ﻿import Control = require('Core/Control');
 import Env = require('Env/Env');
 import coreMerge = require('Core/core-merge');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import Model = require('Controls/_input/DateTime/Model');
 import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
-   
+
+//TODO Копипаста из модуля Controls/_dateRange/Utils, чтобы убрать закчиливание библиотек.
+// https://online.sbis.ru/opendoc.html?guid=33a2d809-9c38-4dd4-bb3a-054afbf49bcc
+function proxyModelEvents(component, model, eventNames) {
+   eventNames.forEach(function(eventName) {
+      model.subscribe(eventName, function(event, value) {
+         component._notify(eventName, value);
+      });
+   });
+}
 
 /**
  * Control for entering date and time.
@@ -49,11 +57,9 @@ var Component = Control.extend([], {
 
    _model: null,
 
-   _needInputCompletedEvent: false,
-
    _beforeMount: function(options) {
       this._model = new Model(options);
-      CalendarControlsUtils.proxyModelEvents(this, this._model, ['valueChanged']);
+      proxyModelEvents(this, this._model, ['valueChanged']);
    },
 
    _beforeUpdate: function(options) {
@@ -65,7 +71,6 @@ var Component = Control.extend([], {
    _inputCompletedHandler: function(event, value, textValue) {
       event.stopImmediatePropagation();
       this._model.autocomplete(textValue, this._options.autocompleteType);
-      this._needInputCompletedEvent = false;
       this._notify('inputCompleted', [this._model.value, textValue]);
    },
 
@@ -77,26 +82,16 @@ var Component = Control.extend([], {
       var key = event.nativeEvent.keyCode;
       if (key === Env.constants.key.insert) {
       // on Insert button press current date should be inserted in field
-         event.stopImmediatePropagation();
          this._model.setCurrentDate();
-         this._needInputCompletedEvent = true;
       }
       if (key === Env.constants.key.plus || key === Env.constants.key.minus) {
       // on +/- buttons press date should be increased or decreased in field by one day
-         event.stopImmediatePropagation();
          var delta = key === Env.constants.key.plus ? 1 : -1;
          var localDate = new Date(this._model.value);
          localDate.setDate(this._model.value.getDate() + delta);
          this._model.value = localDate;
       }
-   },
-
-   _onDeactivated: function(event) {
-      if (this._needInputCompletedEvent) {
-         this._needInputCompletedEvent = false;
-         this._notify('inputCompleted', [this._model.value, this._model.textValue]);
-      }
-   },
+   }
 
    _beforeUnmount: function() {
       this._model.destroy();

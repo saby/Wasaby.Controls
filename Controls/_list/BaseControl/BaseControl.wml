@@ -13,6 +13,16 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
+    <ws:if data="{{_pagingNavigation}}">
+        <div class="controls-BaseControl__footerPaging_wrapper">
+            <Controls.paging:Paging showDigits = "{{true}}"
+                                    pagesCount = "{{_knownPagesCount}}"
+                                    selectedPage = "{{_currentPage}}"
+                                    on:selectedPageChanged="__pagingChangePage()"
+            ></Controls.paging:Paging>
+
+        </div>
+    </ws:if>
     <ws:if data="{{_shouldDrawFooter}}">
         <ws:partial template="wml!Controls/_list/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
     </ws:if>
@@ -98,10 +108,9 @@
     <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger" style="{{_options.task1177135045 ? ('bottom: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
             <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger"
-                 style="bottom: -{{_loadOffset}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
@@ -124,7 +133,6 @@
                 on:cancelActionClick="_cancelEditActionHandler()"
                 on:menuActionsClick="_showActionsMenu()"
                 on:menuActionClick="_showActionMenu()"
-                on:itemActionsClick="_notifyHandler('itemActionsClick')"
                 on:actionClick="_notifyHandler('actionClick')"
                 toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
                 name="itemActions"
@@ -141,8 +149,6 @@
             ws:content="listView"
             on:menuActionsClick="_showActionsMenu()"
             on:closeSwipe="_closeSwipe()"
-            swipeDirection="{{_options.swipeDirection}}"
-            titlePosition="{{_options.titlePosition}}"
             actionAlignment="{{_options.actionAlignment}}"
             actionCaptionPosition="{{_options.actionCaptionPosition}}"
             viewName="{{ _options.viewName }}"
@@ -154,7 +160,7 @@
         <ws:if data="{{_needScrollCalculation}}">
             <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
             <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger" style="{{_options.task1177135045 ? ('top: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">

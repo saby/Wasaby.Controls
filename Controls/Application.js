@@ -21,6 +21,9 @@ define('Controls/Application',
     *
     * @class Controls/Application
     * @extends Core/Control
+    *
+    * @mixes Controls/Application/BlockLayout/Styles
+    *
     * @control
     * @public
     * @author Зуев Д.В.
@@ -145,10 +148,6 @@ define('Controls/Application',
 
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
-            if (Env.detection.isMobileIOS) {
-               bodyClasses += ' ' + this._scrollingClass;
-            }
-
             return bodyClasses;
          }
       };
@@ -229,17 +228,15 @@ define('Controls/Application',
          /** ************************************************** */
 
          _changeOverflowClass: function() {
-            if (this._isPopupShow || this._isSuggestShow) {
-               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+            if (Env.detection.isMobileIOS) {
+               if (this._isPopupShow || this._isSuggestShow) {
+                  this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+               } else {
+                  this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
+               }
             } else {
-               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
+               this._scrollingClass = '';
             }
-
-            // We have to call forceUpdate, because template doesn't use
-            // '_scrollingClass' from state, but template uses method
-            // calculateBodyClasses which uses _scrollingClass.
-            // We should trigger manually template's update
-            this._forceUpdate();
          },
 
 

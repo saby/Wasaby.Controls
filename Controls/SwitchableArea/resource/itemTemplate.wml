@@ -1,1 +1,2 @@
-<ws:partial template="wml!Controls/_SwitchableArea/resource/itemTemplate" scope="{{_options}}" />
+<!-- Used by wml!Layout/Browser/Tabs/Tabs -->
+<ws:partial template="Controls/switchableArea:itemTemplate" scope="{{_options}}" />

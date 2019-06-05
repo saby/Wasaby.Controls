@@ -2,8 +2,8 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
-import DateRangeModel = require('Controls/Date/model/DateRange');
-import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import DateRangeModel from './DateRangeModel';
+import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
 
 /**
@@ -51,6 +51,9 @@ var Component = BaseControl.extend({
             className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
+            if (this._options.prevArrowVisibility || this._options.prevArrowVisibility) {
+                className += '-prevNext';
+            }
         }
 
         this._children.opener.open({

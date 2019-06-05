@@ -191,7 +191,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             });
             this._navigation = {
                source: 'page',
-               view: 'page',
+               view: 'pages',
                sourceConfig: {
                   pageSize: 20,
                   page: 0,

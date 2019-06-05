@@ -184,7 +184,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                },
                groupTemplate: {
                   items: [
-                     { id: '1', title: 'Default groupTemplate', comment: 'groupingKeyCallback must be set', template: 'wml!Controls/Dropdown/resources/template/defaultGroupTemplate' },
+                     { id: '1', title: 'Default groupTemplate', comment: 'groupingKeyCallback must be set', template: 'wml!Controls/_dropdownPopup/defaultGroupTemplate' },
                      { id: '2', title: 'With text', comment: 'groupingKeyCallback must be set', template: 'wml!Controls-demo/Buttons/Menu/groupTemplate' },
                      { id: '3', title: 'Not specified', template: '' }
                   ],

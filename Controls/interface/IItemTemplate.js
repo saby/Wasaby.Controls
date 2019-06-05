@@ -25,13 +25,13 @@ define('Controls/interface/IItemTemplate', [
     * Using custom template for item rendering:
     * <pre>
     *    <Controls.list:View>
-    *       <itemTemplate>
+    *       <ws:itemTemplate>
     *          <ws:partial template="Controls/list:ItemTemplate">
     *             <ws:contentTemplate>
     *                <span>{{contentTemplate.itemData.item.description}}</span>
     *             </ws:contentTemplate>
     *          </ws:partial>
-    *       </itemTemplate>
+    *       </ws:itemTemplate>
     *    </Controls.list:View>
     * </pre>
     */

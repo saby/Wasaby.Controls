@@ -6,6 +6,7 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
 
 /**
  * Input for entering currency.
+ * <a href="/materials/demo-ws4-input">Demo examples.</a>.
  *
  * @class Controls/_input/Money
  * @extends Controls/_input/Base
@@ -34,8 +35,7 @@ class Money extends Base {
             showEmptyDecimals: true,
             precision: Money.PRECISION,
             useAdditionToMaxPrecision: true,
-            onlyPositive: options.onlyPositive,
-            _newValueBehavior: options._newValueBehavior
+            onlyPositive: options.onlyPositive
         };
     }
 

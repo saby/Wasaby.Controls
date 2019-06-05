@@ -1,8 +1,8 @@
-define('Controls-demo/DragNDrop/Notes/EntityNote', ['Controls/DragNDrop/Entity/Item'],
-   function(Entity) {
+define('Controls-demo/DragNDrop/Notes/EntityNote', ['Controls/dragnDrop'],
+   function(dragnDrop) {
       'use strict';
 
-      var EntityNote = Entity.extend({
+      var EntityNote = dragnDrop._ItemEntity.extend({
 
          constructor: function(options) {
             EntityNote.superclass.constructor.apply(this, arguments);

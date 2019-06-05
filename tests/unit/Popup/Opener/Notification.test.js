@@ -9,7 +9,7 @@ define(
    (popupTemplate, NotificationContent, Notification, NotificationController, collection) => {
       'use strict';
 
-      describe('Controls/Popup/Opener/Notification', () => {
+      describe('Controls/_popup/Opener/Notification', () => {
          const containers = [
             {
                offsetHeight: 10

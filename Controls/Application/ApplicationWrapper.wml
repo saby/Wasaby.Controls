@@ -1,8 +1,6 @@
 <Controls.Application title="Demo-example: {{_options.caption}}"
+                      headJson="{{ headJson }}"
                       appRoot="/materials/">
-    <ws:head>
-        <link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css" />
-    </ws:head>
     <ws:content>
         <Controls.scroll:Container attr:class="controls-ApplicationWrapper__scroll">
             <div>

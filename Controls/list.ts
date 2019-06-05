@@ -13,14 +13,12 @@
  * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
  * @includes DataContainer Controls/_list/Data
  * @includes AddButtonStyles Controls/_list/AddButton/Styles
- * @includes DigitButtonsStyles Controls/_list/DigitButtonsStyles
- * @includes IDraggable Controls/_list/interface/IDraggable
- * @includes IExplorer Controls/_list/interface/IExplorer
  * @includes IHierarchy Controls/_list/interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ListStyles Controls/_list/ListStyles
  * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
+ * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @public
  * @author Kraynov D.
  */
@@ -54,9 +52,12 @@ import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import BaseControl = require('Controls/_list/BaseControl');
+import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
+import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
+import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 
 import {Paging} from 'Controls/paging';
 
@@ -90,7 +91,10 @@ export {
     ItemsUtil,
     TreeItemsUtil,
     BaseControl,
+    ScrollEmitter,
     SearchItemsUtil,
+    getStyle,
+    ItemsView,
     ItemsViewModel,
-    getStyle
+    HotKeysContainer
 };

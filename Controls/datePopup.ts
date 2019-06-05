@@ -2,16 +2,14 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
-import dateRange = require('Controls/dateRange');
+import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
-import DateRangeModel = require('Controls/Date/model/DateRange');
 import MonthsRange from './_datePopup/MonthsRange';
 import periodDialogUtils from './_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
-import 'css!theme?Controls/_datePopup/DatePopup';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.
@@ -342,7 +340,7 @@ Component.getOptionTypes = function () {
             HEADER_TYPES.link,
             HEADER_TYPES.input
         ]),
-    }, dateRange.IDateRangeSelectable.getOptionTypes());
+    }, IDateRangeSelectable.getOptionTypes());
 };
 
 export = Component;

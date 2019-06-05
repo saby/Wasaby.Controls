@@ -33,7 +33,7 @@ define('Controls-demo/List/TreeGrid/ItemTemplatePG',
                      {
                         id: '1',
                         title: 'default',
-                        value: 'wml!Controls/List/TreeGridView/Item'
+                        value: 'Controls/treeGrid:ItemTemplate'
                      },
                      {
                         id: '2',
@@ -75,7 +75,7 @@ define('Controls-demo/List/TreeGrid/ItemTemplatePG',
                displayProperty: 'title',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               itemTemplate: 'wml!Controls/List/TreeGridView/Item'
+               itemTemplate: 'Controls/treeGrid:ItemTemplate'
             };
 
             this._metaData = config[this._content].properties['ws-config'].options;

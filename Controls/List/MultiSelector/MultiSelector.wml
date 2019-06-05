@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_operations/Container/Container" scope="{{_options}}" />

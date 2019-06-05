@@ -156,16 +156,16 @@ var _private = {
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_list/interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/ICaption
- * @mixes Controls/interface/IIcon
- * @mixes Controls/interface/IIconStyle
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control
@@ -249,7 +249,8 @@ var _Controller = Control.extend({
                items: self._items,
                //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down')
+               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down'),
+               selectorOpener: self._children.selectorOpener
             },
             target: self._container,
             corner: self._options.corner,
@@ -278,6 +279,10 @@ var _Controller = Control.extend({
       } else if (this._items) {
          itemsLoadCallback(this._items);
       }
+   },
+
+   _onSelectorTemplateResult: function(event, items) {
+      this._onResult(event, {action: 'selectorResult', data: items});
    },
 
    _mousedown: function () {

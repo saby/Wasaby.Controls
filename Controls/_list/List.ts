@@ -15,7 +15,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @class Controls/_list/List
  * @extends Core/Control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped
@@ -24,7 +24,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/_list/interface/IDraggable
+ * @mixes Controls/_tile/interface/IDraggable
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles
@@ -34,7 +34,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @mixes Controls/_list/Mover/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
- * @mixes Controls/_list/DigitButtonsStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
  *
  * @control
  * @author Авраменко А.С.

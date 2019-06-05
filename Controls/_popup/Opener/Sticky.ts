@@ -1,7 +1,7 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
 import coreMerge = require('Core/core-merge');
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
        * @class Controls/_popup/Opener/Sticky
        * @extends Controls/_popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
@@ -45,11 +45,11 @@ import coreMerge = require('Core/core-merge');
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
+          *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
           *          <ws:verticalAlign side="bottom"/>
           *          <ws:horizontalAlign side="left"/>
           *          <ws:corner vertical="bottom" horizontal="left"/>
-          *   </Controls.Popup.Opener.Sticky>
+          *   </Controls.popup:Sticky>
           *
           *   <div name="target">{{_text}}</div>
           *
@@ -106,11 +106,11 @@ import coreMerge = require('Core/core-merge');
  * @example
  * wml
  * <pre>
- *    <Controls.Popup.Opener.Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
+ *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
  *          <ws:verticalAlign side="bottom"/>
  *          <ws:horizontalAlign side="left"/>
  *          <ws:corner vertical="bottom" horizontal="left"/>
- *    </Controls.Popup.Opener.Sticky>
+ *    </Controls.popup:Sticky>
  *
  *    <div name="target">{{_text}}</div>
  *

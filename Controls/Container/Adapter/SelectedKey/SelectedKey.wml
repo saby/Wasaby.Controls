@@ -1,5 +1,2 @@
-<ws:partial template="{{_options.content}}"
-            on:selectedKeysChanged="_selectedKeysChanged()"
-            scope="{{_options}}"
-            selectedKeys="{{_selectedKeys}}"
-            dataLoadCallback="{{_dataLoadCallbackHandler}}"/>
+// Created in 19.400
+<ws:partial template="wml!Controls/_source/Adapter/SelectedKey/SelectedKey" scope="{{_options}}" />

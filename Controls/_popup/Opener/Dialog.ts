@@ -1,6 +1,6 @@
 import Base = require('Controls/_popup/Opener/BaseOpener');
       /**
-       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
+       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
        * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
        * @class Controls/_popup/Opener/Dialog
        * @extends Controls/_popup/Opener/BaseOpener
@@ -37,9 +37,9 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
           *          <ws:templateOptions key="111"/>
-          *    </Controls.Popup.Opener.Dialog>
+          *    </Controls.popup:Dialog>
           *
           *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
           *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
@@ -72,8 +72,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
 
       Dialog._private = _private;
 
-      export = Dialog;
-
+export default Dialog;
 
     /**
      * @name Controls/_popup/Opener/Dialog#height
@@ -113,9 +112,9 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
      * @example
      * wml
      * <pre>
-     *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+     *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
      *          <ws:templateOptions key="111"/>
-     *    </Controls.Popup.Opener.Dialog>
+     *    </Controls.popup:Dialog>
      *
      *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
      *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>

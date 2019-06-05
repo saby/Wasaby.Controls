@@ -30,7 +30,7 @@ define('Controls-demo/List/List/GroupPG',
                groupTemplate: {
                   value: 'default',
                   items: [
-                     {id: 1, title: 'default', template: 'wml!Controls/List/GroupTemplate'},
+                     {id: 1, title: 'default', template: 'Controls/list:GroupTemplate'},
                      {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate'}
                   ]
                }
@@ -45,7 +45,7 @@ define('Controls-demo/List/List/GroupPG',
                   data: data.groupGadgets
                }),
                groupingKeyCallback: this._groupByBrand,
-               groupTemplate: 'wml!Controls/List/GroupTemplate',
+               groupTemplate: 'Controls/list:GroupTemplate',
                collapsedGroups: [],
                dataLoadCallback: this._dataLoadCallback
             };

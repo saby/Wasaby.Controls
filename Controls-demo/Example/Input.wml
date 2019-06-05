@@ -1,8 +1,6 @@
 <Controls.Application title="Demo-example: Separator(header), back button."
+                      headJson="{{ headJson }}"
                       appRoot="/materials/">
-   <ws:head>
-      <link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css"/>
-   </ws:head>
    <ws:content>
       <Controls.scroll:Container attr:style="height: 100%">
          <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">

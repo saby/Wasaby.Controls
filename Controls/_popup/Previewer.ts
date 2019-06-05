@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Previewer/Previewer');
 import debounce = require('Core/helpers/Function/debounce');
-import PreviewerOpener = require('Controls/_popup/Opener/Previewer');
+import PreviewerOpener from './Opener/Previewer';
 import Env = require('Env/Env');
 import 'css!theme?Controls/popup';
 
@@ -87,7 +87,7 @@ import 'css!theme?Controls/popup';
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
             if (options.templateName) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').error(this._moduleName, 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 
@@ -146,7 +146,10 @@ import 'css!theme?Controls/popup';
 
          _contentMouseenterHandler: function(event) {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               this._cancel(event, 'closing');
+               //We will cancel closing of the popup, if it is already open
+               if (this._isOpened) {
+                  this._cancel(event, 'closing');
+               }
             }
          },
 

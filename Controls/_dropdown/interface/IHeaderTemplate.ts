@@ -11,11 +11,11 @@
    /**
     * @name Controls/_dropdown/interface/IHeaderTemplate#headerTemplate
     * @cfg {Function | String} Template that will be rendered above the list.
-    * @default "wml!Controls/Dropdown/resources/template/defaultHeadTemplate"
+    * @default "Controls/dropdownPopup:Template"
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/Dropdown/resources/template/defaultHeadTemplate'.
+    * To determine the template, you should call the base template 'Controls/dropdownPopup:Template'.
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template 'wml!Controls/Dropdown/resources/template/defaultHeadTemplate' will display caption and icon, if they are set. You can change the following options:
+    * By default, the base template 'Controls/dropdownPopup:Template' will display caption and icon, if they are set. You can change the following options:
     * <ul>
     *     <li>caption - header text,</li>
     *     <li>icon - header icon.</li>
@@ -30,7 +30,7 @@
     *          source="{{_source)}}"
     *          tooltip="Add">
     *       <ws:headerTemplate>
-    *          <ws:partial template="wml!Controls/Dropdown/resources/template/defaultHeadTemplate" caption="Add"/>
+    *          <ws:partial template="Controls/dropdownPopup:Template" caption="Add"/>
     *       </ws:headerTemplate>
     *    </Controls.Button.Menu>
     * </pre>

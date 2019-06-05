@@ -2,9 +2,9 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import EventProxyMixin from './Mixin/EventProxy'
+import EventProxyMixin from './Mixin/EventProxy';
 import {MonthModel as modelViewModel} from 'Controls/calendar';
-import rangeSelectionUtils = require('Controls/Date/Utils/RangeSelection');
+import {rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 

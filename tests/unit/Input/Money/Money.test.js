@@ -1,7 +1,7 @@
 define(
    [
       'Core/core-instance',
-      'Controls/Input/Money',
+      'Controls/_input/Money',
       'unit/resources/TemplateUtil',
       'unit/Input/Base/InputUtility',
       'wml!unit/Input/Money/ZeroValueTest',
@@ -10,12 +10,12 @@ define(
    function(instance, Money, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
       'use strict';
 
-      describe('Controls.Input.Money', function() {
+      describe('Controls/_input/Money', function() {
          var ctrl, calls;
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Money();
+            ctrl = new Money.default();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
@@ -63,7 +63,8 @@ define(
                InputUtility.insert(ctrl, '0');
                InputUtility.triggerInput(ctrl);
 
-               assert.equal(ctrl._viewModel.value, '0.00');
+               assert.equal(ctrl._viewModel.displayValue, '0.00');
+               assert.equal(ctrl._viewModel.value, '0');
                assert.deepEqual(ctrl._viewModel.selection, {
                   start: 1,
                   end: 1

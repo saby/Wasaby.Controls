@@ -390,7 +390,7 @@ var
                         columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
                         editingRowStyles = '';
 
-                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.GridIE) + ' ';
+                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
                     editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
 
@@ -794,6 +794,10 @@ var
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
+        hasItemById: function(id, keyProperty) {
+            return this._model.hasItemById(id, keyProperty);
+        },
+
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
@@ -920,6 +924,8 @@ var
             current.columnScroll = this._options.columnScroll;
 
             current.style = this._options.style;
+            current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+            
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {

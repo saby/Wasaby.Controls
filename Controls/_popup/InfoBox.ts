@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
-import InfoBoxOpener = require('Controls/_popup/Opener/InfoBox');
+import InfoBoxOpener from './Opener/InfoBox');
 import TouchContext = require('Controls/Context/TouchContextField');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
-      
+
 
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
        *
        * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
        * @class Controls/_popup/InfoBox
@@ -160,10 +160,10 @@ import Env = require('Env/Env');
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
             if (options.templateName) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 
@@ -307,7 +307,6 @@ import Env = require('Env/Env');
 
       InfoBox.getDefaultOptions = function() {
          return {
-            position: 'tl',
             targetSide: 'top',
             alignment: 'start',
             style: 'default',
@@ -333,5 +332,5 @@ import Env = require('Env/Env');
        * @property {Number} showDelay Delay before opening.
        * @property {Number} showDelay Delay before closing.
        */
-   
+
 

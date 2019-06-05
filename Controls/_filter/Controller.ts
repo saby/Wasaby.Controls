@@ -9,8 +9,7 @@ import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import 'Controls/Container/Data/ContextOptions';
-
+import 'Controls/context';
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
       var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -331,7 +330,7 @@ import 'Controls/Container/Data/ContextOptions';
 
       function updateFilterHistory(cfg) {
          if (!cfg.historyId) {
-            throw new Error('Controls/Filter/Controller::historyId is required');
+            throw new Error('Controls/_filter/Controller::historyId is required');
          }
          _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
          _private.updateHistory(cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
@@ -354,7 +353,7 @@ import 'Controls/Container/Data/ContextOptions';
       /**
        * @name Controls/_filter/Controller#filterButtonSource
        * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
-       * @remark if the historyId option is setted, function will recive filter history
+       * @remark if the historyId option is setted, function will receive filter history
        * @example
        * TMPL:
        * <pre>

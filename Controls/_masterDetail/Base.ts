@@ -9,7 +9,7 @@ import 'css!theme?Controls/masterDetail';
     * @extends Core/Control
     * @mixes Controls/_masterDetail/List/Styles
     * @control
-    * @author Волоцкой В.Д.
+    * @author Герасимов А.М.
     * @public
     * @demo Controls-demo/MasterDetail/Demo
     */

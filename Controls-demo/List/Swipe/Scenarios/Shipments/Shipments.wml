@@ -3,6 +3,6 @@
    keyProperty="id"
    source="{{_source}}"
    columns="{{_columns}}"
-   swipeDirection="column"
-   titlePosition="right"
+   actionAlignment="vertical"
+   actionCaptionPosition="right"
    itemActions="{{_itemActions}}" />

@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Filter/Button/converterFilterStructure',
+      'Controls/_filterPopup/converterFilterStructure',
       'Types/entity',
       'Types/collection'
    ],

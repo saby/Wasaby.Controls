@@ -4,6 +4,7 @@
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
 
+'use strict';
 
    var markupGenerator,
       defCollection,
@@ -11,6 +12,7 @@ import validHtml = require('Core/validHtml');
       resolver,
       resolverParams,
       resolverMode,
+      currentValidHtml,
       linkAttributesMap = {
          'action': true,
          'background': true,
@@ -42,7 +44,7 @@ import validHtml = require('Core/validHtml');
    }
 
    function validAttributesInsertion(to, from) {
-      var validAttributes = validHtml.validAttributes;
+      var validAttributes = currentValidHtml.validAttributes;
       for (var key in from) {
          if (!from.hasOwnProperty(key)) {
             continue;
@@ -87,7 +89,7 @@ import validHtml = require('Core/validHtml');
             events: {},
             key: key
          };
-      if (!validHtml.validNodes[tagName]) {
+      if (!currentValidHtml.validNodes[tagName]) {
          resolverMode ^= wasResolved;
          return [];
       }
@@ -112,6 +114,7 @@ import validHtml = require('Core/validHtml');
       resolver = data._options.tagResolver;
       resolverParams = data._options.resolverParams || {};
       resolverMode = 1;
+      currentValidHtml = data._options.validHtml || validHtml;
 
       var elements = [],
          key = (attr && attr.key) || '_',
@@ -168,6 +171,7 @@ import validHtml = require('Core/validHtml');
 
    // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
    template.stable = true;
+
 
    export = template;
 

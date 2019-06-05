@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Filter/Button/Panel/PropertyGrid'
+      'Controls/_filterPopup/Panel/PropertyGrid'
    ],
    function(PropertyGrid) {
       describe('FilterPropertyGrid', function() {

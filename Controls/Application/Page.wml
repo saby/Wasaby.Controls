@@ -11,6 +11,7 @@
    pageName="{{ pageName }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
+   headJson="{{ _options.headJson }}"
    title="{{ _options.title }}"
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
@@ -26,15 +27,16 @@
             <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.Popup.Global>
+                     <Controls.popup:Global>
                      <Controls.popup:Manager
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
                              stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <body
-                                 class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
+                              <UI.HotKeys:Dispatcher>
+                                 <body
+                                 class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
                                  id="body"
                                  key="1_2_"
                                  on:scroll="_scrollPage()"
@@ -123,10 +125,11 @@
                                  <div id="theme-changing-overlay"></div>
                               </ws:if>
                               </body>
+                              </UI.HotKeys:Dispatcher>
                            </Controls.dragnDrop:Controller>
                         </Controls.Application.TouchDetector>
                      </Controls.popup:Manager>
-                     </Controls.Popup.Global>
+                     </Controls.popup:Global>
                   </Controls.event:Register>
                </Controls.event:Register>
             </Controls.event:Register>

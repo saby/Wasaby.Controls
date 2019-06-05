@@ -1,21 +1,22 @@
-
+export interface ICheckableOptions {
+   value?: boolean;
+}
 
 /**
- * Interface for 2-position switch.
+ * Interface for 2-position control.
  *
  * @interface Controls/_toggle/interface/ICheckable
  * @public
  * @author Михайловский Д.С.
  */
-
+export interface ICheckable {
+   readonly '[Controls/_toggle/interface/ICheckable]': boolean;
+}
 /**
  * @name Controls/_toggle/interface/ICheckable#value
- * @cfg {Boolean} Current state.
+ * @cfg {boolean} Current state.
  */
-
 /**
  * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
- * @param {Boolean} value New value.
+ * @param {boolean} value New value.
  */
-
-

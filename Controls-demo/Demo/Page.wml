@@ -1,7 +1,4 @@
-<Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
-   <ws:head>
-      <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
-   </ws:head>
+<Controls.Application scope="{{_options}}" bodyClass="controls-default-bg" headJson="{{ headJson }}">
    <ws:content>
       <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
          <div class="themeSwitcher">

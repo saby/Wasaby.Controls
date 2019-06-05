@@ -14,6 +14,25 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
+ * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию
+ * В качестве ключей можно использовать следующие свойства
+ * - items - для смены набора элементов
+ * - groupingKeyCallback, groupingTemplate для установки группировки
+ * - itemTemplate - шаблон элемента меню
+ * - footerTamplate - шаблон футера
+ * - headerTemplate - шаблон шапки
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Determines whether context menu should be shown on right-click.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @default true
+ */
+
+/**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -57,10 +76,21 @@
  * @name Controls/_list/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
+ * <pre>
  * [
  *    { price: 'desc' },
  *    { balance: 'asc' }
  * ]
+ * </pre>
+ * You can also define null-policy by set 3-members array for each field where the 3rd member of an array defines a null
+ * policy. So you can choose between two of them: false - NULLS in the beginning, true - NULLS in the end:
+ * <pre>
+ * [
+ *    ['price', 'desc', false],
+ *    ['balance', 'asc', true]
+ * ]
+ * </pre>
+ * See topic about {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript declarative method signature} for details.
  */
 
 /**
@@ -78,8 +108,8 @@
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
  * @property {String} icon Operation icon.
- * @property {Number} showType Location of operation.
- * @property {String} style Operation style.
+ * @property {Number} showType Location of operation. (1 - menu | 2 - toolbar and menu | 3 - toolbar).
+ * @property {String} style Operation style. (secondary | warning | danger | success).
  * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
  * @property {Function} handler Operation handler.
  * @property {String} parent Key of the action's parent.
@@ -101,7 +131,7 @@
  */
 
 /**
- * @event Controls/_list/interface/IList#actionClick
+ * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
@@ -111,7 +141,7 @@
 /**
  * @name Controls/_list/interface/IList#actionAlignment
  * @cfg {String} Determines how item actions will be aligned on swipe.
- * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant horizontal Actions will be displayed in a line.
  * @variant vertical Actions will be displayed in a line.
  */
@@ -119,7 +149,7 @@
 /**
  * @name Controls/_list/interface/IList#actionCaptionPosition
  * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
- * <a href="/demo/demo-ws4-swipe">Example</a>.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant right Title will be displayed to the right of the action's icon.
  * @variant bottom Title will be displayed under the action's icon.
  * @variant none Title will not be displayed.
@@ -166,11 +196,32 @@
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Callback function that will be called when list data instance is ready.
+ * @example
+ * <pre class="brush:js">
+ * _myItemsReadyCallback = function(items) {
+ *    this._myItems = items;
+ * }
+ * ...
+ * deleteButtonClickHandler: function{
+ *    this._myItems.removeAt(0);
+ * }
+ * </pre>
  */
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
  * @cfg {Function} Callback function that will be called when list data loaded by source
+ * @remark
+ * dataLoadCallback takes to first argument the collection of loaded items.
+ * dataLoadCallback can be used for setting metadata or adjusting loaded items.
+ * @example
+ * <pre class="brush:js">
+ * _myDataLoadCallback = function(items) {
+ *    items.each(function(item){
+ *       item.set(field, value);
+ *    });
+ * }
+ * </pre>
  */
 
 /**
@@ -179,8 +230,8 @@
  */
 
 /**
- * @function Controls/_list/interface/IList#reload
  * Reloads list data and view.
+ * @function Controls/_list/interface/IList#reload
  */
 
 /**
@@ -191,8 +242,8 @@
  */
 
 /**
- * @function Controls/_list/interface/IList#reloadItem
  * Loads model from data source, merges changes into the current data and renders the item.
+ * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Identifier of the collection item, that should be reloaded from source.
  * @param {Object} readMeta Meta information, that which will be passed to the query/read method.
  * @param {Boolean} replaceItem Determine, how the loaded item will be applied to collection.

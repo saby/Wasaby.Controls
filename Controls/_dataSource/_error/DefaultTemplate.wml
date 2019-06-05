@@ -2,6 +2,13 @@
     type="ok"
     style="danger"
     message="{{ _options.message || message }}"
-    details="{{ _options.details || details }}"
     closeHandler="{{ _closeHandler }}"
 />
+<!--
+в detail сейчас в многих местах редактирования по месту приходит текст из запроса
+Не будем его отображать
+TODO После закрытия задачи по написанию документа по правильному формированию текстов ошибок:
+https://online.sbis.ru/doc/c8ff58ac-e6f7-4f0e-877a-e9cbbe661139
+Вернуть проброс параметра details:
+details="{{ _options.details || details }}"
+-->

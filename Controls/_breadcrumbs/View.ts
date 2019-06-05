@@ -52,7 +52,9 @@ var BreadCrumbsView = Control.extend({
             });
             e.stopPropagation();
         } else {
-            this._notify('itemClick', [itemData.item]);
+            if (!this._options.readOnly) {
+                this._notify('itemClick', [itemData.item]);
+            }
         }
     },
 
@@ -71,7 +73,7 @@ var BreadCrumbsView = Control.extend({
     _onResult: function (event, args) {
         var actionName = args && args.action;
 
-        if (actionName === 'itemClick') {
+        if (actionName === 'itemClick' && !this._options.readOnly) {
             this._notify('itemClick', [args.data[0]]);
         }
         this._children.menuOpener.close();

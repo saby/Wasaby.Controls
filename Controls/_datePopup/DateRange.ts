@@ -1,16 +1,14 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
 import EventProxy from './Mixin/EventProxy';
-import DateRangeModel = require('Controls/Date/model/DateRange');
+import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
 import {MonthModel} from 'Controls/calendar';
-import quantumUtils = require('Controls/Date/Utils/DateRangeQuantum');
-import DateControlsUtils = require('Controls/Calendar/Utils');
 import dateUtils = require('Controls/Utils/Date');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
-import 'css!theme?Controls/_datePopup/RangeSelection';
+import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods of multiple days.

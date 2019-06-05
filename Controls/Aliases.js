@@ -11,7 +11,7 @@ define('Controls/Aliases',
        * @css @color_warning color of functional elements meaning "warning"
        * @css @color_success color of functional elements meaning "success"
        * @css @color_danger color of functional elements meaning "danger"
-       * @css @color_primaryV color of primary functional elements
+       * @css @@color_primary color of primary functional elements
        * @css @color_secondary color of functional elements in normal state
        * @css @color_active-element color of elements selected in select controls
        * @css @color_active-element_disabled color of elements selected in select controls in read-only mode

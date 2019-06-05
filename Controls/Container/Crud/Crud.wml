@@ -1,1 +1,0 @@
-<ws:partial template="wml!Controls/_form/Crud/Crud" scope="{{_options}}" />

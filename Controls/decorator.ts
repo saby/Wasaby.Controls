@@ -22,6 +22,7 @@ import WrapURLs = require('Controls/_decorator/WrapURLs');
 
 import Converter = require('Controls/_decorator/Markup/Converter');
 import InnerText = require('Controls/_decorator/Markup/resolvers/innerText');
+import _highlightResolver = require('Controls/_decorator/Markup/resolvers/highlight');
 import noOuterTag = require('Controls/_decorator/Markup/resolvers/noOuterTag');
 import linkDecorate = require('Controls/_decorator/Markup/resolvers/linkDecorate');
 
@@ -36,5 +37,7 @@ export {
     Converter,
     InnerText,
     noOuterTag,
-    linkDecorate
+    linkDecorate,
+
+   _highlightResolver,
 }

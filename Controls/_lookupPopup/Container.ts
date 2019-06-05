@@ -1,11 +1,11 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
-import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions} from 'Controls/context';
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import {Controller as SourceController} from 'Controls/source';
-import selectionToRecord = require('Controls/Container/MultiSelector/selectionToRecord');
+import {selectionToRecord} from 'Controls/operations';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import {adapter} from 'Types/entity'
@@ -24,7 +24,7 @@ import {IData, IDecorator} from "Types/source";
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
  * @control
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @public
  * @author Герасимов Александр Максимович
  */

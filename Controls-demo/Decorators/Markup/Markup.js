@@ -2,17 +2,14 @@ define('Controls-demo/Decorators/Markup/Markup', [
 
    'Core/Control',
    'Controls/decorator',
-   'Controls/Decorator/Markup/resolvers/highlight',
    'Types/source',
    'wml!Controls-demo/Decorators/Markup/Markup',
 
    'css!Controls-demo/Decorators/Markup/Markup',
    'Controls/decorator'
 
-], function(
-   Control,
+], function(Control,
    decorator,
-   highlightResolver,
    source,
    template) {
    'use strict';
@@ -34,7 +31,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       _combineResolver: function(json, parent, resolverParams) {
          var newJson = decorator.linkDecorate(json, parent, resolverParams);
          if (newJson === json) {
-            newJson = highlightResolver(json, parent, resolverParams);
+            newJson = decorator._highlightResolver(json, parent, resolverParams);
          }
          return newJson;
       },

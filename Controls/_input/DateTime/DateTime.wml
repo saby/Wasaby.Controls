@@ -14,6 +14,5 @@
    on:inputCompleted="_inputCompletedHandler()"
    on:tagClick="_proxyEvent('tagClick')"
    on:tagHover="_proxyEvent('tagHover')"
-   on:keydown="_onKeyDown()"
-   on:deactivated="_onDeactivated()">
+   on:keydown="_onKeyDown()">
 </Controls._input.DateTime.Mask>

@@ -21,12 +21,11 @@
          window.buildnumber = '{{ _options.buildnumber }}';
          {{__setHTMLUnsafe(_options.preInitScript)}}
       </script>
-   </ws:if>
-
-   <ws:if data="{{!_options.compat}}">
-      <script>
-         window.themesActive = true;
-      </script>
+      <ws:if data="{{!_options.compat}}">
+         <script data-vdomignore="true">
+            window.themesActive = true;
+         </script>
+      </ws:if>
    </ws:if>
 
    <ws:if data="{{ head }}">
@@ -38,6 +37,15 @@
       <ws:else>
          <ws:partial template="{{ head }}"  attr:data-vdomignore="true" attr:class="head-custom-block"/>
       </ws:else>
+   </ws:if>
+   <ws:if data="{{ headJson }}">
+      <ws:for data="json in headJson">
+         <Controls.decorator:Markup attr:data-vdomignore="true"
+                                    attr:class="head-custom-block"
+                                    value="{{ json }}"
+                                    tagResolver="{{ headTagResolver }}"
+                                    validHtml="{{ headValidHtml }}" />
+      </ws:for>
    </ws:if>
 
    <ws:for data="index, value in themedCss">

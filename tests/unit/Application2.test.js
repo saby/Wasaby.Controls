@@ -2,27 +2,64 @@
  * Created by dv.zuev on 27.12.2017.
  */
 define([
+   'Env/Env',
    'Controls/Application'
-], function(Application) {
+], function(Env, Application) {
    describe('Controls.Application2', function() {
 
-      it('Check _forceUpdate reaction', function() {
-         let ctrl = new Application({}),
-            test = false;
-         ctrl._forceUpdate = () => {
-            test = true;
-         };
+      describe('popup logic', function() {
+         it('not mobile', function () {
+            let
+               ctrl = new Application({});
 
-         ctrl._popupCreatedHandler();
-         assert.isTrue(test);
+            ctrl._popupCreatedHandler();
+            assert.equal(ctrl._scrollingClass, '');
 
-         test = false;
-         ctrl._popupDestroyedHandler(null, null, {getCount: ()=>{return 0;}});
-         assert.isTrue(test);
+            ctrl._popupDestroyedHandler(null, null, {
+               getCount: () => {
+                  return 0;
+               }
+            });
+            assert.equal(ctrl._scrollingClass, '');
 
-         test = false;
-         ctrl._suggestStateChangedHandler();
-         assert.isTrue(test);
+            ctrl._suggestStateChangedHandler(null, true);
+            assert.equal(ctrl._scrollingClass, '');
+            ctrl._suggestStateChangedHandler(null, false);
+            assert.equal(ctrl._scrollingClass, '');
+         });
+
+         it('ios', function () {
+            let ctrl = new Application({}),
+               oldIsMobileIOS = Env.detection.isMobileIOS;
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = true;
+            } else {
+               Env.detection.isMobileIOS = true;
+            }
+
+            ctrl._popupCreatedHandler();
+            assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingAuto');
+
+            ctrl._popupDestroyedHandler(null, null, {
+               getCount: () => {
+                  return 0;
+               }
+            });
+            assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingTouch');
+
+            ctrl._suggestStateChangedHandler(null, true);
+            assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingAuto');
+            ctrl._suggestStateChangedHandler(null, false);
+            assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingTouch');
+
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = undefined;
+            } else {
+               Env.detection.isMobileIOS = oldIsMobileIOS;
+            }
+         });
       });
    });
 });

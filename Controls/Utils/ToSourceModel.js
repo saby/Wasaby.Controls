@@ -13,17 +13,17 @@ define('Controls/Utils/ToSourceModel', [
    function getModel(model, config) {
       return typeof model === 'string' ? Di.create(model, config) : new model(config);
    }
-   
+
    function getSourceModel(source) {
       var model;
-      
+
       //до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
       if (source instanceof sourceLib.PrefetchProxy) {
          model = source._$target.getModel();
       } else {
          model = source.getModel();
       }
-      
+
       return model;
    }
 
@@ -38,7 +38,7 @@ define('Controls/Utils/ToSourceModel', [
       var dataSourceModel, dataSourceModelInstance, parent, changedFields, newRec;
 
       if (items) {
-         if (dataSource && (cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource') || cInstance.instanceOfMixin(dataSource, 'Types/_source/ICrud'))) {
+         if (dataSource && cInstance.instanceOfMixin(dataSource, 'Types/_source/ICrud')) {
             dataSourceModel = getSourceModel(dataSource);
 
             /* Создадим инстанс модели, который указан в dataSource,

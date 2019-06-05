@@ -1,5 +1,5 @@
 {
-  "Controls/Decorator/Money": {
+  "Controls/_decorator/Money": {
     "properties": {
       "ws-config": {
         "options": {

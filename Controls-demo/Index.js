@@ -9,14 +9,16 @@ define('Controls-demo/Index', [
    'wml!Controls-demo/Index',
    'Application/Initializer',
    'Application/Env',
-   'css!Controls-demo/Demo/Page'
-], function(BaseControl,
-   Deferred,
-   LinkResolver,
-   Env,
-   template,
-   AppInit,
-   AppEnv) {
+   'css!Controls-demo/Demo/Page',
+   'css!Controls-theme/themes/default/helpers/AreaBlocks'
+], function (BaseControl,
+             Deferred,
+             LinkResolver,
+             Env,
+             template,
+             AppInit,
+             AppEnv
+) {
    'use strict';
 
    var ModuleClass = BaseControl.extend(

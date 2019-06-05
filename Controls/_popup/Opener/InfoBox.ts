@@ -5,7 +5,7 @@ import getZIndex = require('Controls/Utils/getZIndex');
 
 
       /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
        * @remark
        * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
        * @class Controls/_popup/Opener/InfoBox
@@ -127,7 +127,7 @@ import getZIndex = require('Controls/Utils/getZIndex');
          _beforeMount: function(options) {
             InfoBox.superclass._beforeMount.apply(this, arguments);
             if (options.float) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
             }
          },
 
@@ -155,10 +155,10 @@ import getZIndex = require('Controls/Utils/getZIndex');
                newCfg.floatCloseButton = cfg.float;
             }
             if (cfg.style === 'error') {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
             }
             if (cfg.position) {
-               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
             }
             newCfg.style = _private.prepareDisplayStyle(cfg.style);
 
@@ -226,5 +226,4 @@ import getZIndex = require('Controls/Utils/getZIndex');
          return options;
       };
 
-      export = InfoBox;
-
+export default InfoBox;

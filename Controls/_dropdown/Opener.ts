@@ -79,7 +79,7 @@ var _private = {
    },
    setPopupOptions: function (self, popupOptions) {
       popupOptions.className = popupOptions.className || self._options.className;
-      popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
+      popupOptions.template = 'Controls/dropdownPopup:List';
       popupOptions.closeOnOutsideClick = true;
    }
 };
@@ -89,7 +89,7 @@ var _private = {
  *
  * @class Controls/_dropdown/Opener
  * @mixes Controls/interface/IDropdownList
- * @extends Controls/Popup/Opener/Sticky
+ * @extends Controls/_popup/Opener/Sticky
  * @control
  * @public
  * @author Красильников А.С.

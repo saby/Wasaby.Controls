@@ -76,7 +76,7 @@ define('Controls-demo/Confirmation/Confirmation',
                   cfg: {
                      message: MESSAGE,
                      details: DETAILS,
-                     style: 'error'
+                     style: 'danger'
                   }
                }]
             },

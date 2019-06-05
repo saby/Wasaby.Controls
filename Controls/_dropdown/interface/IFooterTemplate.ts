@@ -24,7 +24,7 @@
     *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
     *          </div>
     *       </ws:footerTemplate>
-    *    </Controls.dropdown.Menu>
+    *    </Controls.dropdown:Menu>
     * </pre>
     * JS:
     * <pre>

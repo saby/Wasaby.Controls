@@ -1,7 +1,7 @@
 <Controls.list:View attr:class="demo-News"
                itemActions="{{_itemActions}}"
                source="{{_source}}"
-               actionAlignment="column"
+               actionAlignment="vertical"
                actionCaptionPosition="bottom"
                markerVisibility="hidden"
                itemActionVisibilityCallback="{{_visibilityCallback}}"

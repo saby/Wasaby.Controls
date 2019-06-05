@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import {ItemsViewModel} from 'Controls/list';
+import { ItemsViewModel } from 'Controls/list';
 import template = require('wml!Controls/_propertyGrid/PropertyGrid');
 import defaultGroupTemplate = require('wml!Controls/_propertyGrid/groupTemplate');
 import defaultItemTemplate = require('wml!Controls/_propertyGrid/itemTemplate');

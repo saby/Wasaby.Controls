@@ -9,7 +9,7 @@ define('Controls-demo/Decorators/Money/Money',
       'use strict';
 
       var _private = {
-         CONTENT: 'Controls/Decorator/Money'
+         CONTENT: 'Controls/_decorator/Money'
       };
 
       var Money = Control.extend({

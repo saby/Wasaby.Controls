@@ -1,4 +1,4 @@
-import dateControlsUtils = require('Controls/Calendar/Utils');
+import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
 import {descriptor} from 'Types/entity';
 
@@ -58,7 +58,7 @@ const EMPTY_CAPTIONS = {
 
 function getDefaultOptions(): ILinkView {
     return {
-        style: 'default',
+        style: undefined,
         linkClickable: true,
         showNextArrow: false,
         showPrevArrow: false,

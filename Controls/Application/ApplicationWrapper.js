@@ -24,7 +24,19 @@ define('Controls/Application/ApplicationWrapper', [
 
       _version: null,
 
+      headJson: null,
+
       _beforeMount: function() {
+         this.headJson = [
+            ['link',
+               {
+                  rel: 'stylesheet',
+                  type: 'text/css',
+                  href: '/materials/resources/SBIS3.CONTROLS/themes/online/online.css'
+               }
+            ]
+         ];
+
          if (Env.constants.isBrowserPlatform) {
             this._version = _private.calculateVersion(window.location.search);
          }

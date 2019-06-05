@@ -95,6 +95,9 @@ var
         getExpandedItems: function () {
             return this._model.getExpandedItems();
         },
+        getRoot: function() {
+            return this._model.getRoot();
+        },
         setRoot: function (root) {
             this._model.setRoot(root);
         },

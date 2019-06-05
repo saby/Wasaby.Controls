@@ -84,6 +84,7 @@ define('Controls-demo/Demo/Page',
       var DemoPage = Control.extend({
          _template: template,
          _theme: null,
+         headJson: null,
          componentName: 'Controls-demo/IndexOld',
          _beforeMount: function() {
             var deferred = new Deferred();
@@ -91,6 +92,16 @@ define('Controls-demo/Demo/Page',
                this.componentName = UrlParams.cname;
             }
             this._theme = themeLinks[UrlParams['theme']] || themeLinks['base'];
+            this.headJson = [
+               ['link',
+                  {
+                     rel: 'stylesheet',
+                     type: 'text/css',
+                     id: 'controlsThemeStyle',
+                     href: this._theme + '.css'
+                  }
+               ]
+            ];
             requirejs([this.componentName], deferred.callback.bind(deferred));
             return deferred;
          },

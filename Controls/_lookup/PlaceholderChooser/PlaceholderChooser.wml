@@ -1,0 +1,1 @@
+<ws:partial template="{{_options.content}}" placeholder="{{_placeholder}}" on:itemsChanged="_itemsChanged()" dataLoadCallback="{{_dataLoadCallback}}"/>

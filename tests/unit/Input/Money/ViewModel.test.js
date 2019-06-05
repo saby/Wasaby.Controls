@@ -11,8 +11,7 @@ define(
             useGrouping: true,
             onlyPositive: false,
             showEmptyDecimals: true,
-            useAdditionToMaxPrecision: true,
-            _newValueBehavior: true
+            useAdditionToMaxPrecision: true
          }, null);
 
          describe('Change the value.', function() {

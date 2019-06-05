@@ -1,1 +1,0 @@
-<ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper" scope="{{_options}}" />

@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Lookup/Lookup');
-import Env = require('Env/Env');
 
 
 /**
@@ -13,7 +12,7 @@ import Env = require('Env/Env');
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISearch
- * @mixes Controls/interface/ISource
+ * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ILookup
@@ -29,14 +28,13 @@ import Env = require('Env/Env');
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 
+/**
+ * @name Controls/interface/ILookup#multiLine
+ * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
+ */
+
 var Lookup = Control.extend({
    _template: template,
-
-   _beforeMount: function (options) {
-      if (options.lookupTemplate) {
-         Env.IoC.resolve('ILogger').warn('Option "Controls/_lookup/Lookup:lookupTemplate" renamed and will be deleted in 3.19.100, use "Controls/_lookup/Lookup:selectorTemplate"');
-      }
-   },
 
    showSelector: function (popupOptions) {
       this._children.controller.showSelector(popupOptions);

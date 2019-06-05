@@ -57,7 +57,7 @@ import buttons = require('Controls/buttons');
     *
     * @class Controls/_operations/Panel
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
+    * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/_list/interface/IHierarchy
     * @control

@@ -1,7 +1,7 @@
-define(['Controls/Search/Misspell/getSwitcherStrFromData', 'Types/collection', 'Types/entity'], function(getSwitchedStrFromData, collection, entity) {
-   
-   describe('Controls.Search.Misspell.getSwitchedStrFromData', function() {
-      
+define(['Controls/_search/Misspell/getSwitcherStrFromData', 'Types/collection', 'Types/entity'], function(getSwitchedStrFromData, collection, entity) {
+
+   describe('Controls/_search/Misspell/getSwitcherStrFromData', function() {
+
       it('getSwitchedStrFromData', function() {
          var rs = new collection.RecordSet({
             rawData: [],
@@ -15,12 +15,12 @@ define(['Controls/Search/Misspell/getSwitcherStrFromData', 'Types/collection', '
             })
          });
          assert.equal(getSwitchedStrFromData(rs), 'testStr');
-   
+
          rs.setMetaData({
             switchedStr: 'testStr2'
          });
          assert.equal(getSwitchedStrFromData(rs), 'testStr2');
       });
    });
-   
+
 });

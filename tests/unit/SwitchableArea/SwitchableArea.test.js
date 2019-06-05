@@ -1,7 +1,7 @@
 define([
-   'Controls/SwitchableArea'
+   'Controls/switchableArea'
 ], function(
-   SwitchableArea
+   switchableArea
 ) {
    'use strict';
    var SwitchArea;
@@ -20,9 +20,9 @@ define([
          title: 'title'
       }
    ];
-   describe('Controls.SwitchableArea', function() {
+   describe('Controls.switchableArea:View', function() {
       beforeEach(function() {
-         SwitchArea = new SwitchableArea();
+         SwitchArea = new switchableArea.View();
       });
 
       it('life cycle', function() {

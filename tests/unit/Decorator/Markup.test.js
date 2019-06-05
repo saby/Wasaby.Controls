@@ -3,9 +3,9 @@
  */
 define([
    'Controls/decorator',
-   'Controls/Decorator/Markup/resources/template',
-   'Controls/Decorator/Markup/resolvers/highlight',
-   'Controls/Decorator/Markup/resources/linkDecorateUtils',
+   'Controls/_decorator/Markup/resources/template',
+   'Controls/_decorator/Markup/resolvers/highlight',
+   'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
 ], function(
    decorator,
@@ -432,6 +432,44 @@ define([
                '</div>';
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });
+
+         it('validHtml option', function() {
+            var
+               validHtml = {
+                  validNodes: {
+                     any: true,
+                     tag: true,
+                     link: true,
+                     script: true
+                  },
+                  validAttributes: {
+                     name: true,
+                     value: true
+                  }
+               },
+               json = [
+                  ['p', '123'],
+                  ['div', '456'],
+                  ['any', { name: 'name', value: 'value', id: 'id' }],
+                  ['tag', 'inner text'],
+                  ['link'],
+                  ['script', 'alert(123);']
+               ],
+               goodHtml =
+                  '<any name="name" value="value"></any>' +
+                  '<tag>inner text</tag>' +
+                  '<link />' +
+                  '<script>alert(123);</script>',
+               checkHtml = template({
+                  _options: {
+                     value: json,
+                     validHtml: validHtml,
+                     tagResolver: decorator.noOuterTag
+                  }
+               }, {});
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
          it('with linkDecorate resolver', function() {
             // Link with length 1500.
             var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
