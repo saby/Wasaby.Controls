@@ -49,12 +49,6 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
 
    _resetClick: function () {
       this._notifySearch('');
-   },
-
-   _keyDown: function (event) {
-      if (event.nativeEvent.keyCode === 13) {
-         this._notifySearch(this._value, true);
-      }
    }
 });
 
