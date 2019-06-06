@@ -238,10 +238,12 @@ var HierarchySelection = Selection.extend({
 
    selectAll: function() {
       this.select([this._getRoot()]);
+      ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    },
 
    unselectAll: function() {
       this.unselect([this._getRoot()]);
+      ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [this._getRoot()]);
    },
 
    toggleAll: function() {
@@ -252,11 +254,11 @@ var HierarchySelection = Selection.extend({
          childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
       if (this._isAllSelection(this._getParams(rootId))) {
-         this.unselectAll(rootId);
+         this.unselect([rootId]);
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
 
       } else {
-         this.selectAll(rootId);
+         this.select([rootId]);
          this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
       }
    },
