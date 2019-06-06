@@ -37,6 +37,14 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        * @default visible
        */
 
+        /**
+         * @name Controls/_scroll/StickyHeader#backgroundVisibility
+         * @cfg {String} Background visibility.
+         * @variant visible Show.
+         * @variant hidden Do not show.
+         * @default visible
+         */
+
       /**
        * @name Controls/_scroll/StickyHeader#position
        * @cfg {String} Determines which side the control can sticky.
