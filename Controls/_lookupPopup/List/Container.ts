@@ -14,7 +14,7 @@ import Toolbar = require('Controls/Utils/Toolbar');
  *
  * @class Controls/_lookupPopup/List/Container
  * @extends Core/Control
- * @mixes Controls/interface/IMultiSelectable
+ * @mixes Controls/_interface/IMultiSelectable
  * @control
  * @public
  * @author Герасимов Александр Максимович

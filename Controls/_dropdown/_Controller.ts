@@ -160,7 +160,7 @@ var _private = {
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IMultiSelectable
+ * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/_interface/ICaption
