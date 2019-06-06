@@ -21,6 +21,8 @@ define([
    }
 
    describe('Controls/_lookup/BaseController', function() {
+      var dataHistory;
+
       // Убираем работу с вертской
       if (typeof window === 'undefined') {
          scroll._CollectionController._private.getCounterWidth = function() {};
@@ -30,8 +32,8 @@ define([
          return {
             addCallback: function(func) {
                func({
-                  update: function(item) {
-                     item._isUpdateHistory = true;
+                  update: function(data) {
+                     dataHistory = data;
                   }
                });
             }
@@ -357,6 +359,7 @@ define([
                rawData: {id: 1}
             });
 
+         selectedCollection._selectedKeys = [1, 2, 3];
          selectedCollection._options.historyId = 'historyField';
          selectedCollection._selectCallback(
             null,
@@ -365,7 +368,9 @@ define([
             })
          );
 
-         assert.isTrue(item._isUpdateHistory);
+         assert.equal(dataHistory, {
+            ids: [1, 2, 3]
+         });
       });
    });
 });
