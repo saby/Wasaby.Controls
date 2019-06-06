@@ -187,6 +187,7 @@ import {IData, IDecorator} from "Types/source";
             const keyProperty = dataOptions.keyProperty;
 
             let loadDef;
+            let indicatorId;
 
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
@@ -206,6 +207,7 @@ import {IData, IDecorator} from "Types/source";
                   selectedItems.add(selectedItem);
                   loadDef = Deferred.success(selectedItems);
                } else {
+                  indicatorId = this._notify('showIndicator', [], {bubbling: true});
                   loadDef = sourceController.load(
                      _private.prepareFilter(
                         dataOptions.filter,
@@ -219,6 +221,10 @@ import {IData, IDecorator} from "Types/source";
             }
 
             loadDef.addCallback(function(result) {
+               if (indicatorId) {
+                  self._notify('hideIndicator', [indicatorId], {bubbling: true});
+               }
+
                return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
             });
 
