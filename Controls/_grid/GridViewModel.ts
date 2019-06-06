@@ -946,6 +946,9 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
                 current.rowIndex = this._calcRowIndex(current);
+                if (this.getEditingItemData() && (current.rowIndex>=this.getEditingItemData().rowIndex)) {
+                    current.rowIndex++;
+                }
             }
 
             if (GridLayoutUtil.isPartialGridSupport()) {
@@ -1114,9 +1117,9 @@ var
             this._model.nextModelVersion.apply(this._model, arguments);
         },
 
-        _setEditingItemData: function(itemData) {
-           if (GridLayoutUtil.isPartialGridSupport() && itemData) {
-               itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+        _setEditingItemData: function (itemData) {
+            if (GridLayoutUtil.isPartialGridSupport() && itemData) {
+                itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
             }
             this._model._setEditingItemData(itemData);
         },
