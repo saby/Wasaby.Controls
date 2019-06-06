@@ -53,7 +53,7 @@ var _private = {
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
-           homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
+           homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
            if (!options.header) {
               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                  _options: {
@@ -88,6 +88,19 @@ var _private = {
             self._breadCrumbsClass = '';
         }
         self._viewUpdated = true;
+    },
+
+    getContainer: function(self) {
+        return self._container[0] || self._container;
+    },
+
+    getContainerSpacing: function(self) {
+        let computedStyle = window.getComputedStyle(_private.getContainer(self));
+        return parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
+    },
+
+    getAvailableContainerWidth: function(self):number {
+        return  _private.getContainer(self).clientWidth - _private.getContainerSpacing(self);
     }
 };
 
@@ -140,7 +153,7 @@ var BreadCrumbsPath = Control.extend({
     _backButtonMinWidth: 0,
 
     _afterMount: function () {
-        this._oldWidth = this._container.clientWidth;
+        this._oldWidth = _private.getAvailableContainerWidth(this);
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
@@ -156,7 +169,7 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.theme !== newOptions.theme) {
            this._backButtonMinWidth = _private.getBackButtonMinWidth();
         }
-        var containerWidth = this._container.clientWidth;
+        let containerWidth = _private.getAvailableContainerWidth(this);
         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
@@ -211,5 +224,6 @@ BreadCrumbsPath.getDefaultOptions = function () {
 };
 
 BreadCrumbsPath._theme = ['Controls/crumbs'];
+BreadCrumbsPath._private = _private;
 
 export default BreadCrumbsPath;
