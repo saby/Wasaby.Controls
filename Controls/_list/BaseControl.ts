@@ -23,7 +23,7 @@ import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
-import TouchContextField = require('Controls/Context/TouchContextField');
+import {TouchContextField} from 'Controls/context';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
