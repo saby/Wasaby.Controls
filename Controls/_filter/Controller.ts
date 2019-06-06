@@ -468,6 +468,7 @@ import 'Controls/context';
          _beforeUpdate: function(newOptions) {
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
                _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
             }
             if (!isEqual(this._options.filter, newOptions.filter)) {
