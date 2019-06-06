@@ -93,16 +93,21 @@ interface IPosition {
          return position;
       },
 
-       isNegativePosition(position: IPosition, targetCoords): Boolean {
-          // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
-          if (Env.detection.isMobileIOS) {
-             _private._fixBottomPositionForIos(position, targetCoords);
+       isNegativePosition(popupCfg: object, position: IPosition, targetCoords): Boolean {
+           // The target side can be behind the visible area. In Ios it's happen, when page is zoomed.
+           if (_private._isMobileIOS() && popupCfg.checkNegativePosition !== false) {
+               // don't change original value
+               let clonePosition = {...position};
+               _private._fixBottomPositionForIos(clonePosition, targetCoords);    // Protection against incorrect page design
+               // Protection against incorrect page design
+               let minValue = -10;
+               return clonePosition.left < minValue || clonePosition.right < minValue || clonePosition.top < minValue || clonePosition.bottom < minValue;
+           }
+           return false;
+       },
 
-             // Protection against incorrect page design
-             let minValue = -10;
-             return position.left < minValue || position.right < minValue || position.top < minValue || position.bottom < minValue;
-          }
-          return false;
+       _isMobileIOS() {
+          return Env.detection.isMobileIOS;
        },
 
       calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
@@ -110,7 +115,7 @@ interface IPosition {
          let position = _private.getPosition(popupCfg, targetCoords, direction);
          let resultPosition = position;
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
-         let isNegativePos = _private.isNegativePosition(position, targetCoords);
+         let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
             if (popupCfg.fittingMode === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
@@ -120,7 +125,7 @@ interface IPosition {
                _private.invertPosition(popupCfg, direction);
                let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-               let isNegativeRevertPosition = _private.isNegativePosition(revertPosition, targetCoords);
+               let isNegativeRevertPosition = _private.isNegativePosition(popupCfg, revertPosition, targetCoords);
                if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
                   if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
                      _private.invertPosition(popupCfg, direction);

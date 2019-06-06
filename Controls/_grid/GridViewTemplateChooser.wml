@@ -11,7 +11,7 @@
                _options="{{_options}}"/>
 </ws:template>
 <ws:if data="{{_options.columnScroll}}">
-   <Controls._grid.ColumnScroll scope="{{_options}}">
+   <Controls._grid.ColumnScroll scope="{{_options}}" name="columnScroll">
       <ws:partial template="gridTemplate"/>
    </Controls._grid.ColumnScroll>
 </ws:if>
