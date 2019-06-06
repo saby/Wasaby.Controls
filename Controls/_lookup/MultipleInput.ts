@@ -15,7 +15,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IMultiSelectable
+ * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/Input/interface/IInputField
  * @mixes Controls/_lookup/Lookup/LookupStyles

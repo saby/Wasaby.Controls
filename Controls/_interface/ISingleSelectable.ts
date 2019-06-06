@@ -8,7 +8,7 @@ export interface ISingleSelectableOptions {
  * @interface Controls/_interface/ISingleSelectable
  * @public
  * @author Авраменко А.С.
- * @see Controls/interface/IMultiSelectable
+ * @see Controls/_interface/IMultiSelectable
  * @see Controls/interface/IPromisedSelectable
  */
 export default interface ISingleSelectable {

@@ -7,7 +7,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
     * @class Controls/_list/Mover/MoveDialog
     * @extends Core/Control
-    * @mixes Controls/_list/interface/IHierarchy
+    * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/interface/IFilter
     * @mixes Controls/_interface/ISource
     *
