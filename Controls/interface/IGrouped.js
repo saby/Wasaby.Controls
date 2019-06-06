@@ -13,6 +13,22 @@ define('Controls/interface/IGrouped', [
     * @name Controls/interface/IGrouped#groupingKeyCallback
     * @cfg {Function} groupingKeyCallback Function that returns group identifier for a given item.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @remark
+    * In addition, there is a "hidden group".
+    * Items in the hidden group will appear at the top of the list, and the group itself will appear untitled.
+    * To define an element in the "hidden group" it is necessary to return the constant view.hiddenGroup from the "Controls/Constants" library from the function passed to the groupingKeyCallback.
+    * @example
+    * <pre>
+    *    _groupByBrand: function(item) {
+    *       if (item.get('brand') === 'apple') {
+    *          return ControlsConstants.view.hiddenGroup;
+    *       }
+    *       return item.get('brand');
+    *    }
+    * </pre>
+    * <pre>
+    *    groupingKeyCallback ="{{_groupByBrand}}",
+    * </pre>
     */
 
    /**
