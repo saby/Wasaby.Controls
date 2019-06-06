@@ -7,45 +7,45 @@
 .controls-Checkbox__enabled {
    cursor: pointer;
 }
-.controls-Checkbox__wrapper:before {
+.controls-Checkbox__wrapper_theme_@{themeName}:before {
    content: '\200b';
 }
-.controls-Checkbox__wrapper {
+.controls-Checkbox__wrapper_theme_@{themeName} {
    display: inline-flex;
    font-size: @font-size_CheckBox;
    //Не можем сделать на флексах из-за стандарта
    line-height: @height_CheckBox__clickArea;
    text-align: left; //ie can inherit text-align: right from parent node
 }
-.controls-Checkbox__icon-border-color__enabled {
+.controls-Checkbox__icon-border-color__enabled_theme_@{themeName} {
    color: @color_CheckBox__iconBox;
 }
-.controls-Checkbox__icon-border-color__disabled {
+.controls-Checkbox__icon-border-color__disabled_theme_@{themeName} {
    color: @color_CheckBox__iconBox_disabled;
 }
-.controls-Checkbox__caption-color__enabled{
+.controls-Checkbox__caption-color__enabled_theme_@{themeName}{
    color: @color_CheckBox__caption_enabled;
 }
-.controls-Checkbox__caption-color__disabled{
+.controls-Checkbox__caption-color__disabled_theme_@{themeName}{
    color: @color_CheckBox__caption_disabled;
 }
-.controls-Checkbox_iconInCaption {
+.controls-Checkbox_iconInCaption_theme_@{themeName} {
    height: @height_CheckBox__clickArea - 2*@padding-horizontal_CheckBox-caption;
 }
-.controls-Checkbox__caption, .controls-Checkbox_iconInCaption {
+.controls-Checkbox__caption_theme_@{themeName}, .controls-Checkbox_iconInCaption_theme_@{themeName} {
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
    //Не можем сделать на флексах из-за стандарта
    line-height: @line-height_CheckBox__caption;
 }
-.controls-Checkbox__iconWrapper {
+.controls-Checkbox__iconWrapper_theme_@{themeName} {
    position: relative;
    user-select: none;
    width: @width_CheckBox__clickArea;
    height: @height_CheckBox__clickArea;
    flex-shrink: 0;
 }
-.controls-Checkbox__iconWrapper:before {
+.controls-Checkbox__iconWrapper_theme_@{themeName}:before {
    box-sizing: border-box;
    content: '';
    position: absolute;
@@ -55,23 +55,23 @@
    height: @size_CheckBox__icon-box;
    margin: (@height_CheckBox - @size_CheckBox__icon-box) / 2 (@width_CheckBox - @size_CheckBox__icon-box) / 2;
 }
-.controls-Checkbox__icon-checked {
+.controls-Checkbox__icon-checked_theme_@{themeName} {
    width: @size_CheckBox__iconSuccessful;
    height: @size_CheckBox__iconSuccessful;
    position: relative;
    left: @left_CheckBox__iconSuccessful;
    top: @top_CheckBox__iconSuccessful;
 }
-.controls-Checkbox__icon-checked-color_enabled {
+.controls-Checkbox__icon-checked-color_enabled_theme_@{themeName} {
    fill: @color_CheckBox__icon_enabled;
 }
-.controls-Checkbox__icon-checked-color_disabled {
+.controls-Checkbox__icon-checked-color_disabled_theme_@{themeName} {
    fill: @color_CheckBox__icon_disabled;
 }
 .controls-Checkbox__icon-checked-color_transparent {
    fill: transparent;
 }
-.controls-Checkbox__icon-tristate:after {
+.controls-Checkbox__icon-tristate_theme_@{themeName}:after {
    left: 0;
    content: '';
    position: absolute;
@@ -80,9 +80,9 @@
    line-height: @size_CheckBox__iconTristate;
    margin: (@height_CheckBox__clickArea - @size_CheckBox__iconTristate) / 2 (@width_CheckBox__clickArea - @size_CheckBox__iconTristate) / 2;
 }
-.controls-Checkbox__icon-tristate-color__disabled:after{
+.controls-Checkbox__icon-tristate-color__disabled_theme_@{themeName}:after{
    background-color: @color_CheckBox__icon_disabled;
 }
-.controls-Checkbox__icon-tristate-color__enabled:after{
+.controls-Checkbox__icon-tristate-color__enabled_theme_@{themeName}:after{
    background-color: @color_CheckBox__icon_enabled;
 }
