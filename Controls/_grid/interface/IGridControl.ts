@@ -84,7 +84,7 @@
 
 /**
  * @typedef {Object} Column
- * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) and the value “auto”.
+ * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fr and the value “auto”.
  * @property {String} [displayProperty] Name of the field that will shown in the column by default.
  * @property {String} [template] Template for cell rendering.
  * @property {String} [resultTemplate] Template for cell rendering in results row. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
@@ -99,6 +99,30 @@
  * @cfg {Array.<Column>} Describes grid's columns.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
+ * @example
+ * <pre>
+ * _columns = [
+ * {
+ *     displayProperty: 'name',
+ *     width: '1fr',
+ *     align: 'left',
+ *     template: _customNameTemplate
+ * },
+ * {
+ *     displayProperty: 'balance',
+ *     align: 'right',
+ *     width: 'auto',
+ *     resutTemplate: '_customResultTemplate',
+ *     result: 12340
+ * }
+ * ];
+ * </pre>
+ * <pre>
+ *  <Controls.grid:View
+ *      ...
+ *      columns="{{_columns}}">
+ *  </Controls.grid:View>
+ * </pre>
  */
 
 /**
