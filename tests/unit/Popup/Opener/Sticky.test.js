@@ -448,6 +448,22 @@ define(
             position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.bottom, 740);
          });
+
+         it('isNegativePosition', () => {
+            StickyStrategy._private._isMobileIOS = () => true;
+            StickyStrategy._private._fixBottomPositionForIos = (pos) => (pos.bottom = -1000);
+
+            let position = {
+               bottom: 100
+            };
+            let isNegative = StickyStrategy._private.isNegativePosition({}, position, {});
+            assert.equal(position.bottom, 100);
+            assert.equal(isNegative, true);
+
+            isNegative = StickyStrategy._private.isNegativePosition({checkNegativePosition: false}, position, {});
+            assert.equal(position.bottom, 100);
+            assert.equal(isNegative, false);
+         });
       });
    }
 );
