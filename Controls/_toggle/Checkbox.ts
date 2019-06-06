@@ -2,9 +2,6 @@ import {Control, IControlOptions} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions} from 'Controls/interface';
-// убрать после https://online.sbis.ru/opendoc.html?guid=39d8fd32-5701-4e7f-b022-3ef5893977e8
-import 'css!theme?Controls/_toggle/Checkbox/Checkbox';
-
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions {
    triState?: boolean;
    value?: boolean | null;
