@@ -292,7 +292,7 @@ var
             if (expanded !== currentExpanded || expanded === undefined) {
                 if (_private.isExpandAll(this._expandedItems)) {
                     if (expanded) {
-                        _private.removeFromArray(_collapsedItems,itemId);
+                        _private.removeFromArray(this._collapsedItems,itemId);
                     } else {
                         this._collapsedItems.push(itemId);
                     }
