@@ -8,13 +8,15 @@
       <div>Потяните за левый или правый край.</div>
       <div>&nbsp;</div>
    </ws:else>
-   <div style="height: 200px; width: {{_width}}px; background: red; position: relative;overflow:hidden;">
+   <div style="height: 200px; width: {{_width}}px; background: red; position: relative;">
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"
                                       direction="reverse"
+                                      minOffset="{{-100}}"
                                       maxOffset="{{400}}"
                                       on:offset="_offsetHandlerLeft()"/>
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; right: 0; height: 100%"
                                        direction="direct"
+                                       minOffset="{{-100}}"
                                        maxOffset="{{400}}"
                                       on:offset="_offsetHandlerRight()"/>
    </div>

@@ -29,14 +29,6 @@ interface IResizingLineCoords {
  */
 
 /**
- * @name Controls/_dragnDrop/ResizingLine#maxOffset
- * @cfg {Number} Максимальное значение сдвига при изменении значения размера
- * @default 1000
- * @remark
- * Сдвиге больше указанного визуально отображаться не будет
- */
-
-/**
  * @name Controls/_toggle/Checkbox#direction
  * @cfg {String} Задает направление оси для сдвига
  * @variant direct Прямое направление. Слева направо
@@ -44,6 +36,22 @@ interface IResizingLineCoords {
  * @remark
  * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
  * @see event offset()
+ */
+
+/**
+ * @name Controls/_dragnDrop/ResizingLine#maxOffset
+ * @cfg {Number} Максимальное значение сдвига при изменении значения размера
+ * @default 1000
+ * @remark
+ * Сдвиг больше указанного визуально отображаться не будет. Для возможности сдвига вдоль направления оси maxOffset должен быть > 0
+ */
+
+/**
+ * @name Controls/_dragnDrop/ResizingLine#minOffset
+ * @cfg {Number} Минимальное значение сдвига при изменении значения размера
+ * @default 1000
+ * @remark
+ * Сдвиг меньше указанного визуально отображаться не будет. Для возможности сдвига против направления оси minOffset должен быть < 0
  */
 
 /**
@@ -74,7 +82,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
       this._dragging = true;
    }
 
-   private _calculateCoordinates(offsetX: number, maxOffset: number,
+   private _calculateCoordinates(offsetX: number, maxOffset: number, minOffset: number,
                                  controlWidth: number, direction: string): IResizingLineCoords {
       let offset: number = null;
       let left: string;
@@ -82,21 +90,21 @@ class ResizingLine extends Control<IContainerOptions, void> {
 
       if (offsetX > 0) {
          if (direction === 'reverse') {
-            offset = -Math.min(Math.abs(offsetX), maxOffset);
+            offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
             left = '0';
             right = offset + 'px';
          } else {
-            offset = Math.min(Math.abs(offsetX), maxOffset);
+            offset = Math.min(Math.abs(offsetX), Math.abs(maxOffset));
             left = controlWidth + 'px';
             right = -offset + 'px';
          }
       } else {
          if (direction === 'reverse') {
-            offset = Math.min(Math.abs(offsetX), maxOffset);
+            offset = Math.min(Math.abs(offsetX), Math.abs(maxOffset));
             left = -offset + 'px';
             right = controlWidth + 'px';
          } else {
-            offset = -Math.min(Math.abs(offsetX), maxOffset);
+            offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
             right = '0';
             left = offset + 'px';
          }
@@ -112,6 +120,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
       const coords: IResizingLineCoords = this._calculateCoordinates(
          dragObject.offset.x,
          this._options.maxOffset,
+         this._options.minOffset,
          this._width, this._options.direction
       );
 
