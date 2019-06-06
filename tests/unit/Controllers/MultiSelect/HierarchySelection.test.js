@@ -571,7 +571,6 @@ define([
                excludedKeys: [],
                items: allData,
                keyProperty: 'id',
-               extendedSelectionMode: true,
                listModel: getListModel(1)
             };
             selectionInstance = new HierarchySelection(cfg);
@@ -599,7 +598,6 @@ define([
                excludedKeys: [],
                items: allData,
                keyProperty: 'id',
-               extendedSelectionMode: true,
                listModel: getListModel(1)
             };
             selectionInstance = new HierarchySelection(cfg);
