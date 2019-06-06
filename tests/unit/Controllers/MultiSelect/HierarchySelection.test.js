@@ -573,7 +573,7 @@ define([
                keyProperty: 'id',
                listModel: getListModel(1)
             };
-            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance = new operations.HierarchySelection(cfg);
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([], selection.selected);
@@ -600,7 +600,7 @@ define([
                keyProperty: 'id',
                listModel: getListModel(1)
             };
-            selectionInstance = new HierarchySelection(cfg);
+            selectionInstance = new operations.HierarchySelection(cfg);
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([1], selection.selected);
