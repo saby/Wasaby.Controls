@@ -564,6 +564,54 @@ define([
             assert.deepEqual([1, 6, 4], selection.selected);
             assert.deepEqual([5, 2], selection.excluded);
          });
+
+         it('selectAll and unselectAll in unselected folder', function() {
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(1)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([1], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+         });
+
+         it('selectAll and unselectAll in selected folder', function() {
+            cfg = {
+               selectedKeys: [1],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(1)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+         });
       });
 
       it('if an item is in selectedKeys, it should get counted even if it is not loaded', function() {
