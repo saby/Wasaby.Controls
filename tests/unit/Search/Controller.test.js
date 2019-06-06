@@ -201,6 +201,23 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.deepEqual(controller._options.sorting, []);
       });
 
+      it('_private.searchErrback', function() {
+         let searchErrbackCalled = false;
+         let err;
+
+         let searchErrback = (error) => {
+            searchErrbackCalled = true;
+            err = error;
+         };
+
+         var searchController = getSearchController({dataLoadErrback: searchErrback});
+         searchController._dataOptions = defaultOptions;
+
+         searchMod.Controller._private.searchErrback(searchController, 'test');
+         assert.isTrue(searchErrbackCalled);
+         assert.equal(err, 'test');
+      });
+
       it('_search', function() {
          var searchController = getSearchController();
          var value;
