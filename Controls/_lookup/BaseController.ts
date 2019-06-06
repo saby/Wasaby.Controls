@@ -7,7 +7,6 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import collection = require('Types/collection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
-import LoadService from 'Controls/suggest';
 
    var _private = {
       loadItems: function(self, options, selectedKeys, sourceIsChanged) {
@@ -130,8 +129,14 @@ import LoadService from 'Controls/suggest';
 
       getHistoryService: function(self) {
          if (!self._historyServiceLoad) {
-            self._historyServiceLoad = LoadService({
-               historyId: self._options.historyId
+            self._historyServiceLoad = new Deferred();
+            require('Controls/suggest', (suggest) => {
+               suggest.LoadService({
+                  historyId: self._options.historyId
+               }).addCallback((result) => {
+                  self._historyServiceLoad.callback(result);
+                  return result;
+               });
             });
          }
 

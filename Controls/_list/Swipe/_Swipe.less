@@ -47,11 +47,6 @@
   align-items: center;
   display: inline-flex;
   height: 100%;
-
-  /**
- Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
-  */
-  padding: 0 @spacing-Swipe-between-content-and-borders 0 @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
   overflow: hidden;
   box-sizing: border-box;
   background-color: transparent;
@@ -63,7 +58,14 @@
   align-items: center;
   box-sizing: border-box;
   flex-shrink: 0;
+  flex-grow: 1;
   position: relative;
+
+  /**
+ Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
+  */
+  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
+  padding-right: @spacing-Swipe-between-content-and-borders;
 }
 
 .controls-Swipe__action_column {
@@ -141,8 +143,8 @@
 .controls-Swipe__separator_vertical {
   width: 100%;
   height: @width_Swipe-separator;
-  padding-left: @spacing_Swipe-between-horizontal-separator-and-border;
-  padding-right: @spacing_Swipe-between-horizontal-separator-and-border;
+  margin-left: @spacing_Swipe-between-horizontal-separator-and-border + @width_Swipe-shadow;
+  margin-right: @spacing_Swipe-between-horizontal-separator-and-border;
   box-sizing: border-box;
 }
 

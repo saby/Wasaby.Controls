@@ -270,16 +270,20 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             var moduleLang;
             var lang = this.getLang();
             var availableDictList = this.getAvailableDictList(lang);
+            var modules = this.getModules();
             for (var key in packages.js) {
                module = key.split('/')[0];
-               moduleLang = module + '/lang/' + lang + '/' + lang + '.json';
-               if (availableDictList[moduleLang]) {
-                  collectedDictList[moduleLang] = true;
+               moduleLang = module + '/lang/' + lang + '/' + lang;
+               if (availableDictList[moduleLang + '.json']) {
+                  collectedDictList[module] = { moduleLang: moduleLang };
                }
             }
             for (var key in collectedDictList) {
                if (collectedDictList.hasOwnProperty(key)) {
-                  files.js.push(key);
+                  files.js.push(collectedDictList[key].moduleLang + '.json');
+                  if (modules[key].dict && modules[key].dict && ~modules[key].dict.indexOf(lang + '.css')) {
+                     files.css.simpleCss.push(collectedDictList[key].moduleLang);
+                  }
                }
             }
          }
@@ -322,6 +326,9 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       getAvailableDictList: function(lang) {
          return i18n._dictNames[lang] || {};
+      },
+      getModules: function() {
+         return Env.constants.modules;
       }
    });
 

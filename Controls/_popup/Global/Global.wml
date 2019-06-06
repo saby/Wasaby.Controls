@@ -1,0 +1,11 @@
+<ws:partial template="{{_options.content}}" scope="{{ _options }}"
+            on:managerPopupBeforeDestroyed="_popupBeforeDestroyedHandler()"
+            on:serviceError="_openDialogHandler()"
+            on:openInfoBox="_openInfoBoxHandler()"
+            on:closeInfoBox="_closeInfoBoxHandler()"
+            on:forceCloseInfoBox="_forceCloseInfoBoxHandler()"
+            on:openPreviewer="_openPreviewerHandler()"
+            on:cancelPreviewer="_cancelPreviewerHandler()"
+            on:isPreviewerOpened="_isPreviewerOpenedHandler()"
+            on:closePreviewer="_closePreviewerHandler()"
+/>

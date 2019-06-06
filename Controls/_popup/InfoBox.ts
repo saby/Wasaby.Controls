@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
-import InfoBoxOpener = require('Controls/_popup/Opener/InfoBox');
+import InfoBoxOpener from './Opener/InfoBox');
 import TouchContext = require('Controls/Context/TouchContextField');
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
-      
+
 
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
@@ -332,5 +332,5 @@ import Env = require('Env/Env');
        * @property {Number} showDelay Delay before opening.
        * @property {Number} showDelay Delay before closing.
        */
-   
+
 

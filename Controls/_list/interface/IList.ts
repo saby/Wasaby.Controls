@@ -14,6 +14,25 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
+ * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию
+ * В качестве ключей можно использовать следующие свойства
+ * - items - для смены набора элементов
+ * - groupingKeyCallback, groupingTemplate для установки группировки
+ * - itemTemplate - шаблон элемента меню
+ * - footerTamplate - шаблон футера
+ * - headerTemplate - шаблон шапки
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#contextMenuConfig
+ * @cfg {Object} Determines whether context menu should be shown on right-click.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @default true
+ */
+
+/**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -143,6 +162,29 @@
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
  * @returns {Boolean} Determines whether the action should be rendered.
+ * @example
+ * Item action Read don't display if item has property isNew === false
+ * <pre>
+ *    <Controls.list:View attr:class="demo-News"
+ *                        itemActions="{{_itemActions}}"
+ *                        source="{{_source}}"
+ *                        actionAlignment="vertical"
+ *                        actionCaptionPosition="bottom"
+ *                        markerVisibility="hidden"
+ *                        itemActionVisibilityCallback="{{_visibilityCallback}}"
+ *                        ...
+ *   </Controls.list:View>
+ * </pre>
+ * <pre>
+ *  ...
+ *  private _visibilityCallback(action: IItemAction, item: Model): boolean {
+ *   if (action.title === 'Read') {
+ *     return item.get('isNew');
+ *   }
+ *   return true;
+ *  }
+ *  ...
+ * </pre>
  */
 
 /**
@@ -216,6 +258,14 @@
 /**
  * @name Controls/_list/interface/IList#dataLoadErrback
  * @cfg {Function} Callback function that will be called when data loading fail
+ */
+
+/**
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Control styling
+ * @variant master Stylizes control as MasterDetail
+ * @variant default Simple list
+ * @default default
  */
 
 /**

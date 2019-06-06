@@ -3,13 +3,13 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
 import isEqual = require('Core/helpers/Object/isEqual');
-import historyUtils = require('Controls/_filter/HistoryUtils');
+import {HistoryUtils} from 'Controls/filter';
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
 import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
-import 'Controls/Controllers/PrimaryAction';
+import 'Controls/form';
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -63,7 +63,7 @@ import 'Controls/Controllers/PrimaryAction';
 
       loadHistoryItems: function(self, historyId) {
          if (historyId) {
-            return historyUtils.loadHistoryItems(historyId).addCallback(function(items) {
+            return HistoryUtils.loadHistoryItems(historyId).addCallback(function(items) {
                self._historyItems = items;
                return items;
             }).addErrback(function() {
@@ -73,7 +73,7 @@ import 'Controls/Controllers/PrimaryAction';
       },
 
       reloadHistoryItems: function(self, historyId) {
-         self._historyItems = historyUtils.getHistorySource(historyId).getItems();
+         self._historyItems = HistoryUtils.getHistorySource(historyId).getItems();
       },
 
       cloneItems: function(items) {

@@ -60,13 +60,13 @@ var
                     return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
               } else {
-                 if (GridLayoutUtil.isNoGridSupport()) {
-                    return ` colspan: ${columnsLength - multiselectOffset};`;
-                 } else if (GridLayoutUtil.isPartialGridSupport()) {
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
-                 } else {
-                    return ` grid-column: ${multiselectOffset+1} / ${columnsLength + 1};`;
-                 }
+                  if (GridLayoutUtil.isNoGridSupport()) {
+                      return ` colspan: ${columnsLength - multiselectOffset};`;
+                  } else if (GridLayoutUtil.isPartialGridSupport()) {
+                      return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + multiselectOffset + 1}; -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
+                  } else {
+                      return ` grid-column: ${multiselectOffset + 1} / ${multiselectOffset + columnsLength + 1};`;
+                  }
               }
           }
         },
@@ -924,6 +924,8 @@ var
             current.columnScroll = this._options.columnScroll;
 
             current.style = this._options.style;
+            current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+            
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {

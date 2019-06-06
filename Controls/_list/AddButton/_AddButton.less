@@ -1,32 +1,29 @@
-.controls-AddButton-wrapper{
+.controls-AddButton-wrapper {
    display: inline-flex;
    align-items: baseline;
 }
 
-.controls-AddButton_state-enable{
-   color: @color_listAddButton;
-   stroke: @color_listAddButton;
-   cursor: pointer;
-}
-
-.controls-AddButton_state-enable:active{
-   .controls-AddButtonText {
+.controls-AddButton_state-enable:active {
+   .controls-AddButtonText-enable {
       text-decoration: underline;
    }
 }
 
-
 .ws-is-desktop-platform {
    .controls-AddButton_state-enable:hover {
-      .controls-AddButtonText {
+      .controls-AddButtonText-enable {
          text-decoration: underline;
       }
    }
 }
 
-.controls-AddButton_state-disable{
-   color: @color_listAddButton_readOnly;
-   stroke: @color_listAddButton_readOnly;
+.controls-AddButton_icon-disable {
+   background-image: @background-image_AddButton_disable;
+}
+
+.controls-AddButton_icon-enable {
+   background-image: @background-image_AddButton_enable;
+   cursor: pointer;
 }
 
 .controls-AddButton__icon {
@@ -39,13 +36,17 @@
    display: inline-flex;
    justify-content: center;
 }
-.controls-AddButtonText {
+
+.controls-AddButtonText-disable {
    margin-left: @spacing_ListAddButton-between-icon-and-text;
-}
-.controls-AddButton{
-   font-size: @font-size_listAddButton;
+   color: @color_listAddButton_readOnly;
 }
 
-.controls-AddButton__line {
-   stroke-width: @thickness_listAddButton;
+.controls-AddButtonText-enable {
+   margin-left: @spacing_ListAddButton-between-icon-and-text;
+   color: @color_listAddButton;
+}
+
+.controls-AddButton {
+   font-size: @font-size_listAddButton;
 }

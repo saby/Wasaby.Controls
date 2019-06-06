@@ -1,9 +1,9 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
-import DataOptions = require('Controls/Container/Data/ContextOptions');
+import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
-import _SearchController = require('Controls/Controllers/_SearchController');
+import _SearchController from './_SearchController';
 import isEqual = require('Core/helpers/Object/isEqual');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
@@ -86,7 +86,7 @@ var _private = {
       if (self._options.parentProperty && self._viewMode !== 'search') {
          _private.assignServiceFilters(filter);
       }
-      if (self._root !== undefined && self._options.parentProperty && self._options.searchMode === 'current') {
+      if (self._root !== undefined && self._options.parentProperty && self._options.startingWith === 'current') {
          filter[self._options.parentProperty] = self._root;
       }
       self._loading = true;
@@ -229,7 +229,7 @@ Container.getDefaultOptions = function () {
    return {
       minSearchLength: 3,
       searchDelay: 500,
-      searchMode: 'root'
+      startingWith: 'root'
    };
 };
 

@@ -70,7 +70,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             return itemConfig;
          },
 
-         loadItemsFromSource: function(instance, {source, keyProperty filter, navigation, dataLoadCallback}) {
+         loadItemsFromSource: function(instance, {source, keyProperty, filter, navigation, dataLoadCallback}) {
             // As the data source can be history source, then you need to merge the filter
             return _private.getSourceController(instance, {source, navigation, keyProperty}).load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
                instance._items = items;
@@ -155,10 +155,10 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             this._setText();
          },
 
-         getNewItems: function(self, selectedItems) {
+         getNewItems: function(config, selectedItems) {
             var newItems = [],
-               curItems = self._configs[self.lastOpenIndex]._items,
-               keyProperty = self._configs[self.lastOpenIndex].keyProperty;
+               curItems = config._items,
+               keyProperty = config.keyProperty;
 
             chain.factory(selectedItems).each(function(item) {
                if (!curItems.getRecordById(item.get(keyProperty))) {
@@ -170,7 +170,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
          onResult: function(event, result) {
             if (result.action === 'selectorResult') {
-               this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this, result.data));
+               this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this._configs[this.lastOpenIndex], result.data));
             }
             if (result.data) {
                _private.selectItems.call(this, result.data);
@@ -226,9 +226,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             chain.factory(items).each(function(item, index) {
                let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
                if (keys.length) {
-                  let properties = {...getPropValue(item, 'properties')};
+                  let properties = {source: getPropValue(item, 'properties').source};
                   properties.filter = properties.filter || {};
-                  properties.filter[properties.keyProperty] = keys;
+                  properties.filter[getPropValue(item, 'properties').keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties).addCallback(function(items) {
                      configs[index]._items.prepend(items);
                   });

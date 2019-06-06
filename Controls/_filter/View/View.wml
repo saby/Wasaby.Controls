@@ -1,6 +1,7 @@
 <ws:template name="textTemplate">
-   <div class="controls-FilterView__block_theme_{{_options.theme}}">
-      <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}}
+   <div class="controls-FilterView__block_theme_{{_options.theme}}
+   {{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme_' + _options.theme}}">
+      <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}} controls-FilterView-{{_options.alignment}}__iconArrow_theme_{{_options.theme}}
                controls-FilterView__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}} "></div>
       <div class="controls-FilterView__text-wrapper_theme_{{_options.theme}} controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
            title="{{title}}">
@@ -20,25 +21,26 @@
          <!--Data range-->
       </ws:if>
       <ws:if data="{{_isFastReseted() && _options.detailPanelTemplateName && _options.panelTemplateName}}">
-         <ws:partial template="textTemplate"
-                     text="{[Все]}"
-                     on:click="_openPanel()"/>
-      </ws:if>
-      <ws:for data="item in _filterSource">
-         <ws:if data="{{_displayText[item.name].text}}">
             <ws:partial template="textTemplate"
-                        text="{{_displayText[item.name].text}}"
-                        title="{{_displayText[item.name].title}}"
-                        hasMoreText="{{_displayText[item.name].hasMoreText}}"
+                        text="{[Все]}"
                         on:click="_openPanel()"/>
-            <ws:partial template="cross" on:click="_reset(item)" />
+      </ws:if>
+      <ws:for data="index, item in _filterSource">
+         <ws:if data="{{_displayText[item.name].text}}">
+               <ws:partial template="textTemplate"
+                           text="{{_displayText[item.name].text}}"
+                           title="{{_displayText[item.name].title}}"
+                           hasMoreText="{{_displayText[item.name].hasMoreText}}"
+                           on:click="_openPanel(item)"
+                           attr:name="{{item.name}}"/>
+               <ws:partial template="cross" on:click="_reset(item)" />
          </ws:if>
       </ws:for>
       <ws:if data="{{_filterText}}">
-         <ws:partial template="textTemplate"
-                     text="{{_filterText}}"
-                     title="{{_filterText}}"
-                     on:click="_openDetailPanel()"/>
+            <ws:partial template="textTemplate"
+                        text="{{_filterText}}"
+                        title="{{_filterText}}"
+                        on:click="_openDetailPanel()"/>
             <ws:partial template="cross" on:click="_resetFilterText()" />
       </ws:if>
    </div>

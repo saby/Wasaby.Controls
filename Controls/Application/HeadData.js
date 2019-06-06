@@ -65,13 +65,27 @@ define('Controls/Application/HeadData', [
          }
       },
 
+      getDepsCollector: function() {
+         return new DepsCollector(modDeps.links, modDeps.nodes, bundles, this.themesActive, true);
+      },
+      initThemesController: function(themedCss, simpleCss) {
+         return ThemesController.getInstance().initCss({
+            themedCss: themedCss,
+            simpleCss: simpleCss
+         });
+      },
+
+      getSerializedData: function() {
+         return AppEnv.getStateReceiver().serialize();
+      },
+
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive, true);
+         var depsCollector = self.getDepsCollector();
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             if (self.defRender.isReady()) {
-               return;
+               return null;
             }
             var components = Object.keys(self.depComponentsMap);
             var files = {};
@@ -79,13 +93,10 @@ define('Controls/Application/HeadData', [
                files = {};
             } else {
                files = depsCollector.collectDependencies(components);
-               ThemesController.getInstance().initCss({
-                  themedCss: files.css.themedCss,
-                  simpleCss: files.css.simpleCss
-               });
+               self.initThemesController(files.css.themedCss, files.css.simpleCss);
             }
 
-            var rcsData = AppEnv.getStateReceiver().serialize();
+            var rcsData = self.getSerializedData();
             var additionalDepsArray = [];
             for (var key in rcsData.additionalDeps) {
                if (rcsData.additionalDeps.hasOwnProperty(key)) {
@@ -106,10 +117,6 @@ define('Controls/Application/HeadData', [
                   }
                }
             }
-
-            // if (!self.isDebug) {
-            //    files.js = files.js.concat(self._getDictionaries());
-            // }
 
             self._version++;
             self.defRender.callback({

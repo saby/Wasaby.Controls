@@ -22,6 +22,8 @@ var TreeTileViewModel = TreeViewModel.extend({
             hoveredItem = this._tileModel.getHoveredItem(),
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
+        current.multiSelectClassList += current.hasMultiSelect ? ' controls-TileView__checkbox controls-TreeTileView__checkbox js-controls-TileView__withoutZoom' : '';
+        
         prevItem = this._display.at(current.index - 1);
 
         //before grouping and when moving from folders to records, you need to draw invisible items

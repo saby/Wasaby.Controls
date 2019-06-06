@@ -293,17 +293,6 @@ var _private = {
     },
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
-        if (direction === 'up') {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-           self._notify('saveScrollPosition', [], {
-               bubbling: true
-           });
-           self._hasSavedScrollPosition = true;
-        }
-
         _private.showIndicator(self, direction);
 
         /**/
@@ -330,6 +319,22 @@ var _private = {
                 if (direction === 'down') {
                     self._listViewModel.appendItems(addedItems);
                 } else if (direction === 'up') {
+                    /**
+                     * todo KINGO.
+                     * Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
+                     * Запоминаем скролл непосредственно до отрисовки (прямо перед добавлением записей в рекордсет),
+                     * это единственная логичная точка. Запоминать перед загрузкой данных - пробовали, это неправильно:
+                     * пока идет загрузка может измениться позиция скролла и запомненное состояние будет неактуальным.
+                     * Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
+                     */
+                    /**
+                     * This event should bubble, because there can be anything between Scroll/Container and the list,
+                     * and we can't force everyone to manually bubble it.
+                     */
+                    self._notify('saveScrollPosition', [], {
+                        bubbling: true
+                    });
+                    self._hasSavedScrollPosition = true;
                     self._listViewModel.prependItems(addedItems);
                 }
                 var cnt2 = self._listViewModel.getCount();
@@ -730,17 +735,28 @@ var _private = {
             self._listViewModel.setActiveItem(itemData);
             self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
+                const defaultMenuConfig = {
+                   items: rs,
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   showClose: true
+                };
+
+                if (self._options.contextMenuConfig) {
+                   if (typeof self._options.contextMenuConfig === 'object') {
+                      cMerge(defaultMenuConfig, self._options.contextMenuConfig);
+                   } else {
+                      IoC.resolve('ILogger').error('CONTROLS.ListView',
+                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                   }
+                }
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: {
-                        items: rs,
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        showClose: true
-                    },
+                    templateOptions: defaultMenuConfig,
                     eventHandlers: {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
@@ -1300,10 +1316,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
-    _afterUpdate: function(oldOptions) {
-        if (this._options.itemActions) {
-            this._canUpdateItemsActions = false;
-        }
+    _beforePaint(): void {
+        // todo KINGO.
+        // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
+        // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
+        // Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
+        // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
@@ -1311,8 +1330,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
-           _private.checkLoadToDirectionCapability(this);
-           this._checkShouldLoadToDirection = false;
+            _private.checkLoadToDirectionCapability(this);
+            this._checkShouldLoadToDirection = false;
+        }
+    },
+
+    _afterUpdate: function(oldOptions) {
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = false;
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -1595,6 +1620,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
+        // activate list when marker is moving. It let us press enter and open current row
+        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
+            // must check mounted to avoid fails on unit tests
+            if (this._mounted) {
+               this.activate();
+            }
+        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {
