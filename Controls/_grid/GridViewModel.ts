@@ -433,7 +433,7 @@ var
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-                if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                if (changesType === 'collectionChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
                 if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialGridSupport()){
@@ -451,6 +451,9 @@ var
             this._onCollectionChangeFn = function() {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
+            // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
+            this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
@@ -458,6 +461,10 @@ var
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
             this._setHeader(this._options.header);
+        },
+
+        _updateIndexesCallback(): void {
+            this._ladder = _private.prepareLadder(this);
         },
 
         _nextModelVersion: function(notUpdatePrefixItemVersion) {
