@@ -241,10 +241,14 @@ var HierarchySelection = Selection.extend({
       ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    },
 
+   /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
+    Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
+    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+
    unselectAll: function() {
       this.unselect([this._getRoot()]);
       ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [this._getRoot()]);
-   },
+   }, */
 
    toggleAll: function() {
       var
