@@ -108,7 +108,7 @@
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
  * @property {String} icon Operation icon.
- * @property {Number} showType Location of operation. (1 - menu | 2 - toolbar and menu | 3 - toolbar).
+ * @property {Number} showType Location of operation. (0 - menu | 1 - toolbar and menu | 2 - toolbar).
  * @property {String} style Operation style. (secondary | warning | danger | success).
  * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
  * @property {Function} handler Operation handler.
