@@ -304,6 +304,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = true;
         }
 
+        //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
@@ -348,6 +349,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpandedItemsChanged(e, expandedItems){
         this._notify('expandedItemsChanged', [expandedItems]);
+
+        //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
     },
     reload: function() {

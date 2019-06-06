@@ -637,46 +637,6 @@ define([
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
-      it('expandedItems bindind', function(){
-         var treeControl = correctCreateTreeControl({
-            columns: [],
-            source: new sourceLib.Memory({
-               data: getHierarchyData(),
-               idProperty: 'id',
-               filter: function(item, filter) {
-                  for (var i = 0; i < filter.parent.length; i++) {
-                     if (item.get('parent') === filter.parent[i]) {
-                        return true;
-                     }
-                  }
-                  return false;
-               }
-            }),
-            expandedItems: [],
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            dataLoadCallback: function(items) {
-               try {
-                  assert.deepEqual(items.getRawData(), [{
-                     id: 111,
-                     parent: null
-                  },
-                     {
-                        id: 777,
-                        parent: null
-                     },
-                     {
-                        id: 777777,
-                        parent: 777
-                     }], 'Invalid items value after reload with expandedItems');
-                  resolve();
-               } catch(e) {
-                  reject(e);
-               }
-            }
-         });
-
-      });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {
