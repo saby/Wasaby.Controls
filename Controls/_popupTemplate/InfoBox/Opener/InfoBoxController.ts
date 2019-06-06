@@ -181,6 +181,13 @@ var InfoBoxController = StickyController.constructor.extend({
         item.position = {...item.position, ...defaultPosition};
     },
 
+    _getPopupConfig() {
+        let baseConfig = InfoBoxController.superclass._getPopupConfig.apply(this, arguments);
+        // Protection against incorrect page design
+        baseConfig.checkNegativePosition = false;
+        return baseConfig;
+    },
+
     prepareConfig: function (cfg, sizes) {
         cMerge(cfg.popupOptions, _private.prepareConfig(cfg.popupOptions.position, cfg.popupOptions.target));
         return InfoBoxController.superclass.prepareConfig.apply(this, arguments);
