@@ -100,8 +100,7 @@ var _private = {
     },
 
     getAvailableContainerWidth: function(self):number {
-        let container = self._container[0] || self._container;
-        return  container.clientWidth - _private.getContainerSpacing(self);
+        return  _private.getContainer(self).clientWidth - _private.getContainerSpacing(self);
     }
 };
 
