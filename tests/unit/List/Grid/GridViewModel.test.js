@@ -1072,6 +1072,17 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             }
          });
 
+         it('should +1 on row index on rows after editting', function () {
+
+            let native = GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = ()=>true;
+            gridViewModel._model._editingItemData = { rowIndex: 1};
+
+            let iData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
+            assert.equal(iData.rowIndex, 4);
+            GridLayoutUtil.isPartialGridSupport = native;
+         });
+
          it('setEditingItemData', function () {
             let
                 called = false,
