@@ -3,12 +3,14 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
+import {Record} from "Types/entity";
 
 var
     ARROW_WIDTH = 0,
     BREAD_CRUMB_MIN_WIDTH = 0,
     DOTS_WIDTH = 0,
-    initialized;
+    initialized,
+    measurer;
 
 var _private = {
     initializeConstants: function () {
@@ -43,12 +45,23 @@ var _private = {
         };
     },
 
-    getItemsSizes: function (items, displayProperty) {
-        var
-            measurer = document.createElement('div'),
-            itemsSizes = [];
+    getMeasurer: function():HTMLElement {
+        //create measurer once on page
+        if (!measurer) {
+            measurer = document.createElement('div');
+            measurer.classList.add('controls-BreadCrumbsView__measurer');
+            measurer.style.cssText = 'position:absolute;overflow:hidden;visibility:hidden;top:-10000px;left:-10000px';
+            measurer.setAttribute('data-vdom-ignore', true);
+            measurer.setAttribute('ws-no-focus', true);
+            document.body.appendChild(measurer);
+        }
+        return measurer;
+    },
 
-        measurer.innerHTML = itemsTemplate({
+    getItemsSizes: function (items:Array<Record>, displayProperty:String):Array<number> {
+        var itemsSizes:Array<number> = [];
+
+        _private.getMeasurer().innerHTML = itemsTemplate({
             itemTemplate: itemTemplate,
             displayProperty: displayProperty,
             applyHighlighter: applyHighlighter,
@@ -56,12 +69,6 @@ var _private = {
                 return _private.getItemData(index, items);
             })
         });
-        measurer.classList.add('controls-BreadCrumbsView__measurer');
-        document.body.appendChild(measurer);
-        [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsView__crumb'), function (item) {
-            itemsSizes.push(item.clientWidth);
-        });
-        document.body.removeChild(measurer);
 
         return itemsSizes;
     },
