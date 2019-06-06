@@ -51,7 +51,8 @@
                                                       selectedKeys="{{_listModel.getSelectedKeys()}}"
                                                       selectorTemplate="{{_options.selectorTemplate}}"
                                                       isCompoundTemplate="{{_options.isCompoundTemplate}}"
-                                                      selectorOpener="{{_options.selectorOpener}}" />
+                                                      selectorOpener="{{_options.selectorOpener}}"
+                                                      selectorDialogResult="{{_options.selectorDialogResult}}" />
                </ws:if>
                <ws:if data="{{_needShowApplyButton}}">
                   <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">

@@ -313,7 +313,8 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: _private.getSourceController(this._configs[index],
                   getPropValue(this._items.at(index), 'properties')).hasMoreData('down'),
-               selectorOpener: this._children.selectorOpener
+               selectorOpener: this._children.selectorOpener,
+               selectorDialogResult: this._onSelectorTemplateResult.bind(this)
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
