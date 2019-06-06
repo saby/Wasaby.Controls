@@ -64,8 +64,8 @@ var helpers = {
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.
      * @param {Types/collection:RecordSet} items List of all items.
-     * @param {Controls/_list/interface/IHierarchy#parentProperty} parentProperty Name of the field that contains information about parent node.
-     * @param {Controls/_list/interface/IHierarchy#nodeProperty} nodeProperty Name of the field describing the type of the node (list, node, hidden node).
+     * @param {Controls/_interface/IHierarchy#parentProperty} parentProperty Name of the field that contains information about parent node.
+     * @param {Controls/_interface/IHierarchy#nodeProperty} nodeProperty Name of the field describing the type of the node (list, node, hidden node).
      */
 
     /**
