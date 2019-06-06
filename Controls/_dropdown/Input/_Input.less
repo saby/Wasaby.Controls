@@ -7,9 +7,11 @@
    .align-items(center);
    width: 100%;
    height: @height_Dropdown;
-   &:before {
-      content: "\200b";
-   }
+}
+
+.controls-Dropdown__wrapper.theme_@{themeName}:before {
+   content: "\200b";
+   font-size: @font-size_DropdownList-text;
 }
 
 .controls-Dropdown__text-wrapper.theme_@{themeName} {

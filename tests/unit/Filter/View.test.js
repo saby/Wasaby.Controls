@@ -207,7 +207,7 @@ define(
             assert.strictEqual(popupOptions, undefined);
 
             isOpened = false;
-            view._open([1, 2, 4], 'templateName');
+            view._open([1, 2, 4], {template: 'templateName'});
 
             assert.strictEqual(popupOptions.template, 'templateName');
             assert.deepStrictEqual(popupOptions.templateOptions.items, [1, 2, 4]);
@@ -228,10 +228,10 @@ define(
 
          it('_reset', function() {
             let view = getView(defaultConfig),
-               isOpened = true,
+               isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;} }
+               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
               if (event === 'filterChanged') {
@@ -255,10 +255,11 @@ define(
             };
             let item = view._filterSource[1];
             view._reset('clearClick', item);
-            assert.deepStrictEqual(item.value, [1]);
-            assert.strictEqual(filterChanged, undefined);
+            assert.deepStrictEqual(item.value, [null]);
+            assert.isTrue(closed);
 
             isOpened = false;
+            item = view._filterSource[1];
             view._reset('clearClick', item);
             assert.deepStrictEqual(item.value, [null]);
             assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
@@ -267,10 +268,10 @@ define(
 
          it('_resetFilterText', function() {
             let view = getView(defaultConfig),
-               isOpened = true,
+               isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;} }
+               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
@@ -293,6 +294,7 @@ define(
                   multiSelect: true}
             };
             view._resetFilterText();
+            assert.isTrue(closed);
             assert.strictEqual(view._filterSource[2].value, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});

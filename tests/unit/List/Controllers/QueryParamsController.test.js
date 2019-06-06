@@ -5,13 +5,11 @@
 define(
    [
       'Controls/_source/QueryParamsController/Page',
-      'Controls/_source/QueryParamsController/Offset',
       'Controls/_source/QueryParamsController/Position',
       'Types/collection',
       'Types/source'
    ],
    function (PageNavigation,
-             OffsetNavigation,
              PositionNavigation, collection, sourceLib) {
 
       'use strict';

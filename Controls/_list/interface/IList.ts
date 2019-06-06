@@ -162,6 +162,29 @@
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
  * @returns {Boolean} Determines whether the action should be rendered.
+ * @example
+ * Item action Read don't display if item has property isNew === false
+ * <pre>
+ *    <Controls.list:View attr:class="demo-News"
+ *                        itemActions="{{_itemActions}}"
+ *                        source="{{_source}}"
+ *                        actionAlignment="vertical"
+ *                        actionCaptionPosition="bottom"
+ *                        markerVisibility="hidden"
+ *                        itemActionVisibilityCallback="{{_visibilityCallback}}"
+ *                        ...
+ *   </Controls.list:View>
+ * </pre>
+ * <pre>
+ *  ...
+ *  private _visibilityCallback(action: IItemAction, item: Model): boolean {
+ *   if (action.title === 'Read') {
+ *     return item.get('isNew');
+ *   }
+ *   return true;
+ *  }
+ *  ...
+ * </pre>
  */
 
 /**
@@ -227,6 +250,14 @@
 /**
  * @name Controls/_list/interface/IList#dataLoadErrback
  * @cfg {Function} Callback function that will be called when data loading fail
+ */
+
+/**
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Control styling
+ * @variant master Stylizes control as MasterDetail
+ * @variant default Simple list
+ * @default default
  */
 
 /**
