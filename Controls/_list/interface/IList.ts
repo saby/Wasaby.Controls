@@ -218,7 +218,13 @@
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Callback function that will be called when list data instance is ready.
+ * @cfg {Function} Callback, который вызывается, когда экземпляр данных списка готов.
+ * @remark
+ * ARGUMENTS:
+ * <ul>
+ * <li>items {@link Types/collection:RecordSet RecordSet} с загруженными данными</li>
+ * </ul>
+ * На этом этапе можно сохранить ссылку на items, чтобы была возможноть потом менять их по ней
  * @example
  * <pre class="brush:js">
  * _myItemsReadyCallback = function(items) {
@@ -233,10 +239,13 @@
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Callback function that will be called when list data loaded by source
+ * @cfg {Function} Callback, который вызывается после загрузки данных из источника.
  * @remark
- * dataLoadCallback takes to first argument the collection of loaded items.
- * dataLoadCallback can be used for setting metadata or adjusting loaded items.
+ * ARGUMENTS:
+ * <ul>
+ * <li>items {@link Types/collection:RecordSet RecordSet} с загруженными данными</li>
+ * </ul>
+ * dataLoadCallback может использоваться для изменения данных еще до того, как он будут отображены.
  * @example
  * <pre class="brush:js">
  * _myDataLoadCallback = function(items) {
