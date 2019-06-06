@@ -85,11 +85,19 @@ var ListView = BaseControl.extend(
                      this,
                      () => {
                         pendingRedraw = false;
-                        _private.resizeNotifyOnListChanged(this);
+                        // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
+                        // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
+                        this._resizeNotifyOnListChanged();
                      }
                   );
                }
             };
+        },
+
+       // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
+       // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
+        _resizeNotifyOnListChanged() {
+           _private.resizeNotifyOnListChanged(this);
         },
 
         _beforeMount: function(newOptions) {
