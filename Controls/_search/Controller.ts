@@ -30,7 +30,8 @@ var _private = {
             navigation: options.navigation,
             searchCallback: _private.searchCallback.bind(self, self),
             abortCallback: _private.abortCallback.bind(self, self),
-            searchStartCallback: _private.searchStartCallback.bind(self, self)
+            searchStartCallback: _private.searchStartCallback.bind(self, self),
+            searchErrback: _private.searchErrback.bind(self, self)
          });
       }
 
@@ -114,6 +115,12 @@ var _private = {
       }
       if (self._options.dataLoadCallback) {
          self._options.dataLoadCallback(data);
+      }
+   },
+
+   searchErrback: function (self, error: Error):void {
+      if (self._options.dataLoadErrback) {
+         self._options.dataLoadErrback(error);
       }
    }
 };
