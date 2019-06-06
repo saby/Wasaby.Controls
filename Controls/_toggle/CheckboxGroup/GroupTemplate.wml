@@ -1,23 +1,26 @@
 <div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup_theme_' + _options.theme)}}">
-   <ws:for data="index, item in groups[parent]">
-      <Controls._toggle.Checkbox on:valueChanged="_valueChangedHandler(item)"
-                                 caption="{{item[displayProperty || 'title']}}"
-                                 triState="{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
-                                 value="{{isSelected(item)}}"/>
-      <ws:if data="{{item[nodeProperty]}}">
-         <ws:partial template="{{groupTemplate}}"
-                     groupTemplate="{{groupTemplate}}"
-                     groups="{{groups}}"
-                     isChildGroup="{{true}}"
-                     parent="{{item[keyProperty]}}"
-                     direction="{{direction}}"
-                     selectedKeys="{{selectedKeys}}"
-                     triStateKeys="{{triStateKeys}}"
-                     isSelected="{{isSelected}}"
-                     keyProperty="{{keyProperty}}"
-                     parentProperty="{{parentProperty}}"
-                     nodeProperty="{{nodeProperty}}"
-                     displayProperty="{{displayProperty}}" />
-      </ws:if>
-   </ws:for>
+    <ws:for data="index, item in groups[parent]">
+        <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _options.defaultItemTemplate}}"
+                    selected="{{isSelected(item)}}"
+                    triState = "{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
+                    on:valueChanged="_valueChangedHandler(item)"
+                    item="{{item}}"
+                    readOnly="{{_options.readOnly}}"/>
+        <ws:if data="{{item[_options.nodeProperty]}}">
+            <ws:partial template="{{_options.groupTemplate}}"
+                        defaultItemTemplate="{{_options.defaultItemTemplate}}"
+                        groupTemplate="{{_options.groupTemplate}}"
+                        groups="{{_options.groups}}"
+                        isChildGroup="{{true}}"
+                        parent="{{item[keyProperty]}}"
+                        direction="{{_options.direction}}"
+                        selectedKeys="{{_options.selectedKeys}}"
+                        triStateKeys="{{_options.triStateKeys}}"
+                        isSelected="{{_options.isSelected}}"
+                        keyProperty="{{_options.keyProperty}}"
+                        parentProperty="{{_options.parentProperty}}"
+                        nodeProperty="{{_options.nodeProperty}}"
+                        displayProperty="{{_options.displayProperty}}" />
+        </ws:if>
+    </ws:for>
 </div>

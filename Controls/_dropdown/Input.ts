@@ -35,11 +35,11 @@ var _private = {
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_list/interface/IHierarchy
+ * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/Input/interface/IValidation
- * @mixes Controls/interface/IMultiSelectable
+ * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog

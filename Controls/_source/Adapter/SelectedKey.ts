@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey');
 
 /**
- * Container for controls that implement interface {@link Controls/interface/IMultiSelectable multiSelectable}.
+ * Container for controls that implement interface {@link Controls/_interface/IMultiSelectable multiSelectable}.
  * Container receives selectedKey option and transfers selectedKeys option to children.
  * Listens for children "selectedKeysChanged" event and notify event "selectedKeyChanged".
  * @class Controls/_source/Adapter/SelectedKey

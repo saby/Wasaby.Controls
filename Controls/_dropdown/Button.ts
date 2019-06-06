@@ -13,7 +13,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/_list/interface/IHierarchy
+ * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/INavigation

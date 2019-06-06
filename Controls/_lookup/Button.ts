@@ -11,7 +11,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/IMultiSelectable
+ * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
  * @extends Core/Control
