@@ -143,6 +143,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
+    * @mixes Controls/_tile/interface/IGridControl
     * @control
     * @public
     * @category List
