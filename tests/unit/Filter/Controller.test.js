@@ -76,6 +76,51 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
 
+      it('_beforeUpdate new filterButtonItems and fastFilterItems', function () {
+         let filterLayout = new Filter();
+         filterLayout.saveOptions({filterButtonSource: []});
+         let buttonItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'testText',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2',
+            resetValue: ''
+         }];
+         let fastItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'test',
+            resetValue: ''
+         }];
+         let expectedButtonItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            isFast: true,
+            textValue: '',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2',
+            resetValue: ''
+         }];
+
+         let expectedFastItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'test',
+            resetValue: ''
+         }];
+         filterLayout._beforeUpdate({ filterButtonSource: buttonItems, fastFilterSource: fastItems });
+         assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
+         assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue', testKey2: 'testValue'});
+      });
+
       it('_itemsChanged', function () {
          var filterLayout = new Filter();
          var items = [{
