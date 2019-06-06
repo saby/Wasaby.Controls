@@ -250,7 +250,8 @@ var _Controller = Control.extend({
                //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
                hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down'),
-               selectorOpener: self._children.selectorOpener
+               selectorOpener: self._children.selectorOpener,
+               selectorDialogResult: self._onSelectorTemplateResult.bind(self)
             },
             target: self._container,
             corner: self._options.corner,
