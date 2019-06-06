@@ -13,9 +13,9 @@ define('Controls-demo/DragBorders/DragBorders',
 
          _width: 200,
 
-         _offsetHandler: function(event, offset) {
+         _offsetHandler: function(event, offset, border) {
             this._offset = offset;
-            if (offset.border === 'left') {
+            if (border === 'left') {
                this._offset.border = 'левый';
                this._width -= offset.value;
             } else {

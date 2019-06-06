@@ -1,0 +1,16 @@
+<div class="controls-ResizingLine">
+   <Controls.dragnDrop:Container name="dragNDrop"
+                                 on:dragmove="_onDragHandler()"
+                                 on:dragstart="_borderStartDragHandler()"
+                                 on:documentdragend="_borderEndDragHandler()">
+
+            <div name="{{border}}"
+                 class="controls-ResizingLine controls-ResizingLine__border_theme_{{_options.theme}}
+                 on:mousedown="_beginDragHandler()"></div>
+
+   </Controls.dragnDrop:Container>
+   <ws:if data="{{_dragging}}">
+      <div class="controls-ResizingLine__area_theme_{{_options.theme}}"
+           style="{{_styleArea}}"></div>
+   </ws:if>
+</div>
