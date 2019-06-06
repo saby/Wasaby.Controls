@@ -1,7 +1,11 @@
 <div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup_theme_' + _options.theme)}}">
    <ws:for data="index, item in groups[parent]">
       <ws:if data="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}">
-         <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}" selected="{{isSelected}}" readOnly="_options.readOnly"/>
+         <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}"
+                     selected="{{isSelected}}"
+                     on:valueChanged="_valueChangedHandler(item)"
+                     item="{{item}}"
+                     readOnly="{{_options.readOnly}}"/>
       </ws:if>
       <ws:else>
          <Controls._toggle.Checkbox on:valueChanged="_valueChangedHandler(item)"
