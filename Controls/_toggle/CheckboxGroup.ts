@@ -36,6 +36,7 @@ export interface ICheckboxGroupOptions extends IControlOptions, IMultiSelectable
 class CheckboxGroup extends Control<IControlOptions> {
     protected _template: Function = template;
     protected _groupTemplate: Function = groupTemplate;
+    protected _defaultItemTemplate: Function = defaultItemTemplate;
     protected _items: any;
     protected _sourceController: any;
     protected _selectedKeys: number[]|string[];
