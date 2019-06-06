@@ -1,6 +1,7 @@
 import {Control, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_toggle/CheckboxGroup/CheckboxGroup');
 import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate');
+import defaultItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import {Controller as SourceController} from "../source";
 import {isEqual} from "Types/object";
 import {descriptor as EntityDescriptor} from 'Types/entity';

@@ -1,17 +1,11 @@
 <div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup_theme_' + _options.theme)}}">
    <ws:for data="index, item in groups[parent]">
-      <ws:if data="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}">
-         <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}"
-                     selected="{{isSelected}}"
+         <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || defaultItemTemplate}}"
+                     selected="{{isSelected(item)}}"
+                     triState = "{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
                      on:valueChanged="_valueChangedHandler(item)"
                      item="{{item}}"
                      readOnly="{{_options.readOnly}}"/>
-      </ws:if>
-      <ws:else>
-         <Controls._toggle.Checkbox on:valueChanged="_valueChangedHandler(item)"
-                                    caption="{{item[displayProperty || 'title']}}"
-                                    triState="{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
-                                    value="{{isSelected(item)}}"/>
          <ws:if data="{{item[nodeProperty]}}">
             <ws:partial template="{{groupTemplate}}"
                         groupTemplate="{{groupTemplate}}"
@@ -27,6 +21,5 @@
                         nodeProperty="{{nodeProperty}}"
                         displayProperty="{{displayProperty}}" />
          </ws:if>
-      </ws:else>
    </ws:for>
 </div>
