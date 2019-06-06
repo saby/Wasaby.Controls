@@ -35,11 +35,11 @@ define(
          };
 
          it('_openSelectorDialog', function() {
-            let actualOptions;
+            let actualOptions, selectCompleted, closed;
             let button = getButton(defaultConfig);
-            button._options.selectorOpener = {open: (popupOptions) => {
-               actualOptions = popupOptions;
-            }};
+            button._options.selectorOpener = {open: (popupOptions) => {actualOptions = popupOptions;},
+               close: () => {closed = true}};
+            button._options.selectorDialogResult = () => {selectCompleted = true};
             button._openSelectorDialog();
 
             assert.strictEqual(actualOptions.template, defaultConfig.selectorTemplate.templateName);
@@ -48,6 +48,10 @@ define(
             assert.strictEqual(actualOptions.templateOptions.option1, '1');
             assert.strictEqual(actualOptions.templateOptions.option2, '2');
             assert.isOk(actualOptions.templateOptions.handlers.onSelectComplete);
+
+            actualOptions.templateOptions.handlers.onSelectComplete();
+            assert.isTrue(selectCompleted);
+            assert.isTrue(closed);
 
             button._options.selectedKeys = [null];
             button._openSelectorDialog();
