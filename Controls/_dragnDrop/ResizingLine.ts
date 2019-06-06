@@ -14,6 +14,44 @@ interface IResizingLineCoords {
    cRight: string;
 }
 
+/*TODO Kingo*/
+/**
+ * Контрол, позволяющий визуально отображать процесс изменения других контролов при помощи перемещения мышью
+ *
+ *
+ * @class Controls/_dragnDrop/ResizingLine
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Журавлев М.С.
+ * @category DragnDrop
+ * @demo Controls-demo/ResizingLine/ResizingLine
+ */
+
+/**
+ * @name Controls/_dragnDrop/ResizingLine#maxOffset
+ * @cfg {Number} Максимальное значение сдвига при изменении значения размера
+ * @default 1000
+ * @remark
+ * Сдвиге больше указанного визуально отображаться не будет
+ */
+
+/**
+ * @name Controls/_toggle/Checkbox#direction
+ * @cfg {String} Задает направление оси для сдвига
+ * @variant direct Прямое направление. Слева направо
+ * @variant reverse Обратное направление. Справа налево
+ * @remark
+ * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
+ * @see event offset()
+ */
+
+/**
+ * @event Controls/_toggle/Checkbox#offset Происходит после перетаскивания мыши, когда клавиша мыши отпущена
+ * @param {Number|null} Значение сдвига
+ * @remark Зависит от направления оси
+ * @see direction
+ */
 class ResizingLine extends Control<IContainerOptions, void> {
    protected _dragging: boolean = false;
    protected _styleArea: string = '';
@@ -90,8 +128,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
 
    static getDefaultOptions(): object {
       return {
-         minWidth: 0,
-         maxWidth: 99999
+         maxOffset: 1000
       };
    }
 }
