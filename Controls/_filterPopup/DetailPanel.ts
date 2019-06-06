@@ -12,7 +12,8 @@ import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
-    * It consists of three blocks: Selected, Possible to selected, Previously selected.
+    * It consists of three blocks: Selected, Also possible to select, Previously selected.
+    *
     *
     * @class Controls/_filterPopup/Panel
     * @extends Core/Control
