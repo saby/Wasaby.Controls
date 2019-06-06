@@ -84,7 +84,7 @@
 
 /**
  * @typedef {Object} Column
- * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fr and the value “auto”.
+ * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fraction (for example 1fr) and the value “auto”.
  * @property {String} [displayProperty] Name of the field that will shown in the column by default.
  * @property {String} [template] Template for cell rendering.
  * @property {String} [resultTemplate] Template for cell rendering in results row. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
