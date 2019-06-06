@@ -179,6 +179,7 @@
                 nodeProperty="{{ _options.nodeProperty }}"
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
+                extendedSelectionMode="{{ _options.extendedSelectionMode }}"
                 listModel="{{ _listViewModel }}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"

@@ -245,10 +245,16 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
       selectAll: function() {
          this.select([this._getRoot()]);
+         if (this._options.extendedSelectionMode) {
+            ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+         }
       },
 
       unselectAll: function() {
          this.unselect([this._getRoot()]);
+         if (this._options.extendedSelectionMode) {
+            ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [this._getRoot()]);
+         }
       },
 
       toggleAll: function() {
@@ -259,11 +265,11 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
          if (this._isAllSelection(this._getParams(rootId))) {
-            this.unselectAll(rootId);
+            this.unselect([rootId]);
             this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
 
          } else {
-            this.selectAll(rootId);
+            this.select([rootId]);
             this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
          }
       },
