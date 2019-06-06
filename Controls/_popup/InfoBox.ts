@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
 import InfoBoxOpener from './Opener/InfoBox');
-import TouchContext = require('Controls/Context/TouchContextField');
+import {TouchContextField} from 'Controls/context';
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
 
@@ -301,7 +301,7 @@ import Env = require('Env/Env');
 
       InfoBox.contextTypes = function() {
          return {
-            isTouch: TouchContext
+            isTouch: TouchContextField
          };
       };
 
