@@ -84,7 +84,8 @@ var _private = {
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
                     nodeProperty: options.nodeProperty,
-                    listModel: options.listModel
+                    listModel: options.listModel,
+                    extendedSelectionMode: options.extendedSelectionMode
                 }));
             });
         } else {
