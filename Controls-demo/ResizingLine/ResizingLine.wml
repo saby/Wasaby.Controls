@@ -1,22 +1,22 @@
 <div style="flex-direction: column;height: 100%;align-items: center;justify-content: center;display: inline-flex;">
    <Controls.heading:Title caption="Движение границ."/>
-   <ws:if data="{{_offset.border}}">
-      <div>Вы только что потянули за {{_offset.border}} край</div>
-      <div>Смещение равно {{_offset.value}}</div>
+   <ws:if data="{{_offset}}">
+      <div>Вы только что потянули за {{_border}} край</div>
+      <div>Смещение равно {{_offset}}</div>
    </ws:if>
    <ws:else>
       <div>Потяните за левый или правый край.</div>
       <div>&nbsp;</div>
    </ws:else>
-   <div style="height: 200px; width: {{_width}}px; background: red">00000
-      <Controls.dragnDrop:ResizingLine attr:style="height: 100%; margin: 100px; display: inline-flex;"
+   <div style="height: 200px; width: {{_width}}px; background: red; position: relative;overflow:hidden;">
+      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"
                                       direction="reverse"
-                                      maxWidth="{{400}}"
-                                      on:offset="_offsetHandler('left')"/>
-      <Controls.dragnDrop:ResizingLine attr:style="height: 100%; margin: 100px; display: inline-flex;"
+                                      maxOffset="{{400}}"
+                                      on:offset="_offsetHandlerLeft()"/>
+      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; right: 0; height: 100%"
                                        direction="direct"
-                                      maxWidth="{{400}}"
-                                      on:offset="_offsetHandler('right')"/>
+                                       maxOffset="{{400}}"
+                                      on:offset="_offsetHandlerRight()"/>
    </div>
 
 

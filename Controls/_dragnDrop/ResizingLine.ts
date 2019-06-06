@@ -2,12 +2,16 @@ import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
 import * as Entity from './Entity';
 import {Control, IControlOptions} from 'UI/Base';
-import {ICoordinate} from 'Controls/interface';
 
 export interface IContainerOptions extends IControlOptions {
-   minWidth?: number;
-   maxWidth?: number;
+   maxOffset?: number;
    direction?: string;
+}
+
+interface IResizingLineCoords {
+   cOffset: number;
+   cLeft: string;
+   cRight: string;
 }
 
 class ResizingLine extends Control<IContainerOptions, void> {
@@ -16,68 +20,72 @@ class ResizingLine extends Control<IContainerOptions, void> {
    protected _template: Function = template;
    protected _theme: string[] = ['Controls/dragnDrop'];
    protected _offset: number;
+   protected _width: number;
+
+   protected _afterMount(): void {
+      this._width = this._container.get ? this._container.get(0).clientWidth : this._container.clientWidth;
+   }
 
    protected _beginDragHandler(event: SyntheticEvent): void {
       this._children.dragNDrop.startDragNDrop(new Entity({
-         item: event.target
+         itemId: this.getInstanceId()
       }), event);
    }
 
-   protected _borderStartDragHandler(): void {
+   protected _onStartDragHandler(): void {
       this._dragging = true;
    }
 
-   protected _onDragHandler(event: SyntheticEvent, dragObject): void {
-      const areaCoordinate: ICoordinate = {
-         top: '0',
-         bottom: '0',
-         right: null,
-         left: null
-      };
-      const width: number = this._container.offsetWidth;
+   private _calculateCoordinates(offsetX: number, maxOffset: number,
+                                 controlWidth: number, direction: string): IResizingLineCoords {
+      let offset: number = null;
+      let left: string;
+      let right: string;
 
-      this._offset = null;
-
-      if (dragObject.offset.x > 0) {
-         if (this._options.direction === 'reverse') {
-            areaCoordinate.left = '0';
-            areaCoordinate.right = `${
-               Math.max(this._options.minWidth, width - dragObject.offset.x)
-               }px`;
-
-            this._offset = Math.min(dragObject.offset.x, width - this._options.minWidth);
+      if (offsetX > 0) {
+         if (direction === 'reverse') {
+            offset = -Math.min(Math.abs(offsetX), maxOffset);
+            left = '0';
+            right = offset + 'px';
          } else {
-            areaCoordinate.left = `${width}px`;
-            areaCoordinate.right = `-${
-               Math.min(this._options.maxWidth - width, dragObject.offset.x)
-               }px`;
-
-            this._offset = Math.min(dragObject.offset.x, this._options.maxWidth - width);
+            offset = Math.min(Math.abs(offsetX), maxOffset);
+            left = controlWidth + 'px';
+            right = -offset + 'px';
          }
       } else {
-         if (this._options.direction === 'left') {
-            areaCoordinate.right = `${width}px`;
-            areaCoordinate.left = `${
-               Math.max(width - this._options.maxWidth, dragObject.offset.x)
-               }px`;
-
-            this._offset = Math.max(dragObject.offset.x, width - this._options.maxWidth);
+         if (direction === 'reverse') {
+            offset = Math.min(Math.abs(offsetX), maxOffset);
+            left = -offset + 'px';
+            right = controlWidth + 'px';
          } else {
-            areaCoordinate.right = '0';
-            areaCoordinate.left = `${
-               Math.max(this._options.minWidth, width + dragObject.offset.x)
-               }px`;
-
-            this._offset = Math.max(dragObject.offset.x, this._options.minWidth - width);
+            offset = -Math.min(Math.abs(offsetX), maxOffset);
+            right = '0';
+            left = offset + 'px';
          }
       }
-
-      this._styleArea = `top:${areaCoordinate.top};right:${areaCoordinate.right};bottom:${areaCoordinate.bottom};left:${areaCoordinate.left};`;
+      return {
+         cOffset: offset,
+         cLeft: left,
+         cRight: right
+      };
    }
 
-   protected _borderEndDragHandler(): void {
+   protected _onDragHandler(event: SyntheticEvent, dragObject): void {
+      const coords: IResizingLineCoords = this._calculateCoordinates(
+         dragObject.offset.x,
+         this._options.maxOffset,
+         this._width, this._options.direction
+      );
+
+      this._offset = coords.cOffset;
+      this._styleArea = 'top:' + 0 + ';right:' + coords.cRight + ';bottom:' + 0 + ';left:' + coords.cLeft + ';';
+   }
+
+   protected _onEndDragHandler(e, dragObject): void {
       this._dragging = false;
-      this._notify('offset', [this._offset]);
+      if (dragObject.entity._options.itemId === this.getInstanceId()) {
+         this._notify('offset', [this._offset]);
+      }
    }
 
    static getDefaultOptions(): object {

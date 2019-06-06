@@ -1,9 +1,9 @@
-define('Controls-demo/DragBorders/DragBorders',
+define('Controls-demo/ResizingLine/ResizingLine',
    [
       'Core/Control',
-      'wml!Controls-demo/DragBorders/DragBorders',
+      'wml!Controls-demo/ResizingLine/ResizingLine',
 
-      'Controls/dragBorders'
+      'Controls/dragnDrop'
    ],
    function(Control, template) {
       'use strict';
@@ -13,15 +13,16 @@ define('Controls-demo/DragBorders/DragBorders',
 
          _width: 200,
 
-         _offsetHandler: function(event, offset, border) {
+         _offsetHandlerRight: function(e, offset) {
+            this._border = 'правый';
             this._offset = offset;
-            if (border === 'left') {
-               this._offset.border = 'левый';
-               this._width -= offset.value;
-            } else {
-               this._offset.border = 'правый';
-               this._width += offset.value;
-            }
+            this._width += offset;
+         },
+
+         _offsetHandlerLeft: function(e, offset) {
+            this._border = 'левый';
+            this._offset = offset;
+            this._width += offset;
          }
       });
    });
