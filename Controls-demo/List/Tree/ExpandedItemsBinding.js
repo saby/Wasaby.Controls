@@ -16,7 +16,8 @@ define('Controls-demo/List/Tree/ExpandedItemsBinding', [
       _viewSource: null,
       gridData: null,
       gridColumns: null,
-      _myExpandedItems: null,
+      _expandedItemsForBind: null,
+      _expandedItems: [2246],
       _beforeMount: function() {
          this._myExpandedItems=[2246];
          this.gridColumns = [
@@ -34,7 +35,6 @@ define('Controls-demo/List/Tree/ExpandedItemsBinding', [
             filter: memorySourceFilter()
          });
       }
-
    });
 
    return ModuleClass;
