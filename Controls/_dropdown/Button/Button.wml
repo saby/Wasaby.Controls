@@ -25,7 +25,7 @@
         lazyItemsLoad="{{true}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_onItemClickHandler()"
-        on:pinClicked="_onPinClickHandler()"
+        on:pinClick="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper theme_{{_options.theme}}">
    <Controls.buttons:Button
                     attr:class="controls-MenuButton__BaseButton theme_{{_options.theme}}"

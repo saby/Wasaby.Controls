@@ -53,7 +53,7 @@ var _private = {
 
       // необходимо учесть иконку в шапке
       if (headerIcon && menuStyle !== 'titleHead') {
-         parents[parentProperty ? rootKey || 'null' : 'undefined'] = [null, this.getIconSize(headerIcon, optIconSize)];
+         parents[parentProperty ? rootKey || 'null' : 'undefined'] = this.getIconSize(headerIcon, optIconSize);
       }
 
       items.each(function (item) {
@@ -62,7 +62,7 @@ var _private = {
             pid = item.get(parentProperty);
             if (!parents.hasOwnProperty(pid)) {
                iconSize = _private.getIconSize(icon, optIconSize);
-               parents[pid] = [pid, iconSize];
+               parents[pid] = iconSize;
             }
          }
       });

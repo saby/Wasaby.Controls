@@ -16,7 +16,6 @@
       <div>
          <ws:partial template="wml!Controls/_dropdownPopup/For"
                      listModel="{{_listModel}}"
-                     defaultGroupTemplate="{{_defaultGroupTemplate}}"
                      itemTemplate="{{_options.itemTemplate}}"
                      defaultItemTemplate="{{_defaultItemTemplate}}"
                      showClose="{{_options.showClose}}"

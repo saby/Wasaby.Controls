@@ -817,7 +817,7 @@ define(
                };
 
                dropdownController._notify = (e, eventResult) => {
-                  if (e === 'pinClicked') {
+                  if (e === 'pinClick') {
                      resultItems = eventResult[0];
                   }
                };
@@ -833,7 +833,7 @@ define(
                item.set('id', item.getId() + '_history');
                closed = false;
                assert.equal(item.getId(), '6_history');
-               dropdownController._onResult(null, {action: 'pinClicked', data: [item]});
+               dropdownController._onResult(null, {action: 'pinClick', data: [item]});
                assert.isFalse(closed);
                assert.equal(resultItems[0].getId(), '6');
             });
