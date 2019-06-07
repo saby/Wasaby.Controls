@@ -359,7 +359,7 @@ define([
                rawData: {id: 1}
             });
 
-         selectedCollection._selectedKeys = [1, 2, 3];
+         selectedCollection._options.keyProperty = 'id';
          selectedCollection._options.historyId = 'historyField';
          selectedCollection._selectCallback(
             null,
@@ -368,8 +368,8 @@ define([
             })
          );
 
-         assert.equal(dataHistory, {
-            ids: [1, 2, 3]
+         assert.deepEqual(dataHistory, {
+            ids: [1]
          });
       });
    });
