@@ -1,4 +1,4 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions} from 'Controls/interface';
@@ -123,7 +123,7 @@ const mapBoolState = {true: false, false: true};
 class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITooltip {
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: Function = checkBoxTemplate;
+   protected _template: TemplateFunction = checkBoxTemplate;
    protected _theme: string[] = ['Controls/toggle'];
 
    private _notifyChangeValue(value: boolean | null): void {
