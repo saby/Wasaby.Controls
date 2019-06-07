@@ -202,6 +202,38 @@ define(
                assert.deepEqual(model.selection, getSelection(1));
             });
          });
+
+         describe('_convertToDisplayValue', function() {
+            [{
+               options: {
+                  precision: 2,
+                  showEmptyDecimals: true,
+                  useAdditionToMaxPrecision: true
+               },
+               value: 12.3,
+               displayValue: '12.30'
+            }, {
+               options: {
+                  precision: 2,
+                  showEmptyDecimals: true,
+                  useAdditionToMaxPrecision: true
+               },
+               value: 12,
+               displayValue: '12.00'
+            }, {
+               options: {
+                  precision: 10,
+                  showEmptyDecimals: false
+               },
+               value: 12,
+               displayValue: '12'
+            }].forEach(function(test) {
+               it(`value: ${test.value}, displayValue: ${test.displayValue}, options: ${JSON.stringify(test.options)}`, function() {
+                  const model = new ViewModel(test.options, null);
+                  assert.equal(model._convertToDisplayValue(test.value), test.displayValue);
+               });
+            });
+         });
       });
    }
 );
