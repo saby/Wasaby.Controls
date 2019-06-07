@@ -236,12 +236,26 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(searchController._inputSearchValue, 'test');
       });
 
-      it('_beforeMount', function() {
+      describe('_beforeMount', function() {
          var searchController = getSearchController(defaultOptions);
-         searchController._beforeMount({ searchValue: 'test', root: 'test' }, {dataOptions: defaultOptions});
 
-         assert.equal(searchController._inputSearchValue, 'test');
-         assert.equal(searchController._root, 'test');
+         searchController._viewMode = 'notSearch';
+
+         it('without option searchValue', function() {
+            searchController._beforeMount({root: 'test'});
+
+            assert.equal(searchController._root, 'test');
+            assert.equal(searchController._viewMode, 'notSearch');
+         });
+
+         it('with option searchValue', function() {
+            searchController._beforeMount({searchValue: 'test2', root: 'test2'});
+
+            assert.equal(searchController._inputSearchValue, 'test2');
+            assert.equal(searchController._root, 'test2');
+            assert.equal(searchController._previousViewMode, 'notSearch');
+            assert.equal(searchController._viewMode, 'search');
+         })
       });
 
       it('_beforeUpdate', function() {
