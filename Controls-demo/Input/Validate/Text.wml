@@ -3,7 +3,6 @@
         <div>
             <Controls.validate:InputContainer   name="InputValidate3" attr:style="margin: 30px" >
                 <ws:validators>
-                    <ws:Function value="{{_value4 }}">ContractorCommon/Validators/INN</ws:Function>
                     <ws:Function value="{{_value4 }}">Controls/validate:isEmail</ws:Function>
                 </ws:validators>
                 <ws:content>
