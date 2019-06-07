@@ -1,6 +1,7 @@
 import Controller = require('Controls/_validate/Controller');
 import template = require('wml!Controls/_validate/Input');
 /**
+ * The control that regulates the validation of his content. Uses with input fields.
  * @class Controls/_validate/Input
  * @extends Controls/_validate/Controller
  * @control

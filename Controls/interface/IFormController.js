@@ -52,21 +52,29 @@ define('Controls/interface/IFormController', [
    /**
     * Updates a record in the data source
     * @function Controls/interface/IFormController#update
+    * @return {Deffered}
     */
 
    /**
     * Creates an empty record through a data source
     * @function Controls/interface/IFormController#create
+    * @param {Object} createMetaData
+    * @returns {Deferred}
     */
 
    /**
     * Reads an entry from a data source
     * @function Controls/interface/IFormController#read
+    * @param {String} key The key by which the record will be received
+    * @param {Object} readMetaData
+    * @return {Deffered}
     */
 
    /**
     * Removes an record from the data source
     * @function Controls/interface/IFormController#delete
+    * @param {Object} destroyMetaData
+    * @return {Deffered}
     */
 
    /**

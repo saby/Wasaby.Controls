@@ -25,11 +25,13 @@ define('Controls/interface/IOpener', [], function() {
    /**
     * @name Controls/interface/IOpener#autofocus
     * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
+    * @default true
     */
 
    /**
     * @name Controls/interface/IOpener#modal
     * @cfg {Boolean} Determines whether the window is modal.
+    * @default false
     */
 
    /**
@@ -40,6 +42,7 @@ define('Controls/interface/IOpener', [], function() {
    /**
     * @name Controls/interface/IOpener#closeOnOutsideClick
     * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
+    * @default false
     */
 
    /**

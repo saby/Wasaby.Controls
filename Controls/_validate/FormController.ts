@@ -4,6 +4,7 @@ import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 /**
+ * Сontrol that regulates the validation of the form with validators.
  * @class Controls/_validate/FormController
  * @extends Core/Control
  * @control

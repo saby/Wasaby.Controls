@@ -9,6 +9,7 @@ import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
 /**
+ * Control that regulates the validation of his content.
  * @class Controls/_validate/Controller
  * @extends Core/Control
  * @control
