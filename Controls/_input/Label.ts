@@ -1,5 +1,5 @@
 import {IoC} from 'Env/Env';
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICaption, ICaptionOptions} from 'Controls/interface';
 import LabelTemplate = require('wml!Controls/_input/Label/Label');
@@ -47,7 +47,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @cfg {String} Contains a URL or a URL fragment that the hyperlink points to.
  */
 class Label extends Control<ILabelOptions> implements ICaption {
-   protected _template: Function = LabelTemplate;
+   protected _template: TemplateFunction = LabelTemplate;
    protected _theme: string[] = ['Controls/input'];
    readonly '[Controls/_interface/ICaption]': true;
 

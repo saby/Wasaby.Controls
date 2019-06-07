@@ -1,4 +1,4 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 import DoubleSwitchTemplate = require('wml!Controls/_toggle/DoubleSwitch/DoubleSwitch');
 import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchToggle');
@@ -49,7 +49,7 @@ const CAPTIONS_LENGTH = 2;
 class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, ITooltip {
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: Function = DoubleSwitchTemplate;
+   protected _template: TemplateFunction = DoubleSwitchTemplate;
    protected _theme: string[] = ['Controls/toggle'];
 
    protected _toggleTemplate: Function = toggleTemplate;
