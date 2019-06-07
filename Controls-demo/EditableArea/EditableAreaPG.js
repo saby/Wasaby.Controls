@@ -15,7 +15,7 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
    template,
    config
 ) {
-   'use strict';Controls/Popup/Previewer/OpenerTemplate
+   'use strict';Controls/Popup/Previewer/PreviewerTemplate
 
    var
       tabsData = [{
