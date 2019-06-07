@@ -302,6 +302,8 @@
 /**
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Types/entity:Record} item Запись, по которой производим клик. 
+ * @param {eventObject} event Объект события.
  */
 
 /**
