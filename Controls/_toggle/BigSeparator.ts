@@ -1,13 +1,8 @@
-import * as Control from 'Core/Control';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-   readOnly?: boolean;
-   theme?: string;
-}
 export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
 
 }
@@ -33,11 +28,10 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @name Controls/_toggle/Separator#value
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
-class BigSeparator extends Control implements ICheckable {
+class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: Function = BigSeparatorTemplate;
+   protected _template: TemplateFunction = BigSeparatorTemplate;
    protected _theme: string[] = ['Controls/toggle'];
-   protected _options: IBigSeparatorOptions;
    protected _icon: string;
 
    private _iconChangedValue(value: boolean): void {

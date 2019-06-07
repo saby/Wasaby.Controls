@@ -1,4 +1,4 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/CheckboxGroup/CheckboxGroup');
 import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate');
 import {Controller as SourceController} from "../source";
@@ -23,17 +23,12 @@ import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHie
  * @demo Controls-demo/Checkbox/Group
  */
 
-// TODO https://online.sbis.ru/opendoc.html?guid=d602a67d-6d52-47a9-ac12-9c74bf5722e1
-interface IControlOptions {
-    readOnly?: boolean;
-    theme?: string;
-}
 export interface ICheckboxGroupOptions extends IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
     direction?: string;
 }
 
 class CheckboxGroup extends Control<IControlOptions> {
-    protected _template: Function = template;
+    protected _template: TemplateFunction = template;
     protected _groupTemplate: Function = groupTemplate;
     protected _items: any;
     protected _sourceController: any;
