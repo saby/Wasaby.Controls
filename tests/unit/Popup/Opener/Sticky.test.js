@@ -105,6 +105,12 @@ define(
                scrollY: 350,
                innerWidth: 1000
             };
+
+            let baseWindowData = {
+               innerHeight: 0,
+               scrollY: 0,
+               innerWidth: 0
+            };
             let position = {
                bottom: 200
             };
@@ -114,7 +120,10 @@ define(
             assert.equal(position.bottom, 50);
             position.bottom = 200;
             StickyStrategy._private.getKeyboardHeight = () => 0;
+            StickyStrategy._private.getWindow = () => baseWindowData;
+            StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
             assert.equal(position.bottom, 200);
+            StickyStrategy._private.getKeyboardHeight = () => 10;
          });
 
          it('Sticky with option fittingMode=overflow', () => {
@@ -267,6 +276,10 @@ define(
          });
 
          it('Sticky revert position', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
             let cfg = getPositionConfig();
             cfg.sizes.height = 400;
             let position = StickyStrategy.getPosition(cfg, targetCoords);
@@ -287,7 +300,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
             assert.equal(position.left, 400);
-            assert.equal(position.bottom, 620);
+            assert.equal(position.bottom, 610);
             assert.equal(Object.keys(position).length, 4);
          });
 
@@ -451,6 +464,7 @@ define(
 
          it('isNegativePosition', () => {
             StickyStrategy._private._isMobileIOS = () => true;
+            let baseFixBottomPositionForIos = StickyStrategy._private._fixBottomPositionForIos;
             StickyStrategy._private._fixBottomPositionForIos = (pos) => (pos.bottom = -1000);
 
             let position = {
@@ -463,6 +477,9 @@ define(
             isNegative = StickyStrategy._private.isNegativePosition({checkNegativePosition: false}, position, {});
             assert.equal(position.bottom, 100);
             assert.equal(isNegative, false);
+
+            StickyStrategy._private._fixBottomPositionForIos = baseFixBottomPositionForIos;
+            StickyStrategy._private._isMobileIOS = () => false;
          });
       });
    }
