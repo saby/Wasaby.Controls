@@ -554,6 +554,7 @@ var
          e.stopPropagation();
          function getScrollTop(element: Element): number {
             const scrollTop = element.scrollTop;
+            // scrollTop in MobileIOS at the moment of inertial scrolling and display overflow is equals negative value.
             if (Env.detection.isMobileIOS && scrollTop < 0) {
                return 0;
             }
