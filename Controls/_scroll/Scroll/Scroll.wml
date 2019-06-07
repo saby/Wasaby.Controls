@@ -24,6 +24,7 @@
                            on:restoreScrollPosition="_restoreScrollPosition()"
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
+                           on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
                            on:itemClick="_tmplNotify('itemClick')"
                            on:actionClick="_tmplNotify('actionClick')"/>
