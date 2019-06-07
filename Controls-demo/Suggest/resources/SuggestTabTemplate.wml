@@ -1,3 +1,3 @@
-<Controls.suggestPopup:ListContainer tabsOptions="{{_tabsOptions}}" attr:class="ControlsDemo-Suggest_searchListTabs">
+<Controls.suggestPopup:ListContainer tabsOptions="{{_tabsOptions}}">
     <Controls.list:View displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass}}"/>
 </Controls.suggestPopup:ListContainer>

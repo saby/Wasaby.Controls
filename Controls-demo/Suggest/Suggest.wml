@@ -8,7 +8,6 @@
                     displayProperty="title"
                     searchParam="title"
                     source="{{_suggestSource}}">
-                <ws:emptyTemplate templateName="Controls-demo/Suggest/resources/EmptyTemplate"/>
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
@@ -31,6 +30,7 @@
                     searchParam="title"
                     source="{{_suggestSource}}"
                     footerTemplate="{{null}}">
+                <ws:emptyTemplate templateName="Controls-demo/Suggest/resources/EmptyTemplate"/>
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
@@ -102,7 +102,7 @@
                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
-               <ws:templateOptions demoClass="demo-SuggestInputList"/>
+               <ws:templateOptions demoClass="demo-SuggestInputList" classListWrapper="ControlsDemo-Suggest_wideSearchListContainer"/>
             </ws:suggestTemplate>
             <ws:minSearchLength>
                <ws:Number>3</ws:Number>
