@@ -35,6 +35,8 @@ import NotificationController = require('Controls/_popupTemplate/Notification/Op
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
 import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resources/template');
 
+import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
+
 export {
    CloseButton,
    Stack,
@@ -53,5 +55,7 @@ export {
    TargetCoords,
    NotificationController,
    PreviewerController,
-   templateInfoBox
+   templateInfoBox,
+
+   StackStrategy
 };
