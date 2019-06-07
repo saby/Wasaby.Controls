@@ -229,6 +229,15 @@ var
             }
         },
 
+        // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
+        // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
+        _resizeNotifyOnListChanged(): void {
+            GridView.superclass._resizeNotifyOnListChanged.apply(this, arguments);
+            if (this._options.columnScroll) {
+                this._children.columnScroll.updateSizes();
+            }
+        },
+
         _afterUpdate() {
             if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);

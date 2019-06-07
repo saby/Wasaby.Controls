@@ -245,11 +245,22 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
       selectAll: function() {
          this.select([this._getRoot()]);
+         if (this._options.extendedSelectionMode) {
+            ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+         }
       },
+
+      /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
+      Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
+      Поправится после задачи https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
 
       unselectAll: function() {
          this.unselect([this._getRoot()]);
+         if (this._options.extendedSelectionMode) {
+            ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [this._getRoot()]);
+         }
       },
+      */
 
       toggleAll: function() {
          var
@@ -259,11 +270,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
          if (this._isAllSelection(this._getParams(rootId))) {
-            this.unselectAll(rootId);
+            this.unselect([rootId]);
             this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
-
          } else {
-            this.selectAll(rootId);
+            this.select([rootId]);
             this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
          }
       },

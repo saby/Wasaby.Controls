@@ -541,6 +541,7 @@ define([
             assert.deepEqual([1, 6, 7], selection.excluded);
          });
 
+         /* toDo До исправления https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
          it('toggleAll with root', function() {
             cfg = {
                selectedKeys: [1, 4, 6],
@@ -563,6 +564,56 @@ define([
             // Вернулись к начальному
             assert.deepEqual([1, 6, 4], selection.selected);
             assert.deepEqual([5, 2], selection.excluded);
+         });*/
+
+         it('selectAll and unselectAll in unselected folder', function() {
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               extendedSelectionMode: true,
+               listModel: getListModel(1)
+            };
+            selectionInstance = new HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([1], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+         });
+
+         it('selectAll and unselectAll in selected folder', function() {
+            cfg = {
+               selectedKeys: [1],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               extendedSelectionMode: true,
+               listModel: getListModel(1)
+            };
+            selectionInstance = new HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
          });
       });
 

@@ -72,6 +72,7 @@ var _private = {
                 if (item.editorOptions.source) {
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.selectorOpener = self._children.selectorOpener;
+                    popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                 }
                 popupItems.push(popupItem);
             }

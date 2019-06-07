@@ -455,7 +455,16 @@ define([
             SETVM.toggleExpanded(SETVM.getItemById('2', cfg.keyProperty), true);
             assert.deepEqual(['2'], SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
          });
-         
+
+
+         it('collapsedItems', function(){
+            var treeViewModel = new treeGrid.TreeViewModel(cMerge({
+               expandedItems: [null]
+            }, cfg));
+            assert.deepEqual(treeViewModel._collapsedItems, []);
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123'), false);
+            assert.deepEqual(treeViewModel._collapsedItems, ['123']);
+         });
          it('Node footer params', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
