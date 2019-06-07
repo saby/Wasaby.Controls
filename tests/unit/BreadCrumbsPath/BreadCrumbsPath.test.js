@@ -132,7 +132,7 @@ define([
             };
             path._afterMount();
             assert.equal(path._backButtonClass, 'controls-BreadCrumbsPath__backButton_short');
-            assert.equal(path._breadCrumbsClass, '');
+            assert.equal(path._breadCrumbsClass, 'controls-BreadCrumbsPath__breadCrumbs_long');
          });
 
          it('half backButton, half crumbs', function() {
