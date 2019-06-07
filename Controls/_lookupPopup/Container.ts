@@ -98,10 +98,9 @@ import {IData, IDecorator} from "Types/source";
             return _private.getKeysByItems(items, context.dataOptions.keyProperty);
          },
 
-         getSourceController: function(source, navigation) {
+         getSourceController: function(source) {
             return new SourceController({
-               source: source,
-               navigation: navigation
+               source: source
             });
          },
 
@@ -191,7 +190,7 @@ import {IData, IDecorator} from "Types/source";
             if (this._selectedKeys.length || this._excludedKeys.length) {
                const source = dataOptions.source;
                const adapter = _private.getSourceAdapter(source);
-               const sourceController = _private.getSourceController(source, dataOptions.navigation);
+               const sourceController = _private.getSourceController(source);
                const selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
