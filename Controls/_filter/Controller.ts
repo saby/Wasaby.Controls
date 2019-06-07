@@ -32,10 +32,16 @@ import 'Controls/context';
             return result;
          },
 
+         isEqualItems: function(item1, item2) {
+            return !!(getPropValue(item1, 'id') && (getPropValue(item1, 'id') === getPropValue(item2, 'id'))
+            || (getPropValue(item1, 'name') && getPropValue(item1, 'name') === getPropValue(item2, 'name')));
+         },
+
          equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
             chain.factory(filterButtonItems).each(function(buttonItem, index) {
                chain.factory(fastFilterItems).each(function(fastItem) {
-                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
+                  if (_private.isEqualItems(buttonItem, fastItem)
+                      && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                      prepareCallback(index, fastItem);
                   }
                });
@@ -57,15 +63,25 @@ import 'Controls/context';
             return _private.minimizeFilterItems(historyItems);
          },
 
+         minimizeItem: function(item) {
+            let minItem = {
+                value: getPropValue(item, 'value'),
+                textValue: (getPropValue(item, 'visibility') !== false) ? getPropValue(item, 'textValue') : undefined,
+                visibility: getPropValue(item, 'visibility')
+            };
+            if (getPropValue(item, 'id')) {
+               minItem.id = getPropValue(item, 'id');
+            } else {
+               minItem.name = getPropValue(item, 'name');
+               minItem.viewMode = getPropValue(item, 'viewMode');
+            }
+            return minItem;
+         },
+
          minimizeFilterItems: function(items) {
             var minItems = [];
             chain.factory(items).each(function(item) {
-               minItems.push({
-                  id: getPropValue(item, 'id'),
-                  value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
-                  visibility: getPropValue(item, 'visibility')
-               });
+               minItems.push(_private.minimizeItem(item));
             });
             return minItems;
          },
@@ -130,10 +146,11 @@ import 'Controls/context';
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
                chain.factory(items).each(function(elem) {
-                  var value = getPropValue(elem, 'value');
-                  var visibility = getPropValue(elem, 'visibility');
+                  let value = getPropValue(elem, 'value');
+                  let visibility = getPropValue(elem, 'visibility');
+                  let viewMode = getPropValue(elem, 'viewMode');
 
-                  if (value !== undefined && (visibility === undefined || visibility === true)) {
+                  if (value !== undefined && ((visibility === undefined || visibility === true) || viewMode === 'frequent')) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
@@ -156,7 +173,7 @@ import 'Controls/context';
             var filter = {};
 
             function processItems(elem) {
-               filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+               filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
             }
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, processItems);
@@ -170,7 +187,7 @@ import 'Controls/context';
             function processItems(elem) {
                // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
                if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
-                  filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+                  filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
                }
             }
 
@@ -183,7 +200,7 @@ import 'Controls/context';
             var removedKeys = [];
 
             function processItems(elem) {
-               removedKeys.push(getPropValue(elem, 'id'));
+               removedKeys.push(getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name'));
             }
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, null, processItems);
@@ -238,10 +255,11 @@ import 'Controls/context';
          mergeFilterItems: function(items, historyItems) {
             chain.factory(items).each(function(item) {
                chain.factory(historyItems).each(function(historyItem) {
-                  if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
+                  if (_private.isEqualItems(item, historyItem)) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
                      var visibility = getPropValue(historyItem, 'visibility');
+                     var viewMode = getPropValue(historyItem, 'viewMode');
 
                      if (value !== undefined) {
                         setPropValue(item, 'value', value);
@@ -253,6 +271,10 @@ import 'Controls/context';
 
                      if (visibility !== undefined && item.hasOwnProperty('visibility')) {
                         setPropValue(item, 'visibility', visibility);
+                     }
+
+                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
+                        setPropValue(item, 'viewMode', viewMode);
                      }
                   }
                });
