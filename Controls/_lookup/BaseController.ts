@@ -130,7 +130,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
       getHistoryService: function(self) {
          if (!self._historyServiceLoad) {
             self._historyServiceLoad = new Deferred();
-            require('Controls/suggest', (suggest) => {
+            require(['Controls/suggest'], (suggest) => {
                suggest.LoadService({
                   historyId: self._options.historyId
                }).addCallback((result) => {
@@ -235,6 +235,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
       _selectCallback: function(event, result) {
          var prepareItems;
+         var self = this;
 
          result = this._notify('selectorCallback', [_private.getItems(this), result]) || result;
          this._setItems(result);
@@ -242,7 +243,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
          if (prepareItems && prepareItems.getCount() && this._options.historyId) {
             _private.getHistoryService(this).addCallback(function(historyService) {
-               historyService.update(prepareItems.at(0), {$_history: true});
+               historyService.update({ids: self._selectedKeys}, {$_history: true});
                return historyService;
             });
          }
