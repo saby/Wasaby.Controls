@@ -34,7 +34,6 @@
 
 .controls-DropdownList__row.theme_@{themeName} {
    position: relative;
-   min-height: @height_DropdownList-row;
    .flexbox();
    .align-items(center);
    box-sizing: border-box;
@@ -42,6 +41,10 @@
 
 .controls-DropdownList__row_state_default {
    cursor: pointer;
+}
+
+.controls-DropdownList__row_state_readOnly {
+   cursor: default;
 }
 
 .controls-DropdownList__row-separator.theme_@{themeName} {
@@ -102,6 +105,30 @@
 
 .controls-DropdownList__row_pinned.theme_@{themeName} {
    font-weight: bold;
+}
+
+.controls-HistoryMenu__iconPin.theme_@{themeName} {
+   position: absolute;
+   display: none;
+   .align-items(center);
+   right: @spacing_HistoryMenu-between-pin-rightBorder;
+   top: (@height_DropdownList-row - @icon-size_HistoryMenu-pin) / 2;
+   .icon-size(@icon-size_HistoryMenu-pin);
+   color: @color_HistoryMenu-pin;
+}
+
+.controls-HistoryMenu__iconPin.controls-HistoryMenu__iconPin_swiped.theme_@{themeName} {
+   .inline-flexbox();
+}
+
+.ws-is-no-touch {
+   .controls-DropdownList__row:hover .controls-HistoryMenu__iconPin.theme_@{themeName} {
+      .inline-flexbox();
+   }
+
+   .controls-HistoryMenu__iconPin.theme_@{themeName}:hover {
+      color: @color_HistoryMenu-pin_hovered;
+   }
 }
 
 .controls-DropdownList__content.theme_@{themeName} {

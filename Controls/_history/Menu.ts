@@ -29,8 +29,8 @@ var _private = {
  */
 
 var HistoryMenu = Menu.extend({
-   _itemTemplate: itemTemplate,
    _filter: null,
+   _itemTemplate: itemTemplate,
 
    _beforeMount: function (options) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
