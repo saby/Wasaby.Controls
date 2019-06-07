@@ -8,7 +8,6 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
-import {isPartialGridSupport} from 'Controls/_grid/utils/GridLayoutUtil'
 import { CssClassList } from "../Utils/CssClassList";
 
 /**
@@ -203,10 +202,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
-        }
-        // todo removed by https://online.sbis.ru/opendoc.html?guid=8f5d1d89-dde4-476d-a100-235b4e4b00b9
-        if (isPartialGridSupport() && this._hoveredItem === item) {
-            version = 'HOVERED_' + version;
         }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
             version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
