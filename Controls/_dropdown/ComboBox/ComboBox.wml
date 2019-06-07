@@ -6,6 +6,7 @@
         itemTemplate="{{_options.itemTemplate}}"
         selectedKeys="{{[_options.selectedKey]}}"
         emptyText="{{_options.emptyText}}"
+        historyId="{{_options.historyId}}"
         corner="{{_corner}}"
         width="{{_width}}"
         marker="{{false}}"
