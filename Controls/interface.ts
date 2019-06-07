@@ -19,5 +19,3 @@ export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle'
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as ISingleSelectable, ISingleSelectableOptions} from './_interface/ISingleSelectable';
-export {default as IDraggableBorders, IDraggableBordersOptions, Border} from './_interface/IDraggableBorders';
-export {default as ICoordinate} from './_interface/ICoordinate';

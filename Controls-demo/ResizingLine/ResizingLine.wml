@@ -1,0 +1,25 @@
+<div style="flex-direction: column;height: 100%;align-items: center;justify-content: center;display: inline-flex;">
+   <Controls.heading:Title caption="Движение границ."/>
+   <ws:if data="{{_offset}}">
+      <div>Вы только что потянули за {{_border}} край</div>
+      <div>Смещение равно {{_offset}}</div>
+   </ws:if>
+   <ws:else>
+      <div>Потяните за левый или правый край.</div>
+      <div>&nbsp;</div>
+   </ws:else>
+   <div style="height: 200px; width: {{_width}}px; background: red; position: relative;">
+      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"
+                                      direction="reverse"
+                                      minOffset="{{-100}}"
+                                      maxOffset="{{400}}"
+                                      on:offset="_offsetHandlerLeft()"/>
+      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; right: 0; height: 100%"
+                                       direction="direct"
+                                       minOffset="{{-100}}"
+                                       maxOffset="{{400}}"
+                                      on:offset="_offsetHandlerRight()"/>
+   </div>
+
+
+</div>

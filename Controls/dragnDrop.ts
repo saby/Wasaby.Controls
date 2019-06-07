@@ -7,6 +7,7 @@
  * @includes Entity Controls/_dragnDrop/Entity
  * @includes ItemsEntity Controls/_dragnDrop/Entity/Items
  * @includes DraggingTemplateStyles Controls/_dragnDrop/DraggingTemplate/Styles
+ * @includes ResizingLine Controls/_dragnDrop/ResizingLine
  * @public
  * @author Авраменко А. С.
  */
@@ -22,16 +23,18 @@ import Compound = require('Controls/_dragnDrop/Controller/Compound');
 import DraggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
 import 'css!Controls/_dragnDrop/DraggingTemplateWrapper';
 import ListItems = require('Controls/_dragnDrop/Entity/List/Items');
+import {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';
 
 export {
-    Container,
-    Controller,
-    DraggingTemplate,
-    Entity,
-    ItemsEntity,
-    _ItemEntity,
+   Container,
+   Controller,
+   DraggingTemplate,
+   Entity,
+   ItemsEntity,
+   _ItemEntity,
+   ResizingLine,
 
-    Compound,
-    DraggingTemplateWrapper,
-    ListItems
+   Compound,
+   DraggingTemplateWrapper,
+   ListItems
 };
