@@ -10,7 +10,10 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                     stringField: "stringValue",
                     booleanField: false
                 },
-                source: []
+                source: [
+                    {name: "stringField"},
+                    {name: "booleanField"}
+                ]
             },
             result: [
                 {name: "stringField", propertyValue: "stringValue"},
@@ -27,12 +30,13 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                 },
                 source: [
                         {name: "stringField", editorTemplateName: "Controls/_input/Text"},
-                        {name: "booleanField", editorOptions: {icon: "testIcon"}}
+                        {name: "booleanField", editorOptions: {icon: "testIcon"}},
+                        {name: "stringField1"}
                     ],
             },
             result: [
-                {name: "booleanField", editorOptions: {icon: "testIcon"}, propertyValue: false},
                 {name: "stringField", editorTemplateName: "Controls/_input/Text", propertyValue: "stringValue"},
+                {name: "booleanField", editorOptions: {icon: "testIcon"}, propertyValue: false},
                 {name: "stringField1", propertyValue: "stringValue1"}
             ],
         };
@@ -73,8 +77,8 @@ define(["Controls/_propertyGrid/PropertyGrid"], function(PropertyGrid) {
                 assert.deepEqual(pg.items.getRawData(), configWithEditingObjectAndSource.result);
 
                 /* testing default and custom templates */
-                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
-                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/_input/Text");
+                assert.strictEqual(pg.items.at(0).get("editorTemplateName"), "Controls/_input/Text");
+                assert.strictEqual(pg.items.at(1).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/Boolean");
                 assert.strictEqual(pg.items.at(2).get("editorTemplateName"), "Controls/_propertyGrid/defaultEditors/String");
             });
 
