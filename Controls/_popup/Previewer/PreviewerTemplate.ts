@@ -4,6 +4,9 @@ import template = require('wml!Controls/_popup/Previewer/PreviewerTemplate');
 import Utils = require('View/Executor/Utils');
 import 'Controls/Container/Async';
 
+/**
+ * @class Controls/_popup/Previewer/PreviewerTemplate
+ */
 
       var PreviewerTemplate = Control.extend({
          _template: template,

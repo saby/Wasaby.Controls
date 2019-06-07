@@ -49,6 +49,7 @@ export {
     Controller,
     Container,
     GlobalTemplate,
+    PreviewerTemplate,
 
     BaseOpener,
     EditContainer
