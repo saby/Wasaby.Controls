@@ -28,7 +28,7 @@ import 'css!theme?Controls/popup';
                autofocus: false,
                opener: self,
                target: self._container,
-               template: 'Controls/_popup/Previewer/OpenerTemplate',
+               template: 'Controls/popup:PreviewerTemplate',
                corner: {
                   vertical: 'bottom',
                   horizontal: 'right'
