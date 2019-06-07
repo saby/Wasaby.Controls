@@ -115,9 +115,9 @@
 
 /**
  * @typedef {String} MovePosition
- * @variant {String} after Inserts the moved items after the specified item.
- * @variant {String} before Inserts the moved items before the specified item.
- * @variant {String} on Inserts the moved items into the specified item.
+ * @variant after Insert moved items after the specified item.
+ * @variant before Insert moved items before the specified item.
+ * @variant on Insert moved items into the specified item.
  */
 
 /**
