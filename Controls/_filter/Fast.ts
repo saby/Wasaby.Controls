@@ -367,6 +367,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          },
 
          _reset: function(event, item, index) {
+            if (this._children.DropdownOpener.isOpened()) {
+               this._children.DropdownOpener.close();
+            }
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
             _private.setTextValue(this._items.at(index), '');
