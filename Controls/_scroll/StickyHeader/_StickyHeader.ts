@@ -104,10 +104,12 @@ var StickyHeader = Control.extend({
    },
 
    get height() {
+      //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      const container = (this._container && this._container.get) ? this._container.get(0) : this._container;
       // If the header is hidden we cannot calculate its current height.
       // Use the height that it had before it was hidden.
-      if (this._container.offsetParent !== null) {
-         this._height = this._container.offsetHeight;
+      if (container.offsetParent !== null) {
+         this._height = container.offsetHeight;
       }
       return this._height;
    },
