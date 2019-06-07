@@ -10,6 +10,10 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/interface/IFilter
     * @mixes Controls/_interface/ISource
+    * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_explorer/interface/IExplorer
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @control
