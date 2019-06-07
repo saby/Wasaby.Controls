@@ -552,7 +552,14 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._savedScrollPosition = this._children.content.scrollHeight - this._children.content.scrollTop;
+         function getScrollTop(element: Element): number {
+            const scrollTop = element.scrollTop;
+            if (Env.detection.isMobileIOS && scrollTop < 0) {
+               return 0;
+            }
+            return scrollTop;
+         }
+         this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
       },
 
       _restoreScrollPosition: function(e) {
