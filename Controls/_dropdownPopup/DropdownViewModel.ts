@@ -16,12 +16,6 @@ import entity = require('Types/entity');
             return parent === this._options.rootKey;
          },
 
-         hasHistory: function(item) {
-            if (item.getFormat().getFieldIndex('HistoryId') !== -1) {
-               return true;
-            }
-         },
-
          isHistoryItem: function(item) {
             return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
          },
@@ -167,7 +161,6 @@ import entity = require('Types/entity');
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
-            itemsModelCurrent.hasHistory = _private.hasHistory(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;

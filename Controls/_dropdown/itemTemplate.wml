@@ -1,6 +1,6 @@
 <div attr:class="controls-DropdownList__row controls-DropdownList__row_state_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly' : 'default'}}
                  {{marker !== false && itemData.isSelected ? 'controls-DropdownList__selected'}}
-                 controls-DropdownList__item-right_{{showClose ? 'close-padding' : itemData.hasHistory ? 'history-padding': itemData.hasChildren ? 'hierarchy-padding' : 'default-padding'}}
+                 controls-DropdownList__item-right_{{showClose ? 'close-padding' : hasPinned ? 'history-padding': itemData.hasChildren ? 'hierarchy-padding' : 'default-padding'}}
                  {{itemData.spacingClassList}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
@@ -39,11 +39,10 @@
          {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
       </div>
    </ws:else>
-   <ws:if data="{{itemData.hasHistory && !itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
+   <ws:if data="{{hasPinned && !itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
       <div    class="controls-HistoryMenu__iconPin {{itemData.isSwiped ? 'controls-HistoryMenu__iconPin_swiped'}}
               {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-HistoryMenu__iconUnnpin icon-PinOff' : 'icon-PinNull'}} theme_{{_options.theme}}"></div>
    </ws:if>
    <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow controls-DropdownList__arrow_{{readOnly ? 'readOnly' : 'default'}}
                                        icon-MarkCRightLight theme_{{_options.theme}}"></div>
 </div>
-<div if="{{itemData.hasSeparator}}" class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>

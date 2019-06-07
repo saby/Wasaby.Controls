@@ -1,4 +1,5 @@
 import {Button as Menu, MenuUtils} from 'Controls/dropdown';
+import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
 
 var _private = {
    getMetaPinned: function (item) {
@@ -29,6 +30,7 @@ var _private = {
 
 var HistoryMenu = Menu.extend({
    _filter: null,
+   _itemTemplate: itemTemplate,
 
    _beforeMount: function (options) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);

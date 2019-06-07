@@ -7,7 +7,7 @@
         displayProperty="{{_options.displayProperty}}"
         nodeProperty="{{_options.nodeProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
-        itemTemplate="{{_options.itemTemplate}}"
+        itemTemplate="{{_options.itemTemplate || _itemTemplate}}"
         headTemplate="{{_options.headTemplate || _options.headerTemplate}}"
         footerTemplate="{{_options.footerTemplate}}"
         headConfig="{{_options.headConfig}}"
