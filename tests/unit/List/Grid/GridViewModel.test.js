@@ -1341,6 +1341,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
+
+         it('getColspan', function() {
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('hidden', 0, 2),
+               ' grid-column: 1 / 3;'
+               );
+
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('hidden', 1, 2),
+               undefined
+               );
+
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('visible', 0, 2),
+               undefined
+               );
+
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('visible', 1, 2),
+               ' grid-column: 2 / 3;'
+               );
+         });
+
       });
    });
 });
