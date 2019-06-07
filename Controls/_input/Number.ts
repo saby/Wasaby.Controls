@@ -90,7 +90,8 @@ var NumberInput = Base.extend({
             useGrouping: options.useGrouping,
             onlyPositive: options.onlyPositive,
             integersLength: _private.convertToNumber(options.integersLength),
-            showEmptyDecimals: options.showEmptyDecimals
+            showEmptyDecimals: options.showEmptyDecimals,
+            useAdditionToMaxPrecision: options.showEmptyDecimals
         };
     },
 
