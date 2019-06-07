@@ -22,16 +22,17 @@ var _private = {
            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
         } else {
-           if (availableWidth - backButtonWidth < minCrumbsWidth || backButtonWidth > availableWidth / 2) {
-              self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
-           } else {
-              self._backButtonClass = '';
-           }
-           if (maxCrumbsWidth > availableWidth / 2) {
-              self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
-           } else {
-              self._breadCrumbsClass = '';
-           }
+            if (availableWidth - backButtonWidth < minCrumbsWidth || backButtonWidth > availableWidth / 2) {
+                self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
+                self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long'
+            } else {
+                self._backButtonClass = '';
+                self._breadCrumbsClass = '';
+            }
+
+            if (maxCrumbsWidth > availableWidth / 2) {
+                self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
+            }
         }
     },
 
