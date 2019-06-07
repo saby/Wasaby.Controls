@@ -54,6 +54,7 @@ define(['Controls/search'], function(searchMod) {
          });
 
          it('new value equally old value', function() {
+            notifyed = false;
             cont._valueChanged(null, 'newValue');
 
             assert.isFalse(notifyed);

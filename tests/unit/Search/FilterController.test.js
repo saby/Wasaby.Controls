@@ -8,7 +8,7 @@ define(['Controls/search'], function(search) {
             searchValue: 'test'
          });
 
-         assert.equal(filterController._filter, {title: 'test'});
+         assert.deepEqual(filterController._filter, {title: 'test'});
       });
    });
 });

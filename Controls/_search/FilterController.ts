@@ -7,7 +7,7 @@ export = Control.extend({
    _filter: null,
 
    _beforeMount: function(options) {
-      let filter = clone(options.filter);
+      let filter = clone(options.filter) || {};
 
       if (options.searchValue) {
          filter[options.searchParam] = options.searchValue;
