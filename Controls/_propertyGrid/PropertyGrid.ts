@@ -52,40 +52,19 @@ function checkRequiredOptions(options: IPropertyGridOptions): void {
     }
 }
 
-function getConfigFromSourceByName(name: string, source: IProperty[]): IProperty|void {
-    let sourceConfig;
-
-    factory(source).each((element) => {
-        if (!sourceConfig && name === object.getPropertyValue(element, PROPERTY_NAME_FIELD)) {
-            sourceConfig = element;
-        }
-    });
-
-    return sourceConfig;
-}
-
 function getPropertyGridItems(editingObject: Object, source: IProperty[]): PropertyGridItems {
     const itemsArray: IPropertyGridItem[] = [];
     let result: RecordSet<Record>;
 
     let propertyGridItemDefault: IPropertyGridItem;
-    let propertyGridItemConfig: IProperty|void;
 
-    for (const propName in editingObject) {
-        if (editingObject.hasOwnProperty(propName)) {
-            propertyGridItemDefault = getPropertyItemDefault();
-            propertyGridItemConfig = getConfigFromSourceByName(propName, source);
+    factory(source).each((config:IProperty) => {
+        propertyGridItemDefault = getPropertyItemDefault();
+        propertyGridItemDefault.propertyValue = editingObject[config[PROPERTY_NAME_FIELD]];
 
-            propertyGridItemDefault.propertyValue = editingObject[propName];
-            propertyGridItemDefault.name = propName;
-
-            if (propertyGridItemConfig) {
-                Object.assign(propertyGridItemDefault, propertyGridItemConfig);
-            }
-
-            itemsArray.push(propertyGridItemDefault);
-        }
-    }
+        Object.assign(propertyGridItemDefault, config);
+        itemsArray.push(propertyGridItemDefault);
+    });
 
     result = new RecordSet({
         rawData: itemsArray,
