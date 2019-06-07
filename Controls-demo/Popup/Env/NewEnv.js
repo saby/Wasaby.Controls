@@ -5,7 +5,7 @@ define('Controls-demo/Popup/Env/NewEnv',
       'SBIS3.CONTROLS/Action/OpenDialog',
       'Controls-demo/Popup/Env/template/oldTemplate',
       'Controls-demo/Popup/TestStack',
-      'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
+      'Controls/compatiblePopup'
    ],
    function(Control, template, OpenDialog) {
       'use strict';
