@@ -1399,5 +1399,36 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
       });
+
+      describe('partial grid support', function () {
+         let
+             nativeIsPartialGridSupport,
+             model;
+
+         beforeEach(function() {
+            nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = () => true;
+            model = new gridMod.GridViewModel(cfg);
+         });
+         afterEach(function() {
+            GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
+            model.destroy();
+            model = null;
+         });
+
+         it('hovered item should have prefix "HOVERED_" in version', function () {
+            model._model._calcItemVersion = () => '';
+
+            let
+                hoveredItem = model.getDisplay().at(0),
+                notHoveredItem = model.getDisplay().at(1);
+
+            model.setHoveredItem(hoveredItem);
+            assert.equal('HOVERED_', model._calcItemVersion(hoveredItem, hoveredItem.key));
+
+            assert.equal('', model._calcItemVersion(notHoveredItem, notHoveredItem.key));
+         });
+
+      });
    });
 });
