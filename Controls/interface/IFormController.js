@@ -50,31 +50,27 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * Updates a record in the data source
+    * Updates a record in the data source.  More {@link Types/source/ICrud#update}
     * @function Controls/interface/IFormController#update
-    * @return {Deffered}
     */
 
    /**
-    * Creates an empty record through a data source
+    * Creates an empty record through a data source. More {@link Types/source/ICrud#create}
     * @function Controls/interface/IFormController#create
-    * @param {Controls/interface/IFormController#createMetaData} createMetaData
-    * @returns {Deferred}
+    * @param {Object} createMetaData
     */
 
    /**
-    * Reads an entry from a data source
+    * Reads an entry from a data source.  More {@link Types/source/ICrud#read}
     * @function Controls/interface/IFormController#read
-    * @param {Controls/interface/IFormController#key} key
-    * @param {Controls/interface/IFormController#readMetaData} readMetaData
-    * @return {Deffered}
+    * @param {String} key
+    * @param {Object} readMetaData
     */
 
    /**
-    * Removes an record from the data source
+    * Removes an record from the data source. More {@link Types/source/ICrud#delete}
     * @function Controls/interface/IFormController#delete
-    * @param {Controls/interface/IFormController#destroyMetaData} destroyMetaData
-    * @return {Deffered}
+    * @param {Object} destroyMetaData
     */
 
    /**

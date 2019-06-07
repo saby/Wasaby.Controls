@@ -2,7 +2,9 @@ import Controller = require('Controls/_validate/Controller');
 import template = require('wml!Controls/_validate/Selection');
 
 /**
- * The control that regulates the validation of his content. Uses in controls that supports the IMultiselect interface.
+ * Контрол, регулирующий валидацию своего контента.
+ * Используется с контролами, поддерживающими интерфейс IMultiSelectable( {@link Controls/_interface/IMultiSelectable} )
+ * Автоматически запускает валидацию при смене значения в контроле и при его деактивации.
  * @class Controls/_validate/Selection
  * @extends Controls/_validate/Controller
  * @control
