@@ -2,12 +2,12 @@ define('Controls/Application/TouchDetector', [
    'Core/Control',
    'wml!Controls/Application/TouchDetector/TouchDetector',
    'Env/Env',
-   'Controls/Context/TouchContextField'
+   'Controls/context'
 ], function(
    Control,
    template,
    Env,
-   TouchContextField
+   context
 ) {
    return Control.extend({
       moveInRow: 1,
@@ -26,7 +26,7 @@ define('Controls/Application/TouchDetector', [
       },
 
       _beforeMount: function() {
-         this._touchObjectContext = new TouchContextField(this.state);
+         this._touchObjectContext = new context.TouchContextField(this.state);
       },
 
       touchHandler: function() {

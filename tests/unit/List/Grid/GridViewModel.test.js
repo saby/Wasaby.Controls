@@ -311,6 +311,26 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'Invalid result data in test #' + idx);
             });
          });
+         it('getCellStyle should set styles for partial support if has colspan', function () {
+            let nativeFn =GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = () => true;
+
+            let
+                itemData = {
+                   multiSelectVisibility: 'hidden',
+                   columns: [{}, {}]
+                },
+                currentColumn = {
+                   columnIndex: 0
+                };
+
+            assert.equal(
+                gridMod.GridViewModel._private.getCellStyle(itemData, currentColumn, true),
+                ' grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;'
+            );
+
+            GridLayoutUtil.isPartialGridSupport = nativeFn;
+         });
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {
@@ -1050,6 +1070,17 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
                    'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
             }
+         });
+
+         it('should +1 on row index on rows after editting', function () {
+
+            let native = GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = ()=>true;
+            gridViewModel._model._editingItemData = { rowIndex: 1};
+
+            let iData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
+            assert.equal(iData.rowIndex, 4);
+            GridLayoutUtil.isPartialGridSupport = native;
          });
 
          it('setEditingItemData', function () {

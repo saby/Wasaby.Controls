@@ -24,6 +24,9 @@
         <Controls.buttons:Button name="button6" caption="Open Stack with headerTemplate" on:click="openStackCustomHeader()"/>
     </div>
     <div>
+        <Controls.buttons:Button name="button7" caption="Open Stack without head" on:click="openStackWithoutHead()"/>
+    </div>
+    <div>
         <Controls.buttons:Button name="button3" caption="Open Dialog" on:click="openDialog()"/>
     </div>
     <div>

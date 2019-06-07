@@ -1,12 +1,12 @@
 define('Controls-demo/InfoBox/Opener/InfoBox',
    [
       'Core/Control',
-      'Controls/Context/TouchContextField',
+      'Controls/context',
       'wml!Controls-demo/InfoBox/resources/content',
       'wml!Controls-demo/InfoBox/Opener/InfoBox',
       'css!Controls-demo/InfoBox/Opener/InfoBox'
    ],
-   function(Control, TouchContext, contentTpl, template) {
+   function(Control, context, contentTpl, template) {
       'use strict';
 
       var message = 'MESSAGE';
@@ -327,7 +327,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
 
       InfoBox.contextTypes = function() {
          return {
-            isTouch: TouchContext
+            isTouch: context.TouchContextField
          };
       };
 

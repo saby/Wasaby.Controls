@@ -72,6 +72,7 @@ var _private = {
                 if (item.editorOptions.source) {
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.selectorOpener = self._children.selectorOpener;
+                    popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                 }
                 popupItems.push(popupItem);
             }
@@ -100,7 +101,7 @@ var _private = {
     getFilterButtonText: function(self, items) {
         var textArr = [];
         factory(items).each(function(item) {
-            if (item.viewMode !== 'frequent' && item.viewMode !== 'extended' && _private.isItemChanged(item)) {
+            if (item.viewMode !== 'frequent' && (item.viewMode !== 'extended' || item.visibility === true) && _private.isItemChanged(item)) {
                 var textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);
@@ -298,48 +299,48 @@ var Filter = Control.extend({
 
     _openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
-            var panelItems = converterFilterItems.convertToDetailPanelItems(this._filterSource);
-            var className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
-            this._open(panelItems, this._options.detailPanelTemplateName, className);
+            let panelItems = converterFilterItems.convertToDetailPanelItems(this._filterSource);
+            let popupOptions =  {};
+            if (this._options.alignment === 'right') {
+                popupOptions.corner = {
+                    vertical: 'top',
+                    horizontal: 'right'
+                };
+                popupOptions.horizontalAlign = {
+                    side: 'left'
+                };
+            }
+            popupOptions.template = this._options.detailPanelTemplateName;
+            popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
+            this._open(panelItems, popupOptions);
         } else {
             this._openPanel();
         }
     },
 
-    _openPanel: function() {
+    _openPanel: function(event, fastItem) {
         if (this._options.panelTemplateName) {
-            var items = new RecordSet({
+            let items = new RecordSet({
                 rawData: _private.setPopupConfig(this, this._configs, this._filterSource)
             });
-            this._open(items, this._options.panelTemplateName, 'controls-FilterView-SimplePanel-popup');
+            let popupOptions = { template: this._options.panelTemplateName,
+                                 className: 'controls-FilterView-SimplePanel-popup' };
+            if (fastItem) {
+                popupOptions.target = this._children[fastItem.name];
+            }
+            this._open(items, popupOptions);
         }
     },
 
-    _open: function(items, template, className) {
-        if (this._children.DropdownOpener.isOpened()) {
-            return;
-        }
-
-        var popupPosition = {};
-        if (this._options.alignment === 'right') {
-            popupPosition.corner = {
-                vertical: 'top',
-                horizontal: 'right'
-            };
-            popupPosition.horizontalAlign = {
-                side: 'left'
-            };
-        }
+    _open: function(items, panelPopupOptions) {
         var popupOptions = {
             templateOptions: {
                 items: items,
                 theme: this._options.theme
             },
-            template: template,
-            className: className,
             target: this._container[0] || this._container
         };
-        this._children.DropdownOpener.open(Merge(popupOptions, popupPosition), this);
+        this._children.DropdownOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
 
     _resultHandler: function(event, result) {
@@ -372,7 +373,7 @@ var Filter = Control.extend({
 
     _reset: function(event, item) {
         if (this._children.DropdownOpener.isOpened()) {
-            return;
+            this._children.DropdownOpener.close();
         }
         var newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
@@ -381,6 +382,9 @@ var Filter = Control.extend({
     },
 
     _resetFilterText: function() {
+        if (this._children.DropdownOpener.isOpened()) {
+            this._children.DropdownOpener.close();
+        }
         factory(this._filterSource).each(function(item) {
             // Fast filters could not be reset from the filter button.
             if (item.viewMode !== 'frequent') {
