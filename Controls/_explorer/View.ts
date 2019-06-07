@@ -144,6 +144,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_tile/interface/IGridControl
+    * @mixes Controls/interface/IGroupedGrid
     * @control
     * @public
     * @category List

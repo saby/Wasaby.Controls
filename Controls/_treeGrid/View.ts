@@ -29,6 +29,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/IGridControl
+    * @mixes Controls/interface/IGroupedGrid
     *
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/_list/BaseControlStyles
