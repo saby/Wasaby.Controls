@@ -129,6 +129,10 @@ var ViewModel = BaseViewModel.extend({
     _convertToDisplayValue: function (value) {
         var displayValue = value === null ? '' : value.toString();
 
+        if (displayValue && this._options.showEmptyDecimals) {
+            displayValue = format(parse(displayValue), this._options, 0).value;
+        }
+
         if (this._options.useGrouping) {
             displayValue = splitIntoTriads(displayValue);
         }
