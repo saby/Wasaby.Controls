@@ -30,6 +30,10 @@
  */
 
 /**
+ * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при смене корня. 
+ */
+
+/**
  * @name Controls/_explorer/interface/IExplorer#backButtonStyle
  * @cfg {String} Back heading display style.
  * @default secondary
