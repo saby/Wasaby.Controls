@@ -1,14 +1,14 @@
 define(
    [
-      'Controls/Popup/Compatible/Notification/Base'
+      'Controls/compatiblePopup'
    ],
-   function(Base) {
+   function(compatiblePopup) {
 
       'use strict';
 
-      describe('Controls/Popup/Compatible/Notification/Base', function() {
+      describe('Controls/compatiblePopup:NotificationBase', function() {
          it('_beforeMount', function() {
-            var ctrl = new Base({});
+            var ctrl = new compatiblePopup.NotificationBase({});
             var options = {};
             ctrl._beforeMount({
                contentTemplateOptions: options

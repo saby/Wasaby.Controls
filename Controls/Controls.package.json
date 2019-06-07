@@ -38,15 +38,6 @@
   "output": "controls-input.package.js"
 }, {
   "include": [
-    "Controls/Popup/Compatible/*"
-  ],
-  "exclude": [
-    "Controls/Popup/Compatible/Layer",
-    "Controls/Popup/Compatible/ManagerWrapper/Controller"
-  ],
-  "output": "controls-popup-compat.package.js"
-}, {
-  "include": [
     "Controls/Render/*"
   ],
   "output": "controls-render.package.js"
