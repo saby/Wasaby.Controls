@@ -32,7 +32,7 @@
 /**
  * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии.
  * @description Например, такое происходит при переходе пользователя по хлебным крошкам.
- * @param event {eventObject} Объект события
+ * @param event {eventObject} Объект события.
  * @param root {String} Идентификатор корневой записи. 
  */
 
