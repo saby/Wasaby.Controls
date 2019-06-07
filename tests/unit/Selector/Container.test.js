@@ -118,6 +118,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             ['Controls/source:Controller', 'Controls/_source/SourceController'],
             sourceController._moduleName
          );
+         assert.isTrue(!sourceController._options.navigation);
       });
 
       it('_selectedKeysChanged', function() {
