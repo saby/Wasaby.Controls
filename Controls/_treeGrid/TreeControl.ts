@@ -277,7 +277,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
         }
-        if (cfg.expandedItems && Object.keys(cfg.expandedItems).length > 0) {
+        if (cfg.expandedItems && cfg.expandedItems.length > 0) {
             this._deepReload = true;
         }
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
@@ -304,12 +304,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = true;
         }
 
-        if (typeof newOptions.expandedItems !== 'undefined' && this._receivedExpandedItems !== newOptions.expandedItems) {
-            this._receivedExpandedItems = newOptions.expandedItems;
-            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
-
-            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            this._children.baseControl.getViewModel().setExpandedItems(this._receivedExpandedItems);
+        //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
+        if (newOptions.expandedItems) {
+            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
@@ -352,6 +349,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpandedItemsChanged(e, expandedItems){
         this._notify('expandedItemsChanged', [expandedItems]);
+
+        //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
+        this._forceUpdate();
     },
     reload: function() {
         var self = this;

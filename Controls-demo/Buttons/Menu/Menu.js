@@ -33,6 +33,9 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _scrollItems: null,
          _hierarchyMultiItems: null,
          _groupTextItems: null,
+         _additionalItems: null,
+         _multilevelHierarchyItems: null,
+         _bigItems: null,
 
          _beforeMount: function() {
             this._oneItem = [
@@ -228,6 +231,51 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 10, title: 'Coordination of change prices', parent: 4, readOnly: true },
                { id: 11, title: 'Matching new dish', parent: 4 }
             ];
+            this._additionalItems = [
+               { id: 1, title: 'Add', icon: 'icon-small icon-Bell' },
+               { id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off',icon: 'icon-small icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2' },
+               { id: 6, title: 'Task', icon: 'icon-small icon-TFTask', group: '3', additional: true },
+               { id: 6, title: 'Incident', icon: 'icon-small icon-Alert', group: '3', additional: true },
+               { id: 6, title: 'Outfit', icon: 'icon-small icon-PermittedBuyers', group: '3', additional: true },
+               { id: 6, title: 'Project', icon: 'icon-small icon-Document', group: '3', additional: true },
+               { id: 6, title: 'Check', icon: 'icon-small icon-Statistics', group: '3', additional: true },
+               { id: 6, title: 'Meeting', icon: 'icon-small icon-Groups', group: '3', additional: true },
+               { id: 6, title: 'Treaties', icon: 'icon-small icon-Report', group: '3', additional: true }
+            ];
+            this._multilevelHierarchyItems = [
+               { id: 1, title: 'Task', '@parent': true, parent: null },
+               { id: 2, title: 'Error in the development', '@parent': false, parent: null },
+               { id: 3, title: 'Commission', parent: 1 },
+               { id: 4, title: 'Coordination', parent: 1, '@parent': true },
+               { id: 5, title: 'Application', parent: 1 },
+               { id: 6, title: 'Development', parent: 1 },
+               { id: 7, title: 'Exploitation', parent: 1 },
+               { id: 8, title: 'Coordination', parent: 4 },
+               { id: 9, title: 'Negotiate the discount', parent: 4 },
+               { id: 10, title: 'Coordination of change prices', parent: 4, '@parent': true },
+               { id: 11, title: 'Matching new dish', parent: 4 },
+               { id: 12, title: 'New level', parent: 10},
+               { id: 13, title: 'New level record 2', parent: 10},
+               { id: 14, title: 'New level record 3', parent: 10, '@parent': true},
+               { id: 15, title: 'Very long hierarchy', parent: 14},
+               { id: 16, title: 'Very long hierarchy 2', parent: 14, '@parent': true},
+               { id: 17, title: 'Very long hierarchy 3', parent: 14},
+               { id: 18, title: 'It is last level', parent: 16},
+               { id: 19, title: 'It is last level 2', parent: 16},
+               { id: 20, title: 'It is last level 3', parent: 16}
+            ];
+            this._bigItems = this._createBigItems();
+         },
+
+         _createBigItems: function() {
+            var items = [];
+            for (var i = 0; i < 100; i++) {
+               items.push({id: i, title: i % 10 === 0 ? ('Are we testing if there are very long records in the menu with unlimited width? This is a very long record. ' + i) : ('New record ' + i)});
+            }
+            return items;
          },
 
          _createMemory: function(items) {

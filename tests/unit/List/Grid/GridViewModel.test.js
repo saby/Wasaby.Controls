@@ -1375,29 +1375,39 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
-
          it('getColspan', function() {
             assert.equal(
                gridMod.GridViewModel._private.getColspan('hidden', 0, 2),
                ' grid-column: 1 / 3;'
-               );
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('hidden', 1, 2),
                undefined
-               );
+            );
+
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('hidden', 0, 2, true),
+               ' grid-column: 1 / 2;'
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('visible', 0, 2),
                undefined
-               );
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('visible', 1, 2),
                ' grid-column: 2 / 3;'
-               );
-         });
+            );
 
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
+               ' grid-column: 1 / 3;'
+            );
+         });
       });
 
       describe('partial grid support', function () {

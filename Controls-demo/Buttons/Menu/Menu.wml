@@ -134,7 +134,12 @@
               source="{{_createHistoryMemory()}}"
               attr:class="ControlsDemo__history"
               tooltip="Add">
-         <ws:headConfig caption="Add"/>
+         <ws:headerTemplate>
+            <ws:partial template="Controls/dropdownPopup:Template" caption="Add" icon=""/>
+         </ws:headerTemplate>
+         <ws:itemTemplate>
+            <ws:partial template="Controls/history:itemTemplate" iconPadding=""/>
+         </ws:itemTemplate>
       </Controls.history:Menu>
    </div>
 
@@ -178,7 +183,7 @@
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
-      <h4>Multiple level menu with comments</h4>
+      <h4>With inactive items</h4>
       <Controls.dropdown:Button
               keyProperty="id"
               style="primary"
@@ -218,6 +223,12 @@
          <ws:groupTemplate>
             <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}"/>
          </ws:groupTemplate>
+         <ws:headerTemplate>
+            <ws:partial template="Controls/dropdownPopup:Template" caption="Related documents" icon=""/>
+         </ws:headerTemplate>
+         <ws:itemTemplate>
+            <ws:partial template="Controls/dropdown:ItemTemplate" iconPadding=""/>
+         </ws:itemTemplate>
       </Controls.dropdown:Button>
    </div>
 
@@ -244,6 +255,51 @@
               source="{{_createMemory(_scrollItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scrollBig"
               tooltip="Subtask">
+      </Controls.dropdown:Button>
+   </div>
+
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>Additional items</h4>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              additionalProperty="additional"
+              groupingKeyCallback="{{_groupingKeyCallback}}"
+              groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
+              style="secondary"
+              viewMode="link"
+              icon="icon-medium icon-Linked"
+              source="{{_createMemory(_additionalItems)}}">
+         <ws:headerTemplate>
+            <invisible-node />
+         </ws:headerTemplate>
+      </Controls.dropdown:Button>
+   </div>
+
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>Multilevel hierarchy</h4>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              style="secondary"
+              viewMode="link"
+              caption="hierarchy"
+              source="{{_createMemory(_multilevelHierarchyItems)}}">
+      </Controls.dropdown:Button>
+   </div>
+
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>Big menu</h4>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              style="secondary"
+              viewMode="link"
+              caption="Big menu"
+              source="{{_createMemory(_bigItems)}}">
       </Controls.dropdown:Button>
    </div>
 

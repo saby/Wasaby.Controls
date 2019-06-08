@@ -89,7 +89,7 @@ var SearchController = extend({
    },
 
    search: function(value, force) {
-      if (value.length >= this._options.minSearchLength || force && value.length) {
+      if ((this._options.minSearchLength !== null && value.length >= this._options.minSearchLength) || (force && value.length)) {
          _private.search(this, value, force);
       } else {
          _private.abort(this);

@@ -8,3 +8,4 @@
             showClose="{{showClose}}"
             parentProperty="{{parentProperty}}"
             iconPadding="{{iconPadding}}"/>
+<div if="{{itemData.hasSeparator}}" class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>

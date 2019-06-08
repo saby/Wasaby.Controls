@@ -97,10 +97,10 @@ define(
          it('checkIcons', function() {
             let opener = getOpener(config);
             dropdown.Opener._private.checkIcons(opener, config);
-            assert.deepEqual(config.templateOptions.iconPadding, { null: [null, 'icon-small'] });
+            assert.deepEqual(config.templateOptions.iconPadding, { null: 'icon-small' });
             config.templateOptions.rootKey = 'testKey';
             dropdown.Opener._private.checkIcons(opener, config);
-            assert.deepEqual(config.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
+            assert.deepEqual(config.templateOptions.iconPadding, { testKey: 'icon-small' });
          });
 
          it('getIconSize', function() {

@@ -445,10 +445,17 @@ define(
          it('reset', function(done) {
             filterMod.Fast._private.reload(fastData).addCallback(function() {
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
+                  let isOpened = false, closed = false;
                   fastData.lastOpenIndex = 0;
-                  fastData._container = { children: [] };
+                  fastData._children = {DropdownOpener: {isOpened: () => {return isOpened;}, close: () => {closed = true;}}};
                   fastData._reset(null, fastData._items.at(0), 0);
                   assert.equal(fastData._items.at(0).get('resetValue'), 'все страны');
+                  assert.isFalse(closed);
+
+                  isOpened = true;
+                  fastData._reset(null, fastData._items.at(0), 0);
+                  assert.equal(fastData._items.at(0).get('resetValue'), 'все страны');
+                  assert.isTrue(closed);
                   done();
                });
             });
