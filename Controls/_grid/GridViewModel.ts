@@ -7,7 +7,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
@@ -895,18 +895,20 @@ var
 
         _getRowIndexHelper() {
             let
-                display = this.getDisplay(),
-                hasHeader = !!this.getHeader(),
-                resultsPosition = this.getResultsPosition(),
+                cfg: IBaseGridRowIndexOptions = {
+                    display: this.getDisplay(),
+                    hasHeader: !!this.getHeader(),
+                    resultsPosition: this.getResultsPosition(),
+                },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
             return {
-                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
-                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
-                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
+                getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
+                getIndexById: (id) => getIndexById({id, ...cfg}),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
+                getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition)
             };
         },
 
