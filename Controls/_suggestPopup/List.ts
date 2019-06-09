@@ -6,6 +6,7 @@ import template = require('wml!Controls/_suggestPopup/List/List');
 import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import { constants } from 'Env/Env';
 
 
 var DIALOG_PAGE_SIZE = 25;
@@ -29,7 +30,10 @@ var _private = {
             navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
             self._navigation = navigation;
          } else {
+            let stickyPosition = self._suggestListOptions.stickyPosition;
+
             self._navigation = self._suggestListOptions.navigation;
+            self._reverseList = stickyPosition && stickyPosition.verticalAlign.side === 'top';
          }
       }
    },
@@ -63,9 +67,13 @@ var _private = {
 var List = Control.extend({
 
    _template: template,
-   _notifyHandler: tmplNotify
+   _notifyHandler: tmplNotify,
+   _reverseList: false,
+   _markedKey: null,
+   _items: null
 
    _beforeMount: function(options, context) {
+      this._searchEndCallback = this._searchEndCallback.bind(this);
       _private.checkContext(this, context);
    },
 
@@ -95,13 +103,38 @@ var List = Control.extend({
    },
 
    _inputKeydown: function(event, domEvent) {
-      //TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
-      var list = this._children.list;
+      if (this._markedKey === null && this._items && this._items.length &&
+            domEvent.nativeEvent.keyCode === constants.key.up) {
+         let
+            idProperty = this._suggestListOptions.source.getIdProperty(),
+            indexItem = this._reverseList ? 0 : this._items.length - 1;
 
-      //remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-      var listContainer = list._container[0] || list._container;
-      var customEvent = new Event('keydown');
-      _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
+         this._markedKey = this._items[indexItem][idProperty];
+      } else {
+         /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
+          remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
+         let
+            list = this._children.list,
+            listContainer = list._container[0] || list._container,
+            customEvent = new Event('keydown');
+
+         _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
+      }
+   },
+
+   _searchEndCallback: function(result, filter) {
+      if (this._suggestListOptions.searchEndCallback instanceof Function) {
+         this._suggestListOptions.searchEndCallback(result, filter);
+      }
+
+      if (result) {
+         this._items = result.data.getRawData();
+      }
+   },
+
+   _markedKeyChanged: function(event, key) {
+      this._markedKey = key;
+      this._notify('markedKeyChanged', [key]);
    }
 });
 

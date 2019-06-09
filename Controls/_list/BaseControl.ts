@@ -31,7 +31,7 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
-var
+const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
         moveMarkerToPrevious: constants.key.up,

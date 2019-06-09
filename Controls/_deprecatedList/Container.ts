@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedList/Container');
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy} from 'Types/source';
 import {_SearchController} from 'Controls/search';
 import merge = require('Core/core-merge');
 import isEqual = require('Core/helpers/Object/isEqual');
@@ -53,14 +53,20 @@ var _private = {
    },
 
    updateSource: function(self, data) {
-      var source = _private.getOriginSource(self._options.source);
+      let
+         source = _private.getOriginSource(self._options.source),
+         items = data.getRawData();
+
+      if (self._options.reverseList) {
+         items.reverse();
+      }
 
       /* TODO will be a cached source */
       _private.cachedSourceFix(self);
       self._source = new Memory({
          model: data.getModel(),
          idProperty: data.getIdProperty(),
-         data: data.getRawData(),
+         data: items,
          adapter: source.getAdapter()
       });
    },
@@ -228,6 +234,20 @@ var _private = {
       }
 
       return _private.getCorrectSource(source);
+   },
+
+   reverseSourceData: function(self) {
+      if (self._source.data) {
+         // toDO !KONGO Используем PrefetchProxy, так как для 'Types/source:Memory' стоит искуственная задержка и список мелькает.
+         self._source = new PrefetchProxy({
+            target: new Memory({
+               model: self._source.getModel(),
+               idProperty: self._source.getIdProperty(),
+               data: self._source.data.reverse(),
+               adapter: self._source.getAdapter()
+            })
+         });
+      }
    }
 };
 
@@ -281,6 +301,8 @@ var List = Control.extend({
          /* create searchController with new options */
          this._searchController = null;
          _private.getSearchController(this).setFilter(currentFilter);
+      } else if (this._options.reverseList !== newOptions.reverseList) {
+         _private.reverseSourceData(this);
       }
       _private.checkContextValues(this, context);
    },

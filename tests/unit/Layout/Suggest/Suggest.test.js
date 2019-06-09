@@ -687,6 +687,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var eventStopPropagation = false;
          var suggestStateChanged = false;
          var eventTriggered = false;
+         var suggestActivated = false;
          suggestComponent._children = {
             inputKeydown: {
                start: function() {
@@ -699,6 +700,10 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             if (event === 'suggestStateChanged') {
                suggestStateChanged = true;
             }
+         };
+
+         suggestComponent.activate = function() {
+            suggestActivated = true;
          };
 
          function getEvent(keyCode) {
@@ -717,34 +722,44 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isFalse(eventPreventDefault);
          assert.isFalse(eventStopPropagation);
+         assert.isFalse(suggestActivated);
 
          suggestComponent._options.suggestState = true;
 
          suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isTrue(eventPreventDefault);
          assert.isTrue(eventStopPropagation);
+         assert.isTrue(suggestActivated);
          eventPreventDefault = false;
+         suggestActivated = false;
 
          suggestComponent._keydown(getEvent(Env.constants.key.up));
          assert.isTrue(eventPreventDefault);
+         assert.isTrue(suggestActivated);
          eventPreventDefault = false;
+         suggestActivated = false;
 
          suggestComponent._keydown(getEvent(Env.constants.key.enter));
          assert.isFalse(eventPreventDefault);
+         assert.isFalse(suggestActivated);
          eventPreventDefault = false;
 
          suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._keydown(getEvent(Env.constants.key.enter));
          assert.isTrue(eventPreventDefault);
+         assert.isTrue(suggestActivated);
 
          eventPreventDefault = false;
+         suggestActivated = false;
          suggestComponent._keydown(getEvent('test'));
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
+         assert.isFalse(suggestActivated);
 
          eventPreventDefault = false;
          suggestComponent._keydown(getEvent(Env.constants.key.esc));
          assert.isTrue(suggestStateChanged);
+         assert.isFalse(suggestActivated);
       });
 
       it('Suggest::_private.openWithHistory', function () {
