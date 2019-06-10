@@ -93,6 +93,24 @@ define(
             });
          });
 
+         describe('_resizeHandler', function() {
+            it('should update _displayState if it changed.', function() {
+               let oldDisplayState = scroll._displayState;
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 100,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._resizeHandler();
+               assert.notStrictEqual(scroll._displayState, oldDisplayState);
+               oldDisplayState = scroll._displayState;
+               scroll._resizeHandler();
+               assert.strictEqual(scroll._displayState, oldDisplayState);
+            });
+         });
+
          describe('_scrollbarTaken', function() {
             it('Should generate scrollbarTaken event if scrollbar displayed', function() {
                const sandbox = sinon.sandbox.create();
