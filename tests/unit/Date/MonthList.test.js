@@ -11,7 +11,7 @@ define([
 ) {
    'use strict';
    let config = {
-      startPosition: new Date(2018, 0, 1)
+      month: new Date(2018, 0, 1)
    };
 
    describe('Controls/_calendar/MonthList', function() {
