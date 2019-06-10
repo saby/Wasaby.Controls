@@ -1,0 +1,15 @@
+<div class="controls-MonthList__year">
+   <div class="controls-MonthList__year-header">{{date.getFullYear()}}</div>
+   <div  class="controls-MonthList__year-months">
+      <ws:for data="month in 12">
+         <ws:partial
+            template="{{_options.monthTemplate}}"
+            date="{{_getMonth(date.getFullYear(), month)}}"
+            extData="{{extData[month]}}"
+            _options="{{_options}}"
+            _getMonth="{{_getMonth}}"
+            dayTemplate="{{dayTemplate}}"
+         />
+      </ws:for>
+   </div>
+</div>
