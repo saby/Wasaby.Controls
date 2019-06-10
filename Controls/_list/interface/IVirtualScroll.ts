@@ -29,19 +29,5 @@
 /**
  * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
  * @cfg {Number} Number of items that will be inserted/removed on reaching the end of displayed items.
- * @default 20
- */
-
-/**
- * @name Controls/_list/interface/IVirtualScroll#startIndex
- * @cfg {Number} The index of the first item displayed in the list at initializing.
- * @default 0
- */
-
-/**
- * @name Controls/_list/interface/IVirtualScroll#updateItemsHeightsMode
- * @cfg {String} Sets the mode of updating the height of items. Determines whether to update the height of all elements.
- * @variant onChangeCollection Update heights of only added items.
- * @variant always Update all items heights
- * @default onChangeCollection
+ * @default 10
  */
