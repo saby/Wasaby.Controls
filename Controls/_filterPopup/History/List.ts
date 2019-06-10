@@ -6,7 +6,7 @@ import template = require('wml!Controls/_filterPopup/History/List');
 import chain = require('Types/chain');
 import isEqual = require('Core/helpers/Object/isEqual');
 import Utils = require('Types/util');
-import historyUtils = require('Controls/_filter/HistoryUtils');
+import {HistoryUtils} from 'Controls/filter';
 import 'css!theme?Controls/filterPopup';
 
 
@@ -57,24 +57,24 @@ import 'css!theme?Controls/filterPopup';
 
       _beforeMount: function(options) {
          if (options.items) {
-            this._itemsText = this._getText(options.items, options.filterItems, historyUtils.getHistorySource(options.historyId));
+            this._itemsText = this._getText(options.items, options.filterItems, HistoryUtils.getHistorySource(options.historyId));
          }
       },
 
       _beforeUpdate: function(newOptions) {
          if (!isEqual(this._options.items, newOptions.items)) {
-            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, historyUtils.getHistorySource(newOptions.historyId));
+            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, HistoryUtils.getHistorySource(newOptions.historyId));
          }
       },
 
       _onPinClick: function(event, item) {
-         historyUtils.getHistorySource(this._options.historyId).update(item, {
+         HistoryUtils.getHistorySource(this._options.historyId).update(item, {
             $_pinned: !item.get('pinned')
          });
          this._notify('historyChanged');
       },
       _contentClick: function(event, item) {
-         var items = historyUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
+         var items = HistoryUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
          this._notify('applyHistoryFilter', [items]);
       },
 

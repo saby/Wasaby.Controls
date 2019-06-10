@@ -47,10 +47,10 @@ define('Controls-demo/Popup/Edit/MyFormController',
          },
          _updateSuccessedHandler: function(event, record) {
             this._record = record;
-            this._notify('close');
+            this._notify('close', [], { bubbling: true });
          },
          _deleteSuccessedHandler: function(record) {
-            this._notify('close');
+            this._notify('close', [], { bubbling: true });
          },
          _errorHandler: function(event, error) {
             var cfg = {
@@ -62,7 +62,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
             this._children.popupOpener.open(cfg);
          },
          _sendResult: function() {
-            this._notify('sendResult', ['arg1', 'args2', 'arg3'], { bubbling: true });
+            this._notify('sendResult', ['Цена ' + (this._record.get('price') || 0), 'Ост. ' + (this._record.get('balance') || 0)], { bubbling: true });
          },
          openTestStack: function() {
             this._children.stack.open();

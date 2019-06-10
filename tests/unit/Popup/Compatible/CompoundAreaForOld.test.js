@@ -3,17 +3,17 @@
  */
 define(
    [
-      'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
+      'Controls/compatiblePopup',
       'Core/Deferred'
    ],
 
-   function(CompoundArea, Deferred) {
+   function(compatiblePopup, Deferred) {
       'use strict';
 
-      var Area = new CompoundArea({});
+      var Area = new compatiblePopup.CompoundArea({});
       Area._beforeMount({});
 
-      describe('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea', function() {
+      describe('Controls/compatiblePopup:CompoundArea', function() {
          it('check options for reload', () => {
             let opt = {
                template: 'newTemplate',

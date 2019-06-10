@@ -63,7 +63,6 @@
 .controls-BreadCrumbsPath__breadCrumbs {
    overflow: hidden;
    flex-grow: 1;
-   padding-left: @spacing_Path-between-home-and-crumbs;
 }
 
 .controls-BreadCrumbsPath__homeContainer {
@@ -71,6 +70,7 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+   padding-right: @spacing_Path-between-home-and-crumbs;
    &:before {
       font-size:@font-size_BreadCrumbs-homeContainer;
    }
@@ -95,6 +95,10 @@
    width: 50%;
    flex-shrink: 1;
    overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__breadCrumbs_long {
+   flex-shrink: 0;
 }
 
 .ws-is-no-touch {

@@ -44,29 +44,29 @@ var
            columnIndex: number,
            columnsLength: number,
 
-           // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-           isBreadCrumbs: boolean = false
+           // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+           isHeaderBreadCrumbs: boolean = false
         ): string {
             let
                 multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
 
           if (columnIndex === multiselectOffset) {
-              if (isBreadCrumbs) {
+              if (isHeaderBreadCrumbs) {
                  if (GridLayoutUtil.isNoGridSupport()) {
                     return ' colspan: 1;';
                  } else if (GridLayoutUtil.isPartialGridSupport()) {
-                        return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
                  } else {
                     return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
               } else {
-                 if (GridLayoutUtil.isNoGridSupport()) {
-                    return ` colspan: ${columnsLength - multiselectOffset};`;
-                 } else if (GridLayoutUtil.isPartialGridSupport()) {
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${columnsLength};`;
-                 } else {
-                    return ` grid-column: ${multiselectOffset+1} / ${columnsLength + 1};`;
-                 }
+                  if (GridLayoutUtil.isNoGridSupport()) {
+                      return ` colspan: ${columnsLength - multiselectOffset};`;
+                  } else if (GridLayoutUtil.isPartialGridSupport()) {
+                      return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1}; -ms-grid-column: ${multiselectOffset + 1}; -ms-grid-column-span: ${columnsLength - multiselectOffset};`;
+                  } else {
+                      return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1};`;
+                  }
               }
           }
         },
@@ -390,7 +390,7 @@ var
                         columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
                         editingRowStyles = '';
 
-                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.GridIE) + ' ';
+                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
                     editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
 
@@ -433,7 +433,7 @@ var
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-                if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                if (changesType === 'collectionChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
                 if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialGridSupport()){
@@ -451,6 +451,9 @@ var
             this._onCollectionChangeFn = function() {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
+            // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
+            this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
@@ -458,6 +461,10 @@ var
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
             this._setHeader(this._options.header);
+        },
+
+        _updateIndexesCallback(): void {
+            this._ladder = _private.prepareLadder(this);
         },
 
         _nextModelVersion: function(notUpdatePrefixItemVersion) {
@@ -924,6 +931,8 @@ var
             current.columnScroll = this._options.columnScroll;
 
             current.style = this._options.style;
+            current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+            
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {
@@ -939,6 +948,9 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
                 current.rowIndex = this._calcRowIndex(current);
+                if (this.getEditingItemData() && (current.rowIndex>=this.getEditingItemData().rowIndex)) {
+                    current.rowIndex++;
+                }
             }
 
             if (GridLayoutUtil.isPartialGridSupport()) {
@@ -1107,9 +1119,9 @@ var
             this._model.nextModelVersion.apply(this._model, arguments);
         },
 
-        _setEditingItemData: function(itemData) {
-           if (GridLayoutUtil.isPartialGridSupport() && itemData) {
-               itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+        _setEditingItemData: function (itemData) {
+            if (GridLayoutUtil.isPartialGridSupport() && itemData) {
+                itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
             }
             this._model._setEditingItemData(itemData);
         },

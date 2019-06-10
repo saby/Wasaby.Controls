@@ -96,6 +96,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _onCollectionChangeFnc: null,
     _collapsedGroups: null,
     _prefixItemVersion: null,
+    _updateIndexesCallback: null,
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
@@ -134,11 +135,18 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._curIndex < endIndex;
     },
 
+    setUpdateIndexesCallback(updateIndexesCallback: Function): void {
+        this._updateIndexesCallback = updateIndexesCallback;
+    },
+
     setIndexes: function(startIndex, stopIndex) {
         if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
             this._nextModelVersion(true, 'indexesChanged');
+            if (this._updateIndexesCallback) {
+                this._updateIndexesCallback();
+            }
         }
     },
 

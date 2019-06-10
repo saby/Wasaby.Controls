@@ -72,6 +72,10 @@ var
             TreeGridViewModel.superclass.constructor.apply(this, arguments);
             this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
             this._model.subscribe('onNodeRemoved', this._onNodeRemovedFn);
+            this._model.subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+        },
+        _onExpandedItemsChanged: function(e, expandedItems) {
+            this._notify('expandedItemsChanged', expandedItems);
         },
         _createModel: function (cfg) {
             return new TreeViewModel(cfg);
@@ -90,6 +94,9 @@ var
         },
         getExpandedItems: function () {
             return this._model.getExpandedItems();
+        },
+        getRoot: function() {
+            return this._model.getRoot();
         },
         setRoot: function (root) {
             this._model.setRoot(root);

@@ -1,8 +1,8 @@
 // Used by Layout/Selector/Browser.wml
 define('Controls/Operations/__MultiSelector',
-   ['Controls/_operations/__MultiSelector'],
+   ['Controls/operations'],
    function(Control) {
       'use strict';
-      return Control;
+      return Control.SimpleMultiSelector;
    }
 );

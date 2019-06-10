@@ -1,4 +1,4 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import SeparatorTemplate = require('wml!Controls/_toggle/Separator/Separator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
@@ -45,7 +45,7 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
    '[Controls/_toggle/interface/ICheckable]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: Function = SeparatorTemplate;
+   protected _template: TemplateFunction = SeparatorTemplate;
    protected _theme: string[] = ['Controls/toggle'];
    protected _icon: String;
 

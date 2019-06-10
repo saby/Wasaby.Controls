@@ -158,6 +158,12 @@ var
             }
          }
          return hasExcludedChildren;
+      },
+
+      getIntersection: function(firstCollection, secondCollection) {
+         return firstCollection.filter(function(key) {
+            return secondCollection.indexOf(key) !== -1;
+         });
       }
    };
 
@@ -230,6 +236,37 @@ var HierarchySelection = Selection.extend({
       }.bind(this));
    },
 
+   selectAll: function() {
+      this.select([this._getRoot()]);
+      ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+   },
+
+   /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
+    Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
+    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+
+   unselectAll: function() {
+      this.unselect([this._getRoot()]);
+      ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [this._getRoot()]);
+   }, */
+
+   toggleAll: function() {
+      var
+         rootId = this._getRoot(),
+         selectedKeys = this._selectedKeys.slice(),
+         excludedKeys = this._excludedKeys.slice(),
+         childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
+
+      if (this._isAllSelection(this._getParams(rootId))) {
+         this.unselect([rootId]);
+         this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
+
+      } else {
+         this.select([rootId]);
+         this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
+      }
+   },
+
    getCount: function() {
       return (
          _private.getSelectedCount(
@@ -286,7 +323,11 @@ var HierarchySelection = Selection.extend({
          items = options.items,
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, rootId, selectedKeys, excludedKeys, items);
 
-      return isParentSelected || selectedKeys.indexOf(rootId) !== -1;
+      return isParentSelected && excludedKeys.indexOf(rootId) === -1 || selectedKeys.indexOf(rootId) !== -1;
+   },
+
+   _getRoot: function() {
+      return this._options.listModel.getRoot().getContents();
    }
 });
 

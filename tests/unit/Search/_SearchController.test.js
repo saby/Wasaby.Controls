@@ -4,10 +4,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/Controllers/_SearchController',
+      'Controls/search',
       'Types/source'
    ],
-   function(Search, sourceLib) {
+   function(searchLib, sourceLib) {
 
       'use strict';
 
@@ -42,11 +42,11 @@ define(
          },
          sorting = [{id: 'DESC'}];
 
-      describe('Controls/Controllers/_SearchController', function() {
+      describe('Controls/search:_SearchController', function() {
 
          it('setFilter', function() {
             var filter = {test: 'test'};
-            var searchController = new Search({});
+            var searchController = new searchLib._SearchController({});
 
             searchController.setFilter(filter);
             assert.deepEqual(filter, {test: 'test'});
@@ -55,7 +55,7 @@ define(
 
          it('getFilter', function() {
             var filter = {test: 'test'};
-            var searchController = new Search({});
+            var searchController = new searchLib._SearchController({});
 
             searchController.setFilter(filter);
             assert.deepEqual(searchController.getFilter(), {test: 'test'});
@@ -65,7 +65,7 @@ define(
             var filter = {};
             var aborted = false;
             var searchStarted = false;
-            var searchController = new Search({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
                navigation: navigation,
@@ -99,7 +99,7 @@ define(
 
          it('search with sorting', function(done) {
             var filter = {};
-            var searchController = new Search({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 0,
                source: source,
                sorting: sorting,
@@ -119,13 +119,13 @@ define(
          });
 
          it('search forced', function(done) {
-            var searchController = new Search({
+            var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
                filter: {}
             });
 
-            Search._private.getSearch(searchController).addCallback(function(search) {
+            searchLib._SearchController._private.getSearch(searchController).addCallback(function(search) {
                var searched = false;
                var forced = false;
 
@@ -143,6 +143,39 @@ define(
                done();
                return search;
             });
+         });
+
+         it('minSearchLength is null', async function() {
+            var searchController = new searchLib._SearchController({
+               minSearchLength: null,
+               source: source,
+               filter: {}
+            });
+
+            await searchLib._SearchController._private.getSearch(searchController);
+
+            var searched = false;
+            var forced = false;
+
+            searchController._search.search = function(value, force) {
+               searched = true;
+
+               if (force) {
+                  forced = true;
+               }
+            };
+
+            searchController.search('t');
+            assert.isFalse(searched);
+            assert.isFalse(forced);
+
+            searchController.search('test');
+            assert.isFalse(searched);
+            assert.isFalse(forced);
+
+            searchController.search('t', true);
+            assert.isTrue(searched);
+            assert.isTrue(forced);
          });
       });
    });

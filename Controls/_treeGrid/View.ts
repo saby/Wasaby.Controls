@@ -11,6 +11,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/demo-ws4-tree-singleexpand">Tree with singleExpand option</a>.</li>
     * </ul>
     *
     * @class Controls/_treeGrid/View
@@ -26,7 +27,8 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/interface/IHierarchy
     * @mixes Controls/_list/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/_list/interface/IDraggable
+    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/_tile/interface/IGridControl
     *
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/_list/BaseControlStyles
@@ -38,7 +40,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     *
     * @mixes Controls/_list/Mover/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_list/DigitButtonsStyles
+    * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
     *
     * @control

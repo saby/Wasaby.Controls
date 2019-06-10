@@ -24,6 +24,7 @@ import {default as Button} from 'Controls/_toggle/Button';
 import {default as Switch} from 'Controls/_toggle/Switch';
 import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
 import RadioGroup = require('Controls/_toggle/RadioGroup');
+import {default as CheckboxGroup} from 'Controls/_toggle/CheckboxGroup';
 import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
@@ -35,6 +36,7 @@ export {
    DoubleSwitch,
    RadioGroup,
    Checkbox,
+   CheckboxGroup,
    Separator,
    BigSeparator,
    ItemTemplate

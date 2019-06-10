@@ -17,16 +17,32 @@ define([
       Path = Path.default;
       BreadCrumbsUtil = BreadCrumbsUtil.default;
 
-      var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
+      var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw, getContainerSpacing;
+
+      const ARROW_WIDTH = 16;
+      const BREAD_CRUMB_MIN_WIDTH = 36;
+      const HOME_WIDTH = 36;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
          getWidth = getWidthUtil.getWidth;
          getWidthUtil.getWidth = function(item) {
-            if (item === '<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>') {
-               return 24;
-            } else {
-               return backButtonWidth;
+            let width;
+
+            switch (item) {
+               case '<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>':
+                  width = HOME_WIDTH;
+                  break;
+               case '<div class="controls-BreadCrumbsView__title_min"></div>':
+                  width = BREAD_CRUMB_MIN_WIDTH;
+                  break;
+               case '<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>':
+                  width = ARROW_WIDTH;
+                  break;
+               default:
+                  width = backButtonWidth;
             }
+
+            return width;
          };
          getMaxCrumbsWidth = BreadCrumbsUtil.getMaxCrumbsWidth;
          BreadCrumbsUtil.getMaxCrumbsWidth = function() {
@@ -36,6 +52,8 @@ define([
          BreadCrumbsUtil.calculateBreadCrumbsToDraw = function() {
 
          };
+         getContainerSpacing = Path._private.getContainerSpacing;
+         Path._private.getContainerSpacing = () => 12;
       }
 
       beforeEach(function() {
@@ -94,6 +112,7 @@ define([
             getWidthUtil.getWidth = getWidth;
             BreadCrumbsUtil.getMaxCrumbsWidth = getMaxCrumbsWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw = calculateBreadCrumbsToDraw;
+            Path._private.getContainerSpacing = getContainerSpacing;
          });
 
          it('simple', function() {
@@ -113,7 +132,7 @@ define([
             };
             path._afterMount();
             assert.equal(path._backButtonClass, 'controls-BreadCrumbsPath__backButton_short');
-            assert.equal(path._breadCrumbsClass, '');
+            assert.equal(path._breadCrumbsClass, 'controls-BreadCrumbsPath__breadCrumbs_long');
          });
 
          it('half backButton, half crumbs', function() {
@@ -145,6 +164,7 @@ define([
          });
 
          it('remove all items', function() {
+            mockBreadCrumbsUtil(650, 650);
             path._visibleItems = [1, 2, 3];
             path._breadCrumbsItems = [2, 3];
             path._container = {

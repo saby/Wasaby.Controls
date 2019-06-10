@@ -23,7 +23,7 @@ import { error as dataSourceError } from 'Controls/dataSource';
 import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
-import TouchContextField = require('Controls/Context/TouchContextField');
+import {TouchContextField} from 'Controls/context';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -152,7 +152,11 @@ var _private = {
                 if (self._virtualScroll) {
                     self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-                    self._virtualScroll.updateItemsIndexes('down');
+
+                    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+                    if (!self._options.task1177135045) {
+                        self._virtualScroll.updateItemsIndexes('down');
+                    }
                     _private.applyVirtualScroll(self);
                 }
 
@@ -289,17 +293,6 @@ var _private = {
     },
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
-        if (direction === 'up') {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-           self._notify('saveScrollPosition', [], {
-               bubbling: true
-           });
-           self._hasSavedScrollPosition = true;
-        }
-
         _private.showIndicator(self, direction);
 
         /**/
@@ -326,6 +319,22 @@ var _private = {
                 if (direction === 'down') {
                     self._listViewModel.appendItems(addedItems);
                 } else if (direction === 'up') {
+                    /**
+                     * todo KINGO.
+                     * Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
+                     * Запоминаем скролл непосредственно до отрисовки (прямо перед добавлением записей в рекордсет),
+                     * это единственная логичная точка. Запоминать перед загрузкой данных - пробовали, это неправильно:
+                     * пока идет загрузка может измениться позиция скролла и запомненное состояние будет неактуальным.
+                     * Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
+                     */
+                    /**
+                     * This event should bubble, because there can be anything between Scroll/Container and the list,
+                     * and we can't force everyone to manually bubble it.
+                     */
+                    self._notify('saveScrollPosition', [], {
+                        bubbling: true
+                    });
+                    self._hasSavedScrollPosition = true;
                     self._listViewModel.prependItems(addedItems);
                 }
                 var cnt2 = self._listViewModel.getCount();
@@ -389,8 +398,14 @@ var _private = {
     },
 
     onScrollLoadEdgeStart: function(self, direction) {
-        self._loadTriggerVisibility[direction] = true;
-        _private.onScrollLoadEdge(self, direction);
+        if (self._options.task1177135045) {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction)
+            }
+        } else {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
     },
 
     onScrollLoadEdgeStop: function(self, direction) {
@@ -410,33 +425,64 @@ var _private = {
 
     // Метод, в котором опеределяется необходимость догрузки данных
     updateVirtualWindow: function(self, direction) {
-        var indexes = self._virtualScroll.ItemsIndexes;
 
-        // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
-        if (self._listViewModel.getCount() <= indexes.stop) {
-            if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                _private.loadToDirectionIfNeed(self, direction);
-            }
-        } else {
-
-            // Иначе пересчитываем скролл
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
             self._virtualScroll.updateItemsIndexes(direction);
             _private.applyVirtualScroll(self);
             self._checkShouldLoadToDirection = true;
+        } else {
+            let
+                indexes = self._virtualScroll.ItemsIndexes;
+
+            // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
+            if (self._listViewModel.getCount() <= indexes.stop) {
+                if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                    _private.loadToDirectionIfNeed(self, direction);
+                }
+            } else {
+
+                // Иначе пересчитываем скролл
+                self._virtualScroll.updateItemsIndexes(direction);
+                _private.applyVirtualScroll(self);
+                self._checkShouldLoadToDirection = true;
+            }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
     onScrollLoadEdge: function(self, direction) {
-        if (self._virtualScroll) {
-            _private.updateVirtualWindow(self, direction);
-        } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            _private.loadToDirectionIfNeed(self, direction);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        if (self._options.task1177135045) {
+            if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+                if (self._virtualScroll) {
+                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
+                    self._virtualScroll.updateItemsIndexes(direction);
+                    _private.applyVirtualScroll(self);
+                }
+            }
+        } else {
+            if (self._virtualScroll) {
+                _private.updateVirtualWindow(self, direction);
+            } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                _private.loadToDirectionIfNeed(self, direction);
+            }
         }
     },
 
     onScrollListEdge: function(self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = true;
+            _private.onScrollLoadEdge(self, direction);
+        }
+    },
 
+    onScrollListEdgeStop: function (self, direction) {
+        if (self._options.task1177135045) {
+            self._loadTriggerVisibility[direction] = false;
+        }
     },
 
     scrollToEdge: function(self, direction) {
@@ -465,8 +511,9 @@ var _private = {
                 topLoadTrigger: children.topLoadTrigger,
                 bottomLoadTrigger: children.bottomLoadTrigger
             };
-        
-        self._children.ScrollEmitter.startRegister(triggers);
+
+        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
+        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
     },
 
     onScrollShow: function(self) {
@@ -688,17 +735,28 @@ var _private = {
             self._listViewModel.setActiveItem(itemData);
             self._listViewModel.setMenuState('shown');
             require(['css!theme?Controls/toolbars'], function() {
+                const defaultMenuConfig = {
+                   items: rs,
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   showClose: true
+                };
+
+                if (self._options.contextMenuConfig) {
+                   if (typeof self._options.contextMenuConfig === 'object') {
+                      cMerge(defaultMenuConfig, self._options.contextMenuConfig);
+                   } else {
+                      IoC.resolve('ILogger').error('CONTROLS.ListView',
+                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                   }
+                }
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: {
-                        items: rs,
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        showClose: true
-                    },
+                    templateOptions: defaultMenuConfig,
                     eventHandlers: {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
@@ -1258,10 +1316,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
-    _afterUpdate: function(oldOptions) {
-        if (this._options.itemActions) {
-            this._canUpdateItemsActions = false;
-        }
+    _beforePaint(): void {
+        // todo KINGO.
+        // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
+        // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
+        // Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
+        // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
@@ -1269,8 +1330,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
-           _private.checkLoadToDirectionCapability(this);
-           this._checkShouldLoadToDirection = false;
+            _private.checkLoadToDirectionCapability(this);
+            this._checkShouldLoadToDirection = false;
+        }
+    },
+
+    _afterUpdate: function(oldOptions) {
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = false;
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -1311,7 +1378,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
+            case 'listTopStop': _private.onScrollListEdgeStop(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
+            case 'listBottomStop': _private.onScrollListEdgeStop(self, 'down'); break;
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
@@ -1551,6 +1620,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
+        // activate list when marker is moving. It let us press enter and open current row
+        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
+            // must check mounted to avoid fails on unit tests
+            if (this._mounted) {
+               this.activate();
+            }
+        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {

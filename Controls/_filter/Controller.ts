@@ -9,7 +9,7 @@ import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import 'Controls/Container/Data/ContextOptions';
+import 'Controls/context';
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
       var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -468,6 +468,7 @@ import 'Controls/Container/Data/ContextOptions';
          _beforeUpdate: function(newOptions) {
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
                _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
             }
             if (!isEqual(this._options.filter, newOptions.filter)) {

@@ -58,7 +58,7 @@ import 'css!theme?Controls/validate';
             // Лежит в application
             var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
             if (requirejs.defined(ManagerWrapperControllerModule)) {
-               return requirejs(ManagerWrapperControllerModule).getGlobalPopup();
+               return requirejs(ManagerWrapperControllerModule).default.getGlobalPopup();
             }
          },
 

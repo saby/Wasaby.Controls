@@ -538,19 +538,46 @@ define([
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
+            assert.isFalse(item.hasMultiSelect);
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isFalse(item.isVisible);
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isUndefined(item.isVisible);
-
             lvm.setItemActions(lvm.getItemById('2', 'id').getContents(), {
                all: [1, 2],
                showed: [1]
             });
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(!!item.drawActions);
+         });
+
+         it('getMultiSelectClassList hidden', function() {
+            lvm._options.multiSelectVisibility = 'hidden';
+            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.equal(item.multiSelectClassList, '');
+         });
+
+
+         it('getMultiSelectClassList visible', function() {
+            lvm._options.multiSelectVisibility = 'visible';
+            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+         });
+
+
+         it('getMultiSelectClassList onhover selected', function() {
+            lvm._options.multiSelectVisibility = 'onhover';
+            lvm._selectedKeys = {'2': true};
+            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+         });
+
+         it('getMultiSelectClassList onhover unselected', function() {
+            lvm._options.multiSelectVisibility = 'onhover';
+            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 
          it('setDragTargetPosition', function() {

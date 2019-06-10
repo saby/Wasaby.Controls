@@ -34,9 +34,9 @@ import {parse as load} from 'Core/library';
          compatibleOpen: function(self, popupOptions) {
             const config = self._getConfig(popupOptions);
             Promise.all([
-                self._requireModule('Controls/Popup/Compatible/BaseOpener'),
+                self._requireModule('Controls/compatiblePopup:BaseOpener'),
                 self._requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
-                self._requireModule('Controls/Popup/Compatible/OldNotification'),
+                self._requireModule('Controls/compatiblePopup:OldNotification'),
                 self._requireModule(config.template)
             ]).then(function(results) {
                 const BaseOpenerCompat = results[0], InformationPopupManager = results[1];

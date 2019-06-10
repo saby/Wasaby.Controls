@@ -185,6 +185,18 @@ define(
             };
             fastFilter._beforeMount(optionsItems, {}, receivedState);
             assert.isOk(fastFilter._configs[0]._sourceController);
+            assert.isFalse(fastFilter._hasSelectorTemplate);
+
+            let receivedStateSelector = Clone(receivedState);
+            receivedStateSelector.configs[0].selectorTemplate = 'new template';
+            fastFilter._beforeMount(optionsItems, {}, receivedStateSelector);
+            assert.isTrue(fastFilter._hasSelectorTemplate);
+
+            fastFilter._hasSelectorTemplate = undefined;
+            let optionsItemsSelector = Clone(optionsItems);
+            optionsItemsSelector.items[0].properties.selectorTemplate = 'new template';
+            fastFilter._beforeMount(optionsItemsSelector);
+            assert.isTrue(fastFilter._hasSelectorTemplate);
          });
 
          it('beforeUpdate new items property not changed', function(done) {
@@ -346,6 +358,21 @@ define(
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
          });
 
+         it('_onSelectorTemplateResult', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            let selectedItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [
+                  { key: 1, title: 'Россия' },
+                  { key: 5, title: 'Франция' }
+               ]
+            });
+            fastData2._onSelectorTemplateResult('event', selectedItems);
+            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
+            assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
+            assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
+         });
+
          it('selectItems', function() {
             let configMultiSelect = Clone(configItems);
             let fastData2 = getFastFilterWithItems(configMultiSelect);
@@ -487,7 +514,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
-            let result = filterMod.Fast._private.getNewItems(fastData2, selectedItems);
+            let result = filterMod.Fast._private.getNewItems(fastData2._configs[0], selectedItems);
             assert.deepEqual(result[0], selectedItems.at(2));
          });
 
@@ -513,10 +540,13 @@ define(
                assert.equal(fastFilter._items.at(3).value, null);
                assert.equal(fastFilter._items.at(3).textValue, 'Не выбрано');
 
+               let isCallback = false;
                newConfigItems = Clone(configWithItems);
                newConfigItems.items[3].value = 'Великобритания';
+               newConfigItems.items[3].properties.dataLoadCallback = () => {isCallback = true};
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                  assert.isFalse(isCallback);
                   done();
                });
             });

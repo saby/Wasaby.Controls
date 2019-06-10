@@ -513,19 +513,105 @@ define([
       });
 
       describe('toggleAll', function() {
+         function getListModel(rootId) {
+            return {
+               getRoot: function() {
+                  return {
+                     getContents: function() {
+                        return rootId || null;
+                     }
+                  }
+               }
+            }
+         }
+
          it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = {
-               selectedKeys: [1, 2, 4, 5, 6, 7, 8],
+               selectedKeys: [1, 2, 4, 5, 6, 7],
                excludedKeys: [],
                items: allData,
-               keyProperty: 'id'
+               keyProperty: 'id',
+               listModel: getListModel()
             };
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.toggleAll();
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([1, 2, 4, 5, 6, 7, 8], selection.excluded);
+            assert.deepEqual([1, 6, 7], selection.excluded);
+         });
+
+         /* toDo До исправления https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+         it('toggleAll with root', function() {
+            cfg = {
+               selectedKeys: [1, 4, 6],
+               excludedKeys: [2, 5],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(2)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
+            assert.deepEqual([1, 6], selection.selected);
+            assert.deepEqual([5, 4], selection.excluded);
+
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // Вернулись к начальному
+            assert.deepEqual([1, 6, 4], selection.selected);
+            assert.deepEqual([5, 2], selection.excluded);
+         });*/
+
+         it('selectAll and unselectAll in unselected folder', function() {
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(1)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([1], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
+         });
+
+         it('selectAll and unselectAll in selected folder', function() {
+            cfg = {
+               selectedKeys: [1],
+               excludedKeys: [],
+               items: allData,
+               keyProperty: 'id',
+               listModel: getListModel(1)
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([], selection.excluded);
+
+            selectionInstance.unselectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([], selection.selected);
+            assert.deepEqual([], selection.excluded);
          });
       });
 

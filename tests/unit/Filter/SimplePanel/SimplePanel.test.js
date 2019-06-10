@@ -166,7 +166,7 @@ define(
             assert.deepStrictEqual(actualResult, expectedResult);
          });
 
-         it('_selectorResultHandler', function() {
+         it('_moreButtonClick', function() {
             let actualResult;
             let panel = getPanel(defaultConfig);
             panel._notify = (event, data) => {
@@ -175,12 +175,12 @@ define(
                }
             };
             let expectedResult = {
-               selectedKeys: [1, 2],
+               action: 'moreButtonClick',
                id: 'first'
             };
             panel._beforeMount(defaultConfig);
 
-            panel._selectorResultHandler('selectorResultEvent', defaultItemsConfig[0], {selectedKeys: [1, 2]});
+            panel._moreButtonClick('moreButtonClick', defaultItemsConfig[0]);
             assert.deepStrictEqual(actualResult, expectedResult);
          });
 

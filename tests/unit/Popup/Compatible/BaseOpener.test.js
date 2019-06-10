@@ -6,7 +6,7 @@
  */
 define(
    [
-      'Controls/Popup/Compatible/BaseOpener',
+      'Controls/compatiblePopup',
       'Examples/DropdownList/MyDropdownList/MyDropdownList',
       'Core/core-instance',
       'Core/Deferred',
@@ -14,7 +14,7 @@ define(
       'Core/Control'
    ],
 
-   function(BaseOpener, DropdownExample, cInstance, Deferred, Context, Control) {
+   function(compatiblePopup, DropdownExample, cInstance, Deferred, Context, Control) {
       'use strict';
 
       var config = {
@@ -28,7 +28,7 @@ define(
          parent: 'testParent',
          opener: 'testOpener',
          newRecord: 'newTestRecord',
-         handlers: 'testHandlers',
+         handlers: {},
          linkedContext: 'testLinkedContext',
          closeButtonStyle: 'testStyle',
          border: false,
@@ -57,7 +57,7 @@ define(
          width: 'auto'
       };
 
-      describe('Controls/Popup/Compatible/BaseOpener', function() {
+      describe('Controls/compatiblePopup:BaseOpener', function() {
          it('_prepareContext', function() {
             let newConfig = {
                templateOptions: {
@@ -67,7 +67,7 @@ define(
                },
                context: {}
             };
-            BaseOpener._prepareContext(newConfig);
+            compatiblePopup.BaseOpener._prepareContext(newConfig);
             assert.isTrue(newConfig.templateOptions.handlers.onDestroy[0] instanceof Function);
             assert.isFalse(cInstance.instanceOfModule(newConfig.context, 'Core/Abstract'));
             assert.isTrue(cInstance.instanceOfModule(newConfig.templateOptions.context, 'Core/Abstract'));
@@ -79,7 +79,7 @@ define(
                },
                context: {}
             };
-            BaseOpener._prepareContext(newConfig);
+            compatiblePopup.BaseOpener._prepareContext(newConfig);
             assert.isTrue(newConfig.templateOptions.handlers.onDestroy[1] instanceof Function);
             assert.isFalse(cInstance.instanceOfModule(newConfig.context, 'Core/Abstract'));
             assert.isTrue(cInstance.instanceOfModule(newConfig.templateOptions.context, 'Core/Abstract'));
@@ -87,13 +87,13 @@ define(
                templateOptions: {},
                context: {}
             };
-            BaseOpener._prepareContext(newConfig);
+            compatiblePopup.BaseOpener._prepareContext(newConfig);
             assert.isTrue(newConfig.templateOptions.handlers.onDestroy instanceof Function);
             newConfig = {
                templateOptions: {}
             };
             let parentContext = new Context();
-            BaseOpener._prepareContext(newConfig, parentContext);
+            compatiblePopup.BaseOpener._prepareContext(newConfig, parentContext);
             assert.isTrue(cInstance.instanceOfModule(newConfig.templateOptions.context, 'Core/Abstract'));
             assert.equal(newConfig.templateOptions.context.getPrevious(), parentContext);
          });
@@ -102,7 +102,7 @@ define(
             config.autoHide = true;
             config.onResultHandler = function() {};
             config.onCloseHandler = function() {};
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.eventHandlers.onResult, config.onResultHandler);
             assert.equal(config.eventHandlers.onClose, config.onCloseHandler);
 
@@ -121,7 +121,7 @@ define(
             config.closeOnOutsideClick = false;
             delete config.draggable;
             config._popupComponent = 'dialog';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.templateOptions.draggable, true);
             assert.isFalse(config.closeOnOutsideClick);
             assert.isFalse(!!config.horizontalAlign.side);
@@ -129,32 +129,32 @@ define(
             assert.isTrue(config.modal);
             config.direction = 'right';
             config.horizontalAlign = 'left';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction, config.horizontalAlign.side);
             config.direction = 'top';
             config.verticalAlign = 'test';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction, config.verticalAlign.side);
             delete config.direction;
             config.side = 'right';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction, 'left');
             config.direction = 'top';
             config.horizontalAlign = 'left';
             config.verticalAlign = 'top';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.horizontalAlign.side, 'left');
             config.catchFocus = false;
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.autofocus, false);
             config.catchFocus = true;
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.autofocus, true);
 
             config.template = 'Examples/DropdownList/MyDropdownList/MyDropdownList';
             assert.equal(config.isCompoundTemplate, true);
             config.template = 'Core/Control';
-            BaseOpener._preparePopupCfgFromOldToNew(config);
+            compatiblePopup.BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.isCompoundTemplate, false);
          });
 
@@ -168,8 +168,8 @@ define(
                   myOpt: true
                }
             };
-            BaseOpener.prepareNotificationConfig(config);
-            assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
+            compatiblePopup.BaseOpener.prepareNotificationConfig(config);
+            assert.equal(config.template, 'Controls/compatiblePopup:OldNotification');
             assert.equal(config.componentOptions.template, template);
             assert.equal(config.componentOptions.templateOptions, config.templateOptions);
             assert.equal(config.componentOptions.className, 'myClass');
@@ -182,11 +182,11 @@ define(
             let cfg = {
                flipWindow: 'vertical'
             };
-            BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
+            compatiblePopup.BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
             assert.equal(cfg.fittingMode, 'overflow');
       })
          it('_setSizes', function() {
-            BaseOpener._setSizes(config, DropdownExample);
+            compatiblePopup.BaseOpener._setSizes(config, DropdownExample);
             assert.isTrue(config.autoWidth);
             assert.isTrue(config.autoHeight);
             let newConfig = {};
@@ -205,7 +205,7 @@ define(
                maxHeight: '30',
                width: 100
             };
-            BaseOpener._setSizes(newConfig, newClass);
+            compatiblePopup.BaseOpener._setSizes(newConfig, newClass);
             assert.isFalse(!!newConfig.autoWidth);
             assert.isFalse(!!newConfig.autoHeight);
             assert.equal(newConfig.minWidth, newClass.dimensions.minWidth);
@@ -219,13 +219,13 @@ define(
             newClass.dimensions = {
                width: 350
             };
-            BaseOpener._setSizes(newConfig, newClass);
+            compatiblePopup.BaseOpener._setSizes(newConfig, newClass);
             assert.equal(newConfig.minWidth, null);
          });
 
          it('_prepareConfigForOldTemplate', function() {
             config.fixed = true;
-            BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
+            compatiblePopup.BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
@@ -243,7 +243,7 @@ define(
             assert.isFalse(config.templateOptions.autoShow);
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
-            assert.equal(config.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.equal(config.template, 'Controls/compatiblePopup:CompoundArea');
             assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
@@ -259,7 +259,7 @@ define(
             newConfig.closeOnTargetHide = true;
             newConfig.trackTarget = false;
             newConfig.disableActions = true;
-            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            compatiblePopup.BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(config.templateOptions.closeOnTargetHide, true);
             assert.equal(config.templateOptions.closeOnTargetHide, true);
@@ -281,20 +281,20 @@ define(
                   return parentContext;
                }
             };
-            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            compatiblePopup.BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.isTrue(!!newConfig.templateOptions.context);
             assert.equal(newConfig.templateOptions.context.getPrevious(), parentContext);
             newConfig = {
                _type : 'stack',
                minWidth: 300
             };
-            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            compatiblePopup.BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(newConfig.width, 300);
          });
 
          it('_getCaption', function() {
             config.title = 'testTitle';
-            let title = BaseOpener._getCaption(config, DropdownExample);
+            let title = compatiblePopup.BaseOpener._getCaption(config, DropdownExample);
             assert.equal(title, 'testTitle');
          });
 
@@ -311,12 +311,12 @@ define(
             newConfig.onCloseHandler = 'onCloseHandler';
             newConfig.onResultHandlerEvent = 'onResultHandlerEvent';
             newConfig.onCloseHandlerEvent = 'onCloseHandlerEvent';
-            BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
+            compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.catchFocus, true);
             assert.equal(newConfig.componentOptions.templateOptions, config.templateOptions);
             assert.equal(newConfig.componentOptions.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
-            assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
+            assert.equal(newConfig.template, 'Controls/compatiblePopup:CompoundAreaNewTpl');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
             assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);
@@ -330,7 +330,7 @@ define(
 
          it('_prepareConfigFromNewToOld', function() {
             // prevent test from falling cause of jQuery
-            BaseOpener._prepareTarget = function(cfg) {
+            compatiblePopup.BaseOpener._prepareTarget = function(cfg) {
                return cfg.target;
             };
             config.offset = {
@@ -351,7 +351,7 @@ define(
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
             config.fittingMode = 'fixed';
-            let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
+            let newConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.dialogOptions.width, 100);
             assert.equal(newConfig.templateOptions, config.templateOptions);
@@ -398,7 +398,7 @@ define(
                mode: 'floatArea'
             };
             let vdomTemplate = { stable: true }; // state of vdom template
-            let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig, vdomTemplate);
+            let newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig, vdomTemplate);
             assert.equal(newTestConfig.dialogOptions.direction, testconfig.horizontalAlign.side);
             assert.isFalse(newTestConfig.dialogOptions.border);
             assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
@@ -406,15 +406,15 @@ define(
             assert.equal(newTestConfig.dialogOptions.offset.y, 15);
             assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
             testconfig.horizontalAlign = null;
-            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, 'right');
             testconfig._type = 'stack';
-            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, 'left');
             testconfig.horizontalAlign = {
                side: 'center'
             };
-            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, '');
          });
 
@@ -426,7 +426,7 @@ define(
                minHeight: 50,
                maxHeight: 50
             };
-            var dimensions = BaseOpener._getDimensions(newClass);
+            var dimensions = compatiblePopup.BaseOpener._getDimensions(newClass);
             assert.equal(newClass.dimensions, dimensions);
          });
          it('_getConfigFromTmpl', function() {
@@ -439,7 +439,7 @@ define(
                   };
                }
             };
-            var newcfg = BaseOpener._getConfigFromTemplate(config);
+            var newcfg = compatiblePopup.BaseOpener._getConfigFromTemplate(config);
             assert.equal(newcfg.minWidth, 300);
             assert.equal(newcfg.maxWidth, 900);
             assert.equal(newcfg.minimizedWidth, 400);

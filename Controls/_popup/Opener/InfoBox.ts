@@ -226,5 +226,4 @@ import getZIndex = require('Controls/Utils/getZIndex');
          return options;
       };
 
-      export = InfoBox;
-
+export default InfoBox;

@@ -113,6 +113,7 @@
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
+   max-width: 100%;
 }
 
 .controls-Grid__header-cell_halign_left {
@@ -345,15 +346,6 @@
    position: absolute;
    top: @spacing_Grid-row-between-checkbox-borderTop;
    left: 0;
-}
-
-.controls-GridView__checkbox.controls-GridView__checkbox-onhover {
-   display: none;
-}
-
-.ws-is-no-touch .controls-Grid__row:hover .controls-GridView__checkbox-onhover,
-.ws-is-no-touch .controls-Grid_row-cell_hovered .controls-GridView__checkbox-onhover {
-   display: inline-block;
 }
 
 .controls-Grid__row-cell__contentWrapper {

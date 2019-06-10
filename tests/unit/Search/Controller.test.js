@@ -175,8 +175,8 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isTrue(controller._loading);
          assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
 
-         //case 3. With root and searchMode='current'
-         controller._options.searchMode = 'current';
+         //case 3. With root and startingWith='current'
+         controller._options.startingWith = 'current';
          controller._root = 'testRootNode';
          controller._loading = false;
          searchMod.Controller._private.searchStartCallback(controller, filter);
@@ -197,8 +197,25 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._dataOptions = defaultOptions;
          controller = searchMod.Controller._private.getSearchController(searchController);
-         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Controllers/_SearchController'));
+         assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/search:_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
+      });
+
+      it('_private.searchErrback', function() {
+         let searchErrbackCalled = false;
+         let err;
+
+         let searchErrback = (error) => {
+            searchErrbackCalled = true;
+            err = error;
+         };
+
+         var searchController = getSearchController({dataLoadErrback: searchErrback});
+         searchController._dataOptions = defaultOptions;
+
+         searchMod.Controller._private.searchErrback(searchController, 'test');
+         assert.isTrue(searchErrbackCalled);
+         assert.equal(err, 'test');
       });
 
       it('_search', function() {

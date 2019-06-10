@@ -100,11 +100,15 @@ define(
             };
             view._beforeMount(defaultConfig, {}, receivedState);
 
-
             assert.deepStrictEqual(view._displayText, expectedDisplayText);
             assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
             assert.isOk(view._configs.document._sourceController);
             assert.isOk(view._configs.state._sourceController);
+            assert.isFalse(view._hasSelectorTemplate);
+
+            receivedState.configs.document.selectorTemplate = 'New Template';
+            view._beforeMount(defaultConfig, {}, receivedState);
+            assert.isTrue(view._hasSelectorTemplate);
          });
 
          it('_beforeMount from options', function(done) {
@@ -203,7 +207,7 @@ define(
             assert.strictEqual(popupOptions, undefined);
 
             isOpened = false;
-            view._open([1, 2, 4], 'templateName');
+            view._open([1, 2, 4], {template: 'templateName'});
 
             assert.strictEqual(popupOptions.template, 'templateName');
             assert.deepStrictEqual(popupOptions.templateOptions.items, [1, 2, 4]);
@@ -224,10 +228,10 @@ define(
 
          it('_reset', function() {
             let view = getView(defaultConfig),
-               isOpened = true,
+               isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;} }
+               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
               if (event === 'filterChanged') {
@@ -251,10 +255,11 @@ define(
             };
             let item = view._filterSource[1];
             view._reset('clearClick', item);
-            assert.deepStrictEqual(item.value, [1]);
-            assert.strictEqual(filterChanged, undefined);
+            assert.deepStrictEqual(item.value, [null]);
+            assert.isTrue(closed);
 
             isOpened = false;
+            item = view._filterSource[1];
             view._reset('clearClick', item);
             assert.deepStrictEqual(item.value, [null]);
             assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
@@ -263,10 +268,10 @@ define(
 
          it('_resetFilterText', function() {
             let view = getView(defaultConfig),
-               isOpened = true,
+               isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;} }
+               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
@@ -289,6 +294,7 @@ define(
                   multiSelect: true}
             };
             view._resetFilterText();
+            assert.isTrue(closed);
             assert.strictEqual(view._filterSource[2].value, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
@@ -393,6 +399,28 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._filterSource[1].value, 'Sander123');
                assert.deepStrictEqual(filterChanged, {'sender': 'Sander123'});
+            });
+
+            it('_onSelectorTemplateResult', function() {
+               let filterChanged;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               view._configs.state.items = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: defaultItems[1]
+               });
+               let newItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
+               });
+               view._idOpenSelector = 'state';
+               view._onSelectorTemplateResult('resultEvent', newItems);
+               assert.deepStrictEqual(view._filterSource[1].value, [3, 20, 28]);
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
          });
       });

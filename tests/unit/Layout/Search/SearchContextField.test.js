@@ -1,12 +1,12 @@
-define(['Controls/Container/Search/SearchContextField'], function(SearchContextField){
-  
-   describe('Controls.Container.Search.SearchContextField', function () {
-      
+define(['Controls/context'], function(contexts){
+
+   describe('Controls.context:SearchContextField', function () {
+
       it('check value', function () {
-         var contextField = new SearchContextField('testValue');
+         var contextField = new contexts.SearchContextField('testValue');
          assert.equal(contextField.searchValue, 'testValue');
       });
-      
+
    });
-   
+
 });

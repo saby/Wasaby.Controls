@@ -24,64 +24,18 @@
   "output": "controls-context.package.js"
 }, {
   "include": [
-    "Controls/Container/Data/ContextOptions",
-    "wml!Controls/Container/Data/Data",
-    "Controls/Container/Data/getPrefetchSource",
-    "Controls/Container/Filter",
-    "wml!Controls/Container/Filter/Filter",
-    "Controls/Container/Filter/FilterContextField",
     "Controls/Container/Input/Search",
-    "wml!Controls/Container/Input/Search/Search",
-    "Controls/Container/List",
-    "wml!Controls/Container/List/List",
-    "Controls/Container/Search",
-    "wml!Controls/Container/Search/Search",
-    "Controls/Container/Search/SearchContextField",
-    "Controls/Container/Suggest/ContentLayer/Styles",
-    "Controls/Container/Suggest/__BaseLayer",
-    "Controls/Container/Suggest/__ContentLayer",
-    "wml!Controls/Container/Suggest/__ContentLayer",
-    "Controls/Container/Suggest/__PopupContent",
-    "wml!Controls/Container/Suggest/__PopupContent",
-    "Controls/Container/Suggest/__PopupLayer",
-    "wml!Controls/Container/Suggest/__PopupLayer",
-    "Controls/Container/Adapter/SelectedKey",
-    "wml!Controls/Container/Adapter/SelectedKey/SelectedKey"
+    "wml!Controls/Container/Input/Search/Search"
   ],
   "output": "controls-container.package.js"
-}, {
-  "include": [
-    "Controls/Controllers/*"
-  ],
-  "exclude": [
-    "Controls/Controllers/QueryParamsController/*",
-    "Controls/Controllers/SourceController"
-  ],
-  "output": "controls-controllers.package.js"
 }, {
   "include": [
     "wml!Controls/Input/Money/ReadOnly",
     "Controls/Input/OldText",
     "wml!Controls/Input/OldText/OldText",
-    "Controls/Input/OldText/OldViewModel",
-    "Controls/Input/Search/Styles"
+    "Controls/Input/OldText/OldViewModel"
   ],
   "output": "controls-input.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Global",
-    "wml!Controls/Popup/Global/Global"
-  ],
-  "output": "controls-popup.package.js"
-}, {
-  "include": [
-    "Controls/Popup/Compatible/*"
-  ],
-  "exclude": [
-    "Controls/Popup/Compatible/Layer",
-    "Controls/Popup/Compatible/ManagerWrapper/Controller"
-  ],
-  "output": "controls-popup-compat.package.js"
 }, {
   "include": [
     "Controls/Render/*"
@@ -95,11 +49,5 @@
     "Controls/Utils/isVDOMTemplate"
   ],
   "output": "controls-utils.package.js"
-}, {
-  "include": [
-    "Controls/Selector/Suggest",
-    "wml!Controls/Selector/Suggest/Suggest"
-  ],
-  "output": "controls-selector.package.js"
 }
 ]

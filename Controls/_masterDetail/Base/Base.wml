@@ -4,6 +4,7 @@
       template="{{_options.master}}"
       on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
    <ws:partial
+           attr:class="controls-MasterDetail_details"
       template="{{_options.detail}}"
       selectedMasterValue="{{_selected}}"/>
 </div>

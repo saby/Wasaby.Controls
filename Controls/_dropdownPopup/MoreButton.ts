@@ -9,8 +9,9 @@ var MoreButton = Control.extend([], {
 
     _openSelectorDialog: function() {
         const self = this;
-        const selectorOpener = this._children.selectorDialog;
+        const selectorOpener = this._options.selectorOpener;
         const selectorTemplate = this._options.selectorTemplate;
+        const selectorDialogResult = this._options.selectorDialogResult;
         let selectedItems = [];
 
         // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
@@ -24,7 +25,7 @@ var MoreButton = Control.extend([], {
             selectedItems: new collection.List({ items: selectedItems }),
             handlers: {
                 onSelectComplete: function(event, result) {
-                    self._selectorDialogResult(event, result);
+                    selectorDialogResult(event, result);
                     selectorOpener.close();
                 }
             }
@@ -43,15 +44,7 @@ var MoreButton = Control.extend([], {
             },
             opener: this
         }, selectorTemplate.popupOptions || {}));
-    },
-
-    _selectorDialogResult: function(event, items) {
-        var result = {
-            action: 'selectorResult',
-            event: event,
-            data: items
-        };
-        this._notify('selectorResult', [result]);
+        this._notify('close', [], {bubbling: true});
     }
 });
 

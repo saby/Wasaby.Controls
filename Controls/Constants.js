@@ -1,5 +1,21 @@
 define('Controls/Constants', [], function() {
    'use strict';
+   
+   /**
+    * Constants
+    * <ul>
+    *    <li>
+    *       view.hiddenGropup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGrouped#groupingKeyCallback gropingKeyCallback}
+    *    </li>
+    *    <li>
+    *       editing.CANCEL - Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel egiting
+    *    </li>
+    * </ul>
+    *
+    * @class Controls/Constants
+    * @public
+    */
+
    var
       constants = {
          view: {

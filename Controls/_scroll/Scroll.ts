@@ -390,6 +390,38 @@ var
          this._children.scrollDetect.start(ev);
       },
 
+      _keydownHandler: function(ev) {
+         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
+         if (!ev.nativeEvent.isTrusted) {
+            var offset;
+            if (ev.nativeEvent.which === Env.constants.key.pageDown) {
+               offset = this._children.content.scrollTop + this._children.content.clientHeight;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.down) {
+               offset = this._children.content.scrollTop + 40;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.pageUp) {
+               offset = this._children.content.scrollTop - this._children.content.clientHeight;
+            }
+            if (ev.nativeEvent.which === Env.constants.key.up) {
+               offset = this._children.content.scrollTop - 40;
+            }
+            if (offset !== undefined) {
+               this.scrollTo(offset);
+               ev.preventDefault();
+            }
+
+            if (ev.nativeEvent.which === Env.constants.key.home) {
+               this.scrollToTop();
+               ev.preventDefault();
+            }
+            if (ev.nativeEvent.which === Env.constants.key.end) {
+               this.scrollToBottom();
+               ev.preventDefault();
+            }
+         }
+      },
+
       _scrollbarTaken: function() {
          if (this._showScrollbarOnHover && this._displayState.hasScroll) {
             this._notify('scrollbarTaken', [], { bubbling: true });
@@ -552,7 +584,15 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._savedScrollPosition = this._children.content.scrollHeight - this._children.content.scrollTop;
+         function getScrollTop(element: Element): number {
+            const scrollTop = element.scrollTop;
+            // scrollTop in MobileIOS at the moment of inertial scrolling and display overflow is equals negative value.
+            if (Env.detection.isMobileIOS && scrollTop < 0) {
+               return 0;
+            }
+            return scrollTop;
+         }
+         this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
       },
 
       _restoreScrollPosition: function(e) {
