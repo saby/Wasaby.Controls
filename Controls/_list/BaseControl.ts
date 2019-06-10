@@ -519,7 +519,9 @@ var _private = {
     },
 
     onScrollShow: function(self) {
-        self._loadOffset = LOAD_TRIGGER_OFFSET;
+        // ToDo option "loadOffset" is crutch for contacts.
+        // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
+        self._loadOffset = self._options.loadOffset || LOAD_TRIGGER_OFFSET;
         self._isScrollShown = true;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
