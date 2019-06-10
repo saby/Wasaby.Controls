@@ -1,9 +1,20 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_buttons/Button');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import ActualApi from './ActualApi';
-// @ts-ignore
 import { IoC } from 'Env/Env';
+import {IHref, IHrefOptions} from './interface/IHref';
+import {IClick} from './interface/IClick';
+import {ITooltip, ITooltipOptions,
+   ICaption, ICaptionOptions,
+   IIcon, IIconOptions,
+   IIconStyle, IIconStyleOptions,
+   IButton, IButtonOptions
+} from 'Controls/interface';
 
+export interface IButtonOptions extends IControlOptions, IHrefOptions,
+                                 ICaptionOptions, IIconOptions, IIconStyleOptions, ITooltipOptions, IButtonOptions {
+   contrastBackground?: boolean;
+}
 
 /**
  * Graphical control element that provides the user a simple way to trigger an event.
@@ -12,7 +23,7 @@ import { IoC } from 'Env/Env';
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/interface/IHref
+ * @mixes Controls/_buttons/interface/IHref
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/IIcon
@@ -28,47 +39,49 @@ import { IoC } from 'Env/Env';
  */
 
 /**
- * @name Controls/Button#transparent
+ * @name Controls/Button#contrastBackground
  * @cfg {Boolean} Determines whether button having background.
- * @default false
+ * @default true
  * @remark
- * true - Button has transparent background.
- * false - Button has default background for this viewmode and style.
+ * false - Button has transparent background.
+ * true - Button has default background for this viewmode and style.
  * @example
  * Button has transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
  * </pre>
  * Button hasn't transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
  * </pre>
  * @see style
  */
 
-class Button extends Control {
-   private _template: Function = template;
+class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIcon, ITooltip, IButton, IClick {
+   protected _template: TemplateFunction = ButtonTemplate;
+   protected _theme: string[] = ['Controls/buttons'];
 
    // Называть _style нельзя, так как это состояние используется для темизации
-   private _buttonStyle: String;
-   private _transparent: Boolean;
-   private _viewMode: String;
-   private _state: String;
-   private _caption: String | Function;
-   private _stringCaption: Boolean;
-   private _icon: String;
-   private _iconSize: String;
-   private _iconStyle: String;
+   private _buttonStyle: string;
+   private _transparent: boolean;
+   private _contrastBackground: boolean;
+   private _viewMode: string;
+   private _state: string;
+   private _caption: string | TemplateFunction;
+   private _stringCaption: boolean;
+   private _icon: string;
+   private _iconSize: string;
+   private _iconStyle: string;
    private _regExp: RegExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
 
-   static _theme: Array<string> = ['Controls/buttons'];
-   private prepareIconSize(icon): String {
+   private prepareIconSize(icon: string): string {
       return icon.replace(this._regExp, '');
    }
-   private cssStyleGeneration(options) {
+   private cssStyleGeneration(options: IButtonOptions): void {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
 
       this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
+      this._contrastBackground = ActualApi.contrastBackground(options);
       this._transparent = options.transparent;
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
       if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
@@ -86,11 +99,11 @@ class Button extends Control {
       this._iconStyle = currentButtonClass.buttonAdd ? 'default' : ActualApi.iconStyleTransformation(options.iconStyle);
    }
 
-   _beforeMount(options) {
+   _beforeMount(options: IButtonOptions): void {
       this.cssStyleGeneration(options);
    }
 
-   _beforeUpdate(newOptions) {
+   _beforeUpdate(newOptions: IButtonOptions): void {
       this.cssStyleGeneration(newOptions);
    }
 

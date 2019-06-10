@@ -140,6 +140,13 @@ const ActualApi = {
             }
          }
       });
+   },
+   contrastBackground(options): boolean {
+      if (typeof options.contrastBackground !== undefined) {
+         return options.contrastBackground;
+      } else {
+         return !options.transparent;
+      }
    }
 };
 export default ActualApi;
