@@ -1,6 +1,7 @@
 <div class="controls-Swipe__action
             {{actionCaptionPosition === 'bottom' ? '  controls-Swipe__action_column'}}
             controls-itemActionsV__action_padding_swipe
+            controls-Swipe__action_{{actionAlignment}}
             controls-Swipe__action_padding_size_{{paddingSize}}
             controls-itemActionsV__action_style_{{action.style || 'secondary'}}
             controls-Swipe__action_iconStyle_{{action.iconStyle || 'secondary'}}">
