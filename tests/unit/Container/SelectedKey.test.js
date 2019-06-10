@@ -27,10 +27,6 @@ define(
             sKeyContainer.saveOptions({selectedKey: 'testKey'});
             sKeyContainer._beforeUpdate({selectedKey: 'newTestKey'});
             assert.deepEqual(sKeyContainer._selectedKeys, ['newTestKey']);
-
-            sKeyContainer._items = items;
-            sKeyContainer._beforeUpdate({selectedKey: null});
-            assert.deepEqual(sKeyContainer._selectedKeys, [null]);
          });
          it('_selectedKeysChanged', function() {
             let sKeyContainer = new source.SelectedKey(),
@@ -61,18 +57,6 @@ define(
             assert.deepEqual(resultKeys, []);
             resultKeys = source.SelectedKey._private.getSelectedKeys('testKey');
             assert.deepEqual(resultKeys, ['testKey']);
-            resultKeys = source.SelectedKey._private.getSelectedKeys(null, items);
-            assert.deepEqual(resultKeys, [null]);
-         });
-         it('_private::dataLoadCallbackHandler', function() {
-            let sKeyContainer = new source.SelectedKey(),
-               options = {dataLoadCallback: () => { dataLoaded = true; }},
-               dataLoaded = false;
-            sKeyContainer._beforeMount(options);
-            sKeyContainer.saveOptions(options);
-            sKeyContainer._dataLoadCallbackHandler([]);
-            assert.deepEqual(sKeyContainer._items, []);
-            assert.isTrue(dataLoaded);
          });
       });
    }

@@ -447,11 +447,26 @@ define(
             let selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
+
+            // emptyText + selectedKeys = [null]
             dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [null], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
 
-            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id');
+            // emptyText + selectedKeys = []
+            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
+
+            // selectedKeys = []
+            let newItems = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  {id: null, title: 'All'},
+                  {id: '1', title: 'first'}
+               ]
+            });
+            dropdownController._items = newItems;
+            dropdown._Controller._private.updateSelectedItems(dropdownController, undefined, [], 'id', selectedItemsChangedCallback);
+            assert.deepEqual(selectedItems, [newItems.at(0)]);
          });
 
          it('_open dropdown', () => {
