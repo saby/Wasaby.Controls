@@ -342,12 +342,10 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport()) {
                 let
-                    multiselectOffset = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
-                    rowIndex = 0;
+                    columnStart = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = self._getRowIndexHelper().getTopOffset();
 
-                rowIndex += self.getHeader() ? 1 : 0;
-                rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, self._columns.length);
             }
 
             return styles;
