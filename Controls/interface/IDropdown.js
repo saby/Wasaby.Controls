@@ -158,6 +158,64 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
+    * @name Controls/interface/IDropdown#displayProperty
+    * @cfg {String} The name of the field whose value will displayed.
+    * @default title
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.dropdown:Button source="{{_source}}" displayProperty="title" keyProperty="id"/>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    *     import sourceLib from "Types/source"
+    *
+    *     _beforeMount() {
+    *         this._source = new sourceLib.Memory({
+    *             idProperty: 'id',
+    *             data: [
+    *                {id: 1, title: 'Name'},
+    *                {id: 2, title: 'Date of change'}
+    *             ]
+    *         });
+    *     }
+    * </pre>
+    *
+    */
+
+   /**
+    * @name Controls/interface/IDropdown#dataLoadCallback
+    * @cfg {Function} Callback function that will be called when list data loaded by source
+    * @example
+    * WML:
+    * <pre>
+    * <Controls.dropdown:Button
+    *       keyProperty="id"
+    *       iconStyle="secondary"
+    *       style="primary"
+    *       viewMode="button"
+    *       caption="+ Add"
+    *       dataLoadCallback="{{_callbackHandler}}"
+    *       source="{{_source)}}" />
+    * </pre>
+    * JS:
+    * <pre>
+    * this._source = new Memory({
+    *    idProperty: 'id',
+    *    data: [
+    *       {id: 1, title: 'Yaroslavl'},
+    *       {id: 2, title: 'Moscow'},
+    *       {id: 3, title: 'St-Petersburg'}
+    *    ]
+    * });
+    * this._callbackHandler = function(items) {
+    *   // do something
+    * };
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IDropdown#historyId
     * @cfg {String} Unique id for save history.
     */
