@@ -171,3 +171,10 @@ define(
       });
    }
 );
+'<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
+'<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
+'<div></div><div></div>' +
+'<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+'<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+'<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
+'</div>'

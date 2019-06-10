@@ -283,14 +283,14 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*":
-  version "12.0.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.4.tgz#46832183115c904410c275e34cf9403992999c32"
-  integrity sha512-j8YL2C0fXq7IONwl/Ud5Kt0PeXw22zGERt+HSSnwbKOJVsAGkEz3sFCYwaF9IOuoG1HOtE0vKCj6sXF7Q0+Vaw==
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.2.tgz#3452a24edf9fea138b48fad4a0a028a683da1e40"
+  integrity sha512-5tabW/i+9mhrfEOUcLDu2xBPsHJ+X5Orqy9FKpale3SjDA17j5AEpYq5vfy3oAeAHGcvANRCO3NV3d2D6q3NiA==
 
 "@types/node@^11.11.3", "@types/node@^11.9.4":
-  version "11.13.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.13.tgz#a3d2a8a908ce322f24f0f8c88160b44c7dd5c452"
-  integrity sha512-GFWH7e4Q/OGLAO545bupVju+nE1YtLSwYAdLfSzAXnTPqoqKoXCOEtB7Cluvg9B/h2nGLhyzCDyCInYvrOE2nw==
+  version "11.13.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.11.tgz#65766752cbbe198ff353ea861a23b6484cf33df4"
+  integrity sha512-blLeR+KIy26km1OU8yTLUlSyVCOvT6+wPq/77tIA+uSHHa4yYQosn+bbaJqPtWId0wjVClUtD7aXzDbZeKWqig==
 
 "@types/requirejs@^2.1.31":
   version "2.1.31"
@@ -319,9 +319,9 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"Router@git+https://github.com/saby/Router.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/Router.git#41251f0f816fac82c5467806ce501d95a903f493"
+"Router@git+https://github.com/saby/Router.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/Router.git#6cf34cb27482c35f7e5f9305c84835963fd8ce1b"
 
 abbrev@1:
   version "1.1.1"
@@ -669,17 +669,17 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autoprefixer@9.5.0:
-  version "9.5.0"
-  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.5.0.tgz#7e51d0355c11596e6cf9a0afc9a44e86d1596c70"
-  integrity sha512-hMKcyHsZn5+qL6AUeP3c8OyuteZ4VaUlg+fWbyl8z7PqsKHF/Bf8/px3K6AT8aMzDkBo8Bc11245MM+itDBOxQ==
+autoprefixer@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.0.0.tgz#fce072cb3c9c61374bf6fb7d1906f630afdb2889"
+  integrity sha512-bMt9puCb+xk5ds1ghr1zzfJ09+SjOcseHCEawhMjibM5KfxkodW8PQMhhEnllyj4Cz3Yixy9A+/0De2VC9R+dQ==
   dependencies:
-    browserslist "^4.4.2"
-    caniuse-lite "^1.0.30000947"
+    browserslist "^4.0.1"
+    caniuse-lite "^1.0.30000865"
     normalize-range "^0.1.2"
     num2fraction "^1.2.2"
-    postcss "^7.0.14"
-    postcss-value-parser "^3.3.1"
+    postcss "^7.0.0"
+    postcss-value-parser "^3.2.3"
 
 autoprefixer@^9.0.0:
   version "9.5.1"
@@ -807,14 +807,14 @@ browser-stdout@1.3.1:
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.1.tgz#baa559ee14ced73452229bad7326467c61fabd60"
   integrity sha512-qhAVI1+Av2X7qelOfAIYwXONood6XlZE/fXaBSmW/T5SzLAmCgzi+eiWE7fUvbHaeNBQH13UftjpXxsfLkMpgw==
 
-browserslist@^4.4.2, browserslist@^4.5.4:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.6.1.tgz#ee5059b1aec18cbec9d055d6cb5e24ae50343a9b"
-  integrity sha512-1MC18ooMPRG2UuVFJTHFIAkk6mpByJfxCrnUyvSlu/hyQSFHMrlhM02SzNuCV+quTP4CKmqtOMAIjrifrpBJXQ==
+browserslist@^4.0.1, browserslist@^4.5.4:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.6.0.tgz#5274028c26f4d933d5b1323307c1d1da5084c9ff"
+  integrity sha512-Jk0YFwXBuMOOol8n6FhgkDzn3mY9PYLYGk29zybF05SbRTsMgPqmTNeQQhOghCxq5oFqAXE3u4sYddr4C0uRhg==
   dependencies:
-    caniuse-lite "^1.0.30000971"
-    electron-to-chromium "^1.3.137"
-    node-releases "^1.1.21"
+    caniuse-lite "^1.0.30000967"
+    electron-to-chromium "^1.3.133"
+    node-releases "^1.1.19"
 
 buffer-equal@^1.0.0:
   version "1.0.0"
@@ -908,7 +908,7 @@ camelcase@^4.1.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-4.1.0.tgz#d545635be1e33c542649c69173e5de6acfae34dd"
   integrity sha1-1UVjW+HjPFQmScaRc+Xeas+uNN0=
 
-caniuse-lite@^1.0.30000947, caniuse-lite@^1.0.30000957, caniuse-lite@^1.0.30000971:
+caniuse-lite@^1.0.30000865, caniuse-lite@^1.0.30000957, caniuse-lite@^1.0.30000967:
   version "1.0.30000971"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000971.tgz#d1000e4546486a6977756547352bc96a4cfd2b13"
   integrity sha512-TQFYFhRS0O5rdsmSbF1Wn+16latXYsQJat66f7S7lizXW1PVpWJeZw9wqqVLIjuxDRz7s7xRUj13QCfd8hKn6g==
@@ -923,9 +923,9 @@ ccount@^1.0.0:
   resolved "https://registry.yarnpkg.com/ccount/-/ccount-1.0.4.tgz#9cf2de494ca84060a2a8d2854edd6dfb0445f386"
   integrity sha512-fpZ81yYfzentuieinmGnphk0pLkOTMm6MZdVqwd77ROvhko6iujLNGrHH5E7utq3ygWklwfmwuG+A7P+NpqT6w==
 
-"cdn@git+https://github.com/saby/wasaby-cdn.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/wasaby-cdn.git#7f8aa185dfc5595f143e33577f6871a3ae4985b5"
+"cdn@git+https://github.com/saby/wasaby-cdn.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/wasaby-cdn.git#245f768e5d7d8ff7062a6955d6d1f264e872672a"
 
 chai@4.1.x:
   version "4.1.2"
@@ -1084,9 +1084,9 @@ clone@^2.1.1:
   integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
 
 cloneable-readable@^1.0.0:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/cloneable-readable/-/cloneable-readable-1.1.3.tgz#120a00cb053bfb63a222e709f9683ea2e11d8cec"
-  integrity sha512-2EF8zTQOxYq70Y4XKtorQupqF0m49MBz2/yf5Bj+MHjvpG3Hy7sImifnqD6UA+TKYxeSV+u6qqQPawN5UvnpKQ==
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/cloneable-readable/-/cloneable-readable-1.1.2.tgz#d591dee4a8f8bc15da43ce97dceeba13d43e2a65"
+  integrity sha512-Bq6+4t+lbM8vhTs/Bef5c5AdEMtapp/iFb6+s4/Hh9MVTt8OLKH7ZOOZSCT+Ys7hsHvqv0GuMPJ1lnQJVHvxpg==
   dependencies:
     inherits "^2.0.1"
     process-nextick-args "^2.0.0"
@@ -1562,10 +1562,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
-electron-to-chromium@^1.3.137:
-  version "1.3.141"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.141.tgz#5858d3a74ceafe71e7824e7c809ea2cc59c8e104"
-  integrity sha512-DdQaeP8yQNYFdivOrp37UNAZMvyZP//+SWYMVJD31A/3gbI1J6olQs8tuRaHL2ij7dubhCDXhlE4F97mrT8KGQ==
+electron-to-chromium@^1.3.133:
+  version "1.3.136"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.136.tgz#758a156109077536780cfa8207b1aeaa99843e33"
+  integrity sha512-xHkYkbEi4kI+2w5v6yBGCQTRXL7N0PWscygTFZu/1bArnPSo2WR9xjdw4m06RR4J5PncrWJcuOVv+MAG2mK5JQ==
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -1834,9 +1834,9 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
     homedir-polyfill "^1.0.1"
 
 express@^4.16.3:
-  version "4.17.1"
-  resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
-  integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==
+  version "4.17.0"
+  resolved "https://registry.yarnpkg.com/express/-/express-4.17.0.tgz#288af62228a73f4c8ea2990ba3b791bb87cd4438"
+  integrity sha512-1Z7/t3Z5ZnBG252gKUPyItc4xdeaA0X934ca2ewckAsVsw9EG71i++ZHZPYnus8g/s5Bty8IMpSVEuRkmwwPRQ==
   dependencies:
     accepts "~1.3.7"
     array-flatten "1.1.1"
@@ -2714,9 +2714,9 @@ ignore@^4.0.3, ignore@^4.0.6:
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
 ignore@^5.0.4:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.2.tgz#e28e584d43ad7e92f96995019cc43b9e1ac49558"
-  integrity sha512-vdqWBp7MyzdmHkkRWV5nY+PfGRbYbahfuvsBCh277tq+w9zyNi7h5CYJCK0kmzti9kU+O/cB7sE8HvKv6aXAKQ==
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.1.tgz#2fc6b8f518aff48fef65a7f348ed85632448e4a5"
+  integrity sha512-DWjnQIFLenVrwyRCKZT+7a7/U4Cqgar4WG8V++K3hw+lrW1hc/SIwdiGmtxKCVACmHULTuGeBbHJmbwW7/sAvA==
 
 image-size@~0.5.0:
   version "0.5.5"
@@ -3553,9 +3553,9 @@ md5-o-matic@^0.1.1:
   integrity sha1-givM1l4RfFFPqxdrJZRdVBAKA8M=
 
 mdast-util-compact@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/mdast-util-compact/-/mdast-util-compact-1.0.3.tgz#98a25cc8a7865761a41477b3a87d1dcef0b1e79d"
-  integrity sha512-nRiU5GpNy62rZppDKbLwhhtw5DXoFMqw9UNZFmlPsNaQCZ//WLjGKUwWMdJrUH+Se7UvtO2gXtAMe0g/N+eI5w==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/mdast-util-compact/-/mdast-util-compact-1.0.2.tgz#c12ebe16fffc84573d3e19767726de226e95f649"
+  integrity sha512-d2WS98JSDVbpSsBfVvD9TaDMlqPRz7ohM/11G0rp5jOBb5q96RJ6YLszQ/09AAixyzh23FeIpCGqfaamEADtWg==
   dependencies:
     unist-util-visit "^1.1.0"
 
@@ -3885,10 +3885,10 @@ node-pre-gyp@^0.12.0:
     semver "^5.3.0"
     tar "^4"
 
-node-releases@^1.1.21:
-  version "1.1.22"
-  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.22.tgz#d90cd5adc59ab9b0f377d4f532b09656399c88bf"
-  integrity sha512-O6XpteBuntW1j86mw6LlovBIwTe+sO2+7vi9avQffNeIW4upgnaCVm6xrBWH+KATz7mNNRNNeEpuWB7dT6Cr3w==
+node-releases@^1.1.19:
+  version "1.1.21"
+  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.21.tgz#46c86f9adaceae4d63c75d3c2f2e6eee618e55f3"
+  integrity sha512-TwnURTCjc8a+ElJUjmDqU6+12jhli1Q61xOQmdZ7ECZVBZuQpN/1UnembiIHDM1wCcfLvh5wrWXUF5H6ufX64Q==
   dependencies:
     semver "^5.3.0"
 
@@ -4511,7 +4511,7 @@ postcss-url@7.3.2:
     postcss "^6.0.1"
     xxhashjs "^0.2.1"
 
-postcss-value-parser@^3.3.0, postcss-value-parser@^3.3.1:
+postcss-value-parser@^3.2.3, postcss-value-parser@^3.3.0, postcss-value-parser@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.1.tgz#9ff822547e2893213cf1c30efa51ac5fd1ba8281"
   integrity sha512-pISE66AbVkp4fDQ7VHBwRNXzAAKJjw4Vw7nWI/+Q3vuly7SNfgYXvm6i5IgFylHGK5sP/xHAbB7N49OS4gWNyQ==
@@ -4599,9 +4599,9 @@ pseudomap@^1.0.2:
   integrity sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
 
 psl@^1.1.24:
-  version "1.1.32"
-  resolved "https://registry.yarnpkg.com/psl/-/psl-1.1.32.tgz#3f132717cf2f9c169724b2b6caf373cf694198db"
-  integrity sha512-MHACAkHpihU/REGGPLj4sEfc/XKW2bheigvHO1dUqjaKigMp1C8+WLQYRGgeKFMsw5PMfegZcaN8IDXK/cD0+g==
+  version "1.1.31"
+  resolved "https://registry.yarnpkg.com/psl/-/psl-1.1.31.tgz#e9aa86d0101b5b105cbe93ac6b784cd547276184"
+  integrity sha512-/6pt4+C+T+wZUieKR620OpzN/LlnNKuWjy1iFLQ/UG35JqHlR/89MP1d96dUfkf6Dne3TuLQzOYEYshJ+Hx8mw==
 
 pump@^2.0.0:
   version "2.0.1"
@@ -4737,9 +4737,9 @@ readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.2, readable
     util-deprecate "~1.0.1"
 
 readable-stream@^3.1.1:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.4.0.tgz#a51c26754658e0a3c21dbf59163bd45ba6f447fc"
-  integrity sha512-jItXPLmrSR8jmTRmRWJXCnGJsfy85mB3Wd/uINMXA65yrnFo0cPClFIUWzo2najVNSl+mx7/4W8ttlLWJe99pQ==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.3.0.tgz#cb8011aad002eb717bf040291feba8569c986fb9"
+  integrity sha512-EsI+s3k3XsW+fU8fQACLN59ky34AZ14LoeVZpYwmZvldCFo0r0gnelwF2TcMjLor/BTL5aDJVBMkss0dthToPw==
   dependencies:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
@@ -4988,11 +4988,11 @@ rimraf@2.6.3, rimraf@^2.6.1, rimraf@^2.6.2:
   dependencies:
     glob "^7.1.3"
 
-"rmi@git+https://git.sbis.ru/sbis/rmi.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://git.sbis.ru/sbis/rmi.git#261a425d41c870b957494ebc58ac19b9afb9cac9"
+"rmi@git+https://git.sbis.ru/sbis/rmi.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://git.sbis.ru/sbis/rmi.git#de0d5fc45e7f910736f7e5154cdc7896c9e16e4e"
   dependencies:
-    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.400"
+    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.300"
     tslib "^1.9.3"
     typescript "^3.1.3"
 
@@ -5010,39 +5010,42 @@ rxjs@^6.4.0:
   dependencies:
     tslib "^1.9.0"
 
-"saby-i18n@git+https://github.com/saby/i18n.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/i18n.git#ef0c1f09e3c3820d0aa6fc00e64e8a4b5927fed9"
+"saby-i18n@git+https://github.com/saby/i18n.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/i18n.git#b877bf23bcc74e5ad86631143706c35c6e43ceda"
   dependencies:
     "@types/node" "^11.9.4"
     "@types/requirejs" "^2.1.31"
 
-"saby-types@git+https://platform-git.sbis.ru/saby/Types.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://platform-git.sbis.ru/saby/Types.git#8736c7bb49dd2178d6482f1c019bd325e7f049ee"
+"saby-types@git+https://platform-git.sbis.ru/saby/Types.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://platform-git.sbis.ru/saby/Types.git#cfbce379d49d17398563b077fff098da7e02f363"
 
-"saby-typescript@git+https://github.com/saby/TypeScript.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/TypeScript.git#1979b5f40e5679a64d406d2f25e0d295d11dbe79"
+"saby-typescript@git+https://github.com/saby/TypeScript.git#rc-19.300":
+  version "19.300.0"
+  resolved "git+https://github.com/saby/TypeScript.git#57cac6970e8a15126781eaf9a775c76528e25b71"
   dependencies:
     tslint "^5.12.1"
     typescript "^3.0.3"
 
-"saby-typescript@git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.400":
-  version "19.400.0"
-  uid "1979b5f40e5679a64d406d2f25e0d295d11dbe79"
-  resolved "git+https://platform-git.sbis.ru/saby/TypeScript.git#1979b5f40e5679a64d406d2f25e0d295d11dbe79"
+"saby-typescript@git+https://github.com/saby/TypeScript.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/TypeScript.git#f13d50158fd1f447c97433ae87958f84bfa65f26"
   dependencies:
     tslint "^5.12.1"
     typescript "^3.0.3"
 
-"saby-ui@git+https://github.com/saby/UI.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/UI.git#e10b2990fb41943cb7a621a2fdd49821a0440f57"
+"saby-typescript@git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.310":
+  version "19.310.0"
+  uid f13d50158fd1f447c97433ae87958f84bfa65f26
+  resolved "git+https://platform-git.sbis.ru/saby/TypeScript.git#f13d50158fd1f447c97433ae87958f84bfa65f26"
+  dependencies:
+    tslint "^5.12.1"
+    typescript "^3.0.3"
 
-"saby-units@git+https://github.com/saby/Units.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/Units.git#ec0c025da8adf2477ab06528ae4b290a05f44840"
+"saby-units@git+https://github.com/saby/Units.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/Units.git#804e5756122de3f278fe049966c843d5492608ba"
   dependencies:
     chai "4.1.x"
     connect "3.6.x"
@@ -5054,10 +5057,10 @@ rxjs@^6.4.0:
     sinon "6.3.x"
     url "0.11.0"
 
-"saby-units@git+https://platform-git.sbis.ru/saby/Units.git#rc-19.400":
-  version "19.400.0"
-  uid ec0c025da8adf2477ab06528ae4b290a05f44840
-  resolved "git+https://platform-git.sbis.ru/saby/Units.git#ec0c025da8adf2477ab06528ae4b290a05f44840"
+"saby-units@git+https://platform-git.sbis.ru/saby/Units.git#rc-19.310":
+  version "19.310.0"
+  uid "804e5756122de3f278fe049966c843d5492608ba"
+  resolved "git+https://platform-git.sbis.ru/saby/Units.git#804e5756122de3f278fe049966c843d5492608ba"
   dependencies:
     chai "4.1.x"
     connect "3.6.x"
@@ -5091,12 +5094,12 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-"sbis3-builder@git+https://github.com/saby/Builder.git#rc-19.400":
-  version "19.400.0-BUILD"
-  resolved "git+https://github.com/saby/Builder.git#986f81f3df31ba1b28ea1fc5aed379a7bc6cebf1"
+"sbis3-builder@git+https://github.com/saby/Builder.git#rc-19.310":
+  version "19.310.0-BUILD"
+  resolved "git+https://github.com/saby/Builder.git#5df3aaff4ab586359a2d1877f4706522d1e8b06a"
   dependencies:
     async "2.6.1"
-    autoprefixer "9.5.0"
+    autoprefixer "9.0.0"
     clean-css "4.1.11"
     escodegen "1.11.0"
     esprima "4.0.1"
@@ -5116,23 +5119,23 @@ sax@^1.2.4:
     postcss "7.0.1"
     postcss-safe-parser "4.0.1"
     postcss-url "7.3.2"
-    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.400"
-    saby-units "git+https://github.com/saby/Units.git#rc-19.400"
+    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.310"
+    saby-units "git+https://github.com/saby/Units.git#rc-19.310"
     strip-bom "3.0.0"
     tensor-xmldom "0.2.0-b9"
     through2 "2.0.3"
-    typescript "3.4.1"
+    typescript "^3.0.3"
     uglify-js "3.3.23"
     vinyl "2.2.0"
     workerpool "2.3.0"
 
-"sbis3-ws@git+https://git.sbis.ru/sbis/ws.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://git.sbis.ru/sbis/ws.git#785b2a75cfd298ff9e80dbf854122a0f607df35a"
+"sbis3-ws@git+https://git.sbis.ru/sbis/ws.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://git.sbis.ru/sbis/ws.git#694f78bf4e680cc865ad2443e30db4074e7ecbd6"
   dependencies:
     "@types/node" "^11.11.3"
     "@types/requirejs" "^2.1.31"
-    saby-typescript "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.400"
+    saby-typescript "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.310"
 
 semver-greatest-satisfied-range@^1.1.0:
   version "1.1.0"
@@ -5725,9 +5728,9 @@ svg-tags@^1.0.0:
   integrity sha1-WPcc7jvVGbWdSyqEO2x95krAR2Q=
 
 table@^5.0.0, table@^5.2.3:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/table/-/table-5.4.0.tgz#d772a3216e68829920a41a32c18eda286c95d780"
-  integrity sha512-nHFDrxmbrkU7JAFKqKbDJXfzrX2UBsWmrieXFTGxiI5e4ncg3VqsZeI4EzNmX0ncp4XNGVeoxIWJXfCIXwrsvw==
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/table/-/table-5.3.3.tgz#eae560c90437331b74200e011487a33442bd28b4"
+  integrity sha512-3wUNCgdWX6PNpOe3amTTPWPuF6VGvgzjKCaO1snFj0z7Y3mUPWf5+zDtxUVGispJkDECPmR29wbzh6bVMOHbcw==
   dependencies:
     ajv "^6.9.1"
     lodash "^4.17.11"
@@ -5908,9 +5911,9 @@ tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
 
 tslint@^5.12.1, tslint@^5.13.1:
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.17.0.tgz#f9f0ce2011d8e90debaa6e9b4975f24cd16852b8"
-  integrity sha512-pflx87WfVoYepTet3xLfDOLDm9Jqi61UXIKePOuca0qoAZyrGWonDG9VTbji58Fy+8gciUn8Bt7y69+KEVjc/w==
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.16.0.tgz#ae61f9c5a98d295b9a4f4553b1b1e831c1984d67"
+  integrity sha512-UxG2yNxJ5pgGwmMzPMYh/CCnCnh0HfPgtlVRDs1ykZklufFBL1ZoTlWFRz2NQjcoEiDoRp+JyT0lhBbbH/obyA==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     builtin-modules "^1.1.1"
@@ -5918,7 +5921,7 @@ tslint@^5.12.1, tslint@^5.13.1:
     commander "^2.12.1"
     diff "^3.2.0"
     glob "^7.1.1"
-    js-yaml "^3.13.1"
+    js-yaml "^3.13.0"
     minimatch "^3.0.4"
     mkdirp "^0.5.1"
     resolve "^1.3.2"
@@ -5970,15 +5973,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.1.tgz#b6691be11a881ffa9a05765a205cb7383f3b63c6"
-  integrity sha512-3NSMb2VzDQm8oBTLH6Nj55VVtUEpe/rgkIzMir0qVoLyjDZlnMBva0U6vDiV3IH+sl/Yu6oP5QwsAQtHPmDd2Q==
-
 typescript@^3.0.3, typescript@^3.1.3:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.1.tgz#ba72a6a600b2158139c5dd8850f700e231464202"
-  integrity sha512-64HkdiRv1yYZsSe4xC1WVgamNigVYjlssIoaH2HcZF0+ijsk5YK2g0G34w9wJkze8+5ow4STd22AynfO6ZYYLw==
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
+  integrity sha512-YycBxUb49UUhdNMU5aJ7z5Ej2XGmaIBL0x34vZ82fn3hGvD+bgrMrVDpatgz2f7YxUMJxMkbWxJZeAvDxVe7Vw==
 
 uglify-js@3.3.23:
   version "3.3.23"
@@ -5989,9 +5987,9 @@ uglify-js@3.3.23:
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.6.0.tgz#704681345c53a8b2079fb6cec294b05ead242ff5"
-  integrity sha512-W+jrUHJr3DXKhrsS7NUVxn3zqMOFn0hL/Ei6v0anCIMoKC93TjcflTagwIHLW7SfMFfiQuktQyFVCFHGUE0+yg==
+  version "3.5.15"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.5.15.tgz#fe2b5378fd0b09e116864041437bff889105ce24"
+  integrity sha512-fe7aYFotptIddkwcm6YuA0HmknBZ52ZzOsUxZEdhhkSsz7RfjHDX2QDxwKTiv4JQ5t5NhfmpgAK+J7LiDhKSqg==
   dependencies:
     commander "~2.20.0"
     source-map "~0.6.1"
@@ -6067,16 +6065,16 @@ unique-stream@^2.0.2:
     through2-filter "^3.0.0"
 
 unist-util-find-all-after@^1.0.2:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/unist-util-find-all-after/-/unist-util-find-all-after-1.0.4.tgz#2eeaba818fd98492d69c44f9bee52c6a25282eef"
-  integrity sha512-CaxvMjTd+yF93BKLJvZnEfqdM7fgEACsIpQqz8vIj9CJnUb9VpyymFS3tg6TCtgrF7vfCJBF5jbT2Ox9CBRYRQ==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/unist-util-find-all-after/-/unist-util-find-all-after-1.0.3.tgz#5114041df272315a36d10b15f4bd199f9d2c3652"
+  integrity sha512-FNPM5Q1AViItYvkLngkalxZ879j842VxGzlfI0gLlgDQz/Teh9CUzqpc7kgFOWO3RK5qU/wqG0UnJ6XWiHSWiA==
   dependencies:
-    unist-util-is "^3.0.0"
+    unist-util-is "^2.0.0"
 
-unist-util-is@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-3.0.0.tgz#d9e84381c2468e82629e4a5be9d7d05a2dd324cd"
-  integrity sha512-sVZZX3+kspVNmLWBPAB6r+7D9ZgAFPNWm66f7YNb420RlQSbn+n8rG8dGZSkrER7ZIXGQYNm5pqC3v3HopH24A==
+unist-util-is@^2.0.0, unist-util-is@^2.1.2:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-2.1.3.tgz#459182db31f4742fceaea88d429693cbf0043d20"
+  integrity sha512-4WbQX2iwfr/+PfM4U3zd2VNXY+dWtZsN1fLnWEi2QQXA4qyDYAZcDMfXUX0Cu6XZUHHAO9q4nyxxLT4Awk1qUA==
 
 unist-util-remove-position@^1.0.0:
   version "1.1.3"
@@ -6091,11 +6089,11 @@ unist-util-stringify-position@^1.0.0, unist-util-stringify-position@^1.1.1:
   integrity sha512-pNCVrk64LZv1kElr0N1wPiHEUoXNVFERp+mlTg/s9R5Lwg87f9bM/3sQB99w+N9D/qnM9ar3+AKDBwo/gm/iQQ==
 
 unist-util-visit-parents@^2.0.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/unist-util-visit-parents/-/unist-util-visit-parents-2.1.2.tgz#25e43e55312166f3348cae6743588781d112c1e9"
-  integrity sha512-DyN5vD4NE3aSeB+PXYNKxzGsfocxp6asDc2XXE3b0ekO2BaRUpBicbbUygfSvYfUz1IkmjFR1YF7dPklraMZ2g==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/unist-util-visit-parents/-/unist-util-visit-parents-2.1.1.tgz#b6a663448eed29325974235c6252a308de2e8eab"
+  integrity sha512-/vuqJFrPaWX2QpW3WqOfnvRmqqlPux5BlWMRcUYm8QO5odQJ9XTGoonFYT9hzJXrpT+AmNMKQjK/9xMB5DaLhw==
   dependencies:
-    unist-util-is "^3.0.0"
+    unist-util-is "^2.1.2"
 
 unist-util-visit@^1.1.0:
   version "1.4.1"
@@ -6202,9 +6200,9 @@ verror@1.10.0:
     extsprintf "^1.2.0"
 
 vfile-location@^2.0.0:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/vfile-location/-/vfile-location-2.0.5.tgz#c83eb02f8040228a8d2b3f10e485be3e3433e0a2"
-  integrity sha512-Pa1ey0OzYBkLPxPZI3d9E+S4BmvfVwNAAXrrqGbwTVXWaX2p9kM1zZ+n35UtVM06shmWKH4RPRN8KI80qE3wNQ==
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/vfile-location/-/vfile-location-2.0.4.tgz#2a5e7297dd0d9e2da4381464d04acc6b834d3e55"
+  integrity sha512-KRL5uXQPoUKu+NGvQVL4XLORw45W62v4U4gxJ3vRlDfI9QsT4ZN1PNXn/zQpKUulqGDpYuT0XDfp5q9O87/y/w==
 
 vfile-message@^1.0.0:
   version "1.1.1"
@@ -6271,11 +6269,11 @@ vinyl@2.2.0, vinyl@^2.0.0:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
-"wasaby-app@git+https://github.com/saby/wasaby-app.git#rc-19.400":
-  version "19.400.0"
-  resolved "git+https://github.com/saby/wasaby-app.git#37edc53cee2f8cd47120219ddc68b67bab00a378"
+"wasaby-app@git+https://github.com/saby/wasaby-app.git#rc-19.310":
+  version "19.310.0"
+  resolved "git+https://github.com/saby/wasaby-app.git#5bd89fbc8a0e12bcc9956b81dda54d94d4302ce6"
   dependencies:
-    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.400"
+    saby-typescript "git+https://github.com/saby/TypeScript.git#rc-19.310"
     tslib "^1.9.3"
     tslint "^5.12.1"
     typescript "^3.1.3"
