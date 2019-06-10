@@ -42,13 +42,15 @@ define(
                id: 'text',
                value: 'value1',
                resetValue: 'resetValue1',
-               visibility: undefined
+               visibility: undefined,
+               viewMode: 'basic'
             },
             {
                id: 'boolean',
                value: 'value2',
                resetValue: 'resetValue2',
                textValue: '123',
+               viewMode: 'basic',
                source: 'dataSource',
                visibility: undefined
             },
@@ -56,6 +58,7 @@ define(
                id: 'Array',
                value: 'value3',
                resetValue: 'resetValue3',
+               viewMode: 'extended',
                visibility: false,
                caption: '12345'
             },
@@ -63,6 +66,7 @@ define(
                id: 'Number',
                value: 'value4',
                resetValue: 'resetValue4',
+               viewMode: 'frequent',
                visibility: undefined,
                editorOptions: { source: 'dataSource' }
             }
