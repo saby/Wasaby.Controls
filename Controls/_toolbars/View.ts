@@ -50,7 +50,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
  * <pre>
- *    <Controls.Toolbar
+ *    <Controls.toolbars:View
  *              keyProperty="key"
  *              source="{{_source}}"
  *    />
@@ -90,7 +90,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
  * <pre>
- *    <Controls.Toolbar
+ *    <Controls.toolbars:View
  *              keyProperty="key"
  *              source="{{_source}}"
  *              itemsSpacing="big"
@@ -105,7 +105,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @example
  * TMPL:
  * <pre>
- *    <Controls.Toolbar on:itemClick="onToolbarItemClick()" />
+ *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
  * </pre>
  * JS:
  * <pre>
@@ -139,7 +139,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * <ul>
  * @example
  * <pre>
- *    <Controls.Toolbar
+ *    <Controls.toolbars:View
  *       source="{{_source}}"
  *       on:itemClick="_itemClick()"
  *    >
@@ -163,7 +163,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
  * @cfg {String} Class for drop-down list in toolbar menu.
  * @example
  * <pre>
- *    <Controls.Toolbar
+ *    <Controls.toolbars:View
  *       popupClassName="your-custom-class"
  *       source="{{_source}}"
  *       on:itemClick="_itemClick()"/>
