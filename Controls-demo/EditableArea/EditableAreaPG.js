@@ -6,7 +6,7 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
    'json!Controls-demo/EditableArea/EAPConfig',
    'wml!Controls-demo/EditableArea/resources/oneField',
    'wml!Controls-demo/EditableArea/resources/twoFields',
-   'Controls/_EditableArea/Templates/Editors/Base',
+   'Controls/_editableArea/Templates/Editors/Base',
    'css!Controls-demo/EditableArea/EditableAreaPG'
 ], function(
    Control,
