@@ -2,13 +2,10 @@ import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions} from 'Controls/interface';
-import {IToggleButtonOptions} from "../_toggle/Button";
 
 export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions {
    fontSize?: string;
    fontColorStyle?: string;
-   size?: string;
-   style?: string;
 }
 
    /**
@@ -46,7 +43,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
 
 
    /**
-    * @name Controls/_heading/Heading#style
+    * @name Controls/_heading/Heading#fontColorStyle
     * @cfg {String} Heading display style.
     * @variant primary
     * @variant secondary
@@ -54,19 +51,24 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @default primary
     */
 const mapFontSize = {'s': 'm', 'm': 'l', 'l': '3xl', 'xl': '4xl'};
+const mapFontColorStyle = {'info': 'info', 'primary':'primary', 'secondary': 'secondary'};
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
       protected _theme: string[] = ['Controls/heading'];
       protected _fontSize: string;
-      private _prepareFontSize(size: string): string {
-           return mapFontSize[size];
-      }
+      protected _fontColorStyle: string;
+
     protected _beforeMount(options: IHeadingOptions): void {
           if(options.size){
-              this._fontSize = this._prepareFontSize(options.size);
+              this._fontSize = mapFontSize[options.size];
           } else {
               this._fontSize = options.fontSize;
+          }
+          if(options.style){
+              this._fontColorStyle = mapFontColorStyle[options.style];
+          } else {
+              this._fontColorStyle = options.fontColorStyle;
           }
     }
       static getDefaultOptions(): object {
@@ -83,12 +85,6 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
                'secondary',
                'primary',
                'info'
-            ]),
-            size: EntityDescriptor(String).oneOf([
-               'xl',
-               'l',
-               'm',
-               's'
             ]),
              fontSize: EntityDescriptor(String).oneOf([
                  'xs',
