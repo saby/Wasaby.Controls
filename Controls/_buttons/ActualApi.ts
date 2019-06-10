@@ -170,7 +170,7 @@ const ActualApi = {
                case 'success': return 'success'; break;
                case 'danger': return 'danger'; break;
                case 'warning': return 'warning'; break;
-               case 'info': return 'primary'; break;
+               case 'info': return 'unaccented'; break;
                case 'secondary': return 'link'; break;
                case 'default': return 'default'; break;
             }

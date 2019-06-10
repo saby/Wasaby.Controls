@@ -1,5 +1,40 @@
+.controls-Button__text-default_theme-@{themeName}{
+   color: @text-color;
+}
+.controls-Button__text-primary_theme-@{themeName}{
+   color: @primary_text-color;
+}
+.controls-Button__text-link_theme-@{themeName}{
+   color: @link_text-color;
+}
+.controls-Button__text-danger_theme-@{themeName}{
+   color: @danger-color;
+}
+.controls-Button__text-success_theme-@{themeName}{
+   color: @success-color;
+}
+.controls-Button__text-warning_theme-@{themeName}{
+   color: @warning-color;
+}
+.controls-Button__text-unaccented_theme-@{themeName}{
+   color: @unaccented_color;
+}
+.controls-Button__text-readonly_theme-@{themeName}{
+   color: @readonly_color;
+}
+.ws-is-no-touch {
+   .controls-BaseButton:hover .controls-Button__text-link_theme-@{themeName}{
+      color: @link_hover_text-color;
+   }
+}
+.ws-is-no-touch, .ws-is-touch {
+   .controls-BaseButton:active .controls-Button__text-link_theme-@{themeName}{
+      color: @link_hover_text-color;
+   }
+}
+
+/*после этого старые*/
 .controls-Button_style-primary_viewMode-button.theme_@{themeName} {
-   color: @color_Button__text_primary;
    border-color: @border-color_Button_button_primary;
    background: @background_Button_button_primary;
 }
@@ -14,7 +49,6 @@
 }
 
 .controls-Button_style-secondary_viewMode-button.theme_@{themeName} {
-   color: @color_Button__text_secondary;
    border-color: @border-color_Button_secondary;
    background: @background_Button_secondary;
 }
@@ -31,7 +65,6 @@
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
    cursor: default;
-   color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
 }
 
@@ -86,9 +119,6 @@
    .justify-content(center);
 }
 
-.controls-Button_viewMode-link_readOnly.theme_@{themeName} {
-   color: @color_Link_readOnly;
-}
 
 .ws-is-no-touch {
    //root tag "a" should be without underline
@@ -142,13 +172,13 @@
 
    .controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
       .controls-Button__icon-secondary {
-         color: @color_Link_secondary_hovered;
+         color: @link_hover_text-color;
       }
    }
 
    .controls-Button_style-secondary_viewMode-link:hover.theme_@{themeName} {
       .controls-Button__icon-secondary {
-         color: @color_Link_secondary_hovered;
+         color: @link_hover_text-color;
       }
    }
 }
@@ -177,19 +207,17 @@
 .controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
    border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
 }
-
 .controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
    .controls-Button__icon-secondary {
-      color: @color_Link_secondary_hovered;
+      color: @link_hover_text-color;
    }
 }
 
 .controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
    .controls-Button__icon-secondary {
-      color: @color_Link_secondary_hovered;
+      color: @link_hover_text-color;
    }
 }
-
 /**/
 .controls-Button__icon-info.theme_@{themeName} {
    color: @color_info;
@@ -283,7 +311,6 @@
 }
 
 .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   color: @color-ToolButton_readOnly;
    border-color: @border-color-ToolButton_readOnly;
    text-shadow: @text-shadow_ToolButton_readOnly;
 }
@@ -298,9 +325,6 @@
    }
 }
 
-.controls-Button__text_viewMode-toolButton.theme_@{themeName}{
-   color: @color_ToggleButton_toolButton-text;
-}
 
 .controls-Button_viewMode-toolButton:active.theme_@{themeName} {
    box-shadow: @box-shadow-ToolButton_activated;
@@ -339,37 +363,30 @@
 }
 
 .controls-Button_style-secondary_viewMode-link.theme_@{themeName} {
-   color: @color_Link_secondary;
    text-decoration: @text-decoration_Link_secondary;
 }
 
 .controls-Button_style-success_viewMode-link.theme_@{themeName} {
-   color: @color_Link_success;
    text-decoration: @text-decoration_Link_success;
 }
 
 .controls-Button_style-danger_viewMode-link.theme_@{themeName} {
-   color: @color_Link_danger;
    text-decoration: @text-decoration_Link_danger;
 }
 
 .controls-Button_style-info_viewMode-link.theme_@{themeName} {
-   color: @color_Link_info;
    text-decoration: @text-decoration_Link_info;
 }
 
 .controls-Button_style-warning_viewMode-link.theme_@{themeName} {
-   color: @color_Link_warning;
    text-decoration: @text-decoration_Link_warning;
 }
 
 .controls-Button_style-primary_viewMode-link.theme_@{themeName} {
-   color: @color_Link_primary;
    text-decoration: @text-decoration_Link_primary;
 }
 
 .controls-Button_style-default_viewMode-link.theme_@{themeName} {
-   color: @color_text_default;
    text-decoration: @text-decoration_Link_default;
 }
 
@@ -377,59 +394,6 @@
    color: @color_Link_magic;
 }
 
-//link active state
-.controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
-   .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
-      color: @color_Link_secondary_hovered;
-   }
-   color: @color_Link_secondary_hovered;
-}
-.controls-Button_style-primary_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_primary_hovered;
-}
-.controls-Button_style-info_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_info_hovered;
-}
-.controls-Button_style-success_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_success_hovered;
-}
-.controls-Button_style-danger_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_danger_hovered;
-}
-.controls-Button_style-warning_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_warning_hovered;
-}
-.controls-Button_style-default_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_default_hovered;
-}
-
-//link hover state
-.ws-is-no-touch {
-   .controls-Button_style-secondary_viewMode-link:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
-         color: @color_Link_secondary_hovered;
-      }
-      color: @color_Link_secondary_hovered;
-   }
-   .controls-Button_style-primary_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_primary_hovered;
-   }
-   .controls-Button_style-info_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_info_hovered;
-   }
-   .controls-Button_style-success_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_success_hovered;
-   }
-   .controls-Button_style-danger_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_danger_hovered;
-   }
-   .controls-Button_style-warning_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_warning_hovered;
-   }
-   .controls-Button_style-default_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_default_hovered;
-   }
-}
 
 .controls-Button_viewMode-button.theme_@{themeName} {
    cursor: pointer;
@@ -446,7 +410,6 @@
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
    cursor: default;
-   color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
    text-shadow: @text-shadow_Button_readOnly;
    user-select: none;
@@ -504,23 +467,6 @@
 
 .controls-Button__text_gap.theme_@{themeName} {
    margin-left: @spacing_Button-between-icon-and-text;
-}
-.ws-is-no-touch {
-   .controls-Label_underline-hovered:hover.theme_@{themeName} {
-      text-decoration: underline;
-   }
-   .controls-Label_underline_color-hovered:hover.theme_@{themeName} {
-      color: @color_Link_secondary_hovered;
-   }
-}
-.controls-Label_underline-hovered:active.theme_@{themeName} {
-   text-decoration: underline;
-}
-.controls-Label_underline_color-hovered:active.theme_@{themeName} {
-   color: @color_Link_secondary_hovered;
-}
-.controls-Label_underline_color-hovered.theme_@{themeName} {
-   text-decoration: underline;
 }
 // перенес в vDom, чтобы не было пересечения со старыми кнопками
 // изменено имя в остальном стили аналогичны

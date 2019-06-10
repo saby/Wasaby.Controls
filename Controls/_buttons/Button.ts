@@ -87,7 +87,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       this._contrastBackground = ActualApi.contrastBackground(options);
       this._transparent = options.transparent; // TODO remove
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
-      this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+      this._fontColorStyle = options.readOnly ? 'readonly' : ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
 
       if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
          if (this._viewMode === 'transparentQuickButton') {

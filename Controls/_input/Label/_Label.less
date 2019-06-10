@@ -70,3 +70,21 @@
    bottom: 0;
    position: absolute;
 }
+
+.ws-is-no-touch {
+   .controls-Label_underline-hovered:hover.theme_@{themeName} {
+      text-decoration: underline;
+   }
+   .controls-Label_underline_color-hovered:hover.theme_@{themeName} {
+      color: @link_hover_text-color;
+   }
+}
+.controls-Label_underline-hovered:active.theme_@{themeName} {
+   text-decoration: underline;
+}
+.controls-Label_underline_color-hovered:active.theme_@{themeName} {
+   color: @link_hover_text-color;
+}
+.controls-Label_underline_color-hovered.theme_@{themeName} {
+   text-decoration: underline;
+}
