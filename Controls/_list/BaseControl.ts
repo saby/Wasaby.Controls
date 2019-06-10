@@ -519,7 +519,7 @@ var _private = {
     },
 
     onScrollShow: function(self) {
-        self._loadOffset = LOAD_TRIGGER_OFFSET;
+        self._loadOffset = self._options.loadOffset;
         self._isScrollShown = true;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -1697,7 +1697,8 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
-        stickyHeader: true
+        stickyHeader: true,
+        loadOffset: LOAD_TRIGGER_OFFSET
     };
 };
 export = BaseControl;
