@@ -1,4 +1,4 @@
-define('Controls-demo/Input/Dropdown//historySourceDropdown',
+define('Controls-demo/Input/Dropdown/historySourceDropdown',
    [
       'Core/Control',
       'Controls/history',
