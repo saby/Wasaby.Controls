@@ -7,7 +7,7 @@ import coreMerge = require('Core/core-merge');
 import CoreClone = require('Core/core-clone');
 
 /**
- * Control dropdown list for filter:View (@link {@link Controls/_filter/Button/View}.
+ * Control dropdown list for {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
