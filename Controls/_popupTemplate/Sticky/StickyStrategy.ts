@@ -149,7 +149,9 @@ interface IPosition {
       },
 
       fixPosition: function(position, targetCoords) {
-         _private._fixBottomPositionForIos(position, targetCoords);
+         if (_private._isMobileIOS()) {
+            _private._fixBottomPositionForIos(position, targetCoords);
+         }
          if (position.bottom) {
             position.bottom = Math.max(position.bottom, 0);
          }
@@ -173,17 +175,15 @@ interface IPosition {
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
             // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
             // only for this case consider a scrollTop
-            if (keyboardHeight === 0) {
-               position.bottom += _private.getTopScroll(targetCoords);
-            } else {
-               let win = _private.getWindow();
-               if ((win.innerHeight + win.scrollY) > win.innerWidth) {
-                  // fix for positioning with keyboard on vertical ios orientation
-                  let dif = win.innerHeight - targetCoords.boundingClientRect.top;
-                  if (position.bottom > dif) {
-                     position.bottom = dif;
-                  }
+            let win = _private.getWindow();
+            if ((win.innerHeight + win.scrollY) > win.innerWidth) {
+               // fix for positioning with keyboard on vertical ios orientation
+               let dif = win.innerHeight - targetCoords.boundingClientRect.top;
+               if (position.bottom > dif) {
+                  position.bottom = dif;
                }
+            } else if (keyboardHeight === 0) {
+               position.bottom += _private.getTopScroll(targetCoords);
             }
          }
       },
@@ -199,10 +199,14 @@ interface IPosition {
       getTopScroll: function(targetCoords) {
          // in portrait landscape sometimes(!) screen.availHeight < innerHeight =>
          // screen.availHeight / innerHeight < 2 incorrect. We expectation what availHeight > innerHeight always.
-         if (window && (window.screen.availHeight / window.innerHeight < 2) && (window.screen.availHeight > window.innerHeight)) {
+         if (_private.considerTopScroll()) {
             return targetCoords.topScroll;
          }
          return 0;
+      },
+
+      considerTopScroll() {
+         return window && (window.screen.availHeight / window.innerHeight < 2) && (window.screen.availHeight > window.innerHeight);
       },
 
       setMaxSizes: function(popupCfg, position) {
