@@ -115,6 +115,7 @@
                 on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                 on:afterEndEdit="_notifyHandler('afterEndEdit')"
                 listModel="{{_listViewModel}}"
+                multiSelectVisibility="{{_options.multiSelectVisibility}}"
                 errorController="{{ __errorController }}"
                 source="{{_sourceController}}"/>
             <Controls._list.ItemActions.ItemActionsControl

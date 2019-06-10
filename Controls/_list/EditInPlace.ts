@@ -406,6 +406,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
     _beforeUpdate: function (newOptions) {
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
+        if (this._editingItemData) {
+            if (this._options.multiSelectVisibility !== newOptions.multiSelectVisibility) {
+                this._setEditingItemData(this._editingItemData.item, newOptions.listModel, newOptions);
+            }
+        }
     },
 
     _afterUpdate: function () {
