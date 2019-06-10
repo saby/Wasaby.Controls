@@ -131,14 +131,14 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             this._options.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
         }
 
-        if (this._options.listModel !== newOptions.listModel) {
-            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
-        }
-
         if (selectionChanged) {
             this._multiselection._selectedKeys = newOptions.selectedKeys;
             this._multiselection._excludedKeys = newOptions.excludedKeys;
             _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+        }
+
+        if (this._options.listModel !== newOptions.listModel) {
+            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
         }
     },
 

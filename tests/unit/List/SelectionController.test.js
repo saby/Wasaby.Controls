@@ -144,7 +144,7 @@ define([
             newCfg.selectedKeys = [3, 4];
             instance._beforeUpdate(newCfg);
 
-            assert.isTrue(instance._options.listModel.updateSelection.withArgs({'3': true, '4': true}).calledOnce);
+            assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
          });
       });
 
