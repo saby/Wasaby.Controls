@@ -8,7 +8,6 @@
                bind:suggestState="_suggestState"
                displayProperty="title"
                searchParam="title"
-               autoDropDown="{{true}}"
                source="{{_suggestSource}}">
             <ws:navigation source="page" view="page">
                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
@@ -31,7 +30,6 @@
                bind:suggestState="_suggestTabsState"
                displayProperty="title"
                searchParam="title"
-               autoDropDown="{{true}}"
                source="{{_suggestTabSource}}">
             <ws:filter currentTab="{{1}}"/>
             <ws:navigation source="page" view="page">
@@ -56,7 +54,6 @@
                bind:suggestState="_suggestWithButtonState"
                displayProperty="title"
                searchParam="title"
-               autoDropDown="{{true}}"
                searchButtonVisible="{{false}}"
                source="{{_suggestTabSource}}">
             <ws:filter currentTab="{{1}}"/>
