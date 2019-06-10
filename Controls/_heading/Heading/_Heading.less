@@ -20,20 +20,12 @@
    display: inline-block;
 }
 
-.controls-Header__caption_size-s_theme_@{themeName} {
-   font-size: @font-size_Heading__caption_size-s;
-}
-
-.controls-Header__caption_size-m_theme_@{themeName} {
-   font-size: @font-size_Heading__caption_size-m;
-}
-
-.controls-Header__caption_size-l_theme_@{themeName} {
-   font-size: @font-size_Heading__caption_size-l;
-}
-
-.controls-Header__caption_size-xl_theme_@{themeName} {
-   font-size: @font-size_Heading__caption_size-xl;
+.controls-Header__caption_theme_@{themeName}_size {
+   @variants: xs,s,m,l,xl,2xl,3xl,4xl,5xl;
+   .for(@variants, { &-@{_item} {
+      font-size: ~"@{font-size_@{_item}}";
+   }
+   });
 }
 
 .controls-Header__caption_style-secondary_theme_@{themeName}, .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
