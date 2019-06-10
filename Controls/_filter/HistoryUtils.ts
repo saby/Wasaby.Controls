@@ -1,4 +1,4 @@
-import {Service as HistoryService, FilterSource as HistorySource} from 'Controls/history';
+import {Service as HistoryService, FilterSource as HistorySource, Constants} from 'Controls/history';
 
 import {Controller as SourceController} from 'Controls/source';
 import entity = require('Types/entity');
@@ -21,6 +21,11 @@ function createHistorySource(historyId) {
    var historySourceData = {
       historyId: historyId,
       pinned: true,
+
+      /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
+         We request one more record, so that the number of records remains equal to 10 */
+      recent: Constants.MAX_HISTORY + 1,
+
       dataLoaded: true
    };
    return new HistorySource({

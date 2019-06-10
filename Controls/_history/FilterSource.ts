@@ -108,14 +108,14 @@ var _private = {
       };
       var maxLength = Constants.MAX_HISTORY - history.pinned.getCount();
       var currentCount = 0;
-      var item, rawData, condition;
+      var item, rawData, isPinned;
 
       chain.factory(history.recent).filter(function (element) {
-         condition = !history.pinned.getRecordById(element.getId());
-         if (condition) {
+         isPinned = history.pinned.getRecordById(element.getId());
+         if (!isPinned) {
             currentCount++;
          }
-         return condition && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
+         return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
       }).value(collection.factory.recordSet, config).forEach(function (element) {
          rawData = {
             d: [
