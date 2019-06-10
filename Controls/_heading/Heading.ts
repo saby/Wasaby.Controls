@@ -2,6 +2,7 @@ import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions} from 'Controls/interface';
+import {IToggleButtonOptions} from "../_toggle/Button";
 
 export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions {
    fontSize?: string;
@@ -28,16 +29,6 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
-   /**
-    * @name Controls/_heading/Heading#size
-    * @cfg {String} Heading size.
-    * @variant s Small text size.
-    * @variant m Medium text size.
-    * @variant l Large text size.
-    * @variant xl Extralarge text size.
-    * @default m
-    */
-
 /**
  * @name Controls/_heading/Heading#fontSize
  * @cfg {String} Heading font-size.
@@ -50,7 +41,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
  * @variant 3xl 3*Extra large text size.
  * @variant 4xl 4*Extra large text size.
  * @variant 5xl 5*Extra large text size.
- * @default m
+ * @default l
  */
 
 
@@ -62,16 +53,26 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @variant info
     * @default primary
     */
-
+const mapFontSize = {'s': 'm', 'm': 'l', 'l': '3xl', 'xl': '4xl'};
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
       protected _theme: string[] = ['Controls/heading'];
-      
+      protected _fontSize: string;
+      private _prepareFontSize(size: string): string {
+           return mapFontSize[size];
+      }
+    protected _beforeMount(options: IHeadingOptions): void {
+          if(options.size){
+              this._fontSize = this._prepareFontSize(options.size);
+          } else {
+              this._fontSize = options.fontSize;
+          }
+    }
       static getDefaultOptions(): object {
          return {
             style: 'secondary',
-            size: 'm',
+            fontSize: 'l',
             theme: 'default'
          };
       }
@@ -88,7 +89,18 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
                'l',
                'm',
                's'
-            ])
+            ]),
+             fontSize: EntityDescriptor(String).oneOf([
+                 'xs',
+                 's',
+                 'm',
+                 'l',
+                 'xl',
+                 '2xl',
+                 '3xl',
+                 '4xl',
+                 '5xl'
+             ])
          };
       }
       '[Controls/_interface/ITooltip]': true;
