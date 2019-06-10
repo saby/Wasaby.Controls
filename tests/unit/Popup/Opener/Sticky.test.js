@@ -122,7 +122,9 @@ define(
             position.bottom = 200;
             StickyStrategy._private.getKeyboardHeight = () => 0;
             StickyStrategy._private.getWindow = () => baseWindowData;
+            StickyStrategy._private.considerTopScroll = () => true;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
+            StickyStrategy._private.considerTopScroll = () => false;
             assert.equal(position.bottom, 210);
          });
 

@@ -199,10 +199,14 @@ interface IPosition {
       getTopScroll: function(targetCoords) {
          // in portrait landscape sometimes(!) screen.availHeight < innerHeight =>
          // screen.availHeight / innerHeight < 2 incorrect. We expectation what availHeight > innerHeight always.
-         if (window && (window.screen.availHeight / window.innerHeight < 2) && (window.screen.availHeight > window.innerHeight)) {
+         if (_private.considerTopScroll()) {
             return targetCoords.topScroll;
          }
          return 0;
+      },
+
+      considerTopScroll() {
+         return window && (window.screen.availHeight / window.innerHeight < 2) && (window.screen.availHeight > window.innerHeight);
       },
 
       setMaxSizes: function(popupCfg, position) {
