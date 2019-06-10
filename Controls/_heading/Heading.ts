@@ -6,6 +6,8 @@ import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions} from 'Controls/int
 export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions {
    fontSize?: string;
    fontColorStyle?: string;
+   size?: string;
+   style?: string;
 }
 
    /**
@@ -58,8 +60,7 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       protected _theme: string[] = ['Controls/heading'];
       protected _fontSize: string;
       protected _fontColorStyle: string;
-
-    protected _beforeMount(options: IHeadingOptions): void {
+      private _prepareOptions(options: IHeadingOptions): void {
           if(options.size){
               this._fontSize = mapFontSize[options.size];
           } else {
@@ -70,10 +71,16 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
           } else {
               this._fontColorStyle = options.fontColorStyle;
           }
+      }
+    protected _beforeMount(options: IHeadingOptions): void {
+          this._prepareOptions(options);
+    }
+    protected _beforeUpdate(options: IHeadingOptions): void {
+        this._prepareOptions(options);
     }
       static getDefaultOptions(): object {
          return {
-            style: 'secondary',
+            fontColorStyle: 'secondary',
             fontSize: 'l',
             theme: 'default'
          };
@@ -81,7 +88,7 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       static getOptionTypes(): object {
          return {
             caption: EntityDescriptor(String),
-            style: EntityDescriptor(String).oneOf([
+             fontColorStyle: EntityDescriptor(String).oneOf([
                'secondary',
                'primary',
                'info'
