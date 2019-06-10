@@ -519,6 +519,7 @@ var _private = {
     },
 
     onScrollShow: function(self) {
+        // ToDo remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
         self._loadOffset = self._options.loadOffset;
         self._isScrollShown = true;
         if (!self._scrollPagingCtr) {

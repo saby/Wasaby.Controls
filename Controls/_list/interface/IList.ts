@@ -146,12 +146,6 @@
  */
 
 /**
- * @name Controls/_list/interface/IList#loadOffset
- * @cfg {Number} Отступ триггера, по которому инициируется загрузка данных (в пикселях).
- * @default 100
- */
-
-/**
  * @name Controls/_list/interface/IList#markerVisibility
  * @cfg {String} Determines when marker is visible.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
