@@ -205,6 +205,9 @@ var ListView = BaseControl.extend(
             this._notify('itemMouseMove', [itemData, event]);
         },
 
+        _onItemWheel: function(event) {
+        },
+
         _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
         },
