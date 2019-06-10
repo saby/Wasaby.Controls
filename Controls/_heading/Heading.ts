@@ -1,8 +1,7 @@
 import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_heading/Heading/Heading');
+import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions} from 'Controls/interface';
-import {ICheckable} from "../_toggle/interface/ICheckable";
 
 export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions {
    fontSize?: string;
@@ -64,10 +63,18 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @default primary
     */
 
-   class Header extends Control<IHeadingOptions> implements ITooltip, ICaption {
-      protected _template: TemplateFunction = template;
+class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
+      // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+      protected _template: TemplateFunction = headingTemplate;
       protected _theme: string[] = ['Controls/heading'];
 
+       private _prepareFontSize(value: boolean): void {
+           if (value) {
+               this._icon = 'icon-AccordionArrowUp ';
+           } else {
+               this._icon = 'icon-AccordionArrowDown ';
+           }
+       }
       static getDefaultOptions(): object {
          return {
             style: 'secondary',
@@ -91,6 +98,8 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
             ])
          };
       }
+      '[Controls/_interface/ITooltip]': true;
+      '[Controls/_interface/ICaption]': true;
    }
 
 export default Header;
