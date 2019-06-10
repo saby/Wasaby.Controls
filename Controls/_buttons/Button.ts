@@ -14,6 +14,8 @@ import {ITooltip, ITooltipOptions,
 export interface IButtonOptions extends IControlOptions, IHrefOptions,
                                  ICaptionOptions, IIconOptions, IIconStyleOptions, ITooltipOptions, IButtonOptions {
    contrastBackground?: boolean;
+   buttonStyle?: string;
+   fontColorStyle?: string;
 }
 
 /**
@@ -64,6 +66,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    // Называть _style нельзя, так как это состояние используется для темизации
    private _buttonStyle: string;
    private _transparent: boolean;
+   private _fontColorStyle: string;
    private _contrastBackground: boolean;
    private _viewMode: string;
    private _state: string;
@@ -80,10 +83,12 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    private cssStyleGeneration(options: IButtonOptions): void {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
 
-      this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
+      this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle);
       this._contrastBackground = ActualApi.contrastBackground(options);
-      this._transparent = options.transparent;
+      this._transparent = options.transparent; // TODO remove
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+      this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+
       if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
          if (this._viewMode === 'transparentQuickButton') {
             this._transparent = true;

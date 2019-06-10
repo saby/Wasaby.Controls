@@ -147,6 +147,37 @@ const ActualApi = {
       } else {
          return !options.transparent;
       }
+   },
+   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string): string {
+      if (optionButtonStyle) {
+         return optionButtonStyle
+      } else {
+         if (calcStyle) {
+            return calcStyle;
+         } else {
+            return optionStyle;
+         }
+      }
+   },
+   fontColorStyle(calcStyle: string, calcViewMode: string, optionFontColorStyle: string): string {
+      if (optionFontColorStyle) {
+         return optionFontColorStyle;
+      } else {
+         // для ссылок старое значение опции style влияло на цвет текста
+         if (calcViewMode === 'link') {
+            switch (calcStyle) {
+               case 'primary': return 'primary'; break;
+               case 'success': return 'success'; break;
+               case 'danger': return 'danger'; break;
+               case 'warning': return 'warning'; break;
+               case 'info': return 'primary'; break;
+               case 'secondary': return 'link'; break;
+               case 'default': return 'default'; break;
+            }
+         } else {
+            return 'default';
+         }
+      }
    }
 };
 export default ActualApi;
