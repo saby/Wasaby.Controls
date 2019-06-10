@@ -165,6 +165,11 @@ var Selection = cExtend.extend({
       return res;
    },
 
+   setListModel: function(listModel) {
+      this._options.listModel = listModel;
+   },
+
+
    _getSelectionStatus: function(item) {
       var itemId = item.get(this._options.keyProperty);
       return this._selectedKeys[0] === null && this._excludedKeys.indexOf(itemId) === -1 || this._selectedKeys.indexOf(itemId) !== -1;
