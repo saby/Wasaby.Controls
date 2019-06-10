@@ -3,7 +3,7 @@ import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
@@ -932,7 +932,7 @@ var
 
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
-            
+
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {

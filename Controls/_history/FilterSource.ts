@@ -7,7 +7,7 @@ import Constants = require('Controls/_history/Constants');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import entity = require('Types/entity');
-import cEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Serializer = require('Core/Serializer');
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];

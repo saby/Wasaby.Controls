@@ -4,7 +4,7 @@ import template = require('wml!Controls/_search/Controller');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
 import _SearchController from './_SearchController';
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
 

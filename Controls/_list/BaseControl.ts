@@ -6,7 +6,7 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import {Controller as SourceController} from 'Controls/source';
-import isEqualObject = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');

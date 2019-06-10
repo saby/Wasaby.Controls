@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');

@@ -3,7 +3,7 @@ import template = require('wml!Controls/_filter/Controller');
 import Deferred = require('Core/Deferred');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_filter/HistoryUtils');
 import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
