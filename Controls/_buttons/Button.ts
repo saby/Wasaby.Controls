@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_buttons/Button');
-import classesUtil from './classesUtil';
-import iconsUtil from './iconsUtil';
+import ActualApi from './ActualApi';
 // @ts-ignore
 import { IoC } from 'Env/Env';
 
@@ -67,7 +66,7 @@ class Button extends Control {
       return icon.replace(this._regExp, '');
    }
    private cssStyleGeneration(options) {
-      const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
+      const currentButtonClass = ActualApi.styleToViewMode(options.style);
 
       this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
       this._transparent = options.transparent;
@@ -84,7 +83,7 @@ class Button extends Control {
       this._stringCaption = typeof options.caption === 'string';
       this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
       this._iconSize = options.iconSize;
-      this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
+      this._iconStyle = currentButtonClass.buttonAdd ? 'default' : ActualApi.iconStyleTransformation(options.iconStyle);
    }
 
    _beforeMount(options) {
