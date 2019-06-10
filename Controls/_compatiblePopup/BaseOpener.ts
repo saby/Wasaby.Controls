@@ -238,6 +238,14 @@ const BaseOpener = {
             }
          }
       }
+
+      // Если вдомное окно открывается из PopupMixin, нужно вычислить zindex вручную
+      if (cfg.opener && cfg.opener._container) {
+         let zIndex = cfg.opener._container.closest('.controls-FloatArea').css('z-index');
+         if (zIndex) {
+            cfg.zIndex = parseInt(zIndex, 10) + 10;
+         }
+      }
    },
 
    _preparePopupCfgFromOldToNew: function(cfg) {
@@ -441,6 +449,8 @@ const BaseOpener = {
       if (cfg.hasOwnProperty('closeOnOutsideClick')) {
          newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
+      } else {
+         newCfg.dialogOptions.autoHide = false; // значение по умолчанию в вдом контроле
       }
 
       if (cfg.hasOwnProperty('closeChildWindows')) {

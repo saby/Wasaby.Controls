@@ -8,133 +8,129 @@ import { Collection, CollectionItem } from 'Types/display'
  */
 
 
-type DItem = CollectionItem<unknown>;
-type Display = Collection<unknown, DItem>;
-
 
 /**
- * @typedef {String} ResultsPosition
- * @variant top Результаты выводятся сверху таблицы.
- * @variant bottom Результаты выводятся снизу таблицы.
- */
-type ResultsPosition = 'top' | 'bottom';
-
-
-/**
- * @typedef {Object} HasMoreStorage
+ * @typedef {Object} HasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
  */
 type HasMoreStorage = Record<string, boolean>;
 
+/**
+ * @typedef {Array<string>} ExpandedItems Массив, содержащий идентификаторы раскрытых узлов дерева.
+ */
+type ExpandedItems = Array<string>;
 
 /**
- * @typedef {Array} ExpandedItems
+ * @typedef {Object} ItemId Объект расширяющий базовую конфигурацию для получения индекса записи по идентификатору элемента таблицы.
+ * @param {string} id Идентификатор элемента таблицы.
  */
-type ExpandedItems = Array;
+type ItemId = { id: string };
+
+/**
+ * @typedef {Object} DisplayItem Объект расширяющий базовую конфигурацию для получения индекса записи по элементу проекции.
+ * @param {'Types/display:CollectionItem'} item Элемент проекции таблицы.
+ */
+type DisplayItem = { item: CollectionItem<unknown> };
+
+/**
+ * @typedef {Object} DisplayItemIndex Объект расширяющий базовую конфигурацию для получения индекса записи по индексу элемента в проекции.
+ * @param {number} index Индекс элемента в проекции.
+ */
+type DisplayItemIndex = { index: number }
+
+/**
+ * @typedef {Object} HasEmptyTemplate Объект расширяющий базовую конфигурацию, необходимый для расчета номера строки подвала и итогов таблицы.
+ * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
+ */
+type HasEmptyTemplate = { hasEmptyTemplate: boolean };
+
+/**
+ * @typedef {Object} IBaseTreeGridRowIndexOptions Конфигурационый объект.
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в дереве.
+ * @param {"top" | "bottom" | null} resultsPosition Позиция результатов в дереве. Null, если результаты не выводятся.
+ * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, представляющий иерархические отношения дерева.
+ * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
+ * @param {ExpandedItems} expandedItems Массив, содержащий идентификаторы раскрытых узлов дерева.
+ * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
+ */
+interface IBaseTreeGridRowIndexOptions {
+    display: Collection<unknown, CollectionItem<unknown>>
+    hasHeader: boolean
+    resultsPosition?: 'top' | 'bottom'
+    hierarchyRelation: relation.Hierarchy
+    hasMoreStorage: HasMoreStorage
+    expandedItems: ExpandedItems
+    hasNodeFooterTemplate: boolean
+}
+
+/**
+ * @typedef {IBaseTreeGridRowIndexOptions & (ItemId|DisplayItem|DisplayItemIndex|HasEmptyTemplate)} TreeGridRowIndexOptions Конфигурационый объект.
+ */
+type TreeGridRowIndexOptions<T = ItemId|DisplayItem|DisplayItemIndex|HasEmptyTemplate> = IBaseTreeGridRowIndexOptions & T;
+
 
 
 /**
  * Возвращает номер строки в списке для элемента с указанным id.
  *
- * @param {string} id Ключ элемента списка.
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
- * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
- * @param {ExpandedItems} expandedItems Массив, содержащий идентификаторы раскрытых узлов дерева.
- * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
- * @return {Number}
+ * @param {TreeGridRowIndexOptions<ItemId>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для элемента с указанным id.
  */
-function getIndexById(id: string,
-                      display: Display,
-                      hasHeader: boolean = false,
-                      resultsPosition: ResultsPosition = null,
-                      hierarchyRelation: relation.Hierarchy,
-                      hasMoreStorage: HasMoreStorage,
-                      expandedItems: ExpandedItems,
-                      hasNodeFooterTemplate: boolean): number {
+function getIndexById(cfg: TreeGridRowIndexOptions<ItemId>): number {
 
-    let idProperty = display.getIdProperty() || display.getCollection().getIdProperty(),
-        item = <DItem>ItemsUtil.getDisplayItemById(display, id, idProperty),
-        displayIndex = display.getIndex(item);
+    let idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty(),
+        item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
+        index = cfg.display.getIndex(item);
 
-    return getItemRealIndex(display, item, id, displayIndex, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage, expandedItems, hasNodeFooterTemplate);
+    return getItemRealIndex({item, index, ...cfg});
 }
+
 
 
 /**
  * Возвращает номер строки в списке для указанного элемента.
  *
- * @param {'Types/display:CollectionItem'} item Элемент списка.
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
- * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
- * @param {ExpandedItems} expandedItems Массив, содержащий идентификаторы раскрытых узлов дерева.
- * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
- * @return {Number}
+ * @param {TreeGridRowIndexOptions<DisplayItem>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для элемента с указанным id.
  */
-function getIndexByItem(item: DItem,
-                        display: Display,
-                        hasHeader: boolean = false,
-                        resultsPosition: ResultsPosition = null,
-                        hierarchyRelation: relation.Hierarchy,
-                        hasMoreStorage: HasMoreStorage = {},
-                        expandedItems: ExpandedItems = [],
-                        hasNodeFooterTemplate: boolean): number {
+function getIndexByItem(cfg: TreeGridRowIndexOptions<DisplayItem>): number {
 
-    let id = item.getContents().getId(),
-        index = display.getIndex(item);
+    let id = cfg.item.getContents().getId(),
+        index = cfg.display.getIndex(cfg.item);
 
-    return getItemRealIndex(display, item, id, index, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage, expandedItems, hasNodeFooterTemplate);
+    return getItemRealIndex({id, index, ...cfg});
 }
+
 
 
 /**
  * Возвращает номер строки в списке для элемента с указанным индексом в проекции.
  *
- * @param {Number} index Индекс элемента списка в проекции.
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {'Types/entity:relation.Hierarchy'} hierarchyRelation Объект, предоставляющий иерархические отношения дерева.
- * @param {HasMoreStorage} hasMoreStorage Объект, содержащий флаги наличия у узлов незагруженных дочерних записей(нужно ли показывать кнопку "Ещё").
- * @param {ExpandedItems} expandedItems Массив, содержащий идентификаторы раскрытых узлов дерева.
- * @param {Boolean} hasNodeFooterTemplate Флаг, указывающий нужно ли выводить подвалы для узлов.
- * @return {Number}
+ * @param {TreeGridRowIndexOptions<DisplayItemIndex>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для элемента с указанным индексом в проекции.
  */
-function getIndexByDisplayIndex(index: number,
-                                display: Display,
-                                hasHeader: boolean = false,
-                                resultsPosition: ResultsPosition = null,
-                                hierarchyRelation: relation.Hierarchy,
-                                hasMoreStorage: HasMoreStorage = {},
-                                expandedItems: ExpandedItems = [],
-                                hasNodeFooterTemplate: boolean): number {
-
-    let item = display.at(index).getContents(),
+function getIndexByDisplayIndex(cfg: TreeGridRowIndexOptions<DisplayItemIndex>): number {
+    
+    let item = cfg.display.at(cfg.index).getContents(),
         id = item.getId ? item.getId() : item;
-
-    return getItemRealIndex(display, item, id, index, hasHeader, resultsPosition, hierarchyRelation, hasMoreStorage, expandedItems, hasNodeFooterTemplate);
+    
+    return getItemRealIndex({item, id, ...cfg});
 }
+
 
 
 /**
  * Возвращает номер строки в списке для строки результатов.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
- * @return {Number}
+ * @param {TreeGridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для строки результатов.
  */
-function getResultsIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean) {
-    let index = hasHeader ? 1 : 0;
-
-    if (resultsPosition === "bottom") {
-        let itemsCount = display.getCount();
-
+function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
+    let index = cfg.hasHeader ? 1 : 0;
+    
+    if (cfg.resultsPosition === "bottom") {
+        let itemsCount = cfg.display.getCount();
+        
         if (itemsCount) {
             // Чтобы ради подвала снова не считать индекс последнего элемента на экране,
             // который кстати сначала нужно найти, просто берем общее количество элементов
@@ -142,55 +138,67 @@ function getResultsIndex(display: Display, hasHeader: boolean, resultsPosition: 
             // Магическая вещь. Может когда-нибудь сломаться, но пока работает
             index += itemsCount * 2;
         } else {
-            index += hasEmptyTemplate ? 1 : 0;
+            index += cfg.hasEmptyTemplate ? 1 : 0;
         }
     }
-
+    
     return index;
 }
+
 
 
 /**
  * Возвращает номер строки в списке для строки с подвалом.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
+ * @param {TreeGridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
  * @return {Number}
  */
-function getFooterIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean): number {
+function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number {
     let
-        hasResults = !!resultsPosition,
-        itemsCount = display.getCount(),
+        hasResults = !!cfg.resultsPosition,
+        itemsCount = cfg.display.getCount(),
         index = 0;
-
-    index += hasHeader ? 1 : 0;
+    
+    index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
-
+    
     if (itemsCount) {
         index += itemsCount * 2;
     } else {
-        index += hasEmptyTemplate ? 1 : 0;
+        index += cfg.hasEmptyTemplate ? 1 : 0;
     }
-
+    
     return index;
 }
 
+
 /**
- * Возвращиет отступ сверху для первой записи списка
+ * Возвращиет отступ сверху для первой записи списка.
+ *
+ * @param {TreeGridRowIndexOptions.hasHeader} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {TreeGridRowIndexOptions.resultsPosition} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @return {Number} Отступ сверху для первой записи списка
  */
-function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
+function getTopOffset(hasHeader: TreeGridRowIndexOptions["hasHeader"], resultsPosition: TreeGridRowIndexOptions["resultsPosition"] = null): number {
     let
         topOffset = 0;
-
+    
     topOffset += hasHeader ? 1 : 0;
     topOffset += resultsPosition === "top" ? 1 : 0;
-
+    
     return topOffset;
 }
 
+
 export {
+    ItemId,
+    DisplayItem,
+    DisplayItemIndex,
+    HasEmptyTemplate,
+    
+    TreeGridRowIndexOptions,
+    IBaseTreeGridRowIndexOptions,
+    
     getIndexById,
     getIndexByItem,
     getIndexByDisplayIndex,
@@ -207,97 +215,65 @@ export {
  * Функция расчета номера строки в списке для заданного элемента.
  *
  * @private
+ * @param {TreeGridRowIndexOptions<DisplayItem & DisplayItemIndex & ItemId>} cfg Конфигурационый объект.
+ * @return {Number} Отступ сверху для первой записи списка
  */
-function getItemRealIndex(display: Display,
-                          item: DItem,
-                          itemId: string,
-                          displayIndex: number,
-                          hasHeader: boolean,
-                          resultsPosition: ResultsPosition = null,
-                          hierarchyRelation: relation.Hierarchy,
-                          hasMoreStorage: HasMoreStorage,
-                          expandedItems: ExpandedItems,
-                          hasNodeFooterTemplate: boolean): number {
-
-    hasMoreStorage = hasMoreStorage || {};
-    expandedItems = expandedItems || [];
-
-    let realIndex = displayIndex + getTopOffset(hasHeader, resultsPosition);
-
-    if (display.getCount() === 1) {
+function getItemRealIndex(cfg: TreeGridRowIndexOptions<DisplayItem & DisplayItemIndex & ItemId>): number {
+    
+    
+    let realIndex = cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition);
+    
+    if (cfg.display.getCount() === 1) {
         return realIndex;
     } else {
-        realIndex += calcNodeFootersBeforeItem(display, itemId, displayIndex, hierarchyRelation, hasMoreStorage, expandedItems, hasNodeFooterTemplate);
+        realIndex += calcNodeFootersBeforeItem(cfg);
     }
-
+    
     return realIndex;
 }
 
 
 
 /**
- * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
+ * Возвращает количество всех видимых подвалов узлов перед(выше) заданным элементом.
  *
+ * Формирует массив, хранящий ключи всех элементов, у которых есть подвал и находит количество подвалов,
+ * которые рендерятся выше элемента с указанным id.
  * @private
  */
-function calcNodeFootersBeforeItem(display: Display,
-                                   itemId: string,
-                                   itemIndex: number,
-                                   hierarchyRelation: relation.Hierarchy,
-                                   hasMoreStorage: HasMoreStorage,
-                                   expandedItems: ExpandedItems,
-                                   hasNodeFooterTemplate: boolean): number {
+function calcNodeFootersBeforeItem(cfg: TreeGridRowIndexOptions<ItemId & DisplayItemIndex & DisplayItem>): number {
 
     let
         count = 0,
-        nasNodeFootersStorage: Record<string, boolean> = {},
-        elementsChildCountStorage: Record<string, number> = {},
-        idProperty: string = display.getIdProperty() || display.getCollection().getIdProperty();
-
-    if (hasNodeFooterTemplate) {
-        for (let i in expandedItems) {
-            let id = expandedItems[i];
-            if (id !== itemId) {
-                let
-                    expandedItem = ItemsUtil.getDisplayItemById(display, id, idProperty),
-                    expandedItemIndex = display.getIndex(expandedItem);
-
-                if (expandedItemIndex >= itemIndex) {
-                    nasNodeFootersStorage[id] = false;
-                } else {
-                    let childrenCount = getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems);
-                    elementsChildCountStorage[id] = childrenCount;
-                    nasNodeFootersStorage[id] = (itemIndex > expandedItemIndex + childrenCount)
-                }
+        needToCheckRealFooterIndex = Object.keys(cfg.hasMoreStorage).filter((id)=>cfg.hasMoreStorage[id] === true),
+        idProperty: string = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty();
+    
+    
+    if(cfg.hasNodeFooterTemplate) {
+        cfg.expandedItems.forEach((expandedItemId) => {
+            if (needToCheckRealFooterIndex.indexOf(expandedItemId) === -1) {
+                needToCheckRealFooterIndex.push(expandedItemId);
             }
-        }
+        });
     }
-
-    for (let id in hasMoreStorage) {
-
-        // Не считаю подвалы с кнопкой еще, если
-        //      - узлу не надо рисовать подвал с кнопкой "Ещё", т.к. записей больше нет;
-        //      - раскрытый узел - это узел для которого считаем номер строки;
-        //      - узел и так раскрыт, а в дереве установлен шаблон для подвала узлов
-
-        if (id !== itemId && hasMoreStorage[id] === true && !nasNodeFootersStorage.hasOwnProperty(id)) {
-
+    
+    needToCheckRealFooterIndex.forEach((itemId)=>{
+        if (itemId !== cfg.id) {
             let
-                item = ItemsUtil.getDisplayItemById(display, id, idProperty),
-                childrenCount;
-
-            if (id in elementsChildCountStorage) {
-                childrenCount = elementsChildCountStorage[id]
-            } else {
-                childrenCount = getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems);
+                expandedItem = ItemsUtil.getDisplayItemById(cfg.display, itemId, idProperty),
+                expandedItemIndex = cfg.display.getIndex(expandedItem);
+        
+            if (expandedItemIndex < cfg.index) {
+                let childrenCount = getChildrenOnDisplayCount(itemId, cfg.display, cfg.hierarchyRelation, cfg.expandedItems);
+                count += (cfg.index > expandedItemIndex + childrenCount) ? 1 : 0;
             }
-
-            nasNodeFootersStorage[id] = (itemIndex > (display.getIndex(item) + childrenCount));
         }
-    }
+    });
+    
 
-    return count + countTrue(nasNodeFootersStorage);
+    return count;
 }
+
 
 /**
  * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
@@ -319,18 +295,6 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
     }
 
     return count;
-}
-
-
-/**
- * Возвращает количество всех видимых подвалов узлов перед("выше") заданным элементом.
- *
- * @private
- */
-function countTrue(obj: Record<string, boolean> = {}): number {
-    return Object.keys(obj).reduce((acc, key) => {
-        return acc + (obj[key] ? 1 : 0);
-    }, 0);
 }
 
 // endregion

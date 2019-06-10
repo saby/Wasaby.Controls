@@ -25,7 +25,7 @@
                         text="{[Все]}"
                         on:click="_openPanel()"/>
       </ws:if>
-      <ws:for data="index, item in _filterSource">
+      <ws:for data="index, item in _source">
          <ws:if data="{{_displayText[item.name].text}}">
                <ws:partial template="textTemplate"
                            text="{{_displayText[item.name].text}}"

@@ -2,11 +2,13 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/CheckboxGroup/CheckboxGroup');
 import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate');
 import defaultItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
-import {Controller as SourceController} from "../source";
-import {isEqual} from "Types/object";
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ICrud} from 'Types/source';
-import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IToggleGroup, IToggleGroupOptions} from 'Controls/interface';
+import {ICrudPlus} from 'Types/source';
+import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
+import {ISource, ISourceOptions, IMultiSelectable,
+   IMultiSelectableOptions, IHierarchy, IHierarchyOptions} from 'Controls/interface';
 
 /**
  * Controls are designed to give users a multichoice among two or more settings.
@@ -24,11 +26,12 @@ import {ISource, ISourceOptions, IMultiSelectable, IMultiSelectableOptions, IHie
  * @demo Controls-demo/Checkbox/Group
  */
 
-export interface ICheckboxGroupOptions extends IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
+export interface ICheckboxGroupOptions extends
+   IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
     direction?: string;
 }
 
-class CheckboxGroup extends Control<IControlOptions> {
+class CheckboxGroup extends Control<ICheckboxGroupOptions> {
     protected _template: TemplateFunction = template;
     protected _groupTemplate: Function = groupTemplate;
     protected _defaultItemTemplate: Function = defaultItemTemplate;
@@ -38,9 +41,9 @@ class CheckboxGroup extends Control<IControlOptions> {
     protected _triStateKeys: number[]|string[];
     protected _groups: object;
 
-    protected _theme: Array<string> = ['Controls/toggle'];
+    protected _theme: string[] = ['Controls/toggle'];
 
-    protected _beforeMount(options, context, receivedState) {
+    protected _beforeMount(options: ICheckboxGroupOptions, context, receivedState): void {
         this._isSelected = this._isSelected.bind(this);
         if (receivedState) {
             this._items = receivedState;
@@ -49,7 +52,7 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    protected _beforeUpdate(newOptions) {
+    protected _beforeUpdate(newOptions: ICheckboxGroupOptions): void {
         var self = this;
         if (newOptions.source && newOptions.source !== this._options.source) {
             return this._initItems(newOptions.source).addCallback(function(items) {
@@ -61,8 +64,8 @@ class CheckboxGroup extends Control<IControlOptions> {
         }
     }
 
-    private _initItems(source: ICrud): any {
-        let self = this;
+    private _initItems(source: ICrudPlus): any {
+        const self = this;
         self._sourceController = new SourceController({
             source: source
         });

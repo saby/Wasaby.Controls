@@ -3,7 +3,7 @@ import {GridLayoutUtil} from 'Controls/list'
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset
+    getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
 
@@ -200,30 +200,24 @@ var
         _getRowIndexHelper() {
             let
                 self = this,
-                display = this.getDisplay(),
-                hasHeader = !!this.getHeader(),
-                resultsPosition = this.getResultsPosition(),
+                cfg: IBaseTreeGridRowIndexOptions = {
+                    display: this.getDisplay(),
+                    hasHeader: !!this.getHeader(),
+                    resultsPosition: this.getResultsPosition(),
+                    hierarchyRelation: self._model.getHierarchyRelation(),
+                    hasMoreStorage: self._model.getHasMoreStorage() || {},
+                    expandedItems: self._model.getExpandedItems() || [],
+                    hasNodeFooterTemplate: !!self._model.getNodeFooterTemplate()
+                },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
-            function getArgsForRowIndexUtil(unicArgs) {
-                return [unicArgs].concat([
-                    display,
-                    hasHeader,
-                    resultsPosition,
-                    self._model.getHierarchyRelation(),
-                    self._model.getHasMoreStorage(),
-                    self._model.getExpandedItems(),
-                    !!self._model.getNodeFooterTemplate()
-                ]);
-            }
-
             return {
-                getIndexByItem: (item) => getIndexByItem.apply(null, getArgsForRowIndexUtil(item)),
-                getIndexById: (id) => getIndexById.apply(null, getArgsForRowIndexUtil(id)),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex.apply(null, getArgsForRowIndexUtil(index)),
-                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
+                getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
+                getIndexById: (id) => getIndexById({id, ...cfg}),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
+                getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
+                getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition)
             };
         }
     });

@@ -70,7 +70,7 @@ define(
          ];
 
          let defaultConfig = {
-           filterSource: defaultSource
+           source: defaultSource
          };
 
          let getView = function (config) {
@@ -136,8 +136,8 @@ define(
             };
 
             let newConfig = Clone(defaultConfig);
-            newConfig.filterSource[0].value = 1;
-            newConfig.filterSource[0].editorOptions.source = new sourceLib.Memory({
+            newConfig.source[0].value = 1;
+            newConfig.source[0].editorOptions.source = new sourceLib.Memory({
                idProperty: 'id',
                data: defaultItems[0]
             });
@@ -157,7 +157,7 @@ define(
             };
             view._container = {};
             view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
-            view._filterSource = defaultConfig.filterSource;
+            view._source = defaultConfig.source;
 
             view._openDetailPanel();
 
@@ -176,7 +176,7 @@ define(
             };
             view._container = {};
             view._options.panelTemplateName = 'panelTemplateName.wml';
-            view._filterSource = defaultConfig.filterSource;
+            view._source = defaultConfig.source;
             view._configs = {
                document: {
                   items: Clone(defaultItems[0]),
@@ -215,13 +215,13 @@ define(
 
          it('_isFastReseted', function() {
             let view = getView(defaultConfig);
-            view._filterSource = defaultConfig.filterSource;
+            view._source = defaultConfig.source;
 
             let isFastReseted = view._isFastReseted();
             assert.isFalse(isFastReseted);
 
-            view._filterSource = Clone(defaultConfig.filterSource);
-            view._filterSource[1].value = view._filterSource[1].resetValue;
+            view._source = Clone(defaultConfig.source);
+            view._source[1].value = view._source[1].resetValue;
             isFastReseted = view._isFastReseted();
             assert.isTrue(isFastReseted);
          });
@@ -241,7 +241,7 @@ define(
               }
             };
             view._displayText = {};
-            view._filterSource = Clone(defaultConfig.filterSource);
+            view._source = Clone(defaultConfig.source);
             view._configs = {
                document: {
                   items: Clone(defaultItems[0]),
@@ -253,13 +253,13 @@ define(
                   keyProperty: 'id',
                   multiSelect: true}
             };
-            let item = view._filterSource[1];
+            let item = view._source[1];
             view._reset('clearClick', item);
             assert.deepStrictEqual(item.value, [null]);
             assert.isTrue(closed);
 
             isOpened = false;
-            item = view._filterSource[1];
+            item = view._source[1];
             view._reset('clearClick', item);
             assert.deepStrictEqual(item.value, [null]);
             assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
@@ -281,7 +281,7 @@ define(
                }
             };
             view._displayText = {};
-            view._filterSource = Clone(defaultConfig.filterSource);
+            view._source = Clone(defaultConfig.source);
             view._configs = {
                document: {
                   items: Clone(defaultItems[0]),
@@ -295,7 +295,7 @@ define(
             };
             view._resetFilterText();
             assert.isTrue(closed);
-            assert.strictEqual(view._filterSource[2].value, '');
+            assert.strictEqual(view._source[2].value, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
          });
@@ -305,7 +305,7 @@ define(
             beforeEach(function() {
                view = getView(defaultConfig);
                view._displayText = {};
-               view._filterSource = Clone(defaultConfig.filterSource);
+               view._source = Clone(defaultConfig.source);
                view._configs = {
                   document: {
                      items: Clone(defaultItems[0]),
@@ -335,7 +335,7 @@ define(
                   selectedKeys: [2]
                };
                view._resultHandler('resultEvent', eventResult);
-               assert.deepStrictEqual(view._filterSource[1].value, [2]);
+               assert.deepStrictEqual(view._source[1].value, [2]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In progress', title: 'In progress', hasMoreText: ''}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [2]});
             });
@@ -352,7 +352,7 @@ define(
                   selectedKeys: { state: [1, 2] }
                };
                view._resultHandler('resultEvent', eventResult);
-               assert.deepStrictEqual(view._filterSource[1].value, [1, 2]);
+               assert.deepStrictEqual(view._source[1].value, [1, 2]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state, In progress', hasMoreText: ', еще 1'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [1, 2]});
             });
@@ -378,7 +378,7 @@ define(
                   data: newItems
                };
                view._resultHandler('resultEvent', eventResult);
-               assert.deepStrictEqual(view._filterSource[1].value, [3, 20, 28]);
+               assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
@@ -397,7 +397,7 @@ define(
                         {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}]
                };
                view._resultHandler('resultEvent', eventResult);
-               assert.deepStrictEqual(view._filterSource[1].value, 'Sander123');
+               assert.deepStrictEqual(view._source[1].value, 'Sander123');
                assert.deepStrictEqual(filterChanged, {'sender': 'Sander123'});
             });
 
@@ -418,7 +418,7 @@ define(
                });
                view._idOpenSelector = 'state';
                view._onSelectorTemplateResult('resultEvent', newItems);
-               assert.deepStrictEqual(view._filterSource[1].value, [3, 20, 28]);
+               assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });

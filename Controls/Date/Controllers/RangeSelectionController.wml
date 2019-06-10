@@ -1,2 +1,0 @@
-// Created in 19.400
-<ws:partial template="wml!Controls/_dateRange/Controllers/RangeSelectionController" scope="{{_options}}" />
