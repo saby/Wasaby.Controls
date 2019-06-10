@@ -15,8 +15,8 @@
                           mode="stackable"
                           fixedZIndex="{{currentResultsColumn.zIndex}}"
                           isResultsColumn="{{true}}"
-                         style="top:{{listModel.headerHeight}}px;"
-                         offsetTop="{{currentResultsColumn.stickyTop}}"
+                          style="top:{{listModel.headerHeight}}px;"
+                          offsetTop="{{listModel.headerHeight}}"
 
    >
       <ws:partial template="cellContent"/>
@@ -61,12 +61,11 @@
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
-<Controls.scroll:Group
-        height="{{listModel.headerHeight}}"
->
+<Controls.scroll:Group>
    <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
    <ws:partial template="templateChooser" temp="{{ listModel.getVersion() }}"/>
-</Controls.scroll:Group>
+</Controls.scroll:Group
+    >
 </ws:if>
 <ws:else>
 <ws:partial template="templateChooser"/>

@@ -182,6 +182,8 @@ var
         _getGridTemplateColumns: _private.getGridTemplateColumns,
         _itemsContainerForPartialSupport: null,
 
+        _cashOffset: null,
+
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = _private.chooseGridTemplate();
@@ -197,10 +199,11 @@ var
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
         },
 
+
         _beforeUpdate: function(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
-
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
                 if (!Env.detection.isNotFullGridSupport) {
@@ -228,6 +231,7 @@ var
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
             }
+
         },
 
         // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
@@ -272,6 +276,54 @@ var
             } else {
                 return GridView.superclass.getItemsContainer.apply(this, arguments);
             }
+        },
+
+        _beforePaint: function() {
+            if (this._options.header) {
+                console.log('BEFOREPAINT', this._options.header);
+                const newHeader = this._setHeaderWithHeight();
+                console.log('newHeaderPOSLEBP', newHeader);
+                this._listModel.setHeaderCellMinHeight(newHeader);
+            }
+        },
+        _setHeaderWithHeight: function() {
+            let resultOffset = 0,
+                maxOffset = {
+                    offset: 0,
+                    height: 0
+                };
+            const headerElem = this._container.getElementsByClassName('controls-Grid__header')[0];
+            const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            const newColumns = this._options.header.map((cur, i) => {
+                if (cur.startRow && cur.endRow) {
+                    const curEl = headerElem.querySelector(
+                        `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`)
+                    const height = curEl.getBoundingClientRect().height;
+                    const offset = curEl.offsetTop;
+                    if (offset > maxOffset.offset) {
+                        maxOffset = {
+                            offset,
+                            height,
+                        };
+                    }
+                    return {
+                        ...cur,
+                        offsetTop: offset,
+                        height,
+                    };
+                }
+                const curElHeight = headerElem.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height
+                if (curElHeight > resultOffset) {
+                    resultOffset = curElHeight;
+                }
+                return {
+                    ...cur,
+                };
+            });
+            if (resultOffset === 0 && this._listModel.getResultsPosition() === 'top') {
+                resultOffset = maxOffset.offset + maxOffset.height;
+            }
+            return [newColumns, resultOffset];
         },
 
         _afterMount: function() {

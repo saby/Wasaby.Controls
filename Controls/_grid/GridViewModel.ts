@@ -7,11 +7,73 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset
+    getResultsIndex, getTopOffset, getRowsArray, getMaxEndRow
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
+
+const isEqual = function (value, other) {
+
+    // Get the value type
+    var type = Object.prototype.toString.call(value);
+
+    // If the two objects are not the same type, return false
+    if (type !== Object.prototype.toString.call(other)) return false;
+
+    // If items are not an object or array, return false
+    if (['[object Array]', '[object Object]'].indexOf(type) < 0) return false;
+
+    // Compare the length of the length of the two items
+    var valueLen = type === '[object Array]' ? value.length : Object.keys(value).length;
+    var otherLen = type === '[object Array]' ? other.length : Object.keys(other).length;
+    if (valueLen !== otherLen) return false;
+
+    // Compare two items
+    var compare = function (item1, item2) {
+
+        // Get the object type
+        var itemType = Object.prototype.toString.call(item1);
+
+        // If an object or array, compare recursively
+        if (['[object Array]', '[object Object]'].indexOf(itemType) >= 0) {
+            if (!isEqual(item1, item2)) return false;
+        }
+
+        // Otherwise, do a simple comparison
+        else {
+
+            // If the two items are not the same type, return false
+            if (itemType !== Object.prototype.toString.call(item2)) return false;
+
+            // Else if it's a function, convert to a string and compare
+            // Otherwise, just compare
+            if (itemType === '[object Function]') {
+                if (item1.toString() !== item2.toString()) return false;
+            } else {
+                if (item1 !== item2) return false;
+            }
+
+        }
+    };
+
+    // Compare properties
+    if (type === '[object Array]') {
+        for (var i = 0; i < valueLen; i++) {
+            if (compare(value[i], other[i]) === false) return false;
+        }
+    } else {
+        for (var key in value) {
+            if (value.hasOwnProperty(key)) {
+                if (compare(value[key], other[key]) === false) return false;
+            }
+        }
+    }
+
+    // If nothing failed, return true
+    return true;
+
+};
 
 var
     _private = {
@@ -354,7 +416,7 @@ var
         },
 
         calcResultsRowIndex: function (self): number {
-            return self._getRowIndexHelper().getResultsIndex() + self._resultOffset;
+            return self._getRowIndexHelper().getResultsIndex();
         },
 
         getFooterStyles: function (self): string {
@@ -364,7 +426,7 @@ var
                 let
                     columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
                     columnEnd = self._columns.length + columnStart,
-                    rowIndex = self._getRowIndexHelper().getFooterIndex() + self._resultOffset;
+                    rowIndex = self._getRowIndexHelper().getFooterIndex();
 
                 styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
             }
@@ -456,8 +518,9 @@ var
         _curHeaderColumnIndex: 0,
         _maxEndRow: 0,
         _curHeaderRowIndex: 0,
-        _resultOffset: 0,
+        _multyHeaderOffset: 0,
         _headerCellMinHeight: null,
+        headerHeight: null,
 
         _resultsColumns: [],
         _curResultsColumnIndex: 0,
@@ -561,24 +624,25 @@ var
 
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
-                this._headerRows = GridLayoutUtil.getRowsArray(columns, multiSelectVisibility);
-                this._maxEndRow = GridLayoutUtil.getMaxEndRow(this._headerRows);
+                this._headerRows = getRowsArray(columns, multiSelectVisibility);
+                this._maxEndRow = getMaxEndRow(this._headerRows);
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
                 this._headerRows = [];
             }
-            this._resultOffset = this._maxEndRow ? this._maxEndRow - 2 : 0;
-            this._headerCellMinHeight = this._headerRows.length > 1 ? 20 : 23;
-            this.headerHeight = (this._maxEndRow - 1) * this._headerCellMinHeight;
-            // if (multiSelectVisibility) {
-            //     this._headerColumns = [{}].concat(columns);
-            // } else {
-            //     this._headerColumns = columns;
-            // }
-            this.resetHeaderRows();
-        },
 
+            this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
+            this.resetHeaderRows();
+
+        },
+        setHeaderCellMinHeight: function(data) {
+            if (!this.headerHeight || this.headerHeight !== data[1]) {
+                this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
+                this.headerHeight = data[1];
+                this._nextModelVersion();
+            }
+        },
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
         },
@@ -682,10 +746,6 @@ var
                );
             }
 
-            // For browsers with partial grid support need to set its grid-row and grid-column
-            // if (GridLayoutUtil.isPartialSupport) {
-            //     headerColumn.gridCellStyles = GridLayoutUtil.getCellStyles(0, columnIndex);
-            // }
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -698,9 +758,7 @@ var
             let height = '';
             let stickyTop = 0;
             let shadowVisibility = 'visible';
-
-            cellContentClasses += ' controls-Grid__cell_header-content';
-            height = endRow ? `max-height:${(endRow - startRow) * this._headerCellMinHeight}px;` : `max-height:${this._headerCellMinHeight}px;`;
+            // height = endRow ? `max-height:${(endRow - startRow) * this._headerCellMinHeight}px;` : `max-height:${this._headerCellMinHeight}px;`;
             if (this._headerRows.length > 1) {
                 cellContentClasses += ' controls-Grid__header-cell_align_items_center';
             }
@@ -711,7 +769,9 @@ var
                     headerColumn.colSpan = endColumn - startColumn;
                 } else {
                     if (this.isStickyHeader()) {
-                        stickyTop = startRow ? (startRow - 1 ) * this._headerCellMinHeight : 0;
+                        // stickyTop = startRow ? (startRow - 1 ) * this._headerCellMinHeight : 0;
+                        stickyTop = cell.offsetTop ? cell.offsetTop : 0;
+                        console.log(cell.offsetTop, cell.title);
                         shadowVisibility = (rowIndex === this._headerRows.length - 1 || endRow === this._maxEndRow) && this.getResultsPosition() !== 'top' ? 'visible' : 'hidden';
                     }
 
@@ -833,7 +893,7 @@ var
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
-            resultsColumn.stickyTop = this._maxEndRow ? (this._maxEndRow - 1 ) * this._headerCellMinHeight : 0;
+            // resultsColumn.stickyTop = this.;
             return resultsColumn;
         },
 
@@ -1037,15 +1097,16 @@ var
                 display = this.getDisplay(),
                 hasHeader = !!this.getHeader(),
                 resultsPosition = this.getResultsPosition(),
-                hasEmptyTemplate = !!this._options.emptyTemplate;
+                hasEmptyTemplate = !!this._options.emptyTemplate,
+                multyHeaderOffset = this._multyHeaderOffset;
 
             return {
-                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
-                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
-                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
+                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition, multyHeaderOffset),
+                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition, multyHeaderOffset),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition, multyHeaderOffset),
+                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate, multyHeaderOffset),
+                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate, multyHeaderOffset),
+                getTopOffset: () => getTopOffset(hasHeader, resultsPosition, multyHeaderOffset)
             };
         },
 
@@ -1086,7 +1147,7 @@ var
             }
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
-                current.rowIndex = this._calcRowIndex(current) + this._resultOffset;;
+                current.rowIndex = this._calcRowIndex(current);
                 if (this.getEditingItemData() && (current.rowIndex>=this.getEditingItemData().rowIndex)) {
                     current.rowIndex++;
                 }

@@ -122,78 +122,6 @@ const _cssTemplatesStyles = {
     ]
 };
 
-
-const takeWhile = (f, xs) => xs.length ? takeWhileNotEmpty(f, xs) : [];
-const takeWhileNotEmpty = (f, [x, ...xs]) =>  f(x) ? [x, ...takeWhile(f, xs)] : [];
-
-function _sortedColumns(arr) {
-    return arr.map((cur) => {
-        const sort = cur.sort((a, b) => {
-            if (a.startColumn > b.startColumn) {
-                return 1;
-            }
-            if (a.startColumn < b.startColumn) {
-                return -1;
-            }
-            return 0;
-        })
-        return sort;
-    });
-};
-
-function getRowsArray(arr, multiSelectVisibility) {
-    let result = [];
-    if (!arr[0].startRow) {
-        result.push(arr);
-    } else {
-        let sortedArray = arr.sort((a, b) => {
-            if (a.startRow > b.startRow) {
-                return 1;
-            }
-            if (a.startRow < b.startRow) {
-                return -1;
-            }
-            return 0;
-        })
-        for (let i = 1, rows = _getRowsCount(sortedArray); i <= rows; i++) {
-            const odd = (x) => x.startRow === i;
-            const row = takeWhile(odd, sortedArray);
-            result.push(row);
-            sortedArray = sortedArray.slice(row.length);
-        }
-        result = _sortedColumns(result);
-    }
-    if (multiSelectVisibility) {
-        result[0] = [{}, ...result[0]];
-    }
-    return result;
-}
-
-function _getRowsCount(arr): number {
-    let maxEndRow = 0;
-    arr.forEach((cur) => {
-        if (cur.endRow > maxEndRow) {
-            maxEndRow = cur.endRow;
-        }
-    })
-    return maxEndRow - 1;
-}
-
-function getMaxEndRow(arr): number {
-    let max = 0;
-    if (arr.length === 1) {
-        return 2;
-    };
-    arr.forEach((cur) => {
-        cur.forEach((c) => {
-            if (c.endRow > max) {
-                max = c.endRow;
-            }
-        });
-    });
-    return max;
-}
-
 export {
     CssRule,
     CssTemplatesEnum,
@@ -207,6 +135,4 @@ export {
     getDefaultStylesFor,
     toCssString,
 
-    getRowsArray,
-    getMaxEndRow
 };

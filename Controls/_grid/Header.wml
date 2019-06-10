@@ -19,7 +19,7 @@
                      template="{{headerColumn.column.template}}"
                      scope="{{ headerColumn.column.templateOptions }}"
                      colData="{{headerColumn}}"
-                     attr:style="{{headerColumn.height}}"
+                     attr:style=""
          />
 
       </ws:if>
@@ -28,7 +28,7 @@
                  attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
                  template="{{defaultHeaderContent}}"
                  colData="{{headerColumn}}"
-                 attr:style="{{headerColumn.height}}"
+                 attr:style=""
          />
 
       </ws:else>
@@ -52,7 +52,7 @@
    </ws:else>
    <ws:else>
       <div attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}} {{headerColumn.height}}">
+           attr:style="{{headerColumn.cellStyles}}">
          <ws:partial template="cellContent"/>
       </div>
    </ws:else>
@@ -60,7 +60,7 @@
 <ws:template name="stickyCell">
    <Controls.scroll:StickyHeader
            attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}} {{headerColumn.height}}"
+           attr:style="{{headerColumn.cellStyles}}"
            mode="stackable"
            fixedZIndex="{{headerColumn.zIndex}}"
            offsetTop="{{headerColumn.stickyTop}}"
@@ -103,11 +103,10 @@
    </ws:else>
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
-   <Controls.scroll:Group
-           height="{{listModel.headerHeight ? listModel.headerHeight}}"
-   >
+   <Controls.scroll:Group>
       <ws:partial template="header" listModel="{{ listModel }}" />
-   </Controls.scroll:Group>
+   </Controls.scroll:Group
+           >
 </ws:if>
 <ws:else>
    <ws:partial template="header"/>
