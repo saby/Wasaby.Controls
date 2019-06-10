@@ -12,7 +12,9 @@ import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
-    * It consists of three blocks: Selected, Possible to selected, Previously selected.
+    * It consists of three blocks: Selected, Also possible to select, Previously selected.
+    * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
+    *
     *
     * @class Controls/_filterPopup/Panel
     * @extends Core/Control
@@ -20,7 +22,7 @@ import 'Controls/form';
     * @demo Controls-demo/Filter/Button/panelOptions/panelPG
     * @control
     * @public
-    * @author Золотова Элина
+    * @author Золотова Э.Е.
     *
     * @cssModifier controls-FilterPanel__width-m Medium panel width.
     * @cssModifier controls-FilterPanel__width-l Large panel width.
