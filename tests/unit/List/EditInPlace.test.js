@@ -119,6 +119,9 @@ define([
                idProperty: 'id'
             }),
             keyProperty: 'id',
+            columns: [{
+               displayProperty: 'title'
+            }],
             parentProperty: 'parent',
             nodeProperty: 'parent@'
          });
@@ -1432,6 +1435,31 @@ define([
          it('editing config doesn\'t exist', function() {
             eip._beforeUpdate({});
             assert.isTrue(eip._sequentialEditing);
+         });
+
+         it('multiSelectVisibility on list has been changed while editing', async function () {
+            let
+                isItemDataRegenerated = false,
+                source = new sourceLib.Memory({
+                   idProperty: 'id',
+                   data: items
+                });
+
+            eip.saveOptions({
+               listModel: treeModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._setEditingItemData = (editingItem, model, options) => {
+               isItemDataRegenerated = true;
+               assert.equal(editingItem, eip._editingItemData.item);
+               assert.equal(options.multiSelectVisibility, 'visible');
+            };
+
+            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: treeModel});
+            assert.isTrue(isItemDataRegenerated);
          });
       });
 
