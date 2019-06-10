@@ -8,7 +8,7 @@
                bind:suggestState="_suggestState"
                displayProperty="title"
                searchParam="title"
-               source="{{_suggestSource}}">
+               source="{{_suggestSourceLong}}">
             <ws:navigation source="page" view="page">
                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
             </ws:navigation>
