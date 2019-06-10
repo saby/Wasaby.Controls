@@ -100,6 +100,7 @@ import Env = require('Env/Env');
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
        * @variant hoverAndTouch Opening by hover or touch on the content. Closing by hover not on the content or template.
+       * @variant demand  Developer opens and closes InfoBox manually. Also it will be closed by click not on the content or template.
        * @default hover
        */
 

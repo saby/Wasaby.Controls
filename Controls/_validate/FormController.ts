@@ -4,6 +4,8 @@ import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 /**
+ * Контрол, регулирующий валидацию формы.
+ * Валидация запускается при вызове метода submit ({@link Controls/_validate/FormController#submit})
  * @class Controls/_validate/FormController
  * @extends Core/Control
  * @control
