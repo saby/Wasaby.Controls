@@ -139,6 +139,10 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
 
         if (this._options.listModel !== newOptions.listModel) {
             newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
+
+            if (this._multiselection) {
+                this._multiselection.setListModel(newOptions.listModel);
+            }
         }
     },
 

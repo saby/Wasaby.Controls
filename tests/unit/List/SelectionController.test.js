@@ -142,9 +142,11 @@ define([
             };
 
             newCfg.selectedKeys = [3, 4];
+            instance._multiselection.setListModel = sandbox.stub();
             instance._beforeUpdate(newCfg);
 
             assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
+            assert.isTrue(instance._multiselection.setListModel.calledOnce);
          });
       });
 
