@@ -135,6 +135,14 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             this._multiselection._excludedKeys = newOptions.excludedKeys;
             _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
         }
+
+        if (this._options.listModel !== newOptions.listModel) {
+            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
+
+            if (this._multiselection) {
+                this._multiselection.setListModel(newOptions.listModel);
+            }
+        }
     },
 
     onCheckBoxClick: function (key, status) {
