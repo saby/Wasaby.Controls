@@ -98,7 +98,8 @@ define(
             let tCoords = {
                boundingClientRect: {
                   top: 800
-               }
+               },
+               topScroll: 10
             };
             let windowData = {
                innerHeight: 850,
@@ -122,8 +123,7 @@ define(
             StickyStrategy._private.getKeyboardHeight = () => 0;
             StickyStrategy._private.getWindow = () => baseWindowData;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
-            assert.equal(position.bottom, 200);
-            StickyStrategy._private.getKeyboardHeight = () => 10;
+            assert.equal(position.bottom, 210);
          });
 
          it('Sticky with option fittingMode=overflow', () => {
