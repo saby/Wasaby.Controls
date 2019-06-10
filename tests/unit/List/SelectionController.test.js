@@ -131,6 +131,23 @@ define([
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[3, 4], [3, 4], []]).calledOnce);
             assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2], { bubbling: true }).calledOnce);
          });
+
+         it('change list model', async function() {
+            let newCfg = Object.assign({}, cfg);
+            await instance._beforeMount(cfg);
+            instance._afterMount();
+
+            newCfg.listModel = {
+               updateSelection: sandbox.stub()
+            };
+
+            newCfg.selectedKeys = [3, 4];
+            instance._multiselection.setListModel = sandbox.stub();
+            instance._beforeUpdate(newCfg);
+
+            assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
+            assert.isTrue(instance._multiselection.setListModel.calledOnce);
+         });
       });
 
       describe('onCheckBoxClick', function() {
