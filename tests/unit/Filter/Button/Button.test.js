@@ -115,5 +115,31 @@ define(
             assert.deepEqual(expectedConfig, filterMod.Selector._private.getPopupConfig(self));
          });
 
+         it('_private.setPopupOptions', function() {
+            let expectedResult = {
+               closeOnOutsideClick: true,
+               className: 'controls-FilterButton-popup-orientation-left',
+               corner: {
+                  vertical: 'top',
+                  horizontal: 'right'
+               },
+               horizontalAlign: {
+                  side: 'left'
+               }
+            };
+            let filterSelector = {},
+               alignment = 'right';
+            filterMod.Selector._private.setPopupOptions(filterSelector, alignment);
+            assert.deepStrictEqual(filterSelector._popupOptions, expectedResult);
+
+            expectedResult = {
+               closeOnOutsideClick: true,
+               className: 'controls-FilterButton-popup-orientation-right'
+            };
+            alignment = 'left';
+            filterMod.Selector._private.setPopupOptions(filterSelector, alignment);
+            assert.deepStrictEqual(filterSelector._popupOptions, expectedResult);
+         });
+
       });
    });

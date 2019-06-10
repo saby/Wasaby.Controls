@@ -23,6 +23,8 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _commentItems: null,
          _themesItems: null,
          _simpleAdd: null,
+         _simpleAdd2: null,
+         _simpleAdd3: null,
          _iconAdd: null,
          _iconAddMedium: null,
          _iconButtonItems: null,
@@ -115,6 +117,20 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 2, title: 'Moderator' },
                { id: 3, title: 'Participant' },
                { id: 4, title: 'Subscriber' }
+            ];
+
+            this._simpleAdd2 = [
+               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 2, title: 'Moderator' },
+               { id: 3, title: 'Participant' },
+               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
+            ];
+
+            this._simpleAdd3 = [
+               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 2, title: 'Moderator' },
+               { id: 3, title: 'Participant' },
+               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
             ];
             this._iconAdd = [
                { id: 1, title: 'Work phone', icon: 'icon-small icon-PhoneWork' },
