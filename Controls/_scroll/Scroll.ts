@@ -378,7 +378,12 @@ var
       },
 
       _resizeHandler: function() {
-         this._displayState = _private.calcDisplayState(this);
+         const displayState = _private.calcDisplayState(this);
+
+         if (!isEqual(this._displayState, displayState)) {
+            this._displayState = displayState;
+         }
+
          _private.calcPagingStateBtn(this);
       },
 
