@@ -1,37 +1,30 @@
-<div class="PageWrap">
-   <div class="PageBlock__content">
-      <Controls.calendar:MonthList
-         startPosition="{{_month}}"
-         source="{{_source}}">
-         <ws:yearTemplate>
-            <ws:partial template="Controls/calendar:MonthListYearTemplate">
-               <ws:dayTemplate>
-                  <ws:partial template="Controls/calendar:MonthViewDayTemplate">
-                     <ws:contentTemplate>
-                        <ws:partial template="{{_dayTemplate}}"/>
-                     </ws:contentTemplate>
-                  </ws:partial>
-               </ws:dayTemplate>
-            </ws:partial>
-         </ws:yearTemplate>
-      </Controls.calendar:MonthList>
-   </div>
-   <div class="PageBlock__content">
-      <Controls.calendar:MonthList
-         startPosition="{{_month}}"
-         source="{{_source}}"
-         viewMode="month">
-         <ws:monthTemplate>
-            <ws:partial template="Controls/calendar:MonthListMonthTemplate">
-               <ws:dayTemplate>
-                  <ws:partial template="Controls/calendar:MonthViewDayTemplate">
-                     <ws:contentTemplate>
-                        <ws:partial template="{{_dayTemplate}}"/>
-                     </ws:contentTemplate>
-                  </ws:partial>
-               </ws:dayTemplate>
-            </ws:partial>
-         </ws:monthTemplate>
-      </Controls.calendar:MonthList>
-   </div>
+<div style="margin: 50px; flex-shrink: 1; height: 100%; display: flex; flex-direction: column;" >
+   <div>month: {{_month}}</div>
+   <div>startValue: {{_startValue}}</div>
+   <div>endValue: {{_endValue}}</div>
+   <div>selectionProcessing: {{_selectionProcessing}}</div>
+   <div>selectionBaseValue: {{_selectionBaseValue}}</div>
+   <div>selectionHoveredValue: {{_selectionHoveredValue}}</div>
+   <Controls.calendar:MonthList
+      attr:style="margin: 10px; border: red; flex-shrink: 1;"
+      bind:startValue="_startValue"
+      bind:endValue="_endValue"
+      bind:month="_month"
+      bind:selectionProcessing="_selectionProcessing"
+      bind:selectionHoveredValue="_selectionHoveredValue"
+      bind:selectionBaseValue="_selectionBaseValue"
+   >
+      <ws:dayTemplate>
+         <ws:partial template="Controls/calendar:MonthViewDayTemplate"
+                     value="{{dayTemplate.value}}"
+         >
+            <ws:contentTemplate>
+               <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:dayTemplate>
+   </Controls.calendar:MonthList>
+   <Controls.buttons:Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
+   <Controls.buttons:Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>
+   <Controls.buttons:Button caption="_setSelection" style="buttonAdd" on:click="_setSelection()"/>
 </div>

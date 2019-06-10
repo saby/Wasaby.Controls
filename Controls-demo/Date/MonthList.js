@@ -2,8 +2,7 @@ define('Controls-demo/Date/MonthList', [
    'Core/Control',
    'Controls-demo/Date/MonthListSource',
    'wml!Controls-demo/Date/MonthList',
-   'wml!Controls-demo/Date/MonthListDay',
-   'css!Controls-demo/Date/MonthList'
+   'wml!Controls-demo/Date/MonthListDay'
 ], function(
    BaseControl,
    MonthListSource,

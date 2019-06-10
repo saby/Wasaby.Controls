@@ -19,17 +19,13 @@ define([
    describe('Controls/Date/PeriodDialog/MonthRangeItem', function() {
       describe('Initialisation', function() {
          [{
-            options: { selectionType: 'range', date: start},
+            options: { selectionType: 'range' },
             eq: { months: true, quarters: true, halfYears: true, years: true }
          }, {
-            options: { selectionType: 'quantum', quantum: { days: [3] }, date: start },
+            options: { selectionType: 'quantum', quantum: { days: [3] } },
             eq: { months: false, quarters: false, halfYears: false, years: false }
          }, {
-            options: {
-               selectionType: 'quantum',
-               quantum: { months: [1], quarters: [1], halfyears: [1], years: [1] },
-               date: start
-            },
+            options: { selectionType: 'quantum', quantum: { months: [1], quarters: [1], halfyears: [1], years: [1] } },
             eq: { months: true, quarters: true, halfYears: true, years: true }
          }].forEach(function(test) {
             it(`should set proper model for options ${JSON.stringify(test.options)}.`, function() {
