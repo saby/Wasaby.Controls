@@ -1142,6 +1142,10 @@ var
             if (lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
             }
+
+            if (GridLayoutUtil.isPartialGridSupport() && this._model.getHoveredItem() === item) {
+                version = 'HOVERED_' + version;
+            }
             return version;
         },
 
