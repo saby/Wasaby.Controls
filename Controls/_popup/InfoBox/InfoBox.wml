@@ -1,22 +1,11 @@
 <div>
-   <ws:if data="{{_options.trigger === 'click'}}">
-      <ws:partial template="{{_options.content}}"
-                  on:mousedown="_contentMousedownHandler()"/>
-   </ws:if>
-   <ws:else data="{{_options.trigger === 'hover'}}">
-      <ws:partial template="{{_options.content}}"
-                  on:mouseenter="_contentMouseenterHandler()"
-                  on:mouseleave="_contentMouseleaveHandler()"/>
-   </ws:else>
-   <ws:else data="{{_options.trigger === 'demand'}}">
-      <ws:partial template="{{_options.content}}" on:mousedown="_contentMousedownHandler()"/>
-   </ws:else>
-   <ws:else>
-      <ws:partial template="{{_options.content}}"
-                  on:mouseenter="_contentMouseenterHandler()"
-                  on:touchstart="_contentTouchStartHandler()"
-                  on:mouseleave="_contentMouseleaveHandler()"/>
-   </ws:else>
+   <ws:partial template="{{_options.content}}"
+               on:mousedown="_contentMousedownHandler()"
+               on:mouseenter="_contentMouseenterHandler()"
+               on:mouseleave="_contentMouseleaveHandler()"
+               on:touchstart="_contentTouchStartHandler()"
+   />
+
    <ws:if data="{{!_isNewEnvironment()}}">
       <Controls._popup.Opener.InfoBox name="infoBoxOpener" _vdomOnOldPage="{{true}}"/>
    </ws:if>
