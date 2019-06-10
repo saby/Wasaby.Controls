@@ -8,9 +8,9 @@
  * @includes IIcon Controls/_interface/IIcon
  * @includes ISource Controls/_interface/ISource
  * @includes ISingleSelectable Controls/_interface/ISingleSelectable
- * @includes ISingleSelectable Controls/_interface/IMultiSelectable
- * @includes ISingleSelectable Controls/_interface/ISource
- * @includes ISingleSelectable Controls/_interface/IHierarchy
+ * @includes IMultiSelectable Controls/_interface/IMultiSelectable
+ * @includes ISource Controls/_interface/ISource
+ * @includes IHierarchy Controls/_interface/IHierarchy
  * @public
  * @author Kraynov D.
  */
