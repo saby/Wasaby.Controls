@@ -1,5 +1,5 @@
 <div>
-   <Controls._paging.Paging.DigitButtons count="{{15}}" selectedKey="{{7}}"></Controls.List.Paging.DigitButtons>
+   <Controls._paging.Paging.DigitButtons count="{{15}}" selectedKey="{{7}}"></Controls._paging.Paging.DigitButtons>
 
    <Controls.list:Paging showDigits="{{false}}" pagesCount="{{15}}" selectedKey="{{1}}"></Controls.list:Paging>
 
