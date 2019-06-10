@@ -441,6 +441,8 @@ const BaseOpener = {
       if (cfg.hasOwnProperty('closeOnOutsideClick')) {
          newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
+      } else {
+         newCfg.dialogOptions.autoHide = false; // значение по умолчанию в вдом контроле
       }
 
       if (cfg.hasOwnProperty('closeChildWindows')) {
