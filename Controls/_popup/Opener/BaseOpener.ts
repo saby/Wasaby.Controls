@@ -164,9 +164,9 @@ import {parse as parserLib, load} from 'Core/library';
                if (mod && mod.__esModule && mod.default) {
                   mod = mod.default;
                }
-               return mod;
+               return Promise.resolve(mod);
             }
-            Promise.resolve(module);
+            return Promise.resolve(module);
          },
 
          _getConfig(popupOptions:Object): Object {
