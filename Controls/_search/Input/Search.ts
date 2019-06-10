@@ -5,8 +5,37 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
 
 /**
+ * Контрол, позволяющий пользователю вводить однострочный текст.
+ * Функционал идентичен полю ввода, но могут быть по-разному стилизованы.
+ *
+ * Информацию о найстройке поиска в списке с ипользованием контрола "input:Search" можно прочитать <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ *
+ * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
+ * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
+ *
+ * @class Controls/_search/Input/Search
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputText
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/_interface/ITooltip
+ *
+ * @ignoreOptions style
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/Input/Search/SearchPG
+ *
+ * @category Input
+ * @author Золотова Э.Е.
+ */
+
+/*
  * Controls that allows user to enter single-line text.
  * These are functionally identical to text inputs, but may be styled differently.
+ *
+ * Information on searching settings in the list using the "input:Search" control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
  * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
