@@ -196,30 +196,24 @@ var ListView = BaseControl.extend(
                return;
             }
             this._notify('itemMouseDown', [itemData, event]);
-            event.blockUpdate = true;
         },
 
         _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
             _private.setHoveredItem(this, itemData.item, event);
-            event.blockUpdate = true;
         },
 
         //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
         //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
         _onItemMouseLeave: function(event) {
             _private.setHoveredItem(this, null);
-            event.blockUpdate = true;
         },
 
         _onItemMouseMove: function(event, itemData) {
             this._notify('itemMouseMove', [itemData, event]);
-            event.blockUpdate = true;
         },
 
         _onItemWheel: function(event) {
-            //FIXME delete after https://online.sbis.ru/opendoc.html?guid=c1021079-f404-47bc-b5ce-4070af539d61
-            event.blockUpdate = true;
         },
 
         _onMarkedKeyChangedHandler: function(event, key) {
