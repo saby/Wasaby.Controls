@@ -32,7 +32,9 @@
       color: @link_hover_text-color;
    }
 }
-
+.controls-Button__text_gap_theme-@{themeName} {
+   margin-left: @icon-offset_button;
+}
 /*после этого старые*/
 .controls-Button_style-primary_viewMode-button.theme_@{themeName} {
    border-color: @border-color_Button_button_primary;
@@ -465,9 +467,7 @@
    }
 }
 
-.controls-Button__text_gap.theme_@{themeName} {
-   margin-left: @spacing_Button-between-icon-and-text;
-}
+
 // перенес в vDom, чтобы не было пересечения со старыми кнопками
 // изменено имя в остальном стили аналогичны
 .controls-BaseButton__content.theme_@{themeName} {

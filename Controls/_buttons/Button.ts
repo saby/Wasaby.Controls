@@ -68,6 +68,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    private _transparent: boolean;
    private _fontColorStyle: string;
    private _contrastBackground: boolean;
+   private _hasIcon: boolean;
    private _viewMode: string;
    private _state: string;
    private _caption: string | TemplateFunction;
@@ -88,6 +89,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       this._transparent = options.transparent; // TODO remove
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
       this._fontColorStyle = options.readOnly ? 'readonly' : ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+      this._hasIcon = options.icon;
 
       if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
          if (this._viewMode === 'transparentQuickButton') {
