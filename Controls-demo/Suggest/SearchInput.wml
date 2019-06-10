@@ -3,7 +3,7 @@
       <div class="demo-SearchSuggestWrapper">
          <h3>Search suggest</h3>
          <Controls.suggest:SearchInput
-               attr:class="ControlsDemo-Suggest__wideSearch"
+               attr:class="ControlsDemo-Suggest__wideSearch ControlsDemo-Suggest__search"
                bind:value="_suggestValue"
                bind:suggestState="_suggestState"
                displayProperty="title"
@@ -25,7 +25,7 @@
       <div class="demo-SearchSuggestWrapper">
          <h3>Search suggest with tabs</h3>
          <Controls.suggest:SearchInput
-               attr:class="ControlsDemo-Suggest__wideSearch"
+               attr:class="ControlsDemo-Suggest__wideSearch ControlsDemo-Suggest__searchTabs"
                bind:value="_suggestTabsValue"
                bind:suggestState="_suggestTabsState"
                displayProperty="title"
