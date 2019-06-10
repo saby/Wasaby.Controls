@@ -13,8 +13,17 @@ define('Controls-demo/Suggest/Suggest', [
    'Controls-demo/Utils/MemorySourceData',
    'css!Controls-demo/Suggest/Suggest'
 ], function(Control, template, source, SearchMemory, memorySourceFilter, MemorySourceData) {
-   
    'use strict';
+
+   function getLongData() {
+      var data = [];
+
+      for (var id = 10; id < 100; id++) {
+         data.push({id: id, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка'});
+      }
+
+      return data;
+   }
    
    var VDomSuggest = Control.extend({
       _template: template,
@@ -33,6 +42,8 @@ define('Controls-demo/Suggest/Suggest', [
             {id: 8, department: 'Разработка Сбис', owner: 'Новиков Д.В.', title: 'Разработка Сбис'},
             {id: 9, department: 'Разработка Ядра', owner: 'Новиков Д.В.', title: 'Разработка Ядра'}
          ]);
+
+         this._departmentsDataLong = this._departmentsData.concat(getLongData());
 
          this._departmentsData.forEach(function(companie) {
             companie.currentTab = 1;
@@ -56,6 +67,13 @@ define('Controls-demo/Suggest/Suggest', [
 
          this._emptySource = new source.Memory({
             data: []
+         });
+
+         this._suggestSourceLong = new SearchMemory({
+            idProperty: 'id',
+            data: this._departmentsDataLong,
+            searchParam: 'title',
+            filter: memorySourceFilter()
          });
       }
    });
