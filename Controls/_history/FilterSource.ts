@@ -219,7 +219,7 @@ var _private = {
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && cEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
             item = element;
          }
       });

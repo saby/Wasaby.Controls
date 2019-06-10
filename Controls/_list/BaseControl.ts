@@ -1147,8 +1147,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeUpdate: function(newOptions) {
-        var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-        var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
+        var filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = newOptions.sorting !== this._options.sorting;
         var self = this;
