@@ -154,7 +154,7 @@ export default Dialog;
      * @property {Number} maxHeight The maximum height of popup.
      * @property {Number} minHeight The minimum height of popup.
      * @property {Number} maxWidth The maximum width of popup.
-     * @property {Number} minWigth The minimum width of popup.
+     * @property {Number} minWidth The minimum width of popup.
      * @property {Number} top Distance from the window to the top of the screen.
      * @property {Number} left Distance from the window to the left border of the screen.
      */

@@ -102,7 +102,8 @@
        * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth
        */
       getMaxPanelWidth: function() {
-         return window.innerWidth - MINIMAL_PANEL_DISTANCE;
+         // window.innerWidth брать нельзя, при масштабировании на ios это значение меняется, что влияет на ширину панелей.
+         return document.body.clientWidth - MINIMAL_PANEL_DISTANCE;
       },
 
       isMaximizedPanel: _private.isMaximizedPanel,

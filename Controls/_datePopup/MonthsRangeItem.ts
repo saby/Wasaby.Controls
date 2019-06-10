@@ -62,12 +62,15 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _monthClickable: true,
 
+    _months: null,
+
     // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
     //    Component.superclass.constructor.apply(this, arguments);
     // },
 
     _beforeMount: function (options) {
+        const year = options.date.getFullYear();
         this._selectionViewType = options.selectionViewType;
         if (options.selectionType === 'single') {
             this._monthsSelectionEnabled = false;
@@ -79,6 +82,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._quarterSelectionEnabled = 'quarters' in options.quantum;
             this._halfyearSelectionEnabled = 'halfyears' in options.quantum;
             this._yearSelectionEnabled = 'years' in options.quantum;
+        }
+        this._months = [];
+        for (let i = 0; i < 12; i++) {
+            this._months.push(new Date(year, i, 1));
         }
     },
 

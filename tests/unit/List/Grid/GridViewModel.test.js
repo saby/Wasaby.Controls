@@ -1,4 +1,4 @@
-define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil) {
+define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil', 'Env/Env'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil, Env) {
    var
       gridData = [
          {
@@ -1375,29 +1375,277 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
-
          it('getColspan', function() {
             assert.equal(
                gridMod.GridViewModel._private.getColspan('hidden', 0, 2),
                ' grid-column: 1 / 3;'
-               );
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('hidden', 1, 2),
                undefined
-               );
+            );
+
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('hidden', 0, 2, true),
+               ' grid-column: 1 / 2;'
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('visible', 0, 2),
                undefined
-               );
+            );
 
             assert.equal(
                gridMod.GridViewModel._private.getColspan('visible', 1, 2),
                ' grid-column: 2 / 3;'
-               );
+            );
+
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            assert.equal(
+               gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
+               ' grid-column: 1 / 3;'
+            );
+         });
+      });
+
+      describe('partial grid support', () => {
+         let
+             nativeIsPartialGridSupport,
+             model;
+
+         before(() => {
+            nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = () => true;
+         });
+         after(() => {
+            GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
+         });
+
+         beforeEach(() => {
+            model = new gridMod.GridViewModel(cfg);
+         });
+         afterEach(() => {
+            model.destroy();
+            model = null;
+         });
+
+         describe('getEmptyTemplateStyles', () => {
+            describe('IE', () => {
+               let nativeDetection;
+               before(() => {
+                  nativeDetection = clone(Env.detection);
+                  Env.detection = { isIE: true };
+               });
+               after(() => {
+                  Env.detection = nativeDetection;
+               });
+
+               it('no checkbox && has header && results in top', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'top';
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 3; -ms-grid-column: 1; -ms-grid-row: 3; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && has header && results in top', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'top';
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 3; -ms-grid-column: 2; -ms-grid-row: 3; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('no checkbox && hasn\'t header && results in top', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = 'top';
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && hasn\'t header && results in top', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = 'top';
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+
+               it('no checkbox && has header && results in bottom', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && has header && results in bottom', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('no checkbox && hasn\'t header && results in bottom', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 1; -ms-grid-column: 1; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && hasn\'t header && results in bottom', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 1; -ms-grid-column: 2; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+
+               it('no checkbox && has header && no results', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = null;
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && has header && no results', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = null;
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('no checkbox && hasn\'t header && no results', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = null;
+                  assert.equal(
+                      'grid-column: 1 / 4; grid-row: 1; -ms-grid-column: 1; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+               it('has checkbox && hasn\'t header && no results', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = null;
+                  assert.equal(
+                      'grid-column: 2 / 5; grid-row: 1; -ms-grid-column: 2; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      model.getEmptyTemplateStyles()
+                  );
+               });
+
+            });
+            describe('other old browsers', () => {
+               it('no checkbox && has header && results in top', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'top';
+                  assert.equal('grid-column: 1 / 4; grid-row: 3;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && has header && results in top', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'top';
+                  assert.equal('grid-column: 2 / 5; grid-row: 3;', model.getEmptyTemplateStyles());
+               });
+               it('no checkbox && hasn\'t header && results in top', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = 'top';
+                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && hasn\'t header && results in top', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = 'top';
+                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+
+               it('no checkbox && has header && results in bottom', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && has header && results in bottom', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+               it('no checkbox && hasn\'t header && results in bottom', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal('grid-column: 1 / 4; grid-row: 1;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && hasn\'t header && results in bottom', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = 'bottom';
+                  assert.equal('grid-column: 2 / 5; grid-row: 1;', model.getEmptyTemplateStyles());
+               });
+
+               it('no checkbox && has header && no results', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = null;
+                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && has header && no results', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._setHeader([{}]);
+                  model._options.resultsPosition = null;
+                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+               });
+               it('no checkbox && hasn\'t header && no results', () => {
+                  model.setMultiSelectVisibility('hidden');
+                  model._header = null;
+                  model._options.resultsPosition = null;
+                  assert.equal('grid-column: 1 / 4; grid-row: 1;', model.getEmptyTemplateStyles());
+               });
+               it('has checkbox && hasn\'t header && no results', () => {
+                  model.setMultiSelectVisibility('visible');
+                  model._header = null;
+                  model._options.resultsPosition = null;
+                  assert.equal('grid-column: 2 / 5; grid-row: 1;', model.getEmptyTemplateStyles());
+               });
+            });
+         });
+
+         it('hovered item should have prefix "HOVERED_" in version', function () {
+            model._model._calcItemVersion = () => '';
+
+            let
+                hoveredItem = model.getDisplay().at(0),
+                notHoveredItem = model.getDisplay().at(1);
+
+            model.setHoveredItem(hoveredItem);
+            assert.equal('HOVERED_', model._calcItemVersion(hoveredItem, hoveredItem.key));
+
+            assert.equal('', model._calcItemVersion(notHoveredItem, notHoveredItem.key));
          });
 
       });
+
    });
 });

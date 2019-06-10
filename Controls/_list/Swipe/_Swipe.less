@@ -60,12 +60,7 @@
   flex-shrink: 0;
   flex-grow: 1;
   position: relative;
-
-  /**
- Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
-  */
-  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
-  padding-right: @spacing-Swipe-between-content-and-borders;
+  justify-content: center;
 }
 
 .controls-Swipe__action_column {
@@ -137,11 +132,12 @@
 .controls-Swipe__separator_horizontal {
   width: @width_Swipe-separator;
   height: calc(100% ~'-' 2 * @spacing_Swipe-between-vertical-separator-and-border);
-  margin: @spacing_Swipe-between-vertical-separator-and-border @spacing_Swipe-between-vertical-separator-and-icon;
+  margin-bottom: @spacing_Swipe-between-vertical-separator-and-border;
+  margin-top: @spacing_Swipe-between-vertical-separator-and-border;
 }
 
 .controls-Swipe__separator_vertical {
-  width: 100%;
+  width: auto;
   height: @width_Swipe-separator;
   margin-left: @spacing_Swipe-between-horizontal-separator-and-border + @width_Swipe-shadow;
   margin-right: @spacing_Swipe-between-horizontal-separator-and-border;
@@ -156,13 +152,25 @@
 
 .controls-Swipe_horizontal {
   align-items: center;
+  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow - @spacing_Swipe-between-vertical-separator-and-icon;
+  padding-right: @spacing-Swipe-between-content-and-borders - @spacing_Swipe-between-vertical-separator-and-icon;
 }
 
 .controls-Swipe_vertical {
   flex-direction: column;
   justify-content: space-evenly;
 }
-
+.controls-Swipe__action_horizontal {
+  padding-left: @spacing_Swipe-between-vertical-separator-and-icon;
+  padding-right: @spacing_Swipe-between-vertical-separator-and-icon;
+}
+.controls-Swipe__action_vertical {
+  /*
+   * Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
+   */
+  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
+  padding-right: @spacing-Swipe-between-content-and-borders;
+}
 .controls-Swipe__action_iconStyle_secondary {
   color: @color_Swipe-icon_style_secondary;
 }

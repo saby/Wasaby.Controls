@@ -60,7 +60,7 @@ import {iconsUtil as validateIconStyle} from 'Controls/buttons';
     *        idProperty: 'key',
     *        data: [
     *        {
-    *           id: '1'
+    *           id: '1',
     *           showType: 2,
     *           icon: 'icon-Time',
     *           '@parent': false,

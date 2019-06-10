@@ -4,6 +4,7 @@
        action="{{action}}"
        needIcon="{{needIcon}}"
        needTitle="{{needTitle}}"
+       actionAlignment="{{actionAlignment}}"
        itemActionsSize="{{swipeConfig.itemActionsSize}}"
        paddingSize="{{swipeConfig.paddingSize}}"
        actionCaptionPosition="{{actionCaptionPosition}}"

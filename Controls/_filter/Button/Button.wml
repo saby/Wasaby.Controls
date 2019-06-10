@@ -32,6 +32,7 @@
            scope="{{_popupOptions}}"
            _vdomOnOldPage="{{true}}"
            autofocus="{{true}}"
+           on:result="_onFilterChanged()"
    >
    </Controls.popup:Sticky>
 </div>

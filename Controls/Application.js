@@ -167,7 +167,6 @@ define('Controls/Application',
          },
 
          _scrollPage: function(ev) {
-            ev.blockUpdate = true;
             this._children.scrollDetect.start(ev);
          },
 
@@ -175,14 +174,12 @@ define('Controls/Application',
             this._children.resizeDetect.start(ev);
          },
          _mousedownPage: function(ev) {
-            ev.blockUpdate = true;
             this._children.mousedownDetect.start(ev);
          },
          _mousemovePage: function(ev) {
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {
-            ev.blockUpdate = true;
             this._children.mouseupDetect.start(ev);
          },
          _touchmovePage: function(ev) {

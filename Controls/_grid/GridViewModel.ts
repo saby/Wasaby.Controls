@@ -7,7 +7,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
@@ -42,18 +42,31 @@ var
         getColspan(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
-           columnsLength: number
+           columnsLength: number,
+
+           // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+           isHeaderBreadCrumbs: boolean = false
         ): string {
             let
                 multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
 
           if (columnIndex === multiselectOffset) {
-              if (GridLayoutUtil.isNoGridSupport()) {
-                  return ` colspan: ${columnsLength - multiselectOffset};`;
-              } else if (GridLayoutUtil.isPartialGridSupport()) {
-                  return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1}; -ms-grid-column: ${multiselectOffset + 1}; -ms-grid-column-span: ${columnsLength - multiselectOffset};`;
+              if (isHeaderBreadCrumbs) {
+                 if (GridLayoutUtil.isNoGridSupport()) {
+                    return ' colspan: 1;';
+                 } else if (GridLayoutUtil.isPartialGridSupport()) {
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
+                 } else {
+                    return ` grid-column: 1 / ${multiselectOffset + 2};`;
+                 }
               } else {
-                  return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1};`;
+                  if (GridLayoutUtil.isNoGridSupport()) {
+                      return ` colspan: ${columnsLength - multiselectOffset};`;
+                  } else if (GridLayoutUtil.isPartialGridSupport()) {
+                      return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1}; -ms-grid-column: ${multiselectOffset + 1}; -ms-grid-column-span: ${columnsLength - multiselectOffset};`;
+                  } else {
+                      return ` grid-column: ${multiselectOffset + 1} / ${columnsLength + 1};`;
+                  }
               }
           }
         },
@@ -329,12 +342,10 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport()) {
                 let
-                    multiselectOffset = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
-                    rowIndex = 0;
+                    columnStart = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = self._getRowIndexHelper().getTopOffset();
 
-                rowIndex += self.getHeader() ? 1 : 0;
-                rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, self._columns.length);
             }
 
             return styles;
@@ -882,18 +893,20 @@ var
 
         _getRowIndexHelper() {
             let
-                display = this.getDisplay(),
-                hasHeader = !!this.getHeader(),
-                resultsPosition = this.getResultsPosition(),
+                cfg: IBaseGridRowIndexOptions = {
+                    display: this.getDisplay(),
+                    hasHeader: !!this.getHeader(),
+                    resultsPosition: this.getResultsPosition(),
+                },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
             return {
-                getIndexByItem: (item) => getIndexByItem(display, item, hasHeader, resultsPosition),
-                getIndexById: (id) => getIndexById(display, id, hasHeader, resultsPosition),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex(index, hasHeader, resultsPosition),
-                getResultsIndex: () => getResultsIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getFooterIndex: () => getFooterIndex(display, hasHeader, resultsPosition, hasEmptyTemplate),
-                getTopOffset: () => getTopOffset(hasHeader, resultsPosition)
+                getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
+                getIndexById: (id) => getIndexById({id, ...cfg}),
+                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
+                getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition)
             };
         },
 
@@ -1128,6 +1141,10 @@ var
 
             if (lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
+            }
+
+            if (GridLayoutUtil.isPartialGridSupport() && this._model.getHoveredItem() === item) {
+                version = 'HOVERED_' + version;
             }
             return version;
         },

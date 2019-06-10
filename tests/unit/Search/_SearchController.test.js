@@ -144,5 +144,38 @@ define(
                return search;
             });
          });
+
+         it('minSearchLength is null', async function() {
+            var searchController = new searchLib._SearchController({
+               minSearchLength: null,
+               source: source,
+               filter: {}
+            });
+
+            await searchLib._SearchController._private.getSearch(searchController);
+
+            var searched = false;
+            var forced = false;
+
+            searchController._search.search = function(value, force) {
+               searched = true;
+
+               if (force) {
+                  forced = true;
+               }
+            };
+
+            searchController.search('t');
+            assert.isFalse(searched);
+            assert.isFalse(forced);
+
+            searchController.search('test');
+            assert.isFalse(searched);
+            assert.isFalse(forced);
+
+            searchController.search('t', true);
+            assert.isTrue(searched);
+            assert.isTrue(forced);
+         });
       });
    });

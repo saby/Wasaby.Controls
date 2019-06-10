@@ -16,7 +16,6 @@
       <div>
          <ws:partial template="wml!Controls/_dropdownPopup/For"
                      listModel="{{_listModel}}"
-                     defaultGroupTemplate="{{_defaultGroupTemplate}}"
                      itemTemplate="{{_options.itemTemplate}}"
                      defaultItemTemplate="{{_defaultItemTemplate}}"
                      showClose="{{_options.showClose}}"
@@ -70,7 +69,8 @@
    <Controls.event:Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
    <Controls.dropdown:Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
-                             on:onSelectedItemChange="resultHandler()"
+                             on:result="_resultHandler()"
+                             on:close="_subDropdownClose()"
                              scope="{{_popupOptions}}">
    </Controls.dropdown:Opener>
 </div>

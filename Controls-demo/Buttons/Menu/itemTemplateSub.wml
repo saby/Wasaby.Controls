@@ -1,5 +1,6 @@
 <ws:partial template="Controls/dropdown:ItemTemplate"
-            itemData="{{itemData}}" >
+            itemData="{{itemData}}"
+            class="ControlsDemo-ButtonsMenu__subMenu-row">
             <ws:contentTemplate>
                <div class="ControlsDemo-ButtonsMenu__subMenu">
                   {{itemData.getPropValue(itemData.item, 'title')}}

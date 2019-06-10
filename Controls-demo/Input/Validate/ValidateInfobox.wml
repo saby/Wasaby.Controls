@@ -32,7 +32,6 @@
          <Controls.validate:InputContainer name="InputValidate2"
                                            attr:class="validate_item_input ControlsDemo-ValidateInfobox_inputValidate2">
             <ws:validators>
-               <ws:Function value="{{_valueInn}}">Controls/validate:isInn</ws:Function>
                <ws:Function value="{{_valueInn}}">Controls/validate:isRequired</ws:Function>
             </ws:validators>
             <ws:content>

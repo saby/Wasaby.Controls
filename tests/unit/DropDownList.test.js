@@ -255,7 +255,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                parentProperty: 'parent',
                rootKey: null,
                caption: 'Caption',
-               iconPadding: { null: [null, 'icon-small'] }
+               iconPadding: { null: 'icon-small' }
             };
             let ddlConfig = getDropDownConfig();
             ddlConfig = {...ddlConfig, ...config2};
@@ -358,16 +358,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                }
             };
             dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
-            dropdownList._resultHandler({ action: 'itemClick', data: [items.at(0)] });
+            dropdownList._resultHandler('onresult', { action: 'itemClick', data: [items.at(0)] });
          });
          it('resultHandler pinClick', function() {
             var dropdownList = getDropDownListWithConfig(getDropDownConfig());
             dropdownList._notify = function(event, data) {
                if (event === 'sendResult') {
-                  assert.equal(data[0].action, 'pinClicked');
+                  assert.equal(data[0].action, 'pinClick');
                }
             };
-            dropdownList._resultHandler({ action: 'pinClicked' });
+            dropdownList._resultHandler('onresult', { action: 'pinClick' });
          });
 
          it('_private::needShowApplyButton', function() {

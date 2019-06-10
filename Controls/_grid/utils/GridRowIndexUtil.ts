@@ -2,88 +2,114 @@ import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
 import {Collection, CollectionItem} from 'Types/display'
 
 /**
- *
- *
  * @author Rodionov E.A.
  */
 
-/**
- * @typedef {String} ResultsPosition
- * @variant top Результаты выводятся сверху таблицы.
- * @variant bottom Результаты выводятся снизу таблицы.
- */
-type ResultsPosition = 'top' | 'bottom';
 
-type DItem = CollectionItem<unknown>;
-type Display = Collection<unknown, DItem>;
+
+/**
+ * @typedef {Object} IBaseGridRowIndexOptions Конфигурационый объект.
+ * @param {'Types/display'} display Проекция элементов списка.
+ * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {"top" | "bottom" | null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ */
+interface IBaseGridRowIndexOptions {
+    display: Collection<unknown, CollectionItem<unknown>>,
+    hasHeader: boolean,
+    resultsPosition?: 'top' | 'bottom';
+}
+
+/**
+ * @typedef {Object} ItemId Объект расширяющий базовую конфигурацию для получения индекса записи по идентификатору элемента таблицы.
+ * @param {string} id Идентификатор элемента таблицы.
+ */
+type ItemId = { id: string };
+
+/**
+ * @typedef {Object} DisplayItem Объект расширяющий базовую конфигурацию для получения индекса записи по элементу проекции.
+ * @param {'Types/display:CollectionItem'} item Элемент проекции таблицы.
+ */
+type DisplayItem = { item: CollectionItem<unknown> };
+
+/**
+ * @typedef {Object} DisplayItemIndex Объект расширяющий базовую конфигурацию для получения индекса записи по индексу элемента в проекции.
+ * @param {number} index Индекс элемента в проекции.
+ */
+type DisplayItemIndex = { index: number }
+
+/**
+ * @typedef {Object} HasEmptyTemplate Объект расширяющий базовую конфигурацию, необходимый для расчета номера строки подвала и итогов таблицы.
+ * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
+ */
+type HasEmptyTemplate = { hasEmptyTemplate: boolean };
+
+/**
+ * @typedef {IBaseGridRowIndexOptions & (DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplate)} GridRowIndexOptions Конфигурационый объект.
+ */
+type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplate> = IBaseGridRowIndexOptions & T;
+
 
 
 /**
  * Возвращает номер строки в списке для элемента с указанным id.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {string} id Ключ элемента списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
+ * @param {GridRowIndexOptions<ItemId>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для элемента с указанным id.
  */
-function getIndexById(display: Display, id: string, hasHeader: boolean = false, resultsPosition: ResultsPosition = null): number {
+function getIndexById(cfg: GridRowIndexOptions<ItemId>): number {
     let
-        idProperty = display.getIdProperty() || display.getCollection().getIdProperty(),
-        item = ItemsUtil.getDisplayItemById(display, id, idProperty),
-        displayIndex = display.getIndex(item);
+        idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty(),
+        item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
+        index = cfg.display.getIndex(item);
     
-    return getItemRealIndex(displayIndex, hasHeader, resultsPosition);
+    return getItemRealIndex(<GridRowIndexOptions<DisplayItemIndex>>{index, ...cfg});
 }
+
 
 
 /**
  * Возвращает номер строки в списке для указанного элемента.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {'Types/display:CollectionItem'} item Элемент списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
+ * @param {GridRowIndexOptions<DisplayItem>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для указанного элемента проекции.
  */
-function getIndexByItem(display: Display, item: DItem, hasHeader: boolean = false, resultsPosition: ResultsPosition = null): number {
-    return getItemRealIndex(display.getIndex(item), hasHeader, resultsPosition);
+function getIndexByItem(cfg: GridRowIndexOptions<DisplayItem>): number {
+    let index = cfg.display.getIndex(cfg.item);
+    return getItemRealIndex(<GridRowIndexOptions<DisplayItemIndex>>{index, ...cfg});
+    
 }
+
 
 
 /**
  * Возвращает номер строки в списке для элемента с указанным индексом в проекции.
  *
- * @param {Number} index Индекс элемента списка в проекции.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
+ * @param {GridRowIndexOptions<DisplayItemIndex>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки элемента списка с указанным индексом в проекции.
  */
-function getIndexByDisplayIndex(index: number, hasHeader: boolean = false, resultsPosition: ResultsPosition = null): number {
-    return getItemRealIndex(index, hasHeader, resultsPosition);
+function getIndexByDisplayIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): number {
+    return getItemRealIndex(cfg);
 }
+
 
 
 /**
  * Возвращает номер строки в списке для строки результатов.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
- * @return {Number}
+ * @param {GridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для строки результатов.
  */
-function getResultsIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean): number {
+function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
     
-    let index = hasHeader ? 1 : 0;
+    let index = cfg.hasHeader ? 1 : 0;
     
-    if (resultsPosition === "bottom") {
-        let itemsCount = display.getCount();
+    if (cfg.resultsPosition === "bottom") {
+        let itemsCount = cfg.display.getCount();
         
         if (itemsCount) {
             index += itemsCount;
         } else {
-            index += hasEmptyTemplate ? 1 : 0;
+            index += cfg.hasEmptyTemplate ? 1 : 0;
         }
     }
     
@@ -91,42 +117,40 @@ function getResultsIndex(display: Display, hasHeader: boolean, resultsPosition: 
 }
 
 
+
 /**
- * Возвращает номер строки в списке для строки с подвалом.
+ * Возвращает номер строки в списке для строки подвала.
  *
- * @param {'Types/display'} display Проекция элементов списка.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @param {Boolean} hasEmptyTemplate Флаг, указывающий, задан ли шаблон отображения пустого списка.
- * @return {Number}
+ * @param {GridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для строки подвала
  */
-function getFooterIndex(display: Display, hasHeader: boolean, resultsPosition: ResultsPosition, hasEmptyTemplate: boolean): number {
+function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
     let
-        hasResults = !!resultsPosition,
-        itemsCount = display.getCount(), index = 0;
+        hasResults = !!cfg.resultsPosition,
+        itemsCount = cfg.display.getCount(), index = 0;
     
-    index += hasHeader ? 1 : 0;
+    index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
     
     if (itemsCount) {
         index += itemsCount;
     } else {
-        index += hasEmptyTemplate ? 1 : 0;
+        index += cfg.hasEmptyTemplate ? 1 : 0;
     }
     
     return index;
 }
 
 
+
 /**
- * Возвращиет отступ сверху для первой записи списка
+ * Возвращиет отступ сверху для первой записи списка.
  *
- * @private
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
+ * @param {GridRowIndexOptions.hasHeader} hasHeader Флаг, указывающий на наличие заголовка в таблице.
+ * @param {GridRowIndexOptions.resultsPosition} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
+ * @return {Number} Отступ сверху для первой записи списка
  */
-function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = null): number {
+function getTopOffset(hasHeader: boolean, resultsPosition: GridRowIndexOptions["resultsPosition"] = null): number {
     let
         topOffset = 0;
     
@@ -137,20 +161,29 @@ function getTopOffset(hasHeader: boolean, resultsPosition: ResultsPosition = nul
 }
 
 
+
 /**
  * Функция расчета номера строки в списке для элемента с указанным индексом в проекции.
  *
- * @param {Number} displayIndex Индекс элемента списка в проекции.
- * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
- * @param {ResultsPosition|null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
- * @return {Number}
+ * @private
+ * @param {GridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
+ * @return {Number} Номера строки в списке для элемента с указанным индексом в проекции.
  */
-function getItemRealIndex(displayIndex: number, hasHeader: boolean, resultsPosition?: ResultsPosition): number {
-    return displayIndex + getTopOffset(hasHeader, resultsPosition);
+function getItemRealIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): number {
+    return cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition);
 }
 
 
+
 export {
+    ItemId,
+    DisplayItem,
+    DisplayItemIndex,
+    HasEmptyTemplate,
+    
+    IBaseGridRowIndexOptions,
+    GridRowIndexOptions,
+    
     getIndexById,
     getIndexByItem,
     getIndexByDisplayIndex,

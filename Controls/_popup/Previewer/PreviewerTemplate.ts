@@ -1,11 +1,14 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
-import template = require('wml!Controls/_popup/Previewer/OpenerTemplate');
+import template = require('wml!Controls/_popup/Previewer/PreviewerTemplate');
 import Utils = require('View/Executor/Utils');
 import 'Controls/Container/Async';
-      
 
-      var OpenerTemplate = Control.extend({
+/**
+ * @class Controls/_popup/Previewer/PreviewerTemplate
+ */
+
+      var PreviewerTemplate = Control.extend({
          _template: template,
 
          _beforeMount: function(options) {
@@ -25,6 +28,6 @@ import 'Controls/Container/Async';
          }
       });
 
-      export = OpenerTemplate;
-   
+      export = PreviewerTemplate;
+
 

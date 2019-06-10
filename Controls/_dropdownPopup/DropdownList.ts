@@ -36,10 +36,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                },
                corner: {
                   horizontal: align
-               },
-               eventHandlers: {
-                  onResult: self._resultHandler,
-                  onClose: self._subDropdownClose
                }
             };
          },
@@ -99,11 +95,15 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                action: action,
                event: event
             };
-            var selectedItems = [];
-            chain.factory(self._listModel.getSelectedKeys()).each(function(key) {
-               selectedItems.push(self._options.items.getRecordById(key));
-            });
-            result.data = selectedItems;
+            if (self._options.emptyText && self._listModel.getSelectedKeys()[0] === null) {
+               result.data = self._listModel.getEmptyItem();
+            } else {
+               let selectedItems = [];
+               chain.factory(self._listModel.getSelectedKeys()).each(function (key) {
+                  selectedItems.push(self._options.items.getRecordById(key));
+               });
+               result.data = selectedItems;
+            }
             return result;
          },
 
@@ -138,7 +138,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   })
                }
                if (!iconSize && options.iconPadding && options.iconPadding[rootKey]) {
-                  headConfig.icon += ' ' + options.iconPadding[rootKey][1];
+                  headConfig.icon += ' ' + options.iconPadding[rootKey];
                }
                if (headConfig.menuStyle === 'duplicateHead') {
                   self._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
@@ -197,8 +197,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                _private.setPopupOptions(this);
                _private.prepareHeaderConfig(this, newOptions);
             }
-            this._resultHandler = this._resultHandler.bind(this);
-            this._subDropdownClose = this._subDropdownClose.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
             this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
          },
@@ -278,13 +276,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             }
          },
 
-         _resultHandler: function(result) {
+         _resultHandler: function(event, result) {
             switch (result.action) {
                case 'itemClick':
                   if (!result.data[0].get(this._options.nodeProperty)) {
                      this._children.subDropdownOpener.close();
                   }
-               case 'pinClicked':
+               case 'pinClick':
                   this._notify('sendResult', [result]);
             }
          },
@@ -298,7 +296,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             }
          },
 
-         _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
+         _itemClickHandler: function(event, item) { // todo нужно обсудить
             if (item.get('readOnly')) {
                return;
             }
@@ -315,16 +313,12 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   });
                }
             } else {
+               let isPinClick = event.target.closest('.controls-HistoryMenu__iconPin');
                var result = {
-                  action: pinClicked ? 'pinClicked' : 'itemClick',
+                  action: isPinClick ? 'pinClick' : 'itemClick',
                   event: event,
                   data: [item]
                };
-
-               // means that pin button was clicked
-               if (pinClicked) {
-                  event.stopPropagation();
-               }
                this._notify('sendResult', [result]);
             }
          },
@@ -353,9 +347,12 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             }
          },
          _toggleExpanded: function() {
+            let self = this;
             this._listModel.toggleExpanded(this._expanded);
             this._hasHierarchy = this._listModel.hasHierarchy();
-            this._forceUpdate();
+            scheduleCallbackAfterRedraw(this, () => {
+               self._notify('controlResize', [], {bubbling: true});
+            });
          },
 
          _selectorDialogResult: function(event, result) {
@@ -367,8 +364,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                this._listModel.destroy();
                this._listModel = null;
             }
-            this._resultHandler = null;
-            this._subDropdownClose = null;
             this._mousemoveHandler = null;
             this._openSubDropdown = null;
             this._headConfig = null;
