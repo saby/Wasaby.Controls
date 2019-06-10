@@ -38,11 +38,11 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        */
 
         /**
-         * @name Controls/_scroll/StickyHeader#backgroundVisibility
-         * @cfg {String} Background visibility.
-         * @variant visible Show.
-         * @variant hidden Do not show.
-         * @default visible
+         * @name Controls/_scroll/StickyHeader#backgroundVisible
+         * @cfg {Boolean} Background visibility.
+         * @variant true Show.
+         * @variant false Do not show.
+         * @default true
          */
 
       /**

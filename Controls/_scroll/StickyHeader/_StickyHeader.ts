@@ -263,7 +263,7 @@ StickyHeader.getDefaultOptions = function() {
       //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
       fixedZIndex: 2,
       shadowVisibility: 'visible',
-      backgroundVisibility: 'visible',
+      backgroundVisible: true,
       mode: 'replaceable',
       position: 'top'
    };
@@ -275,10 +275,7 @@ StickyHeader.getOptionTypes = function() {
          'visible',
          'hidden'
       ]),
-      backgroundVisibility: entity.descriptor(String).oneOf([
-         'visible',
-         'hidden'
-      ]),
+      backgroundVisible: entity.descriptor(Boolean),
       mode: entity.descriptor(String).oneOf([
          'replaceable',
          'stackable'
