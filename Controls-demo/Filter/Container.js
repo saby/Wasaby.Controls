@@ -89,7 +89,7 @@ define('Controls-demo/Filter/Container', [
             })
          }];
          this._source = new sourceLib.Memory({
-            data: memorySourceData,
+            data: memorySourceData.departments,
             idProperty: 'id'
          });
       }

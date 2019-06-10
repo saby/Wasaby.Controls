@@ -34,8 +34,11 @@ var _private = {
    hasMore: function(searchResult) {
       return searchResult && searchResult.hasMore;
    },
+   isEmptyData: function(searchResult) {
+      return !(searchResult && searchResult.data.getCount());
+   },
    shouldShowFooter: function(self, searchResult) {
-      return this.hasMore(searchResult) && self._options.footerTemplate;
+      return (_private.hasMore(searchResult) || _private.isEmptyData(searchResult)) && self._options.footerTemplate;
    },
    suggestStateNotify: function(self, state) {
       if (self._options.suggestState !== state) {
@@ -165,6 +168,10 @@ var _private = {
          if (result && result.get(CURRENT_TAB_META_FIELD)) {
             self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
          }
+
+         if (self._searchValue && resultData.hasMore && !isNaN(metaData.more)) {
+            resultData.more = metaData.more - data.getCount();
+         }
       }
       if (!_private.shouldShowSuggest(self, resultData)) {
          _private.close(self);
@@ -258,6 +265,15 @@ var _private = {
       });
 
       return self._historyLoad;
+   },
+
+   openSelector: function(self, popupOptions) {
+      if (self._notify('showSelector', []) !== false) {
+         //loading showAll templates
+         requirejs(['Controls/suggestPopup'], function () {
+            self._children.stackOpener.open(popupOptions);
+         });
+      }
    }
 };
 
@@ -469,15 +485,20 @@ var SuggestLayout = Control.extend({
       _private.searchErrback(this, error);
    },
    _showAllClick: function() {
-      var self = this;
+      var filter = clone(this._filter) || {};
 
-      if (this._notify('showSelector', []) !== false) {
-         //loading showAll templates
-         requirejs(['Controls/suggestPopup'], function () {
-            self._children.stackOpener.open();
-         });
-      }
-      _private.close(this)
+      filter[this._options.searchParam] = '';
+      _private.openSelector(this, {
+         templateOptions: {
+            filter: filter
+         }
+      });
+      _private.close(this);
+   },
+
+   _moreClick: function() {
+      _private.openSelector(this);
+      _private.close(this);
    },
 
    _missSpellClick: function() {
