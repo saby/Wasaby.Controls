@@ -67,14 +67,7 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
       protected _theme: string[] = ['Controls/heading'];
-
-       private _prepareFontSize(value: boolean): void {
-           if (value) {
-               this._icon = 'icon-AccordionArrowUp ';
-           } else {
-               this._icon = 'icon-AccordionArrowDown ';
-           }
-       }
+      
       static getDefaultOptions(): object {
          return {
             style: 'secondary',
