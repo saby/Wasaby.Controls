@@ -571,12 +571,11 @@ var
             }
             this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
-
         },
         setHeaderCellMinHeight: function(data) {
-            if (!this._resultOffset || !isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
+            if (!isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
                 this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
-                this._setResultOffset(data[1]);
+                if (data[1]) { this._setResultOffset(data[1]); };
                 this._nextModelVersion();
             }
         },
@@ -706,9 +705,9 @@ var
             }
             if (cell.startRow) {
                 if (this.isNoGridSupport()) {
-
                     headerColumn.rowSpan = endRow - startRow;
                     headerColumn.colSpan = endColumn - startColumn;
+                    // console.log(cell.title, 'rowSpan=',  headerColumn.rowSpan, 'colSpan=', headerColumn.colSpan)
                 } else {
                     if (this.isStickyHeader()) {
                         offsetTop = cell.offsetTop ? cell.offsetTop : 0;
@@ -752,6 +751,7 @@ var
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
+
             return headerColumn;
         },
 

@@ -15,7 +15,7 @@
                           mode="stackable"
                           fixedZIndex="{{currentResultsColumn.zIndex}}"
                           isResultsColumn="{{true}}"
-                          style="top:{{offset}}px;"
+                          style="{{ offset ? 'top:'+offset+'px;' }}"
                           offsetTop="{{offset}}"
 
    >

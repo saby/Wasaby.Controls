@@ -1110,16 +1110,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();
-
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
                index: 0,
-               cellContentClasses: ' controls-Grid__cell_header-content',
+               cellContentClasses: '',
                cellStyles:'',
-               height:'max-height:23px;',
                shadowVisibility: 'visible',
-               stickyTop: 0,
+               offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
@@ -1129,10 +1127,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeader[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1,
-               height: "max-height:23px;",
                shadowVisibility: "visible",
-               stickyTop: 0,
-               cellContentClasses: " controls-Grid__cell_header-content",
+               offsetTop: 0,
+               cellContentClasses: "",
                cellStyles: "",
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
@@ -1144,11 +1141,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
                sortingDirection: 'DESC',
-               cellContentClasses: " controls-Grid__cell_header-content controls-Grid__header-cell_justify_content_right",
+               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: "",
-               height: "max-height:23px;",
                shadowVisibility: "visible",
-               stickyTop: 0
+               offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
@@ -1158,11 +1154,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeader[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
-               cellContentClasses: " controls-Grid__cell_header-content controls-Grid__header-cell_justify_content_right",
+               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: "",
-               height: "max-height:23px;",
                shadowVisibility: "visible",
-               stickyTop: 0
+               offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(0, 3), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
@@ -1242,7 +1237,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell-checkbox',
                index: 0,
-               stickyTop: offset,
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value first call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
@@ -1252,7 +1246,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridColumns[0],
                cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                index: 1,
-               stickyTop: offset,
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after second call "getCurrentResultsColumn()".');
@@ -1263,7 +1256,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
                   'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                index: 2,
-               stickyTop: offset,
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
@@ -1274,7 +1266,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
                   'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                index: 3,
-               stickyTop: offset,
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after fourth call "getCurrentResultsColumn()".');

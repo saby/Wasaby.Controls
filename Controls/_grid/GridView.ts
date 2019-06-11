@@ -295,7 +295,7 @@ var
                     return {
                         ...cur,
                         offsetTop: offset,
-                        height,
+                        height
                     };
                 }
                 const curElHeight = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height

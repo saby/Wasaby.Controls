@@ -27,7 +27,6 @@
                  template="{{defaultHeaderContent}}"
                  colData="{{headerColumn}}"
          />
-
       </ws:else>
    </ws:if>
 </ws:template>
@@ -78,6 +77,7 @@
 <ws:template name="header">
    <ws:if data="{{listModel.isNoGridSupport()}}">
       <thead class="controls-Grid__header">
+         {{ listModel.resetHeaderRows() }}
          <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
            <tr>
                <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}" />
@@ -86,6 +86,7 @@
       </thead>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
+      {{ listModel.resetHeaderRows() }}
       <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
          <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}"/>
       </ws:for>
