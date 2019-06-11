@@ -545,6 +545,7 @@ var
 
       /**
        * Scrolls to the given position from the top of the container.
+       * @function Controls/_scroll/Scroll#scrollTo
        * @param {Number} offset
        */
       scrollTo: function(offset) {
@@ -553,6 +554,7 @@ var
 
       /**
        * Scrolls to the top of the container.
+       * @function Controls/_scroll/Scroll#scrollToTop
        */
       scrollToTop: function() {
          _private.setScrollTop(this, 0);
@@ -560,6 +562,7 @@ var
 
       /**
        * Scrolls to the bottom of the container.
+       * @function Controls/_scroll/Scroll#scrollToBottom
        */
       scrollToBottom: function() {
          _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
