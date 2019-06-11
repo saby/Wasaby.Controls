@@ -2149,7 +2149,8 @@
               "warning": "warning",
               "secondary": "secondary",
               "info": "info",
-              "success": "success"
+              "success": "success",
+              "primary" : "primary"
             }
           },
           "trigger": {
