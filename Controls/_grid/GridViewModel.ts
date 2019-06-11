@@ -744,7 +744,6 @@ var
                 cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
             }
 
-
             headerColumn.shadowVisibility = shadowVisibility;
             headerColumn.offsetTop = offsetTop;
             headerColumn.cellStyles = cellStyles;
