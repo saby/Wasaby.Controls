@@ -3,12 +3,11 @@ import Env = require('Env/Env');
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
-
 /**
  * Контрол, позволяющий пользователю вводить однострочный текст.
- * Функционал идентичен полю ввода, но могут быть по-разному стилизованы.
+ * Функционал идентичен полю ввода, но контрол имеет другое оформление.
  *
- * Информацию о найстройке поиска в списке с ипользованием контрола "input:Search" можно прочитать <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ * О том, как настроить поиск в списке, ипользуя контрол "input:Search", можно прочитать <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
  *
  * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
