@@ -11,7 +11,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @extends Core/Control
  *
  * @mixes Controls/_decorator/Money/Styles
- * @mixes Controls/interface/INumberFormat
+ * @mixes Controls/_interface/INumberFormat
  *
  * @public
  * @demo Controls-demo/Decorators/Money/Money
