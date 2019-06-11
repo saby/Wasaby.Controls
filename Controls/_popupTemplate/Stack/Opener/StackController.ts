@@ -11,8 +11,31 @@ import 'css!theme?Controls/popupTemplate';
       var _private = {
 
          prepareSizes: function(item, container) {
-            var templateStyle = container ? getComputedStyle(container.children[0]) : {};
-            var defaultOptions = _private.getDefaultOptions(item);
+            let width;
+            let maxWidth;
+            let minWidth;
+            let templateContainer;
+
+            if (container) {
+               /* start: We remove the set values that affect the size and positioning to get the real size of the content */
+               templateContainer = _private.getStackContentWrapperContainer(container);
+               width = templateContainer.style.width;
+               maxWidth = templateContainer.style.maxWidth;
+               minWidth = templateContainer.style.minWidth;
+               // We won't remove width and height, if they are set explicitly.
+               if(!item.popupOptions.width) {
+                  templateContainer.style.width = 'auto';
+               }
+               if(!item.popupOptions.maxWidth) {
+                  templateContainer.style.maxWidth = 'auto';
+               }
+               if(!item.popupOptions.minWidth) {
+                  templateContainer.style.minWidth = 'auto';
+               }
+               /* end: We remove the set values that affect the size and positioning to get the real size of the content */
+            }
+            let templateStyle = container ? getComputedStyle(container.children[0]) : {};
+            let defaultOptions = _private.getDefaultOptions(item);
 
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
@@ -31,6 +54,14 @@ import 'css!theme?Controls/popupTemplate';
             if (container && !item.popupOptions.width) {
                item.containerWidth = _private.getContainerWidth(item, container);
             }
+
+            if (container) {
+               /* start: Return all values to the node. Need for vdom synchronizer */
+               templateContainer.style.width = width;
+               templateContainer.style.maxWidth = maxWidth;
+               templateContainer.style.minWidth = minWidth;
+               /* end: Return all values to the node. Need for vdom synchronizer */
+            }
          },
 
          getContainerWidth: function(item, container) {
@@ -41,6 +72,10 @@ import 'css!theme?Controls/popupTemplate';
             var templateWidth = container.querySelector('.controls-Stack__content').offsetWidth;
             container.style.width = currentContainerWidth;
             return templateWidth;
+         },
+
+         getStackContentWrapperContainer(stackContainer) {
+            return stackContainer.querySelector('.controls-Stack__content-wrapper');
          },
 
          getStackParentCoords: function() {
@@ -246,8 +281,17 @@ import 'css!theme?Controls/popupTemplate';
                   stackWidth: position.stackWidth || undefined
                };
             } else {
-               this._stack.add(item);
-               this._update();
+                // TODO KINGO
+                // Когда несколько раз зовут open до того как построилось окно и у него может вызываться фаза update
+                // мы обновляем опции, которые пришли в последний вызов метода open и зовем getDefaultConfig, который
+                // добавляет item в _stack. Добавление нужно делать 1 раз, чтобы не дублировалась конфигурация.
+                let itemIndex = this._stack.getIndexByValue('id', item.id);
+                if (itemIndex === -1) {
+                    this._stack.add(item);
+                } else {
+                    this._stack.replace(item, itemIndex);
+                }
+                this._update();
             }
          },
 
