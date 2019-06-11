@@ -26,7 +26,7 @@
           "useGrouping": {
             "type": "Boolean"
           },
-          "displayEmptyDecimal": {
+          "showEmptyDecimals": {
             "type": "Boolean"
           }
         }

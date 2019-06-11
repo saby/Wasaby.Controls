@@ -49,7 +49,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  */
 
 /**
- * @name Controls/_decorator/Money#displayEmptyDecimal
+ * @name Controls/_decorator/Money#showEmptyDecimals
  * @cfg {Boolean} Determines whether to display empty the decimal part.
  * @default true
  * @remark
@@ -141,8 +141,8 @@ var Money = Control.extend({
       }
    },
 
-   _isDisplayFractionPath: function(value, displayEmptyDecimal) {
-      return displayEmptyDecimal || value !== '.00';
+   _isDisplayFractionPath: function(value, showEmptyDecimals) {
+      return showEmptyDecimals || value !== '.00';
    }
 });
 
@@ -150,7 +150,7 @@ Money.getDefaultOptions = function () {
    return {
       style: 'default',
       useGrouping: true,
-      displayEmptyDecimal: true
+      showEmptyDecimals: true
    };
 };
 
