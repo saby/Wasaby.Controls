@@ -452,6 +452,10 @@ const BaseOpener = {
          center: 'center'
       };
 
+      if (cfg.hasOwnProperty('task_1174068748')) {
+         newCfg.dialogOptions.task_1174068748 = cfg.task_1174068748;
+      }
+
       if (cfg.hasOwnProperty('closeOnOutsideClick')) {
          newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
