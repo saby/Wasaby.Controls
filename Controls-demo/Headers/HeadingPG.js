@@ -19,7 +19,7 @@ define('Controls-demo/Headers/HeadingPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               fontColorStylestyle: {
+               fontColorStyle: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
@@ -34,7 +34,7 @@ define('Controls-demo/Headers/HeadingPG',
                readOnly: false,
                fontSize: 'l',
                caption: 'Heading',
-               fontStyle: 'secondary',
+               fontColorStyle: 'secondary',
                tooltip: '',
                name: 'Heading'
 
