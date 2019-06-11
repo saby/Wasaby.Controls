@@ -67,7 +67,12 @@ var _private = {
          if (self._options.parentProperty) {
             _private.deleteServiceFilters(filter);
          }
-         self._notify('filterChanged', [filter]);
+
+         //abortCallback is called on every input change, when input value is less then minSearchLength,
+         //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
+         if (!isEqual(self._options.filter, filter)) {
+            self._notify('filterChanged', [filter]);
+         }
       }
    },
 
