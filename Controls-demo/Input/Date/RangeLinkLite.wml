@@ -31,14 +31,15 @@
                endValue="{{_endValueQuarter}}"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
-               style="linkMain2"
+               viewMode="link"
+               styleMode="info"
 			   attr:test_name="quarters_range"
             />
 
          </div>
          <div class="PageBlock__componentWrap">
             <Controls.dateRange:LiteSelector
-               style="linkAdditional"
+               viewMode="label"
                emptyCaption="не задан"
 			   attr:test_name="range_not_value"
             />

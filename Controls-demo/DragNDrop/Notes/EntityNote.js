@@ -2,7 +2,7 @@ define('Controls-demo/DragNDrop/Notes/EntityNote', ['Controls/dragnDrop'],
    function(dragnDrop) {
       'use strict';
 
-      var EntityNote = dragnDrop._ItemEntity.extend({
+      var EntityNote = dragnDrop.ItemEntity.extend({
 
          constructor: function(options) {
             EntityNote.superclass.constructor.apply(this, arguments);

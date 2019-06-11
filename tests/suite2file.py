@@ -13,7 +13,7 @@ def get_suites():
 
     result = {}
     for name in args.changed_files.split(' '):
-        if name.endswith('chrome_1920_1080.png'):
+        if name.endswith('chrome_1920_1080.png') or name.endswith('ff_1920_1080.png'):
             suite = name.split('/capture/')[1].split('/')[0]
             try:
                 result[suite]

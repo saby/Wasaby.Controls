@@ -25,6 +25,7 @@ var moduleClass = CompoundControl.extend({
    init: function() {
       moduleClass.superclass.init.apply(this, arguments);
       var self = this;
+      this._listeners = [];
       this._onCloseHandler = this._onCloseHandler.bind(this);
       this._keydownHandler = this._keydownHandler.bind(this);
       this._onResultHandler = this._onResultHandler.bind(this);
@@ -237,6 +238,11 @@ var moduleClass = CompoundControl.extend({
       // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
       // не могут отловить событие
       if (handler) {
+         this._listeners.push({
+            event: event,
+            eventName: eventName,
+            emitter: emitter
+         });
          ManagerWrapperController.registerListener(event, eventName, emitter, handler);
       } else {
          ManagerWrapperController.unregisterListener(event, eventName, emitter);
@@ -287,6 +293,12 @@ var moduleClass = CompoundControl.extend({
       this._container[0].eventProperties = null;
       this.unsubscribe('activated', this._activatedHandler);
       this.unsubscribe('deactivated', this._deactivatedHandler);
+
+      // Очищаем список лисенеров в контроллерах.
+      for (var i = 0; i < this._listeners.length; i++) {
+         var listener = this._listeners[i];
+         ManagerWrapperController.unregisterListener(listener.event, listener.eventName, listener.emitter);
+      }
       moduleClass.superclass.destroy.apply(this, arguments);
       this._isVDomTemplateMounted = true;
       this.getContainer().unbind('keydown', this._keydownHandler);

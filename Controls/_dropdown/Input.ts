@@ -101,7 +101,7 @@ var _private = {
  *       bind:selectedKeys="_selectedKeys"
  *       keyProperty="id"
  *       displayProperty="title"
- *       source="{{_source)}}"
+ *       source="{{_source}}"
  *       multiSelect="{{true}}">
  * </Controls.dropdown:Input>
  * </pre>

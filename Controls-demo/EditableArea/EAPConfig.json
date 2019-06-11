@@ -1,11 +1,11 @@
 {
-  "Controls/EditableArea": {
-    "name": "Controls/EditableArea",
+  "Controls/editableArea:View": {
+    "name": "Controls/editableArea:View",
     "title": "Controller for editing of input fields.",
-    "className": "Controls/EditableArea",
+    "className": "Controls/editableArea:View",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/EditableArea",
+    "fullname": "Controls/editableArea:View",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

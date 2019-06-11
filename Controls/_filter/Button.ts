@@ -90,16 +90,13 @@ var _private = {
          self._filterCompatible.updateFilterStructure(items);
       }
    },
-   setPopupOptions: function(self, options) {
+   setPopupOptions: function(self, alignment) {
       self._popupOptions = {
          closeOnOutsideClick: true,
-         eventHandlers: {
-            onResult: self._onFilterChanged
-         },
-         className: 'controls-FilterButton-popup-orientation-' + (options.alignment === 'right' ? 'left' : 'right')
+         className: 'controls-FilterButton-popup-orientation-' + (alignment === 'right' ? 'left' : 'right')
       };
 
-      if (options.alignment === 'right') {
+      if (alignment === 'right') {
          self._popupOptions.corner = {
             vertical: 'top',
             horizontal: 'right'
@@ -162,8 +159,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       if (options.items) {
          _private.resolveItems(this, options.items);
       }
-      this._onFilterChanged = this._onFilterChanged.bind(this);
-      _private.setPopupOptions(this, options);
+      _private.setPopupOptions(this, options.alignment);
    },
 
    _beforeUpdate: function(options) {
@@ -171,7 +167,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
          _private.resolveItems(this, options.items);
       }
       if (this._options.alignment !== options.alignment) {
-         _private.setPopupOptions(this, options);
+         _private.setPopupOptions(this, options.alignment);
       }
    },
 
@@ -209,7 +205,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       }
    },
 
-   _onFilterChanged: function(data) {
+   _onFilterChanged: function(event, data) {
       this._notify('filterChanged', [data.filter]);
       this._notify('itemsChanged', [data.items]);
    }

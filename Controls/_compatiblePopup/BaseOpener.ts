@@ -238,6 +238,20 @@ const BaseOpener = {
             }
          }
       }
+
+      // Если вдомное окно открывается из PopupMixin, нужно вычислить zindex вручную
+      if (cfg.opener && cfg.opener._container) {
+         let sbis3FloatArea = cfg.opener._container.closest('.controls-FloatArea');
+
+         // get DOM node, cause it can be jQuery
+         sbis3FloatArea = sbis3FloatArea && sbis3FloatArea.length !== undefined ? sbis3FloatArea[0] : sbis3FloatArea;
+         if (sbis3FloatArea) {
+            let zIndex = sbis3FloatArea.style.zIndex;
+            if (zIndex) {
+               cfg.zIndex = parseInt(zIndex, 10) + 10;
+            }
+         }
+      }
    },
 
    _preparePopupCfgFromOldToNew: function(cfg) {
@@ -441,6 +455,8 @@ const BaseOpener = {
       if (cfg.hasOwnProperty('closeOnOutsideClick')) {
          newCfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          newCfg.dialogOptions.closeOnOverlayClick = cfg.closeOnOutsideClick;
+      } else {
+         newCfg.dialogOptions.autoHide = false; // значение по умолчанию в вдом контроле
       }
 
       if (cfg.hasOwnProperty('closeChildWindows')) {
