@@ -12,7 +12,7 @@ define('Controls-demo/Headers/headerDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _headerSelectedSize: 'm',
+         _headerSelectedSize: 'l',
          _selectedStyle: 'primary',
          _headerSizeSource: null,
          _headerStyleSource: null,
