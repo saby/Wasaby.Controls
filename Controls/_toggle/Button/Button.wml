@@ -1,4 +1,4 @@
-<a attr:class="controls-BaseButton controls-Button_style-{{_buttonStyle}}{{_state}}
+<a attr:class="controls-BaseButton controls-ToggleButton controls-Button_style-{{_buttonStyle}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
              controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
