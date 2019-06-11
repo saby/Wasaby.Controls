@@ -71,28 +71,52 @@ var
           }
         },
         getPaddingCellClasses: function(params) {
+            var
+                preparedClasses = '';
+
+            // Колонки
+            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
+                preparedClasses += ' controls-Grid__cell_spacingLeft';
+            }
+            if (params.columnIndex < params.columns.length - 1) {
+                preparedClasses += ' controls-Grid__cell_spacingRight';
+            }
+
+            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
+            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
+            }
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (params.isBreadCrumbs) {
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+            }
+
+            // Стиль колонки
+            preparedClasses += ' controls-Grid__cell_' + (params.style || 'default');
+
+            // Отступ для последней колонки
+            if (params.columnIndex === params.columns.length - 1) {
+                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
+            }
+            if (!params.isHeader) {
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
+            }
+
+
+            return preparedClasses;
+        },
+        getPaddingHeaderCellClasses: function(params) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, isMultyHeader } = params;
-            if (isMultyHeader) {
-                if (rowIndex === 0) {
-                    if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
-                        preparedClasses += ' controls-Grid__cell_spacingLeft';
-                    }
-                    // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-                    if (columnIndex === 0 && !multiSelectVisibility) {
-                        preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
-                    }
-                } else {
-                    preparedClasses += ' controls-Grid__cell_spacingLeft';
-                }
-            } else {
+                rowIndex, itemPadding, isBreadCrumbs, style } = params;
+            if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft';
                 }
-                if (columnIndex === 0 && !multiSelectVisibility) {
-                    preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
-                }
+            } else {
+                preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
 
             if (columnIndex < columns.length - 1) {
@@ -101,6 +125,10 @@ var
             // Отступ для последней колонки
             if (columnIndex === columns.length - 1) {
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            }
+            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
+            if (columnIndex === 0 && !multiSelectVisibility) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -636,7 +664,7 @@ var
             if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
-                cellClasses += _private.getPaddingCellClasses({
+                cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
                     columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
@@ -647,10 +675,8 @@ var
                     rowIndex,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
-                    isMultyHeader: !!cell.startRow
                 });
             }
-
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
