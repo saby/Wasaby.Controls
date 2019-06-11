@@ -18,7 +18,7 @@
         </div>
         <div class="ControlsDemo-standartDemoSwitch_RadioGroups">
             <h2>Horizontal radio group</h2>
-            <div class="demo__block">
+            <div class="demo__block ControlsDemo-standartDemoSwitch_HorizontalRadioBlock">
                 <Controls.toggle:RadioGroup
                    attr:class="demo__element horizontal__element ControlsDemo-standartDemoSwitch_HorizontalRadio"
                    on:selectedKeyChanged="changeKey(1)"
@@ -31,7 +31,7 @@
             <h2>Vertical radio group</h2>
             <div class="demo__block_inline">
                 <Controls.toggle:RadioGroup
-                   attr:class="demo__element vertical__element"
+                   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioLeft"
                    on:selectedKeyChanged="changeKey(2)"
                    keyProperty="id"
                    selectedKey="{{_selectKey2}}"
@@ -41,7 +41,7 @@
             </div>
             <div class="demo__block_inline">
                 <Controls.toggle:RadioGroup
-                   attr:class="demo__element vertical__element"
+                   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioRigth"
                    on:selectedKeyChanged="changeKey(3)"
                    keyProperty="id"
                    selectedKey="{{_selectKey3}}"
