@@ -544,22 +544,41 @@ var
       },
 
       /**
+       * Скроллит к выбранной позиции. Позиция определяется в пикселях от верха контейнера.
+       * @function Controls/_scroll/Scroll#scrollTo
+       * @param {Number} Позиция в пикселях
+       */
+
+      /*
        * Scrolls to the given position from the top of the container.
-       * @param {Number} offset
+       * @function Controls/_scroll/Scroll#scrollTo
+       * @param {Number} Offset
        */
       scrollTo: function(offset) {
          _private.setScrollTop(this, offset);
       },
 
       /**
+       * Скроллит к верху контейнера
+       * @function Controls/_scroll/Scroll#scrollToTop
+       */
+
+      /*
        * Scrolls to the top of the container.
+       * @function Controls/_scroll/Scroll#scrollToTop
        */
       scrollToTop: function() {
          _private.setScrollTop(this, 0);
       },
 
       /**
+       * Скроллит к низу контейнера
+       * @function Controls/_scroll/Scroll#scrollToBottom
+       */
+
+      /*
        * Scrolls to the bottom of the container.
+       * @function Controls/_scroll/Scroll#scrollToBottom
        */
       scrollToBottom: function() {
          _private.setScrollTop(this, _private.getScrollHeight(this._children.content));

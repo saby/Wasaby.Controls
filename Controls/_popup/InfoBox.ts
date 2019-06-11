@@ -119,6 +119,7 @@ import Env = require('Env/Env');
        * @variant info
        * @variant secondary
        * @variant success
+       * @variant primary
        */
 
 
