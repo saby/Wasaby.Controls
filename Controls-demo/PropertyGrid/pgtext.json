@@ -186,22 +186,31 @@
             "type": "String",
             "default": ""
           },
-          "style": {
+          "fontColorStyle": {
             "type": "enum",
             "title": "Display style of heading.",
             "enum": {
               "secondary": "Button display as icon with border.",
-              "primary": "Button display as main link style."
+              "primary": "Button display as main link style.",
+              "danger": "danger",
+              "success": "success",
+              "default": "default",
+              "label": "label"
             }
           },
-          "size": {
+          "fontSize": {
             "type": "enum",
             "title": "Size of the heading.",
             "enum": {
+              "xs": "xs",
               "s": "Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.",
               "m": "Button has m size.",
               "l": "Button has l size.",
-              "xl": "Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered."
+              "xl": "Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.",
+              "2xl": "2xl",
+              "3xl": "3xl",
+              "4xl": "4xl",
+              "5xl": "5xl"
             }
           }
         }

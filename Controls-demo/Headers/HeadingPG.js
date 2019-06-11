@@ -19,12 +19,12 @@ define('Controls-demo/Headers/HeadingPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               style: {
+               fontColorStylestyle: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
                },
-               size: {
+               fontSize: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 1
@@ -32,9 +32,9 @@ define('Controls-demo/Headers/HeadingPG',
             };
             this._componentOptions = {
                readOnly: false,
-               size: 'm',
+               fontSize: 'l',
                caption: 'Heading',
-               style: 'secondary',
+               fontStyle: 'secondary',
                tooltip: '',
                name: 'Heading'
 

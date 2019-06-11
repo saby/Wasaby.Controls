@@ -56,6 +56,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @default primary
     */
 const mapFontSize = {'s': 'm', 'm': 'l', 'l': '3xl', 'xl': '4xl'};
+const mapFontColorStyle = {'info': 'label', 'primary': 'primary', 'secondary': 'secondary'};
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
@@ -69,7 +70,7 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
               this._fontSize = options.fontSize;
           }
           if(options.style){
-              this._fontColorStyle = options.style;
+              this._fontColorStyle = mapFontColorStyle[options.style];
           } else {
               this._fontColorStyle = options.fontColorStyle;
           }
@@ -93,7 +94,7 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
              fontColorStyle: EntityDescriptor(String).oneOf([
                'secondary',
                'primary',
-               'info',
+               'label',
                  'danger',
                  'success',
                  'default'
