@@ -35,7 +35,7 @@
    } });
 }
 .controls-InfoBoxTemplate__arrow-marker {
-  @variants: default,  danger, info, secondary, warning, success;
+  @variants: default,  danger, info, secondary, warning, success, primary;
   .for(@variants, { &-@{_item} {
     &.controls-InfoBoxTemplate__arrow-top {
       border-color: ~"@{border-color_Infobox_@{_item}}";
@@ -52,7 +52,7 @@
    } });
 }
 .controls-InfoBoxTemplate_style_marker {
-   @variants: default,  danger, info, secondary, warning, success;
+   @variants: default,  danger, info, secondary, warning, success, primary;
    .for(@variants, { &_@{_item} {
       background: @background-color_Infobox_default;
       box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
