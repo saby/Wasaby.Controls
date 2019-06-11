@@ -29,26 +29,28 @@
                    readOnly="{{false}}"/>
             </div>
             <h2>Vertical radio group</h2>
-            <div class="demo__block_inline">
-                <Controls.toggle:RadioGroup
-                   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioLeft"
-                   on:selectedKeyChanged="changeKey(2)"
-                   keyProperty="id"
-                   selectedKey="{{_selectKey2}}"
-                   source="{{_source}}"
-                   direction="vertical"
-                   readOnly="{{false}}"/>
-            </div>
-            <div class="demo__block_inline">
-                <Controls.toggle:RadioGroup
-                   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioRigth"
-                   on:selectedKeyChanged="changeKey(3)"
-                   keyProperty="id"
-                   selectedKey="{{_selectKey3}}"
-                   source="{{_source}}"
-                   direction="vertical"
-                   readOnly="{{false}}"/>
-            </div>
+			<div class="ControlsDemo-standartDemoSwitch_VerticalRadioBlock">
+				<div class="demo__block_inline">
+					<Controls.toggle:RadioGroup
+					   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioLeft"
+					   on:selectedKeyChanged="changeKey(2)"
+					   keyProperty="id"
+					   selectedKey="{{_selectKey2}}"
+					   source="{{_source}}"
+					   direction="vertical"
+					   readOnly="{{false}}"/>
+				</div>
+				<div class="demo__block_inline">
+					<Controls.toggle:RadioGroup
+					   attr:class="demo__element vertical__element ControlsDemo-standartDemoSwitch_VerticalRadioRight"
+					   on:selectedKeyChanged="changeKey(3)"
+					   keyProperty="id"
+					   selectedKey="{{_selectKey3}}"
+					   source="{{_source}}"
+					   direction="vertical"
+					   readOnly="{{false}}"/>
+				</div>
+			</div>
         </div>
         <h2>readOnly state</h2>
         <div class="demo__block">
@@ -65,10 +67,10 @@
     </div>
     <div class="demo__block demo__block_center">
         <h2>custom itemTemplate</h2>
-        <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_ReadOnlySwitchOff" readOnly="{{false}}" bind:value="value6" caption="tmpl!Controls-demo/Switch/resources/customCaptionTemplate"/>
+        <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_CustomSwitchOff" readOnly="{{false}}" bind:value="value6" caption="tmpl!Controls-demo/Switch/resources/customCaptionTemplate"/>
         <Controls.toggle:RadioGroup
            on:selectedKeyChanged="changeKey(4)"
-           attr:class="demo__element demo__element_width horizontal__element ControlsDemo-standartDemoSwitch_ReadOnlyRadioGroup"
+           attr:class="demo__element demo__element_width horizontal__element ControlsDemo-standartDemoSwitch_CustomRadioGroup"
            keyProperty="id"
            selectedKey="{{_selectKey4}}"
            source="{{_sourceAdditional}}"
