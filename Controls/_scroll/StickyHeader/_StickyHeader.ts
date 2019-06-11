@@ -204,7 +204,7 @@ var StickyHeader = Control.extend({
          if (offsetTop) {
             top = offsetTop + top;
          }
-            // console.log('offset', offsetTop, 'top', top);
+
          if (this._context.stickyHeader) {
             top += this._context.stickyHeader.top;
          }
