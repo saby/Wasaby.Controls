@@ -49,6 +49,15 @@ import template = require('wml!Controls/_decorator/Money/Money');
  */
 
 /**
+ * @name Controls/_decorator/Money#showEmptyDecimals
+ * @cfg {Boolean} Determines whether to display empty the decimal part.
+ * @default true
+ * @remark
+ * true -  Empty the decimal part is displayed.
+ * false - Empty the decimal part is not displayed.
+ */
+
+/**
  * @name Controls/_decorator/Money#style
  * @cfg {String} The type with which you want to display money.
  * @variant accentResults
@@ -130,13 +139,18 @@ var Money = Control.extend({
       if (newValue !== oldValue || newUseGrouping !== oldUseGrouping) {
          this._parsedNumber = _private.parseNumber(newValue, newUseGrouping);
       }
+   },
+
+   _isDisplayFractionPath: function(value, showEmptyDecimals) {
+      return showEmptyDecimals || value !== '.00';
    }
 });
 
 Money.getDefaultOptions = function () {
    return {
       style: 'default',
-      useGrouping: true
+      useGrouping: true,
+      showEmptyDecimals: true
    };
 };
 
