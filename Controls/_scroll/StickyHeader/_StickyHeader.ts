@@ -198,6 +198,8 @@ var StickyHeader = Control.extend({
       offset = this._isMobilePlatform ? 1 : 0;
 
       if (this._options.position.indexOf('top') !== -1) {
+         // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
+         // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
          const offsetTop = this._options.offsetTop;
          top = this._stickyHeadersHeight.top;
 
