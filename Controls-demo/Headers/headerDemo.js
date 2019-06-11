@@ -5,9 +5,9 @@ define('Controls-demo/Headers/headerDemo', [
    'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
-], function (Control,
-             source,
-             template) {
+], function(Control,
+   source,
+   template) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -23,17 +23,26 @@ define('Controls-demo/Headers/headerDemo', [
             this._headerSizeSource = new source.Memory({
                idProperty: 'title',
                data: [
-                  { title: 's'  },
-                  { title: 'm'  },
-                  { title: 'l'  },
-                  { title: 'xl' }
+                  { title: 'xs' },
+                  { title: 's' },
+                  { title: 'm' },
+                  { title: 'l' },
+                  { title: 'xl' },
+                  { title: '2xl' },
+                  { title: '3xl' },
+                  { title: '4xl' },
+                  { title: '5xl' }
                ]
             });
             this._headerStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
-                  { title: 'primary'   },
-                  { title: 'secondary' }
+                  { title: 'primary' },
+                  { title: 'secondary' },
+                  { title: 'label' },
+                  { title: 'danger' },
+                  { title: 'success' },
+                  { title: 'default' },
                ]
             });
          },
@@ -56,6 +65,7 @@ define('Controls-demo/Headers/headerDemo', [
          reset: function() {
             this._eventName = 'no event';
          }
-      });
+      }
+   );
    return ModuleClass;
 });
