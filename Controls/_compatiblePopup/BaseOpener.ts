@@ -241,9 +241,15 @@ const BaseOpener = {
 
       // Если вдомное окно открывается из PopupMixin, нужно вычислить zindex вручную
       if (cfg.opener && cfg.opener._container) {
-         let zIndex = cfg.opener._container.closest('.controls-FloatArea').css('z-index');
-         if (zIndex) {
-            cfg.zIndex = parseInt(zIndex, 10) + 10;
+         let sbis3FloatArea = cfg.opener._container.closest('.controls-FloatArea');
+
+         // get DOM node, cause it can be jQuery
+         sbis3FloatArea = sbis3FloatArea && sbis3FloatArea.length !== undefined ? sbis3FloatArea[0] : sbis3FloatArea;
+         if (sbis3FloatArea) {
+            let zIndex = sbis3FloatArea.style.zIndex;
+            if (zIndex) {
+               cfg.zIndex = parseInt(zIndex, 10) + 10;
+            }
          }
       }
    },
