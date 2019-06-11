@@ -1,11 +1,12 @@
 define('Controls-demo/Date/MonthListSource', [
    'Core/Deferred',
    'Types/source',
+   'Types/formatter',
    'Controls/Utils/Date'
-], function(Deferred, source, dateUtils) {
+], function(Deferred, source, formatter, dateUtils) {
    'use strict';
 
-   var CalendarSource = source.Base.extend({
+   var CalendarSource = source.Memory.extend({
       _moduleName: 'ControlsDemo.Date.MonthListSource',
       $protected: {
          _dataSetItemsProperty: 'items',
@@ -28,45 +29,39 @@ define('Controls-demo/Date/MonthListSource', [
          executor = (function() {
             var adapter = this.getAdapter().forTable(),
                items = [],
-               yearEqual = where['id~'],
-               yearGt = where['id>='],
-               yearLt = where['id<='],
-               year = yearEqual || yearGt || yearLt,
+               monthEqual = where['id~'],
+               monthGt = where['id>='],
+               monthLt = where['id<='],
+               month = monthEqual || monthGt || monthLt,
                extData,
-               days,
                daysInMonth,
-               deferred = new Deferred()
-               // weeksArray
-            ;
+               deferred = new Deferred();
 
-            if (dateUtils.isValidDate(year)) {
-               year = year.getFullYear();
-            } else if (!year) {
-               year = 1900;
+            if (month) {
+               month = formatter.dateFromSql(month);
+            } else {
+               month = dateUtils.getStartOfMonth(new Date());
             }
 
-            year += offset;
+            month.setMonth(month.getMonth() + offset);
 
-            if (yearLt) {
-               year -= limit;
-            } else if (yearGt) {
-               year += 1;
+            if (monthLt) {
+               month.setMonth(month.getMonth() - limit);
+            } else if (monthGt) {
+               month.setMonth(month.getMonth() + 1);
             }
 
             for (var i = 0; i < limit; i++) {
                extData = [];
-               for (var j = 0; j < 12; j++) {
-                  days = [];
-                  daysInMonth = dateUtils.getDaysInMonth(new Date(year + i, j, 1));
-                  for (var d = 0; d < daysInMonth; d++) {
-                     days.push({ isEven: d % 2 });
-                  }
-                  extData.push(days);
+               daysInMonth = dateUtils.getDaysInMonth(month);
+               for (var d = 0; d < daysInMonth; d++) {
+                  extData.push({ isEven: d % 2 });
                }
                items.push({
-                  id: year + i,
+                  id: formatter.dateToSql(month, formatter.TO_SQL_MODE.DATE),
                   extData: extData
                });
+               month.setMonth(month.getMonth() + 1);
             }
 
             this._each(
@@ -77,7 +72,7 @@ define('Controls-demo/Date/MonthListSource', [
             );
             items = this._prepareQueryResult({
                items: adapter.getData(),
-               total: yearEqual ? { before: true, after: true } : true
+               total: monthEqual ? { before: true, after: true } : true
             });
 
             setTimeout(function() {
