@@ -1,8 +1,17 @@
 define(['Controls/suggest'], function(suggest) {
    'use strict';
 
+   var sandbox;
 
-   describe('Controls/_suggest/Input/Search/Suggest', function() {
+   describe('Controls/_suggest/Input/Search/Suggest', ['Types/entity'], function(entity) {
+
+      beforeEach(function() {
+         sandbox = sinon.createSandbox();
+      });
+
+      afterEach(function() {
+         sandbox.restore();
+      });
 
       it('_close', function() {
          var searchSuggest = new suggest.SearchInput();
@@ -48,6 +57,25 @@ define(['Controls/suggest'], function(suggest) {
          searchSuggest._suggestMarkedKeyChanged(null, null);
          searchSuggest._searchClick();
          assert.isTrue(searchClickNotifyed);
+      });
+
+      if('_choose', () => {
+         const searchSuggest = new suggest.SearchInput();
+         const model = new entity.Model({
+            rawData: {
+               id: 0,
+               title: 'test'
+            }
+         });
+         const stubNotify = sandbox.stub(instance, '_notify');
+
+         searchSuggest.saveOptions({
+            displayProperty: 'title'
+         });
+
+         searchSuggest._choose(null, model);
+
+         assert.isTrue(stubNotify.withArgs('valueChanged', ['test']).calledOnce);
       });
 
    });
