@@ -244,7 +244,7 @@ const BaseOpener = {
          let sbis3FloatArea = cfg.opener._container.closest('.controls-FloatArea');
 
          // get DOM node, cause it can be jQuery
-         sbis3FloatArea = sbis3FloatArea && sbis3FloatArea[0] ? sbis3FloatArea[0] : sbis3FloatArea;
+         sbis3FloatArea = sbis3FloatArea && sbis3FloatArea.length !== undefined ? sbis3FloatArea[0] : sbis3FloatArea;
          if (sbis3FloatArea) {
             let zIndex = sbis3FloatArea.style.zIndex;
             if (zIndex) {
