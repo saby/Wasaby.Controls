@@ -13,68 +13,6 @@ import {
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
-const isEqual = function (value, other) {
-
-    // Get the value type
-    var type = Object.prototype.toString.call(value);
-
-    // If the two objects are not the same type, return false
-    if (type !== Object.prototype.toString.call(other)) return false;
-
-    // If items are not an object or array, return false
-    if (['[object Array]', '[object Object]'].indexOf(type) < 0) return false;
-
-    // Compare the length of the length of the two items
-    var valueLen = type === '[object Array]' ? value.length : Object.keys(value).length;
-    var otherLen = type === '[object Array]' ? other.length : Object.keys(other).length;
-    if (valueLen !== otherLen) return false;
-
-    // Compare two items
-    var compare = function (item1, item2) {
-
-        // Get the object type
-        var itemType = Object.prototype.toString.call(item1);
-
-        // If an object or array, compare recursively
-        if (['[object Array]', '[object Object]'].indexOf(itemType) >= 0) {
-            if (!isEqual(item1, item2)) return false;
-        }
-
-        // Otherwise, do a simple comparison
-        else {
-
-            // If the two items are not the same type, return false
-            if (itemType !== Object.prototype.toString.call(item2)) return false;
-
-            // Else if it's a function, convert to a string and compare
-            // Otherwise, just compare
-            if (itemType === '[object Function]') {
-                if (item1.toString() !== item2.toString()) return false;
-            } else {
-                if (item1 !== item2) return false;
-            }
-
-        }
-    };
-
-    // Compare properties
-    if (type === '[object Array]') {
-        for (var i = 0; i < valueLen; i++) {
-            if (compare(value[i], other[i]) === false) return false;
-        }
-    } else {
-        for (var key in value) {
-            if (value.hasOwnProperty(key)) {
-                if (compare(value[key], other[key]) === false) return false;
-            }
-        }
-    }
-
-    // If nothing failed, return true
-    return true;
-
-};
-
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex) {
@@ -445,7 +383,7 @@ var
 
                 rowIndex += self.getHeader() ? 1 : 0;
                 rowIndex += self.getResultsPosition() === 'top' ? 1 : 0;
-                rowIndex += self._resultOffset;
+                rowIndex += self._multyHeaderOffset;
                 styles += GridLayoutUtil.getCellStyles(rowIndex, multiselectOffset, 1, self._columns.length);
             }
 
@@ -520,7 +458,7 @@ var
         _curHeaderRowIndex: 0,
         _multyHeaderOffset: 0,
         _headerCellMinHeight: null,
-        headerHeight: null,
+        _resultOffset: null,
 
         _resultsColumns: [],
         _curResultsColumnIndex: 0,
@@ -631,17 +569,22 @@ var
             } else {
                 this._headerRows = [];
             }
-
             this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
 
         },
         setHeaderCellMinHeight: function(data) {
-            if (!this.headerHeight || this.headerHeight !== data[1]) {
+            if (!this._resultOffset || !isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
                 this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
-                this.headerHeight = data[1];
+                this._setResultOffset(data[1]);
                 this._nextModelVersion();
             }
+        },
+        _setResultOffset: function(offset) {
+            this._resultOffset = offset;
+        },
+        getResultOffset: function() {
+            return this._resultOffset;
         },
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
@@ -755,10 +698,9 @@ var
             const { endRow, startRow, endColumn, startColumn } = cell;
             let cellContentClasses = '';
             let cellStyles = '';
-            let height = '';
-            let stickyTop = 0;
+            let offsetTop = 0;
             let shadowVisibility = 'visible';
-            // height = endRow ? `max-height:${(endRow - startRow) * this._headerCellMinHeight}px;` : `max-height:${this._headerCellMinHeight}px;`;
+
             if (this._headerRows.length > 1) {
                 cellContentClasses += ' controls-Grid__header-cell_align_items_center';
             }
@@ -769,9 +711,7 @@ var
                     headerColumn.colSpan = endColumn - startColumn;
                 } else {
                     if (this.isStickyHeader()) {
-                        // stickyTop = startRow ? (startRow - 1 ) * this._headerCellMinHeight : 0;
-                        stickyTop = cell.offsetTop ? cell.offsetTop : 0;
-                        console.log(cell.offsetTop, cell.title);
+                        offsetTop = cell.offsetTop ? cell.offsetTop : 0;
                         shadowVisibility = (rowIndex === this._headerRows.length - 1 || endRow === this._maxEndRow) && this.getResultsPosition() !== 'top' ? 'visible' : 'hidden';
                     }
 
@@ -798,7 +738,6 @@ var
                 cellStyles = `grid-row:1/${this._maxEndRow};grid-column:1/2;`;
                 headerColumn.rowSpan = this._maxEndRow - 1;
                 headerColumn.colSpan = 1;
-                height = '';
             }
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
@@ -809,8 +748,7 @@ var
 
 
             headerColumn.shadowVisibility = shadowVisibility;
-            headerColumn.stickyTop = stickyTop;
-            headerColumn.height = height;
+            headerColumn.offsetTop = offsetTop;
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
@@ -893,7 +831,6 @@ var
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
                 resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
             }
-            // resultsColumn.stickyTop = this.;
             return resultsColumn;
         },
 

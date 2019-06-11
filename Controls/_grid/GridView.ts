@@ -182,8 +182,6 @@ var
         _getGridTemplateColumns: _private.getGridTemplateColumns,
         _itemsContainerForPartialSupport: null,
 
-        _cashOffset: null,
-
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = _private.chooseGridTemplate();
@@ -279,49 +277,38 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header) {
-                console.log('BEFOREPAINT', this._options.header);
+            if (this._options.header && this._listModel.isStickyHeader()) {
                 const newHeader = this._setHeaderWithHeight();
-                console.log('newHeaderPOSLEBP', newHeader);
                 this._listModel.setHeaderCellMinHeight(newHeader);
             }
         },
         _setHeaderWithHeight: function() {
-            let resultOffset = 0,
-                maxOffset = {
-                    offset: 0,
-                    height: 0
-                };
-            const headerElem = this._container.getElementsByClassName('controls-Grid__header')[0];
+            let resultOffset = 0;
+            const container = this._container;
             const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             const newColumns = this._options.header.map((cur, i) => {
                 if (cur.startRow && cur.endRow) {
-                    const curEl = headerElem.querySelector(
+                    const curEl = container.querySelector(
                         `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`)
                     const height = curEl.getBoundingClientRect().height;
                     const offset = curEl.offsetTop;
-                    if (offset > maxOffset.offset) {
-                        maxOffset = {
-                            offset,
-                            height,
-                        };
-                    }
                     return {
                         ...cur,
                         offsetTop: offset,
                         height,
                     };
                 }
-                const curElHeight = headerElem.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height
+                const curElHeight = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height
                 if (curElHeight > resultOffset) {
                     resultOffset = curElHeight;
                 }
                 return {
                     ...cur,
+                    offset: 0
                 };
             });
             if (resultOffset === 0 && this._listModel.getResultsPosition() === 'top') {
-                resultOffset = maxOffset.offset + maxOffset.height;
+                resultOffset = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__results-cell')[0].offsetTop;
             }
             return [newColumns, resultOffset];
         },

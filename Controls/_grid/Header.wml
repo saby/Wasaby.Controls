@@ -3,7 +3,6 @@
       <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
       {{ headerRow.resetHeaderColumns() }}
       <ws:for data="headerRow.resetHeaderColumns(); headerRow.isEndHeaderColumn(); headerRow.goToNextHeaderColumn();">
-<!--         {{debug()}}-->
          <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
                      defaultHeaderContent="{{defaultHeaderContent}}"
                      listModel="{{listModel}}"
@@ -19,7 +18,6 @@
                      template="{{headerColumn.column.template}}"
                      scope="{{ headerColumn.column.templateOptions }}"
                      colData="{{headerColumn}}"
-                     attr:style=""
          />
 
       </ws:if>
@@ -28,7 +26,6 @@
                  attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
                  template="{{defaultHeaderContent}}"
                  colData="{{headerColumn}}"
-                 attr:style=""
          />
 
       </ws:else>
@@ -38,7 +35,7 @@
    <ws:if data="{{listModel.isNoGridSupport()}}">
       <th
               attr:class="{{headerColumn.cellClasses}}"
-              attr:style="{{headerColumn.style}} {{headerColumn.height}}"
+              attr:style="{{headerColumn.style}}"
               rowspan="{{headerColumn.rowSpan}}"
               colspan="{{headerColumn.colSpan}}">
          <ws:partial template="cellContent"/>
@@ -46,7 +43,7 @@
       </th>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <div attr:style="{{headerColumn.cellStyles}} {{headerColumn.height}}" attr:class="{{headerColumn.cellClasses}}">
+      <div attr:style="{{headerColumn.cellStyles}}" attr:class="{{headerColumn.cellClasses}}">
          <ws:partial template="cellContent" />
       </div>
    </ws:else>
@@ -63,7 +60,7 @@
            attr:style="{{headerColumn.cellStyles}}"
            mode="stackable"
            fixedZIndex="{{headerColumn.zIndex}}"
-           offsetTop="{{headerColumn.stickyTop}}"
+           offsetTop="{{headerColumn.offsetTop}}"
            shadowVisibility="{{headerColumn.shadowVisibility}}"
    >
       <!-- Set the listModel option only in order for the update of the internal templates to update -->

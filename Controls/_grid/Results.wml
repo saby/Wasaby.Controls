@@ -15,8 +15,8 @@
                           mode="stackable"
                           fixedZIndex="{{currentResultsColumn.zIndex}}"
                           isResultsColumn="{{true}}"
-                          style="top:{{listModel.headerHeight}}px;"
-                          offsetTop="{{listModel.headerHeight}}"
+                          style="top:{{offset}}px;"
+                          offsetTop="{{offset}}"
 
    >
       <ws:partial template="cellContent"/>
@@ -41,7 +41,9 @@
                   listModel="{{ listModel }}"
                   multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
                   currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"
-                  attr:style="{{ listModel.getCurrentResultsColumn().gridCellStyles }}"/>
+                  attr:style="{{ listModel.getCurrentResultsColumn().gridCellStyles }}"
+                  offset="{{listModel.getResultOffset() ? listModel.getResultOffset()}}"
+      />
    </ws:for>
 </ws:else>
 </ws:template>
