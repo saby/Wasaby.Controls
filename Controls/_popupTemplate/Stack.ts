@@ -4,6 +4,7 @@ import Env = require('Env/Env');
 import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
+      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton'};
 
       var DialogTemplate = Control.extend({
 
@@ -78,6 +79,7 @@ import 'css!theme?Controls/popupTemplate';
 
          _template: template,
          _maximizeButtonVisibility: false,
+         _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
             if (options.contentArea) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
@@ -102,10 +104,12 @@ import 'css!theme?Controls/popupTemplate';
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
             this._updateMaximizeButton(options);
+            this._prepareCloseButton(options);
          },
 
          _beforeUpdate: function(newOptions) {
             this._updateMaximizeButton(newOptions);
+            this._prepareCloseButton(newOptions);
          },
 
          _afterUpdate: function(oldOptions) {
@@ -113,7 +117,11 @@ import 'css!theme?Controls/popupTemplate';
                this._notify('controlResize', [], { bubbling: true });
             }
          },
-
+         _prepareCloseButton: function(options){
+            var viewMode = options.closeButtonViewMode;
+            var style = options.closeButtonStyle;
+            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
+         },
          _updateMaximizeButton: function(options) {
             this._updateMaximizeButtonTitle(options);
             if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
