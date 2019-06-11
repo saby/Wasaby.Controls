@@ -9,14 +9,12 @@ import {IoC} from "Env/Env";
  *
  * @typedef VirtualScrollConfig
  * @type {object}
- * @property {number} virtualPageSize - The maximum number of elements that will be in the DOM at the same time.
- * @property {number} virtualSegmentSize - your name.
+ * @property {number} virtualPageSize - The size of the virtual page indicates maximum number of simultaneously displayed items in the list.
+ * @property {number} virtualSegmentSize - Number of items that will be inserted/removed on reaching the end of displayed items.
  */
 type VirtualScrollConfig = {
     virtualPageSize?: number;
     virtualSegmentSize?: number;
-    startIndex?: number;
-    updateItemsHeightsMode?: string;
 }
 
 
@@ -25,7 +23,7 @@ type VirtualScrollConfig = {
  *
  * @typedef ItemsContainer
  * @type {Object}
- * @property {Array<HTMLElement>} children
+ * @property {Array<HTMLElement>} children List items
  */
 type ItemsContainer = {
     children: Array<HTMLElement>;
@@ -72,19 +70,16 @@ type PlaceholdersSizes = {
  */
 class VirtualScroll {
 
-    private readonly _virtualSegmentSize: number = 20;
+    private readonly _virtualSegmentSize: number = 10;
     private readonly _virtualPageSize: number = 100;
-    private readonly _initialStartIndex: number = 0;
 
-    private _startIndex: number;
+    private _startIndex: number = 0;
     private _stopIndex: number;
     private _itemsCount: number;
     private _itemsHeights: number[] = [];
     private _itemsContainer: ItemsContainer;
     private _topPlaceholderSize: number = 0;
     private _bottomPlaceholderSize: number = 0;
-    private _needToUpdateAllItemsHeight: boolean = false;
-    private _updateItemsHeightsMode: string = 'onChangeCollection';
 
 
     get ItemsIndexes(): ItemsIndexes {
@@ -126,15 +121,12 @@ class VirtualScroll {
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
         this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
-        this._updateItemsHeightsMode = cfg.updateItemsHeightsMode || this._updateItemsHeightsMode;
-
-        this._startIndex = cfg.startIndex || this._initialStartIndex;
         this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
 
-    public resetItemsIndexes(startIndex = this._initialStartIndex): void {
-        this._startIndex = startIndex;
+    public resetItemsIndexes(): void {
+        this._startIndex = 0;
         this._stopIndex = this._startIndex + this._virtualPageSize;
         this._itemsHeights = [];
         this._topPlaceholderSize = this._bottomPlaceholderSize = 0;
@@ -182,16 +174,6 @@ class VirtualScroll {
         this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
         this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
         this._updatePlaceholdersSizes();
-    }
-
-    public updateItemsIndexesOnToggle(toggledItemIndex, isExpanded, childItemsCount): void {
-        if (!!childItemsCount) {
-            if (isExpanded) {
-                this.insertItemsHeights(toggledItemIndex, childItemsCount);
-            } else {
-                this.cutItemsHeights(toggledItemIndex, childItemsCount);
-            }
-        }
     }
 
     public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
@@ -249,123 +231,19 @@ class VirtualScroll {
     }
 
     private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
+        if (isUnitTesting) {
+            for (let i = 0; i < updateLength; i++) {
+                this._itemsHeights[startUpdateIndex + i] = this._getRowHeight(this._itemsContainer.children[i], isUnitTesting);
+            }
+        }
+    }
+
+    private _getRowHeight(row: HTMLElement, isUnitTesting: boolean): number {
         /*
          * uDimension работает с window, для того чтобы протестировать функцию есть параметр isUnitTesting
          */
-        if (this._updateItemsHeightsMode == 'onChangeCollection') {
-            if (isUnitTesting) {
-                for (let i = 0; i < updateLength; i++) {
-                    this._itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
-                }
-            } else {
-                for (let i = 0; i < updateLength; i++) {
-                    this._itemsHeights[startUpdateIndex + i] = uDimension(this._itemsContainer.children[i]).height;
-                }
-            }
-        } else if (this._updateItemsHeightsMode === 'always') {
-            for (var i = 0; i < this._itemsContainer.children.length; i++) {
-                this._itemsHeights[i] = uDimension(this._itemsContainer.children[i]).height;
-            }
-
-        }
-
+        return isUnitTesting ? row.offsetHeight : uDimension(row).height;
     }
-    //<editor-fold desc="Don't use it! Deprecated methods and methods for compatible with non TS components" defaultstate="collapsed" >
-
-    private _isLogged = {
-        setItemsContainer: false,
-        getItemsIndexes: false,
-        getItemsHeights: false,
-        getPlaceholdersSizes: false,
-        setItemsCount: false,
-    };
-
-    // Old method to set _itemsContainer, now available setter
-    // TODO: remove in 19.200
-    private setItemsContainer(itemsContainer: ItemsContainer): void {
-        if (!this._isLogged.setItemsContainer){
-            this._isLogged.setItemsContainer = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "setItemsContainer" is deprecated and will be removed in 19.200. ' +
-                    'Use setter for property "VirtualScroll.ItemsContainer".');
-        }
-        this.ItemsContainer = itemsContainer;
-    }
-
-    // Old method to get _itemsIndexes, now available getter
-    // TODO: remove in 19.200
-    private getItemsIndexes(): ItemsIndexes {
-        if (!this._isLogged.getItemsIndexes){
-            this._isLogged.getItemsIndexes = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "getItemsIndexes" is deprecated and will be removed in 19.200. ' +
-                    'Use getter for property "VirtualScroll.ItemsIndexes".');
-        }
-        return this.ItemsIndexes;
-    }
-
-    // Old method to get _itemsHeights, now available getter
-    // TODO: remove in 19.200
-    private getItemsHeights(): Array<number> {
-        if (!this._isLogged.getItemsHeights){
-            this._isLogged.getItemsHeights = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "getItemsHeights" is deprecated and will be removed in 19.200. ' +
-                    'Use getter for property "VirtualScroll.ItemsHeights".');
-        }
-        return this.ItemsHeights;
-    }
-
-    // Old method to get _itemsHeights, now available getter
-    // TODO: remove in 19.200
-    private getItemsHeight(): Array<number> {
-        if (!this._isLogged.getItemsHeights){
-            this._isLogged.getItemsHeights = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "getItemsHeight" is deprecated and will be removed in 19.200. ' +
-                    'Use getter for property "VirtualScroll.ItemsHeights".');
-        }
-        return this.ItemsHeights;
-    }
-
-
-    // Old method to get _placeholdersSizes, now available getter
-    // TODO: remove in 19.200
-    private getPlaceholdersSizes(): PlaceholdersSizes {
-        if (!this._isLogged.getPlaceholdersSizes) {
-            this._isLogged.getPlaceholdersSizes = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "getPlaceholdersSizes" is deprecated and will be removed in 19.200. ' +
-                    'Use getter for property "VirtualScroll.PlaceholdersSizes".');
-        }
-        return this.PlaceholdersSizes;
-    }
-
-    // - Old method to set _itemsCount, now available setter
-    // TODO: remove in 19.200
-    private setItemsCount(itemsCount: number): void {
-        if (!this._isLogged.setItemsCount) {
-            this._isLogged.setItemsCount = true;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Method "setItemsCount" is deprecated and will be removed in 19.200. ' +
-                    'Use setter for property "VirtualScroll.ItemsCount".');
-        }
-        this.ItemsCount = itemsCount;
-    }
-    //</editor-fold>
-
 }
 
 export = VirtualScroll;
