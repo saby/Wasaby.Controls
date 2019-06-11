@@ -14,7 +14,7 @@ define('Controls-demo/Headers/HeadingPG',
       var HeadingPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Heading',
+         _content: 'Controls/heading:Title',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

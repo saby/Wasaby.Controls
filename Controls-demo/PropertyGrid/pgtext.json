@@ -158,7 +158,7 @@
       }
     }
   },
-  "Controls/Heading": {
+  "Controls/heading:Title": {
     "name": "Controls/Heading",
     "title": "Heading.",
     "className": "Controls/Heading",
