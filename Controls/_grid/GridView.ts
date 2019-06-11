@@ -283,6 +283,8 @@ var
             }
         },
         _setHeaderWithHeight: function() {
+            // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
+            // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
             let resultOffset = 0;
             const container = this._container;
             const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
