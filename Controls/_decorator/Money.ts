@@ -11,7 +11,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @extends Core/Control
  *
  * @mixes Controls/_decorator/Money/Styles
- * @mixes Controls/interface/IEmptyDecimals
+ * @mixes Controls/interface/INumberFormat
  *
  * @public
  * @demo Controls-demo/Decorators/Money/Money
@@ -40,14 +40,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @deprecated Use option {@link Controls/input:Number#useGrouping}
  */
 
-/**
- * @name Controls/_decorator/Money#useGrouping
- * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
- * @default true
- * @remark
- * true - the number is separated into grouping.
- * false - does not do anything.
- */
 
 /**
  * @name Controls/_decorator/Money#style

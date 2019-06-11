@@ -14,7 +14,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IOnlyPositive
  * @mixes Controls/interface/IInputNumber
- * @mixes Controls/interface/IEmptyDecimals
+ * @mixes Controls/interface/INumberFormat
  *
  * @public
  * @demo Controls-demo/Input/Number/NumberPG
@@ -45,15 +45,6 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * <pre>
  *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
  * </pre>
- */
-
-/**
- * @name Controls/_input/Number#useGrouping
- * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
- * @default true
- * @remark
- * true - the number is separated into grouping.
- * false - does not do anything.
  */
 
 var _private = {
