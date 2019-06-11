@@ -11,6 +11,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @extends Core/Control
  *
  * @mixes Controls/_decorator/Money/Styles
+ * @mixes Controls/interface/IEmptyDecimals
  *
  * @public
  * @demo Controls-demo/Decorators/Money/Money
@@ -46,15 +47,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @remark
  * true - the number is separated into grouping.
  * false - does not do anything.
- */
-
-/**
- * @name Controls/_decorator/Money#showEmptyDecimals
- * @cfg {Boolean} Determines whether to display empty the decimal part.
- * @default true
- * @remark
- * true -  Empty the decimal part is displayed.
- * false - Empty the decimal part is not displayed.
  */
 
 /**
