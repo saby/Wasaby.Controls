@@ -153,7 +153,7 @@ define(['Controls/buttons'], function(buttons) {
             };
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
             assert(fakeThis._iconSize === 'large');
-            assert(fakeThis._icon === 'icon-Admin  icon-medium');
+            assert(fakeThis._icon === 'icon-Admin icon-medium');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {
