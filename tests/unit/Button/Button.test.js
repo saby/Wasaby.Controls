@@ -2,160 +2,248 @@ define(['Controls/buttons'], function(buttons) {
    'use strict';
 
    var btn;
+   var actualAPI = buttons.ActualApi;
 
    describe('Controls.Button', function() {
-      describe('private cssStyleGeneration', function() {
-         beforeEach(function() {
-            btn = new buttons.Button({
-               style: 'buttonDefault'
-            });
-         });
-
-         afterEach(function() {
-            btn.destroy();
-         });
-
+      describe('styleToViewMode', function() {
          it('style linkMain', function() {
-            var opt = {
-               style: 'linkMain',
-               size: 'xl'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkMain');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('secondary', cfg.style, 'wrong cfg');
          });
-
          it('style linkMain2', function() {
-            var opt = {
-               style: 'linkMain2',
-               size: 'l'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkMain2');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('info', cfg.style, 'wrong cfg');
          });
-
          it('style linkMain3', function() {
-            var opt = {
-               style: 'linkMain3',
-               size: 'default'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkMain3');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('info', cfg.style, 'wrong cfg');
          });
-
          it('style linkAdditional', function() {
-            var opt = {
-               style: 'linkAdditional',
-               size: 's'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkAdditional');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('info', cfg.style, 'wrong cfg');
          });
-
          it('style linkAdditional2', function() {
-            var opt = {
-               style: 'linkAdditional2',
-               size: 'xl'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'default' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkAdditional2');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('default', cfg.style, 'wrong cfg');
          });
-
          it('style linkAdditional3', function() {
-            var opt = {
-               style: 'linkAdditional3',
-               size: 'xl'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'danger' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkAdditional3');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('danger', cfg.style, 'wrong cfg');
          });
-
          it('style linkAdditional4', function() {
-            var opt = {
-               style: 'linkAdditional4',
-               size: 'xl'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'success' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkAdditional4');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('success', cfg.style, 'wrong cfg');
          });
-
          it('style linkAdditional5', function() {
-            var opt = {
-               style: 'linkAdditional5',
-               size: 'xl'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'magic' && fakeThis._viewMode === 'link');
+            let cfg = actualAPI.styleToViewMode('linkAdditional5');
+            assert.equal('link', cfg.viewMode, 'wrong cfg');
+            assert.equal('magic', cfg.style, 'wrong cfg');
          });
-
          it('style buttonPrimary', function() {
-            var opt = {
-               style: 'buttonPrimary',
-               size: 'default'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
+            let cfg = actualAPI.styleToViewMode('buttonPrimary');
+            assert.equal('button', cfg.viewMode, 'wrong cfg');
+            assert.equal('primary', cfg.style, 'wrong cfg');
          });
-
          it('style buttonDefault', function() {
-            var opt = {
-               style: 'buttonDefault',
-               size: 'big'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'button');
+            let cfg = actualAPI.styleToViewMode('buttonDefault');
+            assert.equal('button', cfg.viewMode, 'wrong cfg');
+            assert.equal('secondary', cfg.style, 'wrong cfg');
          });
-
          it('style buttonAdd', function() {
-            var opt = {
-               style: 'buttonAdd',
-               size: 'default'
-            };
-            var fakeThis = {};
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
+            let cfg = actualAPI.styleToViewMode('buttonAdd');
+            assert.equal('button', cfg.viewMode, 'wrong cfg');
+            assert.equal('primary', cfg.style, 'wrong cfg');
+         });
+         it('style toolButton', function() {
+            let cfg = actualAPI.styleToViewMode('toolButton');
+            assert.equal('', cfg.viewMode, 'wrong cfg');
+            assert.equal('', cfg.style, 'wrong cfg');
          });
       });
-      describe('private prepareIconSize', function() {
-         beforeEach(function() {
-            btn = new buttons.Button({
-               style: 'buttonDefault'
-            });
+      describe('iconStyleTransformation', function() {
+         it('attention', function() {
+            let cfg = actualAPI.iconStyleTransformation('attention');
+            assert.equal('warning', cfg, 'wrong cfg');
          });
-         afterEach(function() {
-            btn.destroy();
+         it('done', function() {
+            let cfg = actualAPI.iconStyleTransformation('done');
+            assert.equal('success', cfg, 'wrong cfg');
          });
-
-         it('no IconSize', function() {
-            var icon = 'icon-Admin icon-medium';
-            var fakeThis = {};
-            fakeThis._icon = buttons.Button.prototype.prepareIconSize.call(fakeThis, icon);
-            assert(!fakeThis._iconSize && fakeThis._icon === 'icon-Admin icon-medium');
+         it('error', function() {
+            let cfg = actualAPI.iconStyleTransformation('error');
+            assert.equal('danger', cfg, 'wrong cfg');
          });
+         it('success', function() {
+            let cfg = actualAPI.iconStyleTransformation('success');
+            assert.equal('success', cfg, 'wrong cfg');
+         });
+      });
+      describe('contrastBackground', function() {
+         it('contrastBackground', function() {
+            let cfg = actualAPI.contrastBackground({ contrastBackground: true, transparent: true });
+            assert.isTrue(cfg, 'wrong cfg');
+         });
+         it('transparent true', function() {
+            let cfg = actualAPI.contrastBackground({ transparent: true });
+            assert.isFalse(cfg, 'wrong cfg');
+         });
+         it('transparent false', function() {
+            let cfg = actualAPI.contrastBackground({ transparent: false });
+            assert.isTrue(cfg, 'wrong cfg');
+         });
+         it('all undefined', function() {
+            let cfg = actualAPI.contrastBackground({});
+            assert.isFalse(cfg, 'wrong cfg');
+         });
+      });
+      describe('buttonStyle', function() {
+         it('buttonStyle', function() {
+            let cfg = actualAPI.buttonStyle('warning', 'danger', 'secondary');
+            assert.equal('secondary', cfg, 'wrong cfg');
+         });
+         it('style', function() {
+            let cfg = actualAPI.buttonStyle('warning', 'danger');
+            assert.equal('warning', cfg, 'wrong cfg');
+         });
+         it('oldStyle', function() {
+            let cfg = actualAPI.buttonStyle(undefined, 'danger');
+            assert.equal('danger', cfg, 'wrong cfg');
+         });
+      });
+      describe('fontColorStyle', function() {
+         it('all undefined', function() {
+            let cfg = actualAPI.fontColorStyle();
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('fontColorStyle', function() {
+            let cfg = actualAPI.fontColorStyle(undefined, undefined, 'primary');
+            assert.equal('primary', cfg, 'wrong cfg');
+         });
+         it('button', function() {
+            let cfg = actualAPI.fontColorStyle('warning', 'button');
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('link primary', function() {
+            let cfg = actualAPI.fontColorStyle('primary', 'link');
+            assert.equal('primary', cfg, 'wrong cfg');
+         });
+         it('link success', function() {
+            let cfg = actualAPI.fontColorStyle('success', 'link');
+            assert.equal('success', cfg, 'wrong cfg');
+         });
+         it('link danger', function() {
+            let cfg = actualAPI.fontColorStyle('danger', 'link');
+            assert.equal('danger', cfg, 'wrong cfg');
+         });
+         it('link warning', function() {
+            let cfg = actualAPI.fontColorStyle('warning', 'link');
+            assert.equal('warning', cfg, 'wrong cfg');
+         });
+         it('link info', function() {
+            let cfg = actualAPI.fontColorStyle('info', 'link');
+            assert.equal('unaccented', cfg, 'wrong cfg');
+         });
+         it('link secondary', function() {
+            let cfg = actualAPI.fontColorStyle('secondary', 'link');
+            assert.equal('link', cfg, 'wrong cfg');
+         });
+         it('link default', function() {
+            let cfg = actualAPI.fontColorStyle('default', 'link');
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+      });
+      describe('iconSize', function() {
          it('iconSize', function() {
-            var opt = {
-               icon: 'icon-Admin icon-medium',
-               iconSize: 'large'
-            };
-            var regExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b', 'g');
-            var fakeThis = {
-               _regExp: regExp,
-               prepareIconSize: buttons.Button.prototype.prepareIconSize,
-            };
-            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._iconSize === 'large');
-            assert(fakeThis._icon === 'icon-Admin icon-medium');
+            let cfg = actualAPI.iconSize({ 'icon-size': 'small', icon: 'icon-16 icon-Author' });
+            assert.equal('small', cfg, 'wrong cfg');
+         });
+         it('icon-16', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-16 icon-Author' });
+            assert.equal('small', cfg, 'wrong cfg');
+         });
+         it('icon-24', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-24 icon-Author' });
+            assert.equal('medium', cfg, 'wrong cfg');
+         });
+         it('icon-32', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-32 icon-Author' });
+            assert.equal('large', cfg, 'wrong cfg');
+         });
+         it('icon-small', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-small icon-Author' });
+            assert.equal('small', cfg, 'wrong cfg');
+         });
+         it('icon-medium', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-medium icon-Author' });
+            assert.equal('medium', cfg, 'wrong cfg');
+         });
+         it('icon-large', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-large icon-Author' });
+            assert.equal('large', cfg, 'wrong cfg');
          });
       });
+
+      describe('iconStyle', function() {
+         it('readonly', function() {
+            let cfg = actualAPI.iconStyle({ readOnly: true, iconStyle: 'success', icon: 'icon-done icon-Author' });
+            assert.equal('readonly', cfg, 'wrong cfg');
+         });
+         it('buttonAdd', function() {
+            let cfg = actualAPI.iconStyle({ buttonAdd: true, iconStyle: 'success', icon: 'icon-done icon-Author' });
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('iconStyle success', function() {
+            let cfg = actualAPI.iconStyle({ iconStyle: 'success', icon: 'icon-done icon-Author' });
+            assert.equal('success', cfg, 'wrong cfg');
+         });
+         it('iconStyle done', function() {
+            let cfg = actualAPI.iconStyle({ iconStyle: 'done', icon: 'icon-done icon-Author' });
+            assert.equal('success', cfg, 'wrong cfg');
+         });
+         it('icon-done', function() {
+            let cfg = actualAPI.iconStyle({ icon: 'icon-done icon-Author' });
+            assert.equal('success', cfg, 'wrong cfg');
+         });
+      });
+
+      describe('fontSize', function() {
+         it('fontSize', function() {
+            let cfg = actualAPI.fontSize({ fontSize: 'm', size: 'l', viewMode: 'button' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
+         it('button l', function() {
+            let cfg = actualAPI.fontSize({ size: 'l', viewMode: 'button' });
+            assert.equal('xl', cfg, 'wrong cfg');
+         });
+         it('button not l', function() {
+            let cfg = actualAPI.fontSize({ size: 's', viewMode: 'button' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
+         it('link s', function() {
+            let cfg = actualAPI.fontSize({ size: 's', viewMode: 'link' });
+            assert.equal('xs', cfg, 'wrong cfg');
+         });
+         it('link l', function() {
+            let cfg = actualAPI.fontSize({ size: 'l', viewMode: 'link' });
+            assert.equal('l', cfg, 'wrong cfg');
+         });
+         it('link xl', function() {
+            let cfg = actualAPI.fontSize({ size: 'xl', viewMode: 'link' });
+            assert.equal('3xl', cfg, 'wrong cfg');
+         });
+         it('link other', function() {
+            let cfg = actualAPI.fontSize({ size: '4xl', viewMode: 'link' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
+      });
+
       describe('constructor() and _beforeUpdate()', function() {
          var optionsCorrect = false;
          function redefinitionCssStyleGeneration() {

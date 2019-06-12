@@ -78,6 +78,7 @@ const ActualApi = {
          buttonAdd: false
       };
       if (deprecatedClassesOfButton.hasOwnProperty(style)) {
+         IoC.resolve('ILogger').warn('Button', 'Используются устаревшие стили (style = ' + style + ')');
          currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
          currentButtonClass.style = deprecatedClassesOfButton[style].style;
          if (style === 'linkMain2' || style === 'linkMain3') {
@@ -94,22 +95,29 @@ const ActualApi = {
    /**
     * Перевести iconStyle из старых обозначений в новые.
     * @param {String} iconStyle
+    * @param {String} warnFlag
     * @returns {Object}
     */
-   iconStyleTransformation: function (iconStyle) {
+   iconStyleTransformation(iconStyle: string, warnFlag: boolean): string {
       let newIconStyle;
       switch (iconStyle) {
          case 'attention':
             newIconStyle = 'warning';
-            IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение warning вместо attention');
+            if (warnFlag) {
+               IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение warning вместо attention');
+            }
             break;
          case 'done':
             newIconStyle = 'success';
-            IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение success виесто done');
+            if (warnFlag) {
+               IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение success виесто done');
+            }
             break;
          case 'error':
             newIconStyle = 'danger';
-            IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение danger вместо error');
+            if (warnFlag) {
+               IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение danger вместо error');
+            }
             break;
          default:
             newIconStyle = iconStyle;
@@ -143,20 +151,30 @@ const ActualApi = {
       });
    },
    contrastBackground(options): boolean {
-      if (typeof options.contrastBackground !== undefined) {
+      if (typeof options.contrastBackground !== 'undefined') {
          return options.contrastBackground;
       } else {
-         return !options.transparent;
+         if (typeof options.transparent !== 'undefined') {
+            IoC.resolve('ILogger').warn('Button', 'Опция transparent устарела, используйте contrastBackground');
+            return !options.transparent;
+         } else {
+            return false;
+         }
       }
    },
    buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string): string {
       if (optionButtonStyle) {
-         return optionButtonStyle
+         return optionButtonStyle;
       } else {
          if (calcStyle) {
             return calcStyle;
          } else {
-            return optionStyle;
+            if (typeof optionStyle !== 'undefined') {
+               IoC.resolve('ILogger').warn('Button', 'Опция style устарела, используйте buttonStyle и fontColorStyle');
+               return optionStyle;
+            } else {
+               return 'secondary';
+            }
          }
       }
    },
@@ -203,7 +221,7 @@ const ActualApi = {
          return 'default';
       } else {
          if (options.iconStyle) {
-            return this.iconStyleTransformation(options.iconStyle);
+            return this.iconStyleTransformation(options.iconStyle, true);
          } else {
             return this.iconStyleTransformation(this.iconColorFromOptIconToIconStyle(options.icon));
          }
@@ -213,20 +231,30 @@ const ActualApi = {
       if (options.fontSize) {
          return options.fontSize;
       } else {
-         if (options.viewMode !== 'link') {
-            //кнопки l размера имеют шрифт xl в теме
-            if (options.size === 'l') {
-               return 'xl';
+         if (typeof(options.size) !== 'undefined') {
+            IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
+            if (options.viewMode !== 'link') {
+               //кнопки l размера имеют шрифт xl в теме
+               if (options.size === 'l') {
+                  return 'xl';
+               } else {
+                  return 'm';
+               }
             } else {
-               return 'm';
-            }
-         } else {
-            //для ссылок все сложнее
-            switch (options.size) {
-               case 's': return 'xs'; break;
-               case 'l': return 'l'; break;
-               case 'xl': return '3xl'; break;
-               default: return 'm';
+               //для ссылок все сложнее
+               switch (options.size) {
+                  case 's':
+                     return 'xs';
+                     break;
+                  case 'l':
+                     return 'l';
+                     break;
+                  case 'xl':
+                     return '3xl';
+                     break;
+                  default:
+                     return 'm';
+               }
             }
          }
       }

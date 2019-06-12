@@ -130,12 +130,11 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
    static getDefaultOptions() {
       return {
-         style: 'secondary',
          viewMode: 'button',
-         size: 'default',
          iconStyle: 'secondary',
-         transparent: true,
-         theme: 'default'
+         theme: 'default',
+         size: 'default',
+         transparent: true
       };
    }
 }
