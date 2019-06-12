@@ -228,7 +228,7 @@ var _private = {
         }
     },
     restoreScrollPosition: function(self) {
-        if (self._hasSavedScrollPosition) {
+        if (self._saveAndRestoreScrollPosition) {
             /**
              * This event should bubble, because there can be anything between Scroll/Container and the list,
              * and we can't force everyone to manually bubble it.
@@ -236,7 +236,7 @@ var _private = {
             self._notify('restoreScrollPosition', [], {
                 bubbling: true
             });
-            self._hasSavedScrollPosition = false;
+            self._saveAndRestoreScrollPosition = false;
             return;
         }
 
@@ -317,19 +317,13 @@ var _private = {
                     /**
                      * todo KINGO.
                      * Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
-                     * Запоминаем скролл непосредственно до отрисовки (прямо перед добавлением записей в рекордсет),
-                     * это единственная логичная точка. Запоминать перед загрузкой данных - пробовали, это неправильно:
-                     * пока идет загрузка может измениться позиция скролла и запомненное состояние будет неактуальным.
-                     * Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
+                     * Устанавливаем в true флаг _saveAndRestoreScrollPosition, чтобы при ближайшей перерисовке
+                     * запомнить позицию скролла непосредственно до перерисовки и восстановить позицию скролла
+                     * сразу после перерисовки.
+                     * Пробовали запоминать позицию скролла здесь, в loadToDirection. Из-за асинхронности отрисовки
+                     * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
                      */
-                    /**
-                     * This event should bubble, because there can be anything between Scroll/Container and the list,
-                     * and we can't force everyone to manually bubble it.
-                     */
-                    self._notify('saveScrollPosition', [], {
-                        bubbling: true
-                    });
-                    self._hasSavedScrollPosition = true;
+                    self._saveAndRestoreScrollPosition = true;
                     self._listViewModel.prependItems(addedItems);
                 }
                 var cnt2 = self._listViewModel.getCount();
@@ -1294,19 +1288,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
-    _beforePaint(): void {
+    _beforeRender(): void {
+        if (this._saveAndRestoreScrollPosition) {
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+            this._notify('saveScrollPosition', [], { bubbling: true });
+        }
+    },
+
+    _afterRender():void {
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
         // Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
         // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
-        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=2ffab169-6ace-4914-a11e-afc1eadcdce7
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
-            this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
             _private.checkLoadToDirectionCapability(this);
             this._checkShouldLoadToDirection = false;
