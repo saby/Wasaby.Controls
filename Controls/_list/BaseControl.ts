@@ -1298,17 +1298,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _afterRender():void {
+    _beforePaint():void {
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
         // Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
         // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
+        // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
+        // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
+            this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
             _private.checkLoadToDirectionCapability(this);
             this._checkShouldLoadToDirection = false;
