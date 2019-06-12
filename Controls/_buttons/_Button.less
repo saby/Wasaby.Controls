@@ -95,10 +95,44 @@
 .controls-Button__icon_style-readonly_theme-@{themeName} {
    color: @readonly_color;
 }
-
-
-
-
+.ws-is-no-touch {
+   .controls-BaseButton:hover .controls-Button__icon_style-secondary_theme-@{themeName}{
+      color: @link_hover_text-color;
+   }
+}
+.ws-is-no-touch, .ws-is-touch {
+   .controls-BaseButton:active .controls-Button__icon_style-secondary_theme-@{themeName}{
+      color: @link_hover_text-color;
+   }
+}
+//font-size
+.controls-BaseButton__content_fontsize-xs_theme-@{themeName} {
+   font-size: @font-size_xs;
+}
+.controls-BaseButton__content_fontsize-s_theme-@{themeName} {
+   font-size: @font-size_s;
+}
+.controls-BaseButton__content_fontsize-m_theme-@{themeName} {
+   font-size: @font-size_m;
+}
+.controls-BaseButton__content_fontsize-l_theme-@{themeName} {
+   font-size: @font-size_l;
+}
+.controls-BaseButton__content_fontsize-xl_theme-@{themeName} {
+   font-size: @font-size_xl;
+}
+.controls-BaseButton__content_fontsize-2xl_theme-@{themeName} {
+   font-size: @font-size_2xl;
+}
+.controls-BaseButton__content_fontsize-3xl_theme-@{themeName} {
+   font-size: @font-size_3xl;
+}
+.controls-BaseButton__content_fontsize-4xl_theme-@{themeName} {
+   font-size: @font-size_4xl;
+}
+.controls-BaseButton__content_fontsize-5xl_theme-@{themeName} {
+   font-size: @font-size_5xl;
+}
 
 
 
@@ -240,18 +274,6 @@
    .controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
       border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
    }
-
-   .controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary {
-         color: @link_hover_text-color;
-      }
-   }
-
-   .controls-Button_style-secondary_viewMode-link:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary {
-         color: @link_hover_text-color;
-      }
-   }
 }
 
 //toolbutton active style
@@ -277,17 +299,6 @@
 
 .controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
    border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
-}
-.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
-   .controls-Button__icon-secondary {
-      color: @link_hover_text-color;
-   }
-}
-
-.controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
-   .controls-Button__icon-secondary {
-      color: @link_hover_text-color;
-   }
 }
 /**/
 
@@ -375,53 +386,7 @@
    cursor: pointer;
 }
 
-.controls-Button__wrapper_viewMode-link_size-s.theme_@{themeName} {
-   font-size: @font-size_Link-s;
-}
 
-.controls-Button__wrapper_viewMode-link_size-m.theme_@{themeName} {
-   font-size: @font-size_Link-m;
-}
-
-.controls-Button__wrapper_viewMode-link_size-default.theme_@{themeName} {
-      font-size: @font-size_Link-default;
-}
-
-.controls-Button__wrapper_viewMode-link_size-l.theme_@{themeName} {
-   font-size: @font-size_Link-l;
-}
-
-.controls-Button__wrapper_viewMode-link_size-xl.theme_@{themeName} {
-   font-size: @font-size_Link-xl;
-}
-
-.controls-Button_style-secondary_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_secondary;
-}
-
-.controls-Button_style-success_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_success;
-}
-
-.controls-Button_style-danger_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_danger;
-}
-
-.controls-Button_style-info_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_info;
-}
-
-.controls-Button_style-warning_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_warning;
-}
-
-.controls-Button_style-primary_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_primary;
-}
-
-.controls-Button_style-default_viewMode-link.theme_@{themeName} {
-   text-decoration: @text-decoration_Link_default;
-}
 
 .controls-Button_style-magic_viewMode-link.theme_@{themeName} {
    color: @color_Link_magic;
@@ -457,18 +422,5 @@
 }
 
 .controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   font-size: @font-size_Button_size_s;
    .border-radius(@border-radius_Button_size_s);
-}
-
-.controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
-   font-size: @font-size_Button_size_m;
-}
-
-.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
-      font-size: @font-size_Button_size_default;
-}
-
-.controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
-   font-size: @font-size_Button_size_l;
 }

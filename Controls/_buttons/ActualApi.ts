@@ -203,9 +203,9 @@ const ActualApi = {
          return 'default';
       } else {
          if (options.iconStyle) {
-            return options.iconStyle;
+            return this.iconStyleTransformation(options.iconStyle);
          } else {
-            return this.iconColorFromOptIconToIconStyle(options.icon);
+            return this.iconStyleTransformation(this.iconColorFromOptIconToIconStyle(options.icon));
          }
       }
    },
@@ -213,11 +213,21 @@ const ActualApi = {
       if (options.fontSize) {
          return options.fontSize;
       } else {
-         //кнопки l размера имеют шрифт xl в теме
-         if (options.size === 'l') {
-            return 'xl';
+         if (options.viewMode !== 'link') {
+            //кнопки l размера имеют шрифт xl в теме
+            if (options.size === 'l') {
+               return 'xl';
+            } else {
+               return 'm';
+            }
          } else {
-            return 'm';
+            //для ссылок все сложнее
+            switch (options.size) {
+               case 's': return 'xs'; break;
+               case 'l': return 'l'; break;
+               case 'xl': return '3xl'; break;
+               default: return 'm';
+            }
          }
       }
    }

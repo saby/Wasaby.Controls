@@ -12,7 +12,7 @@
     on:keypress="_keyUpHandler()"
     attr:href="{{_options.href}}">
     <span attr:class="controls-BaseButton__content
-                        controls-BaseButton__font_size-{{fontSize}}
+                        controls-BaseButton__content_fontsize-{{_fontSize}}_theme-{{_options.theme}}
                         controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
         <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon {{_icon}}
