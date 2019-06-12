@@ -57,6 +57,7 @@ const deprecatedClassesOfButton = {
       type: 'button'
    }
 };
+const _iconRegExp: RegExp = new RegExp('icon-(large|small|medium|default|16|24|32)\\b');
 
 interface IButtonClass {
    viewMode: string;
@@ -176,6 +177,35 @@ const ActualApi = {
             }
          } else {
             return 'default';
+         }
+      }
+   },
+   iconSize(options: unknown): string {
+      if (options.iconSize) {
+         return options.iconSize;
+      } else {
+         if (_iconRegExp.exec(options.icon)) {
+            switch (RegExp.$1) {
+               case '16': return 'small'; break;
+               case '24': return 'medium'; break;
+               case '32': return 'large'; break;
+               default: return RegExp.$1;
+            }
+         } else {
+            return '';
+         }
+      }
+   },
+   iconStyle(options: unknown): string {
+      if (options.readOnly) {
+         return 'readonly';
+      } else if (options.buttonAdd) {
+         return 'default';
+      } else {
+         if (options.iconStyle) {
+            return options.iconStyle;
+         } else {
+            return this.iconColorFromOptIconToIconStyle(options.icon);
          }
       }
    }

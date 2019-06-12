@@ -1,3 +1,4 @@
+//text colors
 .controls-Button__text-default_theme-@{themeName}{
    color: @text-color;
 }
@@ -34,6 +35,37 @@
 }
 .controls-Button__text_gap_theme-@{themeName} {
    margin-left: @icon-offset_button;
+}
+//icon colors
+.controls-Button__icon_style-info_theme-@{themeName} {
+   color: @color_info;
+}
+
+.controls-Button__icon_style-success_theme-@{themeName} {
+   color: @color_success;
+}
+
+.controls-Button__icon_style-danger_theme-@{themeName} {
+   color: @color_danger;
+}
+
+.controls-Button__icon_style-warning_theme-@{themeName} {
+   color: @color_warning;
+}
+
+.controls-Button__icon_style-secondary_theme-@{themeName} {
+   color: @color_secondary;
+}
+
+.controls-Button__icon_style-primary_theme-@{themeName} {
+   color: @color_primary;
+}
+
+.controls-Button__icon_style-default_theme-@{themeName} {
+   color: @color_text_default;
+}
+.controls-Button__icon_style-readonly_theme-@{themeName} {
+   color: @readonly_color;
 }
 /*после этого старые*/
 .controls-Button_style-primary_viewMode-button.theme_@{themeName} {
@@ -221,33 +253,7 @@
    }
 }
 /**/
-.controls-Button__icon-info.theme_@{themeName} {
-   color: @color_info;
-}
 
-.controls-Button__icon-success.theme_@{themeName} {
-   color: @color_success;
-}
-
-.controls-Button__icon-danger.theme_@{themeName} {
-   color: @color_danger;
-}
-
-.controls-Button__icon-warning.theme_@{themeName} {
-   color: @color_warning;
-}
-
-.controls-Button__icon-secondary.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-Button__icon-primary.theme_@{themeName} {
-   color: @color_primary;
-}
-
-.controls-Button__icon-default.theme_@{themeName} {
-   color: @color_text_default;
-}
 
 .controls-BaseButton.theme_@{themeName} {
    display: inline-block;

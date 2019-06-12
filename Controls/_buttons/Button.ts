@@ -76,7 +76,6 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    private _icon: string;
    private _iconSize: string;
    private _iconStyle: string;
-   private _regExp: RegExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
 
    private prepareIconSize(icon: string): string {
       return icon.replace(this._regExp, '');
@@ -101,9 +100,10 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
-      this._iconSize = options.iconSize;
-      this._iconStyle = currentButtonClass.buttonAdd ? 'default' : ActualApi.iconStyleTransformation(options.iconStyle);
+
+      this._icon = options.icon;
+      this._iconSize = ActualApi.iconSize(options);
+      this._iconStyle = ActualApi.iconStyle(options);
    }
 
    _beforeMount(options: IButtonOptions): void {
