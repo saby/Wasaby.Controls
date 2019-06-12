@@ -208,6 +208,18 @@ const ActualApi = {
             return this.iconColorFromOptIconToIconStyle(options.icon);
          }
       }
+   },
+   fontSize(options: unknown): string {
+      if (options.fontSize) {
+         return options.fontSize;
+      } else {
+         //кнопки l размера имеют шрифт xl в теме
+         if (options.size === 'l') {
+            return 'xl';
+         } else {
+            return 'm';
+         }
+      }
    }
 };
 export default ActualApi;
