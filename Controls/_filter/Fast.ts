@@ -293,6 +293,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                      self._setText();
                   });
                }
+               this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                this._sourceController = null;
                resultDef = _private.loadItemsFromSource(self, newOptions).addCallback(function() {
