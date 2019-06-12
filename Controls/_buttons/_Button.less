@@ -1,3 +1,37 @@
+//common styles
+.controls-BaseButton {
+   display: inline-block;
+   box-sizing: border-box;
+   text-decoration: none;
+}
+//root tag "a" should be without underline
+.controls-BaseButton:hover, .controls-BaseButton:active {
+   text-decoration: none;
+}
+.controls-BaseButton__text {
+   .text-overflow();
+}
+.controls-BaseButton_link:active{
+   .controls-BaseButton__text {
+      text-decoration: underline;
+   }
+}
+.ws-is-no-touch {
+   .controls-BaseButton_link:hover {
+      .controls-BaseButton__text {
+         text-decoration: underline;
+      }
+   }
+}
+.controls-BaseButton__content.theme_@{themeName} {
+   .button-wrapper-default-style();
+   &:before {
+      content: "\200b";
+   }
+}
+.controls-Button__icon {
+   flex-shrink: 0;
+}
 //text colors
 .controls-Button__text-default_theme-@{themeName}{
    color: @text-color;
@@ -40,33 +74,41 @@
 .controls-Button__icon_style-info_theme-@{themeName} {
    color: @color_info;
 }
-
 .controls-Button__icon_style-success_theme-@{themeName} {
    color: @color_success;
 }
-
 .controls-Button__icon_style-danger_theme-@{themeName} {
    color: @color_danger;
 }
-
 .controls-Button__icon_style-warning_theme-@{themeName} {
    color: @color_warning;
 }
-
 .controls-Button__icon_style-secondary_theme-@{themeName} {
    color: @color_secondary;
 }
-
 .controls-Button__icon_style-primary_theme-@{themeName} {
    color: @color_primary;
 }
-
 .controls-Button__icon_style-default_theme-@{themeName} {
    color: @color_text_default;
 }
 .controls-Button__icon_style-readonly_theme-@{themeName} {
    color: @readonly_color;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*после этого старые*/
 .controls-Button_style-primary_viewMode-button.theme_@{themeName} {
    border-color: @border-color_Button_button_primary;
@@ -155,11 +197,6 @@
 
 
 .ws-is-no-touch {
-   //root tag "a" should be without underline
-   .controls-BaseButton:hover.theme_@{themeName} {
-      text-decoration: none;
-   }
-
    .controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
       border-color: @border-color_Button_button_primary_hovered;
       background: @background_Button_button_primary_hovered;
@@ -255,19 +292,7 @@
 /**/
 
 
-.controls-BaseButton.theme_@{themeName} {
-   display: inline-block;
-   box-sizing: border-box;
-   text-decoration: none;
-}
 
-.controls-BaseButton:active.theme_@{themeName} {
-   text-decoration: none;
-}
-
-.controls-BaseButton__text.theme_@{themeName} {
-   .text-overflow();
-}
 
 .controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
 .controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
@@ -432,69 +457,21 @@
 }
 
 .controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   height: @height_Button_size_s;
    font-size: @font-size_Button_size_s;
    .border-radius(@border-radius_Button_size_s);
 }
 
 .controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
-   height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
    .border-radius(@border-radius_Button_size_m);
 }
 
 .controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
-      height: @height_Button_size_default;
       font-size: @font-size_Button_size_default;
       .border-radius(@border-radius_Button_size_default);
 }
 
 .controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
    font-size: @font-size_Button_size_l;
-   height: @height_Button_size_l;
    .border-radius(@border-radius_Button_size_l);
-}
-
-.controls-Button__icon {
-   flex-shrink: 0;
-}
-
-.controls-Button__icon-default_iconStyle-default.theme_@{themeName}, .controls-Button__icon-default-big_iconStyle-default.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-Button__icon-primary_iconStyle-default.theme_@{themeName}, .controls-Button__icon-primary-big_iconStyle-default.theme_@{themeName} {
-   color: @color_primary;
-}
-
-.controls-Button_viewMode-link:active.theme_@{themeName}{
-   .controls-BaseButton__text {
-      text-decoration: underline;
-   }
-}
-
-
-// перенес в vDom, чтобы не было пересечения со старыми кнопками
-// изменено имя в остальном стили аналогичны
-.controls-BaseButton__content.theme_@{themeName} {
-   .button-wrapper-default-style();
-   &:before {
-      content: "\200b";
-   }
-}
-
-.ws-is-no-touch {
-   .controls-Button_viewMode-link:hover.theme_@{themeName} {
-      .controls-BaseButton__text {
-         text-decoration: underline;
-      }
-   }
-}
-// баг ие10, дочерний элемент контейнера с флексом неправильно рассчитывает свои размеры
-// вследствии чего обрезание текста происходит неверно
-.ws-is-ie10.theme_@{themeName} {
-   .controls-Button__text {
-      display: inline-block;
-      -ms-flex-negative: 1;
-   }
 }
