@@ -104,9 +104,6 @@ import 'css!theme?Controls/popupTemplate';
             if (options.closeButtonStyle) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
-            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
-            }
             this._updateMaximizeButton(options);
             this._prepareCloseButton(options);
          },
@@ -122,6 +119,7 @@ import 'css!theme?Controls/popupTemplate';
             }
          },
          _prepareCloseButton: function(options){
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
             let viewMode = options.closeButtonViewMode;
             let style = options.closeButtonStyle;
             this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
