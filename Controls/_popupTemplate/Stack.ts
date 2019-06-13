@@ -4,6 +4,7 @@ import Env = require('Env/Env');
 import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
+      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
 
       var DialogTemplate = Control.extend({
 
@@ -71,13 +72,15 @@ import 'css!theme?Controls/popupTemplate';
          /**
           * @name Controls/_popupTemplate/Stack#closeButtonViewMode
           * @cfg {String} Close button display style.
-          * @variant default
-          * @variant light
-          * @variant primary
+          * @variant toolButton
+          * @variant link
+          * @variant popup
+          * @default popup
           */
 
          _template: template,
          _maximizeButtonVisibility: false,
+         _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
             if (options.contentArea) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
@@ -102,10 +105,12 @@ import 'css!theme?Controls/popupTemplate';
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
             this._updateMaximizeButton(options);
+            this._prepareCloseButton(options);
          },
 
          _beforeUpdate: function(newOptions) {
             this._updateMaximizeButton(newOptions);
+            this._prepareCloseButton(newOptions);
          },
 
          _afterUpdate: function(oldOptions) {
@@ -113,7 +118,12 @@ import 'css!theme?Controls/popupTemplate';
                this._notify('controlResize', [], { bubbling: true });
             }
          },
-
+         _prepareCloseButton: function(options){
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
+            let viewMode = options.closeButtonViewMode;
+            let style = options.closeButtonStyle;
+            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
+         },
          _updateMaximizeButton: function(options) {
             this._updateMaximizeButtonTitle(options);
             if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
