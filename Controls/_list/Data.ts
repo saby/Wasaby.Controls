@@ -195,8 +195,12 @@ type GetSourceResult = {
                will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
             this._dataOptionsContext.prefetchSource = this._options.source;
             this._dataOptionsContext.updateConsumers();
+            this._notify('filterChanged', [filter]);
          },
 
+         _rootChanged: function(event, root) {
+            this._notify('rootChanged', [root]);
+         },
          _itemsChanged: function(event, items) {
             var self = this;
             event.stopPropagation();

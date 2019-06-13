@@ -289,6 +289,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
         this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+        this._children.baseControl.getViewModel().subscribe('rootChanged', this._rootChanged.bind(this));
+        this._children.baseControl.getViewModel().subscribe('filterChanged', this._filterChanged.bind(this));
     },
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
@@ -347,11 +349,17 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
     },
-    _onExpandedItemsChanged(e, expandedItems){
+    _onExpandedItemsChanged(e, expandedItems) {
         this._notify('expandedItemsChanged', [expandedItems]);
 
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
+    },
+    _filterChanged: function (e, filter) {
+    this._notify('filterChanged', filter);
+    },
+    _rootChanged: function (e, root) {
+        this._notify('rootChanged', root);
     },
     reload: function() {
         var self = this;
