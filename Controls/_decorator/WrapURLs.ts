@@ -1,105 +1,179 @@
-import Control = require('Core/Control');
-import entity = require('Types/entity');
-import template = require('wml!Controls/_decorator/WrapURLs/WrapURLs');
+import {descriptor} from 'Types/entity';
+import {Control, IControlOptions} from 'UI/Base';
+import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
-      
+/**
+ * Wrap references in text.
+ *
+ * @class Controls/_decorator/WrapURLs
+ * @extends Core/Control
+ *
+ * @public
+ *
+ * @author Krasilnikov A.S.
+ */
 
-      /**
-       * Wrap references in text.
-       *
-       * @class Controls/_decorator/WrapURLs
-       * @extends Core/Control
-       * @control
-       * @public
-       * @author Журавлев М.С.
-       * @category Decorator
-       *
-       * @author Журавлев Максим Сергеевич
-       */
+export interface IWrapURLsOptions extends IControlOptions {
+    /**
+     * @name Controls/_decorator/WrapURLs#text
+     * @cfg {String} Text to convert.
+     */
+    text: string;
+    /**
+     * @name Controls/_decorator/WrapURLs#newTab
+     * @cfg {Boolean} Open link in new tab.
+     */
+    newTab?: boolean;
+}
 
-      /**
-       * @name Controls/_decorator/WrapURLs#text
-       * @cfg {String} Text to convert.
-       */
+interface IMap {
+    result: number;
+    openDelimiter: number;
+    linkHref: number;
+    schemeHref: number;
+    emailAddress: number;
+    plainValue: number;
+    closeDelimiter: number;
+}
 
-      /**
-       * @name Controls/_decorator/WrapURLs#newTab
-       * @cfg {Boolean} Open link in new tab.
-       */
+interface ILink {
+    type: 'link';
+    href: string;
+    scheme: string;
+}
 
-      var _private = {
-         parseRegExp: /(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([.,:]?(?:\s|$))/g,
+interface IEmail {
+    type: 'email';
+    address: string;
+}
 
-         parseText: function(text) {
-            var
-               node = {},
-               parsedText = [],
-               exec;
-   
-            // eslint-disable-next-line
-            while (exec = this.parseRegExp.exec(text)) {
-               if (text.length === this.parseRegExp.lastIndex && !exec[0]) {
-                  this.parseRegExp.lastIndex = 0;
-                  break;
-               } else if (exec[1]) {
-                  node = {
-                     type: 'link',
-                     href: exec[1],
-                     www: exec[2] === 'www.'
-                  };
-               } else if (exec[3]) {
-                  node = {
-                     type: 'email',
-                     address: exec[3]
-                  };
-               } else if (node.type === 'text') {
-                  node.value += node.end + exec[4];
-                  node.end = exec[5];
-                  continue;
-               } else {
-                  node = {
-                     type: 'text',
-                     value: exec[4]
-                  };
-               }
+interface IPlain {
+    type: 'plain';
+    value: string;
+}
 
-               node.end = exec[5];
-               parsedText.push(node);
+type Path = ILink | IEmail | IPlain;
+
+class WrapURLs extends Control<IWrapURLsOptions, void> {
+    protected _parsedText: Path[] = null;
+
+    protected _template: Function = template;
+
+    protected _beforeMount(options: IWrapURLsOptions): void {
+        this._parsedText = WrapURLs.parseText(options.text);
+    }
+
+    protected _beforeUpdate(newOptions: IWrapURLsOptions): void {
+        if (newOptions.text !== this._options.text) {
+            this._parsedText = WrapURLs.parseText(newOptions.text);
+        }
+    }
+
+    /**
+     * $1 - Opening delimiter.
+     * $2 - Web link.
+     * $3 - Scheme to access the web resource.
+     * $4 - Email address.
+     * $5 - Plain text.
+     * $6 - Closing delimiter.
+     */
+    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
+
+    private static mapExec: IMap = {
+        result: 0,
+        openDelimiter: 1,
+        linkHref: 2,
+        schemeHref: 3,
+        emailAddress: 4,
+        plainValue: 5,
+        closeDelimiter: 6
+    };
+
+    private static pushLink(original: Path[], href: string, scheme: string): Path[] {
+        if (!(href || scheme)) {
+            return original;
+        }
+
+        original.push({
+            href, scheme,
+            type: 'link'
+        });
+
+        return original;
+    }
+
+    private static pushEmail(original: Path[], address: string): Path[] {
+        if (!address) {
+            return original;
+        }
+
+        original.push({
+            address,
+            type: 'email'
+        });
+
+        return original;
+    }
+
+    private static pushPlain(original: Path[], value: string): Path[] {
+        if (!value) {
+            return original;
+        }
+
+        const type = 'plain';
+        const last: Path = original[original.length - 1];
+
+        if (last && last.type === type) {
+            last.value += value;
+        } else {
+            original.push({value, type});
+        }
+
+        return original;
+    }
+
+    private static parseText(text: string): Path[] {
+        let iteration: number = 1;
+        const maxIterations = 10000;
+        const parsedText: Path[] = [];
+        let exec: RegExpExecArray = null;
+
+        // tslint:disable-next-line
+        while (exec = WrapURLs.parseRegExp.exec(text)) {
+            if (text.length === WrapURLs.parseRegExp.lastIndex && !exec[WrapURLs.mapExec.result]) {
+                WrapURLs.parseRegExp.lastIndex = 0;
+                break;
             }
 
-            return parsedText;
-         }
-      };
+            WrapURLs.pushPlain(parsedText, exec[WrapURLs.mapExec.openDelimiter]);
+            WrapURLs.pushLink(parsedText, exec[WrapURLs.mapExec.linkHref], exec[WrapURLs.mapExec.schemeHref]);
+            WrapURLs.pushEmail(parsedText, exec[WrapURLs.mapExec.emailAddress]);
+            WrapURLs.pushPlain(parsedText, exec[WrapURLs.mapExec.plainValue]);
+            WrapURLs.pushPlain(parsedText, exec[WrapURLs.mapExec.closeDelimiter]);
 
-      var WrapURLs = Control.extend({
-         _template: template,
-
-         _parsedText: null,
-
-         _beforeMount: function(options) {
-            this._parsedText = _private.parseText(options.text);
-         },
-
-         _beforeUpdate: function(newOptions) {
-            if (newOptions.text !== this._options.text) {
-               this._parsedText = _private.parseText(newOptions.text);
+            /**
+             * Protection against looping.
+             */
+            if (iteration >= maxIterations) {
+                break;
             }
-         }
-      });
+            iteration++;
+        }
 
-      WrapURLs.getOptionTypes = function() {
-         return {
-            text: entity.descriptor(String).required()
-         };
-      };
+        return parsedText;
+    }
 
-      WrapURLs.getDefaultOptions = function() {
-         return {
+    static getOptionTypes() {
+        return {
+            text: descriptor(String).required()
+        };
+    }
+
+    static getDefaultOptions() {
+        return {
             newTab: true
-         };
-      };
+        };
+    }
+}
 
-      WrapURLs._private = _private;
-
-      export = WrapURLs;
-   
+export default WrapURLs;

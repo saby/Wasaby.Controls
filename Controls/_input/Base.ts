@@ -363,7 +363,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        * @public
        * @demo Controls-demo/Input/Base/Base
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       var Base = Control.extend({

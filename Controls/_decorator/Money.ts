@@ -15,7 +15,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @public
  * @demo Controls-demo/Decorators/Money/Money
  *
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 
 /**
