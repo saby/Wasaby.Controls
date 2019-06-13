@@ -68,6 +68,7 @@ import 'css!theme?Controls/popupTemplate';
 
          _template: template,
          _closeButtonVisibility: true,
+         _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
 
