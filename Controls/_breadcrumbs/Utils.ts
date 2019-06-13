@@ -59,15 +59,20 @@ var _private = {
     },
 
     getItemsSizes: function (items:Array<Record>, displayProperty:String):Array<number> {
-        var itemsSizes:Array<number> = [];
+        let itemsSizes:Array<number> = [];
+        let measurer = _private.getMeasurer();
 
-        _private.getMeasurer().innerHTML = itemsTemplate({
+        measurer.innerHTML = itemsTemplate({
             itemTemplate: itemTemplate,
             displayProperty: displayProperty,
             applyHighlighter: applyHighlighter,
             items: items.map(function (item, index) {
                 return _private.getItemData(index, items);
             })
+        });
+
+        [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsView__crumb'), function (item) {
+            itemsSizes.push(item.clientWidth);
         });
 
         return itemsSizes;
