@@ -233,14 +233,14 @@ const ActualApi = {
       } else {
          if (typeof(options.size) !== 'undefined') {
             IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
-            if (options.viewMode !== 'link') {
+            if (options.viewMode === 'button') {
                //кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
                   return 'xl';
                } else {
                   return 'm';
                }
-            } else {
+            } else if (options.viewMode === 'link'){
                //для ссылок все сложнее
                switch (options.size) {
                   case 's':
@@ -255,6 +255,8 @@ const ActualApi = {
                   default:
                      return 'm';
                }
+            } else {
+               return 'm';
             }
          }
       }

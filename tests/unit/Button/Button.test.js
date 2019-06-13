@@ -242,6 +242,10 @@ define(['Controls/buttons'], function(buttons) {
             let cfg = actualAPI.fontSize({ size: '4xl', viewMode: 'link' });
             assert.equal('m', cfg, 'wrong cfg');
          });
+         it('toolbutton l', function() {
+            let cfg = actualAPI.fontSize({ size: 'l', viewMode: 'toolButton' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
       });
 
       describe('constructor() and _beforeUpdate()', function() {
