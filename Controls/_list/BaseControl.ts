@@ -1146,7 +1146,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var filterChanged = !isEqual(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
-        var sortingChanged = !isEqualObject(newOptions.sorting, this._options.sorting);
+        var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
