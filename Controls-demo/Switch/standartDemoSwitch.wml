@@ -3,16 +3,16 @@
         <div class="ControlsDemo-standartDemoSwitch_SingleSwitcher">
             <h1>Switchers</h1>
             <h2>Single switcher</h2>
-            <div class="demo__block">
+            <div class="demo__block ControlsDemo-standartDemoSwitch_SingleSwitch">
                 <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOff" bind:value="value" caption="State"/>
                 <Controls.toggle:Switch attr:class="demo__element ControlsDemo-standartDemoSwitch_SwitchOn" bind:value="value1" captionPosition="left" caption="State"/>
             </div>
             <h2>Horizontal double switcher</h2>
-            <div class="demo__block">
+            <div class="demo__block ControlsDemo-standartDemoSwitch_HorizontalDoubleSwitch">
                 <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOff" bind:value="value2" captions="{{['Turned on', 'Turned off']}}"/>
             </div>
             <h2>Vertical double switcher</h2>
-            <div class="demo__block">
+            <div class="demo__block ControlsDemo-standartDemoSwitch_VerticalDoubleSwitch">
                 <Controls.toggle:DoubleSwitch attr:class="demo__element ControlsDemo-standartDemoSwitch_DoubleSwitchOn" bind:value="value3" orientation="vertical" captions="{{['Turned on', 'Turned off']}}" />
             </div>
         </div>
