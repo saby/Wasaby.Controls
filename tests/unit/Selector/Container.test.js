@@ -148,20 +148,17 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.isTrue(eventFired);
       });
 
-      it('_selectComplete', function() {
+      describe('_selectComplete', function() {
          let
             container = new lookupPopup.Container(),
             loadDef,
             isSelectionLoad = false,
             items = getItems(),
-            recordSet = new collection.List({items: items}),
-            clearRecordSet = new collection.List({items: items.slice()});
-
+            recordSet = new collection.List({items: items});
          recordSet.getRecordById = function(id) {
             return items[id];
          };
 
-         clearRecordSet.clear();
          container._items = new collection.List({items: items});
          container._selectedKeys = [];
          container._excludedKeys = [];
@@ -169,7 +166,8 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             get: function() {
                return {
                   source: new sourceLib.Memory(),
-                  items: recordSet
+                  items: recordSet,
+                  filter: {}
                };
             }
          };
@@ -181,13 +179,51 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             }
          };
 
-         container._selectComplete();
-         assert.isTrue(isSelectionLoad);
-         assert.deepEqual(loadDef.getResult().resultSelection, clearRecordSet);
+         it('selected keys is empty', function() {
+            let clearRecordSet = new collection.List({items: items.slice()});
 
-         container._selectedKeys = [1];
-         container._selectComplete();
-         assert.equal(loadDef.getResult().resultSelection.at(0), items[1]);
+            clearRecordSet.clear();
+            container._selectComplete();
+
+            assert.isTrue(isSelectionLoad);
+            assert.deepEqual(loadDef.getResult().resultSelection, clearRecordSet);
+         });
+
+         it('single select', function() {
+            container._selectedKeys = [1];
+            container._selectComplete();
+            assert.equal(loadDef.getResult().resultSelection.at(0), items[1]);
+         });
+
+         it('multi select, check toggle indicator', function(done) {
+            let
+               hideIndicatorParam,
+               indicatorId = 'fw54dw54d46q46d5',
+               isShowIndicator = false,
+               isHideIndicator = false;
+
+            container._notify = function(eventName, result) {
+               switch (eventName){
+                  case 'showIndicator':
+                     isShowIndicator = true;
+                     return indicatorId;
+
+                  case 'hideIndicator':
+                     isHideIndicator = true;
+                     hideIndicatorParam = result[0];
+               }
+            };
+
+            container._options.multiSelect = true;
+            container._selectComplete();
+
+            assert.isTrue(isShowIndicator);
+            setTimeout(function() {
+               assert.isTrue(isHideIndicator);
+               assert.equal(hideIndicatorParam, indicatorId);
+               done();
+            }, 0);
+         });
       });
    });
 
