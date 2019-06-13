@@ -204,10 +204,13 @@ const ActualApi = {
       } else {
          if (_iconRegExp.exec(options.icon)) {
             switch (RegExp.$1) {
-               case '16': return 'small'; break;
-               case '24': return 'medium'; break;
-               case '32': return 'large'; break;
-               default: return RegExp.$1;
+               case '16': return 's'; break;
+               case '24': return 'm'; break;
+               case '32': return 'l'; break;
+               case 'small': return 's'; break;
+               case 'medium': return 'm'; break;
+               case 'large': return 'l'; break;
+               default: return '';
             }
          } else {
             return '';

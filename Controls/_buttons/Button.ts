@@ -61,7 +61,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions,
 
 class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIcon, ITooltip, IButton, IClick {
    protected _template: TemplateFunction = ButtonTemplate;
-   protected _theme: string[] = ['Controls/buttons'];
+   protected _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
    // Называть _style нельзя, так как это состояние используется для темизации
    private _buttonStyle: string;

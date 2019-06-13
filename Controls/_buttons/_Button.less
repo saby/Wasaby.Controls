@@ -29,147 +29,31 @@
       content: "\200b";
    }
 }
-.controls-Button__icon {
-   flex-shrink: 0;
-   speak: none;
-   font-style: normal;
-   font-weight: normal;
-   font-variant: normal;
-   text-transform: none;
-   line-height: 1;
-   display: inline-block;
-}
-//icon-sizes
-.controls-Button__icon_size-default_theme-default {
-   font-size: @icon-size_m !important;
-   line-height: @icon-size_m !important;
-   width: @icon-size_m;
-   height: @icon-size_m;
-   font-family: @font-family_m_icon;
-}
-.controls-Button__icon_size-small_theme-default {
-   font-size: @icon-size_s !important;
-   line-height: @icon-size_s !important;
-   width: @icon-size_s;
-   height: @icon-size_s;
-   font-family: @font-family_s_icon;
-}
-.controls-Button__icon_size-medium_theme-default {
-   font-size: @icon-size_m !important;
-   line-height: @icon-size_m !important;
-   width: @icon-size_m;
-   height: @icon-size_m;
-   font-family: @font-family_m_icon;
-}
-.controls-Button__icon_size-large_theme-default {
-   font-size: @icon-size_l !important;
-   line-height: @icon-size_l !important;
-   width: @icon-size_l;
-   height: @icon-size_l;
-   font-family: @font-family_l_icon;
-}
-//text colors
-.controls-Button__text-default_theme-@{themeName}{
-   color: @text-color_button;
-}
-.controls-Button__text-primary_theme-@{themeName}{
-   color: @primary_text-color;
-}
-.controls-Button__text-link_theme-@{themeName}{
-   color: @link_text-color;
-}
-.controls-Button__text-danger_theme-@{themeName}{
-   color: @danger-color;
-}
-.controls-Button__text-success_theme-@{themeName}{
-   color: @success-color;
-}
-.controls-Button__text-warning_theme-@{themeName}{
-   color: @warning-color;
-}
-.controls-Button__text-unaccented_theme-@{themeName}{
-   color: @unaccented_color;
-}
-.controls-Button__text-readonly_theme-@{themeName}{
-   color: @readonly_color;
-}
+
 .ws-is-no-touch {
-   .controls-BaseButton:hover .controls-Button__text-link_theme-@{themeName}{
+   .controls-BaseButton:hover .controls-text-link_theme-@{themeName}{
       color: @link_hover_text-color;
    }
 }
 .ws-is-no-touch, .ws-is-touch {
-   .controls-BaseButton:active .controls-Button__text-link_theme-@{themeName}{
+   .controls-BaseButton:active .controls-text-link_theme-@{themeName}{
       color: @link_hover_text-color;
    }
 }
 .controls-Button__text_gap_theme-@{themeName} {
    margin-left: @icon-offset_button;
 }
-//icon colors
-.controls-Button__icon_style-info_theme-@{themeName} {
-   color: @color_info;
-}
-.controls-Button__icon_style-success_theme-@{themeName} {
-   color: @color_success;
-}
-.controls-Button__icon_style-danger_theme-@{themeName} {
-   color: @color_danger;
-}
-.controls-Button__icon_style-warning_theme-@{themeName} {
-   color: @color_warning;
-}
-.controls-Button__icon_style-secondary_theme-@{themeName} {
-   color: @color_secondary;
-}
-.controls-Button__icon_style-primary_theme-@{themeName} {
-   color: @color_primary;
-}
-.controls-Button__icon_style-default_theme-@{themeName} {
-   color: @color_text_default;
-}
-.controls-Button__icon_style-readonly_theme-@{themeName} {
-   color: @readonly_color;
-}
+
 .ws-is-no-touch {
-   .controls-BaseButton:hover .controls-Button__icon_style-secondary_theme-@{themeName}{
+   .controls-BaseButton:hover .controls-icon_style-secondary_theme-@{themeName}{
       color: @link_hover_text-color;
    }
 }
 .ws-is-no-touch, .ws-is-touch {
-   .controls-BaseButton:active .controls-Button__icon_style-secondary_theme-@{themeName}{
+   .controls-BaseButton:active .controls-icon_style-secondary_theme-@{themeName}{
       color: @link_hover_text-color;
    }
 }
-//font-size
-.controls-BaseButton__content_fontsize-xs_theme-@{themeName} {
-   font-size: @font-size_xs;
-}
-.controls-BaseButton__content_fontsize-s_theme-@{themeName} {
-   font-size: @font-size_s;
-}
-.controls-BaseButton__content_fontsize-m_theme-@{themeName} {
-   font-size: @font-size_m;
-}
-.controls-BaseButton__content_fontsize-l_theme-@{themeName} {
-   font-size: @font-size_l;
-}
-.controls-BaseButton__content_fontsize-xl_theme-@{themeName} {
-   font-size: @font-size_xl;
-}
-.controls-BaseButton__content_fontsize-2xl_theme-@{themeName} {
-   font-size: @font-size_2xl;
-}
-.controls-BaseButton__content_fontsize-3xl_theme-@{themeName} {
-   font-size: @font-size_3xl;
-}
-.controls-BaseButton__content_fontsize-4xl_theme-@{themeName} {
-   font-size: @font-size_4xl;
-}
-.controls-BaseButton__content_fontsize-5xl_theme-@{themeName} {
-   font-size: @font-size_5xl;
-}
-
 
 
 
