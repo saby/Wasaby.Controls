@@ -11,13 +11,13 @@
 .controls-BaseButton__text {
    .text-overflow();
 }
-.controls-BaseButton_link:active{
+.controls-BaseButton_link.controls-BaseButton_clickable:active{
    .controls-BaseButton__text {
       text-decoration: underline;
    }
 }
 .ws-is-no-touch {
-   .controls-BaseButton_link:hover {
+   .controls-BaseButton_link.controls-BaseButton_clickable:hover {
       .controls-BaseButton__text {
          text-decoration: underline;
       }
@@ -28,6 +28,16 @@
    &:before {
       content: "\200b";
    }
+}
+
+.controls-BaseButton_clickable{
+   cursor: pointer;
+}
+.controls-BaseButton_readonly{
+   cursor: default;
+}
+.controls-BaseButton_button, .controls-BaseButton_toolButton {
+   user-select: none;
 }
 
 .ws-is-no-touch {
@@ -94,13 +104,11 @@
 
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
-   cursor: default;
    border-color: @border-color_Button_readOnly;
 }
 
 .controls-Button_viewMode-button_size-s.theme_@{themeName} {
    height: @height_Button_size_s;
-   font-size: @font-size_Button_size_s;
    border-style: solid;
    border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_s);
@@ -108,7 +116,6 @@
 
 .controls-Button_viewMode-button_size-default.theme_@{themeName} {
    height: @height_Button_size_default;
-   font-size: @font-size_Button_size_default;
    border-style: solid;
    border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_default);
@@ -116,14 +123,12 @@
 
 .controls-Button_viewMode-button_size-m.theme_@{themeName} {
    height: @height_Button_size_m;
-   font-size: @font-size_Button_size_m;
    border-style: solid;
    border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_m);
 }
 
 .controls-Button_viewMode-button_size-l.theme_@{themeName} {
-   font-size: @font-size_Button_size_l;
    border-style: solid;
    height: @height_Button_size_l;
    border-width: @thickness_Button__border;
@@ -228,7 +233,6 @@
 .controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
 .controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
    justify-content: center;
-   user-select: none;
 }
 
 .controls-Button_viewMode-toolButton_withBackground.theme_@{themeName} {
@@ -247,7 +251,6 @@
 }
 
 .controls-Button_viewMode-toolButton.theme_@{themeName} {
-   cursor: pointer;
    text-shadow: @text-shadow_ToolButton;
 }
 
@@ -302,23 +305,15 @@
    background-color: @background-color-IconButton_transparent_hovered;
 }
 
-.controls-Button_viewMode-link.theme_@{themeName} {
-   cursor: pointer;
-}
-
-
-
 .controls-Button_style-magic_viewMode-link.theme_@{themeName} {
    color: @color_Link_magic;
 }
 
 
 .controls-Button_viewMode-button.theme_@{themeName} {
-   cursor: pointer;
    min-width: @min-width_Button_common;
    box-shadow: @box-shadow_Button_common;
    text-shadow: @text-shadow_Button_button;
-   user-select: none;
 }
 
 .controls-Button_viewMode-button:active.theme_@{themeName} {
@@ -327,10 +322,8 @@
 
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
-   cursor: default;
    border-color: @border-color_Button_readOnly;
    text-shadow: @text-shadow_Button_readOnly;
-   user-select: none;
 }
 
 .controls-Button_style-secondary_viewMode-Button_readOnly.theme_@{themeName} {

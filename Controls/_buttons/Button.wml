@@ -1,4 +1,6 @@
-<a attr:class="controls-BaseButton controls-BaseButton_{{_viewMode}}
+<a attr:class="controls-BaseButton
+            controls-BaseButton_{{_viewMode}}
+            controls-BaseButton_{{_options.readOnly ? 'readonly':'clickable'}}
              controls-Button_style-{{_buttonStyle}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
@@ -15,7 +17,7 @@
                         controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
                         controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
         <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button__icon {{_icon}}
+            <i attr:class="controls-icon {{_icon}}
                             {{_iconSize ? 'controls-icon_size-' + _iconSize + '_theme-' + _options.theme}}
                             {{_iconStyle ? 'controls-icon_style-' + _iconStyle + '_theme-' + _options.theme}}"/>
         </ws:if>
