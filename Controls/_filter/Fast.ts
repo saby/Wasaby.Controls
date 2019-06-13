@@ -8,7 +8,7 @@ import clone = require('Core/core-clone');
 import pDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 

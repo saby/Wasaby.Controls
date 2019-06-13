@@ -6,7 +6,7 @@ import template = require('wml!Controls/_filter/Button/Button');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filter';
 /**
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.

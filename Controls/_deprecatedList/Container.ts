@@ -3,7 +3,7 @@ import template = require('wml!Controls/_deprecatedList/Container');
 import {Memory} from 'Types/source';
 import {_SearchController} from 'Controls/search';
 import merge = require('Core/core-merge');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import {SearchContextField, FilterContextField} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import {Source} from 'Controls/history';
