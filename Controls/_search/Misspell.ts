@@ -1,4 +1,5 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {ICaption} from 'Controls/interface';
 import template = require('wml!Controls/_search/Misspell');
 
 /**
@@ -20,9 +21,11 @@ import template = require('wml!Controls/_search/Misspell');
  * @author Kraynov D.
  */
 
-class Misspell extends Control {
-   private _template: Function = template;
+class Misspell extends Control<IControlOptions> implements ICaption{
+   private _template: TemplateFunction = template;
    static _theme: Array<string> = ['Controls/search'];
+
+   readonly "[Controls/_interface/ICaption]": true;
 }
 
 export default Misspell;
