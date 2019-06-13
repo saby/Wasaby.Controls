@@ -104,6 +104,9 @@ import 'css!theme?Controls/popupTemplate';
             if (options.closeButtonStyle) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
+            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
+               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
+            }
             this._updateMaximizeButton(options);
             this._prepareCloseButton(options);
          },

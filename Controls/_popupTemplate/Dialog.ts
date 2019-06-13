@@ -87,6 +87,9 @@ import 'css!theme?Controls/popupTemplate';
             if (options.hideCross) {
                Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
+            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
+               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
+            }
             this._prepareCloseButton(options);
          },
          _beforeUpdate: function(options) {
