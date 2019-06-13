@@ -4,7 +4,7 @@ import Env = require('Env/Env');
 import Vdom = require('Vdom/Vdom');
 import 'css!theme?Controls/popupTemplate';
 
-
+      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
       var DialogTemplate = Control.extend({
 
          /**
@@ -54,9 +54,10 @@ import 'css!theme?Controls/popupTemplate';
          /**
           * @name Controls/_popupTemplate/Dialog#closeButtonViewMode
           * @cfg {String} Close button display style.
-          * @variant default
-          * @variant light
-          * @variant primary
+          * @variant toolButton
+          * @variant link
+          * @variant popup
+          * @default popup
           */
 
          /**
@@ -85,9 +86,14 @@ import 'css!theme?Controls/popupTemplate';
             if (options.hideCross) {
                Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
+            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
+               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
+            }
+            this._prepareCloseButton(options);
          },
          _beforeUpdate: function(options) {
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+            this._prepareCloseButton(options);
          },
 
          /**
@@ -102,6 +108,11 @@ import 'css!theme?Controls/popupTemplate';
             if (this._needStartDrag(event.target)) {
                this._startDragNDrop(event)
             }
+         },
+         _prepareCloseButton: function(options){
+            let viewMode = options.closeButtonViewMode;
+            let style = options.closeButtonStyle;
+            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
          },
 
          _startDragNDrop: function(event) {
