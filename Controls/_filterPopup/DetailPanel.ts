@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');

@@ -4,7 +4,7 @@ import {FilterContextField} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import {factory} from 'Types/chain';
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import {Controller} from 'Controls/source';
 import isEmptyObject = require('Core/helpers/Object/isEmpty');
 import {IoC} from 'Env/Env';

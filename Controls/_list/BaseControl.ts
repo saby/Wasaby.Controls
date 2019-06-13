@@ -6,7 +6,7 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import {Controller as SourceController} from 'Controls/source';
-import isEqualObject = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
@@ -1143,8 +1143,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeUpdate: function(newOptions) {
-        var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-        var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
+        var filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = !isEqualObject(newOptions.sorting, this._options.sorting);
         var self = this;

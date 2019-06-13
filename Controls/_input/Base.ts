@@ -3,7 +3,7 @@ import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
 import ViewModel = require('Controls/_input/Base/ViewModel');
@@ -1012,4 +1012,4 @@ import 'wml!Controls/_input/Base/Stretcher';
       };
 
       export = Base;
-   
+
