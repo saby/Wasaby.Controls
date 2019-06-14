@@ -207,8 +207,8 @@ import 'Controls/context';
          },
 
          resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
-            if (filterButtonItems) {
-               _private.setFilterButtonItems(filterButtonItems, fastFilterItems || []);
+            if (filterButtonItems && fastFilterItems) {
+               _private.setFilterButtonItems(filterButtonItems, fastFilterItems);
             }
          },
 
