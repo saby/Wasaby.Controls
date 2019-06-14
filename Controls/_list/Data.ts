@@ -4,9 +4,9 @@ import template = require('wml!Controls/_list/Data');
 import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
-import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
 
+import {PrefetchProxy, DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 
@@ -147,13 +147,13 @@ type GetSourceResult = {
             _private.resolveOptions(this, options);
 
             if (receivedState) {
-               source = options.source instanceof sourceLib.PrefetchProxy ? options.source.getOriginal() : options.source;
+               source = options.source instanceof PrefetchProxy ? options.source.getOriginal() : options.source;
 
                // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new sourceLib.PrefetchProxy({target: source})
+                  source: new PrefetchProxy({target: source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
@@ -197,16 +197,22 @@ type GetSourceResult = {
             this._dataOptionsContext.updateConsumers();
          },
 
-         _itemsChanged: function(event, items) {
-            var self = this;
-            event.stopPropagation();
-            _private.createPrefetchSource(this, items).addCallback(function(result) {
-               _private.resolvePrefetchSourceResult(self, result);
-               _private.updateDataOptions(self, self._dataOptionsContext);
-               self._dataOptionsContext.updateConsumers();
-               self._forceUpdate();
-               return result;
+         _itemsChanged: function(event:Event, items):void {
+            const source = new PrefetchProxy({
+               data: {
+                  query: items
+               },
+               target: this._source
             });
+
+            _private.resolvePrefetchSourceResult(this, {
+               source: source,
+               data: items
+            });
+
+            _private.updateDataOptions(this, this._dataOptionsContext);
+            this._dataOptionsContext.updateConsumers();
+            event.stopPropagation();
          },
 
          _getChildContext: function() {
