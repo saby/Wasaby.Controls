@@ -37,6 +37,7 @@
                                     on:sortingChanged="_notifyHandler('sortingChanged')"
                                     on:itemExpanded="_notifyHandler('itemExpanded')"
                                     on:itemCollapsed="_notifyHandler('itemCollapsed')"
+                                    on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
       </Controls._explorer.PathController>
