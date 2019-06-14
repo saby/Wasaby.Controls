@@ -78,17 +78,14 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    private _iconSize: string;
    private _iconStyle: string;
 
-   private prepareIconSize(icon: string): string {
-      return icon.replace(this._regExp, '');
-   }
    private cssStyleGeneration(options: IButtonOptions): void {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
 
-      this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle);
+      this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
       this._contrastBackground = ActualApi.contrastBackground(options);
       this._transparent = options.transparent; // TODO remove
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
-      this._fontColorStyle = options.readOnly ? 'readonly' : ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+      this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = options.icon;
 
@@ -116,13 +113,13 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       this.cssStyleGeneration(newOptions);
    }
 
-   _keyUpHandler(e) {
+   _keyUpHandler(e): void {
       if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
          this._notify('click');
       }
    }
 
-   _clickHandler(e) {
+   _clickHandler(e): void {
       if (this._options.readOnly) {
          e.stopPropagation();
       }

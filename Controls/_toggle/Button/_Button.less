@@ -120,6 +120,8 @@
       border-color: @border-color_ToggleButton_pushButton_hovered;
    }
 }
+
+
 //Эти стили переехали из кнопки. Т.к. в кнопках они больше не нужны а тоггл их использует
 .controls-ToggleButton.controls-Button_style-secondary_viewMode-link.theme_@{themeName} {
    color: @color_Link_secondary;
@@ -261,7 +263,7 @@
 .controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    cursor: default;
 }
-.controls-Button_viewMode-link_readOnly.theme_@{themeName} {
+.controls-ToggleButton.controls-Button_viewMode-link_readOnly.theme_@{themeName} {
    color: @color_text_readonly;
 }
 .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
@@ -277,8 +279,101 @@
 .controls-ToggleButton.controls-Button_viewMode-button.theme_@{themeName} {
     cursor: pointer;
     user-select: none;
+   border-style: solid;
+   border-width: @thickness_Button__border;
+}
+.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName} {
+   border-style: @border-style-ToolButton;
+   border-width: @border-width-ToolButton;
 }
 .controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    cursor: default;
    user-select: none;
 }
+.controls-ToggleButton.controls-Button_style-primary_viewMode-button.theme_@{themeName} {
+   border-color: @border-color_Button_button_primary;
+}
+.controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
+   border-color: @border-color_Button_button_primary_hovered;
+}
+.controls-ToggleButton.controls-Button_style-secondary_viewMode-button.theme_@{themeName} {
+   border-color: @border-color_Button_secondary;
+}
+.controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
+   border-color: @border-color_Button_secondary_hovered;
+}
+.controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
+   border-color: @border-color_Button_readOnly;
+}
+.controls-ToggleButton.controls-Button_viewMode-toolButton_style-common.theme_@{themeName} {
+   border-color: @border-color-ToolButton;
+}
+.controls-ToggleButton.controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
+   border-color: @border-color-ToolButton_readOnly;
+}
+.ws-is-no-touch {
+   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
+      background: @background_Button_button_primary_hovered;
+   }
+
+   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:hover.theme_@{themeName} {
+      background: @background_Button_secondary_hovered;
+   }
+
+   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
+      background: @background_Button_secondary_active;
+   }
+
+   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
+      background: @background_Button_button_primary_active;
+   }
+   .controls-ToggleButton.controls-Button_style-danger_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color_danger;
+   }
+
+   .controls-ToggleButton.controls-Button_style-warning_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color_warning;
+   }
+
+   .controls-ToggleButton.controls-Button_style-success_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color_success;
+   }
+
+   .controls-ToggleButton.controls-Button_style-info_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color_info;
+   }
+
+   .controls-ToggleButton.controls-Button_style-primary_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color_primary;
+   }
+
+   .controls-ToggleButton.controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
+      border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
+   }
+}
+
+//toolbutton active style
+.controls-ToggleButton.controls-Button_style-danger_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color_danger;
+}
+
+.controls-ToggleButton.controls-Button_style-warning_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color_warning;
+}
+
+.controls-ToggleButton.controls-Button_style-success_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color_success;
+}
+
+.controls-ToggleButton.controls-Button_style-info_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color_info;
+}
+
+.controls-ToggleButton.controls-Button_style-primary_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color_primary;
+}
+
+.controls-ToggleButton.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
+   border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
+}
+/**/

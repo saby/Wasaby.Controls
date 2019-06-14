@@ -8,9 +8,13 @@
 .controls-BaseButton:hover, .controls-BaseButton:active {
    text-decoration: none;
 }
+
+//text-styles
 .controls-BaseButton__text {
    .text-overflow();
 }
+
+//readonly/clickable
 .controls-BaseButton_link.controls-BaseButton_clickable:active{
    .controls-BaseButton__text {
       text-decoration: underline;
@@ -23,7 +27,7 @@
       }
    }
 }
-.controls-BaseButton__content.theme_@{themeName} {
+.controls-BaseButton__content {
    .button-wrapper-default-style();
    &:before {
       content: "\200b";
@@ -39,7 +43,11 @@
 .controls-BaseButton_button, .controls-BaseButton_toolButton {
    user-select: none;
 }
+.controls-BaseButton__text_readonly_theme-@{themeName} {
+   color: @readonly_text-color_button;
+}
 
+//hover styles
 .ws-is-no-touch {
    .controls-BaseButton:hover .controls-text-link_theme-@{themeName}{
       color: @link_hover_text-color;
@@ -59,28 +67,84 @@
       color: @link_hover_text-color;
    }
 }
-.ws-is-no-touch, .ws-is-touch {
-   .controls-BaseButton:active .controls-icon_style-secondary_theme-@{themeName}{
-      color: @link_hover_text-color;
+
+.controls-BaseButton:active .controls-icon_style-secondary_theme-@{themeName}{
+   color: @link_hover_text-color;
+}
+
+//borders
+.controls-BaseButton_button, .controls-BaseButton_toolButton {
+   border-style: solid;
+}
+.controls-BaseButton_button_theme-@{themeName} {
+   border-width: @border-thickness_button;
+}
+.controls-BaseButton_button_style-primary_theme-@{themeName} {
+   border-color: @primary_border-color_button;
+}
+.controls-BaseButton_button_style-secondary_theme-@{themeName} {
+   border-color: @secondary_border-color_button;
+}
+.controls-BaseButton_button_style-readonly_theme-@{themeName} {
+   border-color: @readonly_border-color_button;
+}
+
+.controls-BaseButton_toolButton_theme-@{themeName} {
+   border-width: @border-thickness_button;
+}
+.controls-BaseButton_toolButton_style-primary_theme-@{themeName} {
+   border-color: @border-color_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-secondary_theme-@{themeName} {
+   border-color: @border-color_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-danger_theme-@{themeName} {
+   border-color: @border-color_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-success_theme-@{themeName} {
+   border-color: @border-color_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-readonly_theme-@{themeName} {
+   border-color: @readonly_border-color_button_toolButton;
+}
+.ws-is-no-touch {
+   .controls-BaseButton_toolButton_style-primary_theme-@{themeName}:hover {
+      border-color: @border-color_hover_button_toolButton;
+   }
+   .controls-BaseButton_toolButton_style-secondary_theme-@{themeName}:hover {
+      border-color: @border-color_hover_button_toolButton;
+   }
+   .controls-BaseButton_toolButton_style-danger_theme-@{themeName}:hover {
+      border-color: @danger-color;
+   }
+   .controls-BaseButton_toolButton_style-success_theme-@{themeName}:hover {
+      border-color: @success-color;
    }
 }
 
-
-
-
-
+.controls-BaseButton_toolButton_style-primary_theme-@{themeName}:active {
+   border-color: @border-color_hover_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-secondary_theme-@{themeName}:active {
+   border-color: @border-color_hover_button_toolButton;
+}
+.controls-BaseButton_toolButton_style-danger_theme-@{themeName}:active {
+   border-color: @danger-color;
+}
+.controls-BaseButton_toolButton_style-success_theme-@{themeName}:active {
+   border-color: @success-color;
+}
 
 
 
 
 /*после этого старые*/
 .controls-Button_style-primary_viewMode-button.theme_@{themeName} {
-   border-color: @border-color_Button_button_primary;
+
    background: @background_Button_button_primary;
 }
 
 .controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-   border-color: @border-color_Button_button_primary_hovered;
    background: @background_Button_button_primary_active;
 }
 
@@ -89,12 +153,10 @@
 }
 
 .controls-Button_style-secondary_viewMode-button.theme_@{themeName} {
-   border-color: @border-color_Button_secondary;
    background: @background_Button_secondary;
 }
 
 .controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-   border-color: @border-color_Button_secondary_hovered;
    background: @background_Button_secondary_active;
 }
 
@@ -104,34 +166,26 @@
 
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
-   border-color: @border-color_Button_readOnly;
 }
 
 .controls-Button_viewMode-button_size-s.theme_@{themeName} {
    height: @height_Button_size_s;
-   border-style: solid;
-   border-width: @thickness_Button__border;
+
    .border-radius(@border-radius_Button_size_s);
 }
 
 .controls-Button_viewMode-button_size-default.theme_@{themeName} {
    height: @height_Button_size_default;
-   border-style: solid;
-   border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_default);
 }
 
 .controls-Button_viewMode-button_size-m.theme_@{themeName} {
    height: @height_Button_size_m;
-   border-style: solid;
-   border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_m);
 }
 
 .controls-Button_viewMode-button_size-l.theme_@{themeName} {
-   border-style: solid;
    height: @height_Button_size_l;
-   border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_l);
 }
 
@@ -157,76 +211,22 @@
 
 .ws-is-no-touch {
    .controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
-      border-color: @border-color_Button_button_primary_hovered;
       background: @background_Button_button_primary_hovered;
    }
 
    .controls-Button_style-secondary_viewMode-button:hover.theme_@{themeName} {
-      border-color: @border-color_Button_secondary_hovered;
       background: @background_Button_secondary_hovered;
    }
 
    .controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-      border-color: @border-color_Button_secondary_hovered;
       background: @background_Button_secondary_active;
    }
 
    .controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-      border-color: @border-color_Button_button_primary_hovered;
       background: @background_Button_button_primary_active;
    }
 
-   .controls-Button_style-danger_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_danger;
-   }
-
-   .controls-Button_style-warning_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_warning;
-   }
-
-   .controls-Button_style-success_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_success;
-   }
-
-   .controls-Button_style-info_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_info;
-   }
-
-   .controls-Button_style-primary_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_primary;
-   }
-
-   .controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
-   }
 }
-
-//toolbutton active style
-.controls-Button_style-danger_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_danger;
-}
-
-.controls-Button_style-warning_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_warning;
-}
-
-.controls-Button_style-success_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_success;
-}
-
-.controls-Button_style-info_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_info;
-}
-
-.controls-Button_style-primary_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_primary;
-}
-
-.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
-}
-/**/
-
 
 
 
@@ -245,17 +245,12 @@
 
 .controls-Button_viewMode-toolButton.theme_@{themeName}, .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
    border-radius: @border-radius-ToolButton;
-   border-style: @border-style-ToolButton;
-   border-width: @border-width-ToolButton;
+
    box-shadow: @box-shadow-ToolButton;
 }
 
 .controls-Button_viewMode-toolButton.theme_@{themeName} {
    text-shadow: @text-shadow_ToolButton;
-}
-
-.controls-Button_viewMode-toolButton_style-common.theme_@{themeName} {
-   border-color: @border-color-ToolButton;
 }
 
 .controls-Button_viewMode-toolButton_size-s.theme_@{themeName} {
@@ -278,7 +273,6 @@
 }
 
 .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   border-color: @border-color-ToolButton_readOnly;
    text-shadow: @text-shadow_ToolButton_readOnly;
 }
 
@@ -322,7 +316,6 @@
 
 .controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    min-width: @min-width_Button_common;
-   border-color: @border-color_Button_readOnly;
    text-shadow: @text-shadow_Button_readOnly;
 }
 

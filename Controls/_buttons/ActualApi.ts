@@ -162,8 +162,10 @@ const ActualApi = {
          }
       }
    },
-   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string): string {
-      if (optionButtonStyle) {
+   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean): string {
+      if (optionReadonly) {
+         return 'readonly';
+      } else if (optionButtonStyle) {
          return optionButtonStyle;
       } else {
          if (calcStyle) {

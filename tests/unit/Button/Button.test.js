@@ -104,6 +104,10 @@ define(['Controls/buttons'], function(buttons) {
          });
       });
       describe('buttonStyle', function() {
+         it('readonly', function() {
+            let cfg = actualAPI.buttonStyle('warning', 'danger', 'secondary', true);
+            assert.equal('readonly', cfg, 'wrong cfg');
+         });
          it('buttonStyle', function() {
             let cfg = actualAPI.buttonStyle('warning', 'danger', 'secondary');
             assert.equal('secondary', cfg, 'wrong cfg');

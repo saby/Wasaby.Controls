@@ -1,6 +1,8 @@
 <a attr:class="controls-BaseButton
-            controls-BaseButton_{{_viewMode}}
-            controls-BaseButton_{{_options.readOnly ? 'readonly':'clickable'}}
+            controls-BaseButton_{{_viewMode}} controls-BaseButton_{{_viewMode}}_theme-{{_options.theme}}
+            controls-BaseButton_{{_options.readOnly ? 'readonly' : 'clickable'}}
+            controls-BaseButton_{{_viewMode}}_style-{{_buttonStyle}}_theme-{{_options.theme}}
+
              controls-Button_style-{{_buttonStyle}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
@@ -22,7 +24,7 @@
                             {{_iconStyle ? 'controls-icon_style-' + _iconStyle + '_theme-' + _options.theme}}"/>
         </ws:if>
         <ws:if data="{{!!_caption}}">
-           <span attr:class="controls-BaseButton__text controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
+           <span attr:class="controls-BaseButton__text{{_options.readOnly ? ' controls-BaseButton__text_readonly' + '_theme-' + _options.theme : ' controls-text-' + _fontColorStyle + '_theme-' + _options.theme}}
                              {{_hasIcon ? ' controls-Button__text_gap_theme-' + _options.theme}}">
               <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
               <ws:else><ws:partial template="{{_caption}}"/></ws:else>
