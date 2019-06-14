@@ -1,5 +1,5 @@
 import {descriptor} from 'Types/entity';
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
 /**
@@ -57,7 +57,7 @@ type Path = ILink | IEmail | IPlain;
 class WrapURLs extends Control<IWrapURLsOptions, void> {
     protected _parsedText: Path[] = null;
 
-    protected _template: Function = template;
+    protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IWrapURLsOptions): void {
         this._parsedText = WrapURLs.parseText(options.text);
