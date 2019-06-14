@@ -11,6 +11,7 @@
  * @includes IMultiSelectable Controls/_interface/IMultiSelectable
  * @includes ISource Controls/_interface/ISource
  * @includes IHierarchy Controls/_interface/IHierarchy
+ * @includes INumberFormat Controls/_interface/INumberFormat
  * @public
  * @author Kraynov D.
  */
@@ -23,3 +24,4 @@ export {default as ISingleSelectable, ISingleSelectableOptions} from './_interfa
 export {default as IMultiSelectable, IMultiSelectableOptions} from './_interface/IMultiSelectable';
 export {default as ISource, ISourceOptions} from './_interface/ISource';
 export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy';
+export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
