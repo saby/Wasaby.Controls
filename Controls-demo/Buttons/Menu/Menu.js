@@ -84,7 +84,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   comment: 'Word is more familiar, but does not support all the features of automatic filling',
                   myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
                },
-               { id: 3, title: 'Download ready printed form' },
+               { id: 3, title: 'Download ready printed form', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment' },
                { id: 4, title: 'Select a printed form' },
                {
                   id: 5,
