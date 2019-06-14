@@ -26,72 +26,33 @@ define('Controls-demo/Index', [
          _template: template,
          backClickHdl: function() {
             window.history.back();
+            this._forceUpdate();
          },
          changeTheme: function(event, theme) {
             this._notify('themeChanged', [theme], { bubbling: true });
          },
-         _beforeMount: function(options, context, receivedState) {
+         _beforeMount: function() {
             this._title = this._getTitle();
-            this._createLinkResolver();
-            if (receivedState !== undefined) {
-               this._correctTemplate = receivedState;
-            } else {
-               return this._checkTemplate().addCallback(function(isCorrectTemplate) {
-                  this._correctTemplate = isCorrectTemplate;
-                  return this._correctTemplate;
-               }.bind(this));
-            }
          },
-
-         _createLinkResolver: function() {
-            this.linkResolver = new LinkResolver(Env.cookie.get('s3debug') === 'true',
-               Env.constants.buildnumber,
-               Env.constants.wsRoot,
-               Env.constants.appRoot,
-               Env.constants.resourceRoot);
-         },
-
-         _checkTemplate: function() {
-            var templateName = this._getTemplateName();
-            var loadTplDef = new Deferred();
-            if (templateName) {
-               require([templateName], function(tpl){
-                  loadTplDef.callback(!!tpl);
-               }, function(e) {
-                  loadTplDef.callback(null);
-               });
-               return loadTplDef;
-            }
-            return loadTplDef.callback(true);
-         },
-
-         _getTemplateName: function() {
-            var location = this._getLocation();
-            if (location) {
-               var controlName = location.pathname.replace('/Controls-demo/app/', '').replace(/%2F/g, '/');
-               return this._replaceLastChar(controlName);
-            }
-            return '';
-         },
-
-         _replaceLastChar: function(controlName) {
-            if (controlName[controlName.length - 1] === '/') {
-               return controlName.slice(0, -1);
-            }
-            return controlName;
-         },
-
          _getTitle: function() {
             var location = this._getLocation();
             if (location) {
                var splitter = '%2F';
                var index = location.pathname.lastIndexOf(splitter);
                if (index > -1) {
-                  var controlName = location.pathname.slice(index + splitter.length);
+                  var splittedName = location.pathname.slice(index + splitter.length)
+                     .split('/');
+                  var controlName = splittedName[0];
                   return this._replaceLastChar(controlName);
                }
             }
             return 'Wasaby';
+         },
+         _replaceLastChar: function(controlName) {
+            if (controlName[controlName.length - 1] === '/') {
+               return controlName.slice(0, -1);
+            }
+            return controlName;
          },
          _getLocation: function() {
             if (AppInit.isInit()) {
