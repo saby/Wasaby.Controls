@@ -1,7 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: Input."
-                                         demoname="Controls-demo/Example/Input.wml">
-   <ws:content>
-      <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
+<div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
          <Controls-demo.Example.Input.Text/>
          <Controls-demo.Example.Input.Font/>
          <Controls-demo.Example.Input.RightAlignment/>
@@ -15,6 +12,4 @@
          <Controls-demo.Example.Input.Money/>
          <Controls-demo.Example.Input.Mask/>
          <Controls-demo.Example.Input.Phone/>
-      </div>
-   </ws:content>
-</Controls.Application.ApplicationWrapper>
+</div>
