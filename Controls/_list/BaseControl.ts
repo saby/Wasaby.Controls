@@ -863,7 +863,7 @@ var _private = {
     },
 
     getSortingOnChange: function(currentSorting, propName, sortingType) {
-        var sorting = currentSorting ? currentSorting.slice() : [];
+        var sorting = cClone(currentSorting || []);
         var sortElemIndex = -1;
         var sortElem;
         var newSortElem = {};
