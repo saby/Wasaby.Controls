@@ -11,6 +11,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @extends Core/Control
  *
  * @mixes Controls/_decorator/Money/Styles
+ * @mixes Controls/_interface/INumberFormat
  *
  * @public
  * @demo Controls-demo/Decorators/Money/Money
@@ -39,14 +40,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @deprecated Use option {@link Controls/input:Number#useGrouping}
  */
 
-/**
- * @name Controls/_decorator/Money#useGrouping
- * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
- * @default true
- * @remark
- * true - the number is separated into grouping.
- * false - does not do anything.
- */
 
 /**
  * @name Controls/_decorator/Money#style
@@ -130,13 +123,18 @@ var Money = Control.extend({
       if (newValue !== oldValue || newUseGrouping !== oldUseGrouping) {
          this._parsedNumber = _private.parseNumber(newValue, newUseGrouping);
       }
+   },
+
+   _isDisplayFractionPath: function(value, showEmptyDecimals) {
+      return showEmptyDecimals || value !== '.00';
    }
 });
 
 Money.getDefaultOptions = function () {
    return {
       style: 'default',
-      useGrouping: true
+      useGrouping: true,
+      showEmptyDecimals: true
    };
 };
 
