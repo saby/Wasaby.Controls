@@ -251,6 +251,19 @@
             <ws:partial template="Controls/dropdown:ItemTemplate" iconPadding=""/>
          </ws:itemTemplate>
       </Controls.dropdown:Button>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              style="primary"
+              caption="One group"
+              iconStyle="primary"
+              viewMode="button"
+              showHeader="{{false}}"
+              source="{{_createMemory(_oneGroupItems)}}"
+              groupingKeyCallback="{{_groupingKeyCallback}}"
+              groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              tooltip="Add">
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
