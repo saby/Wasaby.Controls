@@ -82,6 +82,8 @@ import 'css!theme?Controls/popupTemplate';
          _maximizeButtonVisibility: false,
          _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
+            this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть')}`;
+
             if (options.contentArea) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
@@ -125,17 +127,11 @@ import 'css!theme?Controls/popupTemplate';
             this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
          },
          _updateMaximizeButton: function(options) {
-            this._updateMaximizeButtonTitle(options);
             if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
                this._maximizeButtonVisibility = false;
             } else {
                this._maximizeButtonVisibility = options.maximizeButtonVisibility;
             }
-         },
-
-         _updateMaximizeButtonTitle: function(options) {
-            var maximized = this._calculateMaximized(options);
-            this._maximizeButtonTitle = maximized ? rk('Свернуть') : rk('Развернуть');
          },
 
          /**
