@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IInputPlaceholder
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 interface IInputPlaceholder {
     readonly _options: {

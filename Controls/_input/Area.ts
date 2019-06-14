@@ -22,7 +22,7 @@ import 'Controls/decorator';
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       /**

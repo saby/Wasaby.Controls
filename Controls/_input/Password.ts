@@ -16,7 +16,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @public
        * @demo Controls-demo/Input/Password/PasswordPG
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       /**

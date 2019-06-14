@@ -26,7 +26,7 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/ICallback
  *
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
     readonly _options: {
