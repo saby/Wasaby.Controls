@@ -1,23 +1,20 @@
-<Controls.Application title="Demo-example: Separator(header), back button."
-                      headJson="{{ headJson }}"
-                      appRoot="/materials/">
+<Controls.Application.ApplicationWrapper caption="Demo-example: Input."
+                                         demoname="Controls-demo/Example/Input.wml">
    <ws:content>
-      <Controls.scroll:Container attr:style="height: 100%">
-         <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
-            <Controls-demo.Example.Input.Text/>
-            <Controls-demo.Example.Input.Font/>
-            <Controls-demo.Example.Input.RightAlignment/>
-            <Controls-demo.Example.Input.Label/>
-            <Controls-demo.Example.Input.PositionLabels/>
-            <Controls-demo.Example.Input.Tag/>
-            <Controls-demo.Example.Input.Password/>
-            <Controls-demo.Example.Input.Suggest/>
-            <Controls-demo.Example.Input.Area/>
-            <Controls-demo.Example.Input.Number/>
-            <Controls-demo.Example.Input.Money/>
-            <Controls-demo.Example.Input.Mask/>
-            <Controls-demo.Example.Input.Phone/>
-         </div>
-      </Controls.scroll:Container>
+      <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
+         <Controls-demo.Example.Input.Text/>
+         <Controls-demo.Example.Input.Font/>
+         <Controls-demo.Example.Input.RightAlignment/>
+         <Controls-demo.Example.Input.Label/>
+         <Controls-demo.Example.Input.PositionLabels/>
+         <Controls-demo.Example.Input.Tag/>
+         <Controls-demo.Example.Input.Password/>
+         <Controls-demo.Example.Input.Suggest/>
+         <Controls-demo.Example.Input.Area/>
+         <Controls-demo.Example.Input.Number/>
+         <Controls-demo.Example.Input.Money/>
+         <Controls-demo.Example.Input.Mask/>
+         <Controls-demo.Example.Input.Phone/>
+      </div>
    </ws:content>
-</Controls.Application>
+</Controls.Application.ApplicationWrapper>
