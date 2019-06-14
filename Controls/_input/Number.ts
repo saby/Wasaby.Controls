@@ -19,7 +19,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @public
  * @demo Controls-demo/Input/Number/NumberPG
  *
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 
 /**

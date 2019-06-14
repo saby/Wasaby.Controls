@@ -23,7 +23,7 @@ interface IResizingLineCoords {
  * @extends Core/Control
  * @control
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  * @category DragnDrop
  * @demo Controls-demo/ResizingLine/ResizingLine
  */
