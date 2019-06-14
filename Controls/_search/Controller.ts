@@ -178,7 +178,12 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._previousViewMode = this._viewMode = options.viewMode;
 
       if (options.searchValue) {
-         this._search(null, options.searchValue);
+         this._inputSearchValue = options.searchValue;
+
+         if (this._viewMode !== 'search') {
+            this._previousViewMode = this._viewMode;
+            this._viewMode = 'search';
+         }
       }
 
       if (options.root !== undefined) {
