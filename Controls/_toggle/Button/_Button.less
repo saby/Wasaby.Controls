@@ -123,6 +123,12 @@
 
 
 //Эти стили переехали из кнопки. Т.к. в кнопках они больше не нужны а тоггл их использует
+.controls-ToggleButton__content {
+   .button-wrapper-default-style();
+   &:before {
+      content: "\200b";
+   }
+}
 .controls-ToggleButton.controls-Button_style-secondary_viewMode-link.theme_@{themeName} {
    color: @color_Link_secondary;
 }
@@ -281,14 +287,17 @@
     user-select: none;
    border-style: solid;
    border-width: @thickness_Button__border;
+   text-shadow: @text-shadow_Button_button;
 }
 .controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName} {
    border-style: @border-style-ToolButton;
    border-width: @border-width-ToolButton;
+   text-shadow: @text-shadow_ToolButton;
 }
 .controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
    cursor: default;
    user-select: none;
+   text-shadow: @text-shadow_Button_readOnly;
 }
 .controls-ToggleButton.controls-Button_style-primary_viewMode-button.theme_@{themeName} {
    border-color: @border-color_Button_button_primary;
@@ -310,6 +319,7 @@
 }
 .controls-ToggleButton.controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
    border-color: @border-color-ToolButton_readOnly;
+   text-shadow: @text-shadow_ToolButton_readOnly;
 }
 .ws-is-no-touch {
    .controls-ToggleButton.controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
@@ -375,5 +385,37 @@
 
 .controls-ToggleButton.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
    border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
+}
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
+   .justify-content(center);
+}
+
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
+   .justify-content(center);
+}
+
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
+   .justify-content(center);
+}
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
+   .justify-content(center);
+}
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
+.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
+   justify-content: center;
+}
+
+.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName}, .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
+   box-shadow: @box-shadow-ToolButton;
+}
+.controls-ToggleButton.controls-Button_viewMode-toolButton:active.theme_@{themeName} {
+   box-shadow: @box-shadow-ToolButton_activated;
+}
+.controls-ToggleButton.controls-Button_viewMode-button.theme_@{themeName} {
+   box-shadow: @box-shadow_Button_common;
+}
+
+.controls-ToggleButton.controls-Button_viewMode-button:active.theme_@{themeName} {
+   box-shadow: @box-shadow_Button_active;
 }
 /**/
