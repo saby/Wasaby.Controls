@@ -252,6 +252,66 @@ define(['Controls/buttons'], function(buttons) {
          });
       });
 
+      describe('viewMode', function() {
+         it('button', function() {
+            let cfg = actualAPI.viewMode('button', 'link');
+            assert.equal('button', cfg.viewMode, 'wrong cfg');
+         });
+         it('transparentQuickButton', function() {
+            let cfg = actualAPI.viewMode('transparentQuickButton');
+            assert.equal('toolButton', cfg.viewMode, 'wrong cfg');
+            assert.equal(false, cfg.contrast, 'wrong cfg');
+         });
+         it('QuickButton', function() {
+            let cfg = actualAPI.viewMode('quickButton');
+            assert.equal('toolButton', cfg.viewMode, 'wrong cfg');
+            assert.equal(true, cfg.contrast, 'wrong cfg');
+         });
+      });
+
+      describe('height', function() {
+         it('height option', function() {
+            let cfg = actualAPI.height('l', 'xl');
+            assert.equal('xl', cfg, 'wrong cfg');
+         });
+         it('link', function() {
+            let cfg = actualAPI.height('l', 'xl', 'link');
+            assert.equal(undefined, cfg, 'wrong cfg');
+         });
+         it('button s', function() {
+            let cfg = actualAPI.height('s', undefined, 'button');
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('button m', function() {
+            let cfg = actualAPI.height('m', undefined, 'button');
+            assert.equal('m', cfg, 'wrong cfg');
+         });
+         it('button l', function() {
+            let cfg = actualAPI.height('l', undefined, 'button');
+            assert.equal('2xl', cfg, 'wrong cfg');
+         });
+         it('button default', function() {
+            let cfg = actualAPI.height('default', undefined, 'button');
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('toolButton s', function() {
+            let cfg = actualAPI.height('s', undefined, 'button');
+            assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('toolButton m', function() {
+            let cfg = actualAPI.height('m', undefined, 'button');
+            assert.equal('l', cfg, 'wrong cfg');
+         });
+         it('toolButton l', function() {
+            let cfg = actualAPI.height('l', undefined, 'button');
+            assert.equal('xl', cfg, 'wrong cfg');
+         });
+         it('toolButton default', function() {
+            let cfg = actualAPI.height('default', undefined, 'button');
+            assert.equal('l', cfg, 'wrong cfg');
+         });
+      });
+
       describe('constructor() and _beforeUpdate()', function() {
          var optionsCorrect = false;
          function redefinitionCssStyleGeneration() {

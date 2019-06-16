@@ -278,9 +278,7 @@ const ActualApi = {
       resViewMode = calcViewMode ? calcViewMode : optViewMode;
 
       if (resViewMode === 'transparentQuickButton' || resViewMode === 'quickButton') {
-         if (resViewMode === 'transparentQuickButton') {
-            resContrast = false;
-         }
+         resContrast = resViewMode !== 'transparentQuickButton';
          resViewMode = 'toolButton';
          IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
       }
@@ -289,6 +287,30 @@ const ActualApi = {
          viewMode: resViewMode,
          contrast: resContrast
       };
+   },
+
+   actualHeight(optionSize: string, optionHeight: string, viewMode: string): string {
+      if (optionHeight) {
+         return optionHeight;
+      } else {
+         let height = 'default';
+         if (viewMode === 'button') {
+            switch (optionSize) {
+               case 's': height = 'default'; break;
+               case 'm': height = 'm'; break;
+               case 'default': height = 'default'; break;
+               case 'l': height = '2xl'; break;
+            }
+            return height;
+         } else if (viewMode === 'toolButton') {
+            switch (optionSize) {
+               case 's': height = 'default'; break;
+               case 'm': height = 'l'; break;
+               case 'default': height = 'l'; break;
+               case 'l': height = 'xl'; break;
+            }
+         }
+      }
    }
 };
 export default ActualApi;
