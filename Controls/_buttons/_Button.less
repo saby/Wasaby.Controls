@@ -193,41 +193,63 @@
 .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
    background-color: @background-color_button_toolButton;
 }
-.controls-Button_button_xs_theme-default {
+.controls-Button_button_xs_theme-@{themeName} {
    border-radius: @border-radius_xs_button;
 }
-.controls-Button_button_s_theme-default {
+.controls-Button_button_s_theme-@{themeName} {
    border-radius: @border-radius_s_button;
 }
-.controls-Button_button_m_theme-default {
+.controls-Button_button_m_theme-@{themeName} {
    border-radius: @border-radius_m_button;
 }
-.controls-Button_button_l_theme-default {
+.controls-Button_button_l_theme-@{themeName} {
    border-radius: @border-radius_l_button;
 }
-.controls-Button_button_xl_theme-default {
+.controls-Button_button_xl_theme-@{themeName} {
    border-radius: @border-radius_xl_button;
 }
-.controls-Button_button_2xl_theme-default {
+.controls-Button_button_2xl_theme-@{themeName} {
    border-radius: @border-radius_2xl_button;
 }
-.controls-Button_button_default_theme-default {
+.controls-Button_button_default_theme-@{themeName} {
    border-radius: @border-radius_default_button;
 }
-.controls-Button_toolButton_theme-default {
+.controls-Button_toolButton_theme-@{themeName} {
    border-radius: @border-radius_button_toolButton;
 }
 
-
-
+.controls-Button_button_theme-@{themeName} {
+   //may be we need variable for this
+   min-width: @inline_height_default + (@border-radius_m_button * 2 * @border-thickness_button);
+}
+//this is square buttons, that's why width is eqaul to height
+.controls-Button_toolButton_xs_theme-@{themeName} {
+   min-width: @inline_height_xs;
+}
+.controls-Button_toolButton_s_theme-@{themeName} {
+   min-width: @inline_height_s;
+}
+.controls-Button_toolButton_m_theme-@{themeName} {
+   min-width: @inline_height_m;
+}
+.controls-Button_toolButton_l_theme-@{themeName} {
+   min-width: @inline_height_l;
+}
+.controls-Button_toolButton_xl_theme-@{themeName} {
+   min-width: @inline_height_xl;
+}
+.controls-Button_toolButton_2xl_theme-@{themeName} {
+   min-width: @inline_height_2xl;
+}
+.controls-Button_toolButton_default_theme-@{themeName} {
+   min-width: @inline_height_default;
+}
 
 
 /*после этого старые*/
 
 
-.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
-   min-width: @min-width_Button_common;
-}
+
 
 
 .controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
@@ -246,34 +268,9 @@
 }
 
 
-
-.controls-Button_viewMode-toolButton_size-s.theme_@{themeName} {
-   min-width: @width-ToolButton_size-s;
-}
-
-.controls-Button_viewMode-toolButton_size-m.theme_@{themeName} {
-   min-width: @width-ToolButton_size-m;
-}
-.controls-Button_viewMode-toolButton_size-default.theme_@{themeName} {
-      min-width: @width-ToolButton_size-default;
-}
-
-.controls-Button_viewMode-toolButton_size-l.theme_@{themeName} {
-   min-width: @width-ToolButton_size-l;
-}
-
-
 .controls-Button_style-magic_viewMode-link.theme_@{themeName} {
    color: @color_Link_magic;
 }
 
-
-.controls-Button_viewMode-button.theme_@{themeName} {
-   min-width: @min-width_Button_common;
-}
-
-.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
-   min-width: @min-width_Button_common;
-}
 
 
