@@ -70,6 +70,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
    private _contrastBackground: boolean;
    private _hasIcon: boolean;
    private _viewMode: string;
+   private _height: string;
    private _state: string;
    private _caption: string | TemplateFunction;
    private _stringCaption: boolean;
@@ -87,6 +88,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       if (typeof oldViewModeToken.contrast !== 'undefined') {
          this._contrastBackground = oldViewModeToken.contrast;
       }
+      this._height = ActualApi.actualHeight(options.size, options.height, options.viewMode);
       this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = options.icon;
@@ -124,8 +126,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       return {
          viewMode: 'button',
          iconStyle: 'secondary',
-         theme: 'default',
-         size: 'default'
+         theme: 'default'
       };
    }
 }

@@ -271,43 +271,43 @@ define(['Controls/buttons'], function(buttons) {
 
       describe('height', function() {
          it('height option', function() {
-            let cfg = actualAPI.height('l', 'xl');
+            let cfg = actualAPI.actualHeight('l', 'xl');
             assert.equal('xl', cfg, 'wrong cfg');
          });
          it('link', function() {
-            let cfg = actualAPI.height('l', 'xl', 'link');
+            let cfg = actualAPI.actualHeight('l', 'xl', 'link');
             assert.equal(undefined, cfg, 'wrong cfg');
          });
          it('button s', function() {
-            let cfg = actualAPI.height('s', undefined, 'button');
+            let cfg = actualAPI.actualHeight('s', undefined, 'button');
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('button m', function() {
-            let cfg = actualAPI.height('m', undefined, 'button');
+            let cfg = actualAPI.actualHeight('m', undefined, 'button');
             assert.equal('m', cfg, 'wrong cfg');
          });
          it('button l', function() {
-            let cfg = actualAPI.height('l', undefined, 'button');
+            let cfg = actualAPI.actualHeight('l', undefined, 'button');
             assert.equal('2xl', cfg, 'wrong cfg');
          });
          it('button default', function() {
-            let cfg = actualAPI.height('default', undefined, 'button');
+            let cfg = actualAPI.actualHeight('default', undefined, 'button');
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('toolButton s', function() {
-            let cfg = actualAPI.height('s', undefined, 'button');
+            let cfg = actualAPI.actualHeight('s', undefined, 'button');
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('toolButton m', function() {
-            let cfg = actualAPI.height('m', undefined, 'button');
+            let cfg = actualAPI.actualHeight('m', undefined, 'button');
             assert.equal('l', cfg, 'wrong cfg');
          });
          it('toolButton l', function() {
-            let cfg = actualAPI.height('l', undefined, 'button');
+            let cfg = actualAPI.actualHeight('l', undefined, 'button');
             assert.equal('xl', cfg, 'wrong cfg');
          });
          it('toolButton default', function() {
-            let cfg = actualAPI.height('default', undefined, 'button');
+            let cfg = actualAPI.actualHeight('default', undefined, 'button');
             assert.equal('l', cfg, 'wrong cfg');
          });
       });

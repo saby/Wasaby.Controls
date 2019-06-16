@@ -3,10 +3,11 @@
             controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
             controls-Button_{{_viewMode}}_style-{{_buttonStyle}}_theme-{{_options.theme}}
             controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}_theme-{{_options.theme}}
+            {{_height ? ' controls-inlineheight-' + _height + '_theme-' + _options.theme}}
 
              controls-Button_style-{{_buttonStyle}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}
-             controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
+             controls-Button_viewMode-{{_viewMode}}_size-{{_options.size || 'default'}}
              controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
              controls-Button_viewMode-{{_viewMode}}{{_transparent ? '_transparent' : '_withBackground'}}
              controls-Button_style-{{_buttonStyle}}_viewMode-{{_viewMode}}{{_state}}
@@ -19,7 +20,7 @@
     <span attr:class="controls-BaseButton__wrapper
                         controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
                         controls-Button__wrapper_viewMode-{{_viewMode}}
-                        controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
+                        controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size || 'default'}} theme_{{_options.theme}}">
         <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon controls-icon {{_icon}}
                             {{_iconSize ? 'controls-icon_size-' + _iconSize + '_theme-' + _options.theme}}
