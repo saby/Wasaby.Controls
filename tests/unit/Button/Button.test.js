@@ -250,6 +250,10 @@ define(['Controls/buttons'], function(buttons) {
             let cfg = actualAPI.fontSize({ size: 'l', viewMode: 'toolButton' });
             assert.equal('m', cfg, 'wrong cfg');
          });
+         it('size undefined', function() {
+            let cfg = actualAPI.fontSize({ viewMode: 'toolButton' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
       });
 
       describe('viewMode', function() {

@@ -88,7 +88,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       if (typeof oldViewModeToken.contrast !== 'undefined') {
          this._contrastBackground = oldViewModeToken.contrast;
       }
-      this._height = ActualApi.actualHeight(options.size, options.height, options.viewMode);
+      this._height = ActualApi.actualHeight(options.size, options.height, this._viewMode);
       this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = options.icon;
