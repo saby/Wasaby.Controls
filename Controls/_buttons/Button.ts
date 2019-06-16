@@ -32,7 +32,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions,
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IButton
- * @mixes Controls/_button/ButtonStyles
  * @control
  * @public
  * @author Михайловский Д.С.

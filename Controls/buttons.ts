@@ -2,7 +2,6 @@
  * Buttons library
  * @library Controls/buttons
  * @includes Button Controls/_buttons/Button
- * @includes ButtonStyles Controls/_buttons/ButtonStyles
  * @author Михайловский Д. С.
  */
 
