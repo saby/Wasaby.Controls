@@ -275,7 +275,7 @@ define(['Controls/buttons'], function(buttons) {
             assert.equal('xl', cfg, 'wrong cfg');
          });
          it('link', function() {
-            let cfg = actualAPI.actualHeight('l', 'xl', 'link');
+            let cfg = actualAPI.actualHeight('l', undefined, 'link');
             assert.equal(undefined, cfg, 'wrong cfg');
          });
          it('button s', function() {
@@ -295,19 +295,19 @@ define(['Controls/buttons'], function(buttons) {
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('toolButton s', function() {
-            let cfg = actualAPI.actualHeight('s', undefined, 'button');
+            let cfg = actualAPI.actualHeight('s', undefined, 'toolButton');
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('toolButton m', function() {
-            let cfg = actualAPI.actualHeight('m', undefined, 'button');
+            let cfg = actualAPI.actualHeight('m', undefined, 'toolButton');
             assert.equal('l', cfg, 'wrong cfg');
          });
          it('toolButton l', function() {
-            let cfg = actualAPI.actualHeight('l', undefined, 'button');
+            let cfg = actualAPI.actualHeight('l', undefined, 'toolButton');
             assert.equal('xl', cfg, 'wrong cfg');
          });
          it('toolButton default', function() {
-            let cfg = actualAPI.actualHeight('default', undefined, 'button');
+            let cfg = actualAPI.actualHeight('default', undefined, 'toolButton');
             assert.equal('l', cfg, 'wrong cfg');
          });
       });

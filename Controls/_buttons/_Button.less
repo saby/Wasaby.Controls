@@ -193,6 +193,31 @@
 .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
    background-color: @background-color_button_toolButton;
 }
+.controls-Button_button_xs_theme-default {
+   border-radius: @border-radius_xs_button;
+}
+.controls-Button_button_s_theme-default {
+   border-radius: @border-radius_s_button;
+}
+.controls-Button_button_m_theme-default {
+   border-radius: @border-radius_m_button;
+}
+.controls-Button_button_l_theme-default {
+   border-radius: @border-radius_l_button;
+}
+.controls-Button_button_xl_theme-default {
+   border-radius: @border-radius_xl_button;
+}
+.controls-Button_button_2xl_theme-default {
+   border-radius: @border-radius_2xl_button;
+}
+.controls-Button_button_default_theme-default {
+   border-radius: @border-radius_default_button;
+}
+.controls-Button_toolButton_theme-default {
+   border-radius: @border-radius_button_toolButton;
+}
+
 
 
 
@@ -204,22 +229,6 @@
    min-width: @min-width_Button_common;
 }
 
-.controls-Button_viewMode-button_size-s.theme_@{themeName} {
-
-   .border-radius(@border-radius_Button_size_s);
-}
-
-.controls-Button_viewMode-button_size-default.theme_@{themeName} {
-   .border-radius(@border-radius_Button_size_default);
-}
-
-.controls-Button_viewMode-button_size-m.theme_@{themeName} {
-   .border-radius(@border-radius_Button_size_m);
-}
-
-.controls-Button_viewMode-button_size-l.theme_@{themeName} {
-   .border-radius(@border-radius_Button_size_l);
-}
 
 .controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
    padding: @padding_Button-wrapper_size_s;
@@ -238,36 +247,19 @@
 
 
 
-
-
-
-
-.controls-Button_viewMode-toolButton.theme_@{themeName}, .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   border-radius: @border-radius-ToolButton;
-}
-
-
 .controls-Button_viewMode-toolButton_size-s.theme_@{themeName} {
-   height: @height-ToolButton_size-s;
    min-width: @width-ToolButton_size-s;
 }
 
 .controls-Button_viewMode-toolButton_size-m.theme_@{themeName} {
-   height: @height-ToolButton_size-m;
    min-width: @width-ToolButton_size-m;
 }
 .controls-Button_viewMode-toolButton_size-default.theme_@{themeName} {
-      height: @height-ToolButton_size-default;
       min-width: @width-ToolButton_size-default;
 }
 
 .controls-Button_viewMode-toolButton_size-l.theme_@{themeName} {
-   height: @height-ToolButton_size-l;
    min-width: @width-ToolButton_size-l;
-}
-
-.controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-
 }
 
 
@@ -285,6 +277,3 @@
 }
 
 
-.controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   .border-radius(@border-radius_Button_size_s);
-}

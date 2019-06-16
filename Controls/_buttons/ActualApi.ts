@@ -298,17 +298,18 @@ const ActualApi = {
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'm'; break;
-               case 'default': height = 'default'; break;
                case 'l': height = '2xl'; break;
+               default: height = 'default';
             }
             return height;
          } else if (viewMode === 'toolButton') {
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'l'; break;
-               case 'default': height = 'l'; break;
                case 'l': height = 'xl'; break;
+               default: height = 'l';
             }
+            return height;
          }
       }
    }
