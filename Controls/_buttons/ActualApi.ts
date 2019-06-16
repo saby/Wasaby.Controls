@@ -65,6 +65,11 @@ interface IButtonClass {
    buttonAdd: boolean;
 }
 
+interface IViewModeAndContrast {
+   viewMode?: string;
+   contrast?: boolean;
+}
+
 const ActualApi = {
    /**
     * Получить текущий стиль кнопки
@@ -265,6 +270,25 @@ const ActualApi = {
             }
          }
       }
+   },
+
+   viewMode(calcViewMode: string, optViewMode: string): IViewModeAndContrast {
+      let resViewMode: string;
+      let resContrast: boolean;
+      resViewMode = calcViewMode ? calcViewMode : optViewMode;
+
+      if (resViewMode === 'transparentQuickButton' || resViewMode === 'quickButton') {
+         if (resViewMode === 'transparentQuickButton') {
+            resContrast = false;
+         }
+         resViewMode = 'toolButton';
+         IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+      }
+
+      return {
+         viewMode: resViewMode,
+         contrast: resContrast
+      };
    }
 };
 export default ActualApi;

@@ -2,6 +2,7 @@
             controls-Button_{{_viewMode}} controls-Button_{{_viewMode}}_theme-{{_options.theme}}
             controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
             controls-Button_{{_viewMode}}_style-{{_buttonStyle}}_theme-{{_options.theme}}
+            controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}_theme-{{_options.theme}}
 
              controls-Button_style-{{_buttonStyle}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}

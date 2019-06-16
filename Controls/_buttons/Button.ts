@@ -65,7 +65,6 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
    // Называть _style нельзя, так как это состояние используется для темизации
    private _buttonStyle: string;
-   private _transparent: boolean;
    private _fontColorStyle: string;
    private _fontSize: string;
    private _contrastBackground: boolean;
@@ -80,22 +79,18 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
 
    private cssStyleGeneration(options: IButtonOptions): void {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
+      const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
 
       this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
       this._contrastBackground = ActualApi.contrastBackground(options);
-      this._transparent = options.transparent; // TODO remove
-      this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+      this._viewMode = oldViewModeToken.viewMode;
+      if (typeof oldViewModeToken.contrast !== 'undefined') {
+         this._contrastBackground = oldViewModeToken.contrast;
+      }
       this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = options.icon;
 
-      if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
-         if (this._viewMode === 'transparentQuickButton') {
-            this._transparent = true;
-         }
-         this._viewMode = 'toolButton';
-         IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
-      }
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
@@ -130,8 +125,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
          viewMode: 'button',
          iconStyle: 'secondary',
          theme: 'default',
-         size: 'default',
-         transparent: true
+         size: 'default'
       };
    }
 }
