@@ -15,19 +15,19 @@
     on:click="_clickHandler()"
     on:keypress="_keyUpHandler()"
     attr:href="{{_options.href}}">
-    <span attr:class="controls-Button_wrapper
+    <span attr:class="controls-BaseButton__wrapper
                         controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
                         controls-Button__wrapper_viewMode-{{_viewMode}}
                         controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
         <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button_icon controls-icon {{_icon}}
+            <i attr:class="controls-Button__icon controls-icon {{_icon}}
                             {{_iconSize ? 'controls-icon_size-' + _iconSize + '_theme-' + _options.theme}}
                             {{_iconStyle ? 'controls-icon_style-' + _iconStyle + '_theme-' + _options.theme}}"/>
         </ws:if>
         <ws:if data="{{!!_caption}}">
-           <span attr:class="controls-Button_text{{_options.readOnly ? ' controls-Button_text_readonly' + '_theme-' + _options.theme : ' controls-text-' + _fontColorStyle + '_theme-' + _options.theme}}
-                                {{_hasIcon ? ' controls-Button_text_gap_theme-' + _options.theme}}
-                                controls-Button_text_viewMode-{{_viewMode}}_theme-{{_options.theme}}">
+           <span attr:class="controls-BaseButton__text{{_options.readOnly ? ' controls-Button__text_readonly' + '_theme-' + _options.theme : ' controls-text-' + _fontColorStyle + '_theme-' + _options.theme}}
+                                {{_hasIcon ? ' controls-Button__text_gap_theme-' + _options.theme}}
+                                controls-Button__text_viewMode-{{_viewMode}}_theme-{{_options.theme}}">
               <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
               <ws:else><ws:partial template="{{_caption}}"/></ws:else>
            </span>

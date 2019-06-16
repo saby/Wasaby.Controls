@@ -15,19 +15,19 @@
 }
 
 //readonly/clickable
-.controls-BaseButton_link.controls-BaseButton_clickable:active{
+.controls-BaseButton_link.controls-Button_clickable:active{
    .controls-BaseButton__text {
       text-decoration: underline;
    }
 }
 .ws-is-no-touch {
-   .controls-BaseButton_link.controls-BaseButton_clickable:hover {
+   .controls-Button_link.controls-Button_clickable:hover {
       .controls-BaseButton__text {
          text-decoration: underline;
       }
    }
 }
-.controls-Button_wrapper {
+.controls-BaseButton__wrapper {
    .button-wrapper-default-style();
    &:before {
       content: "\200b";
@@ -44,10 +44,10 @@
    cursor: default;
 }
 
-.controls-Button_text_viewMode-button_theme-@{themeName}, .controls-Button_text_viewMode-toolButton_theme-@{themeName} {
+.controls-Button__text_viewMode-button_theme-@{themeName}, .controls-Button__text_viewMode-toolButton_theme-@{themeName} {
    text-shadow: @text-shadow_button;
 }
-.controls-Button_text_readonly_theme-@{themeName} {
+.controls-Button__text_readonly_theme-@{themeName} {
    color: @readonly_text-color_button;
    text-shadow: none;
 }
@@ -75,7 +75,7 @@
       color: @link_hover_text-color;
    }
 }
-.controls-Button_text_gap_theme-@{themeName} {
+.controls-Button__text_gap_theme-@{themeName} {
    margin-left: @icon-offset_button;
 }
 
