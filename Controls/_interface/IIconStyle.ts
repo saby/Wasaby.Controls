@@ -8,8 +8,8 @@ export interface IIconStyleOptions {
  * @interface Controls/_interface/IIconStyle
  * @public
  */
-export default interface IIIconStyle {
-   readonly '[Controls/_interface/IIIconStyle]': boolean;
+export default interface IIconStyle {
+   readonly '[Controls/_interface/IIconStyle]': boolean;
 }
 /**
  * @name Controls/_interface/IIconStyle#iconStyle
@@ -23,13 +23,13 @@ export default interface IIIconStyle {
  * @variant default
  * @default secondary
  * @example
- * Primary button with default icon style.
+ * Button with default icon style.
  * <pre>
- *    <Controls.buttons:Button icon="icon-small icon-Add" style="buttonPrimary"/>
+ *    <Controls.buttons:Button icon="icon-Add" viewMode="button"/>
  * </pre>
- * Primary button with done icon style.
+ * Button with success icon style.
  * <pre>
- *    <Controls.buttons:Button icon="icon-small icon-Add" iconStyle="done" style="buttonPrimary"/>
+ *    <Controls.buttons:Button icon="icon-Add" iconStyle="success" viewMode="button"/>
  * </pre>
  * @see Icon
  */

@@ -1,21 +1,23 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import ActualApi from './ActualApi';
-import { IoC } from 'Env/Env';
 import {IHref, IHrefOptions} from './interface/IHref';
 import {IClick} from './interface/IClick';
 import {ITooltip, ITooltipOptions,
    ICaption, ICaptionOptions,
    IIcon, IIconOptions,
    IIconStyle, IIconStyleOptions,
-   IButton, IButtonOptions
+   IIconSize, IIconSizeOptions,
+   IFontColorStyle, IFontColorStyleOptions,
+   IFontSize, IFontSizeOptions,
+   IHeight, IHeightOptions,
 } from 'Controls/interface';
 
-export interface IButtonOptions extends IControlOptions, IHrefOptions,
-                                 ICaptionOptions, IIconOptions, IIconStyleOptions, ITooltipOptions, IButtonOptions {
+export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
+   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
    contrastBackground?: boolean;
    buttonStyle?: string;
-   fontColorStyle?: string;
+   viewMode?: string;
 }
 
 /**
@@ -30,8 +32,10 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions,
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/IButton
  * @control
  * @public
  * @author Михайловский Д.С.
@@ -40,12 +44,35 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions,
  */
 
 /**
+ * @name Controls/_buttons/Button#viewMode
+ * @cfg {Enum} Button view mode.
+ * @variant link Decorated hyperlink.
+ * @variant button Default button.
+ * @variant toolButton Toolbar button.
+ * @default button
+ * @example
+ * Button with 'link' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ * </pre>
+ * Button with 'toolButton' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ * </pre>
+ * Button with 'button' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ * </pre>
+ * @see Size
+ */
+
+/**
  * @name Controls/Button#contrastBackground
- * @cfg {Boolean} Determines whether button having background.
+ * @cfg {Boolean} Determines if button has contrast background.
  * @default true
  * @remark
- * false - Button has transparent background.
- * true - Button has default background for this viewmode and style.
+ * true - Button has contrast background
+ * false - Button has the harmony background.
  * @example
  * Button has transparent background.
  * <pre>
@@ -58,7 +85,24 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions,
  * @see style
  */
 
-class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIcon, ITooltip, IButton, IClick {
+/**
+ * @name Controls/Button#buttonStyle
+ * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant default
+ * @default secondary
+ * @example
+ * Primary button with default icon style.
+ * <pre>
+ *    <Controls.buttons:Button viewMode="button" buttonStyle="primary"/>
+ * </pre>
+ */
+class Button extends Control<IButtonOptions> implements
+      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight {
    protected _template: TemplateFunction = ButtonTemplate;
    protected _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
@@ -87,7 +131,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       if (typeof oldViewModeToken.contrast !== 'undefined') {
          this._contrastBackground = oldViewModeToken.contrast;
       }
-      this._height = ActualApi.actualHeight(options.size, options.height, this._viewMode);
+      this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
       this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = options.icon;
@@ -101,21 +145,21 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
       this._iconStyle = ActualApi.iconStyle(options);
    }
 
-   _beforeMount(options: IButtonOptions): void {
+   protected _beforeMount(options: IButtonOptions): void {
       this.cssStyleGeneration(options);
    }
 
-   _beforeUpdate(newOptions: IButtonOptions): void {
+   protected _beforeUpdate(newOptions: IButtonOptions): void {
       this.cssStyleGeneration(newOptions);
    }
 
-   _keyUpHandler(e): void {
+   private _keyUpHandler(e): void {
       if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
          this._notify('click');
       }
    }
 
-   _clickHandler(e): void {
+   private _clickHandler(e): void {
       if (this._options.readOnly) {
          e.stopPropagation();
       }
