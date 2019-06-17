@@ -272,7 +272,7 @@ define('Controls/Application',
             self.lite = cfg.lite || false;
 
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath = appData.servicesPath || cfg.servicesPath || Env.constants.defaultServiceUrl || '/service/';
+            self.servicesPath =  cfg.servicesPath || appData.servicesPath || Env.constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = appData.application;
 
