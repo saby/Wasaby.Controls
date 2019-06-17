@@ -1,9 +1,9 @@
-define(['Controls/suggest'], function(suggest) {
+define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
    'use strict';
 
-   var sandbox;
+   describe('Controls/_suggest/Input/Search/Suggest', function() {
 
-   describe('Controls/_suggest/Input/Search/Suggest', ['Types/entity'], function(entity) {
+      var sandbox;
 
       beforeEach(function() {
          sandbox = sinon.createSandbox();
