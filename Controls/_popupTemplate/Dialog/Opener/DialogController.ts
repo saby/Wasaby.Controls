@@ -1,7 +1,5 @@
 import BaseController = require('Controls/_popupTemplate/BaseController');
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
-import Env = require('Env/Env');
-import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
       var _private = {
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
@@ -28,20 +26,12 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
                }
             }
          },
-         getWindowSize: function() {
-            let height = window.innerHeight;
-
-            // if keyboard visible, then window height decreases on scrollTop value.
-            // if user scroll page, then window height will changed.
-            // get real window.height for same position with/without keyboard.
-            if (Env.detection.isMobileIOS) {
-               // todo: https://online.sbis.ru/opendoc.html?guid=7223381a-dc7c-44b4-a628-7f2d7ba8a703
-               height += window.scrollY;
-            }
+         getWindowSize() {
             return {
                width: window.innerWidth,
-               height: height,
-               scrollTop: 0,
+               height: window.innerHeight,
+               scrollTop: window.scrollY,
+               scrollLeft: window.scrollX
             };
          }
       };
@@ -117,6 +107,11 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
 
          popupDragEnd: function(item) {
             delete item.startPosition;
+         },
+
+         pageScrolled(): boolean {
+            // Don't respond to page scrolling. The popup should remain where it originally positioned.
+            return false;
          },
 
          prepareConfig: function(cfg, container) {

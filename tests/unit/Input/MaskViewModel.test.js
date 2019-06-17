@@ -38,26 +38,42 @@ define(
             [{
                displayValue: '12.34.56',
                replacer: ' ',
-               resp: 8
+               currentPosition: 0,
+               resp: 0
             }, {
                displayValue: '12.34.  ',
                replacer: ' ',
+               currentPosition: 0,
+               resp: 0
+            }, {
+               displayValue: '12.34.56',
+               replacer: ' ',
+               currentPosition: 4,
+               resp: 4
+            }, {
+               displayValue: '12.34.  ',
+               replacer: ' ',
+               currentPosition: 7,
                resp: 6
             }, {
                displayValue: '  .  .  ',
                replacer: ' ',
+               currentPosition: 0,
                resp: 0
             }, {
                displayValue: '12.34.56',
                replacer: '',
+               currentPosition: 0,
                resp: 8
             }, {
                displayValue: '12.34.',
                replacer: '',
+               currentPosition: 0,
                resp: 6
             }, {
                displayValue: '',
                replacer: '',
+               currentPosition: 0,
                resp: 0
             }].forEach(function(test) {
                it(`${test.displayValue}, ${test.replacer}, ${test.resp}`, function () {
@@ -72,7 +88,7 @@ define(
                      }
                   }, '');
                   viewModel.displayValue = test.displayValue;
-                  viewModel.setCarriageDefaultPosition();
+                  viewModel.setCarriageDefaultPosition(test.currentPosition);
                   assert.equal(viewModel.selection.start, test.resp);
                   assert.equal(viewModel.selection.end, test.resp);
                });

@@ -26,13 +26,13 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/ICallback
  *
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
     readonly _options: {
         /**
          * @name Controls/interface/IInputBase#size
-         * @cfg {String} Field size.
+         * @cfg {Enum} Field size.
          * @variant s - The size of a small field.
          * @variant m - The size of a medium field.
          * @variant l - The size of a large field.
@@ -44,7 +44,7 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         size: 's' | 'm' | 'l' | 'default';
         /**
          * @name Controls/interface/IInputBase#fontStyle
-         * @cfg {String} Fonts of the text in field.
+         * @cfg {Enum} Fonts of the text in field.
          * @variant default - Font style in standard field.
          * @variant primary - Font style to attract attention.
          * @variant secondary - Font style in secondary field.
@@ -56,8 +56,8 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
          * <pre>
          *    <div class="form">
          *       <div class="fio">
-         *          <Controls.input:Text name="firstName" font="primary"/>
-         *          <Controls.input:Text name="lastName" font="primary"/>
+         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
+         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
          *       </div>
          *       <div class="residence">
          *          <Controls.input:Text name="street"/>
@@ -68,7 +68,7 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         fontStyle: 'default' | 'primary' | 'secondary';
         /**
          * @name Controls/interface/IInputBase#textAlign
-         * @cfg {String} Horizontal alignment of the text in field.
+         * @cfg {Enum} Horizontal alignment of the text in field.
          * @variant left - The text are aligned to the left edge of the line box.
          * @variant right - The text are aligned to the right edge of the line box.
          * @default left

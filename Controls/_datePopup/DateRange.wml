@@ -38,7 +38,7 @@
          on:scroll="_onScroll()"
          on:drawItems="_drawItemsHandler()"
       >
-         <ws:itemTemplate>
+         <ws:yearTemplate>
             <ws:partial
                template="wml!Controls/_datePopup/DateRangeItem"
                _options="{{_options}}"
@@ -48,7 +48,7 @@
                _monthSelectionEnabled="{{_monthSelectionEnabled}}"
                _monthViewModel="{{_monthViewModel}}"
             />
-         </ws:itemTemplate>
+         </ws:yearTemplate>
       </Controls.calendar:MonthList>
    </div>
 </div>

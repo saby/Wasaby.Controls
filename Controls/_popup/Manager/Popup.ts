@@ -123,6 +123,10 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
             }
          },
 
+         _scrollHandler(): void {
+            this._notify('pageScrolled', [this._options.id], { bubbling: true });
+         },
+
          /**
           * Update popup
           * @function Controls/_popup/Manager/Popup#_close

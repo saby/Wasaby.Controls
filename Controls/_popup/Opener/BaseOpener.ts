@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import Vdom = require('Vdom/Vdom');
-import coreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
@@ -137,6 +136,9 @@ import {parse as parserLib, load} from 'Core/library';
                   };
                }
                return new Error('Opener was destroyed');
+            }).catch((error:Error) => {
+               Env.IoC.resolve('ILogger').error(this._moduleName, error.message);
+               return error;
             });
          },
 

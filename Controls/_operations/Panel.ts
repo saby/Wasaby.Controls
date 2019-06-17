@@ -76,7 +76,7 @@ import buttons = require('Controls/buttons');
     * @cfg {Function} Template displayed on the right side of the panel.
     * @example
     * <pre>
-    *    <Controls._operations.Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+    *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
     * </pre>
     */
 
@@ -87,7 +87,7 @@ import buttons = require('Controls/buttons');
     * @example
     * TMPL:
     * <pre>
-    *    <Controls._operations.Panel on:itemClick="onPanelItemClick()" />
+    *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
     * </pre>
     * JS:
     * <pre>

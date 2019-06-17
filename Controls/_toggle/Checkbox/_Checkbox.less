@@ -10,12 +10,14 @@
 .controls-Checkbox__wrapper_theme_@{themeName}:before {
    content: '\200b';
 }
-.controls-Checkbox__wrapper_theme_@{themeName} {
+.controls-Checkbox__wrapper {
    display: inline-flex;
+   text-align: left; //ie can inherit text-align: right from parent node
+}
+.controls-Checkbox__wrapper_theme_@{themeName} {
    font-size: @font-size_CheckBox;
    //Не можем сделать на флексах из-за стандарта
    line-height: @height_CheckBox__clickArea;
-   text-align: left; //ie can inherit text-align: right from parent node
 }
 .controls-Checkbox__icon-border-color__enabled_theme_@{themeName} {
    color: @color_CheckBox__iconBox;
@@ -38,12 +40,14 @@
    //Не можем сделать на флексах из-за стандарта
    line-height: @line-height_CheckBox__caption;
 }
-.controls-Checkbox__iconWrapper_theme_@{themeName} {
+.controls-Checkbox__iconWrapper {
    position: relative;
    user-select: none;
+   flex-shrink: 0;
+}
+.controls-Checkbox__iconWrapper_theme_@{themeName} {
    width: @width_CheckBox__clickArea;
    height: @height_CheckBox__clickArea;
-   flex-shrink: 0;
 }
 .controls-Checkbox__iconWrapper_theme_@{themeName}:before {
    box-sizing: border-box;

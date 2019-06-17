@@ -208,7 +208,11 @@ define(
                newConfigItems.items[0].value = 'США';
                fastFilter._beforeUpdate(newConfigItems);
                assert.equal(fastFilter._items.at(0).value, 'США');
-               fastFilter._beforeUpdate({});
+
+               fastFilter._configs[0].selectorTemplate = 'new template';
+               fastFilter._hasSelectorTemplate = null;
+               fastFilter._beforeUpdate(newConfigItems);
+               assert.isTrue(fastFilter._hasSelectorTemplate);
                done();
             });
          });
