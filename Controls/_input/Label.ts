@@ -26,7 +26,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @public
  * @demo Controls-demo/Label/Label
  *
- * @author Михайловский Д.С.
+ * @author Krasilnikov A.S.
  */
 
 /**
