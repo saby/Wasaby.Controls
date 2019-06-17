@@ -131,6 +131,7 @@ import 'Controls/breadcrumbs';
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGrouped
