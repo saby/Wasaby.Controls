@@ -60,6 +60,7 @@ define([
          validCtrl._validationResult = 'Error';
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, 'Error');
+         validCtrl.destroy();
       });
    });
    describe('Validate/FormController', () => {
