@@ -1,0 +1,1 @@
+<ws:partial template="Controls/list:GroupTemplate" itemData="{{itemData}}" expander="{{false}}"/>
