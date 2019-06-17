@@ -29,6 +29,7 @@ import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
+import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
 
 export {
    Button,
@@ -39,5 +40,6 @@ export {
    CheckboxGroup,
    Separator,
    BigSeparator,
-   ItemTemplate
+   ItemTemplate,
+   switchCircleTemplate
 };

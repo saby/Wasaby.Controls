@@ -4,7 +4,7 @@ import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/
 import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -44,10 +44,8 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/ITextValue
  * @control
  * @public
@@ -101,7 +99,7 @@ var _private = {
  *       bind:selectedKeys="_selectedKeys"
  *       keyProperty="id"
  *       displayProperty="title"
- *       source="{{_source)}}"
+ *       source="{{_source}}"
  *       multiSelect="{{true}}">
  * </Controls.dropdown:Input>
  * </pre>

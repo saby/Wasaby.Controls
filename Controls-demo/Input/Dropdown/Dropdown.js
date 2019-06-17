@@ -2,7 +2,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'Types/source',
-   'Controls-demo/Input/Dropdown//historySourceDropdown',
+   'Controls-demo/Input/Dropdown/historySourceDropdown',
    'Controls/Constants',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',

@@ -23,12 +23,15 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _commentItems: null,
          _themesItems: null,
          _simpleAdd: null,
+         _simpleAdd2: null,
+         _simpleAdd3: null,
          _iconAdd: null,
          _iconAddMedium: null,
          _iconButtonItems: null,
          _multiItems: null,
          _hierarchyItems: null,
          _groupItems: null,
+         _oneGroupItems: null,
          _itemsGroup: null,
          _scrollItems: null,
          _hierarchyMultiItems: null,
@@ -82,7 +85,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   comment: 'Word is more familiar, but does not support all the features of automatic filling',
                   myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
                },
-               { id: 3, title: 'Download ready printed form' },
+               { id: 3, title: 'Download ready printed form', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment' },
                { id: 4, title: 'Select a printed form' },
                {
                   id: 5,
@@ -115,6 +118,20 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 2, title: 'Moderator' },
                { id: 3, title: 'Participant' },
                { id: 4, title: 'Subscriber' }
+            ];
+
+            this._simpleAdd2 = [
+               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 2, title: 'Moderator' },
+               { id: 3, title: 'Participant' },
+               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
+            ];
+
+            this._simpleAdd3 = [
+               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 2, title: 'Moderator' },
+               { id: 3, title: 'Participant' },
+               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
             ];
             this._iconAdd = [
                { id: 1, title: 'Work phone', icon: 'icon-small icon-PhoneWork' },
@@ -152,6 +169,21 @@ define('Controls-demo/Buttons/Menu/Menu', [
             ];
             this._groupItems = [
                { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
+               {
+                  id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
+               },
+               {
+                  id: 3, title: 'Time off', iconStyle: 'purple', icon: 'icon-small icon-SelfVacation', group: '2'
+               },
+               {
+                  id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
+               },
+               {
+                  id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
+               }
+            ];
+            this._oneGroupItems = [
+               { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary', group: '2' },
                {
                   id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
                },

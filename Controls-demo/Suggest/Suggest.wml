@@ -1,11 +1,11 @@
 <div class="demo-Suggest">
     <div class="demo-block-suggest">
         <div class="demo-SuggestWrapper">
-            <h3>Suggest</h3>
+            <h3>Suggest with autocomplete down</h3>
             <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__simple"
-                    bind:value="_suggestValue"
-                    displayProperty="text"
+                    bind:value="_suggestDownValue"
+                    displayProperty="title"
                     searchParam="title"
                     source="{{_suggestSource}}">
                 <ws:navigation source="page" view="page">
@@ -19,35 +19,18 @@
                 </ws:minSearchLength>
             </Controls.suggest:Input>
         </div>
-        <div class="demo-SuggestWrapper">
-            <h3>Search suggest</h3>
-            <Controls.suggest:SearchInput
-                    attr:class="ControlsDemo-Suggest__search"
-                    bind:value="_suggest2Value"
-                    bind:suggestState="_suggestState"
-                    displayProperty="text"
-                    searchParam="title"
-                    source="{{_suggestSource}}">
-                <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
-                </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
-                    <ws:templateOptions demoClass="demo-SuggestSearchList"/>
-                </ws:suggestTemplate>
-                <ws:minSearchLength>
-                    <ws:Number>3</ws:Number>
-                </ws:minSearchLength>
-            </Controls.suggest:SearchInput>
-        </div>
+    </div>
+   <div class="demo-block-suggest">
         <div class="demo-SuggestWrapper">
             <h3>Suggest with no footer</h3>
             <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__nofooter"
-                    bind:value="_suggest5Value"
-                    displayProperty="text"
+                    bind:value="_suggestNoFooterValue"
+                    displayProperty="title"
                     searchParam="title"
                     source="{{_suggestSource}}"
                     footerTemplate="{{null}}">
+                <ws:emptyTemplate templateName="Controls-demo/Suggest/resources/EmptyTemplate"/>
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
@@ -65,10 +48,12 @@
             <h3>Suggest with tabs</h3>
             <Controls.suggest:Input
                     attr:class="ControlsDemo-Suggest__simpleTabs"
-                    bind:value="_suggest3Value"
-                    displayProperty="text"
+                    bind:value="_suggestWithTabsValue"
+                    displayProperty="title"
                     searchParam="title"
+                    autoDropDown="{{true}}"
                     source="{{_suggestTabSource}}">
+                <ws:filter currentTab="{{1}}"/>
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
@@ -80,26 +65,72 @@
                 </ws:minSearchLength>
             </Controls.suggest:Input>
         </div>
-        <div class="demo-SuggestWrapper">
-            <h3>Search suggest with tabs</h3>
-            <Controls.suggest:SearchInput
-                    attr:class="ControlsDemo-Suggest__searchTabs"
-                    bind:value="_suggest4Value"
-                    bind:suggestState="_suggestState1"
-                    displayProperty="text"
-                    searchParam="title"
-                    source="{{_suggestTabSource}}"
-                    placeholder="Найти человека...">
-                <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
-                </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
-                    <ws:templateOptions demoClass="demo-SuggestSearchList"/>
-                </ws:suggestTemplate>
-                <ws:minSearchLength>
-                    <ws:Number>3</ws:Number>
-                </ws:minSearchLength>
-            </Controls.suggest:SearchInput>
-        </div>
     </div>
+   <div class="demo-block-suggest">
+      <div class="demo-SuggestWrapper">
+         <h3>Suggest with no data</h3>
+         <Controls.suggest:Input
+               attr:class="ControlsDemo-Suggest__simpleTabs"
+               bind:value="_suggestNoDataValue"
+               displayProperty="title"
+               searchParam="title"
+               autoDropDown="{{true}}"
+               source="{{_emptySource}}">
+            <ws:navigation source="page" view="page">
+               <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+            <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+               <ws:templateOptions demoClass="demo-SuggestInputList"/>
+            </ws:suggestTemplate>
+            <ws:minSearchLength>
+               <ws:Number>3</ws:Number>
+            </ws:minSearchLength>
+         </Controls.suggest:Input>
+      </div>
+   </div>
+   <div class="demo-block-suggest">
+      <div class="demo-SuggestWrapper">
+         <h3>Suggest with custom footer</h3>
+         <Controls.suggest:Input
+               attr:class="ControlsDemo-Suggest__simple"
+               bind:value="_suggestCustomFooterValue"
+               displayProperty="title"
+               searchParam="title"
+               autoDropDown="{{true}}"
+               source="{{_suggestSource}}">
+            <ws:navigation source="page" view="page">
+               <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+            <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+               <ws:templateOptions demoClass="demo-SuggestInputList" classListWrapper="ControlsDemo-Suggest_wideSearchListContainer"/>
+            </ws:suggestTemplate>
+            <ws:minSearchLength>
+               <ws:Number>3</ws:Number>
+            </ws:minSearchLength>
+            <ws:footerTemplate templateName="Controls-demo/Suggest/resources/FooterTemplate"/>
+         </Controls.suggest:Input>
+      </div>
+   </div>
+   <div class="demo-block-suggest">
+      <div class="demo-SuggestWrapper">
+         <h3>Suggest with autocomplete up</h3>
+         <Controls.suggest:Input
+               attr:class="ControlsDemo-Suggest__simple"
+               bind:value="_suggestUpValue"
+               displayProperty="title"
+               searchParam="title"
+               autoDropDown="{{true}}"
+               source="{{_suggestSource}}">
+            <ws:navigation source="page" view="page">
+               <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+            <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+               <ws:templateOptions demoClass="demo-SuggestInputList"/>
+            </ws:suggestTemplate>
+            <ws:minSearchLength>
+               <ws:Number>3</ws:Number>
+            </ws:minSearchLength>
+         </Controls.suggest:Input>
+      </div>
+   </div>
 </div>

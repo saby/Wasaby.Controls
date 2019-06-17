@@ -4,7 +4,7 @@ import Env = require('Env/Env');
 import Vdom = require('Vdom/Vdom');
 import 'css!theme?Controls/popupTemplate';
 
-
+      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
       var DialogTemplate = Control.extend({
 
          /**
@@ -54,9 +54,10 @@ import 'css!theme?Controls/popupTemplate';
          /**
           * @name Controls/_popupTemplate/Dialog#closeButtonViewMode
           * @cfg {String} Close button display style.
-          * @variant default
-          * @variant light
-          * @variant primary
+          * @variant toolButton
+          * @variant link
+          * @variant popup
+          * @default popup
           */
 
          /**
@@ -67,6 +68,7 @@ import 'css!theme?Controls/popupTemplate';
 
          _template: template,
          _closeButtonVisibility: true,
+         _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
 
@@ -85,9 +87,11 @@ import 'css!theme?Controls/popupTemplate';
             if (options.hideCross) {
                Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
+            this._prepareCloseButton(options);
          },
          _beforeUpdate: function(options) {
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+            this._prepareCloseButton(options);
          },
 
          /**
@@ -102,6 +106,12 @@ import 'css!theme?Controls/popupTemplate';
             if (this._needStartDrag(event.target)) {
                this._startDragNDrop(event)
             }
+         },
+         //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
+         _prepareCloseButton: function(options){
+            let viewMode = options.closeButtonViewMode;
+            let style = options.closeButtonStyle;
+            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
          },
 
          _startDragNDrop: function(event) {

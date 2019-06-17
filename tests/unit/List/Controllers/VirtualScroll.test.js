@@ -34,7 +34,7 @@ define([
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
          assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
-         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
+         assert.equal(10, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
       });
 
       it('resetItemsIndexes', function() {

@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 
@@ -36,8 +36,12 @@ var _private = {
 
    updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
       var selectedItems = [];
-      if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
-         selectedItems.push(null);
+      if (!selectedKeys.length || selectedKeys[0] === null) {
+        if (emptyText) {
+           selectedItems.push(null);
+        } else if (self._items.getRecordById(null)) {
+           selectedItems.push(self._items.getRecordById(null));
+         }
       } else {
          chain.factory(self._items).each(function (item) {
             // fill the array of selected items from the array of selected keys

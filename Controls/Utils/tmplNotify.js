@@ -12,8 +12,6 @@ define('Controls/Utils/tmplNotify', [], function() {
        * Here, event gets forwarded but under a different name.
        */
       var args = Array.prototype.slice.call(arguments, 2);
-      event.blockUpdate = true;
-
       return this._notify(eventName, args);
    };
 });

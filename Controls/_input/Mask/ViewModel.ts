@@ -37,7 +37,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
       class ViewModel extends BaseViewModel {
          constructor(...args: any[]) {
             super(...args);
-            this.setCarriageDefaultPosition();
+            this.setCarriageDefaultPosition(0);
          }
 
          _convertToValue(displayValue) {
@@ -66,18 +66,21 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             return super.handleInput.call(this, _private.prepareSplitValue(result));
          }
 
-         setCarriageDefaultPosition() {
-             this.selection = this.getDefaultCarriagePosition();
-             this._nextVersion();
-             this._shouldBeChanged = true;
+         setCarriageDefaultPosition(currentPosition: number) {
+             let selection = this._getCarriageDefaultPosition(currentPosition);
+             if (selection !== currentPosition || selection !== this.selection.start) {
+                this.selection = selection;
+                this._nextVersion();
+                this._shouldBeChanged = true;
+             }
          }
 
-         private getDefaultCarriagePosition() {
+         private _getCarriageDefaultPosition(currentPosition: number): number {
             let position;
 
             if (this.options.replacer) {
                position = this.displayValue.indexOf(this.options.replacer);
-               return position === -1 ? this.displayValue.length : position;
+               return position === -1 ? currentPosition : Math.min(currentPosition, position);
             }
             return this.displayValue.length;
          }

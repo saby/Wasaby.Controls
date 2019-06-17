@@ -18,6 +18,13 @@
        * @css @spacing_Suggest-showAll-between-leftBorder-content Spacing between left border and "show all" button content.
        * @css @spacing_Suggest-showAll-between-rightBorder-content Spacing between right border and "show all" button content.
        *
+       * @css @color_Suggest-more Color of "more" button.
+       * @css @color_Suggest-more_hovered Color of "more" button in hovered state.
+       * @css @color_Suggest-more_active Color of "more" button in active state.
+       * @css @height_Suggest-more Height of "more" button.
+       * @css @spacing_Suggest-more-between-leftBorder-content Spacing between left border and "more" button content.
+       * @css @spacing_Suggest-more-between-rightBorder-content Spacing between right border and "more" button content.
+       *
        * @css @spacing_Suggest-between-tabs-suggestions Spacing between tabs and suggestions.
        *
        * @css @color_Suggest-empty Color of suggest empty text.

@@ -231,23 +231,15 @@ define([
       });
 
       it('_private::getSortingOnChange', function() {
-         var getEmptySorting = function() {
-            return [];
-         };
-         var getSortingASC = function() {
-            return [{test: 'ASC'}];
-         };
-         var getSortingDESC = function() {
-            return [{test: 'DESC'}];
-         };
-         var getMultiSorting = function() {
-            return [{test: 'DESC'}, {test2: 'DESC'}];
-         };
+         const emptySorting = [];
+         const sortingASC = [{test: 'ASC'}];
+         const sortingDESC = [{test: 'DESC'}];
+         const multiSorting = [{test: 'DESC'}, {test2: 'DESC'}];
 
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(emptySorting, 'test'), sortingDESC);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingDESC, 'test'), sortingASC);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
 
@@ -3169,6 +3161,43 @@ define([
          instance.saveOptions(cfg);
          instance._afterUpdate(cfg);
          assert.equal(instance._loadingState, 'down');
+      });
+
+      it('_beforeUpdate with new sorting/filter', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         let instance = new lists.BaseControl(cfg);
+         let cfgClone = {...cfg};
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         let clock = sandbox.useFakeTimers();
+
+         cfgClone.dataLoadCallback = sandbox.stub();
+         cfgClone.sorting = [{title: 'ASC'}];
+         instance._beforeUpdate(cfgClone);
+         clock.tick(100);
+         assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+
+         cfgClone = {...cfg};
+         cfgClone.dataLoadCallback = sandbox.stub();
+         cfgClone.filter = {test: 'test'};
+         instance._beforeUpdate(cfgClone);
+         clock.tick(100);
+         assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
       });
    });
 });

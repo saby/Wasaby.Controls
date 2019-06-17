@@ -6,7 +6,7 @@ import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate
 import {ItemTemplate as itemTemplate} from 'Controls/dropdown';
 import defaultHeadTemplate = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
 import debounce = require('Core/helpers/Function/debounce');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
@@ -36,10 +36,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                },
                corner: {
                   horizontal: align
-               },
-               eventHandlers: {
-                  onResult: self._resultHandler,
-                  onClose: self._subDropdownClose
                }
             };
          },
@@ -201,8 +197,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                _private.setPopupOptions(this);
                _private.prepareHeaderConfig(this, newOptions);
             }
-            this._resultHandler = this._resultHandler.bind(this);
-            this._subDropdownClose = this._subDropdownClose.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
             this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
          },
@@ -282,7 +276,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             }
          },
 
-         _resultHandler: function(result) {
+         _resultHandler: function(event, result) {
             switch (result.action) {
                case 'itemClick':
                   if (!result.data[0].get(this._options.nodeProperty)) {
@@ -370,8 +364,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                this._listModel.destroy();
                this._listModel = null;
             }
-            this._resultHandler = null;
-            this._subDropdownClose = null;
             this._mousemoveHandler = null;
             this._openSubDropdown = null;
             this._headConfig = null;

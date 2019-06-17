@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 
-import {factory} from 'Types/chain'
-import isEqual = require('Core/helpers/Object/isEqual');
+import {factory} from 'Types/chain';
+import {isEqual} from 'Types/object';
 import coreMerge = require('Core/core-merge');
 import CoreClone = require('Core/core-clone');
 
 /**
- * Control dropdown list for filter:View (@link {@link Controls/_filter/Button/View}.
+ * Control dropdown list for {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control

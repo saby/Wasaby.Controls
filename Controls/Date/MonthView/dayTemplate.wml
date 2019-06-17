@@ -1,2 +1,0 @@
-// Created in 19.400
-<ws:partial template="Controls/calendar:MonthViewDayTemplate" scope="{{_options}}" />

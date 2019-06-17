@@ -99,7 +99,7 @@ import Env = require('Env/Env');
        * @variant click Opening by click on the content. Closing by click not on the content or template.
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
-       * @variant hoverAndTouch Opening by hover or touch on the content. Closing by hover not on the content or template.
+       * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.
        * @variant demand  Developer opens and closes InfoBox manually. Also it will be closed by click not on the content or template.
        * @default hover
        */
@@ -119,6 +119,7 @@ import Env = require('Env/Env');
        * @variant info
        * @variant secondary
        * @variant success
+       * @variant primary
        */
 
 
@@ -210,7 +211,7 @@ import Env = require('Env/Env');
          },
 
          _contentMousedownHandler: function(event) {
-            if (this._options.trigger !== 'demand') {
+            if (this._options.trigger === 'click') {
                if (!this._opened) {
                   this._open(event);
                }
@@ -219,22 +220,26 @@ import Env = require('Env/Env');
          },
 
          _contentMouseenterHandler: function() {
-            /**
-             * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
-             */
-            if (!this._context.isTouch.isTouch) {
-               this._startOpeningPopup();
+            if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
+               /**
+                * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
+                */
+               if (!this._context.isTouch.isTouch) {
+                  this._startOpeningPopup();
+               }
             }
          },
 
          _contentTouchStartHandler: function() {
-            this._startOpeningPopup();
+            if (this._options.trigger === 'hover|touch') {
+               this._startOpeningPopup();
+            }
          },
 
          _startOpeningPopup: function() {
             var self = this;
-
-            clearTimeout(this._closeId);
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+            _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
                self._open();
@@ -243,14 +248,14 @@ import Env = require('Env/Env');
          },
 
          _contentMouseleaveHandler: function() {
-            var self = this;
+            if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
+               clearTimeout(this._openId);
+               this._closeId = setTimeout(() => {
+                  this._close();
+                  this._forceUpdate();
+               }, this._options.hideDelay);
+            }
 
-            clearTimeout(this._openId);
-
-            this._closeId = setTimeout(function() {
-               self._close();
-               self._forceUpdate();
-            }, self._options.hideDelay);
          },
 
          /**

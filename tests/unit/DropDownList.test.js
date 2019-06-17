@@ -358,7 +358,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                }
             };
             dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
-            dropdownList._resultHandler({ action: 'itemClick', data: [items.at(0)] });
+            dropdownList._resultHandler('onresult', { action: 'itemClick', data: [items.at(0)] });
          });
          it('resultHandler pinClick', function() {
             var dropdownList = getDropDownListWithConfig(getDropDownConfig());
@@ -367,7 +367,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   assert.equal(data[0].action, 'pinClick');
                }
             };
-            dropdownList._resultHandler({ action: 'pinClick' });
+            dropdownList._resultHandler('onresult', { action: 'pinClick' });
          });
 
          it('_private::needShowApplyButton', function() {

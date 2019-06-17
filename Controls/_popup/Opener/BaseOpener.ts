@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import Vdom = require('Vdom/Vdom');
-import coreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
@@ -137,6 +136,9 @@ import {parse as parserLib, load} from 'Core/library';
                   };
                }
                return new Error('Opener was destroyed');
+            }).catch((error:Error) => {
+               Env.IoC.resolve('ILogger').error(this._moduleName, error.message);
+               return error;
             });
          },
 
@@ -146,7 +148,27 @@ import {parse as parserLib, load} from 'Core/library';
           * @private
           */
          _requireModule: function(module) {
-            return typeof module === 'string' ? load(module) : Promise.resolve(module);
+            if (typeof module === 'string') {
+               let parsedModule = parserLib(module);
+               if (!require.defined(parsedModule.name)) {
+                  return load(module);
+               }
+               let mod = require(parsedModule.name);
+               if (parsedModule.path.length) {
+                  parsedModule.path.forEach(function(property) {
+                     if (mod && typeof mod === 'object' && property in mod) {
+                        mod = mod[property];
+                     }
+                  });
+               }
+
+               // It's not a library notation so mind the default export for ES6 modules
+               if (mod && mod.__esModule && mod.default) {
+                  mod = mod.default;
+               }
+               return Promise.resolve(mod);
+            }
+            return Promise.resolve(module);
          },
 
          _getConfig(popupOptions:Object): Object {

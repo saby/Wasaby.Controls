@@ -2,8 +2,8 @@ import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import simpleExtend = require('Core/core-simpleExtend');
 import { VersionableMixin } from "Types/entity";
-import isEqual = require('Core/helpers/Object/isEqual');
-      
+import {isEqual} from 'Types/object';
+
 
       var _private = {
          setValue: function(self, value) {
@@ -159,4 +159,4 @@ import isEqual = require('Core/helpers/Object/isEqual');
       });
 
       export = ViewModel;
-   
+

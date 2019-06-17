@@ -2,10 +2,9 @@ define(
    [
       'Controls/popup',
       'Controls/popupTemplate',
-      'Controls/_popup/Previewer/OpenerTemplate',
       'Controls/_popupTemplate/InfoBox'
    ],
-   (popup, popupTemplate, OpenerTemplate, InfoBoxTemplate) => {
+   (popup, popupTemplate, InfoBoxTemplate) => {
       'use strict';
 
       describe('Controls/Popup/InfoBoxController', () => {
@@ -29,7 +28,7 @@ define(
                floatCloseButton: true,
                style: 'error',
                position: 'tl',
-               template: OpenerTemplate
+               template: popup.PreviewerTemplate
             };
             let Infobox = new popup.InfoboxTarget(config);
             Infobox.saveOptions(config);
@@ -38,7 +37,7 @@ define(
             assert.equal(newConfig.floatCloseButton, true);
             assert.equal(newConfig.style, 'error');
             assert.equal(newConfig.position, 'tl');
-            assert.equal(newConfig.template, OpenerTemplate);
+            assert.equal(newConfig.template, popup.PreviewerTemplate);
          });
 
          it('PopupInfoBox: resetTimeOut', () => {

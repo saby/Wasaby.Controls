@@ -7,7 +7,7 @@ import Constants = require('Controls/_history/Constants');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import entity = require('Types/entity');
-import cEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Serializer = require('Core/Serializer');
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
@@ -108,14 +108,14 @@ var _private = {
       };
       var maxLength = Constants.MAX_HISTORY - history.pinned.getCount();
       var currentCount = 0;
-      var item, rawData, condition;
+      var item, rawData, isPinned;
 
       chain.factory(history.recent).filter(function (element) {
-         condition = !history.pinned.getRecordById(element.getId());
-         if (condition) {
+         isPinned = history.pinned.getRecordById(element.getId());
+         if (!isPinned) {
             currentCount++;
          }
-         return condition && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
+         return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
       }).value(collection.factory.recordSet, config).forEach(function (element) {
          rawData = {
             d: [
@@ -219,7 +219,7 @@ var _private = {
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && cEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
             item = element;
          }
       });

@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
@@ -17,11 +17,13 @@ import {RecordSet} from 'Types/collection';
 
 /**
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
- * Clicking on a icon-button or a string opens the detail panel. {@link Controls/_filterPopup/DetailPanel}
- * Clicking on fast filter parameters opens the simple panel. {@link Controls/_filterPopup/SimplePanel}
+ * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
+ * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
+ * Here you can see <a href="/materials/demo-ws4-filter-view">demo-example</a>.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterView
  * @control
  * @public
  * @author Золотова Э.Е.
@@ -39,11 +41,11 @@ var _private = {
     },
 
     prepareItems: function(self, items) {
-        self._filterSource = object.clone(items);
+        self._source = object.clone(items);
     },
 
-    calculateStateSourceControllers: function(configs, filterSource) {
-        factory(filterSource).each(function(item) {
+    calculateStateSourceControllers: function(configs, source) {
+        factory(source).each(function(item) {
             if (item.viewMode === 'frequent') {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
@@ -173,7 +175,7 @@ var _private = {
 
     reload: function(self) {
         var pDef = new ParallelDeferred();
-        factory(self._filterSource).each(function(item) {
+        factory(self._source).each(function(item) {
             if (item.editorOptions) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
@@ -182,7 +184,7 @@ var _private = {
 
         // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
         return pDef.done().getResult().addCallback(function() {
-            _private.updateText(self, self._filterSource, self._configs);
+            _private.updateText(self, self._source, self._configs);
             return {
                 configs: self._configs
             };
@@ -190,15 +192,16 @@ var _private = {
     },
 
     setValue: function(self, selectedKeys, name) {
-        var item = _private.getItemByName(self._filterSource, name);
-        if (!selectedKeys.length) {
-            var resetValue = object.getPropertyValue(item, 'resetValue');
-            object.setPropertyValue(item, 'value', resetValue);
+        const item = _private.getItemByName(self._source, name);
+        let value;
+        if (!selectedKeys.length || (item.emptyText && selectedKeys.includes(null))) {
+            value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
-            object.setPropertyValue(item, 'value', selectedKeys);
+            value = selectedKeys;
         } else {
-            object.setPropertyValue(item, 'value', selectedKeys[0]);
+            value = selectedKeys[0];
         }
+        object.setPropertyValue(item, 'value', value);
     },
 
     selectItems: function(self, selectedKeys) {
@@ -208,7 +211,7 @@ var _private = {
             }
         });
 
-        _private.updateText(self, self._filterSource, self._configs);
+        _private.updateText(self, self._source, self._configs);
     },
 
     getNewItems: function(self, selectedItems, config) {
@@ -244,7 +247,7 @@ var _private = {
 
     itemClick: function(result) {
         _private.setValue(this, result.selectedKeys, result.id);
-        _private.updateText(this, this._filterSource, this._configs);
+        _private.updateText(this, this._source, this._configs);
     },
 
     applyClick: function(result) {
@@ -256,7 +259,7 @@ var _private = {
             newItems = _private.getNewItems(this, result.data, curConfig);
         curConfig.items.prepend(newItems);
         _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-        _private.updateText(this, this._filterSource, this._configs);
+        _private.updateText(this, this._source, this._configs);
     },
 
     moreButtonClick: function(result) {
@@ -268,7 +271,7 @@ var Filter = Control.extend({
     _template: template,
     _displayText: null,
     _configs: null,
-    _filterSource: null,
+    _source: null,
     _idOpenSelector: null,
 
     _beforeMount: function(options, context, receivedState) {
@@ -279,11 +282,11 @@ var Filter = Control.extend({
 
         if (receivedState) {
             this._configs = receivedState.configs;
-            _private.prepareItems(this, options.filterSource);
-            _private.calculateStateSourceControllers(this._configs, this._filterSource);
-            _private.updateText(this, this._filterSource, this._configs);
-        } else if (options.filterSource) {
-            _private.prepareItems(this, options.filterSource);
+            _private.prepareItems(this, options.source);
+            _private.calculateStateSourceControllers(this._configs, this._source);
+            _private.updateText(this, this._source, this._configs);
+        } else if (options.source) {
+            _private.prepareItems(this, options.source);
             resultDef = _private.reload(this);
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
@@ -291,15 +294,15 @@ var Filter = Control.extend({
     },
 
     _beforeUpdate: function(newOptions) {
-        if (newOptions.filterSource && newOptions.filterSource !== this._options.filterSource) {
-            _private.prepareItems(this, newOptions.filterSource);
+        if (newOptions.source && newOptions.source !== this._options.source) {
+            _private.prepareItems(this, newOptions.source);
             return _private.reload(this);
         }
     },
 
     _openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
-            let panelItems = converterFilterItems.convertToDetailPanelItems(this._filterSource);
+            let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {};
             if (this._options.alignment === 'right') {
                 popupOptions.corner = {
@@ -321,7 +324,7 @@ var Filter = Control.extend({
     _openPanel: function(event, fastItem) {
         if (this._options.panelTemplateName) {
             let items = new RecordSet({
-                rawData: _private.setPopupConfig(this, this._configs, this._filterSource)
+                rawData: _private.setPopupConfig(this, this._configs, this._source)
             });
             let popupOptions = { template: this._options.panelTemplateName,
                                  className: 'controls-FilterView-SimplePanel-popup' };
@@ -352,7 +355,7 @@ var Filter = Control.extend({
             _private[result.action].call(this, result);
         }
         if (result.action !== 'moreButtonClick') {
-            _private.notifyChanges(this, this._filterSource);
+            _private.notifyChanges(this, this._source);
             this._children.DropdownOpener.close();
         }
     },
@@ -363,7 +366,7 @@ var Filter = Control.extend({
 
     _isFastReseted: function() {
         var isReseted = true;
-        factory(this._filterSource).each(function(item) {
+        factory(this._source).each(function(item) {
             if (item.viewMode === 'frequent' && _private.isItemChanged(item)) {
                 isReseted = false;
             }
@@ -377,15 +380,15 @@ var Filter = Control.extend({
         }
         var newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
-        _private.notifyChanges(this, this._filterSource);
-        _private.updateText(this, this._filterSource, this._configs);
+        _private.notifyChanges(this, this._source);
+        _private.updateText(this, this._source, this._configs);
     },
 
     _resetFilterText: function() {
         if (this._children.DropdownOpener.isOpened()) {
             this._children.DropdownOpener.close();
         }
-        factory(this._filterSource).each(function(item) {
+        factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
             if (item.viewMode !== 'frequent') {
                 item.value = item.resetValue;
@@ -394,8 +397,8 @@ var Filter = Control.extend({
                 }
             }
         });
-        _private.notifyChanges(this, this._filterSource);
-        _private.updateText(this, this._filterSource, this._configs);
+        _private.notifyChanges(this, this._source);
+        _private.updateText(this, this._source, this._configs);
     }
 });
 

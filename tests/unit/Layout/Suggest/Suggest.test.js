@@ -3,11 +3,15 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
 
-      var hasMoreTrue = {
-         hasMore: true
-      };
-      var hasMoreFalse = {
-         hasMore: false
+      var getSearchResult = function(hasMore, countItems) {
+         return {
+            hasMore: hasMore,
+            data: {
+               getCount: function() {
+                  return countItems;
+               }
+            }
+         }
       };
 
       var getComponentObject = function() {
@@ -71,15 +75,16 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::_private.hasMore', function() {
-         assert.isTrue(suggestMod._InputController._private.hasMore(hasMoreTrue));
-         assert.isFalse(suggestMod._InputController._private.hasMore(hasMoreFalse));
+         assert.isTrue(suggestMod._InputController._private.hasMore(getSearchResult(true)));
+         assert.isFalse(suggestMod._InputController._private.hasMore(getSearchResult(false)));
       });
 
       it('Suggest::_private.shouldShowFooter', function () {
          var self = getComponentObject();
          self._options.footerTemplate = 'anyTemplate';
-         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, hasMoreTrue));
-         assert.isFalse(!!suggestMod._InputController._private.shouldShowFooter(self, hasMoreFalse));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(true)));
+         assert.isFalse(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 1)));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 0)));
       });
 
       it('Suggest::_private.suggestStateNotify', function () {
@@ -774,5 +779,13 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._inputClicked();
          assert.isTrue(suggestComponent._inputActive);
       });
+
+
+      it('Suggest::_private.isEmptyData', function() {
+         assert.isTrue(!!suggestMod._InputController._private.isEmptyData(getSearchResult(undefined, 0)));
+         assert.isFalse(!!suggestMod._InputController._private.isEmptyData(getSearchResult(undefined, 1)));
+      });
+
+
    });
 });
