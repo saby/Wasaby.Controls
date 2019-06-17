@@ -98,23 +98,31 @@ define(
             });
          });
 
-         it('abort Search', function(done) {
-            var search  = new searchLib._Search(
+         it('abort Search', function() {
+            var search = new searchLib._Search(
                {
                   source: source,
                   searchDelay: 50,
                   navigation: navigation
                }
             );
-            var searchDef = search.search({name: 'Sasha'});
+            var searchDef = search.search({ name: 'Sasha' });
 
+            //forced nbort
             search.abort();
+            assert.isFalse(search._searchDeferred.isReady());
 
-            searchDef.addErrback(function(err) {
-               done();
-               return err;
+            return new Promise(function(resolve) {
+               searchDef.addErrback(function(err) {
+                  searchDef = search.search({ name: 'Sasha' });
+
+                  search.abort(true);
+                  assert.isTrue(search._searchDeferred.isReady());
+
+                  resolve();
+                  return err;
+               });
             });
-
          });
 
          it('double Search', function(done) {
