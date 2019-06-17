@@ -8,17 +8,33 @@
         <div class="controls-Swipe
                 controls-Swipe_{{animationState}}"
              on:animationend="_onAnimationEnd()">
-            <div class="controls-Swipe_{{actionAlignment}}">
-                <ws:partial
-                   template="wml!Controls/_list/Swipe/resources/SwipeFor"
-                   itemData="{{itemData}}"
-                   showedActions="{{itemData.itemActions.showed}}"
-                   swipeConfig="{{swipeConfig}}"
-                   actionAlignment="{{actionAlignment}}"
-                   actionCaptionPosition="{{actionCaptionPosition}}"
-                   needSeparator="{{needSeparator}}"
-                   needIcon="{{needIcon}}"
-                   needTitle="{{needTitle}}"/>
+            <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}">
+
+                <ws:if data="{{swipeConfig.twoColumns}}">
+                    <ws:partial
+                            template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
+                            itemData="{{itemData}}"
+                            showedActions="{{itemData.itemActions.showed}}"
+                            swipeConfig="{{swipeConfig}}"
+                            actionAlignment="{{actionAlignment}}"
+                            actionCaptionPosition="{{actionCaptionPosition}}"
+                            needSeparator="{{needSeparator}}"
+                            needIcon="{{needIcon}}"
+                            needTitle="{{needTitle}}"/>
+                </ws:if>
+                <ws:else>
+                    <ws:partial
+                            template="wml!Controls/_list/Swipe/resources/SwipeFor"
+                            itemData="{{itemData}}"
+                            showedActions="{{itemData.itemActions.showed}}"
+                            swipeConfig="{{swipeConfig}}"
+                            actionAlignment="{{actionAlignment}}"
+                            actionCaptionPosition="{{actionCaptionPosition}}"
+                            needSeparator="{{needSeparator}}"
+                            needIcon="{{needIcon}}"
+                            needTitle="{{needTitle}}"/>
+                </ws:else>
+
             </div>
         </div>
     </div>

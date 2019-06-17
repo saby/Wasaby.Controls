@@ -29,6 +29,7 @@ export default class SwipeControl extends Control {
    private _measurer: IMeasurer;
    private _swipeConfig: ISwipeConfig;
    private _animationState: 'close' | 'open' = 'close';
+   private _actionAlignment: 'horizontal' | 'vertical';
 
    constructor(options: ISwipeControlOptions) {
       super();
@@ -103,6 +104,20 @@ export default class SwipeControl extends Control {
       }
    }
 
+   private _needHorizontalRecalc(swipeConfig: ISwipeConfig): boolean {
+      return (swipeConfig.itemActions.showed.length === 1 && swipeConfig.itemActions.all.length > 1);
+   }
+
+   private _setMeasurer(actionAlignment: 'horizontal' | 'vertical' = 'horizontal'): void {
+      this._actionAlignment = actionAlignment;
+      this._measurer = MEASURER_NAMES[actionAlignment];
+   }
+
+   private _prepareTwoColunms(showedActions): Array {
+      return [[showedActions[0],showedActions[1]],
+              [showedActions[2],showedActions[3]]];
+   }
+
    private _initSwipe(
       listModel: IListModel,
       itemData: IItemData,
@@ -112,12 +127,24 @@ export default class SwipeControl extends Control {
       listModel.setSwipeItem(itemData);
       listModel.setActiveItem(itemData);
       if (this._options.itemActionsPosition !== 'outside') {
+         this._setMeasurer(this._options.actionAlignment);
          this._swipeConfig = this._measurer.getSwipeConfig(
             itemData.itemActions.all,
             actionsHeight,
             this._options.actionCaptionPosition
          );
+         if (this._needHorizontalRecalc(this._swipeConfig)) {
+            this._setMeasurer('horizontal');
+            this._swipeConfig = this._measurer.getSwipeConfig(
+                itemData.itemActions.all,
+                actionsHeight,
+                this._options.actionCaptionPosition
+            );
+         }
          listModel.setItemActions(itemData.item, this._swipeConfig.itemActions);
+         if (this._swipeConfig.twoColumns) {
+            this._swipeConfig.itemActions.showed = this._prepareTwoColunms(this._swipeConfig.itemActions.showed);
+         }
       }
       this._animationState = 'open';
    }
@@ -140,7 +167,7 @@ export default class SwipeControl extends Control {
 
    _beforeMount(newOptions: ISwipeControlOptions): void {
       this._updateModel(newOptions);
-      this._measurer = MEASURER_NAMES[newOptions.actionAlignment];
+      this._setMeasurer(newOptions.actionAlignment);
    }
 
    _beforeUpdate(
@@ -169,13 +196,14 @@ export default class SwipeControl extends Control {
       }
 
       if (this._options.actionAlignment !== newOptions.actionAlignment) {
-         this._measurer = MEASURER_NAMES[newOptions.actionAlignment];
+         this._setMeasurer(newOptions.actionAlignment);
       }
    }
 
    _beforeUnmount(): void {
       this._swipeConfig = null;
       this._measurer = null;
+      this._actionAlignment = null;
    }
 
    closeSwipe(withAnimation: boolean = false): void {

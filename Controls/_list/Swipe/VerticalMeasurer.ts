@@ -83,6 +83,7 @@ const VerticalMeasurer: IMeasurer = {
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
       let itemActions = actions;
+      let columnsCount = 1;
       const {
          itemActionsSize,
          countOfActions
@@ -90,9 +91,13 @@ const VerticalMeasurer: IMeasurer = {
          itemActionsSize: ItemActionsSize;
          countOfActions: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
-
-      if (countOfActions !== actions.length) {
-         itemActions = actions.slice(0, countOfActions - 1);
+      if (countOfActions === 2) {
+         if (actions.length > 3) {
+            columnsCount = 2;
+         }
+      }
+      if (columnsCount * countOfActions !== actions.length) {
+         itemActions = actions.slice(0,  countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
@@ -107,7 +112,8 @@ const VerticalMeasurer: IMeasurer = {
             all: actions,
             showed: itemActions
          },
-         paddingSize: getPaddingSize(actionCaptionPosition, itemActionsSize)
+         paddingSize: getPaddingSize(actionCaptionPosition, itemActionsSize),
+         twoColumns: columnsCount === 2
       };
    },
    needIcon(

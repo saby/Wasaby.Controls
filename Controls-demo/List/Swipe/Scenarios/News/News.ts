@@ -76,6 +76,12 @@ export default class News extends Control {
             icon: 'icon-EmptyMessage',
             title: 'В избранные',
             showType: 2
+         },
+         {
+            id: 4,
+            icon: 'icon-EmptyMessage',
+            title: 'В избранные2',
+            showType: 2
          }
       ];
       this._source = new Memory({
