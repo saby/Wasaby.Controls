@@ -34,6 +34,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _multiSelectItems: null,
       _groupItems: null,
       _groupTextItems: null,
+      _groupHierarchyItems: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -56,6 +57,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysMultiSelect2: null,
       _selectedKeysGroup: null,
       _selectedKeysGroupText: null,
+      _selectedKeysGroupHierarchy: null,
 
       _beforeMount: function() {
          this._simpleItems = [
@@ -205,6 +207,17 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 5, title: 'Meeting', group: 'Create' },
             { id: 6, title: 'Video meeting', group: 'Create' }
          ];
+         this._groupHierarchyItems = [
+            {id: 1, title: 'Task in development', parent: null, '@parent': false},
+            {id: 2, title: 'Error in development', parent: null, '@parent': false},
+            {id: 3, title: 'Application', parent: null, '@parent': false, group: '1'},
+            {id: 4, title: 'Assignment', parent: null, '@parent': true, group: '1'},
+            {id: 5, title: 'Approval', parent: null, '@parent': false, group: '1'},
+            {id: 6, title: 'Working out', parent: null, '@parent': false, group: '1'},
+            {id: 7, title: 'Assignment for accounting', parent: 4, '@parent': false},
+            {id: 8, title: 'Assignment for delivery', parent: 4, '@parent': false},
+            {id: 9, title: 'Assignment for logisticians', parent: 4, '@parent': false, group: '3'}
+         ];
          this._historySource = historySource.createMemory();
          this._historySourceMulti = historySource.createMemory();
          this._selectedKeysSimple = [1];
@@ -229,6 +242,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysMultiSelect2 = [6, 7];
          this._selectedKeysGroup = [1];
          this._selectedKeysGroupText = [1];
+         this._selectedKeysGroupHierarchy = [1];
       },
       _createMemory: function(items) {
          return new source.Memory({

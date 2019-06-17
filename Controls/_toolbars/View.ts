@@ -257,7 +257,9 @@ var _private = {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
                 items: self._menuItems,
-                itemTemplateProperty: self._options.itemTemplateProperty
+                itemTemplateProperty: self._options.itemTemplateProperty,
+                groupTemplate: self._options.groupTemplate,
+                groupingKeyCallback: self._options.groupingKeyCallback
             },
             target: self._children.popupTarget
         };
