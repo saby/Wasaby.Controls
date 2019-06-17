@@ -929,6 +929,10 @@ define([
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
 
+         lists.BaseControl._private.showIndicator(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
