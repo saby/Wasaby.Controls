@@ -99,7 +99,7 @@ var
             if (params.columnIndex === params.columns.length - 1) {
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
             }
-            if (!params.isHeader) {
+            if (!params.isHeader && !params.isResult) {
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
@@ -819,7 +819,8 @@ var
                     columns: this._resultsColumns,
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                    itemPadding: this._model.getItemPadding()
+                    itemPadding: this._model.getItemPadding(),
+                    isResult: true
                 });
             }
             resultsColumn.cellClasses = cellClasses;
