@@ -35,6 +35,31 @@ define(['Controls/search'], function(searchMod) {
          assert.isTrue(notifyed);
       });
 
+      describe('_valueChanged', function() {
+         var cont = new searchMod.InputContainer();
+         var notifyed = false;
+
+         cont._value = ''
+         cont._notify = function(eventName, args) {
+            if (eventName === 'search') {
+               notifyed = true;
+            }
+         };
+
+         it('new value not equally old value', function() {
+            cont._valueChanged(null, 'newValue');
+
+            assert.equal(cont._value, 'newValue');
+            assert.isTrue(notifyed);
+         });
+
+         it('new value equally old value', function() {
+            notifyed = false;
+            cont._valueChanged(null, 'newValue');
+
+            assert.isFalse(notifyed);
+         });
+      });
    });
 
 });

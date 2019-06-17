@@ -134,6 +134,14 @@ import Vdom = require('Vdom/Vdom');
             ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
          },
 
+         pageScrolled(id: string): boolean {
+            let item = _private.find(id);
+            if (item) {
+               return item.controller.pageScrolled(item, _private.getItemContainer(id));
+            }
+            return false;
+         },
+
          popupCreated: function(id) {
             var element = _private.find(id);
             if (element) {

@@ -133,5 +133,6 @@ export {
     getCellStyles,
     getTemplateColumnsStyle,
     getDefaultStylesFor,
-    toCssString
+    toCssString,
+
 };

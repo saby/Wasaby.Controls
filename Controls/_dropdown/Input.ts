@@ -44,10 +44,8 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/ITextValue
  * @control
  * @public

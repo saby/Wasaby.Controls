@@ -192,15 +192,16 @@ var _private = {
     },
 
     setValue: function(self, selectedKeys, name) {
-        var item = _private.getItemByName(self._source, name);
-        if (!selectedKeys.length) {
-            var resetValue = object.getPropertyValue(item, 'resetValue');
-            object.setPropertyValue(item, 'value', resetValue);
+        const item = _private.getItemByName(self._source, name);
+        let value;
+        if (!selectedKeys.length || (item.emptyText && selectedKeys.includes(null))) {
+            value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
-            object.setPropertyValue(item, 'value', selectedKeys);
+            value = selectedKeys;
         } else {
-            object.setPropertyValue(item, 'value', selectedKeys[0]);
+            value = selectedKeys[0];
         }
+        object.setPropertyValue(item, 'value', value);
     },
 
     selectItems: function(self, selectedKeys) {

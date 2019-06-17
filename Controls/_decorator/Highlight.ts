@@ -13,7 +13,7 @@ import template = require('wml!Controls/_decorator/Highlight/Highlight');
        * @control
        * @public
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       /**

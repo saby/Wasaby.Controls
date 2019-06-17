@@ -13,15 +13,8 @@ import template = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey'
  */
 
 var _private = {
-   getSelectedKeys: function(selectedKey, items) {
-      return selectedKey === null && !(items && items.getRecordById(null)) ? [] : [selectedKey];
-   },
-
-   dataLoadCallbackHandler: function(items) {
-      this._items = items;
-      if (this._options.dataLoadCallback) {
-         this._options.dataLoadCallback(items);
-      }
+   getSelectedKeys: function(selectedKey) {
+      return selectedKey === null ? [] : [selectedKey];
    }
 };
 
@@ -29,16 +22,14 @@ var Adapter = Control.extend({
 
    _template: template,
    _selectedKeys: null,
-   _items: null,
 
    _beforeMount: function(options) {
-      this._dataLoadCallbackHandler = _private.dataLoadCallbackHandler.bind(this);
-      this._selectedKeys = _private.getSelectedKeys(options.selectedKey, this._items);
+      this._selectedKeys = _private.getSelectedKeys(options.selectedKey);
    },
 
    _beforeUpdate: function(newOptions) {
       if (this._options.selectedKey !== newOptions.selectedKey) {
-         this._selectedKeys = _private.getSelectedKeys(newOptions.selectedKey, this._items);
+         this._selectedKeys = _private.getSelectedKeys(newOptions.selectedKey);
       }
    },
 

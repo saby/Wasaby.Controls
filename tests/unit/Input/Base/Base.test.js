@@ -147,7 +147,7 @@ define(
 
                assert.equal(calls.length, 0);
             });
-         })
+         });
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
                ctrl._options.readOnly = false;
@@ -471,6 +471,76 @@ define(
                ctrl._ieVersion = 12;
 
                ctrl._placeholderClickHandler();
+
+               assert.equal(calls.length, 0);
+            });
+         });
+         describe('KeyDown', function() {
+            var event = {};
+
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               event.stopPropagation = ProxyCall.apply(function() {}, 'stopPropagation', calls, true);
+            });
+            it('The up arrow', function() {
+               event.keyCode = Env.constants.key.up;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The left arrow', function() {
+               event.keyCode = Env.constants.key.left;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The down arrow', function() {
+               event.keyCode = Env.constants.key.down;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The right arrow', function() {
+               event.keyCode = Env.constants.key.right;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The home key', function() {
+               event.keyCode = Env.constants.key.home;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The end key', function() {
+               event.keyCode = Env.constants.key.end;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The b key', function() {
+               event.keyCode = Env.constants.key.b;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
 
                assert.equal(calls.length, 0);
             });

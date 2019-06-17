@@ -57,7 +57,7 @@ var Component = Control.extend([], {
         var cfg = {
             opener: this,
             target: this._container,
-            template: 'Controls/Date/PeriodDialog',
+            template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
@@ -68,6 +68,7 @@ var Component = Control.extend([], {
             templateOptions: {
                startValue: this._rangeModel.startValue,
                endValue: this._rangeModel.endValue,
+               mask: this._options.mask,
                selectionType: this._options.selectionType,
                quantum: this._options.quantum,
                headerType: 'input',
