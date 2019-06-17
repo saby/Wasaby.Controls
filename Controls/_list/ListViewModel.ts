@@ -60,7 +60,7 @@ var _private = {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
             isSelected = current.multiSelectStatus !== undefined;
-        
+
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
@@ -437,8 +437,43 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             });
         }
         _private.updateIndexes(this, 0, this.getCount());
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+            if (removedItemsIndex > 0) {
+                var prev = this._display.at(removedItemsIndex - 1).getContents();
+                if (prev.getId) {
+                    this.updateMarker(prev.getId());
+                } else {
+                    var curenMarkerIndex = this.getIndexByKey(this._markedKey) === -1;
+                    if (this._markedKey) {
+                        this.updateMarker(this.getPreviousItem(removedItemsIndex));
+                    }
+                }
+            } else {
+                this.updateMarker( this._display.at(0).getContents().getId());
+            }
+        }
     },
-
+    getPreviousItem: function(itemIndex) {
+        var prevIndex = itemIndex - 1, prevItem;
+        while (prevIndex >= 0) {
+            prevItem = this._display.at(prevIndex).getContents();
+            if (!this._isGroup(prevItem)) {
+                return prevItem.getId();
+            }
+            prevIndex--;
+        }
+        return this.getNextItem(itemIndex);
+    },
+    getNextItem: function(itemIndex) {
+        var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
+        while (nextIndex < itemsCount) {
+            nextItem = this._display.at(nextIndex).getContents();
+            if (!this._isGroup(nextItem)) {
+                return nextItem.getId();
+            }
+            nextIndex++;
+        }
+    },
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
