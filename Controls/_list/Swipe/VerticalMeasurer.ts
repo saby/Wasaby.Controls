@@ -15,16 +15,14 @@ const breakpoints: Record<
       upperBound: 64
    },
    right: {
-      lowerBound: 24,
-      upperBound: 32
+      lowerBound: 30,
+      upperBound: 38
    },
    none: {
-      lowerBound: 24,
-      upperBound: 32
+      lowerBound: 30,
+      upperBound: 38
    }
 };
-
-const MIN_SPACING = 12;
 
 function getItemActionsSize(
    countOfActions: number,
