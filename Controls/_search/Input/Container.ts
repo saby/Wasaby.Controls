@@ -50,7 +50,7 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
    },
 
    _resetClick: function () {
-      this._notifySearch('');
+      this._notifySearch('', true);
    }
 });
 
