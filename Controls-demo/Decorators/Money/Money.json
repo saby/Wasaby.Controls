@@ -25,6 +25,9 @@
           },
           "useGrouping": {
             "type": "Boolean"
+          },
+          "showEmptyDecimals": {
+            "type": "Boolean"
           }
         }
       }

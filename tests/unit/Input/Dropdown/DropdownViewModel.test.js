@@ -238,11 +238,25 @@ define(
                            return groupItems[key];
                         }
                      }
+                  },
+                  getItems: () => {
+                     return new collectionLib.RecordSet({
+                        idProperty: 'id',
+                        rawData: [{id: '1'}, {id: '2'}]
+                     });
                   }
                };
 
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'empty'));
                assert.isFalse(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
+
+               self.getItems = () => {
+                  return new collectionLib.RecordSet({
+                     idProperty: 'id',
+                     rawData: [{id: '1'}]
+                  });
+               };
+               assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
             });
          });
 

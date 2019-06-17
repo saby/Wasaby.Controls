@@ -2149,7 +2149,8 @@
               "warning": "warning",
               "secondary": "secondary",
               "info": "info",
-              "success": "success"
+              "success": "success",
+              "primary" : "primary"
             }
           },
           "trigger": {
@@ -2456,10 +2457,9 @@
             "title": "Class names of popup.",
             "type": "String"
           },
-          "closeByExternalClick": {
+          "closeOnOutsideClick": {
             "title": "Determines whether possibility of closing the popup when clicking past.",
-            "type": "Boolean",
-            "newName": "closeOnOutsideClick"
+            "type": "Boolean"
           },
           "template": {
             "title": "Template inside popup.",
@@ -2835,10 +2835,9 @@
             "type": "Boolean",
             "title": "Determines the display maximize button."
           },
-          "closeButtonStyle": {
+          "closeButtonViewMode": {
             "type": "enum",
             "default": "default",
-            "newName": "closeButtonViewMode",
             "title": "Close button display style.",
             "enum": {
               "default": "default",

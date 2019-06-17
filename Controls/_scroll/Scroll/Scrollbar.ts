@@ -38,7 +38,7 @@ import 'css!theme?Controls/scroll';
        *
        * @public
        * @control
-       * @author Журавлев Максим Сергеевич
+       * @author Krasilnikov A.S.
        */
       var
          _private = {

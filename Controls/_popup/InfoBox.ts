@@ -119,6 +119,7 @@ import Env = require('Env/Env');
        * @variant info
        * @variant secondary
        * @variant success
+       * @variant primary
        */
 
 
@@ -237,8 +238,8 @@ import Env = require('Env/Env');
 
          _startOpeningPopup: function() {
             var self = this;
-
-            clearTimeout(this._closeId);
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+            _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
                self._open();
