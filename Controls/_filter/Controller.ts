@@ -87,20 +87,21 @@ import 'Controls/context';
          },
 
          getHistoryItems: function(self, id) {
-            var source = historyUtils.getHistorySource(id),
-               result, recent, lastFilter;
+            let result, recent, lastFilter;
 
             if (!id) {
                result =  Deferred.success([]);
             }
 
-            if (!self._sourceController) {
-               self._sourceController = new SourceController({
-                  source: source
-               });
-            }
-
             if (id) {
+               let source = historyUtils.getHistorySource(id);
+
+               if (!self._sourceController) {
+                  self._sourceController = new SourceController({
+                     source: source
+                  });
+               }
+
                result = new Deferred();
 
                self._sourceController.load({ $_history: true })
