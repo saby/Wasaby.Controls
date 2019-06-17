@@ -59,7 +59,16 @@
                                   displayProperty="title"
                                   multiSelect="{{true}}"
                                   emptyText="All categories"
-                                  attr:class="ControlsDemo-InputDropdown__item-limitWidth"
+                                  attr:class="ControlsDemo-InputDropdown__item ControlsDemo-InputDropdown__item-limitWidth"
+                                  source="{{_createMemory(_multiSelectItems)}}">
+         </Controls.dropdown:Input>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect3"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  multiSelect="{{true}}"
+                                  emptyText="All categories"
+                                  itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
+                                  attr:class="ControlsDemo-InputDropdown__item"
                                   source="{{_createMemory(_multiSelectItems)}}">
          </Controls.dropdown:Input>
       </div>

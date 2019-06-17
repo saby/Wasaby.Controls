@@ -175,10 +175,10 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ];
          this._multiSelectItems = [
             { id: 1, title: 'Banking and financial services, credit' },
-            { id: 2, title: 'Gasoline, diesel fuel, light oil products' },
+            { id: 2, title: 'Gasoline, diesel fuel, light oil products', comment: 'comment' },
             { id: 3, title: 'Transportation, logistics, customs' },
-            { id: 4, title: 'Oil and oil products' },
-            { id: 5, title: 'Pipeline transportation services' },
+            { id: 4, title: 'Oil and oil products', comment: 'comment' },
+            { id: 5, title: 'Pipeline transportation services', comment: 'comment' },
             { id: 6, title: 'Services in tailoring and repair of clothes, textiles' },
             { id: 7, title: 'Computers and components, computing, office equipment' }
          ];
