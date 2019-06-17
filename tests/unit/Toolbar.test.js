@@ -242,7 +242,9 @@ define(
                         theme: 'default',
                         size: 'size',
                         popupClassName: 'popupClassName',
-                        itemTemplateProperty: 'itp'
+                        itemTemplateProperty: 'itp',
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback'
                      },
                      _children: {
                         popupTarget: 'popupTarget'
@@ -254,7 +256,9 @@ define(
                      target: 'popupTarget',
                      templateOptions: {
                         items: 'menuItems',
-                        itemTemplateProperty: 'itp'
+                        itemTemplateProperty: 'itp',
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback'
                      }
                   };
                assert.deepEqual(toolbars.View._private.generateMenuConfig(testSelf), config);
