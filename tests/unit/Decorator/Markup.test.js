@@ -380,12 +380,12 @@ define([
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
                      height: 'testHeight',
-                     href: 'http://testHref.com',
+                     href: 'www.testHref.com',
                      id: 'testId',
                      name: 'testName',
                      rel: 'testRel',
                      rowspan: 'testRowspan',
-                     src: '/testSrc',
+                     src: './testSrc',
                      style: 'testStyle',
                      tabindex: 'testTabindex',
                      target: 'testTarget',
@@ -428,7 +428,7 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="/testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });
