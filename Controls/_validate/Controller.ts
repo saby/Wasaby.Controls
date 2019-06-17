@@ -249,7 +249,8 @@ import 'css!theme?Controls/validate';
             clearTimeout(this._closeId);
          },
          _valueChangedHandler: function(event, value) {
-            //if displayValue of content has changed, but value hasn't changed, we won't clean validation.
+            // We clean validation, if the value has changed.
+            // But some controls notify valueChanged if the additional data has changed.
             if (this._currentValue !== value) {
                this._currentValue = value;
                this._notify('valueChanged', [value]);
