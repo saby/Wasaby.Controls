@@ -19,6 +19,7 @@
  * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
  * @includes BaseControlStyles Controls/_list/BaseControlStyles
+ * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @public
  * @author Kraynov D.
  */
