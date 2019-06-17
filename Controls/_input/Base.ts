@@ -3,7 +3,7 @@ import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
 import ViewModel = require('Controls/_input/Base/ViewModel');
@@ -15,6 +15,7 @@ import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
+
 import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
@@ -889,8 +890,8 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @private
           */
          _getTooltip: function() {
-            var valueDisplayElement = this._options.readOnly ? this._getReadOnlyField() : this._getField();
-            var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
+            const valueDisplayElement: HTMLElement = this._getField() || this._getReadOnlyField();
+            const hasFieldHorizontalScroll: boolean = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
@@ -1012,4 +1013,4 @@ import 'wml!Controls/_input/Base/Stretcher';
       };
 
       export = Base;
-   
+
