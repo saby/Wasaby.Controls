@@ -13,7 +13,7 @@ export default interface IHeight {
 }
 /**
  * @name Controls/_interface/IHeight#inlineHeight
- * @cfg {Enum} Icon display Size.
+ * @cfg {Enum} Control height value
  * @variant xs
  * @variant s
  * @variant m

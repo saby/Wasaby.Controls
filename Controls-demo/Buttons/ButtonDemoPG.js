@@ -19,7 +19,7 @@ define('Controls-demo/Buttons/ButtonDemoPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               style: {
+               buttonStyle: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
@@ -27,14 +27,29 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                viewMode: {
                   keyProperty: 'id',
                   displayProperty: 'title',
-                  selectedKey: 0
-               },
-               size: {
-                  keyProperty: 'id',
-                  displayProperty: 'title',
                   selectedKey: 1
                },
+               inlineHeight: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 2
+               },
                iconStyle: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
+               iconSize: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
+               fontSize: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 2
+               },
+               fontColorStyle: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
@@ -42,13 +57,17 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                showClickEvent: true
             };
             this._componentOptions = {
+               contrastBackground: false,
                readOnly: false,
-               size: 'm',
-               icon: 'icon-small icon-Add',
-               iconStyle: 'default',
+               inlineHeight: 'm',
+               fontSize: 'm',
+               fontColorStyle: 'secondary',
+               icon: 'icon-Add',
+               iconStyle: 'secondary',
+               iconSize: 's',
                caption: 'Caption',
-               style: 'secondary',
-               viewMode: 'link',
+               buttonStyle: 'secondary',
+               viewMode: 'button',
                tooltip: '',
                name: 'Button',
                href: ''

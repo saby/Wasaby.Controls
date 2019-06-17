@@ -35,6 +35,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/ITooltip
  * @control
  * @public
@@ -93,7 +94,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @variant success
  * @variant warning
  * @variant danger
- * @variant default
  * @default secondary
  * @example
  * Primary button with default icon style.

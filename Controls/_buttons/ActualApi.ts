@@ -160,7 +160,7 @@ const ActualApi = {
          return options.contrastBackground;
       } else {
          if (typeof options.transparent !== 'undefined') {
-            IoC.resolve('ILogger').warn('Button', 'Опция transparent устарела, используйте contrastBackground');
+            // IoC.resolve('ILogger').warn('Button', 'Опция transparent устарела, используйте contrastBackground');
             return !options.transparent;
          } else {
             return false;
@@ -177,7 +177,7 @@ const ActualApi = {
             return calcStyle;
          } else {
             if (typeof optionStyle !== 'undefined') {
-               IoC.resolve('ILogger').warn('Button', 'Опция style устарела, используйте buttonStyle и fontColorStyle');
+               // IoC.resolve('ILogger').warn('Button', 'Опция style устарела, используйте buttonStyle и fontColorStyle');
                return optionStyle;
             } else {
                return 'secondary';
@@ -242,7 +242,7 @@ const ActualApi = {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
+            // IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
             if (options.viewMode === 'button') {
                //кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
