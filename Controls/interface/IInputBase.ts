@@ -81,11 +81,13 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         textAlign: 'left' | 'right';
         /**
          * @name Controls/interface/IInputBase#autoComplete
-         * @cfg {Boolean} Determines whether to use browser-based auto-complete field.
-         * @default false
+         * @cfg {Enum} Determines whether to use browser-based auto-complete field.
+         * @default off
+         * @variant on - The browser is allowed to automatically complete the input.
+         * @variant off - The browser is not permitted to automatically enter or select a value for this field.
+         * @variant username - The browser is allowed to automatically complete the input using a username.
+         * @variant current-password - The browser is allowed to automatically complete the input using the current password for the account identified by the username field.
          * @remark
-         * true - The browser is allowed to automatically complete the input.
-         * false - The browser is not permitted to automatically enter or select a value for this field.
          * Values for auto-complete are taken by the browser from its storage.
          * The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
          * the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
@@ -94,10 +96,10 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
          * @example
          * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
          * <pre>
-         *    <Controls.input:Text autoComplete={{true}}/>
+         *    <Controls.input:Text autoComplete="on"/>
          * </pre>
          */
-        autoComplete: boolean;
+        autoComplete: 'on' | 'off' | 'username' | 'current-password';
     }
 };
 

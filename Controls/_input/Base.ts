@@ -350,6 +350,16 @@ import 'wml!Controls/_input/Base/Stretcher';
              * only to inform the model about it.
              */
             self._viewModel.changesHaveBeenApplied();
+         },
+
+         compatAutoComplete: function(autoComplete) {
+            if (typeof autoComplete === 'boolean') {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Изменилось API опции autoComplete. Поправте сами или выпишите ошибку на ответсвенного за контрол.');
+
+               return autoComplete ? 'on' : 'off';
+            }
+
+            return autoComplete;
          }
       };
 
@@ -544,13 +554,15 @@ import 'wml!Controls/_input/Base/Stretcher';
          },
 
          _beforeMount: function(options) {
-            var viewModelCtr = this._getViewModelConstructor();
-            var viewModelOptions = this._getViewModelOptions(options);
+            this._autoComplete = _private.compatAutoComplete(options.autoComplete);
+
+            const viewModelCtr = this._getViewModelConstructor();
+            const viewModelOptions = this._getViewModelOptions(options);
 
             this._initProperties(options);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            if (options.autoComplete) {
+            if (this._autoComplete !== 'off') {
                /**
                 * Browsers use auto-fill to the fields with the previously stored name.
                 * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
@@ -598,6 +610,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                scope: {
                   _useStretcher: false,
                   controlName: CONTROL_NAME,
+                  autoComplete: this._autoComplete,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
@@ -968,8 +981,8 @@ import 'wml!Controls/_input/Base/Stretcher';
             size: 'default',
             placeholder: '',
             textAlign: 'left',
+            autoComplete: 'off',
             fontStyle: 'default',
-            autoComplete: false,
             selectOnClick: false
          };
       };
@@ -982,7 +995,12 @@ import 'wml!Controls/_input/Base/Stretcher';
              * value: descriptor(String|null),
              */
             tooltip: entity.descriptor(String),
-            autoComplete: entity.descriptor(Boolean),
+            /*autoComplete: entity.descriptor(String).oneOf([
+               'on',
+               'off',
+               'username',
+               'current-password'
+            ]),*/
             selectOnClick: entity.descriptor(Boolean),
             inputCallback: entity.descriptor(Function),
 
