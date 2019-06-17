@@ -589,11 +589,14 @@ var _private = {
 
     showIndicator: function(self, direction = 'all') {
         self._loadingState = direction;
-        self._loadingIndicatorState = self._loadingState;
+        if (direction === 'all') {
+            self._loadingIndicatorState = self._loadingState;
+        }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
+                    self._loadingIndicatorState = self._loadingState;
                     self._showLoadingIndicatorImage = true;
                     self._forceUpdate();
                 }
