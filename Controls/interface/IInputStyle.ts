@@ -35,7 +35,7 @@ interface IInputStyle {
          *       </div>
          *       <Controls.input:Text name="login" style="primary" bind:value="_login"/>
          *       Controls.input:Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
-         *       <Controls.Button name="register" caption="register" on:click="_sendDataClick()"/>
+         *       <Controls.buttons:Button name="register" caption="register" on:click="_sendDataClick()"/>
          *    </div>
          * </pre>
          *
