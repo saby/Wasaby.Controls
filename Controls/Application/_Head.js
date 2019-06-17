@@ -128,7 +128,7 @@ define('Controls/Application/_Head',
                for (var attributeName in attributes) {
                   if (attributes.hasOwnProperty(attributeName)) {
                      // Try update all attributes as link, but only links would be updated.
-                     attributes[attributeName] = getResourceUrl(attributes[attributeName]);
+                     attributes[attributeName] = getResourceUrl('' + attributes[attributeName]);
                   }
                }
             }
