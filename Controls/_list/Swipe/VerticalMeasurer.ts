@@ -11,8 +11,8 @@ const breakpoints: Record<
    }
 > = {
    bottom: {
-      lowerBound: 42,
-      upperBound: 52
+      lowerBound: 46,
+      upperBound: 64
    },
    right: {
       lowerBound: 24,
@@ -42,7 +42,7 @@ function getItemActionsSize(
    }
 
    const x =
-      (rowHeight - MIN_SPACING - (MIN_SPACING + 1) * (countOfActions - 1)) / countOfActions;
+      (rowHeight - (countOfActions - 1)) / countOfActions;
 
    if (x < breakpoints[actionCaptionPosition].lowerBound) {
       return getItemActionsSize(countOfActions - 1, rowHeight, actionCaptionPosition);

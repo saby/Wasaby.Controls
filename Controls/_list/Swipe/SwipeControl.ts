@@ -105,7 +105,7 @@ export default class SwipeControl extends Control {
    }
 
    private _needHorizontalRecalc(swipeConfig: ISwipeConfig): boolean {
-      return (swipeConfig.itemActions.showed.length === 1 && swipeConfig.itemActions.all.length > 1);
+      return (swipeConfig.itemActions.showed && swipeConfig.itemActions.showed.length === 1 && swipeConfig.itemActions.all.length > 1);
    }
 
    private _setMeasurer(actionAlignment: 'horizontal' | 'vertical' = 'horizontal'): void {

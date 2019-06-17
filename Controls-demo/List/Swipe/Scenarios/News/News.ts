@@ -34,12 +34,30 @@ export default class News extends Control {
          authorPhoto: cConstants.resourceRoot + 'Controls-demo/resources/images/development.png',
          author: 'Суконина М.',
          orgName: 'Организация разработки',
-         date: 'сегодня 12:30',
+         date: 'сегодня 12:31',
          title: 'Опубликован план выпуска на ноябрь 2018',
          text: 'ссылка\nв две строки',
          isNew: true
       }, {
          id: 3,
+         authorPhoto: cConstants.resourceRoot + 'Controls-demo/resources/images/development.png',
+         author: 'Суконина М.',
+         orgName: 'Организация разработки',
+         date: 'сегодня 12:33',
+         title: 'Маленькая новость',
+         text: '',
+         isNew: true
+      }, {
+         id: 4,
+         authorPhoto: cConstants.resourceRoot + 'Controls-demo/resources/images/development.png',
+         author: 'Суконина М.',
+         orgName: 'Организация разработки',
+         date: 'сегодня 12:30',
+         title: 'Опубликован план выпуска на ноябрь 2017',
+         text: 'текст\nв\nцелых\nпять\nстрок',
+         isNew: true
+      }, {
+         id: 5,
          authorPhoto: cConstants.resourceRoot + 'Controls-demo/resources/images/golubev.png',
          author: 'Голубев А.',
          orgName: 'HL/HA',
@@ -49,7 +67,7 @@ export default class News extends Control {
          banner: cConstants.resourceRoot + 'Controls-demo/resources/images/banner.jpg',
          isNew: false
       }, {
-         id: 4,
+         id: 6,
          authorPhoto: cConstants.resourceRoot + 'Controls-demo/resources/images/sbis.png',
          author: 'Гребенкина А.',
          orgName: 'Тензор Ярославль',
