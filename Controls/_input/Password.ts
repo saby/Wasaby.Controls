@@ -16,7 +16,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @public
        * @demo Controls-demo/Input/Password/PasswordPG
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       /**
@@ -52,6 +52,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
          _getViewModelOptions: function(options) {
             return {
+               readOnly: options.readOnly,
                autoComplete: options.autoComplete,
                passwordVisible: this._passwordVisible
             };

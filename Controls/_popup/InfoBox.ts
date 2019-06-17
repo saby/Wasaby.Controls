@@ -4,6 +4,7 @@ import InfoBoxOpener from './Opener/InfoBox');
 import {TouchContextField} from 'Controls/context';
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
+import entity = require('Types/entity');
 
 
       /**
@@ -238,8 +239,8 @@ import Env = require('Env/Env');
 
          _startOpeningPopup: function() {
             var self = this;
-
-            clearTimeout(this._closeId);
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+            _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
                self._open();
@@ -310,8 +311,19 @@ import Env = require('Env/Env');
             isTouch: TouchContextField
          };
       };
+      InfoBox.getOptionTypes = function() {
+         return {
+            trigger: entity.descriptor(String).oneOf([
+               'hover',
+               'click',
+               'hover|touch',
+               'demand'
+            ])
+         };
+      };
 
-      InfoBox.getDefaultOptions = function() {
+
+InfoBox.getDefaultOptions = function() {
          return {
             targetSide: 'top',
             alignment: 'start',

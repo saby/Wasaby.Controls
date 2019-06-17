@@ -20,25 +20,10 @@ define('Controls-demo/Example/Input',
       'css!Controls-demo/Example/resource/Base'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
          _template: template,
 
-         headJson: null,
-
-         _beforeMount: function() {
-            this.headJson = [
-               ['link',
-                  {
-                     rel: 'stylesheet',
-                     type: 'text/css',
-                     href: '/materials/resources/SBIS3.CONTROLS/themes/online/online.css'
-                  }
-               ]
-            ];
-         }
       });
-   }
-);
+   });

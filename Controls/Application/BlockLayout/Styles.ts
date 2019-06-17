@@ -32,5 +32,5 @@
  * @css @background_BlockLayout_block_style_6 Background of the block in the 6 style.
  *
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */

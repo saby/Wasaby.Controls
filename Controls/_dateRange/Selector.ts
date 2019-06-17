@@ -1,5 +1,7 @@
+import {detection} from 'Env/Env';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import isEmpty = require('Core/helpers/Object/isEmpty');
 import ILinkView from './interfaces/ILinkView';
 import IInputSelectable from './interfaces/IInputSelectable';
 import DateRangeModel from './DateRangeModel';
@@ -44,12 +46,24 @@ var Component = BaseControl.extend({
         this._rangeModel.update(options);
     },
 
-
     _openDialog: function (event) {
-        this._children.opener.open({
+        const quantum = this._options.quantum;
+        let className = 'controls-DatePopup__selector-marginTop ';
+
+        if (this._options.selectionType !== 'single' &&
+            (!quantum || (isEmpty(quantum) ||
+                (('months' in quantum || 'quarters' in quantum || 'halfyears' in quantum || 'years' in quantum) &&
+                    ('days' in quantum || 'weeks' in quantum)))) &&
+            (!this._options.minRange || this._options.minRange  === 'day')) {
+            className += 'controls-DatePopup__selector-marginLeft';
+        } else {
+            className += 'controls-DatePopup__selector-marginLeft-withoutModeBtn';
+        }
+        const cfg = {
             opener: this,
             target: this._container,
-            className: 'controls-PeriodDialog__picker',
+            template: 'Controls/datePopup',
+            className,
             isCompoundTemplate: true,
             horizontalAlign: {side: 'right'},
             corner: {horizontal: 'left'},
@@ -63,14 +77,24 @@ var Component = BaseControl.extend({
                 headerType: 'link',
                 captionFormatter: this._options.captionFormatter,
                 closeButtonEnabled: true,
-                quantum: this._options.ranges,
-                minQuantum: this._options.minRange,
-                rangeselect: true,
-                handlers: {
-                    onChoose: this._onResultWS3.bind(this)
-                }
+                selectionType: this._options.selectionType,
+                ranges: this._options.ranges,
+                minRange: this._options.minRange
             }
-        });
+        };
+
+        // TODO problems with ie in datePopup will be solved by the task
+        //  https://online.sbis.ru/opendoc.html?guid=b2e54e78-8dae-4206-8647-559822d3d8e6
+        if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
+            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.isCompoundTemplate = true;
+            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
+            cfg.templateOptions.rangeselect = true;
+            cfg.templateOptions.minQuantum = this._options.minRange;
+            cfg.templateOptions.quantum = this._options.ranges;
+        }
+        this._children.opener.open(cfg);
+
     },
     _onResultWS3: function (event, startValue, endValue) {
         this._onResult(startValue, endValue);

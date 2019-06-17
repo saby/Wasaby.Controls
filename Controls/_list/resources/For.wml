@@ -1,6 +1,5 @@
 <ws:template name="itemOutputLocalTemplate">
    <ws:partial
-      __noDirtyChecking="{{true}}"
       template="{{itemOutputWrapper}}"
       itemOutputWrapper="{{itemOutputWrapper}}"
       listModel="{{listModel}}"
@@ -15,7 +14,6 @@
 <ws:template name="groupOutputLocalTemplate">
    <ws:partial
       template="{{groupTemplate}}"
-      __noDirtyChecking="{{true}}"
       on:click="_onGroupClick(listModel.getCurrent().dispItem)"
       itemData="{{listModel.getCurrent()}}"/>
    {{listModel.goToNext();}}

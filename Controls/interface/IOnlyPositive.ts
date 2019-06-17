@@ -1,7 +1,7 @@
 /**
  * @interface Controls/interface/IOnlyPositive
  * @public
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 interface IOnlyPositive {
     readonly _options: {

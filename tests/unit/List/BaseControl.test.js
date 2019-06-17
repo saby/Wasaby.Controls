@@ -231,23 +231,15 @@ define([
       });
 
       it('_private::getSortingOnChange', function() {
-         var getEmptySorting = function() {
-            return [];
-         };
-         var getSortingASC = function() {
-            return [{test: 'ASC'}];
-         };
-         var getSortingDESC = function() {
-            return [{test: 'DESC'}];
-         };
-         var getMultiSorting = function() {
-            return [{test: 'DESC'}, {test2: 'DESC'}];
-         };
+         const emptySorting = [];
+         const sortingASC = [{test: 'ASC'}];
+         const sortingDESC = [{test: 'DESC'}];
+         const multiSorting = [{test: 'DESC'}, {test2: 'DESC'}];
 
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(emptySorting, 'test'), sortingDESC);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingDESC, 'test'), sortingASC);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
+         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
 

@@ -3,7 +3,7 @@ import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
 import ViewModel = require('Controls/_input/Base/ViewModel');
@@ -15,6 +15,7 @@ import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
+
 import 'wml!Controls/_input/Base/Stretcher';
 
       var _private = {
@@ -363,7 +364,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        * @public
        * @demo Controls-demo/Input/Base/Base
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       var Base = Control.extend({
@@ -640,9 +641,24 @@ import 'wml!Controls/_input/Base/Stretcher';
          },
 
          _keyDownHandler: function(e) {
-            // поле ввода само обрабатывает нажатия home и end (перевод карретки), нужно стопнуть,
-            // чтобы не было обработано действием по умолчанию (не было прокрутки скроллконтейнера)
-            if (e.nativeEvent.keyCode === Env.constants.key.home || e.nativeEvent.keyCode === Env.constants.key.end) {
+            const processedKeys: number[] = [
+               Env.constants.key.end,
+               Env.constants.key.home,
+               Env.constants.key.up,
+               Env.constants.key.left,
+               Env.constants.key.down,
+               Env.constants.key.right
+            ];
+
+            /*
+             The keys processed by the input field should not handle the controls above.
+             To do this, stop the bubbling of the event.
+             */
+            /**
+             * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
+             * Для этого останавливаем всплытие события.
+             */
+            if (processedKeys.includes(e.nativeEvent.keyCode)) {
                e.stopPropagation();
             }
          },
@@ -889,8 +905,8 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @private
           */
          _getTooltip: function() {
-            var valueDisplayElement = this._options.readOnly ? this._getReadOnlyField() : this._getField();
-            var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
+            const valueDisplayElement: HTMLElement = this._getField() || this._getReadOnlyField();
+            const hasFieldHorizontalScroll: boolean = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
@@ -1012,4 +1028,4 @@ import 'wml!Controls/_input/Base/Stretcher';
       };
 
       export = Base;
-   
+
