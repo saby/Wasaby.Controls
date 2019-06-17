@@ -144,6 +144,10 @@ var moduleClass = CompoundControl.extend({
 
          }
          this.popupBeforeDestroyed();
+         if (this._vDomTemplate.hasRegisteredPendings()) {
+            event.setResult(false);
+            this._finishPendingOperations();
+         }
       }
    },
 
@@ -204,11 +208,13 @@ var moduleClass = CompoundControl.extend({
    _onResizeHandler: function() {
       this._notifyOnSizeChanged();
    },
-   _onCloseHandler: function() {
-      var self = this;
-      this._vDomTemplate.finishPendingOperations().addCallback(function() {
-         self.sendCommand('close', this._result);
-         self._result = null;
+   _onCloseHandler(): void {
+      this._finishPendingOperations();
+   },
+   _finishPendingOperations(): void {
+      this._vDomTemplate.finishPendingOperations().addCallback(() => {
+         this.sendCommand('close', this._result);
+         this._result = null;
       });
    },
    _callCloseHandler: function() {
