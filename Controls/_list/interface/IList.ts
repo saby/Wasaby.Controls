@@ -306,6 +306,13 @@
  * @param {Types/entity:Record} item Запись, по которой производим клик. 
  */
 
+ /*
+ * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {eventObject} event Event object.
+ * @param {Types/entity:Record} item Clicked item. 
+ */
+
 /**
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
