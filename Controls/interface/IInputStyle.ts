@@ -10,7 +10,7 @@ interface IInputStyle {
     readonly _options: {
         /**
          * @name Controls/interface/IInputStyle#style
-         * @cfg {String} Display style of the field.
+         * @cfg {Enum} Display style of the field.
          * @variant info - information field display style.
          * @variant invalid - the display style of the field with invalid value.
          * @variant danger - the display style of the field with danger.
