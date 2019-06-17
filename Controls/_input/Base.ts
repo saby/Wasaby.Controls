@@ -364,7 +364,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        * @public
        * @demo Controls-demo/Input/Base/Base
        *
-       * @author Журавлев М.С.
+       * @author Krasilnikov A.S.
        */
 
       var Base = Control.extend({
@@ -641,9 +641,24 @@ import 'wml!Controls/_input/Base/Stretcher';
          },
 
          _keyDownHandler: function(e) {
-            // поле ввода само обрабатывает нажатия home и end (перевод карретки), нужно стопнуть,
-            // чтобы не было обработано действием по умолчанию (не было прокрутки скроллконтейнера)
-            if (e.nativeEvent.keyCode === Env.constants.key.home || e.nativeEvent.keyCode === Env.constants.key.end) {
+            const processedKeys: number[] = [
+               Env.constants.key.end,
+               Env.constants.key.home,
+               Env.constants.key.up,
+               Env.constants.key.left,
+               Env.constants.key.down,
+               Env.constants.key.right
+            ];
+
+            /*
+             The keys processed by the input field should not handle the controls above.
+             To do this, stop the bubbling of the event.
+             */
+            /**
+             * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
+             * Для этого останавливаем всплытие события.
+             */
+            if (processedKeys.includes(e.nativeEvent.keyCode)) {
                e.stopPropagation();
             }
          },

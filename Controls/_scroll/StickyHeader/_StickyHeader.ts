@@ -77,12 +77,11 @@ var StickyHeader = Control.extend({
          position: this._options.position,
          mode: this._options.mode
       }, true], { bubbling: true });
-
       this._observer = new IntersectionObserver(this._observeHandler);
       this._model = new Model({
          topTarget: children.observationTargetTop,
          bottomTarget: children.observationTargetBottom,
-         position: this._options.position
+         position: this._options.position,
       });
 
       this._observer.observe(children.observationTargetTop);
@@ -199,15 +198,28 @@ var StickyHeader = Control.extend({
       offset = this._isMobilePlatform ? 1 : 0;
 
       if (this._options.position.indexOf('top') !== -1) {
+         // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
+         // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
+         const offsetTop = this._options.offsetTop;
          top = this._stickyHeadersHeight.top;
+
+         if (offsetTop) {
+            top = offsetTop + top;
+         }
+
          if (this._context.stickyHeader) {
             top += this._context.stickyHeader.top;
          }
+
          style += 'top: ' + (top - offset)  + 'px;';
       }
 
       if (this._options.position.indexOf('bottom') !== -1) {
          bottom = this._stickyHeadersHeight.bottom;
+         const offsetBottom = this._options.offsetBottom;
+         if (offsetBottom) {
+            bottom += offsetBottom;
+         }
          if (this._context.stickyHeader) {
             bottom += this._context.stickyHeader.bottom;
          }
@@ -223,6 +235,7 @@ var StickyHeader = Control.extend({
 
          style += 'z-index: ' + this._options.fixedZIndex + ';';
       }
+
       return style;
    },
 
@@ -230,7 +243,12 @@ var StickyHeader = Control.extend({
       // The top observer has a height of 1 pixel. In order to track when it is completely hidden
       // beyond the limits of the scrollable container, taking into account round-off errors,
       // it should be located with an offset of -3 pixels from the upper border of the container.
-      return position + ': -' + (this._stickyHeadersHeight[position] + 3) + 'px;';
+      let coord = this._stickyHeadersHeight[position] + 3;
+      if (position === 'top' && this._options.offsetTop && this._options.shadowVisibility === 'visible') {
+         coord += this._options.offsetTop;
+      }
+      return position + ': -' + coord + 'px;';
+
    },
 
    _updateStickyShadow: function(e, ids) {
@@ -246,8 +264,8 @@ var StickyHeader = Control.extend({
       var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
 
       return (!this._context.stickyHeader || this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
-         this._model && this._model.fixedPosition === fixedPosition && this._options.shadowVisibility === 'visible' &&
-         (this._options.mode === 'stackable' || this._shadowVisible);
+          (this._model && this._model.fixedPosition === fixedPosition) && this._options.shadowVisibility === 'visible' &&
+          (this._options.mode === 'stackable' || this._shadowVisible);
    }
 });
 
@@ -265,6 +283,7 @@ StickyHeader.getDefaultOptions = function() {
       //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
       fixedZIndex: 2,
       shadowVisibility: 'visible',
+      backgroundVisible: true,
       mode: 'replaceable',
       position: 'top'
    };
@@ -276,6 +295,7 @@ StickyHeader.getOptionTypes = function() {
          'visible',
          'hidden'
       ]),
+      backgroundVisible: entity.descriptor(Boolean),
       mode: entity.descriptor(String).oneOf([
          'replaceable',
          'stackable'

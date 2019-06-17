@@ -16,7 +16,7 @@ import 'Controls/form';
     * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
     *
     *
-    * @class Controls/_filterPopup/Panel
+    * @class Controls/_filterPopup/DetailPanel
     * @extends Core/Control
     * @mixes Controls/interface/IFilterPanel
     * @demo Controls-demo/Filter/Button/panelOptions/panelPG
@@ -30,7 +30,7 @@ import 'Controls/form';
     */
 
    /**
-    * @event Controls/_filterPopup/Panel#sendResult Happens when clicking the button "Select".
+    * @event Controls/_filterPopup/DetailPanel#sendResult Happens when clicking the button "Select".
     * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
     * @param {Object} items items
     */

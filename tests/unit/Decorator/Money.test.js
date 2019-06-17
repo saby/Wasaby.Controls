@@ -73,6 +73,19 @@ define(
                fraction: '.00'
             });
          });
+         it('isDisplayFractionPath', function() {
+            result = decorator.Money.prototype._isDisplayFractionPath('.00', false);
+            assert.equal(result, false);
+
+            result = decorator.Money.prototype._isDisplayFractionPath('.10', false);
+            assert.equal(result, true);
+
+            result = decorator.Money.prototype._isDisplayFractionPath('.00', true);
+            assert.equal(result, true);
+
+            result = decorator.Money.prototype._isDisplayFractionPath('.10', true);
+            assert.equal(result, true);
+         });
       });
    }
 );

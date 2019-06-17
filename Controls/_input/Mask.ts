@@ -126,6 +126,14 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
             _maskWrapperCss: null,
 
+            _beforeUpdate: function(newOptions) {
+               let oldValue = this._viewModel.value;
+               Mask.superclass._beforeUpdate.apply(this, arguments);
+               if (newOptions.value !== oldValue) {
+                  this._viewModel.setCarriageDefaultPosition(0);
+               }
+            },
+
             _getViewModelOptions: function(options) {
                return {
                   value: options.value,
@@ -145,7 +153,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
             _focusInHandler: function() {
                Mask.superclass._focusInHandler.apply(this, arguments);
-               this._viewModel.setCarriageDefaultPosition();
+               this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
             }
          });
 

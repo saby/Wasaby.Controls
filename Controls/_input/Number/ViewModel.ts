@@ -9,7 +9,7 @@ import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant
 /**
  * @class Controls/_input/Number/ViewModel
  * @private
- * @author Журавлев М.С.
+ * @author Krasilnikov A.S.
  */
 
 const _private = {

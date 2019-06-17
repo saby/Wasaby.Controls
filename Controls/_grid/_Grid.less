@@ -45,8 +45,12 @@
 }
 
 .controls-Grid__header-cell__content {
-   display: inline-block;
-   min-height: @min-height_Grid-header;
+   box-sizing: border-box;
+   min-height: @min-height_Grid-multy-header;
+   display: flex;
+   justify-content: flex-start;
+   align-items: flex-end;
+   flex: 1;
 }
 
 .controls-Grid__row-header__content_baseline:before {
@@ -370,8 +374,8 @@
 }
 
 .controls-Grid__row-cell_selected-master {
-   background-color: @background-color_List-masterList-item_selected;
    z-index: 1;
+   background-color: @background-color_List-masterList-item_selected;
    /* Пока нет фикс шапок
    position: sticky;
    top: 0;
@@ -418,3 +422,42 @@
    position: sticky;
    right: 0;
 }
+
+.controls-Grid__cell_header-content_border-bottom {
+   border-bottom: @height_Grid-row-separator solid @border-color_Grid-lastRow-separator;
+}
+.controls-Grid__cell_header-content_border-transparent {
+   border-bottom: @height_Grid-row-separator solid transparent;
+}
+.control-Grid__cell_header-nowrap {
+   white-space: nowrap;
+}
+
+.controls-Grid__cell_header-relative {
+   position: relative;
+}
+
+.controls-Grid__header-cell_justify_content_left {
+   justify-content: flex-start;
+}
+
+.controls-Grid__header-cell_justify_content_right {
+   justify-content: flex-end;
+}
+
+.controls-Grid__header-cell_justify_content_center {
+   justify-content: center;
+}
+
+.controls-Grid__header-cell_align_items_top {
+   align-items: flex-start;
+}
+
+.controls-Grid__header-cell_align_items_bottom {
+   align-items: flex-end;
+}
+
+.controls-Grid__header-cell_align_items_center {
+   align-items: center;
+}
+
