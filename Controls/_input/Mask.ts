@@ -1,7 +1,7 @@
 import Env = require('Env/Env');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Base = require('Controls/_input/Base');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
@@ -126,6 +126,14 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
             _maskWrapperCss: null,
 
+            _beforeUpdate: function(newOptions) {
+               let oldValue = this._viewModel.value;
+               Mask.superclass._beforeUpdate.apply(this, arguments);
+               if (newOptions.value !== oldValue) {
+                  this._viewModel.setCarriageDefaultPosition(0);
+               }
+            },
+
             _getViewModelOptions: function(options) {
                return {
                   value: options.value,
@@ -145,7 +153,7 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
             _focusInHandler: function() {
                Mask.superclass._focusInHandler.apply(this, arguments);
-               this._viewModel.setCarriageDefaultPosition();
+               this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
             }
          });
 

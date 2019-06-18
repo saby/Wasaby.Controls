@@ -2,7 +2,7 @@ import {factory} from 'Types/chain';
 import collection = require('Types/collection');
 import Utils = require('Types/util');
 
-var differentFields = ['name', 'id', 'viewMode', 'visibility'];
+var differentFields = ['name', 'id', 'visibility'];
 
 function convertToFilterSource(detailPanelItems) {
     var filterSource = [];

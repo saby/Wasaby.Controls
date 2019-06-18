@@ -52,7 +52,18 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       return controller;
    };
 
+   var sandbox;
+
    describe('Controls/_search/Controller', function() {
+
+      beforeEach(function() {
+         sandbox = sinon.createSandbox();
+      });
+
+      afterEach(function() {
+         sandbox.restore();
+      });
+
 
       it('_private.searchCallback', function() {
          var controller = getSearchController();
@@ -82,7 +93,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
-         assert.isFalse(!!isBubbling)
+         assert.isFalse(!!isBubbling);
          assert.equal(controller._viewMode, 'search');
          assert.equal(controller._previousViewMode, 'tile');
          assert.equal(controller._searchValue, 'testFilterValue');
@@ -114,32 +125,33 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
       it('_private.abortCallback', function() {
          var controller = getSearchController();
-         var filterChanged = false;
-         var filter = { 'Разворот': 'С разворотом', 'usePages': 'full' };
+         var filter = { 'Разворот': 'С разворотом', 'usePages': 'full', test: 'test' };
 
          controller._viewMode = 'search';
          controller._misspellValue = 'testStr';
          controller._loading = true;
          controller._searchValue = 'test';
          controller._options.parentProperty = 'test';
+         controller._options.filter = { 'Разворот': 'С разворотом', 'usePages': 'full', test: 'test', searchParam: 'testValue' };
 
-         controller._notify = function(eventName) {
-            if (eventName = 'filterChanged') {
-               filterChanged = true;
-            }
-         };
+         const stubNotify = sandbox.stub(controller, '_notify');
 
          controller._searchContext = { updateConsumers: function() {} };
 
          searchMod.Controller._private.abortCallback(controller, filter);
 
-         assert.isTrue(filterChanged);
+         assert.isTrue(stubNotify.calledOnce);
          assert.isTrue(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, '');
-         assert.deepEqual(filter, {});
+         assert.deepEqual(filter, {test: 'test'});
+
+         controller._options.filter = { test: 'test' };
+         searchMod.Controller._private.abortCallback(controller, filter);
+         assert.isTrue(stubNotify.calledOnce);
+         assert.deepEqual(filter, {test: 'test'});
       });
 
       it('_private.dataLoadCallback', function() {
@@ -236,12 +248,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(searchController._inputSearchValue, 'test');
       });
 
-      it('_beforeMount', function() {
+      describe('_beforeMount', function() {
          var searchController = getSearchController(defaultOptions);
-         searchController._beforeMount({ searchValue: 'test', root: 'test' }, {dataOptions: defaultOptions});
 
-         assert.equal(searchController._inputSearchValue, 'test');
-         assert.equal(searchController._root, 'test');
+         it('without option searchValue', function() {
+            searchController._beforeMount({root: 'test', viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._root, 'test');
+            assert.equal(searchController._viewMode, 'notSearch');
+         });
+
+         it('with option searchValue', function() {
+            searchController._beforeMount({searchValue: 'test2', root: 'test2', viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._inputSearchValue, 'test2');
+            assert.equal(searchController._root, 'test2');
+            assert.equal(searchController._previousViewMode, 'notSearch');
+            assert.equal(searchController._viewMode, 'search');
+         })
       });
 
       it('_beforeUpdate', function() {

@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
 import template = require('wml!Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams');
 import chain = require('Types/chain');

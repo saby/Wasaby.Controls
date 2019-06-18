@@ -41,14 +41,14 @@
          top = this._getTopCoord(windowData, height || containerSizes.height);
 
          return {
-            width: width,
-            height: height,
+            width,
+            height,
             maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
             minHeight: popupOptions.minHeight,
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width),
             minWidth: popupOptions.minWidth,
-            left: left,
-            top: top
+            left: left + (windowData.scrollLeft || 0),
+            top: top + (windowData.scrollTop || 0)
          };
       },
       _calculateValue: function(popupOptions, containerValue, windowValue, popupValue) {
@@ -63,8 +63,7 @@
       },
 
       _getTopCoord: function(windowData, height) {
-         var coord = Math.round((windowData.height - height) / 2) + windowData.scrollTop;
-         return Math.max(coord, windowData.scrollTop);
+         return Math.round((windowData.height - height) / 2);
       }
    };
 

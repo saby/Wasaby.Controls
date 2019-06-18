@@ -338,6 +338,12 @@ define(
                assert.deepStrictEqual(view._source[1].value, [2]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In progress', title: 'In progress', hasMoreText: ''}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [2]});
+
+               eventResult.selectedKeys = [null];
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[1].value, defaultSource[1].resetValue);
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
+               assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
             });
 
             it('_resultHandler applyClick', function() {

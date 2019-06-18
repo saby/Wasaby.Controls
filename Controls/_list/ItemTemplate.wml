@@ -47,7 +47,7 @@
 </ws:template>
 <ws:if data="{{itemData.isSticky}}">
    <ws:partial template="itemOutputTpl">
-      <Controls.scroll:StickyHeader position="topbottom">
+      <Controls.scroll:StickyHeader position="topbottom" backgroundVisible="{{false}}">
          <ws:partial template="itemContentTpl"/>
       </Controls.scroll:StickyHeader>
    </ws:partial>
