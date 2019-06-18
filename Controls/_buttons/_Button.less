@@ -193,6 +193,23 @@
 .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
    background-color: @background-color_button_toolButton;
 }
+.ws-is-no-touch {
+  .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-contrast_theme-@{themeName} {
+    background-color: @hover_background-color_contrast_button_toolButton;
+  }
+  .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
+    background-color: @hover_background-color_button_toolButton;
+  }
+}
+.ws-is-no-touch, .ws-is-touch {
+  .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-contrast_theme-@{themeName} {
+    background-color: @active_background-color_contrast_button_toolButton;
+  }
+  .controls-Button_toolButton_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
+    background-color: @active_background-color_button_toolButton;
+  }
+}
+
 .controls-Button_button_xs_theme-@{themeName} {
    border-radius: @border-radius_xs_button;
 }
