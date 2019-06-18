@@ -702,6 +702,49 @@ define([
          assert.equal(5, instance.getViewModel()._stopIndex);
       });
 
+      it('virtual scroll shouldn\'t update indexes on reload', async function() {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let
+             isIndexesUpdated = false,
+             virtualScroll = instance.getVirtualScroll(),
+             updateIndexes = virtualScroll.updateItemsIndexes,
+             vm = instance.getViewModel();
+
+         instance.getVirtualScroll().updateItemsIndexes = function () {
+            isIndexesUpdated = true;
+            updateIndexes.apply(virtualScroll, arguments);
+         };
+
+         await instance.reload();
+         assert.isFalse(isIndexesUpdated);
+         assert.equal(vm._startIndex, 0);
+         assert.equal(vm._stopIndex, 6);
+         assert.isFalse(isIndexesUpdated);
+
+      });
+
       it('enterHandler', function () {
         var notified = false;
 
