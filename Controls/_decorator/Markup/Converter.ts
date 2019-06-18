@@ -122,11 +122,11 @@ import { IoC } from 'Env/Env';
          result;
       div.innerHTML = wrapUrl(html).trim();
       hasRootTag = div.innerHTML[0] === '<';
-      result = nodeToJson(div);
-      if (hasRootTag || !div.innerHTML) {
-         result = result.slice(1);
-      } else {
-         result[0] = [];
+      result = nodeToJson(div).slice(1);
+      if (!hasRootTag && div.innerHTML) {
+         // In this case, array will begin with a string that is not tag name, what is incorrect.
+         // Empty json in the beginning will fix it.
+         result.unshift([]);
       }
       div = null;
 
