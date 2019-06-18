@@ -136,22 +136,15 @@ var _private = {
         let isExpandAll: boolean;
 
         if (baseControl) {
-            let viewModel = baseControl.getViewModel();
-            let items = viewModel.getItems();
-            let item = items && items.at(0);
-            let expandedItems = viewModel.getExpandedItems();
-            let typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
-
-            if (!isEmpty(expandedItems)) {
-                for (var i in expandedItems) {
-                    if (expandedItems.hasOwnProperty(i)) {
-                        expandedItemsKeys.push(typeFunction(expandedItems[i]));
-                    }
-                }
-            }
+            const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
+            if (!isExpandAll) {
+                viewModel.getExpandedItems().forEach((key) => {
+                    expandedItemsKeys.push(key);
+                });
+            }
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
-                if (expandedItemsKeys.indexOf(typeFunction(node)) === -1) {
+                if (expandedItemsKeys.indexOf(node) === -1) {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
