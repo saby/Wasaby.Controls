@@ -16,6 +16,7 @@
  * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
+ * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
  * @public
  * @author Kraynov D.
  */
