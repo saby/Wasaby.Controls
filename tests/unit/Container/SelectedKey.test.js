@@ -61,8 +61,10 @@ define(
             assert.deepEqual(resultKeys, []);
             resultKeys = source.SelectedKey._private.getSelectedKeys('testKey');
             assert.deepEqual(resultKeys, ['testKey']);
-            resultKeys = source.SelectedKey._private.getSelectedKeys(null, items);
-            assert.deepEqual(resultKeys, [null]);
+            resultKeys = source.SelectedKey._private.getSelectedKeys(null);
+            assert.deepEqual(resultKeys, []);
+            resultKeys = source.SelectedKey._private.getSelectedKeys(undefined);
+            assert.deepEqual(resultKeys, []);
          });
          it('_private::dataLoadCallbackHandler', function() {
             let sKeyContainer = new source.SelectedKey(),
