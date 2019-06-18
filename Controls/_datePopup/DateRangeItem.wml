@@ -24,7 +24,7 @@
          >
          <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
                      _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
-               on:click="_monthCaptionClick(month)">
+               on:click="_monthCaptionClick(date, month)">
             {{ _formatMonth(month) }}
          </div>
          <Controls.calendar:MonthView
