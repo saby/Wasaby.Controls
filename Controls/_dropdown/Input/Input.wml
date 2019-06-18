@@ -13,6 +13,7 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"
+        historyId="{{_options.historyId}}"
         groupingKeyCallback="{{_options.groupingKeyCallback}}"
         groupTemplate="{{_options.groupTemplate}}"
         filter="{{_options.filter}}"
