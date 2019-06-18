@@ -795,6 +795,8 @@ var _private = {
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
+                   groupTemplate: self._options.groupTemplate,
+                   groupingKeyCallback: self._options.groupingKeyCallback,
                    rootKey: action.id,
                    showHeader: true,
                    dropdownClassName: 'controls-itemActionsV__popup',

@@ -237,10 +237,12 @@ var _private = {
             opener: self,
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
-            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme +' ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,
                 rootKey: item.get(self._options.keyProperty),
+                groupTemplate: self._options.groupTemplate,
+                groupingKeyCallback: self._options.groupingKeyCallback,
                 showHeader: item.get('showHeader'),
                 headConfig: {
                     icon: _icon,
