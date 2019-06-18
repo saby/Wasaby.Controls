@@ -443,8 +443,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 if (prev.getId) {
                     this.updateMarker(prev.getId());
                 } else {
-                    var curenMarkerIndex = this.getIndexByKey(this._markedKey) === -1;
-                    if (this._markedKey) {
+                    var curenMarkerIndex = this.getIndexByKey(this._markedKey);
+                    if (this._markedKey && curenMarkerIndex === -1) {
                         this.updateMarker(this.getPreviousItem(removedItemsIndex));
                     }
                 }
