@@ -6,7 +6,10 @@ define('Controls-demo/List/List/GroupPG',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/List/resources/GroupPG/cfg',
-      'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate'
+      'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate',
+      'wml!Controls-demo/List/List/resources/GroupPG/withOutExpander',
+      'wml!Controls-demo/List/List/resources/GroupPG/leftTextAlign',
+      'wml!Controls-demo/List/List/resources/GroupPG/rightTextAlign'
    ],
 
    function(Control, sourceLib, ControlsConstants, data, template, config) {
@@ -31,7 +34,10 @@ define('Controls-demo/List/List/GroupPG',
                   value: 'default',
                   items: [
                      {id: 1, title: 'default', template: 'Controls/list:GroupTemplate'},
-                     {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate'}
+                     {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate'},
+                     {id: 3, title: 'without expander', template: 'wml!Controls-demo/List/List/resources/GroupPG/withOutExpander'},
+                     {id: 4, title: 'with left text align', template: 'wml!Controls-demo/List/List/resources/GroupPG/leftTextAlign'},
+                     {id: 5, title: 'with right text align', template: 'wml!Controls-demo/List/List/resources/GroupPG/rightTextAlign'}
                   ]
                }
             };
