@@ -260,6 +260,12 @@ var
             this._nextModelVersion();
         },
 
+        setCollapsedItems: function(collapsedItems: Array<unknown>) {
+            this._collapsedItems = _private.prepareCollapsedItems(this._options.expandedItems, collapsedItems ? collapsedItems : []);
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextModelVersion();
+        },
+
         getExpandedItems: function() {
             return this._expandedItems;
         },
@@ -296,6 +302,7 @@ var
                     } else {
                         this._collapsedItems.push(itemId);
                     }
+                    this._notify('collapsedItemsChanged', this._collapsedItems);
                 } else if (this._options.singleExpand) {
                     _private.toggleSingleExpanded(this, itemId, parentId);
 

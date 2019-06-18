@@ -771,6 +771,8 @@ define([
       });
 
       it('expandedItems bindind 1', function(done){
+
+         //expandedItems задана, и после обновления контрола, должна соответствовать начальной опции
          setTimeout(()=>{
             var _cfg = {
                source: new sourceLib.Memory({
@@ -791,12 +793,12 @@ define([
 
             setTimeout(()=>{
                var treeGridViewModel1 = treeControl1._children.baseControl.getViewModel();
-               assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong3');
+               assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong expandedItems');
                treeControl1.toggleExpanded(1);
                setTimeout(()=>{
                   treeControl1._beforeUpdate(_cfg);
                   setTimeout(()=>{
-                     assert.deepEqual([1], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong4');
+                     assert.deepEqual([1], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
                      done();
                   }, 10);
                }, 10);
@@ -804,6 +806,8 @@ define([
          }, 10);
       });
       it('expandedItems binding 2', function(done){
+
+         //expandedItems не задана, и после обновления контрола, не должна измениться
          setTimeout(()=>{
             var _cfg = {
                source: new sourceLib.Memory({
@@ -823,18 +827,54 @@ define([
 
             setTimeout(()=>{
                var treeGridViewModel1 = treeControl1._children.baseControl.getViewModel();
-               assert.deepEqual([], treeGridViewModel1._model._expandedItems,'wrong3');
+               assert.deepEqual([], treeGridViewModel1._model._expandedItems,'wrong expandedItems');
                treeControl1.toggleExpanded(1);
                setTimeout(()=>{
                   treeControl1._beforeUpdate(_cfg);
                   setTimeout(()=>{
-                     assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong4');
+                     assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong expandedItems after _breforeUpdate');
                      done();
                   }, 10);
                }, 10);
             }, 10);
          }, 10);
 
+      });
+      it('collapsedItems bindind', function(done){
+
+         //collapsedItems задана, и после обновления контрола, должна соответствовать начальной опции
+         setTimeout(()=>{
+            var _cfg = {
+               source: new sourceLib.Memory({
+                  data: [
+                     { id: 1, type: true, parent: null },
+                     { id: 2, type: true, parent: null },
+                     { id: 11, type: null, parent: 1 }
+                  ],
+                  idProperty: 'id'
+               }),
+               columns: [],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               expandedItems: [null],
+               collapsedItems: []
+            };
+            var treeControl1 = correctCreateTreeControl(_cfg);
+
+            setTimeout(()=>{
+               var treeGridViewModel1 = treeControl1._children.baseControl.getViewModel();
+               assert.deepEqual([], treeGridViewModel1._model._collapsedItems,'wrong collapsedItems');
+               treeControl1.toggleExpanded(1);
+               setTimeout(()=>{
+                  treeControl1._beforeUpdate(_cfg);
+                  setTimeout(()=>{
+                     assert.deepEqual([], treeControl1._children.baseControl.getViewModel()._model._collapsedItems,'wrong collapsedItems after _breforeUpdate');
+                     done();
+                  }, 10);
+               }, 10);
+            }, 10);
+         }, 10);
       });
       it('markItemByExpanderClick true', function() {
          var
