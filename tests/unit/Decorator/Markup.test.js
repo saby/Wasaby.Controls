@@ -143,7 +143,9 @@ define([
             }
          });
          it('no first tag', function() {
-            var html
+            var html = 'some text without tag <span>and some text in tag</span> dot';
+            var json = [[], 'some text without tag ', ['span', 'and some text in tag'], ' dot'];
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
          });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
