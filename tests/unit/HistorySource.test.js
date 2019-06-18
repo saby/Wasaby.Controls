@@ -263,6 +263,28 @@ define(
                assert.equal(historyItems.getFormat().getCount(), 10);
                hSource._history.pinned.removeAt(1);
             });
+            it('getItems', function(done) {
+               let historyConfig = {
+                  originSource: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: items
+                  }),
+                  historySource: new historyMod.Service({
+                     historyId: 'TEST_HISTORY_ID'
+                  }),
+                  parentProperty: 'parent'
+               };
+               let historySource = new historyMod.Source(historyConfig);
+               assert.isNull(historySource.getItems());
+
+               let query = new sourceLib.Query().where({
+                  $_history: true
+               });
+               historySource.query(query).addCallback(function() {
+                  assert.deepStrictEqual(historySource.getItems().getRawData(), items);
+                  done();
+               });
+            });
             it('check alphabet', function() {
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');

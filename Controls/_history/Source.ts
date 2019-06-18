@@ -455,8 +455,12 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       return self.originSource.query(query);
    },
 
-   getItems: function () {
-      return _private.getItemsWithHistory(this, this._history, this._oldItems);
+   getItems: function() {
+      if (this._history) {
+         return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      } else {
+         return this._oldItems;
+      }
    },
 
    resetHistoryFields: function(item, keyProperty) {
