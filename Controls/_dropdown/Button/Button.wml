@@ -1,6 +1,7 @@
 <div class="controls-MenuButton_theme_{{_options.theme}}">
    <Controls._dropdown._Controller
         source="{{_options.source}}"
+        historyId="{{_options.historyId}}"
         keyProperty="{{_options.keyProperty}}"
         parentProperty="{{_options.parentProperty}}"
         additionalProperty="{{_options.additionalProperty}}"
