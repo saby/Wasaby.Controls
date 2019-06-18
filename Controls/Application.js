@@ -330,9 +330,15 @@ define('Controls/Application',
             }
          },
 
-         _afterUpdate: function() {
+         _afterUpdate: function(oldOptions) {
             var elements = document.getElementsByClassName('head-title-tag');
             if (elements.length === 1) {
+               // Chrome на ios при вызове History.replaceState, устанавливает в title текущий http адрес.
+               // Если после загрузки установить title, который уже был, то он не обновится, и в заголовке вкладки
+               // останется http адрес. Поэтому сначала сбросим title, а затем положим туда нужное значение.
+               if (Env.detection.isMobileIOS && Env.detection.chrome && oldOptions.title === this._options.title) {
+                  elements[0].textContent = '';
+               }
                elements[0].textContent = this._options.title;
             }
          },
