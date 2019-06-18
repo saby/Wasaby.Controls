@@ -340,7 +340,9 @@ define(
          });
 
          it('_private.resolveOptions', function() {
-            var self = {};
+            var self = {
+               _options: {}
+            };
             var options = {
                filter: {},
                root: 'test',
@@ -348,9 +350,17 @@ define(
             };
 
             lists.DataContainer._private.resolveOptions(self, options);
-
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
             assert.isTrue(self._filter !== options.filter);
+
+
+            let filter = {test: 123};
+            self._options.filter = filter;
+            options.filter = filter;
+            lists.DataContainer._private.resolveOptions(self, options);
+            //if filter option was not changed, _filter from state will not updated by resolveOptions
+            assert.deepEqual(self._filter, {testParentProperty: 'test'});
+
          });
       });
    });
