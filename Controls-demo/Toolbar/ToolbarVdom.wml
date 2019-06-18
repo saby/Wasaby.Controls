@@ -2,6 +2,7 @@
    <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons):
       <Controls.toolbars:View
          name="myToolbar"
+         attr:id="Toolbar_3"
          parentProperty="parent"
          nodeProperty="@parent"
          keyProperty="id"
