@@ -108,8 +108,8 @@ var _private = {
 
    getFilterHistory: function (self, rawHistoryData) {
       var pinnedIds = this.getPinnedIds(rawHistoryData.pinned);
-      var frequentIds = this.getFrequentIds(self, rawHistoryData.frequent, rawHistoryData.pinned);
-      var recentIds = this.getRecentIds(self, rawHistoryData.recent, rawHistoryData.frequent, rawHistoryData.pinned, frequentIds.length);
+      var frequentIds = this.getFrequentIds(self, rawHistoryData.frequent, pinnedIds);
+      var recentIds = this.getRecentIds(self, rawHistoryData.recent, pinnedIds, frequentIds);
 
       return {
          pinned: pinnedIds,
@@ -128,18 +128,18 @@ var _private = {
       return pinnedIds;
    },
 
-   getFrequentIds: function(self, frequent, pinned) {
+   getFrequentIds: function(self, frequent, filteredPinned) {
       var frequentIds = [];
 
       // рассчитываем количество популярных пунктов
-      var maxCountFrequent = (Constants.MAX_HISTORY - pinned.getCount() - (self._recentCount > Constants.MIN_RECENT ? self._recentCount : Constants.MIN_RECENT));
+      var maxCountFrequent = (Constants.MAX_HISTORY - filteredPinned.length - Constants.MIN_RECENT);
       var countFrequent = 0;
       var item;
 
       frequent.forEach(function(element) {
          var id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countFrequent < maxCountFrequent && !pinned.getRecordById(id) && !item.get(self._nodeProperty)) {
+         if (countFrequent < maxCountFrequent && !filteredPinned.includes(id) && !item.get(self._nodeProperty)) {
             frequentIds.push(id);
             countFrequent++;
          }
@@ -147,16 +147,16 @@ var _private = {
       return frequentIds;
    },
 
-   getRecentIds: function(self, recent, frequent, pinned, filteredFrequentCount) {
+   getRecentIds: function(self, recent, filteredPinned, filteredFrequent) {
       var recentIds = [];
       var countRecent = 0;
-      var maxCountRecent = Constants.MAX_HISTORY - (pinned.getCount() + filteredFrequentCount);
+      var maxCountRecent = Constants.MAX_HISTORY - (filteredPinned.length + filteredFrequent.length);
       var item, id;
 
       recent.forEach(function (element) {
          id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countRecent < maxCountRecent && !pinned.getRecordById(id) && !frequent.getRecordById(id) && !item.get(self._nodeProperty)) {
+         if (countRecent < maxCountRecent && !filteredPinned.includes(id) && !filteredFrequent.includes(id) && !item.get(self._nodeProperty)) {
             recentIds.push(id);
             countRecent++;
          }
