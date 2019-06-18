@@ -142,6 +142,9 @@ define([
                this.skip();
             }
          });
+         it('no first tag', function() {
+            var html
+         });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
@@ -161,7 +164,7 @@ define([
                ]
             ]);
             assert.deepEqual(decorator.Converter.htmlToJson(''), []);
-            assert.deepEqual(decorator.Converter.htmlToJson('just a string'), ['just a string']);
+            assert.deepEqual(decorator.Converter.htmlToJson('just a string'), [[], 'just a string']);
          });
          it('trim', function() {
             var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
@@ -270,6 +273,7 @@ define([
          it('empty', function() {
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(), ''));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([[], 'some text']), '<div>some text</div>'));
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
