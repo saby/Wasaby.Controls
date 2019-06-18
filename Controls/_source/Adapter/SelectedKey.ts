@@ -14,7 +14,7 @@ import template = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey'
 
 var _private = {
    getSelectedKeys: function(selectedKey) {
-      return selectedKey === null ? [] : [selectedKey];
+      return (selectedKey === null || selectedKey === undefined) ? [] : [selectedKey];
    }
 };
 
