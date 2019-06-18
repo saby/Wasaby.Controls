@@ -10,6 +10,7 @@ import {
     getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
+
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
@@ -688,6 +689,7 @@ var
                );
             }
 
+
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -699,6 +701,11 @@ var
             let cellStyles = '';
             let offsetTop = 0;
             let shadowVisibility = 'visible';
+
+            // For browsers with partial grid support need to set its grid-row and grid-column
+            // if (GridLayoutUtil.isPartialGridSupport()) {
+            //     cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
+            // }
 
             if (this._headerRows.length > 1) {
                 cellContentClasses += ' controls-Grid__header-cell_align_items_center';
@@ -714,22 +721,14 @@ var
                     }
 
                     const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
-                    const gridStyles = [
-                        {
-                            name: 'grid-column',
-                            value: `${startColumn + additionalColumn} / ${endColumn + additionalColumn}`
-                        },
-                        {
-                            name: 'grid-row',
-                            value: `${startRow} / ${endRow}`
-                        }
-                    ];
-
-                    cellStyles += GridLayoutUtil.toCssString(gridStyles);
+                    const gridStyles = GridLayoutUtil.getMultyHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn);
+                    cellStyles += gridStyles;
 
                 }
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
+            } else if (GridLayoutUtil.isPartialGridSupport()) {
+                cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
             }
 
             if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
@@ -752,7 +751,6 @@ var
 
             return headerColumn;
         },
-
 
         // -----------------------------------------------------------
         // ---------------------- resultColumns ----------------------

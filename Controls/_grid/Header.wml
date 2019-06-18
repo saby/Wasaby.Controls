@@ -42,13 +42,13 @@
       </th>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <div attr:style="{{headerColumn.cellStyles}}" attr:class="{{headerColumn.cellClasses}}">
+      <div attr:style="{{headerColumn.style}}{{headerColumn.cellStyles}}" attr:class="{{headerColumn.cellClasses}}">
          <ws:partial template="cellContent" />
       </div>
    </ws:else>
    <ws:else>
       <div attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}}">
+           attr:style="{{headerColumn.style}}{{headerColumn.cellStyles}}">
          <ws:partial template="cellContent"/>
       </div>
    </ws:else>
