@@ -115,7 +115,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
    var module = Control.extend(/** @lends Controls/Container/LoadingIndicator.prototype */{
       _template: tmpl,
-      isLoading: false,
+      _isOverlayVisible: false,
+      _isMessageVisible: false,
       _isPreloading: false,
       _prevLoading: null,
       _stack: null,
@@ -186,7 +187,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
             // if its hidden loading state now, we don't show spinner
             if (this._isLoadingSaved !== null) {
-               this.isLoading = false;
+               this._isOverlayVisible = false;
             }
 
             if (isLoadingStateChanged) {
@@ -197,8 +198,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
                      // goes to show loading state
 
                      // return spinner value
-                     this.isLoading = this._isLoadingSaved;
-
+                     this._isOverlayVisible = this._isLoadingSaved;
+                     this._isMessageVisible = this._isLoadingSaved;
                      // clear saved spinner state
                      this._isLoadingSaved = null;
                      this._forceUpdate();
@@ -209,7 +210,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
             // goes to idle state
             clearTimeout(this.delayTimeout);
             this._isLoadingSaved = null;
-            this.isLoading = this._isPreloading;
+            this._isOverlayVisible = this._isPreloading;
+            this._isMessageVisible = this._isPreloading;
             this._forceUpdate();
          }
          this._prevLoading = this._isPreloading;
@@ -339,19 +341,20 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
       _toggleIndicator: function(visible, config, force) {
          clearTimeout(this.delayTimeout);
          if (visible) {
+            this._isOverlayVisible = true;
             if (force) {
-               this.isLoading = true;
+               this._isMessageVisible = true;
                this._updateProperties(config);
             } else {
-               var delay = this._getDelay(config);
-               this.delayTimeout = setTimeout(function() {
-                  this.isLoading = true;
+               this._isMessageVisible = false;
+               this.delayTimeout = setTimeout(() => {
+                  this._isMessageVisible = true;
                   this._updateProperties(config);
                   this._forceUpdate();
-               }.bind(this), delay);
+               }, this._getDelay(config));
             }
          } else {
-            this.isLoading = false;
+            this._isOverlayVisible = false;
          }
          this._forceUpdate();
       }
