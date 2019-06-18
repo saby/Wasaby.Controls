@@ -1,6 +1,7 @@
 <div class="controls-FilterDropdown">
    <Controls.dropdown:Input
            scope="{{_options}}"
+           dataLoadCallback="{{_dataLoadCallbackHandler}}"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()">
       <ws:contentTemplate>
