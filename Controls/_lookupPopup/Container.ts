@@ -182,6 +182,7 @@ import {IData, IDecorator} from "Types/source";
             const self = this;
             const dataOptions = this.context.get('dataOptions');
             const keyProperty = dataOptions.keyProperty;
+            const items = dataOptions.items;
 
             let loadDef;
             let indicatorId;
@@ -194,7 +195,6 @@ import {IData, IDecorator} from "Types/source";
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               const items = dataOptions.items;
                const multiSelect = this._options.multiSelect;
                const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
