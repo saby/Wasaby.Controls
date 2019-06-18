@@ -4,7 +4,7 @@ import template = require('wml!Controls/_switchableArea/View');
 import defaultItemTemplate from './ItemTpl';
 
 /**
- * Компонент который переключает контентные области.
+ * Компонент, который переключает контентные области.
  *
  * @class Controls/_switchableArea/View
  * @extends Core/Control
