@@ -251,6 +251,7 @@ import 'css!theme?Controls/validate';
          _valueChangedHandler: function(event, value) {
             // We clean validation, if the value has changed.
             // But some controls notify valueChanged if the additional data has changed.
+             //For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
             if (this._currentValue !== value) {
                this._currentValue = value;
                this._notify('valueChanged', [value]);
