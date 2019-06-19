@@ -62,6 +62,32 @@ define([
             component._model = { fixedPosition: 'bottom' };
             assert.include(component._getStyle(), 'bottom: 25px;');
          });
+
+         it('should return correct min-height.', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'topbottom' });
+            sandbox.replace(StickyHeader._private, 'getComputedStyle', function() {
+               return { boxSizing: 'border-box', minHeight: '30px' };
+            });
+            component._context = {
+               stickyHeader: { top: 2}
+            };
+            component._stickyHeadersHeight = {
+               top: 10
+            };
+            component._isMobilePlatform = true;
+
+            component._model = { fixedPosition: 'top' };
+            component._container = { style: { paddingTop: '' } };
+
+            assert.include(component._getStyle(), 'min-height:31px;');
+            component._minHeight = 40;
+            component._container.style.minHeight = 40;
+            assert.include(component._getStyle(), 'min-height:40px;');
+
+            sandbox.restore();
+         });
       });
 
       describe('set top', function() {
