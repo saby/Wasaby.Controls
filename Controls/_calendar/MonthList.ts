@@ -1,5 +1,5 @@
 import {Base as BaseSource} from 'Types/source';
-import BaseControl = require('UI/Base');
+import {Control} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
@@ -27,7 +27,7 @@ const
         month: MonthsSource
     };
 
-class  ModuleComponent extends BaseControl {
+class  ModuleComponent extends Control {
     private _template: Function = template;
     private _viewSource: BaseSource;
     private _position: string;

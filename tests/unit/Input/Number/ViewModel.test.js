@@ -201,6 +201,17 @@ define(
                assert.equal(model.displayValue, '-');
                assert.deepEqual(model.selection, getSelection(1));
             });
+            it('Enter "12,34".', function() {
+               model.handleInput({
+                  after: '',
+                  before: '',
+                  insert: '12,34',
+                  delete: ''
+               }, 'insert');
+
+               assert.equal(model.displayValue, '12.34');
+               assert.deepEqual(model.selection, getSelection(5));
+            });
          });
 
          describe('_convertToDisplayValue', function() {

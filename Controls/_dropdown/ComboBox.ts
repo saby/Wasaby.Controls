@@ -28,10 +28,8 @@ var _private = {
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IInputDropdown
  * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
  * @control
  * @public

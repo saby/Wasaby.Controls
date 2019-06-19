@@ -23,6 +23,10 @@ import 'Controls/search';
  * @category Input
  */
 
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
 
 var Suggest = Control.extend({
 
@@ -36,7 +40,6 @@ var Suggest = Control.extend({
 
    _choose: function(event, item) {
       this.activate();
-      this._notify('choose', [item]);
       this._notify('valueChanged', [item.get(this._options.displayProperty) || '']);
    },
 

@@ -1,5 +1,5 @@
 <div class="example-RightAlignment">
-   <Controls-demo.Example.resource.BaseDemoInput title="RightAlignment">
+   <Controls-demo.Example.resource.BaseDemoInput title="RightAlignment" attr:class="ControlsDemo-ExampleInput__tooltip">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -21,7 +21,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="example-Base__wrapper">
+                  <div class="example-Base__wrapper ControlsDemo-ExampleInput__filled">
                      <div class="example-Base__specify">Filled input field</div>
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"
@@ -38,7 +38,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="example-Base__wrapper">
+                  <div class="example-Base__wrapper ControlsDemo-ExampleInput__readOnly">
                      <div class="example-Base__specify">Filled input field in read mode</div>
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"
@@ -56,7 +56,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="example-Base__wrapper">
+                  <div class="example-Base__wrapper ControlsDemo-ExampleInput__money">
                      <div class="example-Base__specify">Filled number input field</div>
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"
@@ -73,7 +73,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="example-Base__wrapper">
+                  <div class="example-Base__wrapper ControlsDemo-ExampleInput__moneyReadOnly">
                      <div class="example-Base__specify">Filled number input field in read mode</div>
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"

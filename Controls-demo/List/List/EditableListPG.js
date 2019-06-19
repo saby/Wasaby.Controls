@@ -37,6 +37,7 @@ define('Controls-demo/List/List/EditableListPG',
                   data: data.gadgets
                }),
                itemTemplate: ItemTemplate,
+               itemActionsPosition: 'inside',
                editingConfig: this._dataObject.editingConfig.value
             };
 

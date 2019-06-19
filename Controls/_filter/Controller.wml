@@ -5,4 +5,5 @@
         on:filterChanged="_filterChanged()"
         filterButtonItems="{{_filterButtonItems}}"
         fastFilterItems="{{_fastFilterItems}}"
-        historyId="{{_options.historyId}}"/>
+        historyId="{{_options.historyId}}"
+        scope="{{_options}}"/>

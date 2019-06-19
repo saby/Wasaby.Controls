@@ -84,11 +84,13 @@ interface ISuggest {
        * </pre>
        *
        * MySuggest.wml:
+       * <pre>
        * <Controls.suggest:Input>
        *    <ws:emptyTemplate templateName="wml!emptyTemplate">
        *       <ws:templateOptions showImage={{_showImage}}/>
        *    </ws:emptyTemplate>
        * </Controls.suggest:Input>
+       * </pre>
        */
       emptyTemplate: IEmptyTemplateProp | null;
 
@@ -99,7 +101,7 @@ interface ISuggest {
        * myFooter.wml
        * <pre>
        *    <span on:click="_showTasksClick()">show tasks</span>
-       * <pre>
+       * </pre>
        *
        * myFooter.js
        * <pre>

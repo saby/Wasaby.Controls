@@ -31,11 +31,11 @@
                 <h3>Text and text-link</h3>
                 <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value3" caption="{{_content1}}" tooltip="Tooltip"/>
             </div>
-            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
+            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin demo-Checkbox_icon">
                 <h3>Icon</h3>
                 <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value4" icon="{{_content2}}" tooltip="Tooltip"/>
             </div>
-            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
+            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin demo-Checkbox_different">
                 <h3>Different style text</h3>
                 <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value5" caption="{{_content3}}" tooltip="Tooltip"/>
             </div>

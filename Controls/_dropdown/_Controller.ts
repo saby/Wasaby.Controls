@@ -2,9 +2,10 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
+import * as Deferred from 'Core/Deferred';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -12,32 +13,45 @@ var
    defaultSelectedKeys = [];
 
 var _private = {
-   getSourceController: function (self, options) {
+   createSourceController: function(self, options) {
       if (!self._sourceController) {
          self._sourceController = new SourceController({
-            source: options.source,
+            source: self._source,
             navigation: options.navigation
          });
       }
       return self._sourceController;
    },
 
+   getSourceController: function (self, options) {
+        return historyUtils.getSource(options.source, options.historyId).addCallback((source) => {
+            self._source = source;
+            return _private.createSourceController(self, options);
+        });
+   },
+
    loadItems: function (self, options) {
-      self._filter = historyUtils.getSourceFilter(options.filter, options.source);
-      return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
-         self._items = items;
-         if (options.dataLoadCallback) {
-            options.dataLoadCallback(items);
-         }
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
-         return items;
-      });
+      return _private.getSourceController(self, options).addCallback((sourceController) => {
+          self._filter = historyUtils.getSourceFilter(options.filter, self._source);
+          return sourceController.load(self._filter).addCallback((items) => {
+              self._items = items;
+              if (options.dataLoadCallback) {
+                  options.dataLoadCallback(items);
+              }
+              _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+              return items;
+          });
+       });
    },
 
    updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
       var selectedItems = [];
-      if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
-         selectedItems.push(null);
+      if (!selectedKeys.length || selectedKeys[0] === null) {
+        if (emptyText) {
+           selectedItems.push(null);
+        } else if (self._items.getRecordById(null)) {
+           selectedItems.push(self._items.getRecordById(null));
+         }
       } else {
          chain.factory(self._items).each(function (item) {
             // fill the array of selected items from the array of selected keys
@@ -202,8 +216,11 @@ var _Controller = Control.extend({
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoad) {
          if (receivedState) {
+            let self = this;
             this._items = receivedState;
-            _private.getSourceController(this, options).calculateState(this._items);
+            _private.getSourceController(this, options).addCallback((sourceController) => {
+                sourceController.calculateState(self._items);
+            });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          } else if (options.source) {
             return _private.loadItems(this, options);
@@ -221,6 +238,7 @@ var _Controller = Control.extend({
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
          !isEqual(newOptions.navigation, this._options.navigation) ||
          !isEqual(newOptions.filter, this._options.filter)) {
+         this._source = null;
          this._sourceController = null;
          if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
@@ -249,7 +267,7 @@ var _Controller = Control.extend({
                items: self._items,
                //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down'),
+               hasMoreButton: self._sourceController.hasMoreData('down'),
                selectorOpener: self._children.selectorOpener,
                selectorDialogResult: self._onSelectorTemplateResult.bind(self)
             },

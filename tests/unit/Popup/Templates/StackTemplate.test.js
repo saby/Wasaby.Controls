@@ -8,14 +8,7 @@ define(['Controls/popupTemplate'], (popupTemplate) => {
             stackWidth: 700,
             stackMaxWidth: 1000
          });
-         assert.equal(Stack._maximizeButtonTitle, 'Свернуть');
-         Stack._beforeUpdate({
-            stackMinWidth: 100,
-            stackWidth: 300,
-            stackMaxWidth: 1000
-         });
-         assert.equal(Stack._maximizeButtonTitle, 'Развернуть');
-         Stack.destroy();
+         assert.equal(Stack._maximizeButtonTitle, 'Свернуть/Развернуть');
       });
 
       it('controlResize after update maximized options', () => {

@@ -46,7 +46,9 @@ var _private = {
 
         if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
-                icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
+                icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
+                style: 'secondary',
+                iconStyle: 'secondary',
                 _isMenu: true
             });
         }

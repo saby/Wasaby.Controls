@@ -48,6 +48,7 @@
                        parentProperty="Раздел"
                        nodeProperty="Раздел@"
                        bind:expandedItems = "_expandedItemsForBind"
+                       bind:collapsedItems = "_collapsedItemsForBind"
                        columns="{{gridColumns}}"
                        multiSelectVisibility="visible">
                </Controls.treeGrid:View>

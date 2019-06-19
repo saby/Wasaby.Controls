@@ -11,7 +11,7 @@
    <ws:footerContentTemplate>
       <div class="controls-ReportDialog__closeButtonContainer">
          <ws:partial if="{{_options.footerContentTemplate}}" template="{{_options.footerContentTemplate}}"/>
-         <Controls.input:Label caption="{[Закрыть]}" underline="hovered" on:click="_onCloseClick()"/>
+         <Controls.buttons:Button caption="{[ОК]}" style="primary" on:click="_onCloseClick()"/>
       </div>
    </ws:footerContentTemplate>
 </Controls.popupTemplate:Confirmation>

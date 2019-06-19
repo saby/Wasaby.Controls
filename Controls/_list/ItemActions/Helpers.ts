@@ -1,11 +1,4 @@
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
-/**
- * List of helpers for displaying item actions.
- * @class Controls/_list/ItemActions/Helpers
- * @private
- * @author Сухоручкин А.С.
- * @category List
- */
 
 var MOVE_DIRECTION = {
     'UP': 'up',
@@ -52,6 +45,13 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
     return result;
 }
 
+/**
+ * List of helpers for displaying item actions.
+ * @class Controls/_list/ItemActions/Helpers
+ * @public
+ * @author Сухоручкин А.С.
+ * @category List
+ */
 var helpers = {
 
     /** @typedef {String} MoveDirection
@@ -61,6 +61,7 @@ var helpers = {
 
     /**
      * Helper to display up/down item actions.
+     * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.
      * @param {Types/collection:RecordSet} items List of all items.

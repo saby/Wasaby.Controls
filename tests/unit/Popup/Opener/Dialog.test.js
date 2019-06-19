@@ -41,8 +41,10 @@ define(
             assert.equal(position.left, 860);
 
             windowData.scrollTop = 80;
+            windowData.scrollLeft = 20;
             position = DialogStrategy.getPosition(windowData, sizes, { popupOptions: {} });
             assert.equal(position.top, 470);
+            assert.equal(position.left, 880);
          });
 
          it('dialog positioning overflow container', () => {
