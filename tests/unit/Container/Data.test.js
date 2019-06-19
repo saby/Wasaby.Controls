@@ -341,7 +341,9 @@ define(
 
          it('_private.resolveOptions', function() {
             var self = {
-               _options: {}
+               _options: {
+                  filter: {}
+               }
             };
             var options = {
                filter: {},
