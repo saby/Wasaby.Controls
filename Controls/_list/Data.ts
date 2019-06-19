@@ -198,6 +198,10 @@ type GetSourceResult = {
          },
 
          _itemsChanged: function(event:Event, items):void {
+            //search:Cotnroller fires two events after search: itemsChanged, filterChanged
+            //on filterChanged event filter state will updated
+            //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
+            //then we need to create prefetchSource synchronously
             const source = new PrefetchProxy({
                data: {
                   query: items
