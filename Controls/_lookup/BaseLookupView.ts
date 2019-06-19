@@ -230,6 +230,8 @@ var BaseLookupView = Control.extend({
     }
 });
 
+BaseLookupView._theme = ['Controls/lookup'];
+
 BaseLookupView.getDefaultOptions = function () {
     return {
         value: '',

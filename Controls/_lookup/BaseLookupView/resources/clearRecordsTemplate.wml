@@ -1,1 +1,1 @@
-<div class="controls-Lookup__icon controls-Lookup__clearRecords icon-Close"></div>
+<div class="controls-Lookup__icon controls-Lookup__clearRecords_theme_{{theme}} icon-Close"></div>

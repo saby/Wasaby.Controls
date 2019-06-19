@@ -1,1 +1,1 @@
-<div attr:class="controls-Lookup__icon controls-Lookup__showSelector icon-ListView"></div>
+<div attr:class="controls-Lookup__icon controls-Lookup__showSelector_theme_{{theme}} icon-ListView"></div>
