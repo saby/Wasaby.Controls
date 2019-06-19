@@ -1,154 +1,196 @@
-import Base = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import Env = require('Env/Env');
 import {parse as load} from 'Core/library';
 
-      /**
-       * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
-       *
-       * <a href="/materials/demo-ws4-notification">Demo-example</a>.
-       * @class Controls/_popup/Opener/Notification
-       * @control
-       * @public
-       * @author Красильников А.С.
-       * @category Popup
-       * @demo Controls-demo/Popup/Opener/NotificationPG
-       */
+/**
+ * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ *
+ * <a href="/materials/demo-ws4-notification">Demo-example</a>.
+ * @class Controls/_popup/Opener/Notification
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/NotificationPG
+ */
 
-      /**
-       * @name Controls/_popup/Opener/Notification#className
-       * @cfg {String} Class names of popup.
-       */
-      /**
-       * @name Controls/_popup/Opener/Notification#template
-       * @cfg {String|Function} Template inside popup.
-       */
+/**
+ * @name Controls/_popup/Opener/Notification#className
+ * @cfg {String} Class names of popup.
+ */
+/**
+ * @name Controls/_popup/Opener/Notification#template
+ * @cfg {String|Function} Template inside popup.
+ */
 
-      /**
-       * @name Controls/_popup/Opener/Notification#templateOptions
-       * @cfg {String|Function} Template options inside popup.
-       */
+/**
+ * @name Controls/_popup/Opener/Notification#templateOptions
+ * @cfg {String|Function} Template options inside popup.
+ */
+const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
-
-      var _private = {
-         compatibleOpen: function(self, popupOptions) {
-            const config = self._getConfig(popupOptions);
-            Promise.all([
-                self._requireModule('Controls/compatiblePopup:BaseOpener'),
-                self._requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
-                self._requireModule('Controls/compatiblePopup:OldNotification'),
-                self._requireModule(config.template)
-            ]).then(function(results) {
-                const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
-                config.template = results[3];
-                const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
+const _private = {
+    compatibleOpen(self, popupOptions) {
+        const config =  BaseOpener.getConfig({}, self ? self._options : {}, popupOptions);
+        return Promise.all([
+            BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
+            BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
+            BaseOpener.requireModule('Controls/compatiblePopup:OldNotification'),
+            BaseOpener.requireModule(config.template)
+        ]).then(function(results) {
+            const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
+            config.template = results[3];
+            const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
+            const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
+            if (self) {
                 if (!self._popup) {
                     self._popup = [];
                 }
-                self._popup.push(InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide));
-            });
-         },
-
-         _requireModule: function(module) {
-            return typeof module === 'string' ? load(module) : Promise.resolve(module);
-         },
-
-         getCompatibleConfig: function(BaseOpenerCompat, config) {
-            var cfg = BaseOpenerCompat.prepareNotificationConfig(config);
-            cfg.notHide = !cfg.autoClose;
-            return cfg;
-         },
-
-         compatibleClose: function(self) {
-            // Close popup on old page
-            if (!isNewEnvironment()) {
-               if (self._popup) {
-                  for (var i = 0; i < self._popup.length; i++) {
-                     self._popup[i].close();
-                  }
-                  self._popup = [];
-               }
+                self._popup.push(popupId);
             }
-         }
-      };
+        });
+    },
 
-      var Notification = Base.extend({
+    _requireModule(module) {
+        return typeof module === 'string' ? load(module) : Promise.resolve(module);
+    },
 
-         /**
-          * Open dialog popup.
-          * @function Controls/_popup/Opener/Notification#open
-          * @param {PopupOptions[]} popupOptions Notification popup options.
-          * @returns {Undefined}
-          * @example
-          * wml
-          * <pre>
-          *    <Controls.popup:Notification name="notificationOpener">
-          *       <ws:popupOptions template="wml!Controls/Template/NotificationTemplate">
-          *       </ws:popupOptions>
-          *    </Controls.popup:Notification>
-          *
-          *    <Controls.Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
-          * </pre>
-          * js
-          * <pre>
-          *   Control.extend({
-          *      ...
-          *       _open() {
-          *          var popupOptions = {
-          *              templateOptions: {
-          *                 style: "done",
-          *                 text: "Message was send",
-          *                 icon: "Admin"
-          *              }
-          *          }
-          *          this._children.notificationOpener.open(popupOptions)
-          *      }
-          *      ...
-          *   });
-          * </pre>
-          * @see close
-          */
-         open: function(popupOptions) {
-            return new Promise((resolve) => {
-                if (isNewEnvironment()) {
-                    Base.prototype.open.call(this, this._preparePopupOptions(popupOptions), 'Controls/popupTemplate:NotificationController')
-                        .then(popupId => resolve(popupId));
-                } else {
-                    _private.compatibleOpen(this, popupOptions);
-                    resolve();
+    getCompatibleConfig(BaseOpenerCompat, config) {
+        const cfg = BaseOpenerCompat.prepareNotificationConfig(config);
+        cfg.notHide = !cfg.autoClose;
+        return cfg;
+    },
+
+    compatibleClose(self) {
+        // Close popup on old page
+        if (!isNewEnvironment()) {
+            if (self._popup) {
+                for (let i = 0; i < self._popup.length; i++) {
+                    self._popup[i].close();
                 }
+                self._popup = [];
+            }
+        }
+    }
+};
+
+const Notification = BaseOpener.extend({
+
+    /**
+     * Open dialog popup.
+     * @function Controls/_popup/Opener/Notification#open
+     * @param {PopupOptions[]} popupOptions Notification popup options.
+     * @returns {Undefined}
+     * @example
+     * wml
+     * <pre>
+     *    <Controls.popup:Notification name="notificationOpener">
+     *       <ws:popupOptions template="wml!Controls/Template/NotificationTemplate">
+     *       </ws:popupOptions>
+     *    </Controls.popup:Notification>
+     *
+     *    <Controls.Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
+     * </pre>
+     * js
+     * <pre>
+     *   Control.extend({
+     *      ...
+     *       _open() {
+     *          var popupOptions = {
+     *              templateOptions: {
+     *                 style: "done",
+     *                 text: "Message was send",
+     *                 icon: "Admin"
+     *              }
+     *          }
+     *          this._children.notificationOpener.open(popupOptions)
+     *      }
+     *      ...
+     *   });
+     * </pre>
+     * @see close
+     */
+    open(popupOptions) {
+        return new Promise((resolve) => {
+            if (isNewEnvironment()) {
+                BaseOpener.prototype.open.call(this, this._preparePopupOptions(popupOptions), POPUP_CONTROLLER)
+                    .then((popupId) => resolve(popupId));
+            } else {
+                _private.compatibleOpen(this, popupOptions);
+                resolve();
+            }
+        });
+    },
+    close() {
+        Notification.superclass.close.apply(this, arguments);
+        _private.compatibleClose(this);
+    },
+
+    _preparePopupOptions(popupOptions) {
+        if (popupOptions && popupOptions.templateOptions && popupOptions.templateOptions.hasOwnProperty('autoClose')) {
+            Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
+            popupOptions.autoClose = popupOptions.templateOptions.autoClose;
+        }
+        if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
+            Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
+            this._options.autoClose = this._options.templateOptions.autoClose;
+        }
+        return popupOptions;
+    }
+});
+
+/**
+ * Open Notification popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ * @function Controls/_popup/Opener/Notification#openPopup
+ * @param {PopupOptions[]} config Notification popup options.
+ * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+ * @see closePopup
+ */
+Notification.openPopup = (config: object): Promise<string> => {
+    return new Promise((resolve) => {
+        if (isNewEnvironment()) {
+            if (!config.hasOwnProperty('opener')) {
+                config.opener = null;
+            }
+            const newConfig = BaseOpener.getConfig({}, {}, config);
+            BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newConfig, result[1]).then((popupId: string) => {
+                    resolve(popupId);
+                });
             });
-         },
-         close: function() {
-            Notification.superclass.close.apply(this, arguments);
-            _private.compatibleClose(this);
-         },
 
-         _preparePopupOptions: function(popupOptions) {
-            if (popupOptions && popupOptions.templateOptions && popupOptions.templateOptions.hasOwnProperty('autoClose')) {
-               Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
-               popupOptions.autoClose = popupOptions.templateOptions.autoClose;
-            }
-            if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
-               Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
-               this._options.autoClose = this._options.templateOptions.autoClose;
-            }
-            return popupOptions;
-         }
-      });
+        } else {
+            _private.compatibleOpen(this, config);
+            resolve();
+        }
 
-      Notification.getDefaultOptions = function() {
-         return {
-            autofocus: false,
-            displayMode: 'multiple',
-            autoClose: true
-         };
-      };
+    });
+};
 
-      Notification._private = _private;
+/**
+ * Close Notification popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ * @function Controls/_popup/Opener/Notification#closePopup
+ * @param {String} popupId Id of popup.
+ * @see openPopup
+ */
+Notification.closePopup = (popupId: string): void => {
+    BaseOpener.closeDialog(popupId);
+};
 
-      export = Notification;
+Notification.getDefaultOptions = function() {
+    return {
+        autofocus: false,
+        displayMode: 'multiple',
+        autoClose: true
+    };
+};
 
+Notification._private = _private;
+
+export = Notification;
 
 /**
  * @typedef {Object} PopupOptions
