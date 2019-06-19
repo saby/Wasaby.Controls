@@ -1,9 +1,7 @@
 import Env = require('Env/Env');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Base = require('Controls/_input/Base');
-import {isEqual} from 'Types/object';
 import ViewModel = require('Controls/_input/Mask/ViewModel');
-import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
 
       
@@ -152,8 +150,20 @@ import entity = require('Types/entity');
             },
 
             _focusInHandler: function() {
+               // Set the carriage only if the input field has received focus on the tab key.
+               // If the focus was set by a mouse click, the selection has not yet been sett.
+               // Getting the focus by clicking the mouse is processed in the _clickHandler.
+               if (!this._focusByMouseDown) {
+                   this._viewModel.setCarriageDefaultPosition();
+               }
                Mask.superclass._focusInHandler.apply(this, arguments);
-               this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
+            },
+
+            _clickHandler: function() {
+                if (this._firstClick) {
+                    this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
+                }
+                Mask.superclass._clickHandler.apply(this, arguments);
             }
          });
 
