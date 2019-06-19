@@ -15,6 +15,7 @@ import Deferred = require('Core/Deferred');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_interface/Isorting
  * @mixes Controls/interface/IEditableList
  * @control
  * @private

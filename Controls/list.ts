@@ -15,6 +15,7 @@
  * @includes AddButtonStyles Controls/_list/AddButton/Styles
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
+ * @includes Isorting Controls/_interface/Isorting
  * @includes ListStyles Controls/_list/ListStyles
  * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
