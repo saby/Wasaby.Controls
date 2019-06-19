@@ -6,7 +6,7 @@
                      scope="{{_contentTemplateOptions}}"></ws:partial>
       </ws:if>
    </div>
-   <ws:if data="{{_options.iconClose}}">
+   <ws:if data="{{_options.iconClose || _options.closeButtonVisibility}}">
       <Controls.popupTemplate:CloseButton class="controls-Notification__closeButton" style="light" on:click="_closeClick()"/>
    </ws:if>
 </div>
