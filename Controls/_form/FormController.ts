@@ -14,6 +14,7 @@ import dataSource = require('Controls/dataSource');
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IFormController
+    * @mixes Controls/interface/IErrorController
     * @demo Controls-demo/Popup/Edit/Opener
     * @control
     * @public
@@ -26,15 +27,15 @@ import dataSource = require('Controls/dataSource');
     * @typedef {Object}
     * @name ReceivedState
     * @property {*} [data]
-    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
     */
 
    /**
     * @typedef {Object}
     * @name CrudResult
     * @property {*} [data]
-    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
-    * @property {Controls/_dataSource/_error/ViewConfig} [error]
+    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+    * @property {Controls/dataSource:error.ViewConfig} [error]
     */
 
    /**
