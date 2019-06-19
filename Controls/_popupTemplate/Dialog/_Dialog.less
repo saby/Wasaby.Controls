@@ -1,21 +1,26 @@
-.controls-DialogTemplate_theme_@{themeName} {
+.controls-DialogTemplate {
    display: flex;
    flex-direction: column;
    flex-grow: 1;
    flex-shrink: 1;
    box-sizing: border-box;
    height: 100%;
-   background-color: @background-color_dialogTemplate-content;
    position: relative;
    overflow: hidden;
+}
+.controls-DialogTemplate_theme_@{themeName} {
+   background-color: @background-color_dialogTemplate-content;
    box-shadow: @size_DialogTemplate-shadow @color_DialogTemplate-shadow;
    border: @size_DialogTemplate-border solid @color-border_DialogTemplate;
 }
 
-.controls-DialogTemplate__top-area_theme_@{themeName} {
-   background-color: @background-color_dialogTemplate-top-area;
+.controls-DialogTemplate__top-area {
    display: flex;
    flex-shrink: 0;
+}
+
+.controls-DialogTemplate__top-area_theme_@{themeName} {
+   background-color: @background-color_dialogTemplate-top-area;
    min-height: @height_DialogTemplate-top-area;
 }
 
