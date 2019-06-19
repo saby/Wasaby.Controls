@@ -492,6 +492,9 @@ var _private = {
     },
 
     startScrollEmitter: function(self) {
+        if (self._scrollEmitterStarted || self.__error) {
+            return;
+        }
         var
             children = self._children,
             triggers = {
@@ -503,6 +506,7 @@ var _private = {
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
         self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
+        self._scrollEmitterStarted = true;
     },
 
     onScrollShow: function(self) {
@@ -1146,7 +1150,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.startScrollEmitter(this);
         }
         if (this._virtualScroll) {
-            this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
+            this._setScrollItemContainer();
         }
     },
 
@@ -1351,6 +1355,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        if (this._needScrollCalculation) {
+            _private.startScrollEmitter(this);
+        }
+        if (this._virtualScroll) {
+            this._setScrollItemContainer();
+        }
         if (this._options.itemActions) {
             this._canUpdateItemsActions = false;
         }
@@ -1517,19 +1527,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _viewResize: function() {
-        if (this._virtualScroll) {
-
+        if (this._setScrollItemContainer()) {
             /*
             * To update items sizes, virtualScroll needs their HTML container. It sets on baseControls' afterMount.
             * The "controlResize" event can fires before baseControls' afterMount, because first performs afterMounts of all
             * children. It leads to errors, because container has not been settled yet.
             * */
-            if (!this._virtualScroll.ItemsContainer) {
-                this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer()
-            }
-
             this._virtualScroll.updateItemsSizes();
         }
+    },
+    _setScrollItemContainer: function () {
+        if (!this._children.listView || !this._virtualScroll) {
+            return false;
+        }
+        if (this._virtualScroll.ItemsContainer) {
+            return true;
+        }
+        this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
+        return  true;
     },
 
     beginEdit: function(options) {
