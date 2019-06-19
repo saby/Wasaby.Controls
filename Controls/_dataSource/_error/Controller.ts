@@ -6,8 +6,10 @@ import {
     ViewConfig
 } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
-// @ts-ignore
-import { Abort } from 'Transport/Errors';
+import { fetch } from 'Browser/Transport';
+
+const { Errors } = fetch;
+const { Abort } = Errors;
 
 export type Config = {
     handlers?: Array<Handler>
