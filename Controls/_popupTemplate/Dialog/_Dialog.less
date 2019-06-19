@@ -46,12 +46,13 @@
    overflow: hidden;
    justify-content: space-between;
 }
-
-.controls-DialogTemplate__close_button_theme_@{themeName} {
+.controls-DialogTemplate__close_button {
    position: relative;
    z-index: 2; // The close button is above the content
-   margin-top: @spacing_DialogTemplate-between-border-close-button;
    align-self: flex-start;
+}
+.controls-DialogTemplate__close_button_theme_@{themeName} {
+   margin-top: @spacing_DialogTemplate-between-border-close-button;
 }
 
 .controls-DialogTemplate__close-button_without_head {
