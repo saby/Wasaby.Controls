@@ -7,6 +7,7 @@ import {
 } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
 import { fetch } from 'Browser/Transport';
+import { IVersionable } from 'Types/entity';
 
 const { Errors } = fetch;
 const { Abort } = Errors;
@@ -16,6 +17,21 @@ export type Config = {
 }
 
 /// region helpers
+let getIVersion = (): IVersionable => {
+    const id: number = Math.random();
+    /*
+     * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
+     * для дальнейшего его отображения через прокидывание параметра в Container
+     * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
+     */
+    return {
+        '[Types/_entity/IVersionable]': true,
+        getVersion(): number {
+            return id;
+        }
+    }
+};
+
 let isNeedHandle = (error: Error): boolean => {
     return !(
         (error instanceof Abort) ||
@@ -49,7 +65,8 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
         options: {
             message,
             details
-        }
+        },
+        ...getIVersion()
     }
 };
 /// endregion helpers
@@ -144,7 +161,8 @@ export default class ErrorController {
             return {
                 mode: handlerResult.mode || _config.mode,
                 template: handlerResult.template,
-                options: handlerResult.options
+                options: handlerResult.options,
+                ...getIVersion()
             };
         });
     }

@@ -537,13 +537,11 @@ import dataSource = require('Controls/dataSource');
        */
       _showError: function(errorConfig) {
          this.__error = errorConfig;
-         this._forceUpdate();
       },
 
       _hideError: function() {
          if (this.__error) {
             this.__error = null;
-            this._forceUpdate();
          }
       },
 
