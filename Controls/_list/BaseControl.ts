@@ -589,11 +589,14 @@ var _private = {
 
     showIndicator: function(self, direction = 'all') {
         self._loadingState = direction;
-        self._loadingIndicatorState = self._loadingState;
+        if (direction === 'all') {
+            self._loadingIndicatorState = self._loadingState;
+        }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
+                    self._loadingIndicatorState = self._loadingState;
                     self._showLoadingIndicatorImage = true;
                     self._forceUpdate();
                 }
@@ -622,7 +625,9 @@ var _private = {
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
         if (self._virtualScroll) {
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=49aaeb41-5d4c-4e6f-9ffd-53dd1db3f990
+            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight, self._options.fix1177345288);
             _private.applyVirtualScroll(self);
         }
 
