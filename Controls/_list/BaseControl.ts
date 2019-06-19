@@ -623,9 +623,7 @@ var _private = {
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
         if (self._virtualScroll) {
-
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=49aaeb41-5d4c-4e6f-9ffd-53dd1db3f990
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight, self._options.fix1177345288);
+            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
             _private.applyVirtualScroll(self);
         }
 
