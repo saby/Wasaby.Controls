@@ -194,12 +194,15 @@ class VirtualScroll {
         }
     }
 
-    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
+    // FIXME: https://online.sbis.ru/opendoc.html?guid=49aaeb41-5d4c-4e6f-9ffd-53dd1db3f990
+    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number, fix1177345288: boolean = false): void {
         if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
             let
                 offsetHeight = 0,
                 heightsCount = this._itemsHeights.length;
-
+            if (fix1177345288) {
+                heightsCount && !this._itemsHeights[0] && this._updateItemsSizes(0, Math.min(heightsCount, this._virtualPageSize));
+            }
             for (let i = 0; i < heightsCount; i++) {
                 offsetHeight += this._itemsHeights[i];
 
