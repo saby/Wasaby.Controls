@@ -224,7 +224,7 @@ define([
             ],
             idProperty: 'id'
          });
-         instance._options.searchMode = 'root';
+         instance._options.searchStartingWith = 'root';
          instance._options.root = 'test';
          instance._options.parentProperty = 'id';
          instance._viewMode = 'tree';
