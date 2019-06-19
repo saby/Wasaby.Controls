@@ -337,6 +337,16 @@
  */
 
 /**
+ * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередной пачки данных.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ */
+
+/*
+ * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ */
+
+/**
  * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Without padding.
  * @variant S Small padding.
