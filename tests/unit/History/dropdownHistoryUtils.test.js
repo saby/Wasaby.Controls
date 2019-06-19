@@ -6,6 +6,18 @@ define(
    ],
    (dropdown, history, Source) => {
    describe('dropdownHistoryUtils',() => {
+      it('getSource', (done) => {
+         let hSource = new history.Source({});
+         dropdown.dropdownHistoryUtils.getSource( hSource, 'test').addCallback((source) => {
+            assert.deepStrictEqual(source, hSource);
+
+            dropdown.dropdownHistoryUtils.getSource('my source').addCallback((source) => {
+               assert.strictEqual(source, 'my source');
+               done();
+            });
+         });
+      });
+
       it('getFilter', () => {
          var filter = dropdown.dropdownHistoryUtils.getSourceFilter({id: 'test'}, new history.Source({}));
          assert.deepEqual(filter, {$_history: true, id: 'test'});
