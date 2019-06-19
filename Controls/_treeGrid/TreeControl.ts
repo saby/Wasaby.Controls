@@ -231,6 +231,12 @@ var _private = {
         items.setEventRaising(true, true);
     },
 
+    initListViewModelHandler(self, listModel): void {
+        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+        listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
+        listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+    },
+
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
         var findChildNodesRecursive = function(key) {
             viewModel.getChildren(key).forEach(function(elem) {
@@ -286,11 +292,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {
-        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
-        this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+        _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         this._children.baseControl.getViewModel().subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
     },
+
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback.apply(null, arguments);
@@ -323,8 +328,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
         }
     },
-    _afterUpdate: function() {
-        TreeControl.superclass._afterUpdate.apply(this, arguments);
+    _afterUpdate: function(oldOptions) {
         if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
@@ -336,6 +340,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 self._children.baseControl.getViewModel().setRoot(self._root);
             });
         }
+        if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
+            _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
+        }
+    },
+    resetExpandedItems(): void {
+        this._children.baseControl.getViewModel().resetExpandedItems();
     },
     toggleExpanded: function(key) {
         var

@@ -191,6 +191,7 @@ import 'Controls/breadcrumbs';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
+            this._children.treeControl.resetExpandedItems();
          }
       },
       _getRoot: function() {

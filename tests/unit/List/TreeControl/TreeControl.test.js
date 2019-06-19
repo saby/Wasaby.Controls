@@ -393,7 +393,7 @@ define([
          return new Promise(function(resolve) {
             setTimeout(function() {
                treeControl._root = 12;
-               treeControl._afterUpdate();
+               treeControl._afterUpdate({});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(undefined, treeViewModel._model._root);
