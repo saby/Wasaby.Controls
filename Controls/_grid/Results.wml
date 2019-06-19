@@ -6,12 +6,12 @@
    </ws:if>
 </ws:template>
 <ws:template name="cell">
-   <div class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}">
+   <div class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}} controls-Grid__results-cell_default-height">
       <ws:partial template="cellContent"/>
    </div>
 </ws:template>
 <ws:template name="stickyCell">
-   <Controls.scroll:StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
+   <Controls.scroll:StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}} controls-Grid__results-cell_default-height"
                           mode="stackable"
                           fixedZIndex="{{currentResultsColumn.zIndex}}"
                           isResultsColumn="{{true}}"
