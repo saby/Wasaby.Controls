@@ -84,6 +84,60 @@ define(
                );
                sandbox.restore();
             });
+            it('should not set update selection position if the focus was set by a mouse click', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+               component._viewModel.selection = {
+                  start: 3,
+                  end: 3
+               };
+               sandbox.replace(component, '_getField', function() {
+                  return { selectionStart: 0 };
+               });
+               component._mouseDownHandler();
+               component._focusInHandler();
+               assert.deepEqual(component._viewModel.selection, { start: 3, end: 3 });
+               sandbox.restore();
+            });
+         });
+
+         describe('_clickHandler', function() {
+            it('should set default selection position', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+               component._viewModel.selection = {
+                  start: 3,
+                  end: 3
+               };
+               sandbox.replace(component, '_getField', function() {
+                  return { selectionStart: 0 };
+               });
+               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
+               component._mouseDownHandler();
+               component._focusInHandler();
+               component._clickHandler();
+               assert.deepEqual(component._viewModel.selection, { start: 0, end: 0 });
+               sandbox.restore();
+            });
+            it('should not update selection position on click on already focused field', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+               component._viewModel.selection = {
+                  start: 3,
+                  end: 3
+               };
+               sandbox.replace(component, '_getField', function() {
+                  return { selectionStart: 0 };
+               });
+               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
+               component._mouseDownHandler();
+               component._clickHandler();
+               assert.deepEqual(component._viewModel.selection, { start: 3, end: 3 });
+               sandbox.restore();
+            });
          });
       });
    }
