@@ -9,6 +9,32 @@
 
 /**
  * @name Controls/_tile/interface/IDraggable#itemsDragNDrop
+ * @cfg {String} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop.
+ * @variant none Dragging items is not allowed.
+ * @variant allow Dragging items is allowed.
+ * @default none
+ * @example
+ * The following example shows how to enable the ability to move items using drag'n'drop.
+ * <pre>
+ *    <Controls.List source="{{_viewSource}}"
+ *                   keyProperty="id"
+ *                   itemsDragNDrop="allow">
+ *     </Controls.List>
+ * </pre>
+ *
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _beforeMount: function() {
+ *          this._viewSource = new Source({...});
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/*
+ * @name Controls/_tile/interface/IDraggable#itemsDragNDrop
  * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
  * @variant none Dragging items is not allowed.
  * @variant allow Dragging items is allowed.
@@ -24,16 +50,58 @@
  *
  * <pre>
  *    Control.extend({
-    *       ...
-    *       _beforeMount: function() {
-    *          this._viewSource = new Source({...});
-    *       }
-    *       ...
-    *    });
+ *       ...
+ *       _beforeMount: function() {
+ *          this._viewSource = new Source({...});
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 
 /**
+ * @name Controls/_tile/interface/IDraggable#draggingTemplate
+ * @cfg {Function} Шаблон перемещаемого элемета.
+ * @default Controls/dragnDrop:DraggingTemplate
+ * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
+ * @example
+ * The following example shows how to use a standard dragging template.
+ * <pre>
+ *    <Controls.List source="{{_viewSource}}"
+ *                   keyProperty="id"
+ *                   on:dragStart="_onDragStart()"
+ *                   itemsDragNDrop="allow">
+ *       <ws:draggingTemplate>
+ *          <ws:partial template="Controls/dragnDrop:DraggingTemplate"
+ *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+ *                      image="{{draggingTemplate.entity._options.image}}"
+ *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+ *          </ws:partial>
+ *       </ws:draggingTemplate>
+ *    </Controls.List>
+ * </pre>
+ *
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _onDragStart: function(event, items) {
+ *          var mainItem = this._items.getRecordById(items[0]);
+ *          return new Entity({
+ *             items: items,
+ *             mainText: mainItem.get('FIO'),
+ *             additionalText: mainItem.get('title'),
+ *             image: mainItem.get('userPhoto')
+ *          });
+ *       },
+ *       _beforeMount: function() {
+ *          this._viewSource= new Source({...});
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/*
  * @name Controls/_tile/interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
  * @default Controls/dragnDrop:DraggingTemplate
@@ -57,21 +125,21 @@
  *
  * <pre>
  *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title'),
-    *             image: mainItem.get('userPhoto')
-    *          });
-    *       },
-    *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+ *       ...
+ *       _onDragStart: function(event, items) {
+ *          var mainItem = this._items.getRecordById(items[0]);
+ *          return new Entity({
+ *             items: items,
+ *             mainText: mainItem.get('FIO'),
+ *             additionalText: mainItem.get('title'),
+ *             image: mainItem.get('userPhoto')
+ *          });
+ *       },
+ *       _beforeMount: function() {
+ *          this._viewSource= new Source({...});
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 

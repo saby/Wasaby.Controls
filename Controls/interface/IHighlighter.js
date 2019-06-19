@@ -16,6 +16,11 @@ define('Controls/interface/IHighlighter', [
 
    /**
     * @name Controls/interface/IHighlighter#highlighter
+    * @cfg {Array.<Highlighter>} Массив параметров подсветки элементов списка.
+    */
+
+   /*
+    * @name Controls/interface/IHighlighter#highlighter
     * @cfg {Array.<Highlighter>} Array of highlighters.
     */
 });

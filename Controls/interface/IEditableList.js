@@ -196,7 +196,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @cfg {EditingConfig} Configuration for editing in place.
+    * @cfg {EditingConfig} Конфигурация редактирования по месту.
     * <a href="/materials/demo-ws4-editable-list">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
@@ -209,6 +209,21 @@ define('Controls/interface/IEditableList', [
     *    </Controls.list:View>
     * </pre>
     */
+
+   /*
+    * @cfg {EditingConfig} Configuration for editing in place.
+    * <a href="/materials/demo-ws4-editable-list">Example</a>.
+    * @name Controls/interface/IEditableList#editingConfig
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.list:View>
+    *       <ws:editingConfig>
+    *          <ws:Object editOnClick="{{true}}" showToolbar="{{true}}" />
+    *       </ws:editingConfig>
+    *    </Controls.list:View>
+    * </pre>
+    */    
 
    /**
     * Starts editing.
