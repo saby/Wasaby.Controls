@@ -18,10 +18,10 @@ import IInputField from "./IInputField";
  *
  * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/interface/IInputTooltip
- * @mixes Controls/interface/IInputStyle
  *
- * @mixes Controls/_input/Base/Styles
- * @mixes Controls/_input/Render/Styles
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
  *
  * @mixes Controls/interface/ICallback
  *
@@ -30,42 +30,6 @@ import IInputField from "./IInputField";
  */
 type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
     readonly _options: {
-        /**
-         * @name Controls/interface/IInputBase#size
-         * @cfg {Enum} Field size.
-         * @variant s - The size of a small field.
-         * @variant m - The size of a medium field.
-         * @variant l - The size of a large field.
-         * @variant default - The size of a standard field.
-         * @default default
-         * @remark
-         * The size is selected depending on the context of the value in the field.
-         */
-        size: 's' | 'm' | 'l' | 'default';
-        /**
-         * @name Controls/interface/IInputBase#fontStyle
-         * @cfg {Enum} Fonts of the text in field.
-         * @variant default - Font style in standard field.
-         * @variant primary - Font style to attract attention.
-         * @variant secondary - Font style in secondary field.
-         * @default default
-         * @remark
-         * The font style is selected depending on the context of the value in the field.
-         * @example
-         * In this example, we create a form for input passport data. Fields for entering your name have accent font.
-         * <pre>
-         *    <div class="form">
-         *       <div class="fio">
-         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
-         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
-         *       </div>
-         *       <div class="residence">
-         *          <Controls.input:Text name="street"/>
-         *       </div>
-         *    </div>
-         * </pre>
-         */
-        fontStyle: 'default' | 'primary' | 'secondary';
         /**
          * @name Controls/interface/IInputBase#textAlign
          * @cfg {Enum} Horizontal alignment of the text in field.

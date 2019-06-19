@@ -229,11 +229,29 @@ import 'Controls/decorator';
             Area.superclass._initProperties.apply(this, arguments);
 
             this._field.template = fieldTemplate;
+            this._field.scope.compatFontSize = this._compatFontSize.bind(this);
             this._readOnlyField.template = readOnlyFieldTemplate;
          },
 
          _isTriggeredChangeEventByEnterKey: function() {
             return false;
+         },
+
+         _compatFontSize: function () {
+            if (this._options.fontSize) {
+               return this._options.fontSize;
+            }
+
+            switch (this._options.size) {
+               case 's':
+                  return 's';
+               case 'm':
+               case 'default':
+               default:
+                  return 'm';
+               case 'l':
+                  return 'l';
+            }
          }
       });
 

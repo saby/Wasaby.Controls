@@ -1,13 +1,12 @@
-<div class="controls-Render
-            controls-Render_theme_{{_options.theme}}_style
-            controls-Render_theme_{{_options.theme}}_fontStyle_{{_options.fontStyle}}
-            controls-Render_textAlign_{{_options.textAlign}}
-            controls-Render_theme_{{_options.theme}}_style_{{_options.style}}{{_getState(_contentActive)}}
+<div class="controls-Render controls-Render_theme-{{_options.theme}}
+            controls-Render_textAlign-{{_options.textAlign}}
+            controls-Render_state-{{_state}}_theme-{{_options.theme}}
+            controls-fontsize-{{_compatFontSize()}}_theme-{{_options.theme}}
+            controls-text-{{_compatFontColorStyle()}}_theme-{{_options.theme}}
             controls-Render_theme_{{_options.theme}}_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
-            {{_options.multiline ?
-            'controls-Render_multiline' :
-            'controls-Render_theme_' + _options.theme + '_size_' + _options.size}}
-            {{_options.roundBorder ? 'controls-Render_theme_' + _options.theme + '_size_' + _options.size + '_roundBorder'}}">
+            {{_options.multiline ? 'controls-Render_multiline' :
+            'controls-inlineheight-' + _compatInlineHeight() + '_theme-' + _options.theme}}
+            {{_options.roundBorder ? 'controls-Render_theme_' + _options.theme + '_size_' + _compatInlineHeight() + '_roundBorder'}}">
    <div class="controls-Render__wrapper">
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
@@ -16,12 +15,12 @@
          <ws:partial attr:class="controls-Render__beforeField" template="{{_options.beforeFieldWrapper}}"/>
       </ws:if>
       <ws:partial template="{{_options.content}}"
-                  on:focusin="_contentFocusInHandler()"
-                  on:focusout="_contentFocusOutHandler()"
+                  on:focusin="_setContentActive(true)"
+                  on:focusout="_setContentActive(false)"
                   attr:class="controls-Render__field controls-Render__field_textAlign_{{_options.textAlign}}">
          <ws:placeholderTemplate>
             <ws:if data="{{_options.placeholder}}">
-               <div class="controls-Render__placeholder_theme_{{_options.theme}}
+               <div class="controls-Render__placeholder_theme-{{_options.theme}}
                            {{_options.multiline ? '' : 'controls-Render__placeholder_overflow'}}">
                   <ws:partial template="{{_options.placeholder}}"/>
                </div>
@@ -36,8 +35,8 @@
       <svg name="tag"
            viewBox="0 0 1 1"
            xmlns="http://www.w3.org/2000/svg"
-           class="controls-Render__tagStyle_theme_{{_options.theme}}
-                  controls-Render__tagStyle_theme_{{_options.theme}}_{{_options.tagStyle}}"
+           class="controls-Render__tagStyle_theme-{{_options.theme}}
+                  controls-icon_style-{{_options.tagStyle}}_theme-{{_options.theme}}"
            on:click="_notifyHandler('tagClick', _children.tag)"
            on:mouseenter="_notifyHandler('tagHover', _children.tag)">
          <polygon points="0,0 1,1 1,0"/>

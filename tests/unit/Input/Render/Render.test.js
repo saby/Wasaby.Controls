@@ -19,29 +19,46 @@ define(
          describe('Behavior', function() {
             describe('_getState', function() {
                it('Control in read mode.', function() {
-                  ctrl._options.readOnly = true;
-                  ctrl._options.multiline = false;
+                  ctrl._beforeMount({
+                     readOnly: true,
+                     multiline: false,
+                     state: ''
+                  });
 
-                  assert.equal(ctrl._getState(false), '_readOnly');
+                  assert.equal(ctrl._state, 'readonly');
                });
                it('Control in read mode and multiline.', function() {
-                  ctrl._options.readOnly = true;
-                  ctrl._options.multiline = true;
+                  ctrl._beforeMount({
+                     readOnly: true,
+                     multiline: true,
+                     state: ''
+                  });
 
-                  assert.equal(ctrl._getState(false), '_readOnly_multiline');
+                  assert.equal(ctrl._state, 'readonly-multiline');
                });
                it('Control in active mode.', function() {
-                  ctrl._options.readOnly = false;
+                  ctrl._beforeMount({
+                     state: '',
+                     readOnly: false
+                  });
+                  ctrl._options = {
+                     state: ''
+                  };
+                  ctrl._setContentActive(true);
+
                   if (Env.detection.isIE) {
-                     assert.equal(ctrl._getState(true), '_active');
+                     assert.equal(ctrl._state, 'valid-active');
                   } else {
-                     assert.equal(ctrl._getState(true), '');
+                     assert.equal(ctrl._state, 'valid');
                   }
                });
                it('Control in inactive mode.', function() {
-                  ctrl._options.readOnly = false;
+                  ctrl._beforeMount({
+                     readOnly: false,
+                     state: ''
+                  });
 
-                  assert.equal(ctrl._getState(false), '');
+                  assert.equal(ctrl._state, 'valid');
                });
             });
          });
@@ -52,11 +69,13 @@ define(
                ctrl._options = {
                   content: Content,
                   size: 'm',
+                  state: '',
                   fontStyle: 'default',
                   textAlign: 'left',
                   style: 'info',
                   theme: 'default'
                };
+               ctrl._beforeMount(ctrl._options);
             });
             it('In the content template passed the placeholder template', function() {
                ctrl._options.placeholder = 'test placeholder';
