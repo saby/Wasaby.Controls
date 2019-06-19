@@ -146,7 +146,7 @@ define(
             });
          });
 
-         it('itemsChanged', (done) => {
+         it('itemsChanged', () => {
             const config = {
                source: source,
                keyProperty: 'id'
