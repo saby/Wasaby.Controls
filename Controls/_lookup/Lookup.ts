@@ -48,17 +48,17 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/ISelectableInput
- * @mixes Controls/_lookup/Lookup/LookupStyles
+ * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
  * @author Капустин И.А.
- * @category Input
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 

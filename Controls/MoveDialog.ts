@@ -13,7 +13,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_list/interface/IList
-    * @mixes Controls/_interface/Isorting
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/_explorer/interface/IExplorer
     *
     * @mixes Controls/_MoveDialog/Styles

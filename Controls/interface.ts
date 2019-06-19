@@ -18,7 +18,7 @@
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
- * @includes Isorting Controls/_interface/Isorting
+ * @includes ISorting Controls/_interface/ISorting
  * @public
  * @author Крайнов Д.О.
  */
@@ -39,4 +39,4 @@ export {default as IErrorController, IErrorControllerOptions} from './_interface
 export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy';
 export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
-export {default as Isorting, ISortingOptions} from './_interface/Isorting';
+export {default as ISorting, ISortingOptions} from './_interface/ISorting';

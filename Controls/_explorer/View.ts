@@ -227,7 +227,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
-    * @mixes Controls/_interface/Isorting
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer

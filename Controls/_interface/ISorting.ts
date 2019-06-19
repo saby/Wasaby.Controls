@@ -3,28 +3,28 @@ export interface ISortingOptions {
 }
 
 /**
- * Интерфейс для сортировки списка.
+ * Интерфейс для контролов, реализующих сортировку.
  *
- * @interface Controls/_interface/Isorting
+ * @interface Controls/_interface/ISorting
  * @public
  * @author Авраменко А.С.
  */
 /*
- * Interface for sorting list.
+ * Interface for controls that implement sorting.
  *
- * @interface Controls/_interface/Isorting
+ * @interface Controls/_interface/ISorting
  * @public
  * @author Avramenko A.S.
  */
-export default interface Isorting {
-   readonly '[Controls/_interface/Isorting]': boolean;
+export default interface ISorting {
+   readonly '[Controls/_interface/ISorting]': boolean;
 }
 
 /**
- * @name Controls/_interface/Isorting#sorting
- * @cfg {Array} Определяет сортировку списка.
+ * @name Controls/_interface/ISorting#sorting
+ * @cfg {Array} Определяет сортировку контрола.
  * @example
- * Вы должны установить свойство sortingProperty в заголовке столбца:
+ * В шапке столбца необходимо задать свойство sortingProperty:
  * <pre>
  * _header = [
  *      {
@@ -51,7 +51,7 @@ export default interface Isorting {
  *      }
  * ];
  * </pre>
- * И забиндиться на опцию сортировки или подписаться на событие sortingChanged и изменить сортировку вручную.
+ * И привязать опцию сортировки или подписаться на событие sortingChanged и изменить сортировку вручную:
  * <pre>
  *  <Controls.grid:View
  *      displayProperty="title"
@@ -61,15 +61,14 @@ export default interface Isorting {
  *  </Controls.grid:View>
  * </pre>
  *
- * Конфигурация сортировочного массива:
+ * Настройка сортировки массива:
  * <pre>
  * [
  *    { price: 'desc' },
  *    { balance: 'asc' }
  * ]
  * </pre>
- * Вы так же можете определить поведение для null значений, установив 3-им элементом массива булево значение.
- * Таким образом вы можете выбрать где расположить значения с null, false - в начале, true - в конце.
+ * Используйте политику сортировки null-значений, разместив их перед "непустыми" значениями или после:
  * <pre>
  * [
  *    ['price', 'desc', false],
@@ -80,7 +79,7 @@ export default interface Isorting {
  */
 
 /*
- * @name Controls/_interface/Isorting#sorting
+ * @name Controls/_interface/ISorting#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
  * You must set the sortingProperty property in the header of the column:

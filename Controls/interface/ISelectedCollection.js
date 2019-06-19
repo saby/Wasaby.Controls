@@ -1,6 +1,5 @@
 define('Controls/interface/ISelectedCollection', [
 ], function() {
-
    /**
     * Интерфейс для выбора элементов из списка.
     * @interface Controls/interface/ISelectedCollection
@@ -148,6 +147,40 @@ define('Controls/interface/ISelectedCollection', [
     *                      clickable="{{true}}"/>
     *       </ws:itemTemplate>
     *    </Controls.lookup:Selector>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/interface/ISelectedCollection#dataLoadCallback
+    * @cfg {Function} Функция обратного вызова, которая вызывается после загрузки данных.
+    * @remark
+    * dataLoadCallback принимает в качестве первого аргумента коллекцию загруженных элементов.
+    * dataLoadCallback может использоваться для установки метаданных или настройки загруженных элементов.
+    * @example
+    * JS:
+    * <pre>
+    * _myDataLoadCallback = function(items) {
+    *    items.each(function(item) {
+    *       item.set(field, value);
+    *    });
+    * }
+    * </pre>
+    */
+
+   /*
+    * @name Controls/interface/ISelectedCollection#dataLoadCallback
+    * @cfg {Function} Callback function that will be called when list data loaded by source
+    * @remark
+    * dataLoadCallback takes to first argument the collection of loaded items.
+    * dataLoadCallback can be used for setting metadata or adjusting loaded items.
+    * @example
+    * JS:
+    * <pre>
+    * _myDataLoadCallback = function(items) {
+    *    items.each(function(item) {
+    *       item.set(field, value);
+    *    });
+    * }
     * </pre>
     */
 

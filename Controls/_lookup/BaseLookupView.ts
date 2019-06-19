@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/BaseLookupView/BaseLookupView');
 import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {isEqual} from 'Types/object';
-import Env = require('Env/Env');
+import {constants, IoC} from 'Env/Env';
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 
@@ -57,6 +57,10 @@ var BaseLookupView = Control.extend({
             this._maxVisibleItems = options.maxVisibleItems;
         } else {
             this._maxVisibleItems = options.items.getCount();
+        }
+
+        if (options.suggestFooterTemplate) {
+            IoC.resolve('ILogger').warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"');
         }
     },
 
@@ -219,7 +223,7 @@ var BaseLookupView = Control.extend({
 
         if (keyCodeEvent === KEY_CODE_F2) {
             this._notify('showSelector');
-        } else if (keyCodeEvent === Env.constants.key.backspace &&
+        } else if (keyCodeEvent === constants.key.backspace &&
             !this._inputValue && !this._isEmpty(this._options)) {
 
             //If press backspace, the input field is empty and there are selected entries -  remove last item
