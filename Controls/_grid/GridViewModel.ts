@@ -577,7 +577,7 @@ var
         setHeaderCellMinHeight: function(data) {
             if (!isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
                 this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
-                if (data[1]) { this._setResultOffset(data[1]); };
+                if (data[1]) { this._setResultOffset(data[1]); }
                 this._nextModelVersion();
             }
         },
@@ -702,11 +702,6 @@ var
             let offsetTop = 0;
             let shadowVisibility = 'visible';
 
-            // For browsers with partial grid support need to set its grid-row and grid-column
-            // if (GridLayoutUtil.isPartialGridSupport()) {
-            //     cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
-            // }
-
             if (this._headerRows.length > 1) {
                 cellContentClasses += ' controls-Grid__header-cell_align_items_center';
             }
@@ -731,10 +726,12 @@ var
                 cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
             }
 
-            if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
-                cellStyles = `grid-row:1/${this._maxEndRow};grid-column:1/2;`;
-                headerColumn.rowSpan = this._maxEndRow - 1;
-                headerColumn.colSpan = 1;
+            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+                cellStyles = GridLayoutUtil.getMultyHeaderStyles(1, 2, 1, this._maxEndRow, 0)
+                if (this.isNoGridSupport()) {
+                    headerColumn.rowSpan = this._maxEndRow - 1;
+                    headerColumn.colSpan = 1;
+                }
             }
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;

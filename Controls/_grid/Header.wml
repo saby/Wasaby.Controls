@@ -17,16 +17,14 @@
          <ws:partial attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
                      template="{{headerColumn.column.template}}"
                      scope="{{ headerColumn.column.templateOptions }}"
-                     colData="{{headerColumn}}"
-         />
+                     colData="{{headerColumn}}"/>
 
       </ws:if>
       <ws:else>
          <ws:partial
                  attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
                  template="{{defaultHeaderContent}}"
-                 colData="{{headerColumn}}"
-         />
+                 colData="{{headerColumn}}"/>
       </ws:else>
    </ws:if>
 </ws:template>
@@ -103,8 +101,7 @@
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.scroll:Group>
       <ws:partial template="header" listModel="{{ listModel }}" />
-   </Controls.scroll:Group
-           >
+   </Controls.scroll:Group>
 </ws:if>
 <ws:else>
    <ws:partial template="header"/>
