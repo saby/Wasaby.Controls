@@ -6,6 +6,7 @@ import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
+import {isEqual} from "Types/object"
 
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
@@ -96,7 +97,7 @@ type GetSourceResult = {
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
 
-            if (self._filter !== options.filter) {
+            if (!isEqual(self._options.filter, options.filter)) {
                self._filter = clone(options.filter);
 
                if (options.parentProperty && options.root) {

@@ -100,6 +100,18 @@
    <div>
       <Controls.buttons:Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
    </div>
+   <div>
+      <Controls.buttons:Button name="helperButton1" caption="open InfoBox by popupHelper" on:click="openInfoBoxByHelper()" attr:class="ControlsDemo-PopupPage__helperInfoBoxButton"/>
+   </div>
+   <div>
+      <Controls.buttons:Button name="helperButton2" caption="open Notification by popupHelper" on:click="openNotificationByHelper()" attr:class="ControlsDemo-PopupPage__helperNotificationButton"/>
+   </div>
+   <div>
+      <Controls.buttons:Button name="helperButton3" caption="open Confirmation by popupHelper" on:click="openConfirmationByHelper()" attr:class="ControlsDemo-PopupPage__helperConfirmationButton"/>
+      <ws:if data="{{_helperConfirmationResult !== undefined}}">
+         <span style="margin-left: 10px;">Пользователь выбрал {{_helperConfirmationResult ? 'да' : 'нет'}}</span>
+      </ws:if>
+   </div>
    <div style="margin-top: 10px;">
       <Controls.input:Text placeholder="for focusing" attr:class="ControlsDemo-PopupPage__forFocusing"/>
    </div>

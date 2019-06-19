@@ -289,6 +289,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
         this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+        this._children.baseControl.getViewModel().subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
     },
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
@@ -308,6 +309,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (newOptions.expandedItems) {
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
+        if (newOptions.collapsedItems) {
+            this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
+        }
+
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }
@@ -349,8 +354,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpandedItemsChanged(e, expandedItems){
         this._notify('expandedItemsChanged', [expandedItems]);
-
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
+        this._forceUpdate();
+    },
+    _onCollapsedItemsChanged(e, collapsedItems){
+        this._notify('collapsedItemsChanged', [collapsedItems]);
+        //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
         this._forceUpdate();
     },
     reload: function() {

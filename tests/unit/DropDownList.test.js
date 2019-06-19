@@ -323,6 +323,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   items: dropDownList._options.items,
                   itemTemplate: dropDownList._options.itemTemplate,
                   itemTemplateProperty: dropDownList._options.itemTemplateProperty,
+                  groupTemplate: dropDownList._options.groupTemplate,
+                  groupingKeyCallback: dropDownList._options.groupingKeyCallback,
                   keyProperty: dropDownList._options.keyProperty,
                   displayProperty: dropDownList._options.displayProperty,
                   parentProperty: dropDownList._options.parentProperty,

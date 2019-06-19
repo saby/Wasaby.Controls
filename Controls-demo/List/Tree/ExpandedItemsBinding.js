@@ -17,9 +17,11 @@ define('Controls-demo/List/Tree/ExpandedItemsBinding', [
       gridData: null,
       gridColumns: null,
       _expandedItemsForBind: null,
+      _collapsedItemsForBind: null,
       _expandedItems: [2246],
       _beforeMount: function() {
-         this._myExpandedItems=[2246];
+         this._expandedItemsForBind = [null];
+         this._collapsedItemsForBind = [];
          this.gridColumns = [
             {
                displayProperty: 'Наименование',

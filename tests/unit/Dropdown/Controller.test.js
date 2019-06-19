@@ -6,9 +6,10 @@ define(
       'Types/collection',
       'Controls/history',
       'Core/Deferred',
-      'Types/entity'
+      'Types/entity',
+      'Core/core-instance'
    ],
-   (dropdown, sourceLib, Clone, collection, history, Deferred, entity) => {
+   (dropdown, sourceLib, Clone, collection, history, Deferred, entity, cInstance) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -189,6 +190,7 @@ define(
 
             isOpen = true;
             dropdownController._items = itemsRecords;
+            dropdownController._sourceController = {hasMoreData: ()=>{}};
             dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
             assert.isTrue(opened);
          });
@@ -202,6 +204,7 @@ define(
                title: 'Запись 9'
             });
             dropdownController._items = itemsRecords;
+            dropdownController._source = true;
             dropdownController._children = {
                DropdownOpener: {
                   open: function() {
@@ -222,6 +225,7 @@ define(
                   })
                }).addCallback(() => {
                   assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isTrue(cInstance.instanceOfModule(dropdownController._source, 'Types/source:Base'));
                   assert.isFalse(opened);
                   resolve();
                });
@@ -447,11 +451,26 @@ define(
             let selectedItemsChangedCallback = function(items) {
                selectedItems = items;
             };
+
+            // emptyText + selectedKeys = [null]
             dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [null], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
 
-            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id');
+            // emptyText + selectedKeys = []
+            dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
+
+            // selectedKeys = []
+            let newItems = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  {id: null, title: 'All'},
+                  {id: '1', title: 'first'}
+               ]
+            });
+            dropdownController._items = newItems;
+            dropdown._Controller._private.updateSelectedItems(dropdownController, undefined, [], 'id', selectedItemsChangedCallback);
+            assert.deepEqual(selectedItems, [newItems.at(0)]);
          });
 
          it('_open dropdown', () => {
@@ -696,13 +715,21 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('_private::getSourceController', function() {
+         it('_private::getSourceController', function(done) {
             let dropdownController = getDropdownController(config);
             dropdownController._beforeMount(configLazyLoad);
             assert.isNotOk(dropdownController._sourceController);
 
             dropdownController._beforeMount(config);
             assert.isOk(dropdownController._sourceController);
+
+            let historyConfig = {...config, historyId: 'TEST_HISTORY_ID'};
+            dropdownController = getDropdownController(historyConfig);
+            dropdown._Controller._private.getSourceController(dropdownController, historyConfig).addCallback((sourceController) => {
+               assert.isTrue(cInstance.instanceOfModule(sourceController._source, 'Controls/history:Source'));
+               assert.isOk(dropdownController._sourceController);
+               done();
+            });
          });
 
          let historySource,
