@@ -143,21 +143,17 @@ define('Controls/Container/Async',
          },
 
          _getHeadData: function() {
-            try {
-               var headData = AppEnv.getStore('HeadData');
-               return headData;
-            } catch (e) {
-               Env.IoC.resolve('ILogger').error('Couldn\'t get HeadData store', e);
-               return null;
-            }
+            return AppEnv.getStore('HeadData');
          },
 
          _pushDepToHeadData: function(dep) {
-            var headData = this._getHeadData();
-            if (headData === null) {
-               Env.IoC.resolve('ILogger').warn('HeadData store wasn\'t initialized. Link to ' + dep + ' won\'t be added to server-side generated markup.');
-            } else {
+            try {
+               var headData = this._getHeadData();
                headData.pushDepComponent(dep, true);
+            } catch (e) {
+               Env.IoC.resolve('ILogger').warn('You\'re trying to use Async without Controls/Application. Link to ' +
+                  dep +
+                  ' won\'t be added to server-side generated markup. ' + e);
             }
          },
 
@@ -169,8 +165,8 @@ define('Controls/Container/Async',
                   this.optionsForComponent[key] = opts[key];
                }
             }
-            if (tpl &&  tpl.__esModule) {
-               this.optionsForComponent.resolvedTemplate = tpl.default;   
+            if (tpl && tpl.__esModule) {
+               this.optionsForComponent.resolvedTemplate = tpl.default;
             } else {
                this.optionsForComponent.resolvedTemplate = tpl;
             }
