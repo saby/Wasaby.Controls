@@ -1089,7 +1089,7 @@ define([
          let treeGridViewModel = new treeGrid.ViewModel(cfg);
 
          let emptyCfg = getDefaultCfg();
-         emptyCfg.expandedItems = [1, 2];
+         emptyCfg.expandedItems = ['1', '2'];
          let emptyTreeGridViewModel = new treeGrid.ViewModel(emptyCfg);
 
          let self = {
