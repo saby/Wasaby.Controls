@@ -56,7 +56,6 @@ define(
                'textAlign',
                'fontStyle',
                'useGrouping',
-               'autoComplete',
                'onlyPositive',
                'selectOnClick',
                'inputCallback',

@@ -48,7 +48,6 @@ define(
                'textAlign',
                'fontStyle',
                'revealable',
-               'autoComplete',
                'inputCallback',
                'selectOnClick'
             ].sort());
