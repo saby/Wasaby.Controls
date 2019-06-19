@@ -4,9 +4,12 @@
    flex-grow: 1;
    flex-shrink: 1;
    height: 100%;
-   background-color: @background-color_StackTemplate;
    position: relative;
    overflow: hidden;
+}
+
+.controls-StackTemplate_theme_@{themeName} {
+   background-color: @background-color_StackTemplate;
 }
 
 .controls-StackTemplate__top-area {
@@ -23,8 +26,11 @@
    flex-direction: column;
    flex-grow: 1;
    flex-shrink: 1;
-   background: @background-color_StackTemplate;
    overflow: hidden;
+}
+
+.controls-StackTemplate__content-area_theme_@{themeName} {
+   background: @background-color_StackTemplate;
 }
 
 .controls-StackTemplate__top-area-content {
@@ -38,8 +44,11 @@
 
 .controls-StackTemplate__close_button {
    position: relative;
-   margin-top: @spacing_StackTemplate-between-close-button-border-top;
    z-index: 3;
+}
+
+.controls-StackTemplate__close_button_theme_@{themeName} {
+   margin-top: @spacing_StackTemplate-between-close-button-border-top;
 }
 
 .controls-StackTemplate__headerContentTemplate {
@@ -64,13 +73,16 @@
 
 .controls-StackTemplate__maximized_button {
    position: relative;
-   margin-top: @spacing_StackTemplate-between-maximized-button-content-top;
-   margin-right: @spacing_StackTemplate-between-maximized-button-close-button;
    background-image: url(resources/images/resize.svg);
    width: 24px;
    height: 24px;
    z-index: 3;
    cursor: pointer;
+}
+
+.controls-StackTemplate__maximized_button_theme_@{themeName} {
+   margin-top: @spacing_StackTemplate-between-maximized-button-content-top;
+   margin-right: @spacing_StackTemplate-between-maximized-button-close-button;
 }
 
 .controls-StackTemplate__caption {
