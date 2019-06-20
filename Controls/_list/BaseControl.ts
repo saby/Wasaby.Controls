@@ -986,6 +986,7 @@ var _private = {
  * @class Controls/_list/BaseControl
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IErrorController
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped
