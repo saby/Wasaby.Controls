@@ -1,12 +1,8 @@
 import Env = require('Env/Env');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Base = require('Controls/_input/Base');
-import {isEqual} from 'Types/object';
 import ViewModel = require('Controls/_input/Mask/ViewModel');
-import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
-import baseTemplate = require('wml!Controls/_input/Base/Base');
-import MaskTpl = require('wml!Controls/_input/Mask/Mask');
 
       
 
@@ -119,8 +115,6 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
             }
          },
          Mask = Base.extend({
-            _template: MaskTpl,
-            _baseTemplate: baseTemplate,
             _viewModel: null,
             _notifyHandler: tmplNotify,
 
@@ -132,6 +126,8 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
                if (newOptions.value !== oldValue) {
                   this._viewModel.setCarriageDefaultPosition(0);
                }
+               // TODO redo after complete https://online.sbis.ru/opendoc.html?guid=6856e162-7b3b-4fdc-ba56-461ff1d9786b
+               this._field.scope._useStretcher = !!newOptions.replacer;
             },
 
             _getViewModelOptions: function(options) {
@@ -147,13 +143,27 @@ import MaskTpl = require('wml!Controls/_input/Mask/Mask');
                return ViewModel;
             },
 
-            _isAutoWidth: function() {
-               return Boolean(this._options.replacer) ? 'absolute' : 'relative';
+            _initProperties: function(options) {
+               Mask.superclass._initProperties.apply(this, arguments);
+               // TODO redo after complete https://online.sbis.ru/opendoc.html?guid=6856e162-7b3b-4fdc-ba56-461ff1d9786b
+               this._field.scope._useStretcher = !!options.replacer;
             },
 
             _focusInHandler: function() {
+               // Set the carriage only if the input field has received focus on the tab key.
+               // If the focus was set by a mouse click, the selection has not yet been sett.
+               // Getting the focus by clicking the mouse is processed in the _clickHandler.
+               if (!this._focusByMouseDown) {
+                   this._viewModel.setCarriageDefaultPosition();
+               }
                Mask.superclass._focusInHandler.apply(this, arguments);
-               this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
+            },
+
+            _clickHandler: function() {
+                if (this._firstClick) {
+                    this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
+                }
+                Mask.superclass._clickHandler.apply(this, arguments);
             }
          });
 

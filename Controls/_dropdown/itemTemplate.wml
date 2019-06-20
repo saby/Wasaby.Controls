@@ -1,9 +1,15 @@
 <div attr:class="controls-DropdownList__row controls-DropdownList__row_state_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly' : 'default'}}
-                 {{marker !== false && itemData.isSelected ? 'controls-DropdownList__selected'}}
+                 {{marker !== false && itemData.isSelected && (!itemData.multiSelect || itemData.emptyText) ? 'controls-DropdownList__selected'}}
                  controls-DropdownList__item-right_{{showClose ? 'close-padding' : hasPinned ? 'history-padding': itemData.hasChildren ? 'hierarchy-padding' : 'default-padding'}}
                  {{itemData.spacingClassList}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
+   <ws:if data="{{(itemData.multiSelect || multiSelect) && !itemData.emptyText}}">
+      <Controls.toggle:Checkbox value="{{itemData.isSelected}}"
+                                attr:class="controls-DropdownList__row-checkbox theme_{{_options.theme}}
+                                   controls-DropdownList__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme_{{_options.theme}}
+                                   controls-DropdownList__row-checkbox_{{itemData.isSelected ? 'active' : 'default'}}_theme_{{_options.theme}}"/>
+   </ws:if>
    <ws:if data="{{contentTemplate}}">
       <!--If contentTemplate is a string, then use Async to load required module-->
       <ws:if data="{{(contentTemplate.charAt)}}">
@@ -22,12 +28,6 @@
       </ws:else>
    </ws:if>
    <ws:else>
-      <ws:if data="{{multiSelect}}">
-         <Controls.toggle:Checkbox value="{{itemData.isSelected}}"
-                                   attr:class="controls-DropdownList__row-checkbox theme_{{_options.theme}}
-                                   controls-DropdownList__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme_{{_options.theme}}
-                                   controls-DropdownList__row-checkbox_{{itemData.isSelected ? 'active' : 'default'}}_theme_{{_options.theme}}"/>
-      </ws:if>
       <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}}">
          <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ? 'controls-DropdownList__icon'}}
                      controls-DropdownList__icon_style_{{itemData.iconStyle}}

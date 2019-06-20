@@ -146,19 +146,24 @@ define(
             });
          });
 
-         it('itemsChanged', function(done) {
-            var config = {source: source, keyProperty: 'id'};
-            var data = getDataWithConfig(config);
-            var propagationStopped = false;
-            var event = {
-               stopPropagation: function() {
+         it('itemsChanged', () => {
+            const config = {
+               source: source,
+               keyProperty: 'id'
+            };
+            const data = getDataWithConfig(config);
+            const event = {
+               stopPropagation: () => {
                   propagationStopped = true;
                }
             };
 
+            let propagationStopped = false;
+
             data._beforeMount(config).addCallback(function() {
-               data._itemsChanged(event, data._items);
+               data._itemsChanged(event, []);
                assert.isTrue(propagationStopped);
+               assert.deepEqual(data._items, []);
                done();
             });
          });
@@ -340,7 +345,11 @@ define(
          });
 
          it('_private.resolveOptions', function() {
-            var self = {};
+            var self = {
+               _options: {
+                  filter: {}
+               }
+            };
             var options = {
                filter: {},
                root: 'test',
@@ -348,9 +357,17 @@ define(
             };
 
             lists.DataContainer._private.resolveOptions(self, options);
-
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
             assert.isTrue(self._filter !== options.filter);
+
+
+            let filter = {test: 123};
+            self._options.filter = filter;
+            options.filter = filter;
+            lists.DataContainer._private.resolveOptions(self, options);
+            //if filter option was not changed, _filter from state will not updated by resolveOptions
+            assert.deepEqual(self._filter, {testParentProperty: 'test'});
+
          });
       });
    });

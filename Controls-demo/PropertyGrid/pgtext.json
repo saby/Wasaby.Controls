@@ -2815,15 +2815,17 @@
             "type": "Boolean",
             "title": "Determines whether display of the close button."
           },
-          "closeButtonStyle": {
+          "closeButtonTransparent": {
+            "type": "Boolean"
+          },
+          "closeButtonViewMode": {
             "type": "enum",
-            "default": "default",
-            "newName": "closeButtonViewMode",
+            "default": "popup",
             "title": "Close button display style.",
             "enum": {
-              "default": "default",
-              "light": "light",
-              "primary": "primary"
+              "toolButton": "toolButton",
+              "link": "link",
+              "popup": "popup"
             }
           },
           "draggable": {
@@ -2879,14 +2881,17 @@
             "type": "Boolean",
             "title": "Determines the display maximize button."
           },
+          "closeButtonTransparent": {
+            "type": "Boolean"
+          },
           "closeButtonViewMode": {
             "type": "enum",
-            "default": "default",
+            "default": "popup",
             "title": "Close button display style.",
             "enum": {
-              "default": "default",
-              "light": "light",
-              "primary": "primary"
+              "toolButton": "toolButton",
+              "link": "link",
+              "popup": "popup"
             }
           }
         }

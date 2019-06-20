@@ -4,6 +4,7 @@ import InfoBoxOpener from './Opener/InfoBox');
 import {TouchContextField} from 'Controls/context';
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
+import entity = require('Types/entity');
 
 
       /**
@@ -310,8 +311,19 @@ import Env = require('Env/Env');
             isTouch: TouchContextField
          };
       };
+      InfoBox.getOptionTypes = function() {
+         return {
+            trigger: entity.descriptor(String).oneOf([
+               'hover',
+               'click',
+               'hover|touch',
+               'demand'
+            ])
+         };
+      };
 
-      InfoBox.getDefaultOptions = function() {
+
+InfoBox.getDefaultOptions = function() {
          return {
             targetSide: 'top',
             alignment: 'start',

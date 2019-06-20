@@ -113,6 +113,16 @@ var TreeTileViewModel = TreeViewModel.extend({
         this._tileModel.unsubscribe('onListChange', this._onListChangeFn);
         this._tileModel.destroy();
         TreeTileViewModel.superclass.destroy.apply(this, arguments);
+    },
+
+    prepareDisplayFilterData: function() {
+        var
+           filterData = TreeTileViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
+        // Для плитки свернутых и развернутых узлов не существует. Есть просто узлы, в которые можно проваливаться и
+        // листья, в которые проваливаться нельзя.
+        filterData.expandedItems = [];
+        filterData.collapsedItems = [];
+        return filterData;
     }
 });
 

@@ -142,6 +142,11 @@ define([
                this.skip();
             }
          });
+         it('no first tag', function() {
+            var html = 'some text without tag <span>and some text in tag</span> dot';
+            var json = [[], 'some text without tag ', ['span', 'and some text in tag'], ' dot'];
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
+         });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
@@ -161,7 +166,7 @@ define([
                ]
             ]);
             assert.deepEqual(decorator.Converter.htmlToJson(''), []);
-            assert.deepEqual(decorator.Converter.htmlToJson('just a string'), ['just a string']);
+            assert.deepEqual(decorator.Converter.htmlToJson('just a string'), [[], 'just a string']);
          });
          it('trim', function() {
             var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
@@ -270,6 +275,7 @@ define([
          it('empty', function() {
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(), ''));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([[], 'some text']), '<div>some text</div>'));
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
@@ -380,12 +386,12 @@ define([
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
                      height: 'testHeight',
-                     href: 'http://testHref.com',
+                     href: 'www.testHref.com',
                      id: 'testId',
                      name: 'testName',
                      rel: 'testRel',
                      rowspan: 'testRowspan',
-                     src: '/testSrc',
+                     src: './testSrc',
                      style: 'testStyle',
                      tabindex: 'testTabindex',
                      target: 'testTarget',
@@ -428,7 +434,7 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="/testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });

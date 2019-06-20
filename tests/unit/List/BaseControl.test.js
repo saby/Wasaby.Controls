@@ -702,6 +702,49 @@ define([
          assert.equal(5, instance.getViewModel()._stopIndex);
       });
 
+      it('virtual scroll shouldn\'t update indexes on reload', async function() {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let
+             isIndexesUpdated = false,
+             virtualScroll = instance.getVirtualScroll(),
+             updateIndexes = virtualScroll.updateItemsIndexes,
+             vm = instance.getViewModel();
+
+         instance.getVirtualScroll().updateItemsIndexes = function () {
+            isIndexesUpdated = true;
+            updateIndexes.apply(virtualScroll, arguments);
+         };
+
+         await instance.reload();
+         assert.isFalse(isIndexesUpdated);
+         assert.equal(vm._startIndex, 0);
+         assert.equal(vm._stopIndex, 6);
+         assert.isFalse(isIndexesUpdated);
+
+      });
+
       it('enterHandler', function () {
         var notified = false;
 
@@ -928,6 +971,10 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
+
+         lists.BaseControl._private.showIndicator(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
@@ -2181,42 +2228,42 @@ define([
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
-                  items: new collection.RecordSet({
-                     rawData: [
-                        { id: 1, title: 'item 1' },
-                        { id: 2, title: 'item 2' }
-                     ],
-                     idProperty: 'id'
-                  }),
-                  viewName: 'Controls/List/ListView',
-                  viewConfig: {
-                     idProperty: 'id'
-                  },
-                  viewModelConfig: {
-                     items: [],
-                     idProperty: 'id'
-                  },
-                  markedKey: null,
-                  viewModelConstructor: lists.ListViewModel,
-                  source: source
-               },
-               instance = new lists.BaseControl(cfg),
-               fakeEvent = {
-                  type: 'itemcontextmenu'
-               },
-               childEvent = {
-                  nativeEvent: {
-                     preventDefault: function() {
-                        callBackCount++;
-                     }
-                  },
-                  stopImmediatePropagation: function() {
-                     callBackCount++;
-                  }
-               },
-               itemData = {
-                  key: 1
-               };
+                   items: new collection.RecordSet({
+                      rawData: [
+                         { id: 1, title: 'item 1' },
+                         { id: 2, title: 'item 2' }
+                      ],
+                      idProperty: 'id'
+                   }),
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   markedKey: null,
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                instance = new lists.BaseControl(cfg),
+                fakeEvent = {
+                   type: 'itemcontextmenu'
+                },
+                childEvent = {
+                   nativeEvent: {
+                      preventDefault: function() {
+                         callBackCount++;
+                      }
+                   },
+                   stopImmediatePropagation: function() {
+                      callBackCount++;
+                   }
+                },
+                itemData = {
+                   key: 1
+                };
             instance._children = {
                itemActionsOpener: {
                   open: function() {
@@ -2233,7 +2280,71 @@ define([
             assert.equal(callBackCount, 0);
          });
 
+         it('close context menu if its owner was removed', function() {
+            let
+                swipeClosed = false,
+                itemActionsOpenerClosed = false,
+                cfg = {
+                   items: new collection.RecordSet({
+                      rawData: [
+                         { id: 1, title: 'item 1' },
+                         { id: 2, title: 'item 2' }
+                      ],
+                      idProperty: 'id'
+                   }),
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   markedKey: null,
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                instance = new lists.BaseControl(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function () {
+                     itemActionsOpenerClosed = true;
+                  }
+               },
+               swipeControl: {
+                  closeSwipe: function () {
+                     swipeClosed = true;
+                  }
+               }
+            };
 
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._menuIsShown = true;
+            instance._itemWithShownMenu = {
+               getId: () => '123321'
+            };
+            instance.getViewModel()._notify(
+                'onListChange',
+                'collectionChanged',
+                collection.IObservable.ACTION_REMOVE,
+                null,
+                null,
+                [{
+                   getContents: () => {
+                      return {
+                         getId: () => '123321'
+                      }
+                   }
+                }],
+                null);
+
+            assert.isFalse(instance._menuIsShown);
+            assert.isFalse(instance._actionMenuIsShown);
+            assert.isNull(instance._itemWithShownMenu);
+            assert.isTrue(itemActionsOpenerClosed);
+            assert.isTrue(swipeClosed);
+         });
 
          it('showActionsMenu context', function() {
             var callBackCount = 0;

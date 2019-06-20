@@ -56,21 +56,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          }
       ],
       gridHeader = [
-         {
-            title: '',
-            style: 'default'
-         },
-         {
-            title: 'Цена',
-            align: 'right',
-            style: 'default',
-            sortingProperty: 'price'
-         },
-         {
-            title: 'Остаток',
-            align: 'right',
-            style: 'default'
-         }
+            {
+               title: '',
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 1,
+               endColumn: 2
+            },
+            {
+               title: 'Цена',
+               align: 'right',
+               style: 'default',
+               sortingProperty: 'price',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 2,
+               endColumn: 3
+            },
+            {
+               title: 'Остаток',
+               align: 'right',
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 3,
+               endColumn: 4
+            }
       ],
       itemActions = [],
       cfg = {
@@ -358,33 +370,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultWithoutMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_xl controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ],
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ],
                expectedResultWithMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ];
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ];
             assert.equal(expectedResultWithoutMultiselect[0],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[1],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[2],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
             assert.equal(expectedResultWithMultiselect[0],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[1],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[2],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
             assert.equal(expectedResultWithMultiselect[3],
-               gridMod.GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
          });
          it('getSortingDirectionByProp', function() {
@@ -1105,67 +1117,109 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
-         it('_prepareHeaderColumns', function() {
-            assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
-            gridViewModel._prepareHeaderColumns([], false);
-            assert.deepEqual([], gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
-            gridViewModel._prepareHeaderColumns(gridHeader, false);
-            assert.deepEqual(gridHeader, gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
-
-            gridViewModel._prepareHeaderColumns([], true);
-            assert.deepEqual([{}], gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
-            gridViewModel._prepareHeaderColumns(gridHeader, true);
-            assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
-         });
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
+            gridViewModel._prepareHeaderColumns(gridHeader, true);
+            const headerRow = gridViewModel.getCurrentHeaderRow();
+            console.log(headerRow.getCurrentHeaderColumn())
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
-               index: 0
-            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+               index: 0,
+               cellContentClasses: '',
+               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
+               shadowVisibility: 'visible',
+               offsetTop: 0,
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
-            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
-            gridViewModel.goToNextHeaderColumn();
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+
+            const secondCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
-               index: 1
-            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+               index: 1,
+               shadowVisibility: "visible",
+               offsetTop: 0,
+               cellContentClasses: " control-Grid__cell_header-nowrap",
+               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
-            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
-            gridViewModel.goToNextHeaderColumn();
+            assert.equal(
+               `grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+               )
+
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+
+            const thirdCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[1],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__header-cell_halign_right',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
-               sortingDirection: 'DESC'
-            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
+               sortingDirection: 'DESC',
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               shadowVisibility: "visible",
+               offsetTop: 0
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
-            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
-            gridViewModel.goToNextHeaderColumn();
+            assert.equal(
+               `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
+
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+
+            const fourthCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[2],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
-                  'controls-Grid__header-cell_halign_right',
-               index: 3
-            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
+               index: 3,
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               shadowVisibility: "visible",
+               offsetTop: 0
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
-            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
+            assert.equal(
+               `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
 
-            gridViewModel.goToNextHeaderColumn();
-            assert.equal(false, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
+            assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
+            headerRow.goToNextHeaderColumn();
+            assert.equal(false, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
 
-            assert.equal(4, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
-            gridViewModel.resetHeaderColumns();
-            assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-         });
+            assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
+            headerRow.resetHeaderColumns();
+            assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+            });
+            it('getResultsPosition()', function() {
+               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            });
 
-         it('getResultsPosition()', function() {
-            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+         it('_prepareHeaderColumns', function() {
+            gridViewModel._headerRows = [];
+            // gridViewModel._prepareHeaderColumns(gridHeader, false);
+            assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
+            console.log('hello', gridViewModel._headerRows);
+            gridViewModel._prepareHeaderColumns([], false);
+            assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
+            gridViewModel._prepareHeaderColumns(gridHeader, false);
+            assert.deepEqual([gridHeader], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
+            gridViewModel._prepareHeaderColumns([], true);
+            assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
+            gridViewModel._prepareHeaderColumns(gridHeader, true);
+            assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
          });
 
          it('_prepareResultsColumns', function() {
@@ -1212,10 +1266,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
+            const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
+            console.log(gridViewModel.getCurrentResultsColumn());
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell-checkbox',
-               index: 0
+               index: 0,
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value first call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
@@ -1223,7 +1279,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[0],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
 
@@ -1232,8 +1288,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[1],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
 
@@ -1242,8 +1297,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[2],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l',
                index: 3
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
 

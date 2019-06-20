@@ -152,11 +152,6 @@ var _private = {
                 if (self._virtualScroll) {
                     self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-
-                    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-                    if (!self._options.task1177135045) {
-                        self._virtualScroll.updateItemsIndexes('down');
-                    }
                     _private.applyVirtualScroll(self);
                 }
 
@@ -587,11 +582,14 @@ var _private = {
 
     showIndicator: function(self, direction = 'all') {
         self._loadingState = direction;
-        self._loadingIndicatorState = self._loadingState;
+        if (direction === 'all') {
+            self._loadingIndicatorState = self._loadingState;
+        }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
+                    self._loadingIndicatorState = self._loadingState;
                     self._showLoadingIndicatorImage = true;
                     self._forceUpdate();
                 }
@@ -670,6 +668,12 @@ var _private = {
                 if (self._options.navigation && self._options.navigation.source) {
                     self._sourceController.setState(self._listViewModel);
                 }
+                if (action === collection.IObservable.ACTION_REMOVE && self._menuIsShown) {
+                    if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
+                        self._closeActionsMenu();
+                        self._children.itemActionsOpener.close();
+                    }
+                }
                 if (!!action && self.getVirtualScroll()) {
                     self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
@@ -730,6 +734,7 @@ var _private = {
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
             self._listViewModel.setMenuState('shown');
+            self._itemWithShownMenu = itemData.item;
             require(['css!theme?Controls/toolbars'], function() {
                 const defaultMenuConfig = {
                    items: rs,
@@ -792,6 +797,8 @@ var _private = {
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
+                   groupTemplate: self._options.groupTemplate,
+                   groupingKeyCallback: self._options.groupingKeyCallback,
                    rootKey: action.id,
                    showHeader: true,
                    dropdownClassName: 'controls-itemActionsV__popup',
@@ -821,6 +828,7 @@ var _private = {
             self._listViewModel.setMenuState('hidden');
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
+            self._itemWithShownMenu = null;
             self._actionMenuIsShown = false;
         }
 
@@ -978,6 +986,7 @@ var _private = {
  * @class Controls/_list/BaseControl
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IErrorController
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped
