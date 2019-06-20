@@ -100,7 +100,7 @@ const VerticalMeasurer: IMeasurer = {
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
-            showType: ShowType.MENU
+            showType: ShowType.TOOLBAR
          });
       }
 
