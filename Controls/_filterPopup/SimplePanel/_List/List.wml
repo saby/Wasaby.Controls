@@ -19,6 +19,6 @@
            selectorTemplate="{{_options.selectorTemplate}}"
            isCompoundTemplate="{{_options.isCompoundTemplate}}"
            selectorOpener="{{_options.selectorOpener}}"
-           on:click="_moreButtonClick()"/>
+           on:mousedown="_moreButtonClick()"/>
    </ws:if>
 </div>

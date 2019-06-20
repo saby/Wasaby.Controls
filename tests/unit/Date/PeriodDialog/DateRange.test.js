@@ -61,6 +61,23 @@ define([
 
       });
 
+      describe('_monthCaptionClick', function() {
+         it('should notify event.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { month: year, selectionType: 'range' });
+            sandbox.stub(component, '_notify');
+            component._monthCaptionClick(null, new Date(2019, 0), 3);
+            sinon.assert.calledWith(
+               component._notify, 'fixedPeriodClick', [new Date(2019, 3, 1), new Date(2019, 3, 30)]);
+         });
+         it('should not notify event if month selection disabled.', function() {
+            const component = calendarTestUtils.createComponent(
+               DateRange, { month: year, selectionType: 'quantum', quantum: { days: [1] } });
+            sandbox.stub(component, '_notify');
+            component._monthCaptionClick(null, new Date(2019, 0), 3);
+            sinon.assert.notCalled(component._notify);
+         });
+      });
+
       describe('_wheelHandler', function() {
          beforeEach(function() {
             sandbox.stub(DateRange._private, '_scrollToMonth');

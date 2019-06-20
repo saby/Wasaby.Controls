@@ -1,5 +1,5 @@
 <div class="example-Font">
-   <Controls-demo.Example.resource.BaseDemoInput title="Font">
+   <Controls-demo.Example.resource.BaseDemoInput title="Font" attr:class="ControlsDemo-ExampleInput__fontTooltip">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -33,12 +33,12 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput attr:class="ControlsDemo-ExampleInput__fontFilled">
       <ws:contents>
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="example-Base__wrapper">
+                  <div class="example-Base__wrapper ControlsDemo-ExampleInput__fontFilledFirst">
                      <div class="example-Base__specify">Filled input field</div>
                      <Controls.input:Text fontStyle="default"
                                           placeholder="Tooltip"
@@ -67,7 +67,7 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput attr:class="ControlsDemo-ExampleInput__fontFilledReadOnly">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -104,7 +104,7 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput attr:class="ControlsDemo-ExampleInput__fontFilledNumber">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -138,7 +138,7 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput attr:class="ControlsDemo-ExampleInput__fontFilledNumberReadOnly">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -175,7 +175,7 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput attr:class="ControlsDemo-ExampleInput__fontFilledMoney">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -209,7 +209,7 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-   <Controls-demo.Example.resource.BaseDemoInput>
+   <Controls-demo.Example.resource.BaseDemoInput  attr:class="ControlsDemo-ExampleInput__fontFilledMoneyReadOnly">
       <ws:contents>
          <ws:Array>
             <ws:Object>

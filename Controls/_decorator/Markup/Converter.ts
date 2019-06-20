@@ -114,18 +114,25 @@ import { IoC } from 'Env/Env';
             .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
          return [];
       }
-      var div = document.createElement('div'),
+      let div = document.createElement('div'),
          rootNode,
          rootNodeTagName,
          rootNodeAttributes,
+         hasRootTag,
          result;
       div.innerHTML = wrapUrl(html).trim();
+      hasRootTag = div.innerHTML[0] === '<';
       result = nodeToJson(div).slice(1);
+      if (!hasRootTag && div.innerHTML) {
+         // In this case, array will begin with a string that is not tag name, what is incorrect.
+         // Empty json in the beginning will fix it.
+         result.unshift([]);
+      }
       div = null;
 
       // Add version.
       rootNode = result[0];
-      if (Array.isArray(rootNode)) {
+      if (hasRootTag) {
          // TODO: replace this "magic" getting of attributes with a function from result of task to wrap JsonML.
          // https://online.sbis.ru/opendoc.html?guid=475ea157-8996-47e8-9842-6d4e6533bba5
          if (typeof rootNode[1] === 'object' && !Array.isArray(rootNode[1])) {

@@ -1,8 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
+import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
 
-import {factory} from 'Types/chain'
-import isEqual = require('Core/helpers/Object/isEqual');
+import {factory} from 'Types/chain';
+import {isEqual} from 'Types/object';
 import coreMerge = require('Core/core-merge');
 import CoreClone = require('Core/core-clone');
 
@@ -104,6 +105,12 @@ var Panel = Control.extend({
         this._notify('sendResult', [{action: 'moreButtonClick', id: item.id}]);
     }
 });
+
+Panel.getDefaultOptions = (): object => {
+    return {
+        itemTemplate: defaultItemTemplate
+    };
+};
 
 Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup'];
 

@@ -6,7 +6,7 @@ import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Env = require('Env/Env');
 import LoadService from './LoadService';
 import 'css!theme?Controls/suggest';
@@ -169,7 +169,7 @@ var _private = {
             self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
          }
 
-         if (self._searchValue && resultData.hasMore && !isNaN(metaData.more)) {
+         if (self._searchValue && resultData.hasMore && typeof metaData.more === 'number') {
             resultData.more = metaData.more - data.getCount();
          }
       }

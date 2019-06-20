@@ -137,6 +137,32 @@ define([
          Loading.hide();
          assert.equal(Loading._stack.getCount(), 0);
       });
+
+      it('LoadingIndicator - toggleIndicator', (done) => {
+         let LoadingInd = new LoadingIndicator();
+         let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
+         let config = {
+            delay: 1
+         };
+         LoadingInd._toggleIndicator(true, config, true);
+         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isMessageVisible, true);
+
+         LoadingInd._toggleIndicator(false);
+         assert.equal(LoadingInd._isOverlayVisible, false);
+         assert.equal(LoadingInd._isMessageVisible, false);
+
+         LoadingInd._toggleIndicator(true, config);
+         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isMessageVisible, false);
+         LoadingInd._toggleIndicatorVisible = function() {
+            baseToggleIndicatorVisible.apply(LoadingInd, arguments);
+            assert.equal(LoadingInd._isMessageVisible, true);
+            done();
+         };
+         Loading.destroy();
+
+      });
       after(() => {
          Loading.destroy();
       });

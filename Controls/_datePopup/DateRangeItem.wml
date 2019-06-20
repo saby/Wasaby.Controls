@@ -4,15 +4,15 @@
          on:wheel="_wheelHandler()">
          <ws:for data="month in 12">
             <div class="controls-PeriodDialog-DateRangeItem__months-btn"
-                 on:click="_scrollToMonth(item.id, month)"
+                 on:click="_scrollToMonth(date.getFullYear(), month)"
                  >
                {{ _formatMonth(month) }}
             </div>
          </ws:for>
          <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
-              on:click="_scrollToMonth(item.id + 1, 0)"
+              on:click="_scrollToMonth(date.getFullYear() + 1, 0)"
                >
-            {{ item.id + 1 }}
+            {{ date.getFullYear() + 1 }}
          </div>
       </div>
    </ws:if>
@@ -20,11 +20,11 @@
       <div
          for="month in 12"
          class="controls-PeriodDialog-DateRangeItem__monthList_monthWrapper"
-         attr:data-date="{{ item.id + '.' + (month + 1)}}"
+         attr:data-date="{{ date.getFullYear() + '.' + (month + 1)}}"
          >
          <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
                      _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
-               on:click="_monthCaptionClick(month)">
+               on:click="_monthCaptionClick(date, month)">
             {{ _formatMonth(month) }}
          </div>
          <Controls.calendar:MonthView
@@ -33,8 +33,8 @@
             selectionType="{{_options.selectionType}}"
             quantum="{{_options.quantum}}"
             showWeekdays="{{false}}"
-            month="{{_getMonth(item.id, month)}}"
-            daysData="{{item.extData[month]}}"
+            month="{{_getMonth(date.getFullYear(), month)}}"
+            daysData="{{extData[month]}}"
             dayTemplate="{{_options.dayTemplate}}"
 
             startValue="{{_options.startValue}}"

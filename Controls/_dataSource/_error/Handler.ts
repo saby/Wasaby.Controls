@@ -3,6 +3,7 @@ import Mode from 'Controls/_dataSource/_error/Mode';
 import {
     ViewConfig as ParkingViewConfig
 } from 'Controls/_dataSource/_parking/Handler';
+import { IVersionable } from 'Types/entity';
 
 /**
  * Возвращаемый обработчиком ошибки результат
@@ -10,10 +11,11 @@ import {
  * @property {String} template Шаблон отображения ошибки
  * @property {Object} [options] параметры построяния шаблона ошибки
  * @property {Controls/_dataSource/_error/Mode} [mode]
+ * @extends Types/entity:IVersionable
  * @public
  * @author Заляев А.В.
  */
-export type ViewConfig<TOptions = object> = ParkingViewConfig<TOptions> & {
+export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOptions>, IVersionable {
     mode?: Mode;
 }
 
@@ -25,7 +27,7 @@ export type ViewConfig<TOptions = object> = ParkingViewConfig<TOptions> & {
  * @public
  * @author Заляев А.В.
  */
-export type HandlerConfig<T extends Error = Error> = {
+export interface HandlerConfig<T extends Error = Error> {
     error: T | Error;
     mode: Mode;
 }

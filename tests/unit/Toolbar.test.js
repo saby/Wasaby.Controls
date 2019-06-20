@@ -202,6 +202,8 @@ define(
                   }),
                   testSelf = {
                      _options: {
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback',
                         size: 'size',
                         theme: 'default',
                         keyProperty: 'keyProperty'
@@ -223,6 +225,8 @@ define(
                      },
                      target: 'target',
                      templateOptions: {
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback',
                         headConfig: {
                            caption: 'title',
                            icon: 'icon icon-size',
@@ -242,7 +246,9 @@ define(
                         theme: 'default',
                         size: 'size',
                         popupClassName: 'popupClassName',
-                        itemTemplateProperty: 'itp'
+                        itemTemplateProperty: 'itp',
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback'
                      },
                      _children: {
                         popupTarget: 'popupTarget'
@@ -254,7 +260,9 @@ define(
                      target: 'popupTarget',
                      templateOptions: {
                         items: 'menuItems',
-                        itemTemplateProperty: 'itp'
+                        itemTemplateProperty: 'itp',
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback'
                      }
                   };
                assert.deepEqual(toolbars.View._private.generateMenuConfig(testSelf), config);

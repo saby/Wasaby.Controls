@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_list/EditInPlace/EditingRow');
+import { constants } from 'Env/Env';
 
 var EditingRow = Control.extend({
     _template: template,
@@ -24,7 +25,8 @@ var EditingRow = Control.extend({
         // так как обработчики БТРа в таком случае не отработают, потому что
         // у события не будет bubbling фазы
         // TODO: Нужно поправить после исправления https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
-        if (!event.target.closest('.richEditor_TinyMCE')) {
+        // Don't stop propagation event with tab-key, it breaks the moving focus by tab/shift+tab.
+        if (!event.target.closest('.richEditor_TinyMCE') && event.nativeEvent.keyCode !== constants.key.tab) {
             event.stopPropagation();
         }
     },

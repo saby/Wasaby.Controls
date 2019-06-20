@@ -45,7 +45,10 @@ import entity = require('Types/entity');
 
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
-            return self._itemsModel._display.getGroupItems(key).length === 0;
+
+            // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
+            let itemsGroup = self._itemsModel._display.getGroupItems(key);
+            return itemsGroup.length === 0 || itemsGroup.length === self.getItems().getCount();
          }
       };
 
@@ -175,6 +178,7 @@ import entity = require('Types/entity');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';
+            itemsModelCurrent.multiSelect = this._options.multiSelect;
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {

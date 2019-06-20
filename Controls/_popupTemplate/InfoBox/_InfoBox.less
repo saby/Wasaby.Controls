@@ -2,6 +2,7 @@
 
 .controls-InfoBoxTemplate {
    display: flex;
+   height: 100%;
 }
 
 .controls-InfoBoxTemplate__arrow-side-position-left {
@@ -35,7 +36,7 @@
    } });
 }
 .controls-InfoBoxTemplate__arrow-marker {
-  @variants: default,  danger, info, secondary, warning, success;
+  @variants: default,  danger, info, secondary, warning, success, primary;
   .for(@variants, { &-@{_item} {
     &.controls-InfoBoxTemplate__arrow-top {
       border-color: ~"@{border-color_Infobox_@{_item}}";
@@ -52,7 +53,7 @@
    } });
 }
 .controls-InfoBoxTemplate_style_marker {
-   @variants: default,  danger, info, secondary, warning, success;
+   @variants: default,  danger, info, secondary, warning, success, primary;
    .for(@variants, { &_@{_item} {
       background: @background-color_Infobox_default;
       box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
@@ -64,6 +65,8 @@
    position: relative;
    box-sizing: border-box;
    max-width: @max-width_Infobox;
+   height: 100%;
+   overflow: hidden;
 }
 
 .controls-InfoBoxTemplate__closeButton {
@@ -81,10 +84,12 @@
 .controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom{
    width: @spacing_Infobox-between-target-popup + 1;
    height: @spacing_Infobox-between-target-popup;
+   flex-shrink: 0;
 }
 .controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right{
    width: @spacing_Infobox-between-target-popup;
    height: @spacing_Infobox-between-target-popup + 1;
+   flex-shrink: 0;
 }
 
 .controls-InfoBoxTemplate__arrow-top {

@@ -6,17 +6,19 @@
 
    <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">
-         <ws:if data="{{content.app && _options.correctTemplate}}">
-            <Controls.Container.Async templateName="{{content.app}}"
-                                      attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
-         </ws:if>
-         <ws:else>
-            <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;
-               <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
-                  <ws:content><a href="{{ content.href }}">разводящую</a></ws:content>
-               </Router.router:Reference> ?
-            </div>
-         </ws:else>
+         <Controls-demo.RootTemplateWrapper>
+            <ws:if data="{{content.app && content.templateLoaded}}">
+               <Controls.Container.Async templateName="{{content.app}}"
+                                         attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
+            </ws:if>
+            <ws:else>
+               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;
+                  <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+                     <ws:content><a href="{{ content.href }}">разводящую</a></ws:content>
+                  </Router.router:Reference> ?
+               </div>
+            </ws:else>
+         </Controls-demo.RootTemplateWrapper>
       </Router.router:Route>
    </Controls.scroll:Container>
 </div>
