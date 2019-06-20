@@ -449,7 +449,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                     }
                 }
             } else {
-                this.updateMarker( this._display.at(0).getContents().getId());
+                var first = this._display.at(0)
+                if (first && first.getContents()) {
+                    var nextMarkedKey = this.getNextItem(0);
+                    this.updateMarker(nextMarkedKey);
+                }
+//                     this.updateMarker(this._display.at(0).getContents().getId());
             }
         }
     },
