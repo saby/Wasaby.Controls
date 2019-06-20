@@ -492,21 +492,24 @@ var _private = {
     },
 
     startScrollEmitter: function(self) {
-        if (self._scrollEmitterStarted || self.__error) {
+        if (self.__error) {
             return;
         }
-        var
-            children = self._children,
-            triggers = {
-                topListTrigger: children.topListTrigger,
-                bottomListTrigger: children.bottomListTrigger,
-                topLoadTrigger: children.topLoadTrigger,
-                bottomLoadTrigger: children.bottomLoadTrigger
-            };
+        const children = self._children;
+        const scrollEmitter = children.ScrollEmitter;
+        if (scrollEmitter.__started) {
+            return;
+        }
+        const triggers = {
+            topListTrigger: children.topListTrigger,
+            bottomListTrigger: children.bottomListTrigger,
+            topLoadTrigger: children.topLoadTrigger,
+            bottomLoadTrigger: children.bottomLoadTrigger
+        };
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
-        self._scrollEmitterStarted = true;
+        scrollEmitter.startRegister(triggers, self._options.task1177135045);
+        scrollEmitter.__started = true;
     },
 
     onScrollShow: function(self) {
@@ -1539,9 +1542,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _setScrollItemContainer: function () {
         if (!this._children.listView || !this._virtualScroll) {
             return false;
-        }
-        if (this._virtualScroll.ItemsContainer) {
-            return true;
         }
         this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
         return  true;
