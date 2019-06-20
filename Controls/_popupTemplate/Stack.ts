@@ -77,6 +77,14 @@ import Env = require('Env/Env');
           * @default popup
           */
 
+         /**
+          * @name Controls/_popupTemplate/Stack#closeButtonTransparent
+          * @cfg {String} Close button transparent.
+          * @variant true
+          * @variant false
+          * @default true
+          */
+
          _template: template,
          _maximizeButtonVisibility: false,
          _closeButtonViewMode: 'popup',
@@ -163,7 +171,8 @@ import Env = require('Env/Env');
             headingStyle: 'secondary',
             closeButtonVisibility: true,
             headingSize: 'l',
-            closeButtonViewMode: 'popup'
+            closeButtonViewMode: 'popup',
+            closeButtonTransparent: true
          };
       };
       DialogTemplate._theme = ['Controls/popupTemplate'];

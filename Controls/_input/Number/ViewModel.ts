@@ -141,26 +141,32 @@ var ViewModel = BaseViewModel.extend({
     },
 
     handleInput: function (splitValue, inputType) {
-        let parsedNumber: IParsedNumber;
-
-        _private.handleRemovalSplitterTriad(splitValue, inputType);
-
-        let text: IText = _private.recoverText(splitValue);
-
-        if (inputType !== 'insert' && text.value === '') {
-            return _private.superHandleInput(this, text, inputType);
-        }
+        let text: IText;
 
         /**
          * To enter the fractional part, you can go directly by pressing a dot or a comma.
          */
         if (decimalSplitters.includes(splitValue.insert) && splitValue.delete === '') {
+            text = {
+                value: splitValue.before + splitValue.after,
+                carriagePosition: splitValue.before.length
+            };
             const splitterPosition: number = text.value.indexOf(decimalSplitter);
 
             if (splitterPosition !== -1) {
                 text.carriagePosition = splitterPosition + 1;
             }
 
+            return _private.superHandleInput(this, text, inputType);
+        }
+
+        let parsedNumber: IParsedNumber;
+
+        _private.handleRemovalSplitterTriad(splitValue, inputType);
+
+        text = _private.recoverText(splitValue);
+
+        if (inputType !== 'insert' && text.value === '') {
             return _private.superHandleInput(this, text, inputType);
         }
 
