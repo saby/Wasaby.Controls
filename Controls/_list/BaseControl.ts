@@ -132,6 +132,10 @@ var _private = {
                     isActive,
                     listModel = self._listViewModel;
 
+                if (cfg.afterReloadCallback) {
+                    cfg.afterReloadCallback(cfg);
+                }
+
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
@@ -172,6 +176,9 @@ var _private = {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: CrudResult) {
+                    if (cfg.afterReloadCallback) {
+                        cfg.afterReloadCallback(cfg);
+                    }
                     resDeferred.callback({
                         data: null,
                         ...result
@@ -179,15 +186,12 @@ var _private = {
                 });
             });
         } else {
-            resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
-        }
-        resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
                 cfg.afterReloadCallback(cfg);
             }
-            return result;
-        });
+            resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        }
         return resDeferred;
     },
 
