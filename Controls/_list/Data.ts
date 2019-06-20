@@ -97,7 +97,8 @@ type GetSourceResult = {
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
 
-            if (!isEqual(self._options.filter, options.filter)) {
+            //https://online.sbis.ru/opendoc.html?guid=8dd3b48d-9123-4d6c-ac26-9c908e6e25f8
+            if (!isEqual(self._options.filter, options.filter) || !self._filter) {
                self._filter = clone(options.filter);
 
                if (options.parentProperty && options.root) {
