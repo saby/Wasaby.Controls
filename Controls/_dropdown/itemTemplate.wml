@@ -4,7 +4,7 @@
                  {{itemData.spacingClassList}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
-   <ws:if data="{{itemData.multiSelect && !itemData.emptyText}}">
+   <ws:if data="{{(itemData.multiSelect || multiSelect) && !itemData.emptyText}}">
       <Controls.toggle:Checkbox value="{{itemData.isSelected}}"
                                 attr:class="controls-DropdownList__row-checkbox theme_{{_options.theme}}
                                    controls-DropdownList__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme_{{_options.theme}}

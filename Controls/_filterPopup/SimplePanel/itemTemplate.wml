@@ -1,0 +1,6 @@
+<ws:if data="{{index && showSeparator !== false}}">
+   <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
+</ws:if>
+<Controls._filterPopup.SimplePanel._List
+   scope="{{_options}}"
+/>
