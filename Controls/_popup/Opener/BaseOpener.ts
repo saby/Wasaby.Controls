@@ -376,7 +376,9 @@ Base.requireModule = function (module) {
 
 Base.getConfig = function(baseConfig, options, popupOptions) {
     // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
-    // merge _options to popupOptions
+    // Возвращаю правки. usedOptions - набор опций, которые мы берем с opener'a (с opener._options) и передаем в окно.
+    // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
+    // попасть не должны.
     const usedOptions = [
         'closeByExternalClick',
         'isCompoundTemplate',
