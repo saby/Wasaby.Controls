@@ -337,7 +337,7 @@
  */
 
 /**
- * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередной пачки данных.
+ * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
