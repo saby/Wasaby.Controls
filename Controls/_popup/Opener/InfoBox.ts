@@ -86,6 +86,7 @@ const _private = {
         }
         if (!isNewEnvironment()) {
             // For the old page, set the zIndex manually
+            //InfoBox must be above all the popup windows on the page.
             newCfg.zIndex = 10000;
         }
         return {
