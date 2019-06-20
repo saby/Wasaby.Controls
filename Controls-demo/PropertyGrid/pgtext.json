@@ -89,6 +89,61 @@
             "type": "String",
             "title": "Button icon."
           },
+          "iconStyle": {
+            "type": "enum",
+            "title": "Displaying icon style.",
+            "enum": {
+              "secondary": "Icon display as icon with border.",
+              "primary": "Icon display as main link style.",
+              "success": "Icon display as first nonaccent link style.",
+              "warning": "Icon display as second nonaccent link style.",
+              "danger": "Icon display as third nonaccent link style.",
+              "info": "Icon display as first accent link style.",
+              "default": "Icon display as default tyext."
+            }
+          },
+          "iconSize": {
+            "type": "enum",
+            "title": "Displaying icon size",
+            "enum": {
+              "s": "Icon display as icon with border.",
+              "m": "Icon display as main link style.",
+              "l": "Icon display as first nonaccent link style.",
+              "default": "Icon display as second nonaccent link style."
+            }
+          },
+          "fontSize": {
+            "type": "enum",
+            "title": "Font size value",
+            "enum": {
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl",
+              "3xl": "3xl",
+              "4xl": "4xl",
+              "5xl": "5xl"
+
+            }
+          },
+          "fontColorStyle": {
+            "type": "enum",
+            "title": "Font color style value",
+            "enum": {
+              "default": "default",
+              "primary": "primary",
+              "secondary": "secondary",
+              "success": "success",
+              "warning": "warning",
+              "danger": "danger",
+              "unaccented": "unaccented",
+              "link": "link",
+              "label": "label"
+
+            }
+          },
           "caption": {
             "type": "String",
             "title": "Button text."
@@ -106,7 +161,7 @@
             "type": "String",
             "default": ""
           },
-          "style": {
+          "buttonStyle": {
             "type": "enum",
             "title": "Display style of button.",
             "enum": {
@@ -114,13 +169,12 @@
               "primary": "Button display as main link style.",
               "success": "Button display as first nonaccent link style.",
               "warning": "Button display as second nonaccent link style.",
-              "danger": "Button display as third nonaccent link style.",
-              "info": "Button display as first accent link style."
+              "danger": "Button display as third nonaccent link style."
             }
           },
-          "transparent": {
+          "contrastBackground": {
             "type": "Boolean",
-            "title": "Indicates whether control will react to user actions."
+            "title": "Determines if button has contrast background."
           },
           "viewMode": {
             "type": "enum",
@@ -131,27 +185,17 @@
               "toolButton": "Button display as first nonaccent link style."
             }
           },
-          "size": {
+          "inlineHeight": {
             "type": "enum",
-            "title": "Size of the button.",
+            "title": "Control height value",
             "enum": {
-              "s": "Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.",
-              "m": "Button has m size.",
-              "l": "Button has l size.",
-              "xl": "Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered."
-            }
-          },
-          "iconStyle": {
-            "type": "enum",
-            "title": "Displaying icon style.",
-            "enum": {
-              "secondary": "Icon display as icon with border.",
-              "primary": "Icon display as main link style.",
-              "success": "Icon display as first nonaccent link style.",
-              "warning": "Icon display as second nonaccent link style.",
-              "danger": "Icon display as third nonaccent link style.",
-              "info": "Icon display as first accent link style.",
-              "default": "Icon display as default tyext."
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl",
+              "default": "default"
             }
           }
         }
