@@ -354,8 +354,6 @@ import 'wml!Controls/_input/Base/Stretcher';
 
          compatAutoComplete: function(autoComplete) {
             if (typeof autoComplete === 'boolean') {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Изменилось API опции autoComplete. Поправте сами или выпишите ошибку на ответсвенного за контрол.');
-
                return autoComplete ? 'on' : 'off';
             }
 
