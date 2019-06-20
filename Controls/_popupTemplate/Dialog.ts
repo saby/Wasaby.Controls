@@ -60,6 +60,14 @@ import Vdom = require('Vdom/Vdom');
           */
 
          /**
+          * @name Controls/_popupTemplate/Dialog#closeButtonTransparent
+          * @cfg {String} Close button transparent.
+          * @variant true
+          * @variant false
+          * @default true
+          */
+
+         /**
           * @name Controls/_popupTemplate/Dialog#draggable
           * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
           * @default false
@@ -136,7 +144,8 @@ import Vdom = require('Vdom/Vdom');
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'popup'
+            closeButtonViewMode: 'popup',
+            closeButtonTransparent: true
          };
       };
       DialogTemplate._theme = ['Controls/popupTemplate'];
