@@ -25,21 +25,8 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <ws:if data="{{_options.stickyFooter}}">
-        <Controls.scroll:StickyHeader position="bottom"
-                                      attr:class="{{_calcFooterPaddingClass(_options)}}"
-                                      attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() === 'visible' ? 1 : 0)) + ';'}}">
-            <ws:content>
-                <div>
-                    <ws:partial template="{{_options.footerTemplate}}"/>
-                </div>
-            </ws:content>
-        </Controls.scroll:StickyHeader>
-    </ws:if>
-    <ws:else>
-        <div class="{{_calcFooterPaddingClass(_options)}}"
-             style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() === 'visible' ? 1 : 0)) + ';'}}">
-            <ws:partial template="{{_options.footerTemplate}}"/>
-        </div>
-    </ws:else>
+    <div attr:class="{{_calcFooterPaddingClass(_options)}}"
+         attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() === 'visible' ? 1 : 0)) + ';'}}">
+        <ws:partial template="{{_options.footerTemplate}}"/>
+    </div>
 </div>

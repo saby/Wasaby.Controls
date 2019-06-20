@@ -13,7 +13,7 @@
                 isAdd="{{_options.isAdd}}"
                 itemActionsTemplate="{{_options.itemActionsTemplate}}"
                 groupTemplate="{{_groupTemplate}}"
-                itemActionsPosition="{{}}"
+                itemActionsPosition="{{_options.itemActionsPosition}}"
                 itemOutputWrapper="{{_itemOutputWrapper}}"
                 swipeTemplate="{{_options.swipeTemplate}}"/>
     <div if="{{_options.itemActionsPosition==='outside'}}" class="controls-itemActionsV_outside-spacing"></div>
@@ -23,22 +23,8 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-
-    <ws:if data="{{_options.stickyFooter}}">
-        <Controls.scroll:StickyHeader position="bottom"
-                                      attr:class="{{_calcFooterPaddingClass(_options)}}"
-                                      attr:style="{{_listModel.getFooterStyles()}}">
-            <ws:content>
-                <div>
-                    <ws:partial template="{{_options.footerTemplate}}"/>
-                </div>
-            </ws:content>
-        </Controls.scroll:StickyHeader>
-    </ws:if>
-    <ws:else>
-        <div class="{{_calcFooterPaddingClass(_options)}}"
-             style="{{_listModel.getFooterStyles()}}">
-            <ws:partial template="{{_options.footerTemplate}}"/>
-        </div>
-    </ws:else>
+    <div attr:class="{{_calcFooterPaddingClass(_options)}}"
+         attr:style="{{_listModel.getFooterStyles()}}">
+        <ws:partial template="{{_options.footerTemplate}}"/>
+    </div>
 </div>
