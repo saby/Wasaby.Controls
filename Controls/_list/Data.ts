@@ -199,7 +199,9 @@ type GetSourceResult = {
          },
 
          _rootChanged: function(event, root) {
-            this._notify('rootChanged', [root]);
+            var filter = clone(this._options.filter);
+            filter[this._options.parentProperty] = root;
+            this._notify('filterChanged', [filter]);
          },
          _itemsChanged: function(event, items) {
             var self = this;

@@ -28,7 +28,6 @@
                                     on:actionClick="_notifyHandler('actionClick')"
                                     on:dragStart="_notifyHandler('dragStart')"
                                     on:dragEnd="_notifyHandler('dragEnd')"
-                                    on:filterChanged="_notifyHandler('filterChanged')"
                                     on:rootChanged="_notifyHandler('rootChanged')"
                                     on:changeDragTarget="_notifyHandler('changeDragTarget')"
                                     on:dragEnter="_notifyHandler('dragEnter')"
