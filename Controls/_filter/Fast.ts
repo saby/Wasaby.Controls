@@ -77,7 +77,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                if (dataLoadCallback) {
                   dataLoadCallback(items);
                }
-               return items
+               return items;
             });
          },
 
@@ -276,7 +276,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                resultDef = _private.reload(this);
             } else if (options.source) {
                resultDef = _private.loadItemsFromSource(self, options).addCallback(function() {
-                  return _private.reload(self);
+                  let reloadResult = _private.reload(self);
+                  self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+                  return reloadResult;
                });
             }
             this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
@@ -299,7 +301,8 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                this._sourceController = null;
                resultDef = _private.loadItemsFromSource(self, newOptions).addCallback(function() {
-                  return _private.reload(self);
+                  _private.reload(self);
+                  self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
                });
             }
             return resultDef;
