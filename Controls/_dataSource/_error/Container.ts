@@ -7,6 +7,7 @@ import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
 // @ts-ignore
 import { load } from 'Core/library';
+import IContainer from "Controls/_dataSource/_error/IContainer";
 
 type Options = {
     /**
@@ -33,7 +34,7 @@ let getTemplate = (template: string | Control): Promise<Control> => {
  * @author Заляев А.В.
  *
  */
-export default class Container extends Control {
+export default class Container extends Control implements IContainer {
     private __viewConfig: Config;
     protected _template = template;
     hide() {

@@ -50,6 +50,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
+    * @name Controls/interface/IFormController#errorContainer
+    * @cfg {Controls/dataSource:error.IContainerConstructor} Component for displaying the error template
+    */
+
+   /**
     * Updates a record in the data source.  More {@link Types/source/ICrud#update}
     * @function Controls/interface/IFormController#update
     */
