@@ -13,6 +13,8 @@
              itemOutputWrapper="{{_itemOutputWrapper}}"
              itemTemplate="{{_itemTemplate}}">
          </ws:partial>
+         <div if="{{_options.itemActionsPosition==='outside'}}" class="controls-itemActionsV_outside-spacing"></div>
+
       </div>
       <ws:if data="{{_options.emptyTemplate}}">
          <ws:partial template="{{_options.emptyTemplate}}"/>
