@@ -201,9 +201,11 @@ type GetSourceResult = {
          },
 
          _rootChanged: function(event, root) {
-            var filter = clone(this._options.filter);
-            filter[this._options.parentProperty] = root;
-            this._notify('filterChanged', [filter]);
+            if (this._options.filter && this._options.parentProperty) {
+                var filter = clone(this._options.filter);
+                filter[this._options.parentProperty] = root;
+                this._notify('filterChanged', [filter]);
+            }
          },
          _itemsChanged: function(event:Event, items):void {
             //search:Cotnroller fires two events after search: itemsChanged, filterChanged
