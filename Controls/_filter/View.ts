@@ -295,8 +295,11 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
+            const self = this;
             _private.prepareItems(this, newOptions.source);
-            return _private.reload(this);
+            return _private.reload(this).addCallback(function() {
+                self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+            });
         }
     },
 

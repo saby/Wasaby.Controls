@@ -188,6 +188,7 @@ var
                 self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+            self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {
             self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {

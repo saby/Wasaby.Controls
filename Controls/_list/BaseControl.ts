@@ -152,11 +152,6 @@ var _private = {
                 if (self._virtualScroll) {
                     self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-
-                    // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-                    if (!self._options.task1177135045) {
-                        self._virtualScroll.updateItemsIndexes('down');
-                    }
                     _private.applyVirtualScroll(self);
                 }
 
@@ -991,6 +986,7 @@ var _private = {
  * @class Controls/_list/BaseControl
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IErrorController
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped

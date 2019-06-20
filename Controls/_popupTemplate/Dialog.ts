@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
 import Vdom = require('Vdom/Vdom');
-import 'css!theme?Controls/popupTemplate';
 
       var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
       var DialogTemplate = Control.extend({
@@ -149,6 +148,7 @@ import 'css!theme?Controls/popupTemplate';
             closeButtonTransparent: true
          };
       };
+      DialogTemplate._theme = ['Controls/popupTemplate'];
 
       export = DialogTemplate;
 

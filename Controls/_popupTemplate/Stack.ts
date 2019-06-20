@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
       var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
@@ -176,7 +175,7 @@ import 'css!theme?Controls/popupTemplate';
             closeButtonTransparent: true
          };
       };
-
+      DialogTemplate._theme = ['Controls/popupTemplate'];
       export = DialogTemplate;
 
 
