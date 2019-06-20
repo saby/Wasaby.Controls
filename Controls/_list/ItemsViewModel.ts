@@ -328,7 +328,6 @@ var ItemsViewModel = BaseViewModel.extend({
     },
     _onBeginCollectionChange: function() {
         // method may be implemented
-        console.log('hello');
     },
     _onEndCollectionChange: function() {
         // method may be implemented
