@@ -60,7 +60,7 @@ const mapFontColorStyle = {'info': 'label', 'primary': 'primary', 'secondary': '
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
-      protected _theme: string[] = ['Controls/heading'];
+      protected _theme: string[] = ['Controls/heading','Controls/Classes'];
       protected _fontSize: string;
       protected _fontColorStyle: string;
       private _prepareOptions(options: IHeadingOptions): void {
