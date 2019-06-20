@@ -8,6 +8,13 @@
 
 /**
  * @typedef {String} explorerViewMode
+ * @variant grid Таблица.
+ * @variant list Список.
+ * @variant tile Плитка.
+ */
+
+/*
+ * @typedef {String} explorerViewMode
  * @variant grid Table.
  * @variant list List.
  * @variant tile Tiles.
@@ -34,16 +41,29 @@
  */ 
 
 /**
- * @event Controls/_explorer/interface/IExplorer#itemOpen Occurs before opening a folder.
+ * @event Controls/_explorer/interface/IExplorer#itemOpen Происходит при проваливании в узел.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  */
+
+/*
+ * @event Controls/_explorer/interface/IExplorer#itemOpen Occurs before opening a folder.
+ * @param {Env/Event:Object} eventObject The event descriptor.
+ */
+
 /**
+ * @event Controls/_explorer/interface/IExplorer#itemOpened Происходит после проваливания в узел.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
+ */
+
+/*
  * @event Controls/_explorer/interface/IExplorer#itemOpened Occurs after the folder was opened.
+ * @param {Env/Event:Object} eventObject The event descriptor.
  */
 
 /**
  * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии.
  * @description Например, такое происходит при переходе пользователя по хлебным крошкам.
- * @param event {eventObject} Объект события.
+ * @param event {eventObject} Дескриптор события.
  * @param root {String} Идентификатор корневой записи. 
  */
 
