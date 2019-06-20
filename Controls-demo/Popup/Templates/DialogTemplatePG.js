@@ -80,6 +80,7 @@ define('Controls-demo/Popup/Templates/DialogTemplatePG',
             this._componentOptions = {
                name: 'DialogTemplate',
                headingCaption: 'secondary',
+               closeButtonTransparent: true,
                headerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/headerContent',
                bodyContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
                footerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
