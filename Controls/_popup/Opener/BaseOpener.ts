@@ -128,6 +128,9 @@ var Base = Control.extend({
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
         }
+        if (baseConfig.actionOnScroll) {
+            this._actionOnScroll = baseConfig.actionOnScroll;
+        }
         this._prepareNotifyConfig(baseConfig);
         return baseConfig;
     },
@@ -453,9 +456,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         if (baseCfg.targetTracking) {
             baseCfg.actionOnScroll = 'track';
         }
-    }
-    if (baseCfg.actionOnScroll) {
-        this._actionOnScroll = baseCfg.actionOnScroll;
     }
 
     if (baseCfg.hasOwnProperty('isModal')) {
