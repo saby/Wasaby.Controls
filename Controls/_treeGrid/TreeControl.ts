@@ -124,9 +124,8 @@ var _private = {
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
     },
-    isDeepReload: function({deepReload, task1177343452}, deepReloadState: boolean): boolean {
-        //task1177343452 will removed in 510, added by task https://online.sbis.ru/opendoc.html?guid=15641dfc-fd55-4e68-9c2e-f95627780acb
-        return  task1177343452 ? false : deepReload || deepReloadState;
+    isDeepReload: function({deepReload}, deepReloadState: boolean): boolean {
+        return  deepReload || deepReloadState;
     },
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
         const parentProperty = cfg.parentProperty;
