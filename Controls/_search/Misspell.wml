@@ -1,6 +1,6 @@
 <div class="controls-Misspell controls-Misspell_theme_{{_options.theme}}">
     <span class="controls-Misspell__text_theme_{{_options.theme}}">{[Возможно, вы имели в виду]}&nbsp;</span>
-    <div class="controls-Misspell__caption_theme_{{_options.theme}}">
+    <div class="controls-Misspell__caption controls-Misspell__caption_theme_{{_options.theme}}">
         <div class="controls-Misspell__caption-content_theme_{{_options.theme}}">
             <ws:partial template="{{_options.caption}}"/>
         </div>
