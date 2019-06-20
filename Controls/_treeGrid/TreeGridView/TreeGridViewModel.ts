@@ -73,6 +73,10 @@ var
             this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
             this._model.subscribe('onNodeRemoved', this._onNodeRemovedFn);
             this._model.subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+            this._model.subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
+        },
+        _onCollapsedItemsChanged: function(e, collapsedItems) {
+            this._notify('collapsedItemsChanged', collapsedItems);
         },
         _onExpandedItemsChanged: function(e, expandedItems) {
             this._notify('expandedItemsChanged', expandedItems);
@@ -91,6 +95,9 @@ var
         },
         setExpandedItems: function (expandedItems: Array<unknown>) {
             this._model.setExpandedItems(expandedItems);
+        },
+        setCollapsedItems: function (collapsedItems: Array<unknown>) {
+            this._model.setCollapsedItems(collapsedItems);
         },
         getExpandedItems: function () {
             return this._model.getExpandedItems();

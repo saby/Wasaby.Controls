@@ -43,8 +43,8 @@ var CompoundArea = CompoundContainer.extend([
    _template: template,
    _compoundId: undefined,
 
+   _beforeCloseHandlerResult: true,
    _isClosing: false,
-
    _pending: null,
    _pendingTrace: null,
    _waiting: null,
@@ -300,6 +300,7 @@ var CompoundArea = CompoundContainer.extend([
       }
 
       self._trackTarget(true);
+      self._createBeforeCloseHandlerPending();
 
       self.rebuildChildControl().addCallback(function() {
          runDelayed(function() {
@@ -868,6 +869,19 @@ var CompoundArea = CompoundContainer.extend([
    hide: function() {
       this.close();
    },
+   _createBeforeCloseHandlerPending(): void {
+      const self = this;
+      self._notifyVDOM('registerPending', [new cDeferred(), {
+         showLoadingIndicator: false,
+         validate(): boolean {
+            if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
+               self.close();
+               return !self._beforeCloseHandlerResult;
+            }
+            return false;
+         }
+      }], { bubbling: true });
+   },
    close: function(arg) {
       if (!this.isDestroyed()) {
          if (this._logicParent.waitForPopupCreated) {
@@ -888,9 +902,12 @@ var CompoundArea = CompoundContainer.extend([
             }
             this._isClosing = true;
             if (this._notifyCompound('onBeforeClose', arg) !== false) {
+               this._beforeCloseHandlerResult = true;
                this._notifyVDOM('close', null, { bubbling: true });
                this._notifyCompound('onClose', arg);
                this._notifyCompound('onAfterClose', arg);
+            } else {
+               this._beforeCloseHandlerResult = false;
             }
             this._isClosing = false;
          }

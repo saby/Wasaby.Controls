@@ -320,6 +320,11 @@ define([
                updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
                updatedRangesOptions: [new Date(2013, 0, 1), 12, 12, 2],
                relationType: 'normal'
+            }, {
+               componentOptions: [new Date(2015, 0, 1), 15, {}, 2, 3],
+               updateToRange: [new Date(2015, 0, 1), new Date(2015, 6, 0)],
+               updatedRangesOptions: [new Date(2015, 0, 1), 6, 6, 2],
+               relationType: 'normal'
             }].forEach(function(test, testNumber) {
                it(`Test ${testNumber}`, function() {
                   let
