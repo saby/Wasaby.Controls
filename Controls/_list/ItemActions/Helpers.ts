@@ -48,7 +48,7 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
 /**
  * List of helpers for displaying item actions.
  * @class Controls/_list/ItemActions/Helpers
- * @private
+ * @public
  * @author Сухоручкин А.С.
  * @category List
  */

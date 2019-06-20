@@ -393,7 +393,7 @@ define([
          return new Promise(function(resolve) {
             setTimeout(function() {
                treeControl._root = 12;
-               treeControl._afterUpdate();
+               treeControl._afterUpdate({});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(undefined, treeViewModel._model._root);
@@ -1089,7 +1089,7 @@ define([
          let treeGridViewModel = new treeGrid.ViewModel(cfg);
 
          let emptyCfg = getDefaultCfg();
-         emptyCfg.expandedItems = [1, 2];
+         emptyCfg.expandedItems = ['1', '2'];
          let emptyTreeGridViewModel = new treeGrid.ViewModel(emptyCfg);
 
          let self = {

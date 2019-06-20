@@ -200,10 +200,6 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerType = options.headerType;
     },
 
-    _beforeUpdate: function (options) {
-        this._rangeModel.update(options);
-    },
-
     _beforeUnmount: function () {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();

@@ -345,6 +345,33 @@ define([
          assert.equal(defOpts.itemActionsPosition, 'inside');
       });
 
+      it('updateItemActions should prepare expander with right fields', function () {
+         var
+             cfg = {
+                listModel: listViewModel,
+                itemActions: [
+                   {
+                      id: 0,
+                      title: 'first',
+                      showType: tUtil.showType.MENU
+                   },
+                   {
+                      id: 1,
+                      title: 'second',
+                      showType: tUtil.showType.TOOLBAR
+                   }
+                ]
+             },
+             ctrl = new lists.ItemActionsControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
+         let menuExpanderAction = listViewModel.getItemActions(listViewModel.getCurrent().item).showed.find((action) => action._isMenu);
+         assert.equal("icon-ExpandDown controls-itemActionsV__action_icon  icon-size", menuExpanderAction.icon);
+         assert.equal("secondary", menuExpanderAction.iconStyle);
+         assert.equal("secondary", menuExpanderAction.style);
+         assert.isTrue(menuExpanderAction._isMenu);
+      });
+
       it('updateItemActions should update the version of the list exactly once', function() {
          var
             cfg = {

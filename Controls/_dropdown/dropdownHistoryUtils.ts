@@ -26,7 +26,7 @@ function createHistorySource(source, historyId) {
 function getSource(source, historyId) {
    let historyLoad = new Deferred();
 
-   if (!historyId) {
+   if (!historyId || isHistorySource(source)) {
       historyLoad.callback(source);
    } else if (HistorySource && HistoryService) {
       historyLoad.callback(createHistorySource(source, historyId));

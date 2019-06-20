@@ -202,6 +202,8 @@ define(
                   }),
                   testSelf = {
                      _options: {
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback',
                         size: 'size',
                         theme: 'default',
                         keyProperty: 'keyProperty'
@@ -223,6 +225,8 @@ define(
                      },
                      target: 'target',
                      templateOptions: {
+                        groupTemplate: 'groupTemplate',
+                        groupingKeyCallback: 'groupingKeyCallback',
                         headConfig: {
                            caption: 'title',
                            icon: 'icon icon-size',

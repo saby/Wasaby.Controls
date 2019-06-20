@@ -16,6 +16,7 @@
  * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
+ * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
  * @public
  * @author Kraynov D.
  */
@@ -23,6 +24,7 @@
 import Panel = require('Controls/_filterPopup/Panel');
 import DetailPanel = require('Controls/_filterPopup/DetailPanel');
 import SimplePanel = require('Controls/_filterPopup/SimplePanel');
+import SimplePanelItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/itemTemplate');
 import Link = require('Controls/_filterPopup/Panel/Link');
 import Select = require('Controls/_filterPopup/Panel/Select');
 import Dropdown = require('Controls/_filterPopup/Panel/Dropdown');
@@ -36,6 +38,7 @@ export {
    Panel,
    DetailPanel,
    SimplePanel,
+   SimplePanelItemTemplate,
    Link,
    Select,
    Dropdown,
