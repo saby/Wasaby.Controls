@@ -186,6 +186,56 @@ define([
                HorizontalMeasurer.default.getSwipeConfig(actions, 59, 'bottom')
             );
          });
+
+         it('main actions', function() {
+            let otherActions = [
+               {
+                  id: 1,
+                  showType: 2,
+                  icon: 'icon-PhoneNull'
+               },
+               {
+                  id: 2,
+                  showType: 2,
+                  icon: 'icon-Erase'
+               },
+               {
+                  id: 3,
+                  showType: 0,
+                  icon: 'icon-EmptyMessage'
+               },
+               {
+                  id: 4,
+                  showType: 2,
+                  icon: 'icon-Profile'
+               }];
+            let result = [
+               {
+                  id: 1,
+                  showType: 2,
+                  icon: 'icon-PhoneNull'
+               },
+               {
+                  id: 2,
+                  showType: 2,
+                  icon: 'icon-Erase'
+               },
+               {
+                  id: 4,
+                  showType: 2,
+                  icon: 'icon-Profile'
+               },
+               {
+                  icon: 'icon-SwipeMenu',
+                  title: i18n.rk('Ещё'),
+                  _isMenu: true,
+                  showType: 2
+               }];
+            assert.deepEqual(
+               result,
+               HorizontalMeasurer.default.getSwipeConfig(otherActions, 59, 'none').itemActions.showed
+            );
+         });
       });
    });
 });
