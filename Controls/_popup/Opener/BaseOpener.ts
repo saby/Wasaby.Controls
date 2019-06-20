@@ -377,11 +377,55 @@ Base.requireModule = function (module) {
 Base.getConfig = function(baseConfig, options, popupOptions) {
     // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
     // merge _options to popupOptions
-    for (const i in options) {
-        if (options.hasOwnProperty(i)) {
-            if (options[i] !== undefined) {
-                baseConfig[i] = options[i];
-            }
+    const usedOptions = [
+        'closeByExternalClick',
+        'isCompoundTemplate',
+        'eventHandlers',
+        'autoCloseOnHide',
+        'autoClose',
+        'type',
+        'style',
+        'message',
+        'details',
+        'yesCaption',
+        'noCaption',
+        'cancelCaption',
+        'okCaption',
+        'autofocus',
+        'isModal',
+        'modal',
+        'closeOnOutsideClick',
+        'closeOnTargetScroll',
+        'className',
+        'template',
+        'templateOptions',
+        'minWidth',
+        'maxWidth',
+        'maximize',
+        'width',
+        'resizable',
+        'top',
+        'autoHide',
+        'left',
+        'maxHeight',
+        'minHeight',
+        'draggable',
+        'horizontalAlign',
+        'verticalAlign',
+        'offset',
+        'direction',
+        'corner',
+        'targetPoint',
+        'targetTracking',
+        'locationStrategy',
+        'actionOnScroll'
+    ];
+
+    // merge _options to popupOptions
+    for (let i = 0; i < usedOptions.length; i++) {
+        const option = usedOptions[i];
+        if (options[option] !== undefined) {
+            baseConfig[option] = options[option];
         }
     }
 
