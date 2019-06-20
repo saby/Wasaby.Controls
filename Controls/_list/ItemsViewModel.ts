@@ -128,7 +128,7 @@ var ItemsViewModel = BaseViewModel.extend({
     isEnd: function() {
         var endIndex;
         if (this._options.virtualScrolling) {
-            endIndex = (this._options.virtualScrolling && !!this._stopIndex ? this._stopIndex : 0);
+            endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
         }

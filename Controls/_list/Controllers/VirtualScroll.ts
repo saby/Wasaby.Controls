@@ -89,6 +89,11 @@ class VirtualScroll {
         };
     }
 
+    set StartIndex(startIndex: number): void {
+        this._startIndex = Math.max(0, startIndex);
+        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+    }
+
     get ItemsHeights(): Array<number> {
         return this._itemsHeights;
     }
@@ -106,7 +111,6 @@ class VirtualScroll {
 
     set ItemsContainer(value: ItemsContainer) {
         this._itemsContainer = value;
-        this.updateItemsSizes();
     }
 
     get ItemsContainer(): ItemsContainer {
@@ -140,12 +144,14 @@ class VirtualScroll {
 
         this._updateItemsSizes(startUpdateIndex, updateLength);
         this._updatePlaceholdersSizes();
-
     }
 
     //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
     public updateItemsIndexes(direction: String): void {
         if (direction === 'down') {
+            if (this._isEnd()) {
+                return;
+            }
             this._startIndex = this._startIndex + this._virtualSegmentSize;
             this._startIndex = Math.min(this._startIndex, this._itemsCount - this._virtualPageSize);
         } else {
@@ -153,7 +159,6 @@ class VirtualScroll {
         }
         this._startIndex = Math.max(0, this._startIndex);
         this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
     public insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
@@ -166,17 +171,14 @@ class VirtualScroll {
         }
 
         this._itemsHeights = topItemsHeight.concat(insertedItemsHeights, bottomItemsHeight);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
     public cutItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
         this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
     public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
+        // TODO: Сделать out параметр, чтобы не гулять по потенциально огромному массиву 2 а то и 3 раза.
         if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
             let
                 offsetHeight = 0,
@@ -199,18 +201,17 @@ class VirtualScroll {
                     break;
                 }
             }
-
-            this._updatePlaceholdersSizes();
         }
     }
 
+    private _isEnd(): boolean {
+        return (this._itemsHeights.length === this._itemsCount) && (this._stopIndex >= this._itemsHeights.length);
+    }
 
     private _isScrollInPlaceholder(scrollTop: number, containerHeight: number = 0): boolean {
-        let itemsHeight = 0,
-            topPlaceholderSize = this._getItemsHeight(0, this._startIndex);
-        for (let i = this._startIndex; i < this._stopIndex; i++) {
-            itemsHeight += this._itemsHeights[i];
-        }
+        let topPlaceholderSize = this._getItemsHeight(0, this._startIndex),
+            itemsHeight = this._getItemsHeight(this._startIndex, this._stopIndex);
+
         return (scrollTop <= topPlaceholderSize || (scrollTop+containerHeight) >= (itemsHeight + topPlaceholderSize));
     }
 
@@ -225,16 +226,18 @@ class VirtualScroll {
         return height;
     }
 
+    updatePlaceholdersSizes(): void {
+        this._updatePlaceholdersSizes();
+    }
+
     private _updatePlaceholdersSizes(): void {
         this._topPlaceholderSize = this._getItemsHeight(0, this._startIndex);
         this._bottomPlaceholderSize = this._getItemsHeight(this._stopIndex, this._itemsHeights.length);
     }
 
     private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
-        if (isUnitTesting) {
-            for (let i = 0; i < updateLength; i++) {
-                this._itemsHeights[startUpdateIndex + i] = this._getRowHeight(this._itemsContainer.children[i], isUnitTesting);
-            }
+        for (let i = 0; i < updateLength; i++) {
+            this._itemsHeights[startUpdateIndex + i] = this._getRowHeight(this._itemsContainer.children[i], isUnitTesting);
         }
     }
 
