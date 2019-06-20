@@ -58,6 +58,7 @@ define(
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
             assert.equal(baseConfig.actionOnScroll, 'close');
+            assert.equal(opener._actionOnScroll, 'close');
             let opener2 = new popup.BaseOpener();
             popupOptions = {
                templateOptions: {
