@@ -141,9 +141,7 @@ define([
 
          listView._listModel._notify('onListChange');
          assert.isFalse(stub.called);
-         listView._beforeUpdate(cfg);
-         assert.isFalse(stub.called);
-         listView._afterUpdate();
+         listView._afterRender(cfg);
          assert.isTrue(stub.calledOnce);
       });
 
@@ -165,7 +163,7 @@ define([
          listView._listModel._notify('onListChange');
          listView._listModel._notify('onListChange');
          listView._beforeUpdate(cfg);
-         listView._afterUpdate();
+         listView._afterRender();
          assert.isTrue(stub.calledOnce);
       });
 
