@@ -502,6 +502,7 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
+            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.getMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
         },
 
@@ -558,7 +559,16 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-
+        getMultyHeader: function(columns) {
+            let k = 0;
+            while(columns.length > k) {
+                if (columns[k].startRow && columns[k].endRow) {
+                    return true;
+                }
+                k++;
+            }
+            return false;
+        },
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
