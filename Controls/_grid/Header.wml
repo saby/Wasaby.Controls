@@ -40,36 +40,36 @@
       </th>
    </ws:if>
    <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <div attr:style="{{headerColumn.cellStyles}}" attr:class="{{headerColumn.cellClasses}}">
+      <div attr:style="{{headerColumn.style}}{{headerColumn.cellStyles}}" attr:class="{{headerColumn.cellClasses}}">
          <ws:partial template="cellContent" />
       </div>
    </ws:else>
    <ws:else>
       <div attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}}">
+           attr:style="{{headerColumn.style}}{{headerColumn.cellStyles}}">
          <ws:partial template="cellContent"/>
       </div>
    </ws:else>
 </ws:template>
 <ws:template name="stickyCell">
-   <Controls.scroll:StickyHeader
-           attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}}"
-           mode="stackable"
-           fixedZIndex="{{headerColumn.zIndex}}"
-           offsetTop="{{headerColumn.offsetTop}}"
-           shadowVisibility="{{headerColumn.shadowVisibility}}">
-      <!-- Set the listModel option only in order for the update of the internal templates to update -->
-      <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
-      <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
-      <!-- Most often, the headings are changed simultaneously with updating the table. -->
-      <!-- Remove after complete https://online.sbis.ru/opendoc.html?guid=660b0a02-abbd-433c-9b37-b2468076171c -->
-      <ws:partial template="cellContent"
-                  defaultHeaderContent="{{defaultHeaderContent}}"
-                  headerColumn="{{headerColumn}}"
-                  multiselect="{{multiselect}}"
-                  listModel="{{ listModel }}"/>
-   </Controls.scroll:StickyHeader>
+      <Controls.scroll:StickyHeader
+              attr:class="{{headerColumn.cellClasses}}"
+              attr:style="{{headerColumn.cellStyles}}"
+              mode="stackable"
+              fixedZIndex="{{headerColumn.zIndex}}"
+              offsetTop="{{headerColumn.offsetTop}}"
+              shadowVisibility="{{headerColumn.shadowVisibility}}">
+         <!-- Set the listModel option only in order for the update of the internal templates to update -->
+         <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
+         <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
+         <!-- Most often, the headings are changed simultaneously with updating the table. -->
+         <!-- Remove after complete https://online.sbis.ru/opendoc.html?guid=660b0a02-abbd-433c-9b37-b2468076171c -->
+         <ws:partial template="cellContent"
+                     defaultHeaderContent="{{defaultHeaderContent}}"
+                     headerColumn="{{headerColumn}}"
+                     multiselect="{{multiselect}}"
+                     listModel="{{ listModel }}"/>
+      </Controls.scroll:StickyHeader>
 </ws:template>
 <ws:template name="header">
    <ws:if data="{{listModel.isNoGridSupport()}}">
