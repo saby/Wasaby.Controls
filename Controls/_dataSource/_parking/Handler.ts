@@ -8,7 +8,7 @@
  * @public
  * @author Заляев А.В.
  */
-export type ViewConfig<TOptions = object> = {
+export interface ViewConfig<TOptions = object> {
     template: any;
     options?: Partial<TOptions>;
 }
