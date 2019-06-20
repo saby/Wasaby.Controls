@@ -273,5 +273,16 @@ define([
          sinon.assert.callOrder(component._notifyToOpener, component._notify);
          sandbox.restore();
       });
+
+      it('_confirmDialogResult', () => {
+         let FC = new form.Controller();
+         FC.update = () => {
+            return (new Deferred()).errback('update error');
+         };
+         let def = new Deferred();
+         FC._confirmDialogResult(true, def);
+         assert.equal(def.isReady(), false);
+         FC.destroy();
+      });
    });
 });
