@@ -1,9 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
+      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
 
       var DialogTemplate = Control.extend({
 
@@ -71,14 +71,26 @@ import 'css!theme?Controls/popupTemplate';
          /**
           * @name Controls/_popupTemplate/Stack#closeButtonViewMode
           * @cfg {String} Close button display style.
-          * @variant default
-          * @variant light
-          * @variant primary
+          * @variant toolButton
+          * @variant link
+          * @variant popup
+          * @default popup
+          */
+
+         /**
+          * @name Controls/_popupTemplate/Stack#closeButtonTransparent
+          * @cfg {String} Close button transparent.
+          * @variant true
+          * @variant false
+          * @default true
           */
 
          _template: template,
          _maximizeButtonVisibility: false,
+         _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
+            this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть')}`;
+
             if (options.contentArea) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
@@ -102,10 +114,12 @@ import 'css!theme?Controls/popupTemplate';
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
             this._updateMaximizeButton(options);
+            this._prepareCloseButton(options);
          },
 
          _beforeUpdate: function(newOptions) {
             this._updateMaximizeButton(newOptions);
+            this._prepareCloseButton(newOptions);
          },
 
          _afterUpdate: function(oldOptions) {
@@ -113,19 +127,18 @@ import 'css!theme?Controls/popupTemplate';
                this._notify('controlResize', [], { bubbling: true });
             }
          },
-
+         _prepareCloseButton: function(options){
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
+            let viewMode = options.closeButtonViewMode;
+            let style = options.closeButtonStyle;
+            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
+         },
          _updateMaximizeButton: function(options) {
-            this._updateMaximizeButtonTitle(options);
             if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
                this._maximizeButtonVisibility = false;
             } else {
                this._maximizeButtonVisibility = options.maximizeButtonVisibility;
             }
-         },
-
-         _updateMaximizeButtonTitle: function(options) {
-            var maximized = this._calculateMaximized(options);
-            this._maximizeButtonTitle = maximized ? rk('Свернуть') : rk('Развернуть');
          },
 
          /**
@@ -158,10 +171,11 @@ import 'css!theme?Controls/popupTemplate';
             headingStyle: 'secondary',
             closeButtonVisibility: true,
             headingSize: 'l',
-            closeButtonViewMode: 'popup'
+            closeButtonViewMode: 'popup',
+            closeButtonTransparent: true
          };
       };
-
+      DialogTemplate._theme = ['Controls/popupTemplate'];
       export = DialogTemplate;
 
 

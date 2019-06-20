@@ -45,7 +45,7 @@ define(
                inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -81,8 +81,14 @@ define(
             });
 
             it('On the mobile platform', function() {
+               var sandbox = sinon.createSandbox();
+
                inst._isMobilePlatform = true;
                inst._model.fixedPosition = 'top';
+               sandbox.replace(_StickyHeader._private, 'getComputedStyle', function() {
+                  return { paddingTop: '0px' };
+               });
+               inst._container = { style: { paddingTop: '' } };
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;margin-top: -1px;z-index: 2;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
@@ -92,6 +98,7 @@ define(
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                                              '</div>');
+               sandbox.restore();
             });
 
             it('Move the header', function() {

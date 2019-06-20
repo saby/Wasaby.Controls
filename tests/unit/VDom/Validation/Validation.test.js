@@ -43,10 +43,6 @@ define([
             arguments: ['valueChanged', ['test']]
          }]);
       });
-      it('cleanValid', () => {
-         validCtrl._valueChangedHandler();
-         assert.deepEqual(validCtrl._validationResult, undefined);
-      });
       it('closeInfoBox', () => {
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
@@ -55,16 +51,16 @@ define([
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
          assert.deepEqual(validCtrl._isOpened, false);
+         validCtrl.destroy();
       });
-   });
-   describe('Validate/Input', () => {
-      it('cleanValidInput', () => {
-         var inputCtrl = new validateMod.InputContainer();
-         inputCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(inputCtrl._validationResult, undefined);
-         inputCtrl._validationResult = 'Error';
-         inputCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(inputCtrl._validationResult, 'Error');
+      it('cleanValid', () => {
+         var validCtrl = new validateMod.Container();
+         validCtrl._valueChangedHandler(null, 'test');
+         assert.deepEqual(validCtrl._validationResult, undefined);
+         validCtrl._validationResult = 'Error';
+         validCtrl._valueChangedHandler(null, 'test');
+         assert.deepEqual(validCtrl._validationResult, 'Error');
+         validCtrl.destroy();
       });
    });
    describe('Validate/FormController', () => {

@@ -93,6 +93,10 @@ import Utils = require('Types/util');
             return false;
          },
 
+         pageScrolled(item, container): boolean {
+            return this._elementUpdated(item, container);
+         },
+
          /**
           * Updating popup
           * @function Controls/_popupTemplate/BaseController#elementUpdated

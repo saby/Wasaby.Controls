@@ -95,6 +95,7 @@ import 'css!theme?Controls/validate';
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
+         _currentValue: undefined,
          _beforeMount: function() {
             this._isNewEnvironment = isNewEnvironment();
             if (!this._isNewEnvironment) {
@@ -248,8 +249,14 @@ import 'css!theme?Controls/validate';
             clearTimeout(this._closeId);
          },
          _valueChangedHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
-            this._cleanValid();
+            // We clean validation, if the value has changed.
+            // But some controls notify valueChanged if the additional data has changed.
+             //For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
+            if (this._currentValue !== value) {
+               this._currentValue = value;
+               this._notify('valueChanged', [value]);
+               this._cleanValid();
+            }
          },
          _cleanValid: function() {
             if (this._validationResult) {

@@ -2457,10 +2457,9 @@
             "title": "Class names of popup.",
             "type": "String"
           },
-          "closeByExternalClick": {
+          "closeOnOutsideClick": {
             "title": "Determines whether possibility of closing the popup when clicking past.",
-            "type": "Boolean",
-            "newName": "closeOnOutsideClick"
+            "type": "Boolean"
           },
           "template": {
             "title": "Template inside popup.",
@@ -2772,15 +2771,17 @@
             "type": "Boolean",
             "title": "Determines whether display of the close button."
           },
-          "closeButtonStyle": {
+          "closeButtonTransparent": {
+            "type": "Boolean"
+          },
+          "closeButtonViewMode": {
             "type": "enum",
-            "default": "default",
-            "newName": "closeButtonViewMode",
+            "default": "popup",
             "title": "Close button display style.",
             "enum": {
-              "default": "default",
-              "light": "light",
-              "primary": "primary"
+              "toolButton": "toolButton",
+              "link": "link",
+              "popup": "popup"
             }
           },
           "draggable": {
@@ -2836,15 +2837,17 @@
             "type": "Boolean",
             "title": "Determines the display maximize button."
           },
-          "closeButtonStyle": {
+          "closeButtonTransparent": {
+            "type": "Boolean"
+          },
+          "closeButtonViewMode": {
             "type": "enum",
-            "default": "default",
-            "newName": "closeButtonViewMode",
+            "default": "popup",
             "title": "Close button display style.",
             "enum": {
-              "default": "default",
-              "light": "light",
-              "primary": "primary"
+              "toolButton": "toolButton",
+              "link": "link",
+              "popup": "popup"
             }
           }
         }

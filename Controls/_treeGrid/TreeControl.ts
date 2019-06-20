@@ -124,8 +124,9 @@ var _private = {
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
     },
-    isDeepReload: function({deepReload}, deepReloadState: boolean): boolean {
-        return  deepReload || deepReloadState;
+    isDeepReload: function({deepReload, task1177343452}, deepReloadState: boolean): boolean {
+        //task1177343452 will removed in 510, added by task https://online.sbis.ru/opendoc.html?guid=15641dfc-fd55-4e68-9c2e-f95627780acb
+        return  task1177343452 ? false : deepReload || deepReloadState;
     },
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
         const parentProperty = cfg.parentProperty;
@@ -136,22 +137,15 @@ var _private = {
         let isExpandAll: boolean;
 
         if (baseControl) {
-            let viewModel = baseControl.getViewModel();
-            let items = viewModel.getItems();
-            let item = items && items.at(0);
-            let expandedItems = viewModel.getExpandedItems();
-            let typeFunction = item && typeof item.get(cfg.keyProperty) === 'number' ? Number : String;
-
-            if (!isEmpty(expandedItems)) {
-                for (var i in expandedItems) {
-                    if (expandedItems.hasOwnProperty(i)) {
-                        expandedItemsKeys.push(typeFunction(expandedItems[i]));
-                    }
-                }
-            }
+            const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
+            if (!isExpandAll) {
+                viewModel.getExpandedItems().forEach((key) => {
+                    expandedItemsKeys.push(key);
+                });
+            }
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
-                if (expandedItemsKeys.indexOf(typeFunction(node)) === -1) {
+                if (expandedItemsKeys.indexOf(node) === -1) {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
@@ -231,6 +225,15 @@ var _private = {
         items.setEventRaising(true, true);
     },
 
+    initListViewModelHandler(self, listModel): void {
+        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+        listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
+        listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+        listModel.subscribe('rootChanged', self._rootChanged.bind(self));
+        listModel.subscribe('filterChanged', self._filterChanged.bind(self));
+        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+    },
+
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
         var findChildNodesRecursive = function(key) {
             viewModel.getChildren(key).forEach(function(elem) {
@@ -286,12 +289,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {
-        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
-        this._children.baseControl.getViewModel().subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
-        this._children.baseControl.getViewModel().subscribe('rootChanged', this._rootChanged.bind(this));
-        this._children.baseControl.getViewModel().subscribe('filterChanged', this._filterChanged.bind(this));
+        _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
     },
+
     _dataLoadCallback: function() {
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback.apply(null, arguments);
@@ -310,6 +310,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (newOptions.expandedItems) {
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
+        if (newOptions.collapsedItems) {
+            this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
+        }
+
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }
@@ -320,8 +324,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
         }
     },
-    _afterUpdate: function() {
-        TreeControl.superclass._afterUpdate.apply(this, arguments);
+    _afterUpdate: function(oldOptions) {
         if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
@@ -333,6 +336,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 self._children.baseControl.getViewModel().setRoot(self._root);
             });
         }
+        if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
+            _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
+        }
+    },
+    resetExpandedItems(): void {
+        this._children.baseControl.getViewModel().resetExpandedItems();
     },
     toggleExpanded: function(key) {
         var
@@ -351,15 +360,19 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpandedItemsChanged(e, expandedItems) {
         this._notify('expandedItemsChanged', [expandedItems]);
-
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
     },
     _filterChanged: function (e, filter) {
-    this._notify('filterChanged', filter);
+        this._notify('filterChanged', filter);
     },
     _rootChanged: function (e, root) {
         this._notify('rootChanged', root);
+    },
+    _onCollapsedItemsChanged(e, collapsedItems) {
+        this._notify('collapsedItemsChanged', [collapsedItems]);
+        //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
+        this._forceUpdate();
     },
     reload: function() {
         var self = this;

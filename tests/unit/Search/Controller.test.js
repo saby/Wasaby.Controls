@@ -224,10 +224,12 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          var searchController = getSearchController({dataLoadErrback: searchErrback});
          searchController._dataOptions = defaultOptions;
+         searchController._loading = true;
 
          searchMod.Controller._private.searchErrback(searchController, 'test');
          assert.isTrue(searchErrbackCalled);
          assert.equal(err, 'test');
+         assert.isFalse(searchController._loading);
       });
 
       it('_search', function() {
@@ -248,12 +250,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(searchController._inputSearchValue, 'test');
       });
 
-      it('_beforeMount', function() {
+      describe('_beforeMount', function() {
          var searchController = getSearchController(defaultOptions);
-         searchController._beforeMount({ searchValue: 'test', root: 'test' }, {dataOptions: defaultOptions});
 
-         assert.equal(searchController._inputSearchValue, 'test');
-         assert.equal(searchController._root, 'test');
+         it('without option searchValue', function() {
+            searchController._beforeMount({root: 'test', viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._root, 'test');
+            assert.equal(searchController._viewMode, 'notSearch');
+         });
+
+         it('with option searchValue', function() {
+            searchController._beforeMount({searchValue: 'test2', root: 'test2', viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._inputSearchValue, 'test2');
+            assert.equal(searchController._root, 'test2');
+            assert.equal(searchController._previousViewMode, 'notSearch');
+            assert.equal(searchController._viewMode, 'search');
+         })
       });
 
       it('_beforeUpdate', function() {

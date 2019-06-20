@@ -30,7 +30,8 @@ define('Controls-demo/Example/Input/Tag',
             var cfg = {
                target: target,
                message: 'Tooltip text',
-               position: 'tl'
+               targetSide: 'top',
+               alignment: 'end'
             };
 
             this._notify('openInfoBox', [cfg], {

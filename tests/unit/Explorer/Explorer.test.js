@@ -198,6 +198,14 @@ define([
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
+         var resetExpandedItemsCalled = false;
+         instance._children = {
+            treeControl: {
+               resetExpandedItems: function() {
+                  resetExpandedItemsCalled = true;
+               }
+            }
+         };
 
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
@@ -212,11 +220,13 @@ define([
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
          assert.isFalse(rootChanged);
 
+         resetExpandedItemsCalled = false;
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
          assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.isFalse(rootChanged);
+         assert.isTrue(resetExpandedItemsCalled);
 
          instance._breadCrumbsItems = new collection.RecordSet({
             rawData: [
@@ -224,7 +234,7 @@ define([
             ],
             idProperty: 'id'
          });
-         instance._options.searchMode = 'root';
+         instance._options.searchStartingWith = 'root';
          instance._options.root = 'test';
          instance._options.parentProperty = 'id';
          instance._viewMode = 'tree';

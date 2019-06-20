@@ -4,7 +4,7 @@ import template = require('wml!Controls/_search/Controller');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
 import _SearchController from './_SearchController';
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
 
@@ -127,6 +127,7 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loading = false;
    }
 };
 
@@ -178,7 +179,12 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._previousViewMode = this._viewMode = options.viewMode;
 
       if (options.searchValue) {
-         this._search(null, options.searchValue);
+         this._inputSearchValue = options.searchValue;
+
+         if (this._viewMode !== 'search') {
+            this._previousViewMode = this._viewMode;
+            this._viewMode = 'search';
+         }
       }
 
       if (options.root !== undefined) {

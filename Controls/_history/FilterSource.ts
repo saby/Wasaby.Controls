@@ -7,7 +7,7 @@ import Constants = require('Controls/_history/Constants');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import entity = require('Types/entity');
-import cEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Serializer = require('Core/Serializer');
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
@@ -112,7 +112,7 @@ var _private = {
 
       chain.factory(history.recent).filter(function (element) {
          isPinned = history.pinned.getRecordById(element.getId());
-         if (!isPinned) {
+         if (!isPinned && element.get('ObjectData') !== DEFAULT_FILTER) {
             currentCount++;
          }
          return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
@@ -219,7 +219,7 @@ var _private = {
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && cEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
             item = element;
          }
       });

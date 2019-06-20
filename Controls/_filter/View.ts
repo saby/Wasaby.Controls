@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
@@ -192,15 +192,16 @@ var _private = {
     },
 
     setValue: function(self, selectedKeys, name) {
-        var item = _private.getItemByName(self._source, name);
-        if (!selectedKeys.length) {
-            var resetValue = object.getPropertyValue(item, 'resetValue');
-            object.setPropertyValue(item, 'value', resetValue);
+        const item = _private.getItemByName(self._source, name);
+        let value;
+        if (!selectedKeys.length || (item.emptyText && selectedKeys.includes(null))) {
+            value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
-            object.setPropertyValue(item, 'value', selectedKeys);
+            value = selectedKeys;
         } else {
-            object.setPropertyValue(item, 'value', selectedKeys[0]);
+            value = selectedKeys[0];
         }
+        object.setPropertyValue(item, 'value', value);
     },
 
     selectItems: function(self, selectedKeys) {
@@ -294,8 +295,11 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
+            const self = this;
             _private.prepareItems(this, newOptions.source);
-            return _private.reload(this);
+            return _private.reload(this).addCallback(function() {
+                self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+            });
         }
     },
 

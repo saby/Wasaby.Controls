@@ -6,7 +6,7 @@ import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate
 import {ItemTemplate as itemTemplate} from 'Controls/dropdown';
 import defaultHeadTemplate = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
 import debounce = require('Core/helpers/Function/debounce');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
@@ -69,6 +69,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   items: options.items,
                   itemTemplate: options.itemTemplate,
                   itemTemplateProperty: options.itemTemplateProperty,
+                  groupTemplate: options.groupTemplate,
+                  groupingKeyCallback: options.groupingKeyCallback,
                   keyProperty: options.keyProperty,
                   displayProperty: options.displayProperty,
                   parentProperty: options.parentProperty,

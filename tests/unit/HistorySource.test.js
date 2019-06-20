@@ -263,6 +263,28 @@ define(
                assert.equal(historyItems.getFormat().getCount(), 10);
                hSource._history.pinned.removeAt(1);
             });
+            it('getItems', function(done) {
+               let historyConfig = {
+                  originSource: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: items
+                  }),
+                  historySource: new historyMod.Service({
+                     historyId: 'TEST_HISTORY_ID'
+                  }),
+                  parentProperty: 'parent'
+               };
+               let historySource = new historyMod.Source(historyConfig);
+               assert.isNull(historySource.getItems());
+
+               let query = new sourceLib.Query().where({
+                  $_history: true
+               });
+               historySource.query(query).addCallback(function() {
+                  assert.deepStrictEqual(historySource.getItems().getRawData(), items);
+                  done();
+               });
+            });
             it('check alphabet', function() {
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');
@@ -426,12 +448,12 @@ define(
             });
 
             it('_private:getFrequentIds', function() {
-               let frequentIds = historyMod.Source._private.getFrequentIds(hSource, hSource._history.frequent, hSource._history.pinned);
+               let frequentIds = historyMod.Source._private.getFrequentIds(hSource, hSource._history.frequent, ['5']);
                assert.deepEqual(frequentIds, ['6', '4']);
             });
 
             it('_private:getRecentIds', function() {
-               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, hSource._history.frequent, hSource._history.pinned,  hSource._history.frequent.getCount());
+               let recentIds = historyMod.Source._private.getRecentIds(hSource, hSource._history.recent, ['5'], ['6', '4']);
                assert.deepEqual(recentIds, ['7', '8']);
             });
 
@@ -444,10 +466,10 @@ define(
                let actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
 
-
+               // 1 pinned + 5 recent
                expectedResult = {
                   pinned: ['5'],
-                  frequent: ['6'],
+                  frequent: ['6', '4'],
                   recent: ['8', '1', '2', '3', '7']
                };
                let recentFilteredData = {
@@ -470,6 +492,62 @@ define(
                };
                hSource._history.recent = createRecordSet(recentFilteredData);
                hSource._recentCount = 8;
+               actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
+
+               // 6 pinned
+               expectedResult = {
+                  pinned: ['8', '1', '2', '5', '9', '10'],
+                  frequent: ['6'],
+                  recent: ['3', '4', '7']
+               };
+               let pinnedFilteredData = {
+                  _type: 'recordset',
+                  d: [
+                     ['8', null, 'TEST_HISTORY_ID_V1'],
+                     ['1', null, 'TEST_HISTORY_ID_V1'],
+                     ['2', null, 'TEST_HISTORY_ID_V1'],
+                     ['5', null, 'TEST_HISTORY_ID_V1'],
+                     ['9', null, 'TEST_HISTORY_ID_V1'],
+                     ['10', null, 'TEST_HISTORY_ID_V1']
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               };
+               hSource._history.pinned = createRecordSet(pinnedFilteredData);
+               hSource._recentCount = 3;
+               actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
+               assert.deepEqual(expectedResult, actualResult);
+
+               // 8 pinned
+               expectedResult = {
+                  pinned: ['8', '1', '2', '3', '4', '5', '9', '10'],
+                  frequent: [],
+                  recent: ['6', '7']
+               };
+               pinnedFilteredData = {
+                  _type: 'recordset',
+                  d: [
+                     ['8', null, 'TEST_HISTORY_ID_V1'],
+                     ['1', null, 'TEST_HISTORY_ID_V1'],
+                     ['2', null, 'TEST_HISTORY_ID_V1'],
+                     ['3', null, 'TEST_HISTORY_ID_V1'],
+                     ['4', null, 'TEST_HISTORY_ID_V1'],
+                     ['5', null, 'TEST_HISTORY_ID_V1'],
+                     ['9', null, 'TEST_HISTORY_ID_V1'],
+                     ['10', null, 'TEST_HISTORY_ID_V1']
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               };
+               hSource._history.pinned = createRecordSet(pinnedFilteredData);
+               hSource._recentCount = 2;
                actualResult = historyMod.Source._private.getFilterHistory(hSource, hSource._history);
                assert.deepEqual(expectedResult, actualResult);
             });

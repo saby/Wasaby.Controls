@@ -193,9 +193,11 @@ class ModuleClass {
             }
             // In the capacity mode we move the periods as adjacent.
             // In the normal mode, if the capacity has changed and the step is not a multiple of the year
-            // and the month of the periods differ, then we also set adjacent periods.
+            // and the month of the periods differ or step is not aligned to the new capacity,
+            // then we also set adjacent periods.
             if (relationMode === 'byCapacity' ||
-                    (capacityChanged && steps[number] % 12 !== 0 && start.getMonth() !== oldStart.getMonth())) {
+                    (capacityChanged && steps[number] % 12 !== 0 &&
+                        (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
             } else {
                 s = steps[number] || periodLength;

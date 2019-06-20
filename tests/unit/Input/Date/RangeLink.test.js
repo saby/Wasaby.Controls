@@ -27,7 +27,12 @@ define([
             };
             component._openDialog();
             sinon.assert.called(component._children.opener.open);
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {minQuantum: 'day'} }));
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft',
+               templateOptions: {
+                  minRange: 'day'
+               }
+            }));
          });
 
          it('should open dialog with passed dialog options', function() {
@@ -41,11 +46,75 @@ define([
                open: sinon.fake()
             };
             component._openDialog();
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({ templateOptions: {
-                  minQuantum: extOptions.minRange,
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft-withoutModeBtn',
+               templateOptions: {
+                  minRange: extOptions.minRange,
                   captionFormatter: extOptions.captionFormatter
-               }}));
+               }
+            }));
          });
+         describe('open dialog with .controls-DatePopup__selector-marginLeft css class', function() {
+            [{
+               selectionType: 'range'
+            }, {
+               minRange: 'day'
+            }, {
+               quantum: { days: [1], months: [1] }
+            }, {
+               quantum: { weeks: [1], quarters: [1] }
+            }, {
+               quantum: { days: [1], quarters: [1] }
+            }, {
+               quantum: { days: [1], halfyears: [1] }
+            }, {
+               quantum: { days: [1], years: [1] }
+            }].forEach(function (test) {
+               it(`${JSON.stringify(test)}`, function () {
+                  const
+                     component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
+                  component._children.opener = {
+                     open: sinon.fake()
+                  };
+                  component._openDialog();
+                  sinon.assert.calledWith(component._children.opener.open, sinon.match({
+                     className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft'
+                  }));
+               });
+            });
+         });
+         describe('open dialog with .controls-DatePopup__selector-marginLeft-withoutModeBtn css class', function() {
+            [{
+               selectionType: 'single'
+            }, {
+               minRange: 'month'
+            }, {
+               quantum: { days: [1] }
+            }, {
+               quantum: { weeks: [1] }
+            }, {
+               quantum: { months: [1] }
+            }, {
+               quantum: { quarters: [1] }
+            }, {
+               quantum: { halfyears: [1] }
+            }, {
+               quantum: { years: [1] }
+            }].forEach(function (test) {
+               it(`${JSON.stringify(test)}`, function () {
+                  const
+                     component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
+                  component._children.opener = {
+                     open: sinon.fake()
+                  };
+                  component._openDialog();
+                  sinon.assert.calledWith(component._children.opener.open, sinon.match({
+                     className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft-withoutModeBtn'
+                  }));
+               });
+            });
+         });
+
       });
 
       describe('_onResult', function() {
