@@ -376,12 +376,58 @@ Base.requireModule = function (module) {
 
 Base.getConfig = function(baseConfig, options, popupOptions) {
     // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
+    // Возвращаю правки. usedOptions - набор опций, которые мы берем с opener'a (с opener._options) и передаем в окно.
+    // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
+    // попасть не должны.
+    const usedOptions = [
+        'closeByExternalClick',
+        'isCompoundTemplate',
+        'eventHandlers',
+        'autoCloseOnHide',
+        'autoClose',
+        'type',
+        'style',
+        'message',
+        'details',
+        'yesCaption',
+        'noCaption',
+        'cancelCaption',
+        'okCaption',
+        'autofocus',
+        'isModal',
+        'modal',
+        'closeOnOutsideClick',
+        'closeOnTargetScroll',
+        'className',
+        'template',
+        'templateOptions',
+        'minWidth',
+        'maxWidth',
+        'maximize',
+        'width',
+        'resizable',
+        'top',
+        'autoHide',
+        'left',
+        'maxHeight',
+        'minHeight',
+        'draggable',
+        'horizontalAlign',
+        'verticalAlign',
+        'offset',
+        'direction',
+        'corner',
+        'targetPoint',
+        'targetTracking',
+        'locationStrategy',
+        'actionOnScroll'
+    ];
+
     // merge _options to popupOptions
-    for (const i in options) {
-        if (options.hasOwnProperty(i)) {
-            if (options[i] !== undefined) {
-                baseConfig[i] = options[i];
-            }
+    for (let i = 0; i < usedOptions.length; i++) {
+        const option = usedOptions[i];
+        if (options[option] !== undefined) {
+            baseConfig[option] = options[option];
         }
     }
 
