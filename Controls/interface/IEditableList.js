@@ -39,7 +39,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @event Controls/interface/IEditableList#beforeBeginEdit Occurs before the start of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {ItemEditOptions} options Options of editing.
     * @param {Boolean} isAdd
     * @returns {ItemEditResult}
@@ -109,7 +109,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
@@ -137,7 +137,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @event Controls/interface/IEditableList#beforeEndEdit Occurs before the end of editing\adding.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
@@ -169,7 +169,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
