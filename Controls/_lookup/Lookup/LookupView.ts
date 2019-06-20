@@ -20,9 +20,13 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
    var _private = {
       initializeConstants: function(self) {
+         let templateOptions = {
+            theme: self._options.theme
+         };
+
          if (!SHOW_SELECTOR_WIDTH) {
-            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(self._showSelectorTemplate());
-            CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(self._clearRecordsTemplate());
+            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(self._showSelectorTemplate(templateOptions));
+            CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(self._clearRecordsTemplate(templateOptions));
             LEFT_OFFSET_COUNTER = parseInt(getComputedStyle(self._fieldWrapper).paddingLeft, 10);
          }
       },
