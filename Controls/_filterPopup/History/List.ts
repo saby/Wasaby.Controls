@@ -4,7 +4,7 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import chain = require('Types/chain');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Utils = require('Types/util');
 import {HistoryUtils} from 'Controls/filter';
 import 'css!theme?Controls/filterPopup';

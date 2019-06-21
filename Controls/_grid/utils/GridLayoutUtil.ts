@@ -16,7 +16,7 @@ function isFullGridSupport(): boolean {
 }
 
 function isPartialGridSupport(): boolean {
-    return detection.isNotFullGridSupport;
+    return (detection.isNotFullGridSupport && !(detection.isWinXP || (detection.isIE && !detection.isModernIE)) || detection.safari11);
 }
 
 function isNoGridSupport(): boolean {
@@ -133,5 +133,6 @@ export {
     getCellStyles,
     getTemplateColumnsStyle,
     getDefaultStylesFor,
-    toCssString
+    toCssString,
+
 };

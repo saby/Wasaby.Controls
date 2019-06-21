@@ -1,5 +1,4 @@
 <ws:partial
-   __noDirtyChecking="{{true}}"
    template="wml!Controls/_list/resources/ItemOutput"
    listModel="{{listModel}}"
    editingItemData="{{editingItemData}}"
@@ -9,5 +8,6 @@
    multiSelectTpl="{{multiSelectTpl}}"
    itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
    itemData="{{listModel.getCurrent()}}"
+   attr:key="{{listModel.getCurrent().key}}"
    itemActionsPosition="{{itemActionsPosition}}" />
 {{listModel.goToNext()}}

@@ -18,6 +18,7 @@ import Misspell = require('Controls/_search/Misspell');
 import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
 import Input = require('Controls/_search/Input/Search');
+import FilterController = require('Controls/_search/FilterController');
 
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 
@@ -30,6 +31,7 @@ export {
    MisspellContainer,
    Controller,
    Input,
+   FilterController,
 
    getSwitcherStrFromData
 };

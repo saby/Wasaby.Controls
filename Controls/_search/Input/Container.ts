@@ -39,8 +39,10 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
    },
 
    _valueChanged: function (event, value) {
-      this._value = value;
-      this._notifySearch(value);
+      if (this._value !== value) {
+         this._value = value;
+         this._notifySearch(value);
+      }
    },
 
    _searchClick: function () {

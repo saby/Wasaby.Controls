@@ -90,16 +90,29 @@ define(
             popupTemplate.StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
             popupTemplate.StackController._private.getStackParentCoords = () => ({ top: 0, right: 0 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
             let itemConfig = {
+               id: '555444333',
                popupOptions: item.popupOptions
             };
             itemConfig.popupOptions.template = TestMaximizedStack;
             itemConfig.popupOptions.minimizedWidth = undefined;
             popupTemplate.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
+
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, StackContent);
+
+            let itemCount = 0;
+            let items = popupTemplate.StackController._stack;
+            for (let i = 0; i < items.getCount(); i++) {
+               if (items.at(i).id === itemConfig.id) {
+                  itemCount++;
+               }
+            }
+            assert.equal(itemCount, 1);
          });
 
          it('stack maximized popup position', () => {
