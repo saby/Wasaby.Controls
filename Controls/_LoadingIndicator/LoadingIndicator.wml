@@ -1,5 +1,5 @@
 <div class="controls-LoadingIndicator">
-   <ws:partial template="{{_options.content}}" scope="{{ _options }}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()" on:toggleIndicator="_toggleIndicatorHandler()"
+   <ws:partial template="{{_options.content}}" scope="{{ _options }}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()"
                attr:class="controls-loading-indicator_content"/>
    <ws:if data="{{ _isOverlayVisible }}">
       <div tabindex="1" class="controls-loading-indicator controls-Popup__isolatedFocusingContext
