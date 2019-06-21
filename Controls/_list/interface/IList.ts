@@ -338,11 +338,13 @@
 
 /**
  * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /*
  * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+ * @param {Env/Event:Object} eventObject The event descriptor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
