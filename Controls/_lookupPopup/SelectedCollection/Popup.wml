@@ -1,4 +1,8 @@
-<Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" attr:class="controls-SelectedCollection__infobox_content">
+<Controls.popupTemplate:InfoBox
+        stickyPosition="{{_options.stickyPosition}}"
+        attr:class="controls-SelectedCollection__infobox_content"
+        styleType="marker"
+        style="default">
    <div class="controls-SelectedCollection__header_wrapper">
       <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
    </div>
