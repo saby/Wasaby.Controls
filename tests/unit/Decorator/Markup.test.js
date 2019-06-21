@@ -506,7 +506,7 @@ define([
                '<pre>' + decoratedLinkHtml + '</pre>' +
                '<div>' + decoratedLinkHtml + '</div>' +
                '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
-               '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
+               '<p>' + decoratedLinkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
@@ -773,6 +773,43 @@ define([
                'http://ya.ru'
             ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate many links that are separated by spaces in the end of paragraph', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a', testIndex: 1 }, 'http://a'],
+                  ['a', { href: 'http://a', testIndex: 2 }, 'http://a'],
+                  ['br'],
+
+                  ['a', { href: 'http://a', testIndex: 4 }, 'http://a'],
+                  '   ' + nbsp + '\t\n',
+                  ['a', { href: 'http://a', testIndex: 6 }, 'http://a'],
+                  '   \t\n   ' + nbsp,
+                  ['br'],
+
+                  ['a', { href: 'http://a', testIndex: 9 }, 'http://a'],
+                  'aaa',
+                  ['a', { href: 'http://a', testIndex: 11 }, 'http://a'],
+                  ['br'],
+
+                  ['a', { href: 'http://a', testIndex: 13 }, 'http://a'],
+                  ['a', { href: 'http://IJUSTWANNASLEEP', testIndex: 14 }, 'http://a'],
+                  ['br'],
+
+                  ['a', { href: 'http://a', testIndex: 16 }, 'http://a'],
+                  ['span', 'text'],
+                  ['a', { href: 'http://a', testIndex: 18 }, 'http://a']
+               ],
+               isTrueIndexes = [1, 2, 4, 6, 11, 18],
+               isFalseIndexes = [9, 13, 15, 16];
+
+            for (i = 0; i < isTrueIndexes; ++i) {
+               assert.isTrue(linkDecorateUtils.needDecorate(parentNode[isTrueIndexes[i]], parentNode));
+            }
+
+            for (i = 0; i < isFalseIndexes; ++i) {
+               assert.isFalse(linkDecorateUtils.needDecorate(parentNode[isFalseIndexes[i]], parentNode));
+            }
          });
       });
       describe('decorateLink', function() {
