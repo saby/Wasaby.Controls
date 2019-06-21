@@ -3,8 +3,6 @@ import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import 'css!theme?Controls/list';
-import 'wml!Controls/_list/Swipe/resources/SwipeTwoColumns';
-import 'wml!Controls/_list/Swipe/resources/SwipeFor';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
@@ -19,6 +17,8 @@ import { descriptor } from 'Types/entity';
 import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
 import HorizontalMeasurer from 'Controls/_list/Swipe/HorizontalMeasurer';
 import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
+import 'wml!Controls/_list/Swipe/resources/SwipeTwoColumns';
+import 'wml!Controls/_list/Swipe/resources/SwipeFor';
 
 const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
    horizontal: HorizontalMeasurer,
