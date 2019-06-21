@@ -229,7 +229,6 @@ var _private = {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
-        listModel.subscribe('rootChanged', self._rootChanged.bind(self));
         listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
 
