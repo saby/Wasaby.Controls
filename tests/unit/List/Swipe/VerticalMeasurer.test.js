@@ -396,7 +396,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   }];
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(otherActions, 160, 'none').itemActions.showed
+                  VerticalMeasurer.default.getSwipeConfig(otherActions, 130, 'none').itemActions.showed
                );
             });
          });

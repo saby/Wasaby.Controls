@@ -3,6 +3,8 @@ import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import 'css!theme?Controls/list';
+import 'wml!Controls/_list/Swipe/resources/SwipeTwoColumns';
+import 'wml!Controls/_list/Swipe/resources/SwipeFor';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
