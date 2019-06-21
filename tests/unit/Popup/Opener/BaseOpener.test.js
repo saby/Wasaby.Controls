@@ -41,8 +41,8 @@ define(
                name: 'options'
             };
             var popupOptions = {
-               closeByExternalClick: true,
-               closeOnTargetScroll: true,
+               closeOnOutsideClick: true,
+               actionOnScroll: 'close',
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
