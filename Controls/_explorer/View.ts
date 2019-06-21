@@ -276,7 +276,7 @@ import 'Controls/breadcrumbs';
          viewMode: DEFAULT_VIEW_MODE,
          backButtonStyle: 'secondary',
          stickyHeader: true,
-         searchMode: 'root'
+         searchStartingWith: 'root'
       };
    };
 
