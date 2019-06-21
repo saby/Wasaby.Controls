@@ -393,7 +393,7 @@ var
             let
                 columns: Array<{ width: string }> = self._columns,
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                columnsWidth = hasMultiselect ? ['auto'] : [],
+                columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasAutoWidth = !!columns.find((column) => {
                     return column.width === 'auto';
                 });
@@ -519,6 +519,9 @@ var
                 result = cClone(column);
             if (isNoGridSupport) {
                 if (result.width === '1fr') {
+                    result.width = 'auto';
+                }
+                if (result.width === 'max-content') {
                     result.width = 'auto';
                 }
             }

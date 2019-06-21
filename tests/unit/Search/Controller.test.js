@@ -26,6 +26,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
    var getDefaultOptions = function() {
       return {
          searchParam: 'test',
+         searchValue: '',
          minSearchLength: 3,
          searchDelay: 50,
          sorting: [],
@@ -270,19 +271,51 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          })
       });
 
-      it('_beforeUpdate', function() {
+      describe('_beforeUpdate', function() {
          var searchController = getSearchController(defaultOptions);
+
          searchController._beforeMount({}, {dataOptions: defaultOptions});
 
-         searchMod.Controller._private.getSearchController(searchController);
-         searchController._beforeUpdate({}, {dataOptions: defaultOptions});
-         assert.isNull(searchController._searchController);
+         it('default options', function() {
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._beforeUpdate({searchValue: ''}, {dataOptions: defaultOptions});
+            assert.isNull(searchController._searchController);
+         });
 
-         searchMod.Controller._private.getSearchController(searchController);
-         var options = getDefaultOptions();
-         options.filter = {test: 'testValue'};
-         searchController._beforeUpdate(options, {dataOptions: defaultOptions});
-         assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
+         it('filter is changed', function() {
+            var options = getDefaultOptions();
+
+            options.filter = {test: 'testValue'};
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
+         });
+
+         it('search value is changed', function() {
+            var value;
+
+            searchController._inputSearchValue = 'test';
+            searchController._options.searchValue = '';
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._search = function(searchVal) {
+               value = searchVal;
+            };
+
+            it('equal _options.searchValue', function() {
+               searchController._beforeUpdate({searchValue: ''}, {});
+               assert.equal(value, undefined);
+            });
+
+            it('equal _inputSearchValue', function() {
+               searchController._beforeUpdate({searchValue: 'test'}, {});
+               assert.equal(value, undefined);
+            });
+
+            it('new value', function() {
+               searchController._beforeUpdate({searchValue: 'test2'}, {});
+               assert.equal(value, 'test2');
+            });
+         });
       });
 
       it('itemOpenHandler', function() {

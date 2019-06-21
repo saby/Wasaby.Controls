@@ -304,7 +304,9 @@ var _Controller = Control.extend({
       this._onResult(event, {action: 'selectorResult', data: items});
    },
 
-   _mousedown: function () {
+   _clickHandler: function(event) {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
          opener.close();
