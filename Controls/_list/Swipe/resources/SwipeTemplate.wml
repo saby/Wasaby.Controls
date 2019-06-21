@@ -1,5 +1,5 @@
 <ws:template name="swipeTmpl">
-    <ws:partial template="forTemplate"
+    <ws:partial template="{{forTemplate}}"
                 itemData="{{itemData}}"
                 showedActions="{{itemData.itemActions.showed}}"
                 swipeConfig="{{swipeConfig}}"
