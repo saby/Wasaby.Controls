@@ -52,7 +52,7 @@ var
         },
 
         getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
-            let columnsWidths: Array<string> = (hasMultiselect ? ['auto'] : []).concat(columns.map((column => column.width || '1fr')));
+            let columnsWidths: Array<string> = (hasMultiselect ? ['max-content'] : []).concat(columns.map((column => column.width || '1fr')));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
