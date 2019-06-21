@@ -228,6 +228,7 @@ var _private = {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -286,7 +287,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
-        this._children.baseControl.getViewModel().subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
     },
 
     _dataLoadCallback: function() {
@@ -355,12 +355,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
     },
-    _onExpandedItemsChanged(e, expandedItems){
+    _onExpandedItemsChanged(e, expandedItems) {
         this._notify('expandedItemsChanged', [expandedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
     },
-    _onCollapsedItemsChanged(e, collapsedItems){
+    _onCollapsedItemsChanged(e, collapsedItems) {
         this._notify('collapsedItemsChanged', [collapsedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
         this._forceUpdate();
