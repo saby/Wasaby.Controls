@@ -1,5 +1,6 @@
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from "Vdom/Vdom";
@@ -83,7 +84,11 @@ const _private = {
         if (!newCfg.opener) {
             newCfg.opener = DefaultOpenerFinder.find(newCfg.target);
         }
-
+        if (!isNewEnvironment()) {
+            // For the old page, set the zIndex manually
+            //InfoBox must be above all the popup windows on the page.
+            newCfg.zIndex = 10000;
+        }
         return {
             target: newCfg.target && newCfg.target[0] || newCfg.target, // todo: https://online.sbis.ru/doc/7c921a5b-8882-4fd5-9b06-77950cbe2f79
             position: newCfg.position,
