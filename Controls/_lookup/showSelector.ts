@@ -1,11 +1,24 @@
 import merge = require('Core/core-merge');
 
-export = function (self, popupOptions, multiSelect) {
+interface PopupOptions {
+    opener: any;
+    isCompoundTemplate: boolean;
+    templateOptions: any;
+}
+
+/**
+ * Open selector
+ * @param {Controls/_lookup/BaseController} self
+ * @param {Object} popupOptions
+ * @param {Boolean} multiSelect
+ * @returns {Promise}
+ */
+function showSelector(self, popupOptions, multiSelect) {
     let
         indicatorId,
         selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
-        defaultPopupOptions = merge({
+        defaultPopupOptions: PopupOptions = merge({
             opener: self,
             isCompoundTemplate: self._options.isCompoundTemplate
         }, selectorTemplate && selectorTemplate.popupOptions || {});
@@ -28,4 +41,6 @@ export = function (self, popupOptions, multiSelect) {
             self._notify('hideIndicator', [indicatorId], {bubbling: true});
         });
     }
-};
+}
+
+export = showSelector;
