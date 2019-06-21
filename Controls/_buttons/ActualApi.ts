@@ -199,6 +199,7 @@ const ActualApi = {
                case 'info': return 'unaccented'; break;
                case 'secondary': return 'link'; break;
                case 'default': return 'default'; break;
+               default: return 'link';
             }
          } else {
             return 'default';
