@@ -439,30 +439,35 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         _private.updateIndexes(this, 0, this.getCount());
         if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
             if (removedItemsIndex > 0) {
-                var prev = this._display.at(removedItemsIndex - 1).getContents();
-                if (prev.getId) {
+                const prev = this._display.at(removedItemsIndex - 1).getContents();
+                if (this.isValidItemForMarkedKey(prev)) {
                     this.updateMarker(prev.getId());
                 } else {
-                    var curenMarkerIndex = this.getIndexByKey(this._markedKey);
+                    const curenMarkerIndex = this.getIndexByKey(this._markedKey);
                     if (this._markedKey && curenMarkerIndex === -1) {
                         this.updateMarker(this.getPreviousItem(removedItemsIndex));
                     }
                 }
             } else {
-                var first = this._display.at(0)
+                const first = this._display.at(0);
                 if (first && first.getContents()) {
                     var nextMarkedKey = this.getNextItem(0);
                     this.updateMarker(nextMarkedKey);
                 }
-//                     this.updateMarker(this._display.at(0).getContents().getId());
             }
         }
+    },
+    isValidItemForMarkedKey: function(item) {
+        return !this.isBreadCrumbs(item) && !this._isGroup(item);
+    },
+    isBreadCrumbs: function(item) {
+        return !!item.forEach;
     },
     getPreviousItem: function(itemIndex) {
         var prevIndex = itemIndex - 1, prevItem;
         while (prevIndex >= 0) {
             prevItem = this._display.at(prevIndex).getContents();
-            if (!this._isGroup(prevItem)) {
+            if (this.isValidItemForMarkedKey(prevItem)) {
                 return prevItem.getId();
             }
             prevIndex--;
@@ -473,7 +478,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
         while (nextIndex < itemsCount) {
             nextItem = this._display.at(nextIndex).getContents();
-            if (!this._isGroup(nextItem)) {
+            if (this.isValidItemForMarkedKey(nextItem)) {
                 return nextItem.getId();
             }
             nextIndex++;
