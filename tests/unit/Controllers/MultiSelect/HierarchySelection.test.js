@@ -567,6 +567,9 @@ define([
          });*/
 
          it('selectAll and unselectAll in unselected folder', function() {
+            // remove current root from data
+            allData.removeAt(0);
+
             cfg = {
                selectedKeys: [],
                excludedKeys: [],
@@ -585,12 +588,14 @@ define([
 
             assert.deepEqual([1], selection.selected);
             assert.deepEqual([1], selection.excluded);
+            assert.equal(4, selectionInstance.getCount());
 
             selectionInstance.unselectAll();
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([], selection.selected);
             assert.deepEqual([], selection.excluded);
+            assert.equal(0, selectionInstance.getCount());
          });
 
          it('selectAll and unselectAll in selected folder', function() {
