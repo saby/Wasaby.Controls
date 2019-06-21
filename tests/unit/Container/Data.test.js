@@ -369,5 +369,24 @@ define(
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
 
          });
+
+         it('rootChange handler', function() {
+            let events = [];
+            function mockNotify() {
+               return function(eventName, eventArgs, eventOptions) {
+                  events.push({
+                     eventName: eventName,
+                     eventArgs: eventArgs,
+                     eventOptions: eventOptions
+                  });
+               };
+            }
+            var data = getDataWithConfig({filter:{'Раздел': 0}, parentProperty: 'Раздел'});
+            data._notify = mockNotify();
+            data._rootChanged({}, 1);
+            assert.equal('filterChanged', events[0].eventName);
+            assert.deepEqual([{'Раздел': 1}], events[0].eventArgs);
+            assert.isUndefined(events[0].eventOptions);
+         });
       });
    });
