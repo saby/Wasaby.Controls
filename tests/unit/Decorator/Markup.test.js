@@ -801,7 +801,7 @@ define([
                   ['a', { href: 'http://a', testIndex: 18 }, 'http://a']
                ],
                isTrueIndexes = [1, 2, 4, 6, 11, 18],
-               isFalseIndexes = [9, 13, 15, 16];
+               isFalseIndexes = [9, 13, 14, 16];
 
             for (i = 0; i < isTrueIndexes.length; ++i) {
                assert.isTrue(linkDecorateUtils.needDecorate(parentNode[isTrueIndexes[i]], parentNode));
