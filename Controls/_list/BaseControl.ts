@@ -249,26 +249,24 @@ var _private = {
             self._keyDisplayedItem = null;
         }
     },
+    moveMarker: function(self, newMarkedKey) {
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (this._mounted) {
+            this.activate();
+        }
+        _private.setMarkedKey(self, newMarkedKey);
+    },
     moveMarkerToNext: function(self) {
         if (self._options.markerVisibility !== 'hidden') {
-            // activate list when marker is moving. It let us press enter and open current row
-            // must check mounted to avoid fails on unit tests
-            if (this._mounted) {
-                this.activate();
-            }
             const model = self.getViewModel();
-            _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
     moveMarkerToPrevious: function(self) {
         if (self._options.markerVisibility !== 'hidden') {
-            // activate list when marker is moving. It let us press enter and open current row
-            // must check mounted to avoid fails on unit tests
-            if (this._mounted) {
-                this.activate();
-            }
             const model = self.getViewModel();
-            _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
     enterHandler: function(self) {
