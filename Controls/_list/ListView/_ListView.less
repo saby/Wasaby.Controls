@@ -148,19 +148,20 @@
    opacity: @opacity_ListView-item_dragging;
 }
 
-.controls-ListView__item_showActions {
-   &:hover {
-      > .controls-itemActionsV {
+.ws-is-no-touch {
+   .controls-ListView__item_showActions {
+      &:hover {
+         > .controls-itemActionsV {
             display: inline-block;
+         }
+      }
+   }
+   .controls-ListView__item_highlightOnHover_editing {
+      &:hover {
+         background-color: @background-color_ListView-item_editing;
       }
    }
 }
-.controls-ListView__item_highlightOnHover_editing {
-   &:hover {
-      background-color: @background-color_ListView-item_editing;
-   }
-}
-
 
 .controls-ListView__groupContent {
    display: flex;
