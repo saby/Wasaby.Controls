@@ -210,7 +210,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (this._options.searchValue !== newOptions.searchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }
    },
