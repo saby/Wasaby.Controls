@@ -51,7 +51,7 @@ define('Controls/interface/IFormController', [
 
    /**
     * @name Controls/interface/IFormController#errorContainer
-    * @cfg {Controls/dataSource:error.IContainerConstructor} Component for displaying the error template
+    * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения шаблона ошибки по данным от {@link Controls/_dataSource/_error/Controller}
     */
 
    /**

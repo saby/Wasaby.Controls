@@ -7,14 +7,7 @@ import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
 // @ts-ignore
 import { load } from 'Core/library';
-import IContainer from "Controls/_dataSource/_error/IContainer";
-
-type Options = {
-    /**
-     * @cfg {Controls/_dataSource/_error/ViewConfig} viewConfig
-     */
-    viewConfig?: ViewConfig;
-}
+import { default as IContainer, IContainerConfig } from "Controls/_dataSource/_error/IContainer";
 
 type Config = ViewConfig & {
     isShowed?: boolean;
@@ -37,6 +30,12 @@ let getTemplate = (template: string | Control): Promise<Control> => {
 export default class Container extends Control implements IContainer {
     private __viewConfig: Config;
     protected _template = template;
+    /**
+     * Скрыть компонент, отображающий данные об ошибке
+     * @method
+     * @public
+     */
+    hide(): void;
     hide() {
         let mode = this.__viewConfig.mode;
         this.__viewConfig = null;
@@ -45,6 +44,12 @@ export default class Container extends Control implements IContainer {
         }
         this._forceUpdate();
     }
+    /**
+     * Показать парковочный компонент, отображающий данные об ошибке
+     * @param {Controls/_dataSource/_error/ViewConfig} viewConfig
+     * @method
+     * @public
+     */
     show(viewConfig: ViewConfig) {
         if (viewConfig.mode == Mode.dialog) {
             return this.__showDialog(viewConfig)
@@ -52,10 +57,10 @@ export default class Container extends Control implements IContainer {
         this.__viewConfig = viewConfig;
         this._forceUpdate();
     }
-    protected _beforeMount(options: Options) {
+    protected _beforeMount(options: IContainerConfig) {
         this.__updateConfig(options);
     }
-    protected _beforeUpdate(options: Options) {
+    protected _beforeUpdate(options: IContainerConfig) {
         this.__updateConfig(options);
     }
     protected _afterMount() {
@@ -90,7 +95,7 @@ export default class Container extends Control implements IContainer {
     private __notifyDialogClosed() {
         this._notify('dialogClosed', []);
     }
-    private __updateConfig(options: Options) {
+    private __updateConfig(options: IContainerConfig) {
         this.__viewConfig = options.viewConfig;
         if (this.__viewConfig) {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
