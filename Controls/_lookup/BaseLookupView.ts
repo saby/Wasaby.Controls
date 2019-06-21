@@ -7,10 +7,8 @@ import Env = require('Env/Env');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 
-import 'css!theme?Controls/lookup';
 
-
-var KEY_CODE_F2 = 113;
+const KEY_CODE_F2 = 113;
 
 var _private = {
     initializeContainers: function (self) {
