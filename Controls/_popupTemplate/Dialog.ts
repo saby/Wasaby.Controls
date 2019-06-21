@@ -76,34 +76,6 @@ import Vdom = require('Vdom/Vdom');
          _template: template,
          _closeButtonVisibility: true,
          _closeButtonViewMode: 'popup',
-         _beforeMount: function(options) {
-            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
-
-            if (options.contentArea) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
-            }
-            if (options.caption) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
-            }
-            if (options.captionStyle) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
-            }
-            if (options.topArea) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
-            }
-            if (options.hideCross) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
-            }
-            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
-               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
-            }
-            this._prepareCloseButton(options);
-         },
-         _beforeUpdate: function(options) {
-            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
-            this._prepareCloseButton(options);
-         },
-
          /**
           * Close popup.
           * @function Controls/_popupTemplate/Dialog#close
@@ -116,12 +88,6 @@ import Vdom = require('Vdom/Vdom');
             if (this._needStartDrag(event.target)) {
                this._startDragNDrop(event)
             }
-         },
-         //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
-         _prepareCloseButton: function(options){
-            let viewMode = options.closeButtonViewMode;
-            let style = options.closeButtonStyle;
-            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
          },
 
          _startDragNDrop: function(event) {
