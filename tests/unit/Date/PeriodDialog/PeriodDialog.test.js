@@ -1,10 +1,12 @@
 define([
    'Core/core-merge',
+   'Core/Deferred',
    'Controls/datePopup',
    'Controls/Utils/Date',
    'unit/Calendar/Utils'
 ], function(
    coreMerge,
+   Deferred,
    PeriodDialog,
    dateUtils,
    calendarTestUtils
@@ -254,6 +256,45 @@ define([
 
             component._dateRangeSelectionEnded(null, start, end);
             sinon.assert.calledWith(component._notify, 'sendResult', [start, end]);
+            sandbox.restore();
+         });
+      });
+
+      describe('_applyClick', function() {
+         it('should generate "sendResult" event if validation successful.', function() {
+            const sandbox = sinon.sandbox.create(),
+               start = new Date(),
+               end = new Date(),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: start, endValue: end });
+
+            sandbox.stub(component, '_notify');
+            component._children = {
+               formController: {
+                  submit: function() {
+                     return (new Deferred()).callback({ '0': null, '1': null });
+                  }
+               }
+            };
+            component._applyClick(null);
+            sinon.assert.calledWith(component._notify, 'sendResult', [start, end]);
+            sandbox.restore();
+         });
+         it('should generate "sendResult" event if validation failed.', function() {
+            const sandbox = sinon.sandbox.create(),
+               start = new Date(),
+               end = new Date(),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: start, endValue: end });
+
+            sandbox.stub(component, '_notify');
+            component._children = {
+               formController: {
+                  submit: function() {
+                     return (new Deferred()).callback({ '0': ['error'], '1': null });
+                  }
+               }
+            };
+            component._applyClick(null);
+            sinon.assert.notCalled(component._notify);
             sandbox.restore();
          });
       });

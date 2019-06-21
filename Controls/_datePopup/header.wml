@@ -24,22 +24,37 @@
       />
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">
-      <Controls.input:DateBase
-         mask="{{_options.mask}}"
-         autocompleteMode="start"
-         value="{{_rangeModel.startValue}}"
-         attr:class="controls-PeriodDialog__header-datePickerStart"
-         on:valueChanged="_startValuePickerChanged()"
-      />
+      <Controls.validate:InputContainer>
+         <ws:validators>
+            <ws:Function value="{{_rangeModel.startValue}}">Controls/validate:isValidDate</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <Controls.input:DateBase
+               mask="{{_options.mask}}"
+               autocompleteMode="start"
+               value="{{_rangeModel.startValue}}"
+               attr:class="controls-PeriodDialog__header-datePickerStart"
+               on:valueChanged="_startValuePickerChanged()"
+            />
+         </ws:content>
+      </Controls.validate:InputContainer>
+
       <div if="{{_options.selectionType !== 'single'}}" class="controls-PeriodDialog__dateInputEnd-wrapper">
          <div class="controls-PeriodDialog__header-rangeDash"></div>
-         <Controls.input:DateBase
-            mask="{{_options.mask}}"
-            autocompleteMode="start"
-            value="{{_rangeModel.endValue}}"
-            attr:class="controls-PeriodDialog__header-datePickerEnd"
-            on:valueChanged="_endValuePickerChanged()"
-         />
+            <Controls.validate:InputContainer>
+            <ws:validators>
+               <ws:Function value="{{_rangeModel.endValue}}">Controls/validate:isValidDate</ws:Function>
+            </ws:validators>
+            <ws:content>
+               <Controls.input:DateBase
+                  mask="{{_options.mask}}"
+                  autocompleteMode="start"
+                  value="{{_rangeModel.endValue}}"
+                  attr:class="controls-PeriodDialog__header-datePickerEnd"
+                  on:valueChanged="_endValuePickerChanged()"
+               />
+            </ws:content>
+         </Controls.validate:InputContainer>
       </div>
    </div>
 
