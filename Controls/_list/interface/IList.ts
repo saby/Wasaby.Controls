@@ -8,6 +8,13 @@
 
 /**
  * @name Controls/_list/interface/IList#contextMenuVisibility
+ * @cfg {Boolean} Определяет доступность контекстного меню строки при нажатии на правую кнопку мыши.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @default true
+ */
+
+/*
+ * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @default true
@@ -16,13 +23,13 @@
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
  * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
- * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию
- * В качестве ключей можно использовать следующие свойства
- * - items - для смены набора элементов
- * - groupingKeyCallback, groupingTemplate для установки группировки
- * - itemTemplate - шаблон элемента меню
- * - footerTamplate - шаблон футера
- * - headerTemplate - шаблон шапки
+ * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
+ * В качестве ключей можно использовать следующие свойства:
+ * - items - для смены набора элементов.
+ * - groupingKeyCallback, groupingTemplate для установки группировки.
+ * - itemTemplate - шаблон элемента меню.
+ * - footerTamplate - шаблон футера.
+ * - headerTemplate - шаблон шапки.
  */
 
 /*ENG
@@ -33,6 +40,28 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#emptyTemplate
+ * @cfg {Function} Шаблон пустого списка.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @remark
+ * Рекомендуемый шаблон по умолчанию для emptyTemplate: wml!Controls/_list/emptyTemplate
+ * Шаблон принимает следующие параметры:
+ * - contentTemplate - содержимое шаблона emptyTemplate
+ * - topSpacing - расстояние между верхней границей и содержимым шаблона emptyTemplate
+ * - bottomSpacing - расстояние между нижней границей и содержимым шаблона emptyTemplate
+ * @example
+ * <pre>
+ *    <Controls.List>
+ *       <ws:emptyTemplate>
+ *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
+ *          </ws:partial>
+ *       </ws:emptyTemplate>
+ *    </Controls.List>
+ * </pre>
+ */
+
+/*
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -56,16 +85,34 @@
 
 /**
  * @name Controls/_list/interface/IList#footerTemplate
+ * @cfg {Function} Шаблон подвала списка.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /**
  * @name Controls/_list/interface/IList#resultsTemplate
+ * @cfg {Function} Шаблон строки итогов.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#resultsTemplate
  * @cfg {Function} Results row template.
  */
 
 /**
+ * @name Controls/_list/interface/IList#resultsPosition
+ * @cfg {String} Положение строки итогов.
+ * @variant top Вывести итоги над списком.
+ * @variant bottom Вывести итоги под списком.
+ */
+
+/*
  * @name Controls/_list/interface/IList#resultsPosition
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
@@ -73,6 +120,64 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#sorting
+ * @cfg {Array} Конфигурация объекта сортировки.
+ * @example
+ * В шапке столбца необходимо задать свойство sortingProperty:
+ * <pre>
+ * _header = [
+ *      {
+ *          title: ''
+ *      },
+ *      {
+ *          title: 'Цена',
+ *          sortingProperty: 'price'
+ *      },
+ *      {
+ *          title: 'Остаток',
+ *          sortingProperty: 'balance'
+ *      }
+ * ];
+ * _columns = [
+ *      {
+ *          displayProperty: 'name'
+ *      },
+ *      {
+ *          displayProperty: 'price'
+ *      },
+ *      {
+ *          displayProperty: 'balance'
+ *      }
+ * ];
+ * </pre>
+ * И привязать опцию сортировки или подписаться на событие sortingChanged и изменить сортировку вручную:
+ * <pre>
+ *  <Controls.grid:View
+ *      displayProperty="title"
+ *      header="{{_header}}"
+ *      columns="{{_columns}}"
+ *      bind:sorting="_sorting">
+ *  </Controls.grid:View>
+ * </pre>
+ *
+ * Настройка сортировки массива:
+ * <pre>
+ * [
+ *    { price: 'desc' },
+ *    { balance: 'asc' }
+ * ]
+ * </pre>
+ * Используйте политику сортировки null-значений, разместив их перед "непустыми" значениями или после:
+ * <pre>
+ * [
+ *    ['price', 'desc', false],
+ *    ['balance', 'asc', true]
+ * ]
+ * </pre>
+ * See topic about {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript declarative method signature} for details.
+ */
+
+/*
  * @name Controls/_list/interface/IList#sorting
  * @cfg {Array} Determinates sorting for list.
  * @example
@@ -133,6 +238,16 @@
 
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
+ * @cfg {String} Режим отображения флагов множественного выбора.
+ * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
+ * @variant visible Отобразить.
+ * @variant hidden Не отображать.
+ * @variant onhover Отобразить при наведении.
+ * @default hidden
+ */
+
+/*
+ * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {String} Whether multiple selection is enabled.
  * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
  * @variant visible Show.
@@ -142,6 +257,19 @@
  */
 
 /**
+ * @typedef {Object} ItemAction
+ * @property {String} id Идентификатор операции.
+ * @property {String} title Название операции.
+ * @property {String} icon Иконка операции.
+ * @property {Number} showType Положение операции. (0 - меню | 1 - панель инструментов и меню | 2 - панель инструментов).
+ * @property {String} style Режим визуального отображения операции. (secondary | warning | danger | success).
+ * @property {String} iconStyle Режим визуального отображения иконки операции. (secondary | warning | danger | success).
+ * @property {Function} handler Обработчик операции.
+ * @property {String} parent Ключ родителя операции.
+ * @property {boolean|null} parent@ Поле, описывающее тип узла (список, узел, скрытый узел).
+ */
+
+/*
  * @typedef {Object} ItemAction
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
@@ -156,11 +284,25 @@
 
 /**
  * @name Controls/_list/interface/IList#itemActions
+ * @cfg {Array.<ItemAction>} Массив объектов конфигурации для кнопок, которые будут отображаться при наведении указателя мыши на элемент.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  */
 
 /**
+ * @name Controls/_list/interface/IList#itemActionsPosition
+ * @cfg {String} Позиция панели действий над записью в строке.
+ * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * @variant inside Панель действий над записью будет располагаться внутри строки.
+ * @variant outside Панель действий над записью будет располагаться под строкой.
+ */
+
+/*
  * @name Controls/_list/interface/IList#itemActionsPosition
  * @cfg {String} Position of item actions.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
@@ -169,6 +311,14 @@
  */
 
 /**
+ * @event Controls/_list/interface/IList#actionClick Происходит при клике на элемент панели действий над записью.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {ItemAction} action Запись, по которой был выполнен клик.
+ * @param {Types/entity:Model} item Экземпляр записи, по которой был выполнен клик.
+ * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
+ */
+
+/*
  * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
@@ -178,6 +328,14 @@
 
 /**
  * @name Controls/_list/interface/IList#actionAlignment
+ * @cfg {String} Устанавливает выравнивание элементов в панели действий над записью в режиме swipe.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
+ * @variant horizontal Элементы будут выровнены по горизонтали.
+ * @variant vertical Элементы будут выровнены по вертикали.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#actionAlignment
  * @cfg {String} Determines how item actions will be aligned on swipe.
  * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant horizontal Actions will be displayed in a line.
@@ -186,6 +344,15 @@
 
 /**
  * @name Controls/_list/interface/IList#actionCaptionPosition
+ * @cfg {String} Позиция заголовка в панели действий над записью в режиме swipe.
+ * <a href="/materials/demo-ws4-swipe">Example</a>.
+ * @variant right Заголовок будет отображаться справа от иконки действия.
+ * @variant bottom Заголовок будет отображаться под иконкой действия.
+ * @variant none Заголовок не будет отображаться.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#actionCaptionPosition
  * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
  * <a href="/materials/demo-ws4-swipe">Example</a>.
  * @variant right Title will be displayed to the right of the action's icon.
@@ -193,8 +360,38 @@
  * @variant none Title will not be displayed.
  */
 
-
 /**
+ * @name Controls/_list/interface/IList#itemActionVisibilityCallback
+ * @cfg {function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
+ * @param {ItemAction} action Объект с конфигурацией конкретной операции.
+ * @param {Types/entity:Model} item Модель, содержащая данные записи.
+ * @returns {Boolean} Следует ли отображать действие.
+ * @example
+ * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
+ * <pre>
+ *    <Controls.list:View attr:class="demo-News"
+ *                        itemActions="{{_itemActions}}"
+ *                        source="{{_source}}"
+ *                        actionAlignment="vertical"
+ *                        actionCaptionPosition="bottom"
+ *                        markerVisibility="hidden"
+ *                        itemActionVisibilityCallback="{{_visibilityCallback}}"
+ *                        ...
+ *   </Controls.list:View>
+ * </pre>
+ * <pre>
+ *  ...
+ *  private _visibilityCallback(action: IItemAction, item: Model): boolean {
+ *   if (action.title === 'Read') {
+ *     return item.get('isNew');
+ *   }
+ *   return true;
+ *  }
+ *  ...
+ * </pre>
+ */
+
+/*
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
@@ -227,16 +424,37 @@
 
 /**
  * @name Controls/_list/interface/IList#itemActionsProperty
+ * @cfg {String} Имя свойства, содержащего конфигурацию панели действий над записью для текущей строки.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#itemActionsProperty
  * @cfg {String} Name of the item's property that contains item actions.
  */
 
 /**
+ * @name Controls/_list/interface/IList#markedKey
+ * @cfg {Number} Идентификатор выделенной маркером строки.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ */
+
+/*
  * @name Controls/_list/interface/IList#markedKey
  * @cfg {Number} Identifier of the marked collection item.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  */
 
 /**
+ * @name Controls/_list/interface/IList#markerVisibility
+ * @cfg {String} Режим отображения маркера строки.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @variant visible Маркер отображается всегда, даже если ключевая запись не указана.
+ * @variant hidden Маркер всегда скрыт.
+ * @variant onactivated - Маркер отображается при активации списка. Например, когда пользователь отмечает запись.
+ * @default onactivated
+ */
+
+/*
  * @name Controls/_list/interface/IList#markerVisibility
  * @cfg {String} Determines when marker is visible.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -247,6 +465,14 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#uniqueKeys
+ * @cfg {String} Определяет стратегию вставки элементов при загрузке с дублирующимися идентификаторами.
+ * @remark
+ * true - Merge, элементы с одинаковым идентификатором будут объединены в один.
+ * false - Add, элементы с одинаковым идентификатором будут объединены в один.
+ */
+
+/*
  * @name Controls/_list/interface/IList#uniqueKeys
  * @cfg {String} Strategy for loading new list items.
  * @remark
@@ -296,10 +522,23 @@
 
 /**
  * @name Controls/_list/interface/IList#dataLoadErrback
+ * @cfg {Function} Функция обратного вызова для определения сбоя загрузки данных из источника.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#dataLoadErrback
  * @cfg {Function} Callback function that will be called when data loading fail
  */
 
 /**
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Режим отображения списка.
+ * @variant master Двухколоночный реестр.
+ * @variant default Плоский список.
+ * @default default
+ */
+
+/*
  * @name Controls/_list/interface/IList#style
  * @cfg {String} Control styling
  * @variant master Stylizes control as MasterDetail
@@ -308,11 +547,23 @@
  */
 
 /**
+ * Перезагружает данные из источника данных.
+ * @function Controls/_list/interface/IList#reload
+ */
+
+/*
  * Reloads list data and view.
  * @function Controls/_list/interface/IList#reload
  */
 
 /**
+ * @typedef {String} reloadType
+ * @variant query Элемент будет перезагружен с помощью метода "Поисковый запрос".
+ * @variant read Элемент будет перезагружен с помощью метода "Прочитать".
+ * @default read
+ */
+
+/*
  * @typedef {String} reloadType
  * @variant query Item will be reloaded with query method
  * @variant read Item will be reloaded with read method
@@ -338,10 +589,10 @@
  */
 
 /**
- * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
+ * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {eventObject} event Объект события.
- * @param {Types/entity:Record} item Запись, по которой производим клик. 
+ * @param {Types/entity:Record} item Элемент, по которому производим клик. 
  */
 
  /*
@@ -352,6 +603,15 @@
  */
 
 /**
+ * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Дескриптор исходного события.
+ * @remark
+ * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IList#itemClick itemClick}.
+ */
+
+/*
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
@@ -361,6 +621,14 @@
  */
 
 /**
+ * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
+ * @param {HTMLElement} itemContainer Контейнер элемента.
+ */
+
+/*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
@@ -369,6 +637,12 @@
  */
 
 /**
+ * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Number} key Ключ выбранного элемента.
+ */
+
+/*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Number} key Key of the selected item.
@@ -388,12 +662,31 @@
 
 /**
  * @typedef {Object} VerticalItemPaddingEnum
+ * @variant null Без отступа.
+ * @variant S Маленький отступ.
+ * @default S
+ */
+
+/*
+ * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Without padding.
  * @variant S Small padding.
  * @default S
  */
 
 /**
+ * @typedef {Object} HorizontalItemPaddingEnum
+ * @variant null Без отступа.
+ * @variant XS Минимальный отступ.
+ * @variant S Маленький отступ.
+ * @variant M Средний отступ.
+ * @variant L Большой отступ.
+ * @variant XL Очень большой оступ.
+ * @variant XXL Максимальный отступ.
+ * @default M
+ */
+
+/*
  * @typedef {Object} HorizontalItemPaddingEnum
  * @variant null without padding.
  * @variant XS Extra small padding.
@@ -407,6 +700,14 @@
 
 /**
  * @typedef {Object} ItemPadding
+ * @property {VerticalItemPaddingEnum} [top] Отступ от содержимого элемента до верхней границы элемента.
+ * @property {VerticalItemPaddingEnum} [bottom] Отступ от содержимого элемента до нижней границы элемента.
+ * @property {HorizontalItemPaddingEnum} [left] Отступ от содержимого элемента до левой границы элемента.
+ * @property {HorizontalItemPaddingEnum} [right] Отступ от содержимого элемента до правой границы элемента.
+ */
+
+/*
+ * @typedef {Object} ItemPadding
  * @property {VerticalItemPaddingEnum} [top] Padding from item content to top item border.
  * @property {VerticalItemPaddingEnum} [bottom] Padding from item content to bottom item border.
  * @property {HorizontalItemPaddingEnum} [left] Padding from item content to left item border.
@@ -414,6 +715,11 @@
  */
 
 /**
+ * @cfg {ItemPadding} Конфигурация внутренних отступов строки.
+ * @name Controls/_list/interface/IList#itemPadding
+ */
+
+/*
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
  */
