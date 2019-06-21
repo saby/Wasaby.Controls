@@ -2,6 +2,14 @@ define('Controls/interface/IGrouped', [
 ], function() {
 
    /**
+    * Интерфейс для контролов, реализующих группировку элементов.
+    *
+    * @interface Controls/interface/IGrouped
+    * @public
+    * @author Авраменко А.С.
+    */
+
+   /*
     * Interface for components implementing item grouping.
     *
     * @interface Controls/interface/IGrouped
@@ -14,9 +22,9 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} groupingKeyCallback Функция обратного вызова для получения идентификатора группы элемента списка.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * In addition, there is a "hidden group".
-    * Items in the hidden group will appear at the top of the list, and the group itself will appear untitled.
-    * To define an element in the "hidden group" it is necessary to return the constant view.hiddenGroup from the "Controls/Constants" library from the function passed to the groupingKeyCallback.
+    * Кроме того, существует "скрытая группа".
+    * Элементы скрытой группы будут отображаться в верхней части списка, а сама группа будет отображаться без названия.
+    * Чтобы определить элемент скрытой группы, необходимо вернуть константу view.hiddenGroup из библиотеки Controls/Constants из функции, переданной в groupingKeyCallback.
     * @example
     * <pre>
     *    _groupByBrand: function(item) {
@@ -58,16 +66,16 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} groupTemplate Шаблон группировки.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * Base groupTemplate for Controls.list:View: "Controls/list:GroupTemplate".
-    * Group template supports these parameters:
+    * Базовый шаблон groupTemplate для Controls.list:View: "Controls/list:GroupTemplate".
+    * Шаблон группировки поддерживает параметры::
     * <ul>
-    *    <li>separatorVisibility {Boolean} - The presence of a horizontal line - separator.</li>
-    *    <li>expanderVisibility {Boolean} - The presence of a group expander.</li>
-    *    <li>textAlign {String} - Group text horizontal alignment. Supported values: 'left' and 'right'. By default using center text alignment.</li>
-    *    <li>rightTemplate {Function} - Template of group right part. May be using for rendering totals.</li>
+    *    <li>separatorVisibility {Boolean} - видимость горизонтальной линии-разделителя.</li>
+    *    <li>expanderVisibility {Boolean} - видимость кнопки-экспандера, позволяющей сворачивать/разворачивать группу.</li>
+    *    <li>textAlign {String} - горизонтальное выравнивание текста группы. Доступные значения: 'left' and 'right'. По умолчанию используется выравнивание текста по центру.</li>
+    *    <li>rightTemplate {Function} - шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
     * </ul>
     * @example
-    * Using custom parameters for group rendering in Controls.list:View without expander and with left text alignment:
+    * Пример использования пользовательских параметров для группового рендеринга в Controls.list:View без экспандера и с выравниванием текста слева:
     * <pre>
     *    <Controls.list:View
     *       <groupTemplate>
@@ -124,12 +132,26 @@ define('Controls/interface/IGrouped', [
     */
 
    /**
+    * @event Controls/interface/IGrouped#groupExpanded Происходит при развертывании группы.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    */
+
+   /*
     * @event Controls/interface/IGrouped#groupExpanded Occurs after group expansion.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     */
 
    /**
+    * @event Controls/interface/IGrouped#groupCollapsed Происходит при сворачивании группы.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    */
+
+   /*
     * @event Controls/interface/IGrouped#groupCollapsed Occurs after group collapse.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     */
 
