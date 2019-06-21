@@ -17,8 +17,6 @@ import { descriptor } from 'Types/entity';
 import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
 import HorizontalMeasurer from 'Controls/_list/Swipe/HorizontalMeasurer';
 import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
-import 'wml!Controls/_list/Swipe/resources/SwipeTwoColumns';
-import 'wml!Controls/_list/Swipe/resources/SwipeFor';
 
 const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
    horizontal: HorizontalMeasurer,
