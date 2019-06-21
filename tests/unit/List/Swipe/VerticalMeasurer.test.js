@@ -139,7 +139,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                         }
                      ]
                   },
-                  paddingSize: 'm'
+                  paddingSize: 'm',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -155,12 +156,13 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'm'
+                  paddingSize: 'm',
+                  twoColumns: false
                };
 
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(actions, 120, 'none')
+                  VerticalMeasurer.default.getSwipeConfig(actions, 97, 'none')
                );
             });
 
@@ -171,7 +173,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'm'
+                  paddingSize: 'm',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -196,7 +199,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                         }
                      ]
                   },
-                  paddingSize: 'l'
+                  paddingSize: 'l',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -212,12 +216,13 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'l'
+                  paddingSize: 'l',
+                  twoColumns: false
                };
 
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(actions, 120, 'right')
+                  VerticalMeasurer.default.getSwipeConfig(actions, 97, 'right')
                );
             });
 
@@ -228,7 +233,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'l'
+                  paddingSize: 'l',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -239,6 +245,40 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
          });
 
          describe('title on the bottom', function() {
+            it('two columns', function() {
+               var fourActions = [
+                  {
+                     id: 1,
+                     icon: 'icon-PhoneNull'
+                  },
+                  {
+                     id: 2,
+                     icon: 'icon-Erase'
+                  },
+                  {
+                     id: 3,
+                     icon: 'icon-EmptyMessage'
+                  },
+                  {
+                     id: 4,
+                     icon: 'icon-EmptyMessage'
+                  }
+               ];
+               var result = {
+                  itemActionsSize: 'm',
+                  itemActions: {
+                     all: fourActions,
+                     showed: fourActions
+                  },
+                  paddingSize: 's',
+                  twoColumns: true
+               };
+               assert.deepEqual(
+                  result,
+                  VerticalMeasurer.default.getSwipeConfig(fourActions, 93, 'bottom')
+               );
+
+            });
             it('small row, only menu should be drawn', function() {
                var result = {
                   itemActionsSize: 'm',
@@ -253,7 +293,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                         }
                      ]
                   },
-                  paddingSize: 's'
+                  paddingSize: 's',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -269,7 +310,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 's'
+                  paddingSize: 's',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -289,7 +331,8 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      all: actions,
                      showed: actions
                   },
-                  paddingSize: 'l'
+                  paddingSize: 'l',
+                  twoColumns: false
                };
 
                assert.deepEqual(
@@ -353,7 +396,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   }];
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(otherActions, 160, 'none').itemActions.showed
+                  VerticalMeasurer.default.getSwipeConfig(otherActions, 130, 'none').itemActions.showed
                );
             });
          });

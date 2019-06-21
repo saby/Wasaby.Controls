@@ -12,7 +12,7 @@
            needIcon="{{_needIcon}}"
            needTitle="{{_needTitle}}"
            needSeparator="{{_needSeparator}}"
-           actionAlignment="{{ _options.actionAlignment }}"
+           actionAlignment="{{ _actionAlignment }}"
            actionCaptionPosition="{{ _options.actionCaptionPosition }}"
            animationState="{{_animationState}}"
            itemActionsPosition="{{_options.itemActionsPosition}}"/>

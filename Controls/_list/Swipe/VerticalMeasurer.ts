@@ -11,20 +11,18 @@ const breakpoints: Record<
    }
 > = {
    bottom: {
-      lowerBound: 42,
-      upperBound: 52
+      lowerBound: 46,
+      upperBound: 64
    },
    right: {
-      lowerBound: 24,
-      upperBound: 32
+      lowerBound: 30,
+      upperBound: 38
    },
    none: {
-      lowerBound: 24,
-      upperBound: 32
+      lowerBound: 30,
+      upperBound: 38
    }
 };
-
-const MIN_SPACING = 12;
 
 function getItemActionsSize(
    countOfActions: number,
@@ -42,7 +40,7 @@ function getItemActionsSize(
    }
 
    const x =
-      (rowHeight - MIN_SPACING - (MIN_SPACING + 1) * (countOfActions - 1)) / countOfActions;
+      (rowHeight - (countOfActions - 1)) / countOfActions;
 
    if (x < breakpoints[actionCaptionPosition].lowerBound) {
       return getItemActionsSize(countOfActions - 1, rowHeight, actionCaptionPosition);
@@ -82,6 +80,7 @@ const VerticalMeasurer: IMeasurer = {
       rowHeight: number,
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
+      let columnsCount = 1;
       let itemActions = actions.slice();
       itemActions.sort(function(action1, action2) {
          return action2.showType - action1.showType;
@@ -94,7 +93,12 @@ const VerticalMeasurer: IMeasurer = {
          countOfActions: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
 
-      if (countOfActions !== itemActions.length) {
+      if (countOfActions === 2) {
+         if (actions.length > 3) {
+            columnsCount = 2;
+         }
+      }
+      if (columnsCount * countOfActions !== actions.length) {    
          itemActions = itemActions.slice(0, countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
@@ -110,7 +114,8 @@ const VerticalMeasurer: IMeasurer = {
             all: actions,
             showed: itemActions
          },
-         paddingSize: getPaddingSize(actionCaptionPosition, itemActionsSize)
+         paddingSize: getPaddingSize(actionCaptionPosition, itemActionsSize),
+         twoColumns: columnsCount === 2
       };
    },
    needIcon(
