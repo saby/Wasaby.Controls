@@ -14,15 +14,15 @@ define('Controls/interface/IItemTemplate', [
     * @cfg {Function} Шаблон элемента списка.
     * <a href="/materials/demo-ws4-list-item-template">Example</a>.
     * @remark
-    * Base itemTemplate for Controls.list:View: "Controls/list:ItemTemplate".
-    * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
-    * Base itemTemplate supports these parameters:
+    * Базовый шаблон itemTemplate для Controls.list:View: "Controls/list:ItemTemplate".
+    * В области шаблона доступен объект itemData, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
+    * Базовый шаблон itemTemplate поддерживает следующие параметры:
     * <ul>
-    *    <li>contentTemplate {Function} - Template for render item content.</li>
-    *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
+    *    <li>contentTemplate {Function} - Шаблон содержимого элемента</li>
+    *    <li>highlightOnHover {Boolean} - Выделять элемент при наведении на него курсора мыши.</li>
     * </ul>
     * @example
-    * Using custom template for item rendering:
+    * Пример использования пользовательского шаблона для рендеринга:
     * <pre>
     *    <Controls.list:View>
     *       <ws:itemTemplate>
