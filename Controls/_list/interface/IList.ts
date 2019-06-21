@@ -37,7 +37,7 @@
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @remark
- * We recommend to use default template for emptyTemplate: wml!Controls/_list/emptyTemplate
+ * We recommend to use default template for emptyTemplate: Controls/list:EmptyTemplate
  * The template accepts the following options:
  * - contentTemplate content of emptyTemplate
  * - topSpacing Spacing between top border and content of emptyTemplate
@@ -46,7 +46,7 @@
  * <pre>
  *    <Controls.List>
  *       <ws:emptyTemplate>
- *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
@@ -372,6 +372,18 @@
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Number} key Key of the selected item.
+ */
+
+/**
+ * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
+ */
+
+/*
+ * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+ * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject The event descriptor.
  */
 
 /**
