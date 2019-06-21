@@ -3,7 +3,6 @@ import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
-      var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
 
       var DialogTemplate = Control.extend({
 
@@ -90,51 +89,17 @@ import Env = require('Env/Env');
          _closeButtonViewMode: 'popup',
          _beforeMount: function(options) {
             this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть')}`;
-
-            if (options.contentArea) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
-            }
-            if (options.caption) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
-            }
-            if (options.captionStyle) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
-            }
-            if (options.showMaximizeButton) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
-            }
-            if (options.topArea) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
-            }
-
-            if (options.bottomArea) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
-            }
-            if (options.closeButtonStyle) {
-               Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
-            }
-            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
-               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
-            }
             this._updateMaximizeButton(options);
-            this._prepareCloseButton(options);
          },
 
          _beforeUpdate: function(newOptions) {
             this._updateMaximizeButton(newOptions);
-            this._prepareCloseButton(newOptions);
          },
 
          _afterUpdate: function(oldOptions) {
             if (this._options.maximized !== oldOptions.maximized) {
                this._notify('controlResize', [], { bubbling: true });
             }
-         },
-         _prepareCloseButton: function(options){
-            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=9f2f09ab-6605-484e-9840-1e5e2c000ae3
-            let viewMode = options.closeButtonViewMode;
-            let style = options.closeButtonStyle;
-            this._closeButtonViewMode = style ? prepareCloseButton[style] : prepareCloseButton[viewMode];
          },
          _updateMaximizeButton: function(options) {
             if (options.stackMaxWidth - options.stackMinWidth < MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON) {
