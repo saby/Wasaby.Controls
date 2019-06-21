@@ -111,7 +111,7 @@ const RecordSynchronizer = {
      * @param {additionalData} additionalData Дополнительные данные, которые могут потребоваться для добавления.
      * @param {RecordSet} items Рекордсет, в которые добавляется запись
      */
-    addRecord(editRecord: Model, additionalData: IAdditionalData, items: RecordSet): void {
+    addRecord(editRecord: Model | Model[], additionalData: IAdditionalData, items: RecordSet): void {
         additionalData = additionalData || {};
         if (editRecord instanceof Array) {
             items.setEventRaising(false, true);
@@ -133,7 +133,7 @@ const RecordSynchronizer = {
      * @param {RecordSet} items Рекордсет, в котором обновляется запись
      * @param {String} editKey Ключ обновляемой записи в рекордсете.
      */
-    mergeRecord(editRecord: Model, items: RecordSet, editKey: string): void {
+    mergeRecord(editRecord: Model | Model[], items: RecordSet, editKey: string): void {
         if (editRecord instanceof Array) {
             items.setEventRaising(false, true);
             for (let i = 0; i < editRecord.length; i++) {
@@ -151,7 +151,7 @@ const RecordSynchronizer = {
      * @param {RecordSet} items Рекордсет, в котором удаляется запись
      * @param {String|Array} editKey Ключ удаляемой записи в рекордсете. Можно передать так же массив ключей.
      */
-    deleteRecord(items: RecordSet, editKey: string): void {
+    deleteRecord(items: RecordSet, editKey: string | string[]): void {
         if (editKey instanceof Array) {
             items.setEventRaising(false, true);
             for (let i = 0; i < editKey.length; i++) {
@@ -164,4 +164,5 @@ const RecordSynchronizer = {
     }
 };
 
+// TODO TYPESCRIPT
 export = RecordSynchronizer;
