@@ -473,25 +473,34 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
       it('Suggest::_private.processResultData', function() {
          var self = getComponentObject();
-         self._notify = function() {};
          var queryRecordSet = new collection.RecordSet({
             rawData: [{id: 1}, {id: 2}, {id: 3}],
             idProperty: 'id'
          });
+         var resultData = {
+            data: queryRecordSet,
+            hasMore: true
+         };
+
+         self._notify = function() {};
+         self._searchValue = 'notEmpty';
+
          queryRecordSet.setMetaData({
             results: new entity.Model({
                rawData: {
                   tabsSelectedKey: 'testId',
                   switchedStr: 'testStr'
                }
-            })
+            }),
+            more: 10
          });
 
-         suggestMod._InputController._private.processResultData(self, {data: queryRecordSet});
+         suggestMod._InputController._private.processResultData(self, resultData);
 
          assert.equal(self._searchResult.data, queryRecordSet);
          assert.equal(self._tabsSelectedKey, 'testId');
          assert.equal(self._misspellingCaption, 'testStr');
+         assert.equal(resultData.more, 7)
 
          var queryRecordSetEmpty = new collection.RecordSet();
          queryRecordSetEmpty.setMetaData({

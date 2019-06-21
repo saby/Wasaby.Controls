@@ -26,12 +26,21 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
                   'group': '1'
                }],
                idProperty: 'id'
-            })
+            }),
+            expandedItems: [1, 2, 3],
+            collapsedItems: [4, 5]
          });
 
       it('constructor', function() {
          assert.equal(treeTileViewModel.getTileMode(), 'static');
          assert.equal(treeTileViewModel.getItemsHeight(), 300);
+      });
+
+      it('prepareDisplayFilterData', function() {
+         var
+            filterData = treeTileViewModel.prepareDisplayFilterData();
+         assert.deepEqual([], filterData.expandedItems);
+         assert.deepEqual([], filterData.collapsedItems);
       });
 
       it('getCurrent', function() {

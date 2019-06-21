@@ -1,5 +1,5 @@
 <div class="example-Label ws-inline-flexbox ws-flex-column" on:labelClick="_labelClickHandler()">
-   <Controls-demo.Example.resource.BaseDemoInput title="Labels for input fields" blocker="{{true}}">
+   <Controls-demo.Example.resource.BaseDemoInput title="Labels for input fields" blocker="{{true}}" attr:class="ControlsDemo-ExampleInput_labels1">
       <ws:contents>
          <ws:Array>
             <ws:Object>
@@ -22,7 +22,7 @@
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
 
-   <Controls-demo.Example.resource.BaseDemoInput title="Field labels are required" blocker="{{true}}">
+   <Controls-demo.Example.resource.BaseDemoInput title="Field labels are required" blocker="{{true}}" attr:class="ControlsDemo-ExampleInput_labels2">
       <ws:contents>
          <ws:Array>
             <ws:Object>

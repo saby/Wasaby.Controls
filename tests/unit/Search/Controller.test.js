@@ -224,10 +224,12 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          var searchController = getSearchController({dataLoadErrback: searchErrback});
          searchController._dataOptions = defaultOptions;
+         searchController._loading = true;
 
          searchMod.Controller._private.searchErrback(searchController, 'test');
          assert.isTrue(searchErrbackCalled);
          assert.equal(err, 'test');
+         assert.isFalse(searchController._loading);
       });
 
       it('_search', function() {

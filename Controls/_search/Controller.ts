@@ -127,6 +127,7 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loading = false;
    }
 };
 

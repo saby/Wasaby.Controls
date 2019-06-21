@@ -497,18 +497,21 @@ define(['Controls/_tile/TileView/TileView',
          assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
 
+         tileView._onItemMouseMove(event, {key: 3});
+         assert.equal(count, 1);
+
          tileView._listModel.setHoveredItem(null);
          isTouch = true;
          tileView._onItemMouseMove({}, {key: 2});
-         assert.equal(count, 0);
+         assert.equal(count, 1);
          assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
          isTouch = false;
          tileView._onItemMouseMove({}, {key: 3});
-         assert.equal(count, 1);
-         tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 2);
+         tileView._onItemMouseMove({}, {key: 3});
+         assert.equal(count, 3);
 
          tileView._calculateHoveredItemPosition = originFn;
       });

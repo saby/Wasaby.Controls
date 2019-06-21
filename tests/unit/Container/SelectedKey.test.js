@@ -55,6 +55,8 @@ define(
          it('_private::getSelectedKeys', function() {
             let resultKeys = source.SelectedKey._private.getSelectedKeys(null);
             assert.deepEqual(resultKeys, []);
+            resultKeys = source.SelectedKey._private.getSelectedKeys(undefined);
+            assert.deepEqual(resultKeys, []);
             resultKeys = source.SelectedKey._private.getSelectedKeys('testKey');
             assert.deepEqual(resultKeys, ['testKey']);
          });

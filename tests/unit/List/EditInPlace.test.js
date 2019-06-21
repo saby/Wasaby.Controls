@@ -1272,7 +1272,9 @@ define([
          it('clickItemInfo', function() {
             var
                clickPropagationStopped = false;
-            eip.beginEdit = function() {};
+            eip.beginEdit = function() {
+               return Deferred.success({});
+            };
             eip.saveOptions({
                editingConfig: {
                   editOnClick: true
@@ -1297,6 +1299,37 @@ define([
             assert.equal(eip._clickItemInfo.item, newItem);
             assert.equal(eip._clickItemInfo.clientX, 10);
             assert.equal(eip._clickItemInfo.clientY, 20);
+            assert.isTrue(clickPropagationStopped);
+         });
+
+         it('clickItemInfo with editing canceled', function() {
+            var
+               clickPropagationStopped = false;
+            eip.beginEdit = function() {
+               return Deferred.success({ cancelled: true });
+            };
+            eip.saveOptions({
+               editingConfig: {
+                  editOnClick: true
+               }
+            });
+            eip._onItemClick({
+               stopPropagation: function() {
+                  clickPropagationStopped = true;
+               }
+            }, newItem, {
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 10,
+                  clientY: 20
+               },
+               type: 'click'
+            });
+            assert.equal(null, eip._clickItemInfo);
             assert.isTrue(clickPropagationStopped);
          });
 

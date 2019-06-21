@@ -69,6 +69,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   items: options.items,
                   itemTemplate: options.itemTemplate,
                   itemTemplateProperty: options.itemTemplateProperty,
+                  groupTemplate: options.groupTemplate,
+                  groupingKeyCallback: options.groupingKeyCallback,
                   keyProperty: options.keyProperty,
                   displayProperty: options.displayProperty,
                   parentProperty: options.parentProperty,

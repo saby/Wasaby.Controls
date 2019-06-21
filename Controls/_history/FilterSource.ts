@@ -112,7 +112,7 @@ var _private = {
 
       chain.factory(history.recent).filter(function (element) {
          isPinned = history.pinned.getRecordById(element.getId());
-         if (!isPinned) {
+         if (!isPinned && element.get('ObjectData') !== DEFAULT_FILTER) {
             currentCount++;
          }
          return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;

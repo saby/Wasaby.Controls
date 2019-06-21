@@ -58,18 +58,30 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       gridHeader = [
             {
                title: '',
-               style: 'default'
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 1,
+               endColumn: 2
             },
             {
                title: 'Цена',
                align: 'right',
                style: 'default',
-               sortingProperty: 'price'
+               sortingProperty: 'price',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 2,
+               endColumn: 3
             },
             {
                title: 'Остаток',
                align: 'right',
-               style: 'default'
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 3,
+               endColumn: 4
             }
       ],
       itemActions = [],
@@ -1105,17 +1117,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
-
-
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();
+            console.log(headerRow.getCurrentHeaderColumn())
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
-               cellStyles:'',
+               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
                shadowVisibility: 'visible',
                offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
@@ -1123,42 +1134,66 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
 
+            const secondCell = headerRow.getCurrentHeaderColumn().column;
+
             assert.deepEqual({
                column: gridHeader[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1,
                shadowVisibility: "visible",
                offsetTop: 0,
-               cellContentClasses: "",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap",
+               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+
+            assert.equal(
+               `grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+               )
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
+
+            const thirdCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
                sortingDirection: 'DESC',
-               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
                shadowVisibility: "visible",
                offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
+            assert.equal(
+               `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
+
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
+
+            const fourthCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
-               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
                shadowVisibility: "visible",
                offsetTop: 0
-            }, headerRow.getCurrentHeaderColumn(0, 3), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+
+            assert.equal(
+               `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
@@ -1244,8 +1279,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[0],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-               index: 1,
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               index: 1
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after second call "getCurrentResultsColumn()".');
@@ -1253,9 +1288,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[1],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-               index: 2,
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               index: 2
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
@@ -1263,9 +1297,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[2],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-               index: 3,
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l',
+               index: 3
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
 
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after fourth call "getCurrentResultsColumn()".');

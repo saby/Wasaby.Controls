@@ -6,15 +6,12 @@
 
       <div>
          <ws:for data="index, item in _items">
-            <ws:if data="{{index}}">
-               <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
-            </ws:if>
-            <Controls._filterPopup.SimplePanel._List
-                    scope="{{item}}"
-                    on:itemClick="_itemClickHandler(item)"
-                    on:checkBoxClick="_checkBoxClickHandler(index)"
-                    on:moreButtonClick="_moreButtonClick(item)"
-            />
+            <ws:partial template="{{_options.itemTemplate}}"
+                        index="{{index}}"
+                        scope="{{item}}"
+                        on:itemClick="_itemClickHandler(item)"
+                        on:checkBoxClick="_checkBoxClickHandler(index)"
+                        on:moreButtonClick="_moreButtonClick(item)"/>
          </ws:for>
       </div>
    </Controls.scroll:Container>

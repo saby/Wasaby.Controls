@@ -80,8 +80,11 @@ const VerticalMeasurer: IMeasurer = {
       rowHeight: number,
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
-      let itemActions = actions;
       let columnsCount = 1;
+      let itemActions = actions.slice();
+      itemActions.sort(function(action1, action2) {
+         return action2.showType - action1.showType;
+      });
       const {
          itemActionsSize,
          countOfActions
@@ -89,18 +92,19 @@ const VerticalMeasurer: IMeasurer = {
          itemActionsSize: ItemActionsSize;
          countOfActions: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
+
       if (countOfActions === 2) {
          if (actions.length > 3) {
             columnsCount = 2;
          }
       }
-      if (columnsCount * countOfActions !== actions.length) {
-         itemActions = actions.slice(0,  countOfActions - 1);
+      if (columnsCount * countOfActions !== actions.length) {    
+         itemActions = itemActions.slice(0, countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
-            showType: ShowType.MENU
+            showType: ShowType.TOOLBAR
          });
       }
 
