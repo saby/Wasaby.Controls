@@ -35,8 +35,7 @@ export default class Container extends Control implements IContainer {
      * @method
      * @public
      */
-    hide(): void;
-    hide() {
+    hide(): void {
         let mode = this.__viewConfig.mode;
         this.__viewConfig = null;
         if (mode == Mode.dialog) {
