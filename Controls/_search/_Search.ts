@@ -134,17 +134,22 @@ var Search  = extend({
     * Aborting search
     * @public
     */
-   abort: function(force) {
+   abort: function(force):Deferred {
       let self = this;
+      let abortDef = new Deferred();
+
       let abort = function() {
          if (self._searchDeferred && !self._searchDeferred.isReady()) {
             self._searchDeferred.cancel();
          }
          self._sourceController.cancelLoading();
+         abortDef.callback();
       };
 
       _private.clearSearchDelay(this);
       _private.resolveSearchCall(this, abort, force);
+
+      return abortDef;
    },
 
    isLoading: function() {
