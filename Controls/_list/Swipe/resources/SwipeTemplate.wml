@@ -1,4 +1,15 @@
-<ws:if data="{{itemActionsPosition === 'outside'}}">
+<ws:template name="swipeTmpl">
+    <ws:partial template="forTemplate"
+                itemData="{{itemData}}"
+                showedActions="{{itemData.itemActions.showed}}"
+                swipeConfig="{{swipeConfig}}"
+                actionAlignment="{{actionAlignment}}"
+                actionCaptionPosition="{{actionCaptionPosition}}"
+                needSeparator="{{needSeparator}}"
+                needIcon="{{needIcon}}"
+                needTitle="{{needTitle}}"/>
+</ws:template>
+    <ws:if data="{{itemActionsPosition === 'outside'}}">
     <ws:partial template="{{itemActionsTemplate}}"
                 itemData="{{itemData}}"
                 highlightOnHover="{{highlightOnHover}}"/>
@@ -11,28 +22,12 @@
             <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}">
 
                 <ws:if data="{{swipeConfig.twoColumns}}">
-                    <ws:partial
-                            template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
-                            itemData="{{itemData}}"
-                            showedActions="{{itemData.itemActions.showed}}"
-                            swipeConfig="{{swipeConfig}}"
-                            actionAlignment="{{actionAlignment}}"
-                            actionCaptionPosition="{{actionCaptionPosition}}"
-                            needSeparator="{{needSeparator}}"
-                            needIcon="{{needIcon}}"
-                            needTitle="{{needTitle}}"/>
+                    <ws:partial template="swipeTmpl"
+                                forTemplate="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"/>
                 </ws:if>
                 <ws:else>
-                    <ws:partial
-                            template="wml!Controls/_list/Swipe/resources/SwipeFor"
-                            itemData="{{itemData}}"
-                            showedActions="{{itemData.itemActions.showed}}"
-                            swipeConfig="{{swipeConfig}}"
-                            actionAlignment="{{actionAlignment}}"
-                            actionCaptionPosition="{{actionCaptionPosition}}"
-                            needSeparator="{{needSeparator}}"
-                            needIcon="{{needIcon}}"
-                            needTitle="{{needTitle}}"/>
+                    <ws:partial template="swipeTmpl"
+                                forTemplate="wml!Controls/_list/Swipe/resources/SwipeFor"/>
                 </ws:else>
 
             </div>
