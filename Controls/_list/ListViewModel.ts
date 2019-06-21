@@ -438,32 +438,26 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         _private.updateIndexes(this, 0, this.getCount());
         if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
-            if (removedItemsIndex > 0) {
-                const prev = this._display.at(removedItemsIndex - 1).getContents();
-                if (this.isValidItemForMarkedKey(prev)) {
-                    this.updateMarker(prev.getId());
-                } else {
-                    const curenMarkerIndex = this.getIndexByKey(this._markedKey);
-                    if (this._markedKey && curenMarkerIndex === -1) {
-                        this.updateMarker(this.getPreviousItem(removedItemsIndex));
-                    }
-                }
-            } else {
-                const first = this._display.at(0);
-                if (first && first.getContents()) {
-                    var nextMarkedKey = this.getNextItem(0);
-                    this.updateMarker(nextMarkedKey);
+            const curenMarkerIndex = this.getIndexByKey(this._markedKey);
+            const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
+            if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
+                const prevValidItem = this.getPreviousItem(removedItemsIndex);
+                const nextValidItem = this.getNextItem(removedItemsIndex);
+                if (prevValidItem) {
+                    this.updateMarker(prevValidItem);
+                } else if (nextValidItem) {
+                    this.updateMarker(nextValidItem);
                 }
             }
         }
     },
-    isValidItemForMarkedKey: function(item) {
-        return !this.isBreadCrumbs(item) && !this._isGroup(item);
+    isValidItemForMarkedKey: function (item) {
+        return !this.isBreadCrumbs(item) && !this._isGroup(item) && item.getId();
     },
-    isBreadCrumbs: function(item) {
+    isBreadCrumbs: function (item) {
         return !!item.forEach;
     },
-    getPreviousItem: function(itemIndex) {
+    getPreviousItem: function (itemIndex) {
         var prevIndex = itemIndex - 1, prevItem;
         while (prevIndex >= 0) {
             prevItem = this._display.at(prevIndex).getContents();
@@ -472,9 +466,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
             prevIndex--;
         }
-        return this.getNextItem(itemIndex);
     },
-    getNextItem: function(itemIndex) {
+    getNextItem: function (itemIndex) {
         var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
         while (nextIndex < itemsCount) {
             nextItem = this._display.at(nextIndex).getContents();
