@@ -73,16 +73,7 @@ var
             this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
             this._model.subscribe('onNodeRemoved', this._onNodeRemovedFn);
             this._model.subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
-
-            this._model.subscribe('rootChanged', this._rootChanged.bind(this));
-            this._model.subscribe('filterChanged', this._filterChanged.bind(this));
             this._model.subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
-        },
-        _filterChanged: function (e, filter) {
-            this._notify('filterChanged', filter);
-        },
-        _rootChanged: function (e, root) {
-            this._notify('rootChanged', root);
         },
         _onCollapsedItemsChanged: function(e, collapsedItems) {
             this._notify('collapsedItemsChanged', collapsedItems);

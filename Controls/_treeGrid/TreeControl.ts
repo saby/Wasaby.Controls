@@ -230,7 +230,6 @@ var _private = {
         listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
         listModel.subscribe('rootChanged', self._rootChanged.bind(self));
-        listModel.subscribe('filterChanged', self._filterChanged.bind(self));
         listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
 
@@ -362,12 +361,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._notify('expandedItemsChanged', [expandedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
-    },
-    _filterChanged: function (e, filter) {
-        this._notify('filterChanged', filter);
-    },
-    _rootChanged: function (e, root) {
-        this._notify('rootChanged', root);
     },
     _onCollapsedItemsChanged(e, collapsedItems) {
         this._notify('collapsedItemsChanged', [collapsedItems]);
