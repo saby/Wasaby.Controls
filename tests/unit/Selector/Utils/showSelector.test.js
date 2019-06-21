@@ -17,6 +17,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          open: function(popupOptions) {
             isShowSelector = true;
             lastPopupOptions = popupOptions;
+            return Promise.resolve();
          }
       };
 
@@ -57,6 +58,32 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       it('showSelector with multiSelect', function() {
          showSelector(baseController, undefined, true);
          assert.isTrue(lastPopupOptions.templateOptions.multiSelect);
+      });
+
+      it('check toggle indicator', function(done) {
+         let
+            isShowIndicator = false,
+            isHideIndicator = false;
+
+         baseController._notify = function(eventName, result) {
+            let indicatorId = 'indicatorId';
+
+            switch(eventName) {
+               case 'showIndicator':
+                  isShowIndicator = true;
+                  return indicatorId;
+
+               case 'hideIndicator':
+                  isHideIndicator = true;
+            }
+         };
+
+         showSelector(baseController).then(function() {
+            assert.isTrue(isHideIndicator);
+            done();
+         });
+         assert.isTrue(isShowIndicator);
+         assert.isFalse(isHideIndicator);
       });
    });
 });
