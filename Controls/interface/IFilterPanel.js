@@ -321,4 +321,38 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>instruction</a>.
     */
 
+   /**
+    * @event Controls/interface/IFilterPanel#itemsChanged Событие возникает при изменении опции items.
+    * @param {Event}
+    * @param {Controls/_filter/interface/IFilterView#source} items Конфигурация св-в фильтра,
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.filterPopup:Panel on:itemsChanged="_panelItemsChanged()"/>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    * _panelItemsChanged(event, items) {
+    *    ....
+    * }
+    * </pre>
+    */
+
+   /*
+    * @event Controls/interface/IFilterPanel#itemsChanged Occurs when items options was changed.
+    * @param {Event}
+    * @param {Controls/_filter/interface/IFilterView#source} items Filter items configuration,
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.filterPopup:Panel on:itemsChanged="_panelItemsChanged()"/>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    * _panelItemsChanged(event, items) {
+    *    ....
+    * }
+    */
 });
