@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
 
       var MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
       var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
@@ -78,6 +77,14 @@ import 'css!theme?Controls/popupTemplate';
           * @default popup
           */
 
+         /**
+          * @name Controls/_popupTemplate/Stack#closeButtonTransparent
+          * @cfg {String} Close button transparent.
+          * @variant true
+          * @variant false
+          * @default true
+          */
+
          _template: template,
          _maximizeButtonVisibility: false,
          _closeButtonViewMode: 'popup',
@@ -105,6 +112,9 @@ import 'css!theme?Controls/popupTemplate';
             }
             if (options.closeButtonStyle) {
                Env.IoC.resolve('ILogger').error('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
+            }
+            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
+               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
             }
             this._updateMaximizeButton(options);
             this._prepareCloseButton(options);
@@ -164,10 +174,11 @@ import 'css!theme?Controls/popupTemplate';
             headingStyle: 'secondary',
             closeButtonVisibility: true,
             headingSize: 'l',
-            closeButtonViewMode: 'popup'
+            closeButtonViewMode: 'popup',
+            closeButtonTransparent: true
          };
       };
-
+      DialogTemplate._theme = ['Controls/popupTemplate'];
       export = DialogTemplate;
 
 

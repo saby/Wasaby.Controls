@@ -82,7 +82,10 @@ const VerticalMeasurer: IMeasurer = {
       rowHeight: number,
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
-      let itemActions = actions;
+      let itemActions = actions.slice();
+      itemActions.sort(function(action1, action2) {
+         return action2.showType - action1.showType;
+      });
       const {
          itemActionsSize,
          countOfActions
@@ -91,13 +94,13 @@ const VerticalMeasurer: IMeasurer = {
          countOfActions: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
 
-      if (countOfActions !== actions.length) {
-         itemActions = actions.slice(0, countOfActions - 1);
+      if (countOfActions !== itemActions.length) {
+         itemActions = itemActions.slice(0, countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
-            showType: ShowType.MENU
+            showType: ShowType.TOOLBAR
          });
       }
 

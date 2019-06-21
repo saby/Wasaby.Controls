@@ -135,7 +135,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                            icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
-                           showType: 0
+                           showType: 2
                         }
                      ]
                   },
@@ -192,7 +192,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                            icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
-                           showType: 0
+                           showType: 2
                         }
                      ]
                   },
@@ -249,7 +249,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                            icon: 'icon-SwipeMenu',
                            title: i18n.rk('Ещё'),
                            _isMenu: true,
-                           showType: 0
+                           showType: 2
                         }
                      ]
                   },
@@ -299,6 +299,61 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      200,
                      'bottom'
                   )
+               );
+            });
+
+            it('main actions', function() {
+               let otherActions = [
+                  {
+                     id: 1,
+                     showType: 2,
+                     icon: 'icon-PhoneNull'
+                  },
+                  {
+                     id: 2,
+                     showType: 2,
+                     icon: 'icon-Erase'
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
+                     icon: 'icon-EmptyMessage'
+                  },
+                  {
+                     id: 4,
+                     showType: 2,
+                     icon: 'icon-Profile'
+                  },
+                  {
+                     id: 5,
+                     showType: 0,
+                     icon: 'icon-DK'
+                  }];
+               let result = [
+                  {
+                     id: 1,
+                     showType: 2,
+                     icon: 'icon-PhoneNull'
+                  },
+                  {
+                     id: 2,
+                     showType: 2,
+                     icon: 'icon-Erase'
+                  },
+                  {
+                     id: 4,
+                     showType: 2,
+                     icon: 'icon-Profile'
+                  },
+                  {
+                     icon: 'icon-SwipeMenu',
+                     title: i18n.rk('Ещё'),
+                     _isMenu: true,
+                     showType: 2
+                  }];
+               assert.deepEqual(
+                  result,
+                  VerticalMeasurer.default.getSwipeConfig(otherActions, 160, 'none').itemActions.showed
                );
             });
          });

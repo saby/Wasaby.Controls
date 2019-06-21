@@ -166,8 +166,6 @@ import {IData, IDecorator} from "Types/source";
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
-            this._items = context.dataOptions.items;
-
             this._initialSelectedKeys = this._selectedKeys.slice();
          },
 
@@ -184,6 +182,7 @@ import {IData, IDecorator} from "Types/source";
             const self = this;
             const dataOptions = this.context.get('dataOptions');
             const keyProperty = dataOptions.keyProperty;
+            const items = dataOptions.items;
 
             let loadDef;
             let indicatorId;
@@ -196,12 +195,11 @@ import {IData, IDecorator} from "Types/source";
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               const items = dataOptions.items;
                const multiSelect = this._options.multiSelect;
                const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
                if (!multiSelect && selectedItem) {
-                  let selectedItems = _private.getEmptyItems(self._items);
+                  let selectedItems = _private.getEmptyItems(items);
 
                   selectedItems.add(selectedItem);
                   loadDef = Deferred.success(selectedItems);
@@ -216,7 +214,7 @@ import {IData, IDecorator} from "Types/source";
                   );
                }
             } else {
-               loadDef = Deferred.success(_private.getEmptyItems(self._items));
+               loadDef = Deferred.success(_private.getEmptyItems(items));
             }
 
             loadDef.addCallback(function(result) {

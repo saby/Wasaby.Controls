@@ -153,7 +153,11 @@ var TileView = ListView.extend({
     },
 
     _onItemMouseMove: function (event, itemData) {
-        if (!this._listModel.getHoveredItem() && !_private.isTouch(this) && !this._listModel.getDragEntity()) {
+        let
+            hoveredItem = this._listModel.getHoveredItem(),
+            isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
+
+        if ((!hoveredItem || !isCurrentItemHovered) && !_private.isTouch(this) && !this._listModel.getDragEntity()) {
             _private.clearMouseMoveTimeout(this);
 
             this._calculateHoveredItemPosition(event, itemData);

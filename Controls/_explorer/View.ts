@@ -80,7 +80,7 @@ import 'Controls/breadcrumbs';
             var currentRoot = _private.getRoot(self);
             var dataRoot = _private.getDataRoot(self);
 
-            if (viewMode === 'search' && self._options.searchMode === 'root' && dataRoot !== currentRoot) {
+            if (viewMode === 'search' && self._options.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
@@ -130,6 +130,7 @@ import 'Controls/breadcrumbs';
     * @class Controls/_explorer/View
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
@@ -145,6 +146,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_tile/interface/IGridControl
     * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/interface/IGroupedGrid
     * @control
     * @public
     * @category List
@@ -190,6 +192,7 @@ import 'Controls/breadcrumbs';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
+            this._children.treeControl.resetExpandedItems();
          }
       },
       _getRoot: function() {

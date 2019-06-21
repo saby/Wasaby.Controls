@@ -66,7 +66,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             return super.handleInput.call(this, _private.prepareSplitValue(result));
          }
 
-         setCarriageDefaultPosition(currentPosition: number) {
+         setCarriageDefaultPosition(currentPosition?: number) {
              let selection = this._getCarriageDefaultPosition(currentPosition);
              if (selection !== currentPosition || selection !== this.selection.start) {
                 this.selection = selection;
@@ -75,12 +75,18 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
              }
          }
 
-         private _getCarriageDefaultPosition(currentPosition: number): number {
-            let position;
+         private _getCarriageDefaultPosition(currentPosition?: number): number {
+            let
+               position,
+               isFiled;
 
             if (this.options.replacer) {
                position = this.displayValue.indexOf(this.options.replacer);
-               return position === -1 ? currentPosition : Math.min(currentPosition, position);
+               isFiled = position === -1;
+               if (currentPosition === undefined) {
+                  currentPosition = isFiled ? 0 : position;
+               }
+               return isFiled ? currentPosition : Math.min(currentPosition, position);
             }
             return this.displayValue.length;
          }

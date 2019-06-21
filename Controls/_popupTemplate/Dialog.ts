@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
 import Vdom = require('Vdom/Vdom');
-import 'css!theme?Controls/popupTemplate';
 
       var prepareCloseButton = {'light': 'link', 'popup': 'popup', 'default' : 'toolButton', 'primary': 'toolButton', 'toolButton':'toolButton','link':'link' };
       var DialogTemplate = Control.extend({
@@ -61,6 +60,14 @@ import 'css!theme?Controls/popupTemplate';
           */
 
          /**
+          * @name Controls/_popupTemplate/Dialog#closeButtonTransparent
+          * @cfg {String} Close button transparent.
+          * @variant true
+          * @variant false
+          * @default true
+          */
+
+         /**
           * @name Controls/_popupTemplate/Dialog#draggable
           * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
           * @default false
@@ -86,6 +93,9 @@ import 'css!theme?Controls/popupTemplate';
             }
             if (options.hideCross) {
                Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
+            }
+            if (options.closeButtonViewMode === 'light' || options.closeButtonViewMode === 'default'|| options.closeButtonViewMode === 'primary') {
+               Env.IoC.resolve('ILogger').error('DialogTemplate', 'Используется устаревшее значение closeButtonViewMode, используйте toolButton, link или popup');
             }
             this._prepareCloseButton(options);
          },
@@ -137,9 +147,11 @@ import 'css!theme?Controls/popupTemplate';
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'popup'
+            closeButtonViewMode: 'popup',
+            closeButtonTransparent: true
          };
       };
+      DialogTemplate._theme = ['Controls/popupTemplate'];
 
       export = DialogTemplate;
 

@@ -144,7 +144,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
    _dataLoaded: false,
 
    constructor: function Memory(cfg) {
-      if (!('historyId' in cfg) && !('historyIds' in cfg)) {
+      if (!cfg.historyId && !cfg.historyIds) {
          throw new Error('"historyId" not found in options.');
       }
       this._historyId = cfg.historyId;

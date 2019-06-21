@@ -6,6 +6,14 @@
             "options": {
                "editingConfig": {
                   "type": "Object"
+               },
+               "itemActionsPosition": {
+                  "type": "enum",
+                  "title": "itemActionsPosition",
+                  "enum": {
+                     "outside": "Out of line item actions",
+                     "inside": "In line item actions"
+                  }
                }
             }
          }

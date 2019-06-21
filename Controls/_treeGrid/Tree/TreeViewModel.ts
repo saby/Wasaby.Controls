@@ -188,6 +188,7 @@ var
                 self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+            self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {
             self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
@@ -260,6 +261,12 @@ var
             this._nextModelVersion();
         },
 
+        setCollapsedItems: function(collapsedItems: Array<unknown>) {
+            this._collapsedItems = _private.prepareCollapsedItems(this._options.expandedItems, collapsedItems ? collapsedItems : []);
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextModelVersion();
+        },
+
         getExpandedItems: function() {
             return this._expandedItems;
         },
@@ -296,6 +303,7 @@ var
                     } else {
                         this._collapsedItems.push(itemId);
                     }
+                    this._notify('collapsedItemsChanged', this._collapsedItems);
                 } else if (this._options.singleExpand) {
                     _private.toggleSingleExpanded(this, itemId, parentId);
 
