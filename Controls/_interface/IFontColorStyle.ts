@@ -5,7 +5,7 @@ export interface IFontColorStyleOptions {
 /**
  * Interface for control, which has different font colors
  *
- * @interface Controls/_interface/IFontColor
+ * @interface Controls/_interface/IFontColorStyle
  * @public
  */
 export default interface IFontColorStyle {
