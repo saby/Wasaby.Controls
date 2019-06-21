@@ -18,7 +18,7 @@
 
 import {Record, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import Di = require('Types/di');
+import {create as DICreate} from 'Types/di';
 
 interface IAdditionalData {
     at?: number;
@@ -29,7 +29,7 @@ const _private = {
     createRecord(editRecord: Model, items: RecordSet, additionalData: IAdditionalData): Model {
         let syncRecord: Model;
 
-        syncRecord = Di.create(items.getModel(), {
+        syncRecord = DICreate(items.getModel(), {
             adapter: items.getAdapter(),
             format: items.getFormat(),
             idProperty: items.getIdProperty()
