@@ -304,6 +304,51 @@ define([
          }, 100);});
       });
 
+      it('check dataLoadCallback and afterReloadCallback calling order', async function() {
+         var
+            dataLoadCallbackCalled = false,
+            afterReloadCallbackCalled = false,
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: new sourceLib.Memory({}),
+               viewModelConstructor: lists.ListViewModel,
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               afterReloadCallback: function() {
+                  afterReloadCallbackCalled = true;
+                  assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called before afterReloadCallback.');
+               }
+            },
+            ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         // emulate reload with error
+         ctrl._sourceController.load = function() {
+            return cDeferred.fail();
+         };
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
+      });
 
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
