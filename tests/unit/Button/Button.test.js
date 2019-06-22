@@ -136,7 +136,7 @@ define(['Controls/buttons'], function(buttons) {
          });
          it('link primary', function() {
             let cfg = actualAPI.fontColorStyle('primary', 'link');
-            assert.equal('primary', cfg, 'wrong cfg');
+            assert.equal('link', cfg, 'wrong cfg');
          });
          it('link success', function() {
             let cfg = actualAPI.fontColorStyle('success', 'link');
@@ -161,6 +161,10 @@ define(['Controls/buttons'], function(buttons) {
          it('link default', function() {
             let cfg = actualAPI.fontColorStyle('default', 'link');
             assert.equal('default', cfg, 'wrong cfg');
+         });
+         it('link without style', function() {
+            let cfg = actualAPI.fontColorStyle(undefined, 'link');
+            assert.equal('link', cfg, 'wrong cfg');
          });
       });
       describe('iconSize', function() {
