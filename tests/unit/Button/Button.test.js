@@ -162,8 +162,8 @@ define(['Controls/buttons'], function(buttons) {
             let cfg = actualAPI.fontColorStyle('default', 'link');
             assert.equal('default', cfg, 'wrong cfg');
          });
-         it('link widthout style', function() {
-            let cfg = actualAPI.fontColorStyle('', 'link');
+         it('link without style', function() {
+            let cfg = actualAPI.fontColorStyle(undefined, 'link');
             assert.equal('link', cfg, 'wrong cfg');
          });
       });
