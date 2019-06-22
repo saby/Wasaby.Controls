@@ -136,7 +136,7 @@ define(['Controls/buttons'], function(buttons) {
          });
          it('link primary', function() {
             let cfg = actualAPI.fontColorStyle('primary', 'link');
-            assert.equal('primary', cfg, 'wrong cfg');
+            assert.equal('link', cfg, 'wrong cfg');
          });
          it('link success', function() {
             let cfg = actualAPI.fontColorStyle('success', 'link');

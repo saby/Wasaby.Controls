@@ -192,14 +192,14 @@ const ActualApi = {
          // для ссылок старое значение опции style влияло на цвет текста
          if (calcViewMode === 'link') {
             switch (calcStyle) {
-               case 'primary': return 'primary'; break;
+               case 'primary': return 'link'; break;
                case 'success': return 'success'; break;
                case 'danger': return 'danger'; break;
                case 'warning': return 'warning'; break;
                case 'info': return 'unaccented'; break;
                case 'secondary': return 'link'; break;
                case 'default': return 'default'; break;
-               default: return 'link';
+               case undefined: return 'link'; break;
             }
          } else {
             return 'default';
