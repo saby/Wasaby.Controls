@@ -149,9 +149,7 @@ define([
                 controller.process(error);
                 Promise.all(promises).then(function() {
                     done();
-                }, function(error) {
-                    done(error);
-                })
+                }, done);
             });
             it('stop calling when find answer', function (done) {
                 for (var i = 0; i < 5; i++) {
@@ -168,7 +166,7 @@ define([
                 });
                 controller.process(error).then(function() {
                     done();
-                });
+                }, done);
             });
             it('return current handler result', function (done) {
                 var RESULT = {
@@ -180,9 +178,13 @@ define([
                     return RESULT;
                 });
                 controller.process(error).then(function(result) {
-                    assert.deepEqual(RESULT, result);
+                    assert.deepEqual(RESULT, {
+                        mode: result.mode,
+                        template: result.template,
+                        options: result.options
+                    });
                     done();
-                });
+                }).catch(done);
             });
             
             // call application handler

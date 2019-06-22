@@ -86,6 +86,7 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
                draggable: true,
                closeButtonViewMode: 'default',
                closeButtonVisibility: true,
+               closeButtonTransparent: true,
                maximizeButtonVisibility: true
             };
             this._metaData = config[this._content].properties['ws-config'].options;

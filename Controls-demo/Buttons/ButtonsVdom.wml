@@ -41,7 +41,7 @@
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="success" viewMode="link" size="xl"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button readOnly="{{false}}" caption="Link" style="magic" viewMode="link" size="l"/>
+    <Controls.buttons:Button attr:class="demo-controls-Button_style-magic" readOnly="{{false}}" caption="Link" style="magic" viewMode="link" size="l"/>
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{true}}" caption="Link" style="secondary" viewMode="link" size="xl"/>
     <span class="baseline_span">baseline</span>

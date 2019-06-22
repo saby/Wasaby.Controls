@@ -53,11 +53,11 @@
             </div>
             <div class="demo_element">
                 <span class="span_label">link, magic, size="m"</span>
-                <Controls.buttons:Button readOnly="{{false}}" attr:test_name="accent_link_4" caption="Акцентная ссылка 4" style="magic" viewMode="link" size="m" />
+                <Controls.buttons:Button readOnly="{{false}}" attr:class="demo-controls-Button_style-magic" attr:test_name="accent_link_4" caption="Акцентная ссылка 4" style="magic" viewMode="link" size="m" />
             </div>
             <div class="demo_element">
                 <span class="span_label">link, magic,, readOnly="true" </span>
-                <Controls.buttons:Button readOnly="{{true}}" attr:test_name="accent_link_5" caption="Акцентная ссылка 5" style="magic" viewMode="link" size="m"/>
+                <Controls.buttons:Button readOnly="{{true}}" attr:class="demo-controls-Button_style-magic" attr:test_name="accent_link_5" caption="Акцентная ссылка 5" style="magic" viewMode="link" size="m"/>
             </div>
         </div>
         <div class="header">Кнопки контурные</div>

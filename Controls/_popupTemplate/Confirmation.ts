@@ -3,31 +3,6 @@ import template = require('wml!Controls/_popupTemplate/Confirmation/Confirmation
 import Env = require('Env/Env');
 import 'css!theme?Controls/popupTemplate';
 
-
-      var _private = {
-         prepareStatusStyle: function(color) {
-            var resColor = color;
-
-            // Todo: remove
-            if (color === 'error') {
-               resColor = 'danger';
-            }
-            return resColor;
-         },
-         prepareSize: function(size) {
-            var resSize = size;
-
-            // Todo: remove
-            if (size === 'big') {
-               resSize = 'l';
-            }
-            if (size === 'default') {
-               resSize = 'm';
-            }
-            return resSize;
-         }
-      };
-
       var DialogTemplate = Control.extend({
 
          /**
@@ -70,29 +45,6 @@ import 'css!theme?Controls/popupTemplate';
 
          _template: template,
          _size: null,
-         _beforeMount: function(options) {
-            if (options.style === 'error') {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
-            }
-            this._style = _private.prepareStatusStyle(options.style);
-            this._size = _private.prepareSize(options.size);
-            if (options.contentArea) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
-            }
-            if (options.footerArea) {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
-            }
-            if (options.size === 'big') {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
-            }
-            if (options.size === 'default') {
-               Env.IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
-            }
-         },
-         _beforeUpdate: function(options) {
-            this._style = _private.prepareStatusStyle(options.style);
-            this._size = _private.prepareSize(options.size);
-         },
 
          /**
           * Close the dialog

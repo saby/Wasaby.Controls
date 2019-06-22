@@ -323,6 +323,12 @@ define('Controls/Application',
             return def;
          },
 
+         _afterMount: function() {
+            if (!Env.detection.isMobilePlatform) {
+               this.activate();
+            }
+         },
+
          _beforeUpdate: function(cfg) {
             if (this._scrollData.pagingVisible !== cfg.pagingVisible) {
                this._scrollData.pagingVisible = cfg.pagingVisible;

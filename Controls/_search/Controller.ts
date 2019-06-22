@@ -127,6 +127,7 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loading = false;
    }
 };
 
@@ -210,7 +211,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (this._options.searchValue !== newOptions.searchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }
    },

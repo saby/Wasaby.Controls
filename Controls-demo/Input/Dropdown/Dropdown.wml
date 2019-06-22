@@ -157,6 +157,8 @@
             </ws:itemTemplate>
          </Controls.dropdown:Input>
       </div>
+   </div>
+   <div class="ControlsDemo-InputDropdown_column">
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With grouping</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroup"

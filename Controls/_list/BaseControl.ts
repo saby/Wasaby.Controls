@@ -132,6 +132,10 @@ var _private = {
                     isActive,
                     listModel = self._listViewModel;
 
+                if (cfg.afterReloadCallback) {
+                    cfg.afterReloadCallback(cfg);
+                }
+
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
@@ -172,6 +176,9 @@ var _private = {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: CrudResult) {
+                    if (cfg.afterReloadCallback) {
+                        cfg.afterReloadCallback(cfg);
+                    }
                     resDeferred.callback({
                         data: null,
                         ...result
@@ -179,15 +186,12 @@ var _private = {
                 });
             });
         } else {
-            resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
-        }
-        resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
                 cfg.afterReloadCallback(cfg);
             }
-            return result;
-        });
+            resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        }
         return resDeferred;
     },
 
@@ -245,15 +249,25 @@ var _private = {
             self._keyDisplayedItem = null;
         }
     },
+    moveMarker: function(self, newMarkedKey) {
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (this._mounted) {
+            this.activate();
+        }
+        _private.setMarkedKey(self, newMarkedKey);
+    },
     moveMarkerToNext: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+        }
     },
     moveMarkerToPrevious: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
+        }
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
@@ -492,17 +506,24 @@ var _private = {
     },
 
     startScrollEmitter: function(self) {
-        var
-            children = self._children,
-            triggers = {
-                topListTrigger: children.topListTrigger,
-                bottomListTrigger: children.bottomListTrigger,
-                topLoadTrigger: children.topLoadTrigger,
-                bottomLoadTrigger: children.bottomLoadTrigger
-            };
+        if (self.__error) {
+            return;
+        }
+        const children = self._children;
+        const scrollEmitter = children.ScrollEmitter;
+        if (scrollEmitter.__started) {
+            return;
+        }
+        const triggers = {
+            topListTrigger: children.topListTrigger,
+            bottomListTrigger: children.bottomListTrigger,
+            topLoadTrigger: children.topLoadTrigger,
+            bottomLoadTrigger: children.bottomLoadTrigger
+        };
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        self._children.ScrollEmitter.startRegister(triggers, self._options.task1177135045);
+        scrollEmitter.startRegister(triggers, self._options.task1177135045);
+        scrollEmitter.__started = true;
     },
 
     onScrollShow: function(self) {
@@ -797,8 +818,8 @@ var _private = {
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
-                   groupTemplate: self._options.groupTemplate,
-                   groupingKeyCallback: self._options.groupingKeyCallback,
+                   groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
+                   groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
                    rootKey: action.id,
                    showHeader: true,
                    dropdownClassName: 'controls-itemActionsV__popup',
@@ -986,6 +1007,7 @@ var _private = {
  * @class Controls/_list/BaseControl
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IErrorController
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGrouped
@@ -1146,7 +1168,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.startScrollEmitter(this);
         }
         if (this._virtualScroll) {
-            this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
+            this._setScrollItemContainer();
         }
     },
 
@@ -1351,6 +1373,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        if (this._needScrollCalculation) {
+            _private.startScrollEmitter(this);
+        }
+        if (this._virtualScroll) {
+            this._setScrollItemContainer();
+        }
         if (this._options.itemActions) {
             this._canUpdateItemsActions = false;
         }
@@ -1517,19 +1545,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _viewResize: function() {
-        if (this._virtualScroll) {
-
+        if (this._setScrollItemContainer()) {
             /*
             * To update items sizes, virtualScroll needs their HTML container. It sets on baseControls' afterMount.
             * The "controlResize" event can fires before baseControls' afterMount, because first performs afterMounts of all
             * children. It leads to errors, because container has not been settled yet.
             * */
-            if (!this._virtualScroll.ItemsContainer) {
-                this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer()
-            }
-
             this._virtualScroll.updateItemsSizes();
         }
+    },
+    _setScrollItemContainer: function () {
+        if (!this._children.listView || !this._virtualScroll) {
+            return false;
+        }
+        this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
+        return  true;
     },
 
     beginEdit: function(options) {
@@ -1633,13 +1663,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
-        // activate list when marker is moving. It let us press enter and open current row
-        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
-            // must check mounted to avoid fails on unit tests
-            if (this._mounted) {
-               this.activate();
-            }
-        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {

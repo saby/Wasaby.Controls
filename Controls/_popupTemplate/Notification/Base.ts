@@ -2,21 +2,6 @@ import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_popupTemplate/Notification/Base/Base');
 import 'css!theme?Controls/popupTemplate';
-      var _private = {
-         prepareDisplayStyle: function(color) {
-            var resColor = color;
-
-            // TODO Remove.
-            if (color === 'done') {
-               resColor = 'success';
-            }
-            if (color === 'error') {
-               resColor = 'danger';
-            }
-            return resColor;
-         }
-      };
-
       /**
        * Base template of notification popup.
        *
@@ -35,25 +20,6 @@ import 'css!theme?Controls/popupTemplate';
 
          _timerId: null,
          _style: null,
-
-         _beforeMount: function(options) {
-            if (options.style === 'error') {
-               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style error, используйте danger');
-            }
-            if (options.style === 'done') {
-               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style done, используйте success');
-            }
-            this._style = _private.prepareDisplayStyle(options.style);
-            if (options.iconClose) {
-               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
-            }
-            if (options.contentTemplate) {
-               Env.IoC.resolve('ILogger').error('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
-            }
-         },
-         _beforeUpdate: function(options) {
-            this._style = _private.prepareDisplayStyle(options.style);
-         },
 
          _closeClick: function() {
             this._notify('close', []);

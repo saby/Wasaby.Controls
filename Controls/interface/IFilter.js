@@ -2,7 +2,7 @@ define('Controls/interface/IFilter', [
 ], function() {
 
    /**
-    * Filter interface.
+    * Интерфейс для поддержки фильтрации.
     *
     * @interface Controls/interface/IFilter
     * @public
@@ -10,6 +10,41 @@ define('Controls/interface/IFilter', [
     */
 
    /**
+    * @name Controls/interface/IFilter#filter
+    * @cfg {Object} Конфигурация объекта фильтра.
+    * @example
+    * В данном примере в списке будет отображаться 2 элемента.
+    * TMPL:
+    * <pre>
+    *    <Controls.list:View
+    *       keyProperty="id"
+    *       filter={{_filter}}
+    *       source="{{_source}}" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._filter = {id: ['1', '2']};
+    *    this._source = new Memory({
+    *      idProperty: 'id',
+    *      data: [
+    *         {
+    *            id: '1',
+    *            title: 'Yaroslavl'
+    *         },
+    *         {
+    *            id: '2',
+    *            title: 'Moscow'
+    *         },
+    *         {
+    *            id: '3',
+    *            title: 'St-Petersburg'
+    *         }
+    *      ]
+    *    });
+    * </pre>
+    */
+
+   /*
     * @name Controls/interface/IFilter#filter
     * @cfg {Object} Filter configuration - object with field names and their values.
     * @example
@@ -47,9 +82,9 @@ define('Controls/interface/IFilter', [
    /**
     * @event Controls/interface/IFilter#filterChanged Событие filterChanged срабатывает, когда фильтр был изменён.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-    * @param {Object} Изменённый фильтр
+    * @param {Object} Изменённый фильтр.
     * @remark
-    * Важно помнить, что опции имутабельны (https://ru.m.wikipedia.org/wiki/Неизменяемый_объект), поэтому фильтр в аргументах события отличается от фильтра в опциях контрола.
+    * Важно помнить, что опции иммутабельны (https://ru.m.wikipedia.org/wiki/Неизменяемый_объект), поэтому фильтр в аргументах события отличается от фильтра в опциях контрола.
     * @example
     * WML:
     * <pre>

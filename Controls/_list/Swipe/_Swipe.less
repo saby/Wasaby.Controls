@@ -66,6 +66,9 @@
 .controls-Swipe__action_column {
   flex-direction: column;
 }
+.controls-Swipe__action_caption_right {
+  justify-content: flex-start;
+}
 
 .controls-Swipe_open {
   animation: itemActionsSwipeOpen 0.35s 0ms ease;
@@ -141,25 +144,47 @@
   height: @width_Swipe-separator;
   margin-left: @spacing_Swipe-between-horizontal-separator-and-border + @width_Swipe-shadow;
   margin-right: @spacing_Swipe-between-horizontal-separator-and-border;
-  box-sizing: border-box;
+}
+
+.controls-Swipe__separator_columns_first {
+  width: auto;
+  height: @width_Swipe-separator;
+  margin-right: @spacing_Swipe-between-vertical-and-horizontal-separator;
+}
+
+.controls-Swipe__separator_columns_second {
+  width: auto;
+  height: @width_Swipe-separator;
+  margin-left: @spacing_Swipe-between-vertical-and-horizontal-separator;
 }
 
 .controls-Swipe_horizontal,
-.controls-Swipe_vertical {
+.controls-Swipe_vertical,
+.controls-Swipe_columns {
   display: inline-flex;
   height: 100%;
 }
 
-.controls-Swipe_horizontal {
-  align-items: center;
+.controls-Swipe_horizontal,
+.controls-Swipe_columns {
   padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow - @spacing_Swipe-between-vertical-separator-and-icon;
   padding-right: @spacing-Swipe-between-content-and-borders - @spacing_Swipe-between-vertical-separator-and-icon;
 }
 
-.controls-Swipe_vertical {
+.controls-Swipe_horizontal {
+  align-items: center;
+}
+
+.controls-Swipe__action_columns {
+  display: flex;
+}
+
+.controls-Swipe_vertical,
+.controls-Swipe__action_columns {
   flex-direction: column;
   justify-content: space-evenly;
 }
+
 .controls-Swipe__action_horizontal {
   padding-left: @spacing_Swipe-between-vertical-separator-and-icon;
   padding-right: @spacing_Swipe-between-vertical-separator-and-icon;

@@ -1,6 +1,6 @@
 <div>
    <ws:partial template="{{_options.content}}"
-               on:mousedown="_mousedown()"/>
+               on:click="_clickHandler()"/>
 
    <Controls._dropdown.Opener name="DropdownOpener"
                              on:open="_onOpen()"
