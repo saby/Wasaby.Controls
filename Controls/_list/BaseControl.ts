@@ -373,17 +373,17 @@ var _private = {
         }
     },
 
-    correctStartIndexIfNeed(self): void {
+    correctStartIndexIfNeed(self): boolean {
         /*
         * TODO: KINGO
         * При первой отрисовке, фактической подгрузки вверх не было, но из за IntersectionObserver мы всё равно сюда попадаем.
         * Такую ситуацию не обрабатываем.
         * */
         if (self._topPlaceholderHeight === 0 && self._loadedItems) {
-            if (self._loadedItems.getCount() !== self._listViewModel.getCount()) {
                 self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + self._loadedItems.getCount();
-            }
+                return true;
         }
+        return false;
     },
 
     checkLoadToDirectionCapability: function(self) {
@@ -399,13 +399,11 @@ var _private = {
     onScrollLoadEdgeStart: function (self, direction) {
         self._loadTriggerVisibility[direction] = true;
 
-        if (self._virtualScroll && direction === 'down') {
-
-            // TODO: KINGO
-            // Имеющихся в данный момент данных хватает для показа. Загрузка не требуется.
-            if (self._listViewModel.getCount() > self._virtualScroll.ItemsIndexes.stop) {
-                return;
-            }
+        // TODO: KINGO
+        // При виртуальном скролле не нужно загружать данные, если уже имеющихся в данный момент
+        // хватает для отображения.
+        if (self._virtualScroll && self._virtualScroll.hasEnoughDataToDirection(direction)) {
+            return;
         }
         _private.onScrollLoadEdge(self, direction);
     },
@@ -415,16 +413,27 @@ var _private = {
         self._blockUpdatingVirtualScrollWhileAsyncLoading = false;
     },
 
+    checkVirtualScrollUpdateCapability(self): void {
+        if (self._topPlaceholderHeight !== 0 && self._virtualScrollTriggerVisibility.up) {
+            _private.updateVirtualWindowStart(self, 'up');
+        } else if (self._bottomPlaceholderHeight !== 0 && self._virtualScrollTriggerVisibility.down) {
+            _private.updateVirtualWindowStart(self, 'down');
+        }
+    },
 
-    updateVirtualWindowStart(self, direction: 'up'|'down'): void {
-        self._virtualScrollTriggerVisibility[direction] = true;
-        if (!self._blockUpdatingVirtualScrollWhileAsyncLoading && self._listViewModel.getCount()) {
-            _private.updateVirtualWindow(self, direction);
+    updateVirtualWindowStart(self, direction: 'up' | 'down'): void {
+        if (self._virtualScroll) {
+            self._virtualScrollTriggerVisibility[direction] = true;
+            if (!self._blockUpdatingVirtualScrollWhileAsyncLoading && self._listViewModel.getCount()) {
+                _private.updateVirtualWindow(self, direction);
+            }
         }
     },
 
     updateVirtualWindowStop(self, direction: 'up'|'down'): void {
-        self._virtualScrollTriggerVisibility[direction] = false;
+        if (self._virtualScroll) {
+            self._virtualScrollTriggerVisibility[direction] = false;
+        }
     },
 
     updateVirtualWindow(self, direction: 'up'|'down'): void {
@@ -448,9 +457,9 @@ var _private = {
         } else {
             self._virtualScroll.updateItemsIndexes(direction);
         }
+        self._shouldCheckVirtualScrollTriggers = true;
         _private.applyVirtualScrollIndexes(self);
     },
-
 
     loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
@@ -612,14 +621,6 @@ var _private = {
      */
     handleListScroll: function(self, scrollTop, position, clientHeight: number) {
         var hasMoreData;
-
-        // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
-        if (self._virtualScroll_TODO_REMOVE) {
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
-            _private.applyVirtualScrollIndexes(self);
-            self._virtualScroll.updatePlaceholdersSizes();
-            _private.updatePlaceholdersHeights(self);
-        }
 
         if (self._scrollPagingCtr) {
             if (position === 'middle') {
@@ -1040,6 +1041,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigation: false,
 
     _canUpdateItemsActions: false,
+    _wasRepaint: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1064,7 +1066,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
@@ -1075,11 +1076,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     virtualSegmentSize: newOptions.virtualSegmentSize
                 });
                 self._blockUpdatingVirtualScrollWhileAsyncLoading = true;
-                this._virtualScrollTriggerVisibility = {
-                    up: false,
-                    down: false
-                };
+
             }
+            this._virtualScrollTriggerVisibility = {
+                up: false,
+                down: false
+            };
             this._loadTriggerVisibility = {
                 up: false,
                 down: false
@@ -1335,7 +1337,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint():void {
-
+        this._wasRepaint = true;
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.updatePlaceholdersHeights(this);
@@ -1375,6 +1377,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._delayedSelect = null;
         }
 
+
+        if (this._wasRepaint) {
+            this._wasRepaint = false;
+            if (this._shouldCheckVirtualScrollTriggers) {
+                this._shouldCheckVirtualScrollTriggers = false;
+                _private.checkVirtualScrollUpdateCapability(this);
+            }
+        }
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {

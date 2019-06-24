@@ -31,7 +31,7 @@ class LoadBottom extends Control {
         });
     }
 
-    protected afterMount() {
+    protected _afterMount() {
         this._children[this._listName].reload();
     }
 

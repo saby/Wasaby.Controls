@@ -4,6 +4,8 @@ import {IoC} from "Env/Env";
  * TODO: Сделать правильные экспорты, чтобы можно было и в js писать просто new VirtualScroll() и в TS файле использовать типы
  */
 
+type Direction = 'down' | 'up';
+
 /**
  * Configuration object.
  *
@@ -147,7 +149,7 @@ class VirtualScroll {
     }
 
     //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
-    public updateItemsIndexes(direction: String): void {
+    public updateItemsIndexes(direction: Direction): void {
         if (direction === 'down') {
             if (this._isEnd()) {
                 return;
@@ -177,7 +179,7 @@ class VirtualScroll {
         this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
     }
 
-    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
+    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): boolean {
         // TODO: Сделать out параметр, чтобы не гулять по потенциально огромному массиву 2 а то и 3 раза.
         if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
             let
@@ -198,9 +200,18 @@ class VirtualScroll {
                     } else {
                         this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, heightsCount);
                     }
-                    break;
+                    return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public hasEnoughDataToDirection(direction: Direction): boolean {
+        if (direction === "up") {
+            return this._startIndex >= this._virtualSegmentSize;
+        } else {
+            return this._itemsCount > this._stopIndex;
         }
     }
 
@@ -209,10 +220,16 @@ class VirtualScroll {
     }
 
     private _isScrollInPlaceholder(scrollTop: number, containerHeight: number = 0): boolean {
-        let topPlaceholderSize = this._getItemsHeight(0, this._startIndex),
-            itemsHeight = this._getItemsHeight(this._startIndex, this._stopIndex);
 
-        return (scrollTop <= topPlaceholderSize || (scrollTop+containerHeight) >= (itemsHeight + topPlaceholderSize));
+        if (this._topPlaceholderSize === 0 && this._bottomPlaceholderSize === 0) {
+            return false;
+        }
+
+        let
+            topPlaceholderEnd = this._topPlaceholderSize,
+            bottomPlaceholderStart = this._topPlaceholderSize + this._getItemsHeight(this._startIndex, this._stopIndex);
+
+        return ((scrollTop <= topPlaceholderEnd) || ((scrollTop + containerHeight) >= bottomPlaceholderStart));
     }
 
     private _getItemsHeight(startIndex: number, stopIndex: number): number {
