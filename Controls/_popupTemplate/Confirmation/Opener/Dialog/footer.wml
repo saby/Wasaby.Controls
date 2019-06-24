@@ -32,7 +32,7 @@
       <ws:if data="{{type === 'yesnocancel'}}">
          <div class="controls-ConfirmationDialog__button-mini">
             <Controls.buttons:Button
-               buttonStyle="secodary"
+               buttonStyle="secondary"
                caption="{{cancelCaption}}"
                attr:class="controls-ConfirmationDialog__button controls-Button__ellipsis"
                on:click="_sendResultHandler()"

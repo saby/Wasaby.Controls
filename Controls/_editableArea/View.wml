@@ -23,6 +23,7 @@
                iconStyle="success"
                icon="icon-Yes"
                iconSize="s"
+               height="m"
                style="secondary"
             />
             <Controls.popupTemplate:CloseButton
