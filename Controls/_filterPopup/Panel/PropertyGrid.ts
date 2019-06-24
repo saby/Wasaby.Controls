@@ -31,7 +31,7 @@ import 'css!theme?Controls/filterPopup';
          if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
-         return Clone(items);
+         return Utils.object.clone(items);
       },
 
       getIndexChangedVisibility: function(newItems, oldItems) {
@@ -67,15 +67,15 @@ import 'css!theme?Controls/filterPopup';
             get() {
                return value;
             }
-         })
+         });
       },
 
       observeItems: function(self, items) {
          chain.factory(items).each(function(item) {
             observableItemProps.forEach(function (propName) {
                _private.observeProp(self, propName, item);
-            })
-         })
+            });
+         });
       }
    };
 
