@@ -59,7 +59,7 @@
                 <Controls.buttons:Button readOnly="{{false}}" caption="Accent link 1" fontColorStyle="default" viewMode="link" fontSize="m"/>
                 <Controls.buttons:Button readOnly="{{false}}" caption="Accent link 2" fontColorStyle="danger" viewMode="link" fontSize="m"/>
                 <Controls.buttons:Button readOnly="{{false}}" caption="Accent link 3" fontColorStyle="success" viewMode="link" fontSize="m"/>
-                <Controls.buttons:Button readOnly="{{false}}" attr:class="demo-controls-Button_style-magic" caption="Accent link 4" viewMode="link" fontSize="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" attr:class="demo-controls-Button_style-magic" buttonStyle="magic" caption="Accent link 4" viewMode="link" fontSize="m"/>
             </div>
         </div>
         <h3>Button-link with icon and text</h3>
