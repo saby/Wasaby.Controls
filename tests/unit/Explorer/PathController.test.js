@@ -81,6 +81,22 @@ define([
             }]);
          });
       });
+      describe('needCrumbs', function() {
+         var pathController = new PathController();
+         var needCrumbs = PathController._private.needCrumbs;
+         it('BackButton is in header, items.length === 1', function() {
+            assert.equal(needCrumbs([{title:'back'}], ['first']), false);
+         });
+         it('BackButton is not in header, items.length === 1', function() {
+            assert.equal(needCrumbs(undefined, ['first']), true);
+         });
+         it('BackButton is in header, items.length === 2', function() {
+            assert.equal(needCrumbs([{title:'back'}], ['first','second']), true);
+         });
+         it('items === null', function() {
+            assert.equal(needCrumbs(undefined, null), false);
+         });
+      });
       describe('_beforeUpdate', function() {
          it('old items + update header', async function() {
             var

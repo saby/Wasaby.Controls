@@ -26,20 +26,27 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
             };
          }
          return newHeader;
+      },
+
+      needCrumbs: function(header, items) {
+         return !!items && ((!header && items.length > 0) || items.length > 1);
       }
    };
 
    var PathController = Control.extend({
       _template: template,
       _header: null,
+      _needCrumbs: false,
 
       _beforeMount: function(options) {
          this._header = _private.getHeader(this, options);
+         this._needCrumbs = _private.needCrumbs(this._header, options.items);
       },
 
       _beforeUpdate: function(newOptions) {
          if (this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._header = _private.getHeader(this, newOptions);
+            this._needCrumbs = _private.needCrumbs(this._header, newOptions.items);
          }
       },
 
@@ -53,6 +60,6 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
          HeadingPathCommon.onArrowClick.call(this, e);
       }
    });
-
+   PathController._private = _private;
    export = PathController;
 
