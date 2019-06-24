@@ -30,7 +30,8 @@ var
       getItemDataByItem() {
          var
             self = this,
-            data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments);
+            data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments),
+            s = SearchViewModel.superclass;
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
          data.breadCrumbs = !!data.item.forEach;
          data.resolveItemTemplate = function(itemData) {
@@ -42,6 +43,13 @@ var
          return data;
       },
 
+       isBredCrumbsItem: function(item:Record) {
+           return !!item.forEach;
+       },
+       isValidItemForMarkedKey: function(item) {
+          const isGroup = SearchViewModel.superclass.isValidItemForMarkedKey.call(this, item);
+          return isGroup && !this.isBredCrumbsItem(item);
+       },
       _isGroup: function(item:Record):boolean {
           let result;
 

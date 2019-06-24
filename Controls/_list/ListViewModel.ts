@@ -60,7 +60,7 @@ var _private = {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
             isSelected = current.multiSelectStatus !== undefined;
-        
+
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
@@ -437,8 +437,43 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             });
         }
         _private.updateIndexes(this, 0, this.getCount());
+        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+            const curenMarkerIndex = this.getIndexByKey(this._markedKey);
+            const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
+            if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
+                const prevValidItem = this.getPreviousItem(removedItemsIndex);
+                const nextValidItem = this.getNextItem(removedItemsIndex);
+                if (prevValidItem) {
+                    this.updateMarker(prevValidItem);
+                } else if (nextValidItem) {
+                    this.updateMarker(nextValidItem);
+                }
+            }
+        }
     },
-
+    isValidItemForMarkedKey: function (item) {
+        return !this._isGroup(item) && item.getId;
+    },
+    getPreviousItem: function (itemIndex) {
+        var prevIndex = itemIndex - 1, prevItem;
+        while (prevIndex >= 0) {
+            prevItem = this._display.at(prevIndex).getContents();
+            if (this.isValidItemForMarkedKey(prevItem)) {
+                return prevItem.getId();
+            }
+            prevIndex--;
+        }
+    },
+    getNextItem: function (itemIndex) {
+        var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
+        while (nextIndex < itemsCount) {
+            nextItem = this._display.at(nextIndex).getContents();
+            if (this.isValidItemForMarkedKey(nextItem)) {
+                return nextItem.getId();
+            }
+            nextIndex++;
+        }
+    },
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
