@@ -147,11 +147,13 @@ var _private = {
 
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
+         self._notify('dropDownOpen');
          if (typeof (options.open) === 'function') {
             options.open(args);
          }
       };
       self._onClose = function(event, args) {
+         self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
