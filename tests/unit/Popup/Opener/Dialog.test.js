@@ -45,6 +45,12 @@ define(
             position = DialogStrategy.getPosition(windowData, sizes, { popupOptions: {} });
             assert.equal(position.top, 470);
             assert.equal(position.left, 880);
+
+            let sizesCopy = {...sizes};
+            sizesCopy.height = 2000;
+            DialogStrategy.getPosition(windowData, sizesCopy, { popupOptions: {} });
+            position = DialogStrategy.getPosition(windowData, sizesCopy, { popupOptions: {} });
+            assert.equal(position.height, windowData.height);
          });
 
          it('dialog positioning overflow container', () => {
