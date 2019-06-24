@@ -207,6 +207,7 @@ var moduleClass = CompoundControl.extend({
    },
    _onResizeHandler: function() {
       this._notifyOnSizeChanged();
+      ManagerWrapperController.startResizeEmitter();
    },
    _onCloseHandler(): void {
       this._finishPendingOperations();
