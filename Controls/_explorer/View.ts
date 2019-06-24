@@ -225,12 +225,14 @@ import 'Controls/breadcrumbs';
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent) {
-         if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-            _private.setRoot(this, item.getId());
+      _onItemClick: function(event, item, clickEvent): void {
+         const res = this._notify('itemClick', [item, clickEvent]);
+         if (res !== false) {
+            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+               _private.setRoot(this, item.getId());
+            }
+            event.stopPropagation();
          }
-         event.stopPropagation();
-         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
