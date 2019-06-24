@@ -276,50 +276,55 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
         }
 
         requirejs(deps, function (compatiblePopup, Action, Tpl) {
-            if (opener && opener._options.closeOnTargetScroll) {
-                cfg.closeOnTargetScroll = true;
+            try {
+                if (opener && opener._options.closeOnTargetScroll) {
+                    cfg.closeOnTargetScroll = true;
+                }
+
+                if (libInfo && libInfo.path.length !== 0) {
+                    cfg.template = Tpl;
+                    libInfo.path.forEach(function (key) {
+                        cfg.template = cfg.template[key];
+                    });
+                }
+
+                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
+
+                // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
+                // Нужно для открытия окон на старых страницах'.
+                if (opener && opener._options.theme) {
+                    newCfg.templateOptions = newCfg.templateOptions || {};
+                    newCfg.templateOptions.theme = newCfg.templateOptions.theme || opener._options.theme;
+                }
+
+                var action;
+                if (!opener || !opener._action) {
+                    action = new Action({
+                        closeByFocusOut: true,
+                    });
+                } else {
+                    action = opener._action;
+                }
+
+                var dialog = action.getDialog(),
+                    compoundArea = dialog && dialog._getTemplateComponent();
+
+                // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
+                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
+                    // Redraw template with new options
+                    compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
+                    compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
+                    dialog.setTarget && dialog.setTarget($(newCfg.target));
+                } else {
+                    action.closeDialog();
+                    action._isExecuting = false;
+                    action.execute(newCfg);
+                }
+                def.callback(action);
+            } catch (err) {
+                Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
             }
 
-            if (libInfo && libInfo.path.length !== 0) {
-                cfg.template = Tpl;
-                libInfo.path.forEach(function (key) {
-                    cfg.template = cfg.template[key];
-                });
-            }
-
-            var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
-
-            // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
-            // Нужно для открытия окон на старых страницах'.
-            if (opener && opener._options.theme) {
-                newCfg.templateOptions = newCfg.templateOptions || {};
-                newCfg.templateOptions.theme = newCfg.templateOptions.theme || opener._options.theme;
-            }
-
-            var action;
-            if (!opener || !opener._action) {
-                action = new Action({
-                    closeByFocusOut: true,
-                });
-            } else {
-                action = opener._action;
-            }
-
-            var dialog = action.getDialog(),
-                compoundArea = dialog && dialog._getTemplateComponent();
-
-            // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
-            if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
-                // Redraw template with new options
-                compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
-                compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
-                dialog.setTarget && dialog.setTarget($(newCfg.target));
-            } else {
-                action.closeDialog();
-                action._isExecuting = false;
-                action.execute(newCfg);
-            }
-            def.callback(action);
         });
     }
     return def;
