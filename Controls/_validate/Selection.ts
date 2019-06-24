@@ -14,7 +14,7 @@ import template = require('wml!Controls/_validate/Selection');
 
       
 
-      var Selection = Controller.extend({
+      const Selection = Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
             this._shouldValidate = true;

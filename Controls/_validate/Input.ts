@@ -10,7 +10,7 @@ import template = require('wml!Controls/_validate/Input');
  * @author Красильников А.С.
  */
 
-      var Input = Controller.extend({
+     const Input = Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
             if (!this._options.readOnly) {
