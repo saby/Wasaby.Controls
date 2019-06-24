@@ -588,7 +588,7 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('mousedown', () => {
+         it('_clickHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
@@ -609,10 +609,13 @@ define(
                   return opened;
                }
             };
-            dropdownController._mousedown();
+            let stopped;
+            let event = {stopPropagation: () => {stopped = true;}};
+            dropdownController._clickHandler(event);
             assert.isTrue(opened);
+            assert.isTrue(stopped);
 
-            dropdownController._mousedown();
+            dropdownController._clickHandler(event);
             assert.isFalse(opened);
          });
 
@@ -860,6 +863,7 @@ define(
                item.set('id', item.getId() + '_history');
                closed = false;
                assert.equal(item.getId(), '6_history');
+               dropdownController._source = historySource;
                dropdownController._onResult(null, {action: 'pinClick', data: [item]});
                assert.isFalse(closed);
                assert.equal(resultItems[0].getId(), '6');

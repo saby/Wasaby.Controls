@@ -52,7 +52,7 @@ var
         },
 
         getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
-            let columnsWidths: Array<string> = (hasMultiselect ? ['auto'] : []).concat(columns.map((column => column.width || '1fr')));
+            let columnsWidths: Array<string> = (hasMultiselect ? ['max-content'] : []).concat(columns.map((column => column.width || '1fr')));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
@@ -277,7 +277,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel.isStickyHeader()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
             }
@@ -286,7 +286,10 @@ var
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
             let resultOffset = 0;
-            const container = this._container;
+            // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            const container = this._container.length !== undefined ? this._container[0] : this._container;
+            const stickyHeaderCells = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+            const resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
             const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             const newColumns = this._options.header.map((cur, i) => {
                 if (cur.startRow && cur.endRow) {
@@ -300,7 +303,7 @@ var
                         height
                     };
                 }
-                const curElHeight = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height
+                const curElHeight = stickyHeaderCells[i].getBoundingClientRect().height
                 if (curElHeight > resultOffset) {
                     resultOffset = curElHeight;
                 }
@@ -310,7 +313,7 @@ var
                 };
             });
             if (resultOffset === 0 && this._listModel.getResultsPosition() === 'top') {
-                resultOffset = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__results-cell')[0].offsetTop;
+                resultOffset = resultsHeaderCells[0].offsetTop;
             }
             return [newColumns, resultOffset];
         },

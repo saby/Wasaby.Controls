@@ -2,9 +2,10 @@ define('Controls-demo/Explorer/Search', [
    'Core/Control',
    'wml!Controls-demo/Explorer/Search',
    'Controls-demo/Explorer/ExplorerMemory',
+   'Types/source',
    'css!Controls-demo/Explorer/Search',
    'Controls/explorer'
-], function(BaseControl, template, MemorySource) {
+], function(BaseControl, template, MemorySource, source) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -16,6 +17,7 @@ define('Controls-demo/Explorer/Search', [
          _viewColumns: null,
          _filter: { demo: 123 },
          _title: '',
+         _searchStartingWith: 'root',
          _beforeMount: function() {
             this._viewColumns = [
                {
@@ -31,6 +33,17 @@ define('Controls-demo/Explorer/Search', [
                   width: '150px'
                }
             ];
+            this._searchStartingWithSource = new source.Memory({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: 'root', title: 'root'
+                  },
+                  {
+                     id: 'current', title: 'current'
+                  }
+               ]
+            });
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: [

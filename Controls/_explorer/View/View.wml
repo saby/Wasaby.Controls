@@ -28,6 +28,7 @@
                                     on:actionClick="_notifyHandler('actionClick')"
                                     on:dragStart="_notifyHandler('dragStart')"
                                     on:dragEnd="_notifyHandler('dragEnd')"
+                                    on:rootChanged="_notifyHandler('rootChanged')"
                                     on:changeDragTarget="_notifyHandler('changeDragTarget')"
                                     on:dragEnter="_notifyHandler('dragEnter')"
                                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"

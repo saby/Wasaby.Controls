@@ -23,19 +23,19 @@ export interface IToggleGroup {
      * @example
      * Vertical orientation.
      * <pre>
-     *    <Controls.toggle:RadioGroup direction="horizontal"/>
+     *    <Controls.toggle:RadioGroup direction="vertical"/>
      * </pre>
      */
 
     /**
      * @name Controls/_toggle/interface/IToggleGroup#itemTemplate
      * @cfg {Function} Template for item render.
-     * @default Base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate"
+     * @default Base template
      * @remark
-     * To determine the template, you should call the base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate".
+     * To determine the template, you should call the base template.
      * The template is placed in the component using the <ws:partial> tag with the template attribute.
      *
-     * By default, the base template wml!Controls/_toggle/RadioGroup/resources/ItemTemplate will display only the 'title' field.
+     * By default, the base template will display only the 'title' field.
      * You can change the display of records by setting their values for the following options:
      * <ul>
      *    <li>displayProperty - defines the display field of the record.</li>

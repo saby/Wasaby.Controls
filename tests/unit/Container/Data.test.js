@@ -146,19 +146,24 @@ define(
             });
          });
 
-         it('itemsChanged', function(done) {
-            var config = {source: source, keyProperty: 'id'};
-            var data = getDataWithConfig(config);
-            var propagationStopped = false;
-            var event = {
-               stopPropagation: function() {
+         it('itemsChanged', () => {
+            const config = {
+               source: source,
+               keyProperty: 'id'
+            };
+            const data = getDataWithConfig(config);
+            const event = {
+               stopPropagation: () => {
                   propagationStopped = true;
                }
             };
 
+            let propagationStopped = false;
+
             data._beforeMount(config).addCallback(function() {
-               data._itemsChanged(event, data._items);
+               data._itemsChanged(event, []);
                assert.isTrue(propagationStopped);
+               assert.deepEqual(data._items, []);
                done();
             });
          });

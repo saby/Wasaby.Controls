@@ -137,6 +137,7 @@ import dataSource = require('Controls/dataSource');
       _template: tmpl,
       _record: null,
       _isNewRecord: false,
+      _errorContainer: dataSource.error.Container,
 
       constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);
@@ -274,81 +275,58 @@ import dataSource = require('Controls/dataSource');
          return this._record && this._isNewRecord && this._getRecordId();
       },
 
-      _createChangeRecordPending: function() {
-         var self = this;
+      _createChangeRecordPending(): void {
+         const self = this;
          self._notify('registerPending', [new Deferred(), {
             showLoadingIndicator: false,
-            validate: function() {
+            validate(): boolean {
                return self._record && self._record.isChanged();
             },
-            onPendingFail: function(forceFinishValue, deferred) {
+            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                self._showConfirmDialog(deferred, forceFinishValue);
             }
          }], { bubbling: true });
       },
-      _showConfirmDialog: function(def, forceFinishValue) {
-         function updating(answer) {
-            if (answer === true) {
-               this.update().addCallbacks(function(res) {
-                  if (!res.validationErrors) {
-                     // если нет ошибок в валидации, просто завершаем пендинг с результатом
-                     if (!def.isReady()) {
-                        def.callback(res);
-                     }
-                  } else {
-                     // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
-                     // чтобы оно не сработало, когда пендинг завершится.
-                     // иначе попробуем закрыть панель, не получится, потом сохраним рекорд и панель закроется сама собой
-                     this._notify('cancelFinishingPending', [], { bubbling: true });
-                  }
-                  return res;
-               }.bind(this), function(e) {
+
+      _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
+         if (answer === true) {
+            this.update().addCallback((res) => {
+               if (!res.validationErrors) {
+                  // если нет ошибок в валидации, просто завершаем пендинг с результатом
                   if (!def.isReady()) {
-                     def.errback(e);
+                     def.callback(res);
                   }
-                  return e;
-               });
-            } else if (answer === false) {
-               if (!def.isReady()) {
-                  def.callback(false);
+               } else {
+                  // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
+                  // чтобы оно не сработало, когда пендинг завершится.
+                  // иначе попробуем закрыть панель, не получится, потом сохраним рекорд и панель закроется сама собой
+                  this._notify('cancelFinishingPending', [], {bubbling: true});
                }
-            }
-         }
-
-         if (forceFinishValue !== undefined) {
-            updating.call(this, !!forceFinishValue);
-         } else {
-            var self = this;
-
-            // если окошко уже было показано другим пендингом, просто ждем результата окна, не показываем новое
-            if (this._confirmDef) {
-               this._confirmDef.addCallback(function(answer) {
-                  self._confirmDef = null;
-                  updating.call(self, answer);
-               }).addErrback(function(e) {
-                  self._confirmDef = null;
-                  return e;
-               });
-            } else {
-               var confirmDef = self._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите "Отмена".')).addCallback(function(answer) {
-                  self._confirmDef = null;
-                  updating.call(self, answer);
-                  return answer;
-               }).addErrback(function(e) {
-                  self._confirmDef = null;
-                  return e;
-               });
-               this._confirmDef = confirmDef;
-               return confirmDef;
+               return res;
+            });
+         } else if (answer === false) {
+            if (!def.isReady()) {
+               def.callback(false);
             }
          }
       },
 
-      _showConfirmPopup: function(type, details) {
+      _showConfirmDialog(def: Promise<boolean>, forceFinishValue: boolean): void {
+         if (forceFinishValue !== undefined) {
+            this._confirmDialogResult(forceFinishValue, def);
+         } else {
+            this._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите "Отмена".')).then((answer) => {
+               this._confirmDialogResult(answer, def);
+               return answer;
+            });
+         }
+      },
+
+      _showConfirmPopup(type: string, details: string): Promise<string> {
          return this._children.popupOpener.open({
             message: rk('Сохранить изменения?'),
-            details: details,
-            type: type
+            details,
+            type
          });
       },
 

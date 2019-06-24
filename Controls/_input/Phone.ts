@@ -1,6 +1,5 @@
 import Base = require('Controls/_input/Base');
 import ViewModel = require('Controls/_input/Phone/ViewModel');
-      
 
       /**
        * A component for entering a phone number. Depending on the characters you enter, the phone number format changes.
@@ -27,11 +26,11 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
             var hasSelection = model.selection.start !== model.selection.end;
 
             /**
-             * If we first clicked in the field, after deactivation, the user did not select anything and
+             * If the focus is not obtained with a mouse click, the user did not select anything and
              * you do not need to select a value and the mask is not completely filled,
              * then you need to move the cursor to the end.
              */
-            return self._firstClick && !hasSelection && !model.isFilled() && !self._options.selectOnClick;
+            return !self._focusByMouseDown && !hasSelection && !model.isFilled() && !self._options.selectOnClick;
          }
       };
 
@@ -40,13 +39,11 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
             return ViewModel;
          },
 
-         _clickHandler: function() {
+         _focusInHandler: function() {
             if (_private.isMoveCarriage(this)) {
                this._viewModel.moveCarriageToEnd();
-               return;
             }
-
-            Phone.superclass._clickHandler.apply(this, arguments);
+            Phone.superclass._focusInHandler.apply(this, arguments);
          }
       });
 
@@ -59,4 +56,3 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
       };
 
       export = Phone;
-   

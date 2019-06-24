@@ -8,7 +8,7 @@
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/_dropdown/itemTemplate
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
- * @includes IGroupped Controls/_dropdown/interface/IGroupped
+ * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
  * @includes Styles Controls/_dropdown/Input/Styles

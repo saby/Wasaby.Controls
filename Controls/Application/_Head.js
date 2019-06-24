@@ -5,10 +5,10 @@ define('Controls/Application/_Head',
       'wml!Controls/Application/_Head',
       'Core/helpers/getResourceUrl',
       'Application/Env',
-      'Controls/_decorator/Markup/resolvers/noOuterTag',
+      'Controls/decorator',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, getResourceUrl, AppEnv, noOuterTagResolver, ThemesControllerNew) {
+   function(Base, Deferred, template, getResourceUrl, AppEnv, decorator, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -121,7 +121,7 @@ define('Controls/Application/_Head',
             return Array.isArray(this.head);
          },
          headTagResolver: function(value, parent) {
-            var newValue = noOuterTagResolver(value, parent),
+            var newValue = decorator.noOuterTag(value, parent),
                attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
                   !Array.isArray(newValue[1]) && newValue[1];
             if (attributes) {

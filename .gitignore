@@ -15,6 +15,7 @@
 /application
 /application/*
 /package-lock.json
+/yarn.lock
 /ws-data
 /cdn
 /node_modules

@@ -30,7 +30,7 @@
               on:tagClick="_notifyHandler('tagClick')"
               on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
-              class="controls-ComboBox-InputRender theme_{{_options.theme}}">
+              attr:class="controls-ComboBox-InputRender theme_{{_options.theme}} {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}}">
          <ws:afterFieldWrapper>
             <Controls.toggle:Separator attr:class="controls-ComboBox-button-separator" if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
          </ws:afterFieldWrapper>

@@ -2,7 +2,7 @@
             {{_dropdownClass}}
             {{_options.dropdownClassName}}
             theme_{{_options.theme}}"
-            style="min-width: {{_options.width ? _options.width + 'px'}}"
+            style="width: {{_options.width ? _options.width + 'px'}}"
             attr:ws-no-focus="true"
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader || _options.headerTemplate}}">

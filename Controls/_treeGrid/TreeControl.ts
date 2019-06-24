@@ -124,8 +124,9 @@ var _private = {
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
     },
-    isDeepReload: function({deepReload}, deepReloadState: boolean): boolean {
-        return  deepReload || deepReloadState;
+    isDeepReload: function({deepReload, task1177343452}, deepReloadState: boolean): boolean {
+        //task1177343452 will removed in 510, added by task https://online.sbis.ru/opendoc.html?guid=15641dfc-fd55-4e68-9c2e-f95627780acb
+        return  task1177343452 ? false : deepReload || deepReloadState;
     },
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
         const parentProperty = cfg.parentProperty;
@@ -228,6 +229,7 @@ var _private = {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -286,7 +288,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
-        this._children.baseControl.getViewModel().subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
     },
 
     _dataLoadCallback: function() {
@@ -355,12 +356,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
     },
-    _onExpandedItemsChanged(e, expandedItems){
+    _onExpandedItemsChanged(e, expandedItems) {
         this._notify('expandedItemsChanged', [expandedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
     },
-    _onCollapsedItemsChanged(e, collapsedItems){
+    _onCollapsedItemsChanged(e, collapsedItems) {
         this._notify('collapsedItemsChanged', [collapsedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
         this._forceUpdate();
