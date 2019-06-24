@@ -526,7 +526,7 @@ define([
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
-         return new Promise(function(resolve, reject)
+         return new Promise(function(resolve, reject) {
             treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
