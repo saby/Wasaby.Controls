@@ -1,5 +1,5 @@
 <ws:template name="headingPath">
-   <ws:if data="{{( _header === _options.header && _options.items.length > 0) || _options.items.length > 1}}">
+   <ws:if data="{{_needCrumbs}}">
       <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
                                         name="Path"
                                         header="{{_header}}"

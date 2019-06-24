@@ -25,20 +25,27 @@ import {ItemsUtil} from 'Controls/list';
             };
          }
          return newHeader;
+      },
+
+      needCrumbs: function(header, items) {
+         return !!items && ((!header && items.length > 0) || items.length > 1);
       }
    };
 
    var PathController = Control.extend({
       _template: template,
       _header: null,
+      _needCrumbs: false,
 
       _beforeMount: function(options) {
          this._header = _private.getHeader(this, options);
+         this._needCrumbs = _private.needCrumbs(this._header, options.items);
       },
 
       _beforeUpdate: function(newOptions) {
          if (this._options.items !== newOptions.items) {
             this._header = _private.getHeader(this, newOptions);
+            this._needCrumbs = _private.needCrumbs(this._header, newOptions.items);
          }
       },
 
@@ -52,6 +59,6 @@ import {ItemsUtil} from 'Controls/list';
          HeadingPathCommon.onArrowClick.call(this, e);
       }
    });
-
+   PathController._private = _private;
    export = PathController;
 
