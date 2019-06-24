@@ -340,15 +340,15 @@ define([
 
 
          //Top placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(300, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(300, 100));
 
          assert.isFalse(vsInstance._isScrollInPlaceholder(510, 50));
 
          //Bottom placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(500, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(500, 100));
 
          // Bottom  placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(700));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(700));
       });
 
       it('updateItemsIndexesOnScrolling', function() {
