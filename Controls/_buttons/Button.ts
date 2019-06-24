@@ -10,8 +10,9 @@ import {ITooltip, ITooltipOptions,
    IIconSize, IIconSizeOptions,
    IFontColorStyle, IFontColorStyleOptions,
    IFontSize, IFontSizeOptions,
-   IHeight, IHeightOptions,
+   IHeight, IHeightOptions
 } from 'Controls/interface';
+import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
@@ -134,7 +135,7 @@ class Button extends Control<IButtonOptions> implements
       this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
       this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
       this._fontSize = ActualApi.fontSize(options);
-      this._hasIcon = options.icon;
+      this._hasIcon = !!options.icon;
 
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
@@ -153,19 +154,19 @@ class Button extends Control<IButtonOptions> implements
       this.cssStyleGeneration(newOptions);
    }
 
-   private _keyUpHandler(e): void {
+   private _keyUpHandler(e: SyntheticEvent): void {
       if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
          this._notify('click');
       }
    }
 
-   private _clickHandler(e): void {
+   private _clickHandler(e: SyntheticEvent): void {
       if (this._options.readOnly) {
          e.stopPropagation();
       }
    }
 
-   static getDefaultOptions() {
+   static getDefaultOptions(): object {
       return {
          viewMode: 'button',
          iconStyle: 'secondary',
