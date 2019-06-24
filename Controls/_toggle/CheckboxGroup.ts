@@ -18,7 +18,7 @@ import {ISource, ISourceOptions, IMultiSelectable,
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_toggle/interface/IToggleGroup
+ * @implements Controls/_toggle/interface/IToggleGroup
  * @control
  * @public
  * @author Михайловский Д.С.
