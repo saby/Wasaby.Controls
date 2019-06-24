@@ -13,7 +13,7 @@ interface PopupOptions {
  * @param {Boolean} multiSelect
  * @returns {Promise}
  */
-function showSelector(self, popupOptions, multiSelect) {
+export default function(self, popupOptions, multiSelect) {
     let
         indicatorId,
         selectorOpener = self._children.selectorOpener,
@@ -42,5 +42,3 @@ function showSelector(self, popupOptions, multiSelect) {
         });
     }
 }
-
-export = showSelector;
