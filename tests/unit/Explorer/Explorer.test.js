@@ -446,6 +446,32 @@ define([
 
             /* https://online.sbis.ru/opendoc.html?guid=3523e32f-2bb3-4ed4-8b0f-cde55cb81f75 */
             assert.isTrue(isNativeClickEventExists);
+
+
+            // if return false
+            explorer._notify = function() {
+               return false;
+            };
+
+            isPropagationStopped = false;
+
+            explorer._onItemClick({
+               stopPropagation: function() {
+                  isPropagationStopped = true;
+               }
+            }, {
+               get: function() {
+                  return true;
+               },
+               getId: function() {
+                  return 'itemIdOneMore';
+               }
+            }, {
+               nativeEvent: 123
+            });
+            assert.isFalse(isPropagationStopped);
+            // Root wasn't changed
+            assert.equal(root, 'itemId');
          });
 
          it('_onBreadCrumbsClick', function() {
