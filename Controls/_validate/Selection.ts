@@ -14,7 +14,7 @@ import template = require('wml!Controls/_validate/Selection');
 
       
 
-      export = Controller.extend({
+      const Selection = Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
             this._shouldValidate = true;
@@ -32,4 +32,5 @@ import template = require('wml!Controls/_validate/Selection');
             }
          }
       });
+      export = Selection;
    

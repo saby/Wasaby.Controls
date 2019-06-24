@@ -10,7 +10,7 @@ import template = require('wml!Controls/_validate/Input');
  * @author Красильников А.С.
  */
 
-      export = Controller.extend({
+     const Input = Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
             if (!this._options.readOnly) {
@@ -28,3 +28,4 @@ import template = require('wml!Controls/_validate/Input');
             }
          }
       });
+      export = Input;
