@@ -126,7 +126,9 @@ define('Controls/Application/_Head',
                   !Array.isArray(newValue[1]) && newValue[1];
             if (attributes) {
                for (var attributeName in attributes) {
-                  if (attributes.hasOwnProperty(attributeName)) {
+                  // TODO: call getResourceUrl for only right attributes. Add unit tests.
+                  // Task link: https://online.sbis.ru/opendoc.html?guid=b7d20750-7816-4eff-aa8b-25249ad4d04c.
+                  if (attributes.hasOwnProperty(attributeName) && attributeName !== 'content') {
                      // Try update all attributes as link, but only links would be updated.
                      attributes[attributeName] = getResourceUrl('' + attributes[attributeName]);
                   }
