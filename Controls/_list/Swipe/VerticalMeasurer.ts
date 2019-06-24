@@ -81,9 +81,10 @@ const VerticalMeasurer: IMeasurer = {
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
       let columnsCount = 1;
-      let itemActions = actions.slice();
+      // если у действия есть родитель, то нам не нужно его рисовать
+      let itemActions = actions.filter((action) => !action.parent);
       itemActions.sort(function(action1, action2) {
-         return action2.showType - action1.showType;
+         return (action2.showType || 0) - (action1.showType || 0);
       });
       const {
          itemActionsSize,
@@ -98,7 +99,7 @@ const VerticalMeasurer: IMeasurer = {
             columnsCount = 2;
          }
       }
-      if (columnsCount * countOfActions !== actions.length) {    
+      if (columnsCount * countOfActions !== actions.length) {
          itemActions = itemActions.slice(0, countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',

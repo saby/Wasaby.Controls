@@ -26,9 +26,11 @@ const HorizontalMeasurer: IMeasurer = {
       rowHeight: number,
       actionCaptionPosition: ActionCaptionPosition
    ): ISwipeConfig {
-      let itemActions = actions.slice();
+
+      // если у действия есть родитель, то нам не нужно его рисовать
+      let itemActions = actions.filter((action) => !action.parent);
       itemActions.sort(function(action1, action2) {
-         return action2.showType - action1.showType;
+         return (action2.showType || 0) - (action1.showType || 0);
       });
       if (itemActions.length > MAX_ACTIONS_COUNT) {
          itemActions = itemActions.slice(0, MAX_ACTIONS_COUNT);
