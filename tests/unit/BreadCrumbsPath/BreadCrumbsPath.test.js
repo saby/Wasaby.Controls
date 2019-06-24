@@ -176,6 +176,19 @@ define([
             assert.isNull(path._visibleItems);
             assert.isNull(path._breadCrumbsItems);
          });
+
+         it('container is hidden', function() {
+            mockBreadCrumbsUtil(650, 650);
+            path._visibleItems = [1, 2, 3];
+            path._breadCrumbsItems = [2, 3];
+            path._container = {
+               clientWidth: 0
+            };
+            path._beforeUpdate({ items: path._options.items });
+
+            assert.deepEqual(path._visibleItems, [1, 2, 3]);
+            assert.deepEqual(path._breadCrumbsItems, [2, 3]);
+         });
       });
 
       it('_onBackButtonClick', function() {

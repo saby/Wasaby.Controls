@@ -398,6 +398,13 @@ define(
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+
+            // resetValue selection
+            configMultiSelect.items[0].resetValue = 'все страны';
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            fastData2._configs[0].multiSelect = true;
+            filterMod.Fast._private.selectItems.call(fastData2, [{ key: 0, title: 'все страны' }]);
+            assert.deepEqual(fastData2._items.at(0).value, 'все страны');
          });
 
          it('setText', function(done) {
@@ -466,11 +473,24 @@ define(
          });
 
          it('open dropdown', function() {
-            filterMod.Fast._private.reload(fastData, fastData.sourceController).addCallback(function() {
-               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
-                  fastData._open('itemClick', fastData._items.at(0), 0);
-               });
+            let fastFilter = new filterMod.Fast(config);
+            let expectedConfig;
+            fastFilter._children = {
+               DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig;} }
+            };
+            fastFilter._container = {children: []};
+            fastFilter._configs = [{_items: new collection.RecordSet({
+                  idProperty: 'key',
+                  rawData: items[0]
+               })}];
+            fastFilter._items = new collection.RecordSet({
+               rawData: configItems.items,
+               idProperty: 'title'
             });
+            fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
+            assert.strictEqual(expectedConfig.fittingMode, 'overflow');
+            assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
+            assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
          });
 
          it('_private::itemsPropertiesChanged', function() {

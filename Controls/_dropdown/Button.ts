@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 /**
  * Button by clicking on which a drop-down list opens.
@@ -37,6 +38,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 
 var Button = Control.extend({
    _template: template,
+   _tmplNotify: tmplNotify,
    _filter: null,
 
    _beforeMount: function (options) {

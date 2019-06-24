@@ -59,7 +59,8 @@
           <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
                 <div class="controls-FilterPanel__content-horizontal">
-                   <div class="controls-FilterPanel__filtersWrapper">
+                   <div class="controls-FilterPanel__filtersWrapper
+                    controls-FilterPanel_{{_historyId && _historyItems.getCount() ? 'twoColumn' : 'oneColumn'}}__filtersWrapper">
                       <ws:partial template="filtersContent"/>
                    </div>
                    <ws:partial template="history"/>

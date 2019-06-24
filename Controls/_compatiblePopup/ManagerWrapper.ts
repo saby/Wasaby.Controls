@@ -44,6 +44,10 @@ var ManagerWrapper = Control.extend({
       window[actionName]('mouseup', this._mouseupPage);
    },
 
+   startResizeEmitter(event: Event): void {
+      this._resizePage(event);
+   },
+
    _eventRegistratorHandler: function(registratorName, event) {
       // vdom control used synthetic event
       this._children[registratorName].start(new Vdom.SyntheticEvent(event));

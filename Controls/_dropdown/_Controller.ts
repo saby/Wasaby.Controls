@@ -80,7 +80,7 @@ var _private = {
       var newItems = _private.getNewItems(self._items, selectedItems, self._options.keyProperty);
 
       // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-      if (historyUtils.isHistorySource(self._options.source)) {
+      if (historyUtils.isHistorySource(self._source)) {
          if (newItems.length) {
             self._sourceController = null;
          }
@@ -99,11 +99,11 @@ var _private = {
    },
 
    updateHistory: function (self, items) {
-      if (historyUtils.isHistorySource(self._options.source)) {
-         self._options.source.update(items, historyUtils.getMetaHistory());
+      if (historyUtils.isHistorySource(self._source)) {
+         self._source.update(items, historyUtils.getMetaHistory());
 
-         if (self._sourceController && self._options.source.getItems) {
-            self._items = self._options.source.getItems();
+         if (self._sourceController && self._source.getItems) {
+            self._items = self._source.getItems();
          }
       }
    },
@@ -111,9 +111,9 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             this._notify('pinClick', [result.data]);
-            this._items = this._options.source.getItems();
+            this._items = this._source.getItems();
             this._open();
             break;
          case 'applyClick':
@@ -122,7 +122,7 @@ var _private = {
             this._children.DropdownOpener.close();
             break;
          case 'itemClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
             var item = result.data[0];
@@ -147,11 +147,13 @@ var _private = {
 
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
+         self._notify('dropDownOpen');
          if (typeof (options.open) === 'function') {
             options.open(args);
          }
       };
       self._onClose = function(event, args) {
+         self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
@@ -304,7 +306,9 @@ var _Controller = Control.extend({
       this._onResult(event, {action: 'selectorResult', data: items});
    },
 
-   _mousedown: function () {
+   _clickHandler: function(event) {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
          opener.close();

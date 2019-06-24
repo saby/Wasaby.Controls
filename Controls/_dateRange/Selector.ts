@@ -77,7 +77,7 @@ var Component = BaseControl.extend({
                 captionFormatter: this._options.captionFormatter,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
-                ranges: this._options.ranges,
+                quantum: this._options.ranges,
                 minRange: this._options.minRange
             }
         };

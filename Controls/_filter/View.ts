@@ -295,8 +295,11 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
+            const self = this;
             _private.prepareItems(this, newOptions.source);
-            return _private.reload(this);
+            return _private.reload(this).addCallback(function() {
+                self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+            });
         }
     },
 
@@ -326,8 +329,11 @@ var Filter = Control.extend({
             let items = new RecordSet({
                 rawData: _private.setPopupConfig(this, this._configs, this._source)
             });
-            let popupOptions = { template: this._options.panelTemplateName,
-                                 className: 'controls-FilterView-SimplePanel-popup' };
+            let popupOptions = {
+                template: this._options.panelTemplateName,
+                actionOnScroll: 'close',
+                className: 'controls-FilterView-SimplePanel-popup'
+            };
             if (fastItem) {
                 popupOptions.target = this._children[fastItem.name];
             }

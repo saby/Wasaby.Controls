@@ -76,16 +76,22 @@ import 'Controls/breadcrumbs';
                self._options.itemsReadyCallback(items);
             }
          },
-         setViewMode: function(self, viewMode) {
+         setVirtualScrolling(self, viewMode, cfg): void {
+            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
+            // For viewMode === 'tile' disable virtualScrolling.
+            self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
+         },
+         setViewMode: function(self, viewMode, cfg) {
             var currentRoot = _private.getRoot(self);
             var dataRoot = _private.getDataRoot(self);
 
-            if (viewMode === 'search' && self._options.searchStartingWith === 'root' && dataRoot !== currentRoot) {
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            _private.setVirtualScrolling(self, self._viewMode, cfg);
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -144,8 +150,8 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_tile/interface/IGridControl
     * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_grid/interface/IGridControl
     * @control
     * @public
     * @category List
@@ -174,6 +180,7 @@ import 'Controls/breadcrumbs';
       _viewModelConstructor: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
+      _virtualScrolling: false,
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
@@ -186,11 +193,15 @@ import 'Controls/breadcrumbs';
             this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
-         _private.setViewMode(this, cfg.viewMode);
+         _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
-            _private.setViewMode(this, cfg.viewMode);
+            _private.setViewMode(this, cfg.viewMode, cfg);
+            this._children.treeControl.resetExpandedItems();
+         }
+         if (cfg.virtualScrolling !== this._options.virtualScrolling) {
+            _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
       _getRoot: function() {
@@ -223,12 +234,14 @@ import 'Controls/breadcrumbs';
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent) {
-         if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-            _private.setRoot(this, item.getId());
+      _onItemClick: function(event, item, clickEvent): void {
+         const res = this._notify('itemClick', [item, clickEvent]);
+         if (res !== false) {
+            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+               _private.setRoot(this, item.getId());
+            }
+            event.stopPropagation();
          }
-         event.stopPropagation();
-         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
@@ -274,7 +287,7 @@ import 'Controls/breadcrumbs';
          viewMode: DEFAULT_VIEW_MODE,
          backButtonStyle: 'secondary',
          stickyHeader: true,
-         searchMode: 'root'
+         searchStartingWith: 'root'
       };
    };
 

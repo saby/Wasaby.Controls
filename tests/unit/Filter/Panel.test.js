@@ -246,11 +246,18 @@ define(
 
          it('valueChanged, visibilityChanged', function() {
             var panel = getFilterPanel(config);
+            var itemsChangedEventFired = false;
+
+            panel._notify = () => {
+               itemsChangedEventFired = true;
+            };
             panel._beforeMount(config);
             var newItems = Clone(items);
             newItems[0].value = 'testValue2';
             panel._itemsChangedHandler('itemsChanged', newItems);
+
             assert.deepEqual(panel._items[0].value, 'testValue2');
+            assert.isTrue(itemsChangedEventFired);
          });
 
          it('resolveItems', function() {

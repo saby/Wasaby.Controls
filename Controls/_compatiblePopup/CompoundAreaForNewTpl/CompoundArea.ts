@@ -207,6 +207,7 @@ var moduleClass = CompoundControl.extend({
    },
    _onResizeHandler: function() {
       this._notifyOnSizeChanged();
+      ManagerWrapperController.startResizeEmitter();
    },
    _onCloseHandler(): void {
       this._finishPendingOperations();
@@ -288,6 +289,7 @@ var moduleClass = CompoundControl.extend({
       newOptions.maximized = this._maximized;
 
       this._updateVDOMTemplate(newOptions);
+      this._onResizeHandler();
    },
 
    _getRootContainer: function() {

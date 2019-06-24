@@ -304,6 +304,51 @@ define([
          }, 100);});
       });
 
+      it('check dataLoadCallback and afterReloadCallback calling order', async function() {
+         var
+            dataLoadCallbackCalled = false,
+            afterReloadCallbackCalled = false,
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: new sourceLib.Memory({}),
+               viewModelConstructor: lists.ListViewModel,
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               afterReloadCallback: function() {
+                  afterReloadCallbackCalled = true;
+                  assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called before afterReloadCallback.');
+               }
+            },
+            ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         // emulate reload with error
+         ctrl._sourceController.load = function() {
+            return cDeferred.fail();
+         };
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
+      });
 
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
@@ -700,6 +745,147 @@ define([
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getViewModel()._startIndex);
          assert.equal(5, instance.getViewModel()._stopIndex);
+      });
+
+      it('virtual scroll shouldn\'t update indexes on reload', async function() {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let
+             isIndexesUpdated = false,
+             virtualScroll = instance.getVirtualScroll(),
+             updateIndexes = virtualScroll.updateItemsIndexes,
+             vm = instance.getViewModel();
+
+         instance.getVirtualScroll().updateItemsIndexes = function () {
+            isIndexesUpdated = true;
+            updateIndexes.apply(virtualScroll, arguments);
+         };
+
+         await instance.reload();
+         assert.isFalse(isIndexesUpdated);
+         assert.equal(vm._startIndex, 0);
+         assert.equal(vm._stopIndex, 6);
+         assert.isFalse(isIndexesUpdated);
+
+      });
+
+      it('moveMarkerToNext && moveMarkerToPrevious', async function() {
+         var
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg),
+            originalScrollToItem = lists.BaseControl._private.scrollToItem;
+         lists.BaseControl._private.scrollToItem = function() {};
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            }
+         });
+         assert.equal(3, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            }
+         });
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
+         lists.BaseControl._private.scrollToItem = originalScrollToItem;
+      });
+
+      it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
+         var
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'hidden',
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            }
+         });
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            }
+         });
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
 
       it('enterHandler', function () {
