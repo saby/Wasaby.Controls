@@ -80,6 +80,16 @@ define(
             return dropdownCntroller;
          };
 
+         let sandbox;
+
+         beforeEach(function() {
+            sandbox = sinon.createSandbox();
+         });
+
+         afterEach(function() {
+            sandbox.restore();
+         });
+
          it('before mount', (done) => {
             let newConfig = Clone(config),
                loadedItems;
@@ -522,6 +532,19 @@ define(
                open: setTrue.bind(this, assert)
             };
             dropdownController._open();
+         });
+
+         it('events on open/close', async () => {
+            let dropdownController = getDropdownController(config);
+            let stubNotify = sandbox.stub(dropdownController, '_notify');
+
+            await dropdownController._beforeMount(configLazyLoad);
+
+            dropdownController._onOpen();
+            dropdownController._onClose();
+
+            assert.isTrue(stubNotify.withArgs('dropDownOpen').calledOnce);
+            assert.isTrue(stubNotify.withArgs('dropDownClose').calledOnce);
          });
 
          it('_onSelectorTemplateResult', () => {
