@@ -248,7 +248,6 @@ define(
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
             assert.equal(config.template, 'Controls/compatiblePopup:CompoundArea');
-            assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
             newConfig.minWidth = '100';
