@@ -53,6 +53,8 @@ define(
          enabled: true,
          draggable: true,
          closeChildWindows: true,
+         closeButtonViewMode: 'toolButton',
+         closeButtonTransparent: false,
          closeOnTargetScroll: true,
          width: 'auto'
       };
@@ -227,6 +229,8 @@ define(
             config.fixed = true;
             compatiblePopup.BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
+            assert.equal(config.templateOptions.closeButtonViewMode, 'toolButton');
+            assert.equal(config.templateOptions.closeButtonTransparent, false);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.fixed, true);
