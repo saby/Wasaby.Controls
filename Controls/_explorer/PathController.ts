@@ -3,6 +3,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
 import {HeadingPathBack, HeadingPathCommon} from 'Controls/breadcrumbs';
 import {ItemsUtil} from 'Controls/list';
+import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
 
    var _private = {
@@ -37,7 +38,7 @@ import {ItemsUtil} from 'Controls/list';
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.items !== newOptions.items) {
+         if (this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._header = _private.getHeader(this, newOptions);
          }
       },
