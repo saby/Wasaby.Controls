@@ -9,7 +9,7 @@
         </ws:for>
         <div class="controls-TreeGrid__row-expanderPadding"></div>
         <ws:if data="{{itemData.hasMoreStorage}}">
-            <Controls.buttons:Button size="s" attr:class="controls-TreeGrid__nodeFooterLoadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)" readOnly="{{false}}"/>
+            <Controls.buttons:Button fontSize="xs" attr:class="controls-TreeGrid__nodeFooterLoadMore" viewMode="link" fontColorStyle="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)" readOnly="{{false}}"/>
         </ws:if>
         <ws:else>
             <ws:if data="{{itemData.template}}">
