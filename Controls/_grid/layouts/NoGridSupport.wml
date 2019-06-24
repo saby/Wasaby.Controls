@@ -18,7 +18,9 @@
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"/>
-        <div if="{{_options.itemActionsPosition==='outside'}}" class="controls-itemActionsV_outside-spacing"></div>
+        <ws:if data="{{_options._needBottomPadding}}">
+            <div  class="controls-itemActionsV_outside-spacing"></div>
+        </ws:if>
         <ws:if data="{{_options.emptyTemplate}}">
             <tr>
                 <td colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">

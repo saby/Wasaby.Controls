@@ -60,6 +60,7 @@
         template="{{ _options.content }}"
         scope="{{_options}}"
         _pagingVisible="{{_pagingVisible}}"
+        _needBottomPadding="{{_needBottomPadding}}"
         listModel="{{_listViewModel}}"
         on:animationend="_onAnimationEnd()"
         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
