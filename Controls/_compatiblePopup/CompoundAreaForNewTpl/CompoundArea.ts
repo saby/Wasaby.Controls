@@ -289,6 +289,7 @@ var moduleClass = CompoundControl.extend({
       newOptions.maximized = this._maximized;
 
       this._updateVDOMTemplate(newOptions);
+      this._onRegisterHandler();
    },
 
    _getRootContainer: function() {
