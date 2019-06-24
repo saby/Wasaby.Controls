@@ -5,7 +5,7 @@
             template="{{_options.template}}"
             scope="{{_templateOptions}}"
             on:close="_onCloseHandler()"
-            on:controlresize="_resizeHandler()"
+            on:controlresize="_onResizeHandler()"
             on:sendresult="_onResultHandler()"
             on:register="_onRegisterHandler()"
             on:unregister="_onRegisterHandler()"
