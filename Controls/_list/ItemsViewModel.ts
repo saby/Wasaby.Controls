@@ -128,7 +128,7 @@ var ItemsViewModel = BaseViewModel.extend({
     isEnd: function() {
         var endIndex;
         if (this._options.virtualScrolling) {
-            endIndex = (this._options.virtualScrolling && !!this._stopIndex ? this._stopIndex : 0);
+            endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
         }
@@ -139,10 +139,12 @@ var ItemsViewModel = BaseViewModel.extend({
         this._updateIndexesCallback = updateIndexesCallback;
     },
 
-    setIndexes: function(startIndex, stopIndex) {
-        if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
-            this._startIndex = startIndex;
-            this._stopIndex = stopIndex;
+    setIndexes: function(newStartIndex, stopIndex) {
+        var
+           newStopIndex = Math.min(stopIndex, this.getCount());
+        if (this._startIndex !== newStartIndex || this._stopIndex !== newStopIndex) {
+            this._startIndex = newStartIndex;
+            this._stopIndex = newStopIndex;
             this._nextModelVersion(true, 'indexesChanged');
             if (this._updateIndexesCallback) {
                 this._updateIndexesCallback();

@@ -163,44 +163,6 @@ define([
          }, 1);
       });
 
-      it('should set itemsContainer in VS if null', function () {
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            navigation: {
-               view: 'infinity'
-            },
-            virtualScrolling: true,
-            viewModelConstructor: lists.ListViewModel,
-            source: source
-         };
-         var itemsContainer = {
-            qwe: 123
-         },
-             ctrl = new lists.BaseControl(cfg);
-
-         assert.isUndefined(ctrl._virtualScroll);
-         ctrl._beforeMount(cfg);
-         assert.isTrue(!!ctrl._virtualScroll);
-
-         ctrl._virtualScroll.updateItemsSizes = function(){};
-         ctrl._children.listView = {
-            getItemsContainer: function() {
-               return itemsContainer;
-            }
-         };
-
-         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
-         ctrl._viewResize();
-         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
-      });
-
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -727,24 +689,24 @@ define([
 
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
          assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
-         assert.equal(2, instance.getVirtualScroll().ItemsIndexes.stop);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(2, vm.getStopIndex());
 
          vm.getCount = function() {
             return 1;
          };
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
          assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
-         assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(1, vm.getStopIndex());
 
          vm.getCount = function() {
             return 5;
          };
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getViewModel()._startIndex);
-         assert.equal(5, instance.getViewModel()._stopIndex);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(5, vm.getStopIndex());
       });
 
       it('virtual scroll shouldn\'t update indexes on reload', async function() {
@@ -3280,39 +3242,6 @@ define([
                });
             });
          });
-      });
-
-      it('updateVirtualWindowIfNeed', async function () {
-
-         var
-             cfg = {
-                viewName: 'Controls/List/ListView',
-                viewModelConfig: {
-                   items: [],
-                   keyProperty: 'id',
-                },
-                viewModelConstructor: lists.ListViewModel,
-                virtualScrolling: true,
-                virtualPageSize: 2,
-                virtualSegmentSize: 1,
-                navigation: { view: 'infinity' },
-                keyProperty: 'id',
-                source: source
-             },
-             instance = new lists.BaseControl(cfg);
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-         instance._loadTriggerVisibility = {
-            up: false,
-            down: true
-         };
-         instance._sourceController.hasMoreData = () => false;
-
-         lists.BaseControl._private.updateVirtualWindow(instance, 'up');
-
-         assert.isTrue(instance._checkShouldLoadToDirection);
-         instance._beforePaint();
-         assert.isFalse(instance._checkShouldLoadToDirection);
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
