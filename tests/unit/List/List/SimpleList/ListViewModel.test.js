@@ -361,9 +361,6 @@ define([
             model = new lists.ListViewModel(cfg);
             model.getItems().removeAt(3); // remove item 6 (without markedKey)
             assert.equal(1, model.getMarkedKey());
-
-            console.log(model.getItems().getRawData());
-            console.log('markedKey', model.getMarkedKey());
       });
 
       it('Selection', function() {

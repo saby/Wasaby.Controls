@@ -452,7 +452,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
     isValidItemForMarkedKey: function (item) {
-        if (this.isBredCrumbsItem) { return !this.isBredCrumbsItem(item); }
         return !this._isGroup(item) && item.getId;
     },
     getPreviousItem: function (itemIndex) {

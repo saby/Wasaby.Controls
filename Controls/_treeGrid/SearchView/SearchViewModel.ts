@@ -44,7 +44,11 @@ var
       },
 
        isBredCrumbsItem: function(item:Record) {
-          return !!item.forEach;
+           return !!item.forEach;
+       },
+       isValidItemForMarkedKey: function(item) {
+          const isGroup = SearchViewModel.superclass.isValidItemForMarkedKey.call(this, item);
+          return isGroup && !this.isBredCrumbsItem(item);
        },
       _isGroup: function(item:Record):boolean {
           let result;
