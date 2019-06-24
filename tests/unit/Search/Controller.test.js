@@ -264,6 +264,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchController._beforeMount({searchValue: 'test2', root: 'test2', viewMode: 'notSearch'}, {});
 
             assert.equal(searchController._inputSearchValue, 'test2');
+            assert.equal(searchController._searchValue, 'test2');
             assert.equal(searchController._root, 'test2');
             assert.equal(searchController._previousViewMode, 'notSearch');
             assert.equal(searchController._viewMode, 'search');
