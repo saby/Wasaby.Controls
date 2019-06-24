@@ -36,9 +36,10 @@
    <Controls.buttons:Button
       attr:class="controls-Input-DateRange__button"
       attr:tabindex="-1"
-      style="secondary"
+      fontColorStyle="link"
       viewMode="link"
-      icon="icon-Calendar2 icon-primary controls-Input-DateRange__icon-size"
+      icon="icon-Calendar2 controls-Input-DateRange__icon-size"
+      iconStyle="secondary"
       on:click="_openDialog()"
    />
    <Controls.popup:Sticky
