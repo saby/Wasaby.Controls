@@ -1,12 +1,14 @@
 <ws:template name="headingPath">
-   <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
-                                     name="Path"
-                                     header="{{_header}}"
-                                     attr:class="controls-Explorer__Path"
-                                     on:backButtonClick="_notifyHandler('backButtonClick')"
-                                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                                     on:arrowActivated="_notifyHandler('arrowActivated')"
-                                     on:itemClick="_notifyHandler('itemClick')" />
+   <ws:if data="{{( _header === _options.header && _options.items.length > 0) || _options.items.length > 1}}">
+      <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
+                                        name="Path"
+                                        header="{{_header}}"
+                                        attr:class="controls-Explorer__Path"
+                                        on:backButtonClick="_notifyHandler('backButtonClick')"
+                                        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                        on:arrowActivated="_notifyHandler('arrowActivated')"
+                                        on:itemClick="_notifyHandler('itemClick')" />
+   </ws:if>
 </ws:template>
 <div>
 <ws:if data="{{_options.items || _options.rootVisible}}">
