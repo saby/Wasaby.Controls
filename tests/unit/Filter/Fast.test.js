@@ -398,6 +398,13 @@ define(
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+
+            // resetValue selection
+            configMultiSelect.items[0].resetValue = 'все страны';
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            fastData2._configs[0].multiSelect = true;
+            filterMod.Fast._private.selectItems.call(fastData2, [{ key: 0, title: 'все страны' }]);
+            assert.deepEqual(fastData2._items.at(0).value, 'все страны');
          });
 
          it('setText', function(done) {

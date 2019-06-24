@@ -2,4 +2,5 @@
             itemData="{{itemData}}"
             displayProperty="{{displayProperty}}"
             multiSelect="{{false}}"
+            showClose="{{true}}"
             class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}"/>

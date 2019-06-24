@@ -111,6 +111,7 @@ define(
             //forced nbort
             search.abort();
             assert.isFalse(search._searchDeferred.isReady());
+            assert.isTrue(!!search._searchDelayTimer, 'not forced abort work synchronously');
 
             return new Promise(function(resolve) {
                searchDef.addErrback(function(err) {
@@ -118,6 +119,7 @@ define(
 
                   search.abort(true);
                   assert.isTrue(search._searchDeferred.isReady());
+                  assert.equal(search._searchDelayTimer, null, 'forced abort work asynchronously');
 
                   resolve();
                   return err;

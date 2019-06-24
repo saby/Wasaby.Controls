@@ -249,15 +249,25 @@ var _private = {
             self._keyDisplayedItem = null;
         }
     },
+    moveMarker: function(self, newMarkedKey) {
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (this._mounted) {
+            this.activate();
+        }
+        _private.setMarkedKey(self, newMarkedKey);
+    },
     moveMarkerToNext: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+        }
     },
     moveMarkerToPrevious: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
+        }
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
@@ -808,8 +818,8 @@ var _private = {
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
-                   groupTemplate: self._options.groupTemplate,
-                   groupingKeyCallback: self._options.groupingKeyCallback,
+                   groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
+                   groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
                    rootKey: action.id,
                    showHeader: true,
                    dropdownClassName: 'controls-itemActionsV__popup',
@@ -1653,13 +1663,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
-        // activate list when marker is moving. It let us press enter and open current row
-        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
-            // must check mounted to avoid fails on unit tests
-            if (this._mounted) {
-               this.activate();
-            }
-        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {

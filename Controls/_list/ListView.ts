@@ -83,14 +83,7 @@ var ListView = BaseControl.extend(
                }
             };
         },
-
-       // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-       // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-        _resizeNotifyOnListChanged() {
-           _private.resizeNotifyOnListChanged(this);
-        },
-
-        _beforeMount: function(newOptions) {
+       _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
             if (newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -149,10 +142,10 @@ var ListView = BaseControl.extend(
         },
 
         _afterRender: function() {
+            if (this._pendingRedraw) {
+                _private.resizeNotifyOnListChanged(this);
+            }
             this._pendingRedraw = false;
-            // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-            // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-            this._resizeNotifyOnListChanged();
         },
 
         getItemsContainer: function() {

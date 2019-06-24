@@ -147,11 +147,13 @@ var _private = {
 
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
+         self._notify('dropDownOpen');
          if (typeof (options.open) === 'function') {
             options.open(args);
          }
       };
       self._onClose = function(event, args) {
+         self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
@@ -304,7 +306,9 @@ var _Controller = Control.extend({
       this._onResult(event, {action: 'selectorResult', data: items});
    },
 
-   _mousedown: function () {
+   _clickHandler: function(event) {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
          opener.close();

@@ -13,8 +13,9 @@
          dataSource="{{ _source }}">
       <div>
          <Controls.popup:Confirmation name="popupOpener"/>
-         <Controls.dataSource:error.Container
+         <ws:partial
             name="errorContainer"
+            template="{{ _options.errorContainer || _errorContainer }}"
             viewConfig="{{ __error }}"
             on:dialogClosed="_onCloseErrorDialog()"
          >
@@ -26,7 +27,7 @@
             <ws:else>
                <invisible-node />
             </ws:else>
-         </Controls.dataSource:error.Container>
+         </ws:partial>
       </div>
    </Controls._form.Crud>
 </Controls.validate:Controller>

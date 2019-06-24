@@ -180,6 +180,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
+         this._searchValue = options.searchValue;
 
          if (this._viewMode !== 'search') {
             this._previousViewMode = this._viewMode;
@@ -211,7 +212,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (this._options.searchValue !== newOptions.searchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }
    },
