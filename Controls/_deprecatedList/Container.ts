@@ -238,7 +238,11 @@ var _private = {
 
    reverseSourceData: function(self) {
       if (self._source.data) {
-         // toDO !KONGO Используем PrefetchProxy, так как для 'Types/source:Memory' стоит искуственная задержка и список мелькает.
+         /* toDO !KONGO Вынуждены использовать PrefetchProxy до перевода саггеста на search/Controller
+           https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63
+           Использовать приходится, т.к. мы не можем просто пересоздать выпадашку с новыми данными,
+           т.к. владельцем данных и является сама выпадашка, а использование Memory вызывает искусственную задержку,
+           из-за которой моргают данные */
          self._source = new PrefetchProxy({
             target: new Memory({
                model: self._source.getModel(),
