@@ -2,6 +2,15 @@ define('Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**
+    * Интерфейс для поддержки выбора элементов в списках, где одновременно можно выбрать несколько элементов и количество выбранных элементов неизвестно. Этот интерфейс подходит для деревьев или списков с бесконечным скроллом, где пользователь может выбрать элементы, которые еще не загружены (например, через Панель управления).
+    * @interface Controls/interface/IPromisedSelectable
+    * @public
+    * @author Авраменко А.С.
+    * @see Controls/_interface/ISingleSelectable
+    * @see Controls/interface/IMultiSelectable
+    */
+
+   /*
     * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is unknown. This interface is suitable for trees or lists with infinite scrolling where user can select items which are not loaded yet (e.g. through operations panel).
     * @interface Controls/interface/IPromisedSelectable
     * @public
@@ -12,6 +21,15 @@ define('Controls/interface/IPromisedSelectable', [
 
    /**
     * @typedef {Object} Selection
+    * @property {Array.<Number|String>} selection.selected Массив выбранных ключей.
+    * @property {Array.<Number|String>} selection.excluded Массив исключенных ключей.
+    * @see Controls/_interface/ISource#keyProperty
+    * @see selectedKeys
+    * @see excludedKeys
+    */
+
+   /*
+    * @typedef {Object} Selection
     * @property {Array.<Number|String>} selection.selected Array of selected keys.
     * @property {Array.<Number|String>} selection.excluded Array of excluded keys.
     * @see Controls/_interface/ISource#keyProperty
@@ -20,6 +38,31 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
+    * @name Controls/interface/IPromisedSelectable#selectedKeys
+    * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
+    * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
+    * @default []
+    * @remark
+    * Вы можете передать свойство {@link Controls/_interface/ISource#keyProperty key property}, чтобы выбрать каждый элемент внутри этого узла, для этого необходимо передать значение [null].
+    * @example
+    * В следующем примере создается список и выбираются все элементы, кроме двух. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга.
+    * TMPL:
+    * <pre>
+    *    <Controls.operations:Controller bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [null];
+    *       this._excludedKeys = [1, 2];
+    *    }
+    * </pre>
+    * @see Controls/_interface/ISource#keyProperty
+    * @see excludedKeys
+    * @see selectedKeysChanged
+    */
+
+   /*
     * @name Controls/interface/IPromisedSelectable#selectedKeys
     * @cfg {Array.<Number|String>} Array of selected items' keys.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
@@ -46,6 +89,31 @@ define('Controls/interface/IPromisedSelectable', [
 
    /**
     * @name Controls/interface/IPromisedSelectable#excludedKeys
+    * @cfg {Array.<Number|String>} Набор ключей элементов, которые должны быть исключены из выборки.
+    * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
+    * @default []
+    * @remark
+    * Узел будет отмечен как частично выбранный, если ключ любого из его дочерних элементов находится в excludedKeys. Такие узлы обычно отображаются с флагом в неопределенном состоянии рядом с ними.
+    * @example
+    * В следующем примере создается список и выбираются все элементы, кроме двух. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга.
+    * TMPL:
+    * <pre>
+    *    <Controls.operations:Controller bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [null];
+    *       this._excludedKeys = [1, 2];
+    *    }
+    * </pre>
+    * @see Controls/_interface/ISource#keyProperty
+    * @see selectedKeys
+    * @see excludedKeysChanged
+    */
+
+   /*
+    * @name Controls/interface/IPromisedSelectable#excludedKeys
     * @cfg {Array.<Number|String>} Array of keys of items that should be excluded from the selection.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
     * @default []
@@ -70,6 +138,36 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
+    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Происходит при изменении набора выбранных элементов списка.
+    * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
+    * @param {Array.<Number|String>} added Массив ключей, добавленных в selectedKeys.
+    * @param {Array.<Number|String>} deleted Массив ключей, удаленных из selectedKeys.
+    * @remark
+    * Важно помнить, что мы не мутируем массив selectedKeys из опций. Таким образом, ключи в аргументах события и selectedKeys в параметрах компонента не являются одним и тем же массивом.
+    * @example
+    * В следующем примере создается список с пустым выбором. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга. Источник панели операций будет обновляться при каждом изменении в selectedKeys.
+    * TMPL:
+    * <pre>
+    *    <Controls.operations:Controller on:selectedKeysChanged="onSelectedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *       <Controls.operations:Panel source="{{ _panelSource }} />
+    *    </Controls.operations:Controller>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [];
+    *       this._excludedKeys = [];
+    *    },
+    *    onSelectedKeysChanged: function(e, selectedKeys, added, deleted) {
+    *       this._panelSource = this._getPanelSource(selectedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    *    }
+    * </pre>
+    * @see selectedKeys
+    */
+
+   /*
     * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
@@ -100,6 +198,36 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
+    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Происходит при изменении набора исключенных из выбора элементов списка.
+    * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Array.<Number|String>} keys Набор ключей элементов, которые должны быть исключены из выборки.
+    * @param {Array.<Number|String>} added Массив ключей, добавленных в excludedKeys.
+    * @param {Array.<Number|String>} deleted Массив ключей, удаленных из excludedKeys.
+    * @remark
+    * Важно помнить, что мы не мутируем массив selectedKeys из опций. Таким образом, ключи в аргументах события и selectedKeys в параметрах компонента не являются одним и тем же массивом.
+    * @example
+    * В следующем примере создается список с пустым выбором. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга. Источник панели операций будет обновляться при каждом изменении в excludedKeys.
+    * TMPL:
+    * <pre>
+    *    <Controls.operations:Controller on:excludedKeysChanged="onExcludedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *       <Controls.operations:Panel source="{{ _panelSource }} />
+    *    </Controls.operations:Controller>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [];
+    *       this._excludedKeys = [];
+    *    },
+    *    onExcludedKeysChanged: function(e, excludedKeys, added, deleted) {
+    *       this._panelSource = this._getPanelSource(excludedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    *    }
+    * </pre>
+    * @see excludedKeys
+    */
+
+   /*
     * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when selection was changed.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
