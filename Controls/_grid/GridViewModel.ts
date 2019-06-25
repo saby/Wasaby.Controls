@@ -778,15 +778,14 @@ var
         },
 
         shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-
-            // Не меняю текущее поведение в 410. В 510 сделал по стандарту
-            return !!this.getResultsPosition() && this.getResultsPosition() === position;
+            if (!(this.getResultsPosition() && this.getResultsPosition() === position)) {
+                return false;
+            }
+            return this.getCount() > 1;
         },
 
         shouldDrawFooter(): boolean {
-
-            // Не меняю текущее поведение в 410. В 510 сделал по стандарту
-            return true;
+            return !!this._options.footerTemplate && this.getCount() > 0;
         },
 
         getStyleForCustomResultsTemplate: function() {

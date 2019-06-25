@@ -1477,10 +1477,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(gridModel.shouldDrawResultsAt('top'));
             assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
             gridModel.getCount = () => 0;
-            assert.isTrue(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
             assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
             gridModel.getCount = () => 1;
-            assert.isTrue(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
             assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
             gridModel._options.resultsPosition = null;
             assert.isFalse(gridModel.shouldDrawResultsAt('top'));
@@ -1497,6 +1497,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(gridModel.shouldDrawHeader());
             gridModel.getHeader = () => null;
             assert.isFalse(gridModel.shouldDrawHeader());
+         });
+
+         it('shouldDrawFooter', function () {
+            let gridModel = new gridMod.GridViewModel({...cfg, footerTemplate: 'qwe'});
+            assert.isTrue(gridModel.shouldDrawFooter());
+            gridModel.getCount = () => 0;
+            assert.isFalse(gridModel.shouldDrawFooter());
+            gridModel.getCount = () => 10;
+            gridModel._options.footerTemplate = null;
+            assert.isFalse(gridModel.shouldDrawFooter());
          });
       });
 
