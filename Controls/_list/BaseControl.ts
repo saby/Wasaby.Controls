@@ -24,6 +24,7 @@ import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
+import {Focus} from 'Vdom/Vdom'
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1526,7 +1527,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-EditableArea, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 if (this._children.fakeFocusElem) {
-                    this._children.fakeFocusElem.focus();
+                    Focus.focus(this._children.fakeFocusElem);
                 }
             }, 0);
         }
