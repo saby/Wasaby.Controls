@@ -134,6 +134,7 @@ const Notification = BaseOpener.extend({
  * @function Controls/_popup/Opener/Notification#openPopup
  * @param {PopupOptions[]} config Notification popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+ * @static
  * @see closePopup
  */
 Notification.openPopup = (config: object): Promise<string> => {
@@ -162,6 +163,7 @@ Notification.openPopup = (config: object): Promise<string> => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
  * @function Controls/_popup/Opener/Notification#closePopup
  * @param {String} popupId Id of popup.
+ * @static
  * @see openPopup
  */
 Notification.closePopup = (popupId: string): void => {
