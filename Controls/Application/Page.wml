@@ -85,7 +85,7 @@
                                  </ws:for>
                               </ws:if>
                               <script key="bundles" type="text/javascript"
-                                      src="{{ linkResolver.resolveLink('bundles', 'js') }}"></script>
+                                      src="{{resourceRoot}}bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/RequireJS/2.3.5-p5/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
