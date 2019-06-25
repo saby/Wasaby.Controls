@@ -56,7 +56,7 @@ var _private = {
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
-           homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs"></div>');
+           homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>');
            if (!options.header) {
               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                  _options: {
