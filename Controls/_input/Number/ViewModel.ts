@@ -130,7 +130,7 @@ var ViewModel = BaseViewModel.extend({
         var displayValue = value === null ? '' : value.toString();
 
         if (displayValue && this._options.showEmptyDecimals) {
-            displayValue = format(parse(displayValue), this._options, 0).value;
+            return format(parse(displayValue), this._options, 0).value;
         }
 
         if (this._options.useGrouping) {
