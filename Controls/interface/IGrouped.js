@@ -22,9 +22,9 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} groupingKeyCallback Функция обратного вызова для получения идентификатора группы элемента списка.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * Кроме того, существует "скрытая группа".
-    * Элементы скрытой группы будут отображаться в верхней части списка, а сама группа будет отображаться без названия.
-    * Чтобы определить элемент скрытой группы, необходимо вернуть константу view.hiddenGroup из библиотеки Controls/Constants из функции, переданной в groupingKeyCallback.
+    * Среди групп списка существует "скрытая группа".
+    * Для такой группы не создаётся заголовок, а её элементы визуально размещены в начале списка.
+    * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup, которая принадлежит библиотеке Controls/Constants.
     * @example
     * <pre>
     *    _groupByBrand: function(item) {
@@ -66,7 +66,7 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} groupTemplate Шаблон группировки.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * Базовый шаблон groupTemplate для Controls.list:View: "Controls/list:GroupTemplate".
+    * Базовый шаблон группировки "wml!Controls/list:GroupTemplate".
     * Шаблон группировки поддерживает параметры::
     * <ul>
     *    <li>separatorVisibility {Boolean} - видимость горизонтальной линии-разделителя.</li>
