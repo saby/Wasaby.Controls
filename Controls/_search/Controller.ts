@@ -61,7 +61,6 @@ var _private = {
       self._loading = false;
       if (self._viewMode === 'search') {
          self._searchValue = '';
-         self._inputSearchValue = '';
          self._misspellValue = '';
 
          if (self._options.parentProperty) {
@@ -109,6 +108,7 @@ var _private = {
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
          _private.getSearchController(this).abort();
+         this._inputSearchValue = '';
          this._root = root;
       }
    },
@@ -180,6 +180,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
+         this._searchValue = options.searchValue;
 
          if (this._viewMode !== 'search') {
             this._previousViewMode = this._viewMode;

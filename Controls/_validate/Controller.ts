@@ -33,7 +33,8 @@ import 'css!theme?Controls/validate';
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {
-                     onResult: self._mouseInfoboxHandler.bind(self)
+                     onResult: self._mouseInfoboxHandler.bind(self),
+                     onClose: self._closeHandler.bind(self)
                   }
                };
 
@@ -239,6 +240,9 @@ import 'css!theme?Controls/validate';
             } else if (event.type === 'close') {
                this._isOpened = false;
             }
+         },
+         _closeHandler:function(){
+            this._isOpened = false;
          },
          _mouseLeaveHandler: function() {
             if (this.isValid()) {

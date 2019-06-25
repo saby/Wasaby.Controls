@@ -20,9 +20,10 @@
                on:click="commitEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                viewMode="toolButton"
-               size="s"
                iconStyle="success"
-               icon="icon-small icon-Yes"
+               icon="icon-Yes"
+               iconSize="s"
+               inlineHeight="m"
                style="secondary"
             />
             <Controls.popupTemplate:CloseButton

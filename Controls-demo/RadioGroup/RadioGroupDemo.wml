@@ -98,7 +98,7 @@
         <Controls.buttons:Button
             attr:class="demo-ResetButton"
             on:click="reset()"
-            style="linkMain3"
+            fontColorStyle="unaccented" viewMode="link"
             caption="reset"
         />
         <br/>

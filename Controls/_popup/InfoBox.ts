@@ -129,12 +129,12 @@ import entity = require('Types/entity');
             return {
                opener: self,
                target: self._container,
-               template: self._options.templateName || self._options.template,
+               template: self._options.template,
                position: self._options.position,
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
-               floatCloseButton: self._options.floatCloseButton || self._options.float,
+               floatCloseButton: self._options.floatCloseButton,
                eventHandlers: {
                   onResult: self._resultHandler,
                   onClose: self._closeHandler
@@ -162,12 +162,6 @@ import entity = require('Types/entity');
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
-            if (options.float) {
-               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
-            }
-            if (options.templateName) {
-               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
-            }
          },
 
          /**

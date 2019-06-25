@@ -1,16 +1,6 @@
 <div attr:class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
    <ws:if data="{{_items.length > _options.maxVisibleItems}}">
-      <Controls.popup:Sticky
-            name="infoBox"
-            closeOnOutsideClick="{{true}}"
-            template="Controls/lookupPopup:Collection"
-            on:close="_notifyHandler('closeInfoBox')"
-            _vdomOnOldPage="{{true}}">
-         <!--toDo https://online.sbis.ru/open_dialog.html?guid=619e58be-2885-4a7e-80f5-7415c5bff2ca-->
-         <ws:direction vertical="bottom" horizontal="right"/>
-         <ws:targetPoint vertical="bottom" horizontal="left"/>
-      </Controls.popup:Sticky>
       <span name="infoBoxLink"
             attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
             on:click="_openInfoBox()">
@@ -35,4 +25,15 @@
               on:click="_itemClick(item)">
       </ws:partial>
    </ws:for>
+
+   <Controls.popup:Sticky
+         name="infoBox"
+         closeOnOutsideClick="{{true}}"
+         template="Controls/lookupPopup:Collection"
+         on:close="_notifyHandler('closeInfoBox')"
+         _vdomOnOldPage="{{true}}">
+      <!--toDo https://online.sbis.ru/open_dialog.html?guid=619e58be-2885-4a7e-80f5-7415c5bff2ca-->
+      <ws:direction vertical="bottom" horizontal="right"/>
+      <ws:targetPoint vertical="bottom" horizontal="left"/>
+   </Controls.popup:Sticky>
 </div>

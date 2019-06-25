@@ -148,7 +148,7 @@ define(
             open: setTrue.bind(this, assert)
          };
 
-         it('_beforeMount', function() {
+         it('_beforeMount', function(done) {
             let fastFilter = getFastFilter(configItems);
             let receivedItems = [{
                id: 'first',
@@ -197,6 +197,17 @@ define(
             optionsItemsSelector.items[0].properties.selectorTemplate = 'new template';
             fastFilter._beforeMount(optionsItemsSelector);
             assert.isTrue(fastFilter._hasSelectorTemplate);
+
+            fastFilter._hasSelectorTemplate = undefined;
+            let sourceOptions = Clone(source);
+            sourceOptions[0].properties.selectorTemplate = 'new template';
+            fastFilter._beforeMount({source: new sourceLib.Memory({
+               data: sourceOptions,
+               idProperty: 'id'
+            })}).addCallback(function() {
+               assert.isTrue(fastFilter._hasSelectorTemplate);
+               done();
+            });
          });
 
          it('beforeUpdate new items property not changed', function(done) {
@@ -398,6 +409,13 @@ define(
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+
+            // resetValue selection
+            configMultiSelect.items[0].resetValue = 'все страны';
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            fastData2._configs[0].multiSelect = true;
+            filterMod.Fast._private.selectItems.call(fastData2, [{ key: 0, title: 'все страны' }]);
+            assert.deepEqual(fastData2._items.at(0).value, 'все страны');
          });
 
          it('setText', function(done) {

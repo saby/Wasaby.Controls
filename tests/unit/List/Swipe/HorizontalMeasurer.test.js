@@ -195,6 +195,11 @@ define([
                   icon: 'icon-PhoneNull'
                },
                {
+                  id: 5,
+                  icon: 'icon-PhoneNull',
+                  parent: 1
+               },
+               {
                   id: 2,
                   showType: 2,
                   icon: 'icon-Erase'

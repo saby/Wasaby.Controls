@@ -18,7 +18,8 @@
    <ws:if data="{{_needShowApplyButton}}">
       <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">
          <Controls.buttons:Button viewMode="toolButton"
-                                  icon="icon-Yes icon-medium"
+                                  icon="icon-Yes"
+                                  iconSize="m"
                                   iconStyle="success"
                                   on:click="_applySelection()"/>
       </div>

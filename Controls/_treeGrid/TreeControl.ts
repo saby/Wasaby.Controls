@@ -5,7 +5,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
-import isEmpty = require('Core/helpers/Object/isEmpty');
+import {isEqual} from 'Types/object';
 
 var
     HOT_KEYS = {
@@ -329,9 +329,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 
             //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
             this._children.baseControl.getViewModel().resetExpandedItems();
-            this._children.baseControl.reload().addCallback(function() {
-                self._children.baseControl.getViewModel().setRoot(self._root);
-            });
+
+            //If filter was changed, do not need to reload again, baseControl reload list in beforeUpdate
+            if (isEqual(this._options.filter, oldOptions.filter)) {
+                this._children.baseControl.reload().addCallback(function () {
+                    self._children.baseControl.getViewModel().setRoot(self._root);
+                });
+            }
         }
         if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());

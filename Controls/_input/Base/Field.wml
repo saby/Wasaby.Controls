@@ -11,7 +11,7 @@
          type="{{type}}"
          name="{{fieldName}}"
          placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
-         autocomplete="{{options.autoComplete ? 'on' : 'off'}}"
+         autocomplete="{{autoComplete}}"
          class="controls-InputBase__nativeField_theme_{{options.theme}}
              controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{value ? 'Filled' : 'Empty'}}
              {{isEdge ? 'controls-InputBase__nativeField_edge'}}
@@ -28,13 +28,13 @@
          on:touchstart="_touchStartHandler()"
          on:DOMAutoComplete="_domAutoCompleteHandler()"
       />
-      <ws:if data="{{isFieldFocused()}}">
-         <div name="forCalc" class="controls-InputBase__forCalc"></div>
-      </ws:if>
    </ws:partial>
    <ws:if data="{{!value}}">
       <div class="controls-InputBase__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
+   </ws:if>
+   <ws:if data="{{isFieldFocused()}}">
+      <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>
 </div>

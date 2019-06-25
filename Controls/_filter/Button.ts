@@ -55,9 +55,10 @@ var _private = {
 
       chain.factory(items).each(function(item) {
          if (_private.isItemChanged(item) && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
-            var textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
 
-            if (textValue) {
+            if (textValue && textValue !== resetTextValue) {
                textArr.push(textValue);
             }
          }

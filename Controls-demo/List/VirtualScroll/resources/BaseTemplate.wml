@@ -1,0 +1,28 @@
+<div class="cDemo">
+    <div class="cDemo-info">
+        <div class="cDemo-triggers-legend">
+            <span class="cDemo-triggers-legend-load">DataLoadTrigger</span>
+            <span class="cDemo-triggers-legend-virtyal">VirtualScrollTrigger</span>
+        </div>
+        <pre class="cDemo-configuration">
+            virtualPageSize: {{_virtualPageSize}},
+            virtualSegmentSize: {{_virtualSegmentSize}},
+            navigation: {
+            pageSize: {{_navigation.sourceConfig.pageSize}},
+            page: {{_navigation.sourceConfig.page}}
+            }
+        </pre>
+    </div>
+    <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
+        <Controls.list:View
+                name="{{_listName}}"
+                source="{{_viewSource}}"
+                keyProperty="id"
+                displayProperty="title"
+                virtualScrolling="{{true}}"
+                virtualPageSize="{{_virtualPageSize}}"
+                virtualSegmentSize="{{_virtualSegmentSize}}"
+                navigation="{{_navigation}}">
+        </Controls.list:View>
+    </Controls.scroll:Container>
+</div>

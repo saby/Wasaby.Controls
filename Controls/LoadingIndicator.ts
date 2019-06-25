@@ -171,54 +171,6 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
     },
 
-    toggleIndicator(isLoading) {
-        Env.IoC.resolve('ILogger').error('LoadingIndicator', 'Используйте события showIndicator/hideIndicator взамен toggleIndicator');
-        this._isPreloading = isLoading;
-
-        const isLoadingStateChanged = this._isPreloading !== this._prevLoading;
-
-        if (this._isPreloading) {
-            if (isLoadingStateChanged) {
-                // goes to hidden loading state
-                this._isLoadingSaved = this._isPreloading;
-            }
-
-            // if its hidden loading state now, we don't show spinner
-            if (this._isLoadingSaved !== null) {
-                this._isOverlayVisible = false;
-            }
-
-            if (isLoadingStateChanged) {
-                clearTimeout(this.delayTimeout);
-                const delay = typeof this.delay === 'number' ? this.delay : this._delay;
-                this.delayTimeout = setTimeout(function() {
-                    if (this._isPreloading) {
-                        // goes to show loading state
-
-                        // return spinner value
-                        this._isOverlayVisible = this._isLoadingSaved;
-                        this._isMessageVisible = this._isLoadingSaved;
-                        // clear saved spinner state
-                        this._isLoadingSaved = null;
-                        this._forceUpdate();
-                    }
-                }.bind(this), delay);
-            }
-        } else {
-            // goes to idle state
-            clearTimeout(this.delayTimeout);
-            this._isLoadingSaved = null;
-            this._isOverlayVisible = this._isPreloading;
-            this._isMessageVisible = this._isPreloading;
-            this._forceUpdate();
-        }
-        this._prevLoading = this._isPreloading;
-    },
-    _toggleIndicatorHandler(e, isLoading) {
-        this.toggleIndicator(isLoading, true);
-        e.stopPropagation();
-    },
-
     _showHandler(event, config, waitPromise) {
         event.stopPropagation();
         return this._show(config, waitPromise);
@@ -334,6 +286,14 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
 
     _getDelay(config) {
         return typeof config.delay === 'number' ? config.delay : this.delay;
+    },
+
+    _getOverlay(overlay: string): string {
+        // if overlay is visible, but message don't visible, then overlay must be transparent.
+        if (this._isOverlayVisible && !this._isMessageVisible) {
+            return 'default';
+        }
+        return  overlay;
     },
 
     _toggleIndicator(visible, config, force) {

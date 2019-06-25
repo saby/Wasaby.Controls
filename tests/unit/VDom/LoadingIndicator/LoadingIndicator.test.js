@@ -126,6 +126,17 @@ define([
          Loading._toggleIndicator = baseToggleMethod;
       });
 
+      it('LoadingIndicator - getOverlay', () => {
+         let LoadingInd = new LoadingIndicator();
+         let overlay = 'dark';
+         LoadingInd._isOverlayVisible = true;
+         LoadingInd._isMessageVisible = false;
+         assert.equal(LoadingInd._getOverlay(overlay), 'default');
+         LoadingInd._isMessageVisible = true;
+         assert.equal(LoadingInd._getOverlay(overlay), overlay)
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - hide', () => {
          let config = {
             message: 'message 1',

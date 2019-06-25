@@ -291,6 +291,78 @@ define([
 
       });
 
+      it('SetMarkerOnRemove', function() {
+         var cfg = {
+               keyProperty: 'id',
+               items: new collection.RecordSet({
+                  rawData: [
+                     { id: 1, title: 'item 1', type: 1 },
+                     { id: 2, title: 'item 2', type: 2 },
+                     { id: 3, title: 'item 3', type: 1 },
+                     { id: 4, title: 'item 4', type: 2 },
+                     { id: 5, title: 'item 5', type: 1 },
+                     { id: 6, title: 'item 6', type: 3 }
+                  ],
+                  idProperty: 'id'
+               }),
+            groupingKeyCallback: function(item) {
+               return item.get('type');
+               }
+            };
+            var model;
+
+            /*
+               ---------- 1 ---------
+               item 1
+               item 3
+               item 5
+               ---------- 2 ----------
+               item 2
+               item 4
+
+               item 6
+             */
+
+
+            cfg.markedKey = 3; // item 3, (item.index = 2)
+            model = new lists.ListViewModel(cfg);
+            // remove item 3
+            model.getItems().removeAt(2);
+            assert.equal(1, model.getMarkedKey()); // expect marker on item 1
+
+         /*
+               ---------- 1 ---------
+               item 1
+               item 5
+               ---------- 2 ----------
+               item 2
+               item 4
+
+               item 6
+             */
+
+            cfg.markedKey = 2;
+            model = new lists.ListViewModel(cfg);
+            // remove item 2 (item placed, before group expander)
+            model.getItems().removeAt(1);
+            assert.equal(5, model.getMarkedKey()); // expected marker on item 5
+
+         /*
+              ---------- 1 ---------
+              item 1
+              item 5
+              ---------- 2 ----------
+              item 4
+
+              item 6
+         */
+
+            cfg.markedKey = 1;
+            model = new lists.ListViewModel(cfg);
+            model.getItems().removeAt(3); // remove item 6 (without markedKey)
+            assert.equal(1, model.getMarkedKey());
+      });
+
       it('Selection', function() {
          var cfg = {
             items: data,

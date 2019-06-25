@@ -1,10 +1,11 @@
 <div class="controls-PeriodDialog-Years">
    <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
       <Controls.buttons:Button
-         style="secondary"
+         fontColorStyle="link"
          viewMode="link"
-         icon="icon-24 icon-MarkLeftBold"
-         size="l"
+         icon="icon-MarkLeftBold"
+         iconSize="m"
+         fontSize="l"
          on:click="_onPrevClick()"
       />
    </div>
@@ -23,9 +24,10 @@
 
    <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
       <Controls.buttons:Button
-         style="secondary"
+         fontColorStyle="link"
          viewMode="link"
-         icon="icon-24 icon-MarkRightBold"
+         icon="icon-MarkRightBold"
+         iconSize="m"
          on:click="_onNextClick()"
       />
    </div>
