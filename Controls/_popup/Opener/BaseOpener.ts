@@ -68,7 +68,6 @@ var Base = Control.extend({
     open: function (popupOptions, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             var cfg = this._getConfig(popupOptions || {});
-            _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 _private.compatibleOpen(this, cfg, controller).then(popupId => resolve(popupId));
@@ -82,8 +81,8 @@ var Base = Control.extend({
         return new Promise((resolve => {
             var self = this;
             this._requireModules(cfg, controller).addCallback((result) => {
-                var
-                    popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
+                _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
+                const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                 cfg._vdomOnOldPage = self._options._vdomOnOldPage;
                 Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function (result) {
@@ -127,6 +126,9 @@ var Base = Control.extend({
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
+        }
+        if (baseConfig.actionOnScroll) {
+            this._actionOnScroll = baseConfig.actionOnScroll;
         }
         this._prepareNotifyConfig(baseConfig);
         return baseConfig;
@@ -453,9 +455,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         if (baseCfg.targetTracking) {
             baseCfg.actionOnScroll = 'track';
         }
-    }
-    if (baseCfg.actionOnScroll) {
-        this._actionOnScroll = baseCfg.actionOnScroll;
     }
 
     if (baseCfg.hasOwnProperty('isModal')) {

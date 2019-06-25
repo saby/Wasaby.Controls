@@ -654,11 +654,7 @@ import 'wml!Controls/_input/Base/Stretcher';
          _keyDownHandler: function(e) {
             const processedKeys: number[] = [
                Env.constants.key.end,
-               Env.constants.key.home,
-               Env.constants.key.up,
-               Env.constants.key.left,
-               Env.constants.key.down,
-               Env.constants.key.right
+               Env.constants.key.home
             ];
 
             /*

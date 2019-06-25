@@ -80,6 +80,16 @@ define(
             return dropdownCntroller;
          };
 
+         let sandbox;
+
+         beforeEach(function() {
+            sandbox = sinon.createSandbox();
+         });
+
+         afterEach(function() {
+            sandbox.restore();
+         });
+
          it('before mount', (done) => {
             let newConfig = Clone(config),
                loadedItems;
@@ -524,6 +534,19 @@ define(
             dropdownController._open();
          });
 
+         it('events on open/close', async () => {
+            let dropdownController = getDropdownController(config);
+            let stubNotify = sandbox.stub(dropdownController, '_notify');
+
+            await dropdownController._beforeMount(configLazyLoad);
+
+            dropdownController._onOpen();
+            dropdownController._onClose();
+
+            assert.isTrue(stubNotify.withArgs('dropDownOpen').calledOnce);
+            assert.isTrue(stubNotify.withArgs('dropDownClose').calledOnce);
+         });
+
          it('_onSelectorTemplateResult', () => {
             let dropdownController = getDropdownController(config),
                opened;
@@ -588,7 +611,7 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('mousedown', () => {
+         it('_clickHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
@@ -609,10 +632,13 @@ define(
                   return opened;
                }
             };
-            dropdownController._mousedown();
+            let stopped;
+            let event = {stopPropagation: () => {stopped = true;}};
+            dropdownController._clickHandler(event);
             assert.isTrue(opened);
+            assert.isTrue(stopped);
 
-            dropdownController._mousedown();
+            dropdownController._clickHandler(event);
             assert.isFalse(opened);
          });
 

@@ -199,6 +199,9 @@ type GetSourceResult = {
             this._dataOptionsContext.updateConsumers();
          },
 
+         _rootChanged: function(event, root) {
+            this._notify('rootChanged', [root]);
+         },
          _itemsChanged: function(event:Event, items):void {
             //search:Cotnroller fires two events after search: itemsChanged, filterChanged
             //on filterChanged event filter state will updated

@@ -27,6 +27,8 @@
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClick="_onPinClickHandler()"
+        on:dropDownOpen="_tmplNotify('dropDownOpen')"
+        on:dropDownClose="_tmplNotify('dropDownClose')"
         attr:class="controls-MenuButton__Wrapper theme_{{_options.theme}}">
    <Controls.buttons:Button
                     attr:class="controls-MenuButton__BaseButton theme_{{_options.theme}}"

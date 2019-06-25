@@ -1047,6 +1047,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         width: '100px'
                      },
                      {
+                        title: 'fourth',
+                        width: 'max-content'
+                     },
+                     {
                         title: 'last',
                         width: 'auto'
                      }
@@ -1063,6 +1067,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      {
                         title: 'third',
                         width: '100px'
+                     },
+                     {
+                        title: 'fourth',
+                        width: 'auto'
                      },
                      {
                         title: 'last',
@@ -1336,13 +1344,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    isEditing: true,
                    rowIndex: 2
                 };
+
             gridViewModel.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: auto 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -1366,7 +1375,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr', '15px', '16px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
             assert.isTrue(calledCallback);
 
             calledCallback = false;
@@ -1376,7 +1385,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setColumns(savedColumns);

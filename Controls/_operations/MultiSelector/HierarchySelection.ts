@@ -138,9 +138,9 @@ var
          return Object.keys(selection).length;
       },
 
-      getSelectedButNotLoadedItemsCount: function(selectedKeys, items) {
+      getSelectedButNotLoadedItemsCount: function(selectedKeys, excludedKeys, items) {
          return selectedKeys.reduce(function(acc, key) {
-            if (key !== null && !items.getRecordById(key)) {
+            if (key !== null && !items.getRecordById(key) && excludedKeys.indexOf(key) === -1) {
                return acc + 1;
             }
             return acc;
@@ -278,6 +278,7 @@ var HierarchySelection = Selection.extend({
          ) +
          _private.getSelectedButNotLoadedItemsCount(
             this._selectedKeys,
+            this._excludedKeys,
             this._items
          )
       );
