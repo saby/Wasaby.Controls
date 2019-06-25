@@ -10,7 +10,6 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
- * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
@@ -34,7 +33,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  */
 
 /**
- * @name Controls/interface/ILookup#multiLine
+ * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
  */
 

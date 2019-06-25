@@ -8,7 +8,6 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  *
  * @class Controls/_lookup/MultipleInput
  * @extends Core/Control
- * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
