@@ -813,11 +813,19 @@ import 'wml!Controls/_input/Base/Stretcher';
           */
          _focusOutHandler: function() {
             /**
-             * After the focus disappears, the field should be scrolled to the beginning.
-             * Each browser works differently. For example, chrome scrolled to the beginning.
-             * IE, Firefox does not scrolled. So we do it ourselves.
+             * TODO: KINGO
+             * Когда меняется режим редактирования на чтения происходит перерисовка. Поле удаляется и
+             * фокус уходит. Поэтому в обработчике потери фокуса поля не будет, и все действия с ним не могут быть совершены.
+             * Обрабатываем такую ситуация проверкой на существование поля.
              */
-            this._getField().scrollLeft = 0;
+            if (this._getField()) {
+               /**
+                * After the focus disappears, the field should be scrolled to the beginning.
+                * Each browser works differently. For example, chrome scrolled to the beginning.
+                * IE, Firefox does not scrolled. So we do it ourselves.
+                */
+               this._getField().scrollLeft = 0;
+            }
 
             _private.notifyChangeOfFocusState(this, false);
 
