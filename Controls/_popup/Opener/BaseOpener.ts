@@ -40,10 +40,6 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._popupIds = [];
-
-        if (options.popupOptions) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
-        }
     },
 
     _afterMount: function () {
@@ -122,7 +118,8 @@ var Base = Control.extend({
     },
 
     _getConfig(popupOptions: Object): Object {
-        let baseConfig = Base.getConfig({...this._options.popupOptions}, this._options, popupOptions);
+        // TODO: Удалить 1 аргумент в getConfig
+        let baseConfig = Base.getConfig({}, this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
@@ -152,10 +149,7 @@ var Base = Control.extend({
     _notifyEvent: function (eventName, args) {
         // Trim the prefix "on" in the event name
         var event = eventName.substr(2);
-        var newEvent = event.toLowerCase();
         this._notify(event, args);
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + newEvent + '" instead of "popup' + event + '"');
-        this._notify('popup' + event, args);
     },
 
     _toggleIndicator: function (visible) {
@@ -387,7 +381,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
     // попасть не должны.
     const usedOptions = [
-        'closeByExternalClick',
         'isCompoundTemplate',
         'eventHandlers',
         'autoCloseOnHide',
@@ -401,7 +394,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'cancelCaption',
         'okCaption',
         'autofocus',
-        'isModal',
         'modal',
         'closeOnOutsideClick',
         'closeOnTargetScroll',
@@ -426,7 +418,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'corner',
         'targetPoint',
         'targetTracking',
-        'locationStrategy',
         'actionOnScroll'
     ];
 
@@ -445,31 +436,17 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     CoreMerge(templateOptions, popupOptions.templateOptions || {});
     const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
-    if (baseCfg.hasOwnProperty('closeByExternalClick')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-        baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
-    }
     if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
+        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
         if (baseCfg.closeOnTargetScroll) {
             baseCfg.actionOnScroll = 'close';
         }
     }
     if (baseCfg.hasOwnProperty('targetTracking')) {
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
+        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
         if (baseCfg.targetTracking) {
             baseCfg.actionOnScroll = 'track';
         }
-    }
-
-    if (baseCfg.hasOwnProperty('isModal')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "modal" instead of "isModal"');
-        baseCfg.modal = baseCfg.isModal;
-    }
-
-    if (baseCfg.hasOwnProperty('locationStrategy')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
-        baseCfg.fittingMode = baseCfg.locationStrategy;
     }
 
     return baseCfg;

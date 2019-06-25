@@ -60,7 +60,7 @@
             <div>
                <Controls.buttons:Button name="testStack" caption="testStack" on:click="openTestStack()" attr:class="ControlsDemo-PopupPage__testStackFC"/>
             </div>
-            <Controls.popup:Stack name="stack" closeByExternalClick="{{false}}" template="Controls-demo/Popup/TestStack">
+            <Controls.popup:Stack name="stack" closeByOutsideClick="{{false}}" template="Controls-demo/Popup/TestStack">
                <ws:templateOptions type="stack" width="600px"/>
             </Controls.popup:Stack>
          </ws:if>
