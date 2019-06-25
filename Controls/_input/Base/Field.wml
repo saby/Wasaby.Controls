@@ -28,13 +28,13 @@
          on:touchstart="_touchStartHandler()"
          on:DOMAutoComplete="_domAutoCompleteHandler()"
       />
-      <ws:if data="{{isFieldFocused()}}">
-         <div name="forCalc" class="controls-InputBase__forCalc"></div>
-      </ws:if>
    </ws:partial>
    <ws:if data="{{!value}}">
       <div class="controls-InputBase__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
+   </ws:if>
+   <ws:if data="{{isFieldFocused()}}">
+      <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>
 </div>
