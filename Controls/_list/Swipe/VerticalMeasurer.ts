@@ -82,9 +82,10 @@ const VerticalMeasurer: IMeasurer = {
       rowHeight: number,
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
-      let itemActions = actions.slice();
+      // если у действия есть родитель, то нам не нужно его рисовать
+      let itemActions = actions.filter((action) => !action.parent);
       itemActions.sort(function(action1, action2) {
-         return action2.showType - action1.showType;
+         return (action2.showType || ShowType.MENU) - (action1.showType || ShowType.MENU);
       });
       const {
          itemActionsSize,
