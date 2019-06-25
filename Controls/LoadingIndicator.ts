@@ -336,6 +336,14 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
         return typeof config.delay === 'number' ? config.delay : this.delay;
     },
 
+    _getOverlay(overlay: string): string {
+        // if overlay is visible, but message don't visible, then overlay must be transparent.
+        if (this._isOverlayVisible && !this._isMessageVisible) {
+            return 'default';
+        }
+        return  overlay;
+    },
+
     _toggleIndicator(visible, config, force) {
         clearTimeout(this.delayTimeout);
         if (visible) {
