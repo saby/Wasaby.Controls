@@ -1042,9 +1042,13 @@ var
                     display: this.getDisplay(),
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
-                    multyHeaderOffset: this.getMultyHeaderOffset(),
+                    multyHeaderOffset: this.getMultyHeaderOffset()
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
 
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
