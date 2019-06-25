@@ -315,6 +315,11 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      icon: 'icon-Erase'
                   },
                   {
+                     id: 6,
+                     icon: 'icon-PhoneNull',
+                     parent: 1
+                  },
+                  {
                      id: 3,
                      showType: 0,
                      icon: 'icon-EmptyMessage'

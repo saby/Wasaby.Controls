@@ -393,7 +393,7 @@ define([
          return new Promise(function(resolve) {
             setTimeout(function() {
                treeControl._root = 12;
-               treeControl._afterUpdate({});
+               treeControl._afterUpdate({filter: {}});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(undefined, treeViewModel._model._root);
@@ -529,7 +529,7 @@ define([
                      reject(e);
                   }
 
-                  treeControl._afterUpdate({root: null});
+                  treeControl._afterUpdate({root: null, filter: {}});
                   treeControl._children.baseControl._sourceController._loader.addCallback(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');

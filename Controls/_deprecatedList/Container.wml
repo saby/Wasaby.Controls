@@ -4,4 +4,5 @@
             navigation="{{_navigation}}"
             emptyTemplate="{{_options.emptyTemplate}}"
             footerTemplate="{{_options.footerTemplate}}"
-            searchMode="{{_searchMode}}"/>
+            searchMode="{{_searchMode}}"
+            markedKey="{{_options.markedKey}}"/>

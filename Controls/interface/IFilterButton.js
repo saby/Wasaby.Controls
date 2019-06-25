@@ -21,6 +21,7 @@ define('Controls/interface/IFilterButton', [
     * @property {*} value Current filter field value
     * @property {*} resetValue Value for reset
     * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
+    * @property {String} resetTextValue Text value for reset. It is recommended to use if not set resetValue
     * @property {Visibility} visibility Defines in which block the filter editor is located. For filter editors that are never displayed in the "You can still select" section, you do not need to specify.
     */
 

@@ -17,11 +17,12 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          open: function(popupOptions) {
             isShowSelector = true;
             lastPopupOptions = popupOptions;
+            return Promise.resolve();
          }
       };
 
       it('showSelector without params', function() {
-         showSelector(baseController);
+         showSelector.default(baseController);
          assert.isTrue(isShowSelector);
          assert.equal(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
          assert.equal(lastPopupOptions.width, 100);
@@ -31,7 +32,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
 
       it('showSelector with templateOptions', function() {
          isShowSelector = false;
-         showSelector(baseController, {
+         showSelector.default(baseController, {
             templateOptions: {
                selectedTab: 'Employees'
             }
@@ -44,7 +45,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
 
       it('showSelector with popupOptions', function() {
          isShowSelector = false;
-         showSelector(baseController, {
+         showSelector.default(baseController, {
             width: 50,
             height: 20
          });
@@ -55,8 +56,34 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       });
 
       it('showSelector with multiSelect', function() {
-         showSelector(baseController, undefined, true);
+         showSelector.default(baseController, undefined, true);
          assert.isTrue(lastPopupOptions.templateOptions.multiSelect);
+      });
+
+      it('check toggle indicator', function(done) {
+         let
+            isShowIndicator = false,
+            isHideIndicator = false;
+
+         baseController._notify = function(eventName, result) {
+            let indicatorId = 'indicatorId';
+
+            switch(eventName) {
+               case 'showIndicator':
+                  isShowIndicator = true;
+                  return indicatorId;
+
+               case 'hideIndicator':
+                  isHideIndicator = true;
+            }
+         };
+
+         showSelector.default(baseController).then(function() {
+            assert.isTrue(isHideIndicator);
+            done();
+         });
+         assert.isTrue(isShowIndicator);
+         assert.isFalse(isHideIndicator);
       });
    });
 });

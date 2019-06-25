@@ -18,6 +18,9 @@
                     itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"/>
     </div>
+    <ws:if data="{{_options._needBottomPadding}}">
+        <div  class="controls-itemActionsV_outside-spacing"></div>
+    </ws:if>
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}"/>
     </ws:if>

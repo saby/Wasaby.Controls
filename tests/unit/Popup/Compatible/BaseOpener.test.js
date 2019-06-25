@@ -53,6 +53,8 @@ define(
          enabled: true,
          draggable: true,
          closeChildWindows: true,
+         closeButtonViewMode: 'toolButton',
+         closeButtonTransparent: false,
          closeOnTargetScroll: true,
          width: 'auto'
       };
@@ -227,6 +229,8 @@ define(
             config.fixed = true;
             compatiblePopup.BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
+            assert.equal(config.templateOptions.closeButtonViewMode, 'testStyle');
+            assert.equal(config.templateOptions.closeButtonTransparent, false);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.closeOnTargetHide, false);
             assert.equal(config.templateOptions.fixed, true);
@@ -244,7 +248,6 @@ define(
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
             assert.equal(config.template, 'Controls/compatiblePopup:CompoundArea');
-            assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
             newConfig.minWidth = '100';

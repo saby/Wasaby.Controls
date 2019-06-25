@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedList/Container');
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy} from 'Types/source';
 import {_SearchController} from 'Controls/search';
 import merge = require('Core/core-merge');
 import {isEqual} from 'Types/object';
@@ -53,14 +53,20 @@ var _private = {
    },
 
    updateSource: function(self, data) {
-      var source = _private.getOriginSource(self._options.source);
+      let
+         source = _private.getOriginSource(self._options.source),
+         items = data.getRawData();
+
+      if (self._options.reverseList) {
+         items.reverse();
+      }
 
       /* TODO will be a cached source */
       _private.cachedSourceFix(self);
       self._source = new Memory({
          model: data.getModel(),
          idProperty: data.getIdProperty(),
-         data: data.getRawData(),
+         data: items,
          adapter: source.getAdapter()
       });
    },
@@ -228,6 +234,24 @@ var _private = {
       }
 
       return _private.getCorrectSource(source);
+   },
+
+   reverseSourceData: function(self) {
+      if (self._source.data) {
+         /* toDO !KONGO Вынуждены использовать PrefetchProxy до перевода саггеста на search/Controller
+           https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63
+           Использовать приходится, т.к. мы не можем просто пересоздать выпадашку с новыми данными,
+           т.к. владельцем данных и является сама выпадашка, а использование Memory вызывает искусственную задержку,
+           из-за которой моргают данные */
+         self._source = new PrefetchProxy({
+            target: new Memory({
+               model: self._source.getModel(),
+               idProperty: self._source.getIdProperty(),
+               data: self._source.data.reverse(),
+               adapter: self._source.getAdapter()
+            })
+         });
+      }
    }
 };
 
@@ -281,6 +305,8 @@ var List = Control.extend({
          /* create searchController with new options */
          this._searchController = null;
          _private.getSearchController(this).setFilter(currentFilter);
+      } else if (this._options.reverseList !== newOptions.reverseList) {
+         _private.reverseSourceData(this);
       }
       _private.checkContextValues(this, context);
    },
