@@ -351,11 +351,12 @@ var _private = {
                     if (direction === 'up') {
                         // TODO: KINGO. Когда добавляется пачка записей сверху индексы начала и конца виртуальной страницы
                         // увеличиваются на размер пачки.
-                        // Например, показываем записи с 0 по 20. Затем, загрузили 10 записей сверху.
-                        // Индексы показываемых записей должны стать с 10 по 30.
+                        // Например, показываем записи с 0 по 30. Затем, загрузили 20 записей сверху.
+                        // Индексы показываемых записей должны стать с 20 по 50.
                         self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + addedItems.getCount();
                     }
-                    _private.updateVirtualWindow(self, direction);
+                    self._virtualScroll.recalcItemsIndexes(direction);
+                    _private.applyVirtualScrollIndexes(self, direction);
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -373,8 +374,12 @@ var _private = {
 
     // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
     applyVirtualScrollIndexesToListModel(self): void {
-        const indexes = self._virtualScroll.ItemsIndexes;
-        self._listViewModel.setIndexes(indexes.start, indexes.stop);
+        const newIndexes = self._virtualScroll.ItemsIndexes;
+        const model = self._listViewModel;
+        if (newIndexes.start !== model.getStartIndex() || newIndexes.stop !== model.getStopIndex()) {
+            model.setIndexes(newIndexes.start, newIndexes.stop);
+            return true;
+        }
     },
 
     // Обновляет высоту распорок при виртуальном скроле
@@ -393,17 +398,22 @@ var _private = {
             if (self._loadTriggerVisibility.down) {
                 _private.onScrollLoadEdge(self, 'down');
             }
+            if (self._virtualScroll) {
+                if (self._virtualScrollTriggerVisibility.up) {
+                    // copy-paste from updateVirtualWindowStart
+                    self._virtualScroll.recalcToDirection('up');
+                    _private.applyVirtualScrollIndexes(self, 'up');
+                }
+                if (self._virtualScrollTriggerVisibility.down) {
+                    // copy-paste from updateVirtualWindowStart
+                    self._virtualScroll.recalcToDirection('down');
+                    _private.applyVirtualScrollIndexes(self, 'down');
+                }
+            }
         }
     },
     onScrollLoadEdgeStart: function (self, direction) {
         self._loadTriggerVisibility[direction] = true;
-
-        // TODO: KINGO
-        // При виртуальном скролле не нужно загружать данные, если уже имеющихся в данный момент
-        // хватает для отображения.
-        if (self._virtualScroll && self._virtualScroll.hasEnoughDataToDirection(direction)) {
-            return;
-        }
         _private.onScrollLoadEdge(self, direction);
     },
 
@@ -415,7 +425,8 @@ var _private = {
     updateVirtualWindowStart(self, direction: 'up' | 'down'): void {
         if (self._virtualScroll) {
             self._virtualScrollTriggerVisibility[direction] = true;
-            _private.updateVirtualWindow(self, direction);
+            self._virtualScroll.recalcToDirection(direction);
+            _private.applyVirtualScrollIndexes(self, direction);
         }
     },
 
@@ -427,30 +438,28 @@ var _private = {
     },
 
     // Обновляет стартовый и конечный индексы виртуального окна
-    updateVirtualWindow(self, direction: 'up'|'down'): void {
-        if (!self._listViewModel.getCount()) {
-            return;
-        }
-        if (direction === 'up') {
+    applyVirtualScrollIndexes(self, direction): void {
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
+            if (direction === 'up') {
+                self._saveAndRestoreScrollPosition = true;
+            }
             self._shouldRestoreScrollPosition = true;
-            self._saveAndRestoreScrollPosition = true;
-
-            self._virtualScroll.updateItemsIndexes(direction);
             self._virtualScroll.updatePlaceholdersSizes();
             _private.applyPlaceholdersSizes(self);
-        } else {
-            self._virtualScroll.updateItemsIndexes(direction);
         }
     },
 
     loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
-        if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
-            _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback
-            );
+        // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
+        if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
+            if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
+                _private.loadToDirection(
+                   self, direction,
+                   self._options.dataLoadCallback,
+                   self._options.dataLoadErrback
+                );
+            }
         }
     },
 
@@ -1030,7 +1039,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigation: false,
 
     _canUpdateItemsActions: false,
-    _wasRepaint: false,
 
     _needBottomPadding: false,
 
@@ -1331,7 +1339,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint():void {
-        this._wasRepaint = true;
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
@@ -1373,15 +1380,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
             this._delayedSelect = null;
         }
-
-
-        /*if (this._wasRepaint) {
-            this._wasRepaint = false;
-            if (this._shouldCheckVirtualScrollTriggers) {
-                this._shouldCheckVirtualScrollTriggers = false;
-                _private.checkVirtualScrollUpdateCapability(this);
-            }
-        }*/
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
