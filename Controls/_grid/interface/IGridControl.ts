@@ -29,7 +29,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grid/Column">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -62,7 +62,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grid/Column">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -174,7 +174,7 @@
  * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов. CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
  * @property {GridCellAlign} [align] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
- * @property {String} [stickyProperty] Опция, которая используется для настройки прилипания столбца к верхней границе таблицы.
+ * @property {String} [stickyProperty] Опция, которая используется для настройки прилипания данных столбца к верхней границе таблицы.
  * @property {TextOverflow} [textOverflow] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
