@@ -488,7 +488,7 @@ define([
             }, {
                nativeEvent: 123
             });
-            assert.isFalse(isPropagationStopped);
+            assert.isTrue(isPropagationStopped);
             // Root wasn't changed
             assert.equal(root, 'itemId');
          });
