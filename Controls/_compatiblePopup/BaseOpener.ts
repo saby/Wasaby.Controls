@@ -52,10 +52,12 @@ const BaseOpener = {
          cfg.templateOptions.hoverTarget = cfg.hoverTarget;
       }
 
-      if (cfg.closeButtonStyle) {
-         cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
+      if (cfg.closeButtonStyle || cfg.closeButtonViewMode) {
+         cfg.templateOptions.closeButtonViewMode = cfg.closeButtonStyle || cfg.closeButtonViewMode;
       }
-
+      if (cfg.hasOwnProperty('closeButtonTransparent')){
+         cfg.templateOptions.closeButtonTransparent = cfg.closeButtonTransparent;
+      }
       if (cfg.record) { // от RecordFloatArea
          cfg.templateOptions.record = cfg.record;
       }
