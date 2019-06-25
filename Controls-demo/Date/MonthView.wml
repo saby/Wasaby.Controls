@@ -6,8 +6,8 @@
          <Controls.calendar:MonthView month="{{_month}}" showCaption="{{true}}"/>
          <div>
             <span>Отображаемый месяц: </span>
-            <Controls.buttons:Button enabled="{{true}}" caption="-1 месяц" style="buttonAdd" on:click="_changeMonth(-1)"/>
-            <Controls.buttons:Button enabled="{{true}}" caption="+1 месяц" style="buttonAdd" on:click="_changeMonth(1)"/>
+            <Controls.buttons:Button caption="-1 месяц" buttonStyle="primary" on:click="_changeMonth(-1)"/>
+            <Controls.buttons:Button caption="+1 месяц" buttonStyle="primary" on:click="_changeMonth(1)"/>
          </div>
       </div>
    </div>
