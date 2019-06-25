@@ -1591,6 +1591,20 @@ define([
          var
             stopImmediateCalled = false,
             preventDefaultCalled = false,
+            getParamsKeyDown = function(keyCode) {
+               return {
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  target: {closest() { return false; }},
+                  nativeEvent: {
+                     keyCode: keyCode
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  }
+               };
+            },
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1627,15 +1641,7 @@ define([
             setTimeout(function () {
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.down
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
                lnBaseControl._children = {
@@ -1644,30 +1650,11 @@ define([
                      }
                   }
                };
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.space
-                  },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
                assert.isTrue(preventDefaultCalled);
 
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.up
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
