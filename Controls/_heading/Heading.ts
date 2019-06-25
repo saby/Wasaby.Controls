@@ -1,13 +1,10 @@
 import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions} from 'Controls/interface';
+import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
 
-export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions {
-   fontSize?: string;
-   fontColorStyle?: string;
-   size?: string;
-   style?: string;
+export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
+
 }
 
    /**
@@ -25,39 +22,14 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     *
     * @mixes Controls/_interface/ITooltip
     * @mixes Controls/_interface/ICaption
+    * @mixes Controls/_interface/IFontColorStyle
+    * @mixes Controls/_interface/IFontSize
     * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
-/**
- * @name Controls/_heading/Heading#fontSize
- * @cfg {String} Heading font-size.
- * @variant xs Extra small text size.
- * @variant s Small text size.
- * @variant m Medium text size.
- * @variant l Large text size.
- * @variant xl Extra large text size.
- * @variant 2xl 2*Extra large text size.
- * @variant 3xl 3*Extra large text size.
- * @variant 4xl 4*Extra large text size.
- * @variant 5xl 5*Extra large text size.
- * @default l
- */
-
-
-   /**
-    * @name Controls/_heading/Heading#fontColorStyle
-    * @cfg {String} Heading display style.
-    * @variant primary
-    * @variant secondary
-    * @variant info
-    * @variant default
-    * @variant danger
-    * @variant success
-    * @default primary
-    */
 const mapFontSize = {'s': 'm', 'm': 'l', 'l': '3xl', 'xl': '4xl'};
 const mapFontColorStyle = {'info': 'label', 'primary': 'primary', 'secondary': 'secondary'};
-class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
+class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
       // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
       protected _template: TemplateFunction = headingTemplate;
       protected _theme: string[] = ['Controls/heading','Controls/Classes'];
@@ -91,25 +63,6 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip {
       static getOptionTypes(): object {
          return {
             caption: EntityDescriptor(String),
-             fontColorStyle: EntityDescriptor(String).oneOf([
-               'secondary',
-               'primary',
-               'label',
-                 'danger',
-                 'success',
-                 'default'
-            ]),
-             fontSize: EntityDescriptor(String).oneOf([
-                 'xs',
-                 's',
-                 'm',
-                 'l',
-                 'xl',
-                 '2xl',
-                 '3xl',
-                 '4xl',
-                 '5xl'
-             ])
          };
       }
       '[Controls/_interface/ITooltip]': true;
