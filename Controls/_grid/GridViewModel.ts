@@ -1381,6 +1381,10 @@ var
             return this._model.getStartIndex();
         },
 
+        getStopIndex(): number {
+            return this._model.getStopIndex();
+        },
+
         setHoveredItem: function (item) {
             this._model.setHoveredItem(item);
         },
