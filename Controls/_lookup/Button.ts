@@ -22,7 +22,11 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  */
 
 var Button = Control.extend({
-   _template: template
+   _template: template,
+
+   showSelector: function (popupOptions) {
+      return this._children.controller.showSelector(popupOptions);
+   }
 });
 
 export = Button;
