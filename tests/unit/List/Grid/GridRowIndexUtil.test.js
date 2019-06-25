@@ -64,98 +64,117 @@ define([
          return new gridLib.GridViewModel(cfg)
       }
 
+      let gridModel;
+
+      afterEach(function () {
+         gridModel.destroy();
+         gridModel = null;
+      });
 
       describe('Grid with header', function () {
 
          describe('results in top', function () {
-            let
-                gridModel = createModel({resultsPosition: 'top'}),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel({resultsPosition: 'top'});
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 2);
-               assert.equal(rowIndexHelper.getIndexById('3'), 4);
-               assert.equal(rowIndexHelper.getIndexById('5'), 6);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 6);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 2);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 4);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 6);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 6);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 2);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 4);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 6);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 6);
             });
 
             it('getResultsIndex', function () {
-               assert.equal(rowIndexHelper.getResultsIndex(), 1);
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 7);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
             });
          });
 
          describe('results in bottom', function () {
-            let
-                gridModel = createModel({resultsPosition: 'bottom'}),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel({resultsPosition: 'bottom'});
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 1);
-               assert.equal(rowIndexHelper.getIndexById('3'), 3);
-               assert.equal(rowIndexHelper.getIndexById('5'), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 5);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 1);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 3);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 5);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 3);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
             it('getResultsIndex', function () {
-               assert.equal(rowIndexHelper.getResultsIndex(), 6);
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 7);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 7);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
             });
          });
 
          describe('no results', function () {
-            let
-                gridModel = createModel(),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel();
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 1);
-               assert.equal(rowIndexHelper.getIndexById('3'), 3);
-               assert.equal(rowIndexHelper.getIndexById('5'), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 5);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 1);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 3);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 5);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 3);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 6);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
             });
          });
 
@@ -164,95 +183,108 @@ define([
       describe('Grid without header', function () {
 
          describe('results in top', function () {
-            let
-                gridModel = createModel({resultsPosition: 'top', header: null}),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel({resultsPosition: 'top', header: null});
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 1);
-               assert.equal(rowIndexHelper.getIndexById('3'), 3);
-               assert.equal(rowIndexHelper.getIndexById('5'), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 5);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 1);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 3);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 5);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 3);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 5);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 3);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
             it('getResultsIndex', function () {
-               assert.equal(rowIndexHelper.getResultsIndex(), 0);
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 6);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
             });
 
          });
 
          describe('results in bottom', function () {
-            let
-                gridModel = createModel({resultsPosition: 'bottom', header: null}),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel({resultsPosition: 'bottom', header: null});
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 0);
-               assert.equal(rowIndexHelper.getIndexById('3'), 2);
-               assert.equal(rowIndexHelper.getIndexById('5'), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 4);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 0);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 2);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 4);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 2);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 4);
             });
 
             it('getResultsIndex', function () {
-               assert.equal(rowIndexHelper.getResultsIndex(), 5);
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 5);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 6);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 6);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
             });
          });
 
          describe('no results', function () {
-            let
-                gridModel = createModel({header: null}),
-                rowIndexHelper = gridModel._getRowIndexHelper();
+
+            beforeEach(function () {
+               gridModel = createModel({header: null});
+            });
 
             it('getIndexById', function () {
-               assert.equal(rowIndexHelper.getIndexById('1'), 0);
-               assert.equal(rowIndexHelper.getIndexById('3'), 2);
-               assert.equal(rowIndexHelper.getIndexById('5'), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('1'), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('3'), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexById('5'), 4);
             });
 
             it('getIndexByItem', function () {
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(0)), 0);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(2)), 2);
-               assert.equal(rowIndexHelper.getIndexByItem(gridModel.getDisplay().at(4)), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(0)), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(2)), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByItem(gridModel.getDisplay().at(4)), 4);
             });
 
             it('getIndexByDisplayIndex', function () {
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(2), 2);
-               assert.equal(rowIndexHelper.getIndexByDisplayIndex(4), 4);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(2), 2);
+               assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 4);
             });
 
             it('getFooterIndex', function () {
-               assert.equal(rowIndexHelper.getFooterIndex(), 5);
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 5);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
             });
 
          });
@@ -266,40 +298,53 @@ define([
             describe('Grid with header', function () {
 
                describe('results in top', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'top', emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'top', emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 3);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
                describe('results in bottom', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'bottom', emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'bottom', emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 3);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 3);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
                describe('no results', function () {
-                  let
-                      gridModel = createModel({emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
@@ -308,41 +353,54 @@ define([
             describe('Grid without header', function () {
 
                describe('results in top', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'top', header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'top', header: null, emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 0);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
 
                });
 
                describe('results in bottom', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'bottom', header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'bottom', header: null, emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
                describe('no results', function () {
-                  let
-                      gridModel = createModel({header: null, emptyTemplate: 'qwe'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({header: null, emptyTemplate: 'qwe'}, []);
+                  });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                   });
 
                });
@@ -355,40 +413,53 @@ define([
             describe('Grid with header', function () {
 
                describe('results in top', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'top'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'top'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
                describe('results in bottom', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'bottom'}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'bottom'}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 2);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
                describe('no results', function () {
-                  let
-                      gridModel = createModel({}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({}, []);
+                  });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                   });
                });
 
@@ -397,41 +468,54 @@ define([
             describe('Grid without header', function () {
 
                describe('results in top', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'top', header: null}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'top', header: null}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 0);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                   });
 
                });
 
                describe('results in bottom', function () {
-                  let
-                      gridModel = createModel({resultsPosition: 'bottom', header: null}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({resultsPosition: 'bottom', header: null}, []);
+                  });
 
                   it('getResultsIndex', function () {
-                     assert.equal(rowIndexHelper.getResultsIndex(), 0);
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                   });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 1);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                   });
                });
 
                describe('no results', function () {
-                  let
-                      gridModel = createModel({header: null}, []),
-                      rowIndexHelper = gridModel._getRowIndexHelper();
+
+                  beforeEach(function () {
+                     gridModel = createModel({header: null}, []);
+                  });
 
                   it('getFooterIndex', function () {
-                     assert.equal(rowIndexHelper.getFooterIndex(), 0);
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 0);
+                     gridModel._setEditingItemData({index: 0});
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
                   });
 
                });

@@ -61,6 +61,7 @@ interface IBaseTreeGridRowIndexOptions {
     hasMoreStorage: HasMoreStorage
     expandedItems: ExpandedItems
     hasNodeFooterTemplate: boolean
+    editingRowIndex?: number
 }
 
 /**
@@ -129,7 +130,9 @@ function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
     let index = cfg.hasHeader ? 1 : 0;
     
     if (cfg.resultsPosition === "bottom") {
-        let itemsCount = cfg.display.getCount();
+        let
+            itemsCount = cfg.display.getCount(),
+            hasEditingItem = typeof cfg.editingRowIndex === "number";
         
         if (itemsCount) {
             // Чтобы ради подвала снова не считать индекс последнего элемента на экране,
@@ -140,6 +143,8 @@ function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
         } else {
             index += cfg.hasEmptyTemplate ? 1 : 0;
         }
+
+        index += hasEditingItem ? 1 : 0;
     }
     
     return index;
@@ -157,11 +162,13 @@ function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number 
     let
         hasResults = !!cfg.resultsPosition,
         itemsCount = cfg.display.getCount(),
-        index = 0;
+        index = 0,
+        hasEditingItem = typeof cfg.editingRowIndex === "number";
     
     index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
-    
+    index += hasEditingItem ? 1 : 0;
+
     if (itemsCount) {
         index += itemsCount * 2;
     } else {
