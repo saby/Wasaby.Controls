@@ -18,6 +18,7 @@
                                     actionAlignment="{{ _viewMode === 'tile' ? 'vertical' : _options.actionAlignment }}"
                                     actionCaptionPosition="{{ _viewMode === 'tile' ? 'none' : _options.actionCaptionPosition }}"
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
+                                    virtualScrolling="{{_virtualScrolling}}"
                                     on:itemClick="_onItemClick()"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"
                                     on:itemSwipe="_notifyHandler('itemSwipe')"

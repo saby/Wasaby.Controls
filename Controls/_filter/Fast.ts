@@ -147,7 +147,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             // Get keys of selected items
             chain.factory(items).each(function(item) {
                var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
-               selectedKeys.push(key);
+               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue')) {
+                  selectedKeys.push(key);
+               }
             });
 
             _private.setValue(this, selectedKeys);
