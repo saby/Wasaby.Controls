@@ -241,8 +241,8 @@ import 'Controls/breadcrumbs';
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
                _private.setRoot(this, item.getId());
             }
-            event.stopPropagation();
          }
+         event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
