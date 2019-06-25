@@ -69,7 +69,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  */
 
 /**
- * @name Controls/Button#contrastBackground
+ * @name Controls/_buttons/Button#contrastBackground
  * @cfg {Boolean} Determines if button has contrast background.
  * @default true
  * @remark
@@ -88,7 +88,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  */
 
 /**
- * @name Controls/Button#buttonStyle
+ * @name Controls/_buttons/Button#buttonStyle
  * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
  * @variant primary
  * @variant secondary
