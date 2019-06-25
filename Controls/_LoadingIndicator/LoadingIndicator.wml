@@ -7,7 +7,7 @@
       {{message ? 'controls-loading-indicator_text'}}
       {{scroll ? 'controls-loading-indicator_scroll controls-loading-indicator_sided controls-loading-indicator_sided-' + scroll}}
       {{small ? 'controls-loading-indicator_small' + (small !== 'yes' ? ' controls-loading-indicator_sided controls-loading-indicator_sided-' + small : '')}}
-      {{overlay ? 'controls-loading-indicator_overlay-' + overlay}}
+      {{overlay ? 'controls-loading-indicator_overlay-' + _getOverlay(overlay)}}
       {{mods && mods.length ? 'controls-loading-indicator_mod-' + mods.join(' controls-loading-indicator_mod-') }}">
          <ws:if data="{{_isMessageVisible}}">
             <div class="controls-loading-indicator-in">{{message}}</div>
