@@ -7,7 +7,7 @@
             <ws:partial template="{{_options.content}}"/>
             <ws:if data="{{_version && _options.demoname}}">
                <Controls.buttons:Button attr:target="_blank"
-                                        class="controls-ApplicationWrapper__source"
+                                        attr:class="controls-ApplicationWrapper__source"
                                         caption="Source"
                                         viewMode="link"
                                         fontColorStyle="link"

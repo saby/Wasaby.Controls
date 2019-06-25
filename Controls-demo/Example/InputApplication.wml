@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Input" demoName="Controls-demo/Example/Input">
+<Controls.Application.ApplicationWrapper caption="Input" demoname="Controls-demo/Example/Input">
     <ws:content>
         <Controls-demo.Example.Input/>
     </ws:content>
