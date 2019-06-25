@@ -76,12 +76,16 @@ var Component = Control.extend([], {
                rangeselect: true
             }
         };
-        if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
+        if (!this._isVdomDialog()) {
             cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
             cfg.isCompoundTemplate = true;
             cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
         }
         this._children.opener.open(cfg);
+    },
+
+    _isVdomDialog: function() {
+        return this._options.vdomDialog && !(detection.isIE && detection.IEVersion < 13);
     },
 
     _onResultWS3: function (event, startValue, endValue) {
