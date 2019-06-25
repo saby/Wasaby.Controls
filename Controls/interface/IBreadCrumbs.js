@@ -50,8 +50,7 @@ define('Controls/interface/IBreadCrumbs', [
    /**
     * @name Controls/interface/IBreadCrumbs#displayProperty
     * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
-    * @default
-    * title
+    * @default title
     */
 
    /*
