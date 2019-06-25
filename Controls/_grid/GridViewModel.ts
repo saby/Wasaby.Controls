@@ -778,7 +778,7 @@ var
         },
 
         shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-            if (!(this.getResultsPosition() && this.getResultsPosition() === position)) {
+            if (this.getResultsPosition() !== position) {
                 return false;
             }
             return this.getCount() > 1;
