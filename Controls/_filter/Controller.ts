@@ -66,9 +66,13 @@ import 'Controls/context';
          minimizeItem: function(item) {
             let minItem = {
                 value: getPropValue(item, 'value'),
-                textValue: (getPropValue(item, 'visibility') !== false) ? getPropValue(item, 'textValue') : undefined,
                 visibility: getPropValue(item, 'visibility')
             };
+            if (getPropValue(item, 'visibility') !== false && (getPropValue(item, 'textValue') !== getPropValue(item, 'resetTextValue'))) {
+               minItem.textValue = getPropValue(item, 'textValue');
+            } else {
+               minItem.textValue = undefined;
+            }
             if (getPropValue(item, 'id')) {
                minItem.id = getPropValue(item, 'id');
             } else {
