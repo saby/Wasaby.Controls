@@ -54,7 +54,7 @@
 <ws:template name="stickyCell">
       <Controls.scroll:StickyHeader
               attr:class="{{headerColumn.cellClasses}}"
-              attr:style="{{headerColumn.style}}{{headerColumn.cellStyles}}"
+              attr:style="{{headerColumn.cellStyles}}{{headerColumn.style}}"
               mode="stackable"
               fixedZIndex="{{headerColumn.zIndex}}"
               offsetTop="{{headerColumn.offsetTop}}"
