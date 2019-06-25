@@ -187,7 +187,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         ' Every year the level of their music art is getting higher.\n' +
                         ' Never before have so many unusually gifted American conductors organized\n' +
                         ' lots of the country’s most prominent orchestras.',
-                     floatCloseButton: true
+                     floatCloseButton: false
                   }
                }]
             }, {
