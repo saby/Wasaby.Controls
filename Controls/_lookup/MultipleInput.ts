@@ -29,7 +29,7 @@ var MultipleInput = Control.extend({
     _template: template,
 
     showSelector: function (popupOptions) {
-        this._children.controller.showSelector(popupOptions);
+        return this._children.controller.showSelector(popupOptions);
     }
 });
 

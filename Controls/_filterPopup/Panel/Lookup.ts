@@ -100,7 +100,7 @@ import 'css!theme?Controls/filterPopup';
       showSelector: function(popupOptions) {
          var lookup = _private.getLookup(this);
 
-         lookup && lookup.showSelector(popupOptions);
+         return lookup && lookup.showSelector(popupOptions);
       },
 
       _selectedKeysChanged: function(event, keys) {
