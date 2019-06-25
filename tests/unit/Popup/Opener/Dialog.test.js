@@ -63,7 +63,7 @@ define(
             assert.equal(position.top, 0);
             assert.equal(position.left, 50);
             assert.equal(position.width, undefined);
-            assert.equal(position.height, undefined);
+            assert.equal(position.height, 300);
          });
 
          it('dialog positioning overflow popup config', () => {
