@@ -27,8 +27,8 @@ function loadTemplate(name: string) {
  * @public
  */
 const BaseOpener = {
-   _prepareConfigForOldTemplate: function(cfg, templateClass) {
-      var
+   _prepareConfigForOldTemplate(cfg, templateClass) {
+      let
          templateOptions = this._getTemplateOptions(templateClass),
          parentContext;
 
@@ -45,6 +45,10 @@ const BaseOpener = {
          // На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
          _compoundId: randomId('compound-')
       };
+
+      if (cfg._type === 'dialog' || cfg._type === 'stack') {
+         cfg.isDefaultOpener = true;
+      }
 
       this._preparePopupCfgFromOldToNew(cfg);
 
@@ -165,13 +169,13 @@ const BaseOpener = {
       }
    },
 
-   prepareNotificationConfig: function(config) {
-      var template = typeof config.template === 'string' ? loadTemplate(config.template) : config.template;
+   prepareNotificationConfig(config) {
+      const template = typeof config.template === 'string' ? loadTemplate(config.template) : config.template;
       config.opener = null;
       config.isVDOM = true;
       config.template = 'Controls/compatiblePopup:OldNotification';
       config.componentOptions = {
-         template: template,
+         template,
          templateOptions: config.templateOptions,
          className: config.className
       };
@@ -179,8 +183,8 @@ const BaseOpener = {
       return config;
    },
 
-   _prepareContext: function(cfg, parentContext) {
-      var destroyDef = new Deferred(),
+   _prepareContext(cfg, parentContext) {
+      let destroyDef = new Deferred(),
          destrFunc = function() {
             destroyDef.callback();
             destroyDef = null;
@@ -220,7 +224,7 @@ const BaseOpener = {
       }
    },
 
-   _prepareConfigFromOldToOldByNewEnvironment: function(cfg) {
+   _prepareConfigFromOldToOldByNewEnvironment(cfg) {
       if (cfg.flipWindow === 'vertical') {
          cfg.fittingMode = 'overflow';
       }
@@ -229,11 +233,11 @@ const BaseOpener = {
       }
       if (cfg.maxWidth) {
          if (cfg.maxWidthWithoutSideBar !== true) {
-            var MINIMAL_PANEL_DISTANCE = 50;
-            var stackContainer = document.querySelector('.controls-Popup__stack-target-container');
-            var sideBar = document.querySelector('.online-Sidebar');
+            const MINIMAL_PANEL_DISTANCE = 50;
+            const stackContainer = document.querySelector('.controls-Popup__stack-target-container');
+            const sideBar = document.querySelector('.online-Sidebar');
             if (stackContainer && sideBar) {
-               var maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
+               const maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
                cfg.maxWidth = Math.min(maxCompatibleWidth, cfg.maxWidth);
             }
          }
@@ -246,7 +250,7 @@ const BaseOpener = {
          // get DOM node, cause it can be jQuery
          sbis3FloatArea = sbis3FloatArea && sbis3FloatArea.length !== undefined ? sbis3FloatArea[0] : sbis3FloatArea;
          if (sbis3FloatArea) {
-            let zIndex = sbis3FloatArea.style.zIndex;
+            const zIndex = sbis3FloatArea.style.zIndex;
             if (zIndex) {
                cfg.zIndex = parseInt(zIndex, 10) + 10;
             }
@@ -254,7 +258,7 @@ const BaseOpener = {
       }
    },
 
-   _preparePopupCfgFromOldToNew: function(cfg) {
+   _preparePopupCfgFromOldToNew(cfg) {
       cfg.templateOptions = cfg.templateOptions || cfg.componentOptions || {};
 
       if (cfg.target) {
@@ -301,7 +305,7 @@ const BaseOpener = {
 
       if (!cfg.hasOwnProperty('direction')) {
          // Значения по умолчанию. взято из floatArea.js
-         var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
+         const side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
          if (side === 'left') {
             cfg.direction = 'right';
          } else if (side === 'right') {
@@ -370,7 +374,7 @@ const BaseOpener = {
          cfg.isCompoundTemplate = true;
       }
    },
-   _prepareConfigForNewTemplate: function(cfg, templateClass) {
+   _prepareConfigForNewTemplate(cfg, templateClass) {
       cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
 
       cfg.componentOptions.template = cfg.template;
@@ -420,14 +424,14 @@ const BaseOpener = {
          cfg.maxWidth = cfg.width;
       }
    },
-   _getConfigFromTemplate: function(cfg) {
+   _getConfigFromTemplate(cfg) {
       // get options from template.getDefaultOptions
-      var templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
+      const templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
       return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
    },
-   _prepareConfigFromNewToOld: function(cfg, template) {
-      var optFromTmpl = cfg.template ? this._getConfigFromTemplate(cfg.template) : {};
-      var newCfg = cMerge(cfg, {
+   _prepareConfigFromNewToOld(cfg, template) {
+      const optFromTmpl = cfg.template ? this._getConfigFromTemplate(cfg.template) : {};
+      const newCfg = cMerge(cfg, {
          templateOptions: cfg.templateOptions || {},
          componentOptions: cfg.templateOptions || {},
          template: cfg.template,
@@ -443,7 +447,7 @@ const BaseOpener = {
          mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
       });
 
-      var revertPosition = {
+      const revertPosition = {
          top: 'bottom',
          bottom: 'top',
          left: 'right',
@@ -525,7 +529,6 @@ const BaseOpener = {
          newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
          newCfg.dialogOptions.offset.x = cfg.horizontalAlign.offset;
       }
-
 
       if (cfg.corner && cfg.corner.vertical === 'bottom') {
          newCfg.dialogOptions.verticalAlign = 'bottom';
@@ -617,20 +620,20 @@ const BaseOpener = {
       return newCfg;
    },
 
-   _prepareTarget: function(cfg) {
+   _prepareTarget(cfg) {
       cfg.dialogOptions.target = $(cfg.target);
    },
 
    // Берем размеры либо с опций, либо с дименшенов
-   _setSizes: function(cfg, templateClass) {
-      var dimensions = templateClass ? this._getDimensions(templateClass) : {};
-      var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
-      var minWidth = dimensions.minWidth || templateOptions.minWidth;
-      var maxWidth = dimensions.maxWidth || templateOptions.maxWidth;
-      var width = dimensions.width || templateOptions.width;
-      var height = dimensions.height || templateOptions.height;
-      var minHeight = dimensions.minHeight || templateOptions.minHeight;
-      var maxHeight = dimensions.maxHeight || templateOptions.maxHeight;
+   _setSizes(cfg, templateClass) {
+      const dimensions = templateClass ? this._getDimensions(templateClass) : {};
+      const templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
+      const minWidth = dimensions.minWidth || templateOptions.minWidth;
+      const maxWidth = dimensions.maxWidth || templateOptions.maxWidth;
+      const width = dimensions.width || templateOptions.width;
+      const height = dimensions.height || templateOptions.height;
+      const minHeight = dimensions.minHeight || templateOptions.minHeight;
+      const maxHeight = dimensions.maxHeight || templateOptions.maxHeight;
 
       cfg.width = parseInt(cfg.width || width, 10) || null;
       cfg.minWidth = parseInt(cfg.minWidth || minWidth, 10) || null;
@@ -652,10 +655,10 @@ const BaseOpener = {
       }
    },
 
-   _getCaption: function(cfg, templateClass) {
-      var dimensions = this._getDimensions(templateClass);
-      var compoundAreaOptions = cfg.templateOptions;
-      var templateOptions = this._getTemplateOptions(templateClass);
+   _getCaption(cfg, templateClass) {
+      const dimensions = this._getDimensions(templateClass);
+      const compoundAreaOptions = cfg.templateOptions;
+      const templateOptions = this._getTemplateOptions(templateClass);
       return cfg.title || cfg.caption ||
          dimensions.title || dimensions.caption ||
          templateClass.caption || templateClass.title ||
@@ -663,12 +666,12 @@ const BaseOpener = {
          templateOptions.title || templateOptions.caption;
    },
 
-   _getDimensions: function(templateClass) {
+   _getDimensions(templateClass) {
       return templateClass.dimensions || (templateClass.prototype && templateClass.prototype.dimensions) || {};
    },
 
-   _getTemplateOptions: function(templateClass) {
-      var initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
+   _getTemplateOptions(templateClass) {
+      const initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
       return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
    }
 };
