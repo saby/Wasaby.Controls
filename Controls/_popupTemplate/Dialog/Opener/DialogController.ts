@@ -121,7 +121,7 @@ import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStr
          },
 
          needRecalcOnKeyboardShow: function() {
-            return false;
+            return true;
          },
          _private: _private
       });
