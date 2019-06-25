@@ -1,7 +1,7 @@
 /**
  * Search library
  * @library Controls/scroll
- * @includes Container Controls/_scroll/Scroll
+ * @includes Container Controls/_scroll/Container
  * @includes Watcher Controls/_scroll/Scroll/Watcher
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
