@@ -136,35 +136,6 @@ define([
          assert.equal(4000, vsInstance._itemsCount);
       });
 
-      it('updateItemsSizes always', function() {
-         var
-            vsInstance = new list.VirtualScroll({
-               updateItemsHeightsMode: 'always'
-            }),
-            _items = {
-               children: [
-                  { offsetHeight: 20 },
-                  { offsetHeight: 45 },
-                  { offsetHeight: 10 },
-                  { offsetHeight: 44 },
-                  { offsetHeight: 78 },
-                  { offsetHeight: 45 },
-                  { offsetHeight: 92 }
-               ]
-            },
-            itemsHeights = [20, 45, 10, 44, 78, 45, 92];
-
-         vsInstance.ItemsCount = 7;
-
-         var isUpdated = false;
-         vsInstance._updateItemsSizes = function() {
-            isUpdated = true;
-         };
-         vsInstance.ItemsContainer = _items;
-
-         assert.isTrue(isUpdated);
-      });
-
       it('updateItemsSizes', function() {
          var
             vsInstance = new list.VirtualScroll({}),
@@ -369,15 +340,15 @@ define([
 
 
          //Top placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(300, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(300, 100));
 
          assert.isFalse(vsInstance._isScrollInPlaceholder(510, 50));
 
          //Bottom placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(500, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(500, 100));
 
          // Bottom  placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(700));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(700));
       });
 
       it('updateItemsIndexesOnScrolling', function() {

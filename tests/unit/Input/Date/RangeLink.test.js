@@ -38,6 +38,7 @@ define([
          it('should open dialog with passed dialog options', function() {
             const
                extOptions = {
+                  ranges: { days: [1] },
                   minRange: 'month',
                   captionFormatter: function(){}
                },
@@ -49,6 +50,7 @@ define([
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
                className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft-withoutModeBtn',
                templateOptions: {
+                  quantum: extOptions.ranges,
                   minRange: extOptions.minRange,
                   captionFormatter: extOptions.captionFormatter
                }

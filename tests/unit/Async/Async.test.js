@@ -142,10 +142,12 @@ define([
       });
       it('Push to head data no head data store', function() {
          async._getHeadData = function() {
-            return null;
+            throw new Error('test error');
          };
          async._pushDepToHeadData('myTemplate');
-         checkWarn(warns, 'HeadData store wasn\'t initialized. Link to myTemplate won\'t be added to server-side generated markup.');
+         checkWarn(warns, 'You\'re trying to use Async without Controls/Application.' +
+            ' Link to myTemplate won\'t be added to server-side generated markup.' +
+            ' Error: test error');
       });
       it('_checkLoadedError error', function() {
          async._checkLoadedError(null);

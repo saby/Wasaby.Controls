@@ -50,16 +50,14 @@ var _private = {
 
    abort: function(self) {
       _private.getSearch(self).addCallback(function(search) {
-         if (search.isLoading()) {
-            search.abort();
-         }
-
-         var filter = self._options.filter;
-         delete filter[self._options.searchParam];
-         filter = clone(filter);
-         if (self._options.abortCallback) {
-            self._options.abortCallback(filter);
-         }
+         search.abort().addCallback(function() {
+            var filter = self._options.filter;
+            delete filter[self._options.searchParam];
+            filter = clone(filter);
+            if (self._options.abortCallback) {
+               self._options.abortCallback(filter);
+            }
+         });
          return search;
       });
    }

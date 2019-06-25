@@ -6,9 +6,10 @@ define(
       'Types/collection',
       'Controls/history',
       'Core/Deferred',
-      'Types/entity'
+      'Types/entity',
+      'Core/core-instance'
    ],
-   (dropdown, sourceLib, Clone, collection, history, Deferred, entity) => {
+   (dropdown, sourceLib, Clone, collection, history, Deferred, entity, cInstance) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -78,6 +79,16 @@ define(
             dropdownCntroller.saveOptions(config);
             return dropdownCntroller;
          };
+
+         let sandbox;
+
+         beforeEach(function() {
+            sandbox = sinon.createSandbox();
+         });
+
+         afterEach(function() {
+            sandbox.restore();
+         });
 
          it('before mount', (done) => {
             let newConfig = Clone(config),
@@ -189,6 +200,7 @@ define(
 
             isOpen = true;
             dropdownController._items = itemsRecords;
+            dropdownController._sourceController = {hasMoreData: ()=>{}};
             dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
             assert.isTrue(opened);
          });
@@ -202,6 +214,7 @@ define(
                title: 'Запись 9'
             });
             dropdownController._items = itemsRecords;
+            dropdownController._source = true;
             dropdownController._children = {
                DropdownOpener: {
                   open: function() {
@@ -222,6 +235,7 @@ define(
                   })
                }).addCallback(() => {
                   assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isTrue(cInstance.instanceOfModule(dropdownController._source, 'Types/source:Base'));
                   assert.isFalse(opened);
                   resolve();
                });
@@ -520,6 +534,19 @@ define(
             dropdownController._open();
          });
 
+         it('events on open/close', async () => {
+            let dropdownController = getDropdownController(config);
+            let stubNotify = sandbox.stub(dropdownController, '_notify');
+
+            await dropdownController._beforeMount(configLazyLoad);
+
+            dropdownController._onOpen();
+            dropdownController._onClose();
+
+            assert.isTrue(stubNotify.withArgs('dropDownOpen').calledOnce);
+            assert.isTrue(stubNotify.withArgs('dropDownClose').calledOnce);
+         });
+
          it('_onSelectorTemplateResult', () => {
             let dropdownController = getDropdownController(config),
                opened;
@@ -584,7 +611,7 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('mousedown', () => {
+         it('_clickHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
@@ -605,10 +632,13 @@ define(
                   return opened;
                }
             };
-            dropdownController._mousedown();
+            let stopped;
+            let event = {stopPropagation: () => {stopped = true;}};
+            dropdownController._clickHandler(event);
             assert.isTrue(opened);
+            assert.isTrue(stopped);
 
-            dropdownController._mousedown();
+            dropdownController._clickHandler(event);
             assert.isFalse(opened);
          });
 
@@ -711,13 +741,21 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('_private::getSourceController', function() {
+         it('_private::getSourceController', function(done) {
             let dropdownController = getDropdownController(config);
             dropdownController._beforeMount(configLazyLoad);
             assert.isNotOk(dropdownController._sourceController);
 
             dropdownController._beforeMount(config);
             assert.isOk(dropdownController._sourceController);
+
+            let historyConfig = {...config, historyId: 'TEST_HISTORY_ID'};
+            dropdownController = getDropdownController(historyConfig);
+            dropdown._Controller._private.getSourceController(dropdownController, historyConfig).addCallback((sourceController) => {
+               assert.isTrue(cInstance.instanceOfModule(sourceController._source, 'Controls/history:Source'));
+               assert.isOk(dropdownController._sourceController);
+               done();
+            });
          });
 
          let historySource,
@@ -848,6 +886,7 @@ define(
                item.set('id', item.getId() + '_history');
                closed = false;
                assert.equal(item.getId(), '6_history');
+               dropdownController._source = historySource;
                dropdownController._onResult(null, {action: 'pinClick', data: [item]});
                assert.isFalse(closed);
                assert.equal(resultItems[0].getId(), '6');

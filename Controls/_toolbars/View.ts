@@ -4,7 +4,7 @@ import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
-import {iconsUtil as validateIconStyle} from 'Controls/buttons';
+import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -182,7 +182,7 @@ var _private = {
 
             // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
             // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-            validateIconStyle.itemsSetOldIconStyle(instance._items);
+           ButtonActualApi.itemsSetOldIconStyle(instance._items);
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
             return items;
@@ -237,10 +237,12 @@ var _private = {
             opener: self,
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
-            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme +' ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,
                 rootKey: item.get(self._options.keyProperty),
+                groupTemplate: self._options.groupTemplate,
+                groupingKeyCallback: self._options.groupingKeyCallback,
                 showHeader: item.get('showHeader'),
                 headConfig: {
                     icon: _icon,
@@ -257,7 +259,9 @@ var _private = {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
                 items: self._menuItems,
-                itemTemplateProperty: self._options.itemTemplateProperty
+                itemTemplateProperty: self._options.itemTemplateProperty,
+                groupTemplate: self._options.groupTemplate,
+                groupingKeyCallback: self._options.groupingKeyCallback
             },
             target: self._children.popupTarget
         };
@@ -293,7 +297,7 @@ var Toolbar = Control.extend({
 
             // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
             // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-            validateIconStyle.itemsSetOldIconStyle(this._items);
+           ButtonActualApi.itemsSetOldIconStyle(this._items);
             this._menuItems = _private.getMenuItems(this._items);
             this._needShowMenu = this._menuItems && this._menuItems.getCount();
         } else if (options.source) {

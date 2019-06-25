@@ -43,14 +43,14 @@
                 </div>
              </ws:if>
              <ws:if data="{{_hasResetValue}}">
-                <Controls.buttons:Button viewMode="link" style="secondary" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
+                <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
                                  on:click="_resetFilter()"
                                  name="resetButton"
                                  attr:tabindex="-1"
                                  attr:class="controls-FilterPanel__resetButton"/>
              </ws:if>
 
-             <Controls.buttons:Button viewMode="button" style="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
+             <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                               attr:tabindex="-1"
                               attr:class="controls-FilterPanel__filterButton"/>
           </div>
@@ -59,7 +59,8 @@
           <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
                 <div class="controls-FilterPanel__content-horizontal">
-                   <div class="controls-FilterPanel__filtersWrapper">
+                   <div class="controls-FilterPanel__filtersWrapper
+                    controls-FilterPanel_{{_historyId && _historyItems.getCount() ? 'twoColumn' : 'oneColumn'}}__filtersWrapper">
                       <ws:partial template="filtersContent"/>
                    </div>
                    <ws:partial template="history"/>

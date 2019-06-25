@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filter';
 /**
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
- * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup/Panel}
+ * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup:DetailPanel}
  * Supports the insertion of a custom template between the button and the filter string.
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
  * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -55,9 +55,10 @@ var _private = {
 
       chain.factory(items).each(function(item) {
          if (_private.isItemChanged(item) && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
-            var textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
 
-            if (textValue) {
+            if (textValue && textValue !== resetTextValue) {
                textArr.push(textValue);
             }
          }

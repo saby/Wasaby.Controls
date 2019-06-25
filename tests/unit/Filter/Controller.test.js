@@ -584,13 +584,25 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'test2',
             visibility: undefined
          }]);
-         var filterButtonItems2 = [{
+         let filterButtonItems2 = [{
             id: 'testId2',
             value: 'testValue',
             textValue: 'test2',
             resetValue: 'testValue'
          }];
          assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), {});
+         filterButtonItems2 = [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetTextValue: 'test2'
+         }];
+         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: undefined,
+            visibility: undefined
+         }]);
       });
 
       it('_private.getHistoryItems', function(done) {

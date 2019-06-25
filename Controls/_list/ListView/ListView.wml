@@ -13,6 +13,9 @@
              itemOutputWrapper="{{_itemOutputWrapper}}"
              itemTemplate="{{_itemTemplate}}">
          </ws:partial>
+         <ws:if data="{{_options._needBottomPadding}}">
+            <div  class="controls-itemActionsV_outside-spacing"></div>
+         </ws:if>
       </div>
       <ws:if data="{{_options.emptyTemplate}}">
          <ws:partial template="{{_options.emptyTemplate}}"/>

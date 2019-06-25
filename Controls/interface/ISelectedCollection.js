@@ -77,6 +77,50 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
+    * Open stack popup.
+    * @function Controls/interface/ISelectedCollection#showSelector
+    * @returns {Promise}
+    * @param {PopupOptions[]} popupOptions Stack popup options.
+    * @example
+    * Open stack with specified configuration.
+    * wml
+    * <pre>
+    *     <Controls.lookup:Input
+    *           name="directoriesLookup"
+    *           bind:selectedKeys="_selectedKeysDirectories"
+    *           source="{{_source}}"
+    *           searchParam="title"
+    *           keyProperty="id">
+    *        <ws:placeholder>
+    *           Specify the
+    *           <Controls.lookup:Link caption="department" on:click="showSelector('department')"/>
+    *           and
+    *           <Controls.lookup:Link caption="company" on:click="showSelector('company')"/>
+    *        </ws:placeholder>
+    *        <ws:selectorTemplate templateName="Engine-demo/Selector/FlatListSelectorWithTabs/FlatListSelectorWithTabs"/>
+    *        <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+    *     </Controls.lookup:Input>
+    * </pre>
+    * js
+    * <pre>
+    *     Control.extend({
+    *        ...
+    *
+    *        showSelector: function(selectedTab) {
+    *            this._children.directoriesLookup.showSelector({
+    *                templateOptions: {
+    *                   selectedTab: selectedTab
+    *                }
+    *            });
+    *        }
+    *
+    *        ...
+    *
+    *     });
+    * </pre>
+    */
+
+   /**
     * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {String} textValue String formed from selected entries.

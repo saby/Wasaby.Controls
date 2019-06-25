@@ -58,18 +58,30 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       gridHeader = [
             {
                title: '',
-               style: 'default'
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 1,
+               endColumn: 2
             },
             {
                title: 'Цена',
                align: 'right',
                style: 'default',
-               sortingProperty: 'price'
+               sortingProperty: 'price',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 2,
+               endColumn: 3
             },
             {
                title: 'Остаток',
                align: 'right',
-               style: 'default'
+               style: 'default',
+               startRow: 1,
+               endRow: 2,
+               startColumn: 3,
+               endColumn: 4
             }
       ],
       itemActions = [],
@@ -1035,6 +1047,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         width: '100px'
                      },
                      {
+                        title: 'fourth',
+                        width: 'max-content'
+                     },
+                     {
                         title: 'last',
                         width: 'auto'
                      }
@@ -1051,6 +1067,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      {
                         title: 'third',
                         width: '100px'
+                     },
+                     {
+                        title: 'fourth',
+                        width: 'auto'
                      },
                      {
                         title: 'last',
@@ -1105,17 +1125,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
-
-
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();
+            console.log(headerRow.getCurrentHeaderColumn())
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
-               cellStyles:'',
+               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
                shadowVisibility: 'visible',
                offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
@@ -1123,42 +1142,66 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
 
+            const secondCell = headerRow.getCurrentHeaderColumn().column;
+
             assert.deepEqual({
                column: gridHeader[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1,
                shadowVisibility: "visible",
                offsetTop: 0,
-               cellContentClasses: "",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap",
+               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+
+            assert.equal(
+               `grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+               )
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
+
+            const thirdCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
                sortingDirection: 'DESC',
-               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
                shadowVisibility: "visible",
                offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
+            assert.equal(
+               `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
+
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
+
+            const fourthCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
                column: gridHeader[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
-               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
-               cellStyles: "",
+               cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
+               cellStyles: `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
                shadowVisibility: "visible",
                offsetTop: 0
-            }, headerRow.getCurrentHeaderColumn(0, 3), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+
+            assert.equal(
+               `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               GridLayoutUtil.getMultyHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
+               'Incorrect headerCellGridStyles'
+            )
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
@@ -1301,13 +1344,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    isEditing: true,
                    rowIndex: 2
                 };
+
             gridViewModel.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: auto 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -1331,7 +1375,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr', '15px', '16px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
             assert.isTrue(calledCallback);
 
             calledCallback = false;
@@ -1341,7 +1385,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setColumns(savedColumns);

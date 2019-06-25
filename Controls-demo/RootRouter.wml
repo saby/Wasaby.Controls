@@ -2,7 +2,7 @@
    <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}"
                     attr:id="Back" caption="Назад"
                     attr:style="width: 100px"
-                    viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+                    viewMode="link" fontColorStyle="link" iconSize="s" iconStyle="secondary" icon="icon-DayBackward" on:click="backClickHdl()" />
 
    <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">

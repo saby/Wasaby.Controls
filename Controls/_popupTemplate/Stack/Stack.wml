@@ -1,27 +1,27 @@
-<div class="controls-StackTemplate" ws-tab-cycling="true">
-    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}" scope="{{_options}}">
-        <div class="controls-StackTemplate__top-area">
+<div class="controls-StackTemplate controls-StackTemplate_theme_{{_options.theme}}" ws-tab-cycling="true">
+    <ws:if data="{{_options.headingCaption || _options.headerContentTemplate}}" scope="{{_options}}">
+        <div class="controls-StackTemplate__top-area controls-StackTemplate__top-area_theme_{{_options.theme}}">
             <div class="controls-StackTemplate__top-area-content">
-                <ws:if data="{{_options.caption || _options.headingCaption}}">
-                    <div class="controls-StackTemplate__caption">
-                        <Controls.heading:Title attr:class="controls-StackTemplate__caption_text"
-                                          caption="{{_options.caption || _options.headingCaption}}"
+                <ws:if data="{{_options.headingCaption}}">
+                    <div class="controls-StackTemplate__caption_theme_{{_options.theme}}">
+                        <Controls.heading:Title attr:class="controls-StackTemplate__caption_text_theme_{{_options.theme}}"
+                                          caption="{{_options.headingCaption}}"
                                           style="{{_options.headingStyle}}"
                                           size="{{_options.headingSize}}"
                                           theme="{{_options.headingTheme}}"
                                           readOnly="{{true}}"
-                                          tooltip="{{_options.caption || _options.headingCaption}}"/>
+                                          tooltip="{{_options.headingCaption}}"/>
                     </div>
                 </ws:if>
-                <ws:if data="{{_options.topArea || _options.headerContentTemplate}}">
-                    <ws:partial template="{{_options.topArea || _options.headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate"></ws:partial>
+                <ws:if data="{{_options.headerContentTemplate}}">
+                    <ws:partial template="{{_options.headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate_theme_{{_options.theme}}"></ws:partial>
                 </ws:if>
-                <div class="controls-StackTemplate__command_buttons">
+                <div class="controls-StackTemplate__command_buttons_theme_{{_options.theme}}">
                     <ws:if data="{{_options.showMaximizedButton || _maximizeButtonVisibility}}">
-                        <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
+                        <div class="controls-StackTemplate__maximized_button controls-StackTemplate__maximized_button_theme_{{_options.theme}}" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
                     </ws:if>
                     <ws:if data="{{ _options.closeButtonVisibility}}">
-                    <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button" viewMode="{{_closeButtonViewMode}}" on:click="close()"/>
+                    <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button controls-StackTemplate__close_button_theme_{{_options.theme}}" viewMode="{{_options.closeButtonViewMode}}" transparent="{{_options.closeButtonTransparent}}" on:click="close()"/>
                     </ws:if>
                 </div>
             </div>
@@ -30,18 +30,18 @@
     <ws:else>
         <div class="controls-StackTemplate__command_buttons_without_head">
             <ws:if data="{{_options.showMaximizedButton || _maximizeButtonVisibility}}">
-                <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
+                <div class="controls-StackTemplate__maximized_button controls-StackTemplate__maximized_button_theme_{{_options.theme}}" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
             </ws:if>
             <ws:if data="{{_options.closeButtonVisibility}}">
-                <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button" viewMode="{{_closeButtonViewMode}}" on:click="close()"/>
+                <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button controls-StackTemplate__close_button_theme_{{_options.theme}}" viewMode="{{_options.closeButtonViewMode}}" transparent="{{_options.closeButtonTransparent}}" on:click="close()"/>
             </ws:if>
         </div>
     </ws:else>
 
     <div class="controls-StackTemplate__content-area">
-        <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options}}"></ws:partial>
+        <ws:partial template="{{_options.bodyContentTemplate}}" scope="{{_options}}"></ws:partial>
     </div>
-    <div if="{{_options.bottomArea || _options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea">
-    <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}" scope="{{_options}}"></ws:partial>
+    <div if="{{_options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea controls-StackTemplate__bottomArea_theme_{{_options.theme}}">
+    <ws:partial template="{{_options.footerContentTemplate}}" scope="{{_options}}"></ws:partial>
 </div>
 </div>

@@ -67,7 +67,7 @@
                <ws:Number>3</ws:Number>
             </ws:minSearchLength>
          </Controls.suggest:SearchInput>
-         <Controls.buttons:Button caption="{[Найти]}" viewMode="button" style="primary" attr:class="ControlsDemo-Suggest_searchButton" on:click="_clickSearchButton()"/>
+         <Controls.buttons:Button caption="{[Найти]}" viewMode="button" buttonStyle="primary" attr:class="ControlsDemo-Suggest_searchButton" on:click="_clickSearchButton()"/>
       </div>
    </div>
 </div>

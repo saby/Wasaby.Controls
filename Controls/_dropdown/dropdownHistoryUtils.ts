@@ -1,6 +1,8 @@
 import coreInstance = require('Core/core-instance');
 import Merge = require('Core/core-merge');
+import * as Deferred from 'Core/Deferred';
 
+let HistorySource, HistoryService;
 
 function getMetaHistory() {
    return {
@@ -10,6 +12,32 @@ function getMetaHistory() {
 
 function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
+}
+
+function createHistorySource(source, historyId) {
+   return new HistorySource({
+      originSource: source,
+      historySource: new HistoryService({
+         historyId: historyId
+      })
+   });
+}
+
+function getSource(source, historyId) {
+   let historyLoad = new Deferred();
+
+   if (!historyId || isHistorySource(source)) {
+      historyLoad.callback(source);
+   } else if (HistorySource && HistoryService) {
+      historyLoad.callback(createHistorySource(source, historyId));
+   } else {
+      require(['Controls/history'], function(history) {
+         HistorySource = history.Source;
+         HistoryService = history.Service;
+         historyLoad.callback(createHistorySource(source, historyId));
+      });
+   }
+   return historyLoad;
 }
 
 function getFilter(filter, source) {
@@ -23,5 +51,6 @@ function getFilter(filter, source) {
 export = {
    getSourceFilter: getFilter,
    isHistorySource: isHistorySource,
+   getSource: getSource,
    getMetaHistory: getMetaHistory
 };

@@ -190,14 +190,29 @@ define([
          var
             cfg = {
                root: 'rootNode',
-               viewMode: 'tree'
+               viewMode: 'tree',
+               virtualScrolling: true
             };
          var newCfg = {
             viewMode: 'search',
-            root: 'rootNode'
+            root: 'rootNode',
+            virtualScrolling: true
+         };
+         var newCfg2 = {
+            viewMode: 'tile',
+            root: 'rootNode',
+            virtualScrolling: true
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
+         var resetExpandedItemsCalled = false;
+         instance._children = {
+            treeControl: {
+               resetExpandedItems: function() {
+                  resetExpandedItemsCalled = true;
+               }
+            }
+         };
 
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
@@ -211,12 +226,16 @@ define([
          assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
          assert.isFalse(rootChanged);
+         assert.isTrue(instance._virtualScrolling);
 
+         resetExpandedItemsCalled = false;
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
          assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.isFalse(rootChanged);
+         assert.isTrue(resetExpandedItemsCalled);
+         assert.isTrue(instance._virtualScrolling);
 
          instance._breadCrumbsItems = new collection.RecordSet({
             rawData: [
@@ -224,12 +243,22 @@ define([
             ],
             idProperty: 'id'
          });
-         instance._options.searchMode = 'root';
+         instance._options.searchStartingWith = 'root';
          instance._options.root = 'test';
          instance._options.parentProperty = 'id';
          instance._viewMode = 'tree';
          instance._beforeUpdate(newCfg);
          assert.isFalse(rootChanged);
+         assert.isTrue(instance._virtualScrolling);
+
+         resetExpandedItemsCalled = false;
+         instance._beforeUpdate(newCfg2);
+         assert.equal(instance._viewMode, 'tile');
+         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
+         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
+         assert.isFalse(rootChanged);
+         assert.isTrue(resetExpandedItemsCalled);
+         assert.isFalse(instance._virtualScrolling);
       });
 
       it('toggleExpanded', function() {
@@ -436,6 +465,32 @@ define([
 
             /* https://online.sbis.ru/opendoc.html?guid=3523e32f-2bb3-4ed4-8b0f-cde55cb81f75 */
             assert.isTrue(isNativeClickEventExists);
+
+
+            // if return false
+            explorer._notify = function() {
+               return false;
+            };
+
+            isPropagationStopped = false;
+
+            explorer._onItemClick({
+               stopPropagation: function() {
+                  isPropagationStopped = true;
+               }
+            }, {
+               get: function() {
+                  return true;
+               },
+               getId: function() {
+                  return 'itemIdOneMore';
+               }
+            }, {
+               nativeEvent: 123
+            });
+            assert.isFalse(isPropagationStopped);
+            // Root wasn't changed
+            assert.equal(root, 'itemId');
          });
 
          it('_onBreadCrumbsClick', function() {

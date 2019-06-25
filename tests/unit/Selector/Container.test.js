@@ -160,7 +160,6 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             return items[id];
          };
 
-         container._items = new collection.List({items: items});
          container._selectedKeys = [];
          container._excludedKeys = [];
          container.context = {

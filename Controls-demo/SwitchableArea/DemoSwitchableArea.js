@@ -53,17 +53,26 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
                {
                   id: '0',
                   title: 'dop',
-                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop',
+                  templateOptions: {
+                     number: 1
+                  }
                },
                {
                   id: '1',
                   title: 'dop2',
-                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop',
+                  templateOptions: {
+                     number: 2
+                  }
                },
                {
                   id: '2',
                   title: 'dop3',
-                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop',
+                  templateOptions: {
+                     number: 3
+                  }
                }
             ];
          }

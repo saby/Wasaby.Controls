@@ -200,10 +200,6 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerType = options.headerType;
     },
 
-    _beforeUpdate: function (options) {
-        this._rangeModel.update(options);
-    },
-
     _beforeUnmount: function () {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();
@@ -301,7 +297,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _applyClick: function (e) {
-        _private.sendResult(this);
+        this._children.formController.submit().addCallback((results: object) => {
+            if (!Object.keys(results).find((key) => Array.isArray(results[key]))) {
+                _private.sendResult(this);
+            }
+        });
     },
 
     _closeClick: function () {

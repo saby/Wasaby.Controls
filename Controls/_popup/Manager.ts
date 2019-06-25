@@ -323,13 +323,17 @@ import Vdom = require('Vdom/Vdom');
             ManagerController.getContainer().setPopupItems(_private.popupItems);
          },
 
-         controllerVisibilityChangeHandler: function() {
-            _private.popupItems.each(function(item) {
-               if (item.controller.needRecalcOnKeyboardShow()) {
-                  item.controller._elementUpdated(item, _private.getItemContainer(item.id));
-               }
-            });
-            _private.redrawItems();
+         controllerVisibilityChangeHandler(): void {
+            const keyboardAnimationDelay = 250;
+            // wait, until keyboard show/hide for positioning popup
+            setTimeout(() => {
+               _private.popupItems.each((item) => {
+                  if (item.controller.needRecalcOnKeyboardShow()) {
+                     item.controller._elementUpdated(item, _private.getItemContainer(item.id));
+                  }
+               });
+               _private.redrawItems();
+            }, keyboardAnimationDelay);
          },
 
          getPopupContainer: function() {

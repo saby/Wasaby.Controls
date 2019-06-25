@@ -449,6 +449,11 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Valid code.', function() {
+               ctrl._children[ctrl._fieldName] = undefined;
+
+               ctrl._focusOutHandler();
+            });
          });
          describe('Click event on the placeholder.', function() {
             beforeEach(function() {
@@ -483,42 +488,6 @@ define(
                   value: ''
                });
                event.stopPropagation = ProxyCall.apply(function() {}, 'stopPropagation', calls, true);
-            });
-            it('The up arrow', function() {
-               event.keyCode = Env.constants.key.up;
-               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
-
-               assert.deepEqual(calls, [{
-                  name: 'stopPropagation',
-                  arguments: []
-               }]);
-            });
-            it('The left arrow', function() {
-               event.keyCode = Env.constants.key.left;
-               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
-
-               assert.deepEqual(calls, [{
-                  name: 'stopPropagation',
-                  arguments: []
-               }]);
-            });
-            it('The down arrow', function() {
-               event.keyCode = Env.constants.key.down;
-               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
-
-               assert.deepEqual(calls, [{
-                  name: 'stopPropagation',
-                  arguments: []
-               }]);
-            });
-            it('The right arrow', function() {
-               event.keyCode = Env.constants.key.right;
-               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
-
-               assert.deepEqual(calls, [{
-                  name: 'stopPropagation',
-                  arguments: []
-               }]);
             });
             it('The home key', function() {
                event.keyCode = Env.constants.key.home;

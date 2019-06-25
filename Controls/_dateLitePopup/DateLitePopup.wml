@@ -8,9 +8,10 @@
             <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
                <Controls.buttons:Button
                   class="controls-PeriodLiteDialog__homeButton"
-                  style="secondary"
+                  fontColorStyle="link"
                   viewMode="link"
-                  icon="icon-small icon-Home3"
+                  icon="icon-Home3"
+                  iconSize="s"
                   on:click="_onHomeClick()"
                />
             </div>

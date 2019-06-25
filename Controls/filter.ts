@@ -6,6 +6,7 @@
  * @includes View Controls/_filter/View
  * @includes ButtonContainer Controls/_filter/Button/Container
  * @includes FastContainer Controls/_filter/Fast/Container
+ * @includes ViewContainer Controls/_filter/View/Container
  * @includes Controller Controls/_filter/Controller
  * @includes ButtonStyles Controls/_filter/Button/Styles
  * @includes FastStyles Controls/_filter/Fast/FastStyles

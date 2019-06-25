@@ -5,7 +5,7 @@ import buttonLib = require('Controls/buttons');
          menuStyle = options.headConfig && options.headConfig.menuStyle,
          currentButtonClass, iconSize;
 
-      currentButtonClass = buttonLib.classesUtil.getCurrentButtonClass(options.style);
+      currentButtonClass = buttonLib.ActualApi.styleToViewMode(options.style);
 
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       var offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);

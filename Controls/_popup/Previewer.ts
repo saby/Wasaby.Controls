@@ -39,7 +39,7 @@ import 'css!theme?Controls/popup';
                   onClose: self._closeHandler
                },
                templateOptions: {
-                  template: self._options.templateName || self._options.template,
+                  template: self._options.template,
                   templateOptions: self._options.templateOptions
                }
             };
@@ -86,9 +86,6 @@ import 'css!theme?Controls/popup';
             this._closeHandler = this._closeHandler.bind(this);
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
-            if (options.templateName) {
-               Env.IoC.resolve('ILogger').error(this._moduleName, 'Используется устаревшая опция templateName, используйте опцию template');
-            }
          },
 
          /**

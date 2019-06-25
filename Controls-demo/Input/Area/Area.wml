@@ -53,7 +53,7 @@
       />
       <div>
          <Controls.toggle:Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="ControlsDemo-Area__trim"/>
-         <Controls-demo.PropertyGrid.PropertyGrid 
+         <Controls-demo.PropertyGrid.PropertyGrid
             attr:id="propertyGrid"
             attr:class="ControlsDemo-Area__propertyGrid"
             bind:selectOnClickValue="_selectOnClick"
@@ -63,7 +63,7 @@
          />
       </div>
       <div>
-         <Controls.buttons:Button attr:class="demo-pasteButton" on:click="paste_text()" style="linkMain3" caption="paste"/>
+         <Controls.buttons:Button attr:class="demo-pasteButton" on:click="paste_text()" fontColorStyle="unaccented" viewMode="link" caption="paste"/>
       </div>
    </ws:componentProperty>
 </Controls-demo.Wrapper.Wrapper>

@@ -99,7 +99,7 @@ import Env = require('Env/Env');
     * @public
     * @category List
     * @author Михайловский Д.С.
-    * @demo Controls-demo/_tabs/ButtonsDemoPG
+    * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
    /**

@@ -11,7 +11,14 @@
                         selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
         </Controls.Container.Async>
     </ws:if>
-    <Controls.deprecatedList:Container scope="{{_suggestListOptions}}" name="list" navigation="{{_navigation}}" content="{{_options.content}}" on:markedKeyChanged="_notifyHandler('markedKeyChanged')"/>
+    <Controls.deprecatedList:Container scope="{{_suggestListOptions}}"
+                                       name="list"
+                                       markedKey="{{_markedKey}}"
+                                       reverseList="{{_reverseList}}"
+                                       navigation="{{_navigation}}"
+                                       content="{{_options.content}}"
+                                       searchEndCallback="{{_searchEndCallback}}"
+                                       on:markedKeyChanged="_markedKeyChanged()"/>
 
     <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
 </div>

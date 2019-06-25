@@ -2,7 +2,7 @@
             {{_dropdownClass}}
             {{_options.dropdownClassName}}
             theme_{{_options.theme}}"
-            style="min-width: {{_options.width ? _options.width + 'px'}}"
+            style="width: {{_options.width ? _options.width + 'px'}}"
             attr:ws-no-focus="true"
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader || _options.headerTemplate}}">
@@ -56,8 +56,10 @@
                <ws:if data="{{_needShowApplyButton}}">
                   <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
                      <Controls.buttons:Button viewMode="toolButton"
-                                              icon="icon-Yes icon-medium"
+                                              icon="icon-Yes"
+                                              iconSize="m"
                                               iconStyle="success"
+                                              buttonStyle="success"
                                               on:click="_applySelection()"/>
                   </div>
                </ws:if>

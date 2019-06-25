@@ -77,7 +77,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                if (dataLoadCallback) {
                   dataLoadCallback(items);
                }
-               return items
+               return items;
             });
          },
 
@@ -147,7 +147,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             // Get keys of selected items
             chain.factory(items).each(function(item) {
                var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
-               selectedKeys.push(key);
+               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue')) {
+                  selectedKeys.push(key);
+               }
             });
 
             _private.setValue(this, selectedKeys);
@@ -247,6 +249,15 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                }
             });
             return !!hasSelectorTemplate;
+         },
+
+         loadConfigFromSource: function(self, options) {
+            return _private.loadItemsFromSource(self, options).addCallback(() => {
+               return _private.reload(self).addCallback((result) => {
+                  self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+                  return result;
+               });
+            });
          }
       };
 
@@ -259,8 +270,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             this._configs = [];
             this._onResult = _private.onResult.bind(this);
 
-            var self = this,
-               resultDef;
+            var resultDef;
 
             if (receivedState) {
                this._configs = receivedState.configs;
@@ -273,9 +283,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.loadItemsFromSource(self, options).addCallback(function() {
-                  return _private.reload(self);
-               });
+               resultDef = _private.loadConfigFromSource(this, options);
             }
             this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             return resultDef;
@@ -296,9 +304,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                this._sourceController = null;
-               resultDef = _private.loadItemsFromSource(self, newOptions).addCallback(function() {
-                  return _private.reload(self);
-               });
+               resultDef = _private.loadConfigFromSource(this, newOptions);
             }
             return resultDef;
          },
@@ -320,6 +326,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
                className: (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup') + '_theme_' + this._options.theme,
+               fittingMode: 'overflow',
 
                // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]

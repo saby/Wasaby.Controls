@@ -163,44 +163,6 @@ define([
          }, 1);
       });
 
-      it('should set itemsContainer in VS if null', function () {
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            navigation: {
-               view: 'infinity'
-            },
-            virtualScrolling: true,
-            viewModelConstructor: lists.ListViewModel,
-            source: source
-         };
-         var itemsContainer = {
-            qwe: 123
-         },
-             ctrl = new lists.BaseControl(cfg);
-
-         assert.isUndefined(ctrl._virtualScroll);
-         ctrl._beforeMount(cfg);
-         assert.isTrue(!!ctrl._virtualScroll);
-
-         ctrl._virtualScroll.updateItemsSizes = function(){};
-         ctrl._children.listView = {
-            getItemsContainer: function() {
-               return itemsContainer;
-            }
-         };
-
-         assert.isUndefined(ctrl._virtualScroll.ItemsContainer);
-         ctrl._viewResize();
-         assert.equal(ctrl._virtualScroll.ItemsContainer, itemsContainer);
-      });
-
       it('beforeMount: right indexes with virtual scroll and receivedState', function () {
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -304,6 +266,51 @@ define([
          }, 100);});
       });
 
+      it('check dataLoadCallback and afterReloadCallback calling order', async function() {
+         var
+            dataLoadCallbackCalled = false,
+            afterReloadCallbackCalled = false,
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: new sourceLib.Memory({}),
+               viewModelConstructor: lists.ListViewModel,
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               afterReloadCallback: function() {
+                  afterReloadCallbackCalled = true;
+                  assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called before afterReloadCallback.');
+               }
+            },
+            ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
+
+         // emulate reload with error
+         ctrl._sourceController.load = function() {
+            return cDeferred.fail();
+         };
+
+         afterReloadCallbackCalled = false;
+         dataLoadCallbackCalled = false;
+
+         await ctrl.reload();
+
+         assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
+         assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
+      });
 
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
@@ -682,24 +689,165 @@ define([
 
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
          assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
-         assert.equal(2, instance.getVirtualScroll().ItemsIndexes.stop);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(2, vm.getStopIndex());
 
          vm.getCount = function() {
             return 1;
          };
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
          assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
-         assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(1, vm.getStopIndex());
 
          vm.getCount = function() {
             return 5;
          };
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, instance.getViewModel()._startIndex);
-         assert.equal(5, instance.getViewModel()._stopIndex);
+         assert.equal(0, vm.getStartIndex());
+         assert.equal(5, vm.getStopIndex());
+      });
+
+      it('virtual scroll shouldn\'t update indexes on reload', async function() {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let
+             isIndexesUpdated = false,
+             virtualScroll = instance.getVirtualScroll(),
+             updateIndexes = virtualScroll.updateItemsIndexes,
+             vm = instance.getViewModel();
+
+         instance.getVirtualScroll().updateItemsIndexes = function () {
+            isIndexesUpdated = true;
+            updateIndexes.apply(virtualScroll, arguments);
+         };
+
+         await instance.reload();
+         assert.isFalse(isIndexesUpdated);
+         assert.equal(vm._startIndex, 0);
+         assert.equal(vm._stopIndex, 6);
+         assert.isFalse(isIndexesUpdated);
+
+      });
+
+      it('moveMarkerToNext && moveMarkerToPrevious', async function() {
+         var
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg),
+            originalScrollToItem = lists.BaseControl._private.scrollToItem;
+         lists.BaseControl._private.scrollToItem = function() {};
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            }
+         });
+         assert.equal(3, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            }
+         });
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
+         lists.BaseControl._private.scrollToItem = originalScrollToItem;
+      });
+
+      it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
+         var
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'hidden',
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            }
+         });
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            }
+         });
+         assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
 
       it('enterHandler', function () {
@@ -928,6 +1076,10 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
+
+         lists.BaseControl._private.showIndicator(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
@@ -1439,6 +1591,20 @@ define([
          var
             stopImmediateCalled = false,
             preventDefaultCalled = false,
+            getParamsKeyDown = function(keyCode) {
+               return {
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  target: {closest() { return false; }},
+                  nativeEvent: {
+                     keyCode: keyCode
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  }
+               };
+            },
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1475,15 +1641,7 @@ define([
             setTimeout(function () {
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.down
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
                lnBaseControl._children = {
@@ -1492,30 +1650,11 @@ define([
                      }
                   }
                };
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.space
-                  },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
                assert.isTrue(preventDefaultCalled);
 
-               lnBaseControl._onViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.up
-                  }
-               });
+               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
@@ -2181,42 +2320,42 @@ define([
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
-                  items: new collection.RecordSet({
-                     rawData: [
-                        { id: 1, title: 'item 1' },
-                        { id: 2, title: 'item 2' }
-                     ],
-                     idProperty: 'id'
-                  }),
-                  viewName: 'Controls/List/ListView',
-                  viewConfig: {
-                     idProperty: 'id'
-                  },
-                  viewModelConfig: {
-                     items: [],
-                     idProperty: 'id'
-                  },
-                  markedKey: null,
-                  viewModelConstructor: lists.ListViewModel,
-                  source: source
-               },
-               instance = new lists.BaseControl(cfg),
-               fakeEvent = {
-                  type: 'itemcontextmenu'
-               },
-               childEvent = {
-                  nativeEvent: {
-                     preventDefault: function() {
-                        callBackCount++;
-                     }
-                  },
-                  stopImmediatePropagation: function() {
-                     callBackCount++;
-                  }
-               },
-               itemData = {
-                  key: 1
-               };
+                   items: new collection.RecordSet({
+                      rawData: [
+                         { id: 1, title: 'item 1' },
+                         { id: 2, title: 'item 2' }
+                      ],
+                      idProperty: 'id'
+                   }),
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   markedKey: null,
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                instance = new lists.BaseControl(cfg),
+                fakeEvent = {
+                   type: 'itemcontextmenu'
+                },
+                childEvent = {
+                   nativeEvent: {
+                      preventDefault: function() {
+                         callBackCount++;
+                      }
+                   },
+                   stopImmediatePropagation: function() {
+                      callBackCount++;
+                   }
+                },
+                itemData = {
+                   key: 1
+                };
             instance._children = {
                itemActionsOpener: {
                   open: function() {
@@ -2233,7 +2372,71 @@ define([
             assert.equal(callBackCount, 0);
          });
 
+         it('close context menu if its owner was removed', function() {
+            let
+                swipeClosed = false,
+                itemActionsOpenerClosed = false,
+                cfg = {
+                   items: new collection.RecordSet({
+                      rawData: [
+                         { id: 1, title: 'item 1' },
+                         { id: 2, title: 'item 2' }
+                      ],
+                      idProperty: 'id'
+                   }),
+                   viewName: 'Controls/List/ListView',
+                   viewConfig: {
+                      idProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: [],
+                      idProperty: 'id'
+                   },
+                   markedKey: null,
+                   viewModelConstructor: lists.ListViewModel,
+                   source: source
+                },
+                instance = new lists.BaseControl(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function () {
+                     itemActionsOpenerClosed = true;
+                  }
+               },
+               swipeControl: {
+                  closeSwipe: function () {
+                     swipeClosed = true;
+                  }
+               }
+            };
 
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._menuIsShown = true;
+            instance._itemWithShownMenu = {
+               getId: () => '123321'
+            };
+            instance.getViewModel()._notify(
+                'onListChange',
+                'collectionChanged',
+                collection.IObservable.ACTION_REMOVE,
+                null,
+                null,
+                [{
+                   getContents: () => {
+                      return {
+                         getId: () => '123321'
+                      }
+                   }
+                }],
+                null);
+
+            assert.isFalse(instance._menuIsShown);
+            assert.isFalse(instance._actionMenuIsShown);
+            assert.isNull(instance._itemWithShownMenu);
+            assert.isTrue(itemActionsOpenerClosed);
+            assert.isTrue(swipeClosed);
+         });
 
          it('showActionsMenu context', function() {
             var callBackCount = 0;
@@ -3026,39 +3229,6 @@ define([
                });
             });
          });
-      });
-
-      it('updateVirtualWindowIfNeed', async function () {
-
-         var
-             cfg = {
-                viewName: 'Controls/List/ListView',
-                viewModelConfig: {
-                   items: [],
-                   keyProperty: 'id',
-                },
-                viewModelConstructor: lists.ListViewModel,
-                virtualScrolling: true,
-                virtualPageSize: 2,
-                virtualSegmentSize: 1,
-                navigation: { view: 'infinity' },
-                keyProperty: 'id',
-                source: source
-             },
-             instance = new lists.BaseControl(cfg);
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-         instance._loadTriggerVisibility = {
-            up: false,
-            down: true
-         };
-         instance._sourceController.hasMoreData = () => false;
-
-         lists.BaseControl._private.updateVirtualWindow(instance, 'up');
-
-         assert.isTrue(instance._checkShouldLoadToDirection);
-         instance._beforePaint();
-         assert.isFalse(instance._checkShouldLoadToDirection);
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {

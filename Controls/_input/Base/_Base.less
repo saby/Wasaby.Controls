@@ -34,6 +34,7 @@
 .controls-InputBase__field_readOnly {
    width: 100%;
    .text-overflow();
+   white-space: pre;
 }
 
 .controls-InputBase__nativeField_theme_@{themeName} {
@@ -126,6 +127,20 @@
    left: 0;
 }
 
+.controls-InputBase__stretcher {
+   display: inline-flex;
+}
+
 .controls-InputBase__stretcher-block {
    visibility: hidden;
+   white-space: pre;
+}
+
+/**
+ * Элемент <input> с шириной по stretcher`у может быть прокручен по горизонтали.
+ * Проблема наблюдается в IE. Увеличение ширины на 2px(подобрано тестовым методом) решает проблему.
+ * https://jsfiddle.net/63f8nb4j/3/
+ */
+.ws-is-ie .controls-InputBase__stretcher-block {
+   padding-right: 2px;
 }

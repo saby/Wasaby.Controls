@@ -170,8 +170,10 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.theme !== newOptions.theme) {
            this._backButtonMinWidth = _private.getBackButtonMinWidth();
         }
-        let containerWidth = _private.getAvailableContainerWidth(this);
-        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+        const containerWidth = _private.getAvailableContainerWidth(this);
+
+        //containerWidth is less than 0, if path is inside hidden node. (for example switchableArea)
+        if (containerWidth > 0 && BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
         }

@@ -64,7 +64,6 @@ var Component = BaseControl.extend({
             target: this._container,
             template: 'Controls/datePopup',
             className,
-            isCompoundTemplate: true,
             horizontalAlign: {side: 'right'},
             corner: {horizontal: 'left'},
             fittingMode: 'overflow',
@@ -78,7 +77,7 @@ var Component = BaseControl.extend({
                 captionFormatter: this._options.captionFormatter,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
-                ranges: this._options.ranges,
+                quantum: this._options.ranges,
                 minRange: this._options.minRange
             }
         };
