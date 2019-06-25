@@ -573,7 +573,7 @@ var
         },
 
         getRoot: function() {
-            return this._display.getRoot();
+            return this._display ? this._display.getRoot() : undefined;
         },
 
         setRoot: function(root) {

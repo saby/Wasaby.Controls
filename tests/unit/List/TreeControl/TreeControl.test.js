@@ -368,6 +368,13 @@ define([
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
+            getRoot: () => {
+               return {
+                  getContents: () => {
+                     return treeViewModel._model._root;
+                  }
+               };
+            },
             subscribe: () => {},
             unsubscribe: () => {}
          };
@@ -392,11 +399,12 @@ define([
          // Test
          return new Promise(function(resolve) {
             setTimeout(function() {
+               treeControl._options.root = undefined;
                treeControl._root = 12;
                treeControl._afterUpdate({filter: {}});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
-                  assert.equal(undefined, treeViewModel._model._root);
+                  assert.equal(12, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
@@ -507,7 +515,14 @@ define([
             return reloadOriginal.apply(this, arguments);
          };
          treeGridViewModel._model._display = {
-            setFilter: function() {}
+            setFilter: function() {},
+            getRoot: function() {
+               return {
+                  getContents: function() {
+                     return null;
+                  }
+               };
+            }
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
@@ -522,6 +537,7 @@ define([
                      parent: null
                   };
                   treeControl._beforeUpdate({root: 'testRoot'});
+                  treeControl._options.root = 'testRoot';
                   try {
                      assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
                      assert.deepEqual(filterOnOptionChange, newFilter);
