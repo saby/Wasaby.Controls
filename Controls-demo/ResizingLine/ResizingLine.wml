@@ -11,13 +11,13 @@
    <div style="height: 200px; width: {{_width}}px; background: red; position: relative;">
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"
                                       direction="reverse"
-                                      minOffset="{{-100}}"
-                                      maxOffset="{{400}}"
+                                      minOffset="{{_minOffsetLeft}}"
+                                      maxOffset="{{_maxOffsetLeft}}"
                                       on:offset="_offsetHandlerLeft()"/>
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; right: 0; height: 100%"
                                        direction="direct"
-                                       minOffset="{{-100}}"
-                                       maxOffset="{{400}}"
+                                       minOffset="{{_minOffsetRight}}"
+                                       maxOffset="{{_maxOffsetRight}}"
                                       on:offset="_offsetHandlerRight()"/>
    </div>
 
