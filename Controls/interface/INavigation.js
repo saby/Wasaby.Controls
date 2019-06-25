@@ -133,6 +133,7 @@ define('Controls/interface/INavigation', [
     * </pre>
     * JS:
     * <pre>
+    * _beforeMount: function(options) {
     *    this._source = new Memory({
     *      idProperty: 'id',
     *      data: [
@@ -158,6 +159,7 @@ define('Controls/interface/INavigation', [
     *          page: 0
     *       }
     *    };
+    * }
     * </pre>
     */
 
@@ -175,6 +177,7 @@ define('Controls/interface/INavigation', [
     * </pre>
     * JS:
     * <pre>
+    * _beforeMount: function(options) {
     *    this._source = new Memory({
     *      idProperty: 'id',
     *      data: [
@@ -200,6 +203,7 @@ define('Controls/interface/INavigation', [
     *          page: 0
     *       }
     *    };
+    * }
     * </pre>
     */
 
