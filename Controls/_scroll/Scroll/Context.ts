@@ -1,7 +1,7 @@
 import DataContext = require('Core/DataContext');
 
 /**
- * Context for {@link Controls/_scroll/Scroll}.
+ * Context for {@link Controls/_scroll/Container}.
  * Used to control the visibility of paginated navigation.
  *
  * @example
