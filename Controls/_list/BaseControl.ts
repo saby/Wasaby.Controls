@@ -1031,6 +1031,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _canUpdateItemsActions: false,
     _wasRepaint: false,
 
+    _needBottomPadding: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1054,6 +1056,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
+        this._needBottomPadding = newOptions.itemActionsPosition === 'outside';
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 

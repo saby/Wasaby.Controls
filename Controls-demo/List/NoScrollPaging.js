@@ -232,20 +232,19 @@ define('Controls-demo/List/NoScrollPaging', [
          title: 'Lenovo 59'
       }
    ],
-   partialColumns = [
-      {
-         displayProperty: 'name',
-         width: '1fr',
-         template: 'wml!Controls-demo/List/Grid/DemoName'
-      },
-      {
-         displayProperty: 'price',
-         width: 'auto',
-         align: 'right',
-         template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
-      }
-   ],
-
+      partialColumns = [
+         {
+            displayProperty: 'name',
+            width: '1fr',
+            template: 'wml!Controls-demo/List/Grid/DemoName'
+         },
+         {
+            displayProperty: 'price',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         }
+      ],
       partialColumns2 = [
          {
             displayProperty: 'name',
@@ -272,12 +271,56 @@ define('Controls-demo/List/NoScrollPaging', [
          _footerPagingOptionsG: null,
          _selectKeyColumn: null,
          _columnSource: null,
+         _itemActions: null,
          _markedKey: 0,
          _markedKeyG: 0,
          gridColumns2: null,
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-
+            this._itemActions = [
+               {
+                  id: 5,
+                  title: 'прочитано',
+                  showType: 2,
+                  handler: function() {
+                     console.log('action read Click');
+                  }
+               },
+               {
+                  id: 1,
+                  icon: 'icon-primary icon-PhoneNull',
+                  title: 'phone',
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-primary icon-EmptyMessage',
+                  title: 'message',
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-primary icon-Profile',
+                  title: 'profile',
+                  showType: 2,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase icon-error',
+                  title: 'delete pls',
+                  showType: 2,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
             this._viewSource = new mySource({
                idProperty: 'id',
                data: srcData

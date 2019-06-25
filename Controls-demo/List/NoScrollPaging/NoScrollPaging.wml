@@ -7,6 +7,8 @@
                   source = "{{_viewSource}}"
                   markedKey = "{{4}}"
                   displayProperty="title"
+                  itemActions="{{_itemActions}}"
+                  itemActionsPosition="{{'outside'}}"
                   allowEmptySelection="{{false}}"
                   multiSelect="{{true}}"
                   name="psina"
@@ -31,12 +33,14 @@
                        stickyFooter = "{{true}}"
                        displayProperty="title"
                        resultsPosition="top"
+                       itemActions="{{_itemActions}}"
+                       itemActionsPosition="{{'outside'}}"
                        rowSeparatorVisibility="{{true}}"
                        itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                        columns="{{gridColumns2}}"
                        bind:sorting="_sorting">
                   <ws:navigation source="page" view="pages">
-                     <ws:sourceConfig pageSize="{{7}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+                     <ws:sourceConfig pageSize="{{4}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                      <ws:viewConfig pagingMode="direct"></ws:viewConfig>
                   </ws:navigation>
                   <ws:header>
