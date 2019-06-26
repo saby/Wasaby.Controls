@@ -122,6 +122,9 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _visibilityChangedHandler: function(event, index, visibility) {
+         if (!visibility) {
+            this._options.items[index].value = this._options.items[index].resetValue;
+         }
          this._options.items[index].visibility = visibility;
          this._notify('itemsChanged', [this._options.items]);
       }
