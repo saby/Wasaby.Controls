@@ -107,7 +107,7 @@ var _private = {
    },
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
-         _private.getSearchController(this).abort();
+         _private.getSearchController(this).abort(true);
          this._inputSearchValue = '';
          this._root = root;
       }
