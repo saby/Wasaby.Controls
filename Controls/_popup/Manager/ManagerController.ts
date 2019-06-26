@@ -2,7 +2,6 @@
  * Created by as.krasilnikov on 02.04.2018.
  */
 
-
       // Модуль, необходимый для работы окон/панелей в слое совместимости
       // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
       // т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
@@ -10,29 +9,36 @@
          _manager: null,
          _container: null,
          _indicator: null,
-         setManager: function(manager) {
+         _popupHeaderTheme: undefined,
+         setManager(manager) {
             this._manager = manager;
          },
-         getManager: function() {
+         getManager() {
             return this._manager;
          },
-         setContainer: function(container) {
+         setContainer(container) {
             this._container = container;
+         },
+         setPopupHeaderTheme(themeName: string): void {
+            this._popupHeaderTheme = themeName;
+         },
+         getPopupHeaderTheme(): string {
+            return this._popupHeaderTheme;
          },
 
          // Регистрируем индикатор, лежащий в application.
          // Необходимо для того, чтобы старый индикатор на вдомной странице мог работать через новый компонент
-         setIndicator: function(indicator) {
+         setIndicator(indicator) {
             this._indicator = indicator;
          },
-         getIndicator: function() {
+         getIndicator() {
             return this._indicator;
          },
-         getContainer: function() {
+         getContainer() {
             return this._container;
          },
 
-         popupUpdated: function(id) {
+         popupUpdated(id) {
             return this._manager._eventHandler(null, 'popupUpdated', id);
          },
 
@@ -40,7 +46,7 @@
           * Найти popup
           */
 
-         find: function() {
+         find() {
             return this._callManager('find', arguments);
          },
 
@@ -48,7 +54,7 @@
           * Удалить popup
           */
 
-         remove: function() {
+         remove() {
             return this._callManager('remove', arguments);
          },
 
@@ -56,11 +62,11 @@
           * Обновить popup
           */
 
-         update: function() {
+         update() {
             return this._callManager('update', arguments);
          },
 
-         updateOptionsAfterInitializing: function() {
+         updateOptionsAfterInitializing() {
             return this._callManager('updateOptionsAfterInitializing', arguments);
          },
 
@@ -68,28 +74,28 @@
           * Показать popup
           */
 
-         show: function() {
+         show() {
             return this._callManager('show', arguments);
          },
 
-         reindex: function() {
+         reindex() {
             return this._callManager('reindex', arguments);
          },
 
-         isPopupCreating: function(id) {
-            var item = this.find(id);
+         isPopupCreating(id) {
+            let item = this.find(id);
 
-            //TODO заюзал константы напрямую, чтобы перенести BaseController в библиотку popupTemplate.
+            // TODO заюзал константы напрямую, чтобы перенести BaseController в библиотку popupTemplate.
             // Надо разобраться с наследовниемю.
             // https://online.sbis.ru/opendoc.html?guid=983e303b-d56e-4072-84e9-8514f23efc0e
             return item && (item.popupState === 'initializing' || item.popupState === 'creating');
          },
 
-         _callManager: function(methodName, args) {
+         _callManager(methodName, args) {
             if (this._manager) {
                return this._manager[methodName].apply(this._manager, args || []);
             }
             return false;
-         },
+         }
       };
-
+
