@@ -653,11 +653,6 @@ var _private = {
         );
     },
 
-    isNeedBottomPadding: function (self, options) {
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=2cfbb8ed-b311-4a87-b294-7fd5d5cb4bd2
-        return options.itemActionsPosition === 'outside';
-    },
-
     getItemsCount: function(self) {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
@@ -981,6 +976,10 @@ var _private = {
         if (options.keyProperty === undefined) {
             IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
+    },
+
+    needBottomPadding: function(options) {
+        return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     }
 };
 
@@ -1070,7 +1069,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-        this._needBottomPadding = _private.isNeedBottomPadding(this, newOptions);
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
@@ -1168,6 +1167,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;

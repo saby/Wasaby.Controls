@@ -19,14 +19,31 @@
  * <b>Note:</b>
  * To expand all items, this option must be set as array containing one element “null”.
  * In this case, it is assumed that all data will be loaded initially.
+ * @notice Without binding this option will be static. Use binding to allow expanding/collapsing nodes.
  * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ * @example
+ * <pre>
+ *      <Controls.treeGrid:View
+ *           bind:expandedItems="_expandedItems">
+ *      </Controls.treeGrid:View>
+ *  </pre>
+ *  @see collapsedItems
  */
 
 /**
  * @name Controls/_treeGrid/interface/ITreeControl#collapsedItems
  * @cfg {Boolean} Array of identifiers of collapsed items.
- * This option is used only when the value of  {@link Controls/_treeGrid/interface/ITreeControl#expandedItems expandedItems} is [null].
+ * This option is used only when the value of {@link Controls/_treeGrid/interface/ITreeControl#expandedItems expandedItems} is [null].
+ * @notice Without binding this option will be static. Use binding to allow expanding/collapsing nodes.
  * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ * @example
+ * <pre>
+ *      <Controls.treeGrid:View
+ *           bind:expandedItems="_expandedItems"
+ *           bind:collapsedItems="_collapsedItems">
+ *      </Controls.treeGrid:View>
+ *  </pre>
+ *  @see collapsedItems
  */
 
 /**

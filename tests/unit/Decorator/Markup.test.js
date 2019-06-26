@@ -79,7 +79,7 @@ define([
             href: 'http://www.ya.ru',
             target: '_blank'
          },
-         'http://www.ya.ru'
+         'www.ya.ru'
       ],
       ftpLinkNode = ['a',
          {
