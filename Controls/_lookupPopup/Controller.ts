@@ -89,7 +89,7 @@ var _private = {
       }
    },
 
-   processSelectionResult: function(result, selectedItems) {
+   processSelectionResult: function(result, selectedItems, multiSelect) {
       var i;
       var initialSelection;
       var resultSelection;
@@ -97,12 +97,12 @@ var _private = {
 
       if (result) {
          for (i in result) {
-            if (result.hasOwnProperty(i)) {
+            if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
                initialSelection = result[i].initialSelection;
                resultSelection = result[i].resultSelection;
                keyProperty = result[i].keyProperty;
 
-               if (_private.isSelectionChanged(initialSelection, resultSelection, keyProperty)) {
+               if (multiSelect === false || _private.isSelectionChanged(initialSelection, resultSelection, keyProperty)) {
                   chain.factory(initialSelection).each(function(itemId) {
                      _private.removeFromSelected(itemId, selectedItems, keyProperty);
                   });
@@ -150,7 +150,7 @@ var Controller = Control.extend({
       }
    },
 
-   _selectComplete: function() {
+   _selectComplete: function(event, multiSelect) {
       var self = this;
       var selectCallback = function() {
          self._notify('sendResult', [self._selectedItems], {bubbling: true});
@@ -161,7 +161,10 @@ var Controller = Control.extend({
 
       if (this._selectionLoadDef) {
          this._selectionLoadDef.done().getResult().addCallback(function(result) {
-            _private.processSelectionResult(result, self._selectedItems);
+            if (multiSelect === false) {
+               self._selectedItems.clear();
+            }
+            _private.processSelectionResult(result, self._selectedItems, multiSelect);
             selectCallback();
             self._selectionLoadDef = null;
             return result;
