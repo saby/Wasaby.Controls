@@ -125,7 +125,37 @@ define('Controls-demo/Explorer/Explorer', [
                   'parent': 1,
                   'parent@': true,
                   title: '2. Отчетность через интернет'
-               }, {
+               },{
+                  id: 121,
+                  'parent': 12,
+                  'parent@': true,
+                  title: 'Papo4ka',
+                  image: explorerImages[4],
+               },
+                  {
+                     id: 1211,
+                     'parent': 121,
+                     'parent@': true,
+                     title: 'Doc1',
+                     image: explorerImages[4],
+                     isDocument: true
+                  },
+                  {
+                     id: 1212,
+                     'parent': 121,
+                     'parent@': true,
+                     title: 'Doc12',
+                     image: explorerImages[4],
+                     isDocument: true
+                  },
+                  {
+                     id: 122,
+                     'parent': 12,
+                     'parent@': true,
+                     title: 'Papo4ka2',
+                     image: explorerImages[4],
+                  },
+                  {
                   id: 13,
                   'parent': 1,
                   'parent@': null,

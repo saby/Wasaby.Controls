@@ -146,6 +146,12 @@ var _private = {
                         isActive = true;
                     }
                     listModel.setItems(list);
+                    if (self._restoredKeysFromExplorer &&
+                        self._restoredKeysFromExplorer[self._options.root] &&
+                        self._restoredKeysFromExplorer[self._options.root].markedKey) {
+                        listModel.setMarkedKey(self._restoredKeysFromExplorer[self._options.root].markedKey);
+                    }
+                    // listModel.setMarkedKey(2);
                     self._items = listModel.getItems();
                     if (isActive === true) {
                         self._children.listView.activate();
@@ -1751,6 +1757,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             keyProperty: newKeyProperty
         });
 
+    },
+
+    setRestoredKeyFromExplorer: function(obj) {
+        this._restoredKeysFromExplorer = obj;
     }
 
 

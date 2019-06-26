@@ -35,8 +35,28 @@ import 'Controls/breadcrumbs';
          tile: TreeTileViewModel,
          table: TreeGridViewModel
       },
+      EXPLORER_ACTION = {
+         onBredcrumbs: 'onBreadcrumbs',
+         onItemClick: 'onItemClick'
+      },
       _private = {
-         setRoot: function(self, root) {
+         setRoot: function(self, root, action) {
+            if (action === EXPLORER_ACTION.onItemClick) {
+               self._restoredMarkedKeys[root] = {
+                  parent: self._root,
+                  markedKey: null,
+               }
+               self._restoredMarkedKeys[self._root].markedKey = root
+               self._root = root;
+               self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
+               console.log('dsadsa', self._restoredMarkedKeys);
+            }
+            if (action === EXPLORER_ACTION.onBredcrumbs) {
+               _private.pathCleaner(self, root)
+               console.log(self._restoredMarkedKeys);
+               self._root = root;
+               self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
+            }
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             }
@@ -45,6 +65,41 @@ import 'Controls/breadcrumbs';
                self._options.itemOpenHandler(root);
             }
             self._forceUpdate();
+         },
+         pathCleaner: function(self, root) {
+            for(const prop in self._restoredMarkedKeys) {
+               if (prop == String(root)) {
+                  if (self._restoredMarkedKeys[prop].parent === undefined) {
+                     const markedKey = self._restoredMarkedKeys[prop].markedKey
+                     self._restoredMarkedKeys = {
+                        [root]: {
+                           markedKey: markedKey
+                        }
+                     }
+                  } else {
+                     _remoover2(root);
+                  }
+               }
+            }
+            function _remoover(key) {
+               for(const prop in self._restoredMarkedKeys) {
+                  if (self._restoredMarkedKeys[prop].parent == String(key)) {
+                     const nextKey = prop;
+                     delete self._restoredMarkedKeys[prop];
+                     _remoover(nextKey);
+                  }
+               }
+            };
+            function _remoover2(key) {
+               Object.keys(self._restoredMarkedKeys).forEach((cur) => {
+                  if(self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
+                     const nextKey = cur;
+                     delete self._restoredMarkedKeys[cur];
+                     _remoover2(nextKey);
+                  }
+               })
+            };
+
          },
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
@@ -194,6 +249,12 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
+         const root = cfg.root !== undefined ? cfg.root : null;
+         this._restoredMarkedKeys = {
+         [root]: {
+               markedKey: null
+            }
+         };
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
@@ -238,13 +299,15 @@ import 'Controls/breadcrumbs';
          const res = this._notify('itemClick', [item, clickEvent]);
          if (res !== false) {
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-               _private.setRoot(this, item.getId());
+               _private.setRoot(this, item.getId(), EXPLORER_ACTION.onItemClick);
+            } else if (item.getId) {
+               this._restoredMarkedKeys[this._root].markedKey = item.getId();
             }
          }
          event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
-         _private.setRoot(this, item.getId());
+         _private.setRoot(this, item.getId(), EXPLORER_ACTION.onBredcrumbs);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
