@@ -72,7 +72,7 @@ type PlaceholdersSizes = {
  */
 class VirtualScroll {
 
-    private readonly _virtualSegmentSize: number = 10;
+    private readonly _virtualSegmentSize: number;
     private readonly _virtualPageSize: number = 100;
 
     private _startIndex: number = 0;
@@ -126,7 +126,7 @@ class VirtualScroll {
      */
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
-        this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
+        this._virtualSegmentSize = Math.ceil(this._virtualPageSize / 4);
         this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
