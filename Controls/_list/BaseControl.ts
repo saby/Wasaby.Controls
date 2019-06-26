@@ -653,6 +653,11 @@ var _private = {
         );
     },
 
+    isNeedBottomPadding: function (self, options) {
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=2cfbb8ed-b311-4a87-b294-7fd5d5cb4bd2
+        return options.itemActionsPosition === 'outside';
+    },
+
     getItemsCount: function(self) {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
@@ -1065,7 +1070,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-        this._needBottomPadding = newOptions.itemActionsPosition === 'outside';
+        this._needBottomPadding = _private.isNeedBottomPadding(this, newOptions);
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
