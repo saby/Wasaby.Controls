@@ -594,6 +594,19 @@ define(
             });
          });
 
+         it('_beforeUpdate reload new items by key', function(done) {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems).addCallback(function(result) {
+               let newConfigItems = Clone(configWithItems);
+               newConfigItems.items[3].value = 'Великобритания';
+               newConfigItems.items[2].properties.filter = {key: 1};
+               fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+                  assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                  done();
+               });
+            });
+         });
+
          function setTrue(assert) {
             assert.equal(true, true);
          }
