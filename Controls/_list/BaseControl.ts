@@ -967,7 +967,7 @@ var _private = {
             IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
     },
-    
+
     needBottomPadding: function(options) {
         return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     }
@@ -1158,6 +1158,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
