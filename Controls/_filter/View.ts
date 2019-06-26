@@ -16,6 +16,20 @@ import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 
 /**
+ * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
+ * При клике на иконку-кнопку или строку представления открывается панель фильтров. {@link Controls/filterPopup:DetailPanel}
+ * Клик на параметры быстрого фильтра открывает простую панель. {@link Controls/filterPopup:SimplePanel}
+ * <a href="/materials/demo-ws4-filter-view">Демо-пример</a>.
+ *
+ * @class Controls/_filter/View
+ * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterView
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ */
+
+/*
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
  * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
  * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
