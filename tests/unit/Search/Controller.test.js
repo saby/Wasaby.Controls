@@ -333,6 +333,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             }
          };
 
+         searchController._root = 'test';
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
          assert.equal(searchController._root, null);
