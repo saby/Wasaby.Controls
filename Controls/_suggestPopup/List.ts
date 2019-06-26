@@ -55,6 +55,17 @@ var _private = {
 };
 
 /**
+ * Контейнер для списка в выпадающем блоке автодополнения. 
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
+ *
+ * @class Controls/_suggestPopup/List
+ * @extends Core/Control
+ * @author Герасимов Александр
+ * @control
+ * @public
+ */
+
+/*
  * Container for list inside Suggest.
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
