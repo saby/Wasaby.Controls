@@ -237,9 +237,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+
+
     updateMarker: function(markedKey):void {
         const curMarkedKey = this._markedKey;
-        var s = _private.getItemByMarkedKey(this, 21);
         this._updateMarker(markedKey);
         if (curMarkedKey !== this._markedKey) {
             this._notify('onMarkedKeyChanged', this._markedKey);

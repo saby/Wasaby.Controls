@@ -49,11 +49,9 @@ import 'Controls/breadcrumbs';
                self._restoredMarkedKeys[self._root].markedKey = root
                self._root = root;
                self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
-               console.log('dsadsa', self._restoredMarkedKeys);
             }
             if (action === EXPLORER_ACTION.onBredcrumbs) {
                _private.pathCleaner(self, root)
-               console.log(self._restoredMarkedKeys);
                self._root = root;
                self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
             }
@@ -67,7 +65,7 @@ import 'Controls/breadcrumbs';
             self._forceUpdate();
          },
          pathCleaner: function(self, root) {
-            for(const prop in self._restoredMarkedKeys) {
+            for (const prop in self._restoredMarkedKeys) {
                if (prop == String(root)) {
                   if (self._restoredMarkedKeys[prop].parent === undefined) {
                      const markedKey = self._restoredMarkedKeys[prop].markedKey
@@ -81,15 +79,6 @@ import 'Controls/breadcrumbs';
                   }
                }
             }
-            function _remoover(key) {
-               for(const prop in self._restoredMarkedKeys) {
-                  if (self._restoredMarkedKeys[prop].parent == String(key)) {
-                     const nextKey = prop;
-                     delete self._restoredMarkedKeys[prop];
-                     _remoover(nextKey);
-                  }
-               }
-            };
             function _remoover2(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
                   if(self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
@@ -97,9 +86,8 @@ import 'Controls/breadcrumbs';
                      delete self._restoredMarkedKeys[cur];
                      _remoover2(nextKey);
                   }
-               })
+               });
             };
-
          },
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
