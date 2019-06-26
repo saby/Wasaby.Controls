@@ -1,0 +1,26 @@
+<div class="controls-StackTemplate__top-area controls-StackTemplate__top-area_theme_{{theme}}">
+   <div class="controls-StackTemplate__top-area-content">
+      <ws:if data="{{caption || headingCaption}}">
+         <div class="controls-StackTemplate__caption_theme_{{theme}}">
+            <Controls.heading:Title attr:class="controls-StackTemplate__caption_text_theme_{{theme}}"
+                                    caption="{{caption || headingCaption}}"
+                                    style="{{headingStyle}}"
+                                    size="{{headingSize}}"
+                                    theme="{{headingTheme}}"
+                                    readOnly="{{true}}"
+                                    tooltip="{{caption || headingCaption}}"/>
+         </div>
+      </ws:if>
+      <ws:if data="{{topArea || headerContentTemplate}}">
+         <ws:partial template="{{topArea || headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate_theme_{{theme}}"></ws:partial>
+      </ws:if>
+      <div class="controls-StackTemplate__command_buttons_theme_{{theme}}">
+         <ws:if data="{{showMaximizedButton || _maximizeButtonVisibility}}">
+            <div class="controls-StackTemplate__maximized_button controls-StackTemplate__maximized_button_theme_{{theme}}" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
+         </ws:if>
+         <ws:if data="{{ closeButtonVisibility}}">
+            <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button controls-StackTemplate__close_button_theme_{{theme}}" viewMode="{{_closeButtonViewMode}}" transparent="{{closeButtonTransparent}}" on:click="close()"/>
+         </ws:if>
+      </div>
+   </div>
+</div>
