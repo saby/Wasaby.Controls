@@ -47,13 +47,13 @@ var Component = BaseControl.extend({
     },
 
     _openDialog: function (event) {
-        const quantum = this._options.quantum;
+        const ranges = this._options.ranges;
         let className = 'controls-DatePopup__selector-marginTop ';
 
         if (this._options.selectionType !== 'single' &&
-            (!quantum || (isEmpty(quantum) ||
-                (('months' in quantum || 'quarters' in quantum || 'halfyears' in quantum || 'years' in quantum) &&
-                    ('days' in quantum || 'weeks' in quantum)))) &&
+            (!ranges || (isEmpty(ranges) ||
+                (('months' in ranges || 'quarters' in ranges || 'halfyears' in ranges || 'years' in ranges) &&
+                    ('days' in ranges || 'weeks' in ranges)))) &&
             (!this._options.minRange || this._options.minRange  === 'day')) {
             className += 'controls-DatePopup__selector-marginLeft';
         } else {
