@@ -966,6 +966,10 @@ var _private = {
         if (options.keyProperty === undefined) {
             IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
+    },
+    
+    needBottomPadding: function(options) {
+        return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     }
 };
 
@@ -1056,7 +1060,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-        this._needBottomPadding = newOptions.itemActionsPosition === 'outside';
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
