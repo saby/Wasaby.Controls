@@ -10,6 +10,7 @@
         headerTemplate="{{_options.headerTemplate}}"
         headConfig="{{_options.headConfig}}"
         footerTemplate="{{_options.footerTemplate}}"
+        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"

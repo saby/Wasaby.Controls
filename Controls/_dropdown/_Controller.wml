@@ -22,6 +22,7 @@
               groupMethod="{{_options.groupMethod}}"
               dropdownClassName="{{_options.dropdownClassName}}"
               footerTemplate="{{_options.footerTemplate}}"
+              nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
               multiSelect="{{_options.multiSelect}}"
               selectorTemplate="{{_options.selectorTemplate}}"
               isCompoundTemplate="{{_options.isCompoundTemplate}}"

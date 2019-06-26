@@ -62,6 +62,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             return popupOptions;
          },
 
+         getFooterItemData: function(rootKey, item) {
+            return {
+               key: rootKey,
+               item: item
+            };
+         },
+
          getSubMenuOptions: function(options, popupOptions, event, item) {
             var subMenuPosition = _private.getSubMenuPosition(options, popupOptions);
             return {
@@ -77,6 +84,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   nodeProperty: options.nodeProperty,
                   selectedKeys: options.selectedKeys,
                   rootKey: item.get(options.keyProperty),
+                  footerTemplate: options.nodeFooterTemplate,
+                  footerItemData: _private.getFooterItemData(item.get(options.keyProperty), item),
                   iconSize: options.iconSize,
                   showHeader: false,
                   dropdownClassName: options.dropdownClassName,
