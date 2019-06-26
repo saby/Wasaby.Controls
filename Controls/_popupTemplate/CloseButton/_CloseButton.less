@@ -35,7 +35,12 @@
 .controls-Button__close_toolButton_untransparent.theme_@{themeName} {
    background-color: @background-color_CloseButton_primary_untransparent;
 }
-
+.controls-Button__close_popup_untransparent:active.theme_@{themeName} {
+   background-color: @background-color_CloseButton-primary-untransparent_active;
+}
+.controls-Button__close_popup_untransparent.theme_@{themeName} {
+   background-color: @background-color_CloseButton_primary_untransparent;
+}
 .controls-Button__close_toolButton_untransparent:active.theme_@{themeName} {
    background-color: @background-color_CloseButton-primary-untransparent_active;
 }
@@ -123,6 +128,9 @@
       }
    }
    .controls-Button__close_toolButton_untransparent:hover.theme_@{themeName} {
+      background-color: @background-color_CloseButton-primary-untransparent_hovered;
+   }
+   .controls-Button__close_popup_untransparent:hover.theme_@{themeName} {
       background-color: @background-color_CloseButton-primary-untransparent_hovered;
    }
    .controls-Button__close_toolButton_transparent:hover.theme_@{themeName} {
