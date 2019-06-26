@@ -8,6 +8,9 @@ import {SearchContextField, FilterContextField} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import {Source} from 'Controls/history';
 import cInstance = require('Core/core-instance');
+import {RecordSet} from 'Types/collection';
+import {factory} from 'Types/chain';
+import clone = require('Core/core-clone');
 
 var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
 var SEARCH_VALUE_FIELD = 'searchValue';
@@ -58,7 +61,7 @@ var _private = {
          items = data.getRawData();
 
       if (self._options.reverseList) {
-         items.reverse();
+         items = _private.reverseData(items, source);
       }
 
       /* TODO will be a cached source */
@@ -69,6 +72,27 @@ var _private = {
          data: items,
          adapter: source.getAdapter()
       });
+   },
+
+   reverseData: function(data, source) {
+      const recordSet = new RecordSet({
+         rawData: clone(data), // clone origin data
+         adapter: source.getAdapter(),
+         idProperty: source.getIdProperty()
+      });
+
+      const recordSetToReverse = recordSet.clone();
+      const reversedData = factory(recordSetToReverse).sort((a, b) => {
+          return  recordSetToReverse.getIndex(b) - recordSetToReverse.getIndex(a);
+      }).value();
+
+      // need to use initial recordSet to save metaData in origin format
+      recordSet.clear();
+      reversedData.forEach((item) => {
+         recordSet.add(item);
+      });
+
+      return recordSet.getRawData();
    },
 
    updateFilter: function(self, resultFilter) {
@@ -247,7 +271,7 @@ var _private = {
             target: new Memory({
                model: self._source.getModel(),
                idProperty: self._source.getIdProperty(),
-               data: self._source.data.reverse(),
+               data: _private.reverseData(self._source.data, self._source),
                adapter: self._source.getAdapter()
             })
          });
