@@ -1,7 +1,19 @@
 .controls-Header__caption_theme_@{themeName} {
    font-weight: @font-weight_heading;
+}
+
+.controls-Header__caption {
    display: inline-block;
 }
+//readOnly/clickable
+.controls-Header_clickable {
+   cursor: pointer;
+}
+
+.controls-Header_readonly {
+   cursor: default;
+}
+
 .controls-Header__caption_style-secondary_theme_@{themeName}, .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
    color: @secondary_text-color;
 }
@@ -25,33 +37,27 @@
 
 .controls-Header__caption_style-primary_hovered_theme_@{themeName}:active {
    color: @primary_hover_text-color;
-   cursor: pointer;
 }
 
 .controls-Header__caption_style-secondary_hovered_theme_@{themeName}:active {
    color: @secondary_hover_text-color;
-   cursor: pointer;
 }
 
 .controls-Header__caption_style-label_hovered_theme_@{themeName}:active {
    color: @link_hover_text-color;
-   cursor: pointer;
 }
 
 .ws-is-no-touch {
    .controls-Header__caption_style-primary_hovered_theme_@{themeName}:hover {
       color: @primary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-secondary_hovered_theme_@{themeName}:hover {
       color: @secondary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-label_hovered_theme_@{themeName}:hover {
       color: @link_hover_text-color;
-      cursor: pointer;
    }
 }
 
@@ -62,17 +68,14 @@
 .controls-Header_Counter__clickable:active {
    .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
       color: @primary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
       color: @secondary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-label_hovered_theme_@{themeName} {
       color: @link_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-HeaderCounter_style-primary_hovered {
@@ -87,17 +90,14 @@
 .controls-Header_all__clickable:active {
    .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
       color: @primary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
       color: @secondary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-label_hovered_theme_@{themeName} {
       color: @link_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-HeaderCounter_style-primary_hovered {
@@ -132,17 +132,14 @@
 .controls-Header_Separator__clickable:active {
    .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
       color: @primary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
       color: @secondary_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-Header__caption_style-label_hovered_theme_@{themeName} {
       color: @link_hover_text-color;
-      cursor: pointer;
    }
 
    .controls-HeaderSeparator__icon_style-primary {
@@ -158,17 +155,14 @@
    .controls-Header_Counter__clickable:hover {
       .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
          color: @primary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
          color: @secondary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-label_hovered_theme_@{themeName} {
          color: @link_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-HeaderCounter_style-primary_hovered {
@@ -183,17 +177,14 @@
    .controls-Header_all__clickable:hover {
       .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
          color: @primary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
          color: @secondary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-label_hovered_theme_@{themeName} {
          color: @link_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-HeaderCounter_style-primary_hovered {
@@ -227,17 +218,14 @@
    .controls-Header_Separator__clickable:hover {
       .controls-Header__caption_style-primary_hovered_theme_@{themeName} {
          color: @primary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-secondary_hovered_theme_@{themeName} {
          color: @secondary_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-Header__caption_style-label_hovered_theme_@{themeName} {
          color: @link_hover_text-color;
-         cursor: pointer;
       }
 
       .controls-HeaderSeparator__icon_style-primary {
