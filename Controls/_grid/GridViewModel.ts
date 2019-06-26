@@ -773,6 +773,21 @@ var
             return this._options.resultsPosition;
         },
 
+        shouldDrawHeader(): boolean {
+            return !!this.getHeader() && this.getCount() > 0;
+        },
+
+        shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
+            if (this.getResultsPosition() !== position) {
+                return false;
+            }
+            return this.getCount() > 1;
+        },
+
+        shouldDrawFooter(): boolean {
+            return !!this._options.footerTemplate && this.getCount() > 0;
+        },
+
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
