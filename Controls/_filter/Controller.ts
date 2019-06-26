@@ -64,11 +64,20 @@ import 'Controls/context';
          },
 
          minimizeItem: function(item) {
+            const textValue = getPropValue(item, 'textValue');
+            const value = textValue ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
+            const visibility = !textValue && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             let minItem = {
-                value: getPropValue(item, 'value'),
-                textValue: (getPropValue(item, 'visibility') !== false) ? getPropValue(item, 'textValue') : undefined,
-                visibility: getPropValue(item, 'visibility')
+               value: value,
+               visibility: visibility
             };
+
+            if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
+               minItem.textValue = getPropValue(item, 'textValue');
+            } else {
+               minItem.textValue = undefined;
+            }
+
             if (getPropValue(item, 'id')) {
                minItem.id = getPropValue(item, 'id');
             } else {

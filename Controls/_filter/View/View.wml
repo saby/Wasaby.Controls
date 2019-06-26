@@ -3,7 +3,7 @@
    {{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme_' + _options.theme}}">
       <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}} controls-FilterView-{{_options.alignment}}__iconArrow_theme_{{_options.theme}}
                controls-FilterView__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}} "></div>
-      <div class="controls-FilterView__text-wrapper_theme_{{_options.theme}} controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
+      <div attr:name="{{name}}" class="controls-FilterView__text-wrapper_theme_{{_options.theme}} controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
            title="{{title}}">
          <div class="controls-FilterView__text_theme_{{_options.theme}}">{{text}}</div>
          <span if="{{hasMoreText}}" class="controls-FilterView__hasMoreText_theme_{{_options.theme}}">{{hasMoreText}}</span>
@@ -32,7 +32,7 @@
                            title="{{_displayText[item.name].title}}"
                            hasMoreText="{{_displayText[item.name].hasMoreText}}"
                            on:click="_openPanel(item)"
-                           attr:name="{{item.name}}"/>
+                           name="{{item.name}}"/>
                <ws:partial template="cross" on:click="_reset(item)" />
          </ws:if>
       </ws:for>

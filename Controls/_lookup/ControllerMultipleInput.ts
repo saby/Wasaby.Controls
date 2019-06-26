@@ -3,7 +3,7 @@ import showSelector from 'Controls/_lookup/showSelector';
 
 var ControllerMultiSelector = BaseController.extend({
     showSelector: function(popupOptions) {
-        showSelector(this, popupOptions, false);
+        return showSelector(this, popupOptions, false);
     }
 });
 

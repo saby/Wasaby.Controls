@@ -218,6 +218,10 @@ var
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
+
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
