@@ -1,11 +1,11 @@
-define('Controls-demo/List/List/BaseNoPG', [
+define('Controls-demo/List/List/DocsBase', [
    'Core/Control',
-   'wml!Controls-demo/List/List/resources/BaseNoPG/BaseNoPG',
+   'wml!Controls-demo/List/List/resources/DocsBase/DocsBase',
    'Types/source',
    'Controls-demo/List/List/resources/Navigation/Data',
    'Controls-demo/List/List/resources/DataDemoPG',
    'Controls/Constants',
-   'css!Controls-demo/List/List/resources/BaseNoPG/BaseNoPG',
+   'css!Controls-demo/List/List/resources/DocsBase/DocsBase',
 
    'wml!Controls-demo/List/List/resources/ItemTemplatePG/noHighlightOnHover',
    'wml!Controls-demo/List/List/resources/BasePG/emptyTemplate',
