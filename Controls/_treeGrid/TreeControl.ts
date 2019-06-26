@@ -269,6 +269,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _updatedRoot: false,
     _deepReload: false,
     _nodesSourceControllers: null,
+    _needResetExpandedItems: false,
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
@@ -303,7 +304,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
         }
-
+        if (this._needResetExpandedItems) {
+            this._children.baseControl.getViewModel().resetExpandedItems();
+            this._needResetExpandedItems = false;
+        }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
@@ -327,10 +331,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
-
             //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
-            this._children.baseControl.getViewModel().resetExpandedItems();
-
+            this._needResetExpandedItems = true;
             //If filter was changed, do not need to reload again, baseControl reload list in beforeUpdate
             if (isEqual(this._options.filter, oldOptions.filter)) {
                 this._children.baseControl.reload().addCallback(function () {
