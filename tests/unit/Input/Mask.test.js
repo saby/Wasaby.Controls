@@ -112,7 +112,10 @@ define(
                   end: 3
                };
                sandbox.replace(component, '_getField', function() {
-                  return { selectionStart: 0 };
+                  return {
+                     selectionStart: 0,
+                     setSelectionRange: function() {}
+                  };
                });
                sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
                component._mouseDownHandler();
