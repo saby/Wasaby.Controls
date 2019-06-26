@@ -19,14 +19,12 @@ define([
 
       it('constructor', function() {
          var vsInstance = new list.VirtualScroll({
-            virtualSegmentSize: 30,
             virtualPageSize: 80,
-            itemsRenderMode: 'AllAtOnce'
          });
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after ctor');
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after ctor');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after ctor');
-         assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
+         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
       });
 
       it('default options in constructor', function() {
@@ -34,14 +32,12 @@ define([
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
          assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
-         assert.equal(10, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
+         assert.equal(25, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
       });
 
       it('resetItemsIndexes', function() {
          var vsInstance = new list.VirtualScroll({
-            virtualSegmentSize: 30,
             virtualPageSize: 80,
-            itemsRenderMode: 'AllAtOnce'
          });
 
          vsInstance._startIndex = 20;
@@ -50,7 +46,7 @@ define([
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after reset');
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after reset');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after reset');
-         assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
+         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
       });
 
       it('getter ItemsIndexes', function() {

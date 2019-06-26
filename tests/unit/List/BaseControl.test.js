@@ -186,7 +186,7 @@ define([
             ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
             setTimeout(function () {
                assert.equal(ctrl.getViewModel().getStartIndex(), 0);
-               // assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 6);
                resolve();
             }, 10);
          });
