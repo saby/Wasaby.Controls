@@ -13,6 +13,22 @@ import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
       /**
+       * Контрол "Быстрый фильтр".
+       * Использует выпадающие списки для фильтрации данных.
+       *
+       * <a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       *
+       * @class Controls/_filter/Fast
+       * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/_filter/Fast/FastStyles
+       * @demo Controls-demo/FastFilter/fastPG
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+
+      /*
        * Control "Fast Filter".
        * Use dropDown lists for filter data.
        *
