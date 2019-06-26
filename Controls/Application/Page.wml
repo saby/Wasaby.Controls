@@ -29,6 +29,7 @@
                   <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.popup:Global>
                      <Controls.popup:Manager
+                             popupHeaderTheme="{{_options.popupHeaderTheme}}"
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
                              stackRootWidth="{{_options.width}}">
