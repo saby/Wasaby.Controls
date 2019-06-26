@@ -450,6 +450,7 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
+        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -491,6 +492,7 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -1302,10 +1304,9 @@ var
 
         _calcItemVersion: function(item, key) {
             var
-                version = this._model._calcItemVersion(item, key),
-                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                version = this._model._calcItemVersion(item, key);
 
-            if (lastItemKey === key) {
+            if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
             }
 
