@@ -1771,7 +1771,26 @@ define([
          assert.isTrue(stopPropagationCalled);
          assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
-
+      it ('needFooterPadding', function() {
+         let cfg = {
+            itemActionsPosition: 'outside'
+         };
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, padding is needed");
+         cfg = {
+            itemActionsPosition: 'inside'
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is inside, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            footerTemplate: "footer"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            resultsPosition: "bottom"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+      });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {
