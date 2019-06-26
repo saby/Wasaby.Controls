@@ -13,9 +13,11 @@
  * @includes ISource Controls/_interface/ISource
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes INumberFormat Controls/_interface/INumberFormat
+ * @includes IExpandable Controls/_interface/IExpandable
  * @public
  * @author Kraynov D.
  */
+
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
 export {default as IButton, IButtonOptions} from './_interface/IButton';
 export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
@@ -27,3 +29,4 @@ export {default as ISource, ISourceOptions} from './_interface/ISource';
 export {default as IErrorController, IErrorControllerOptions} from './_interface/IErrorController';
 export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy';
 export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
+export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
