@@ -3,7 +3,7 @@
       <title class="head-title-tag head-server-block" key="title" data-vdomignore="true">{{ _options.title }}</title>
       <ws:if data="{{_options.noscript}}">
          <noscript>
-            <meta http-equiv="refresh" content="2; URL={{_options.noscript}}"/>
+            <meta http-equiv="refresh" data-vdomignore="true" content="2; URL={{_options.noscript}}"/>
          </noscript>
       </ws:if>
       <meta http-equiv="X-UA-Compatible" content="IE=edge" data-vdomignore="true"/>
