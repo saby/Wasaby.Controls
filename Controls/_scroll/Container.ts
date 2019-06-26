@@ -16,6 +16,20 @@ import 'css!theme?Controls/scroll';
 
 
 /**
+ * Контейнер с тонким скроллом.
+ * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
+ *
+ * @class Controls/_scroll/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Миронов А.Ю.
+ * @category Container
+ * @demo Controls-demo/Container/Scroll
+ *
+ */
+
+/*
  * Container with thin scrollbar.
  * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
  *
@@ -30,6 +44,12 @@ import 'css!theme?Controls/scroll';
  */
 
 /**
+ * @event scroll Скроллируемая область.
+ * @param {SyntheticEvent} eventObject.
+ * @param {Number} scrollTop Скролл располагается сверху относительно контейнера.
+ */
+
+/*
  * @event scroll Scrolling content.
  * @param {SyntheticEvent} eventObject.
  * @param {Number} scrollTop Top position of content relative to container.
@@ -37,20 +57,42 @@ import 'css!theme?Controls/scroll';
 
 /**
  * @name Controls/_scroll/Container#content
+ * @cfg {Content} Содержимое контейнера.
+ */
+
+/*
+ * @name Controls/_scroll/Container#content
  * @cfg {Content} Container contents.
  */
 
 /**
+ * @name Controls/_scroll/Container#shadowVisible
+ * @cfg {Boolean} Следует ли показывать тень (когда содержимое не подходит).
+ */
+
+/*
  * @name Controls/_scroll/Container#shadowVisible
  * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
  */
 
 /**
  * @name Controls/_scroll/Container#scrollbarVisible
+ * @cfg {Boolean} Следует ли отображать скролл.
+ */
+
+/*
+ * @name Controls/_scroll/Container#scrollbarVisible
  * @cfg {Boolean} Whether scrollbar should be shown.
  */
 
 /**
+ * @name Controls/_scroll/Container#style
+ * @cfg {String} Цветовая схема (цвета тени и скролла).
+ * @variant normal Тема по умолчанию (для ярких фонов).
+ * @variant inverted Преобразованная тема (для темных фонов).
+ */
+
+/*
  * @name Controls/_scroll/Container#style
  * @cfg {String} Color scheme (colors of the shadow and scrollbar).
  * @variant normal Default theme (for bright backgrounds).

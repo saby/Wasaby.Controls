@@ -29,7 +29,7 @@ define('Controls/interface/IBreadCrumbs', [
 
    /**
     * @name Controls/interface/IBreadCrumbs#keyProperty
-    * @cfg {String} Имя свойства элемента, идентифицирующего элемент коллекции.
+    * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
     */
 
    /*
@@ -39,7 +39,7 @@ define('Controls/interface/IBreadCrumbs', [
 
    /**
     * @name Controls/interface/IBreadCrumbs#parentProperty
-    * @cfg {String} Имя свойства элемента, содержащего сведения о родительском узле.
+    * @cfg {String} Имя свойства, содержащего сведения о родительском узле.
     */
 
    /*
