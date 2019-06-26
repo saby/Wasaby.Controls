@@ -2,6 +2,13 @@ define('Controls/interface/IFastFilter', [
 ], function() {
 
    /**
+    * Интерфейс быстрого фильтра.
+    * @interface Controls/interface/IFastFilter
+    * @public
+    * @author Герасимов А.М.
+    */
+
+   /*
     * Interface for component Fast Filter
     * @interface Controls/interface/IFastFilter
     * @public
@@ -9,6 +16,20 @@ define('Controls/interface/IFastFilter', [
     */
 
    /**
+    * @typedef {Object} PropertiesFastFilter
+    * @property {String} keyProperty Имя свойства, уникально идентифицирующего элемент коллекции.
+    * @property {String} displayProperty Имя свойства элемента, содержимое которого будет отображаться. Влияет только на значение при выборе.
+    * @property {Types/source:Base} source Объект, который реализует интерфейс ISource для доступа к данным. Если свойство "items" указано, свойство "source" будет игнорироваться.
+    * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
+    * @property {Controls/interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
+    * @property {Function} itemTemplate Шаблон рендеринга элементов. Подробнее - {@link Controls/interface/IDropdown#itemTemplate}
+    * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов. Подробнее - {@link Controls/interface/IDropdown#itemTemplateProperty}
+    * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями. {@link Controls/interface/IFilter}
+    * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.) {@link Controls/interface/INavigation}
+    * @property {Types/collection:IList} items Специальная структура для визуального представления фильтра. {@link Types/collection:IList}.
+    */
+
+   /*
     * @typedef {Object} PropertiesFastFilter
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item.
     * @property {String} displayProperty Name of the item property that content will be displayed. Only affects the value when selecting.
@@ -24,6 +45,15 @@ define('Controls/interface/IFastFilter', [
 
    /**
     * @typedef {Types/source:Base} FastFilterSource
+    * @property {String} id Имя поля фильтра.
+    * @property {*} value Текущее значение поля фильтра.
+    * @property {*} resetValue Значение поля при сбрасывании фильтра.
+    * @property {*} textValue Текстовое значение поля фильтра. Используется для отображения текста у кнопки фильтра.
+    * @property {PropertiesFastFilter} properties Настройки быстрого фильтра.
+    */
+
+   /*
+    * @typedef {Types/source:Base} FastFilterSource
     * @property {String} id Name of filter field.
     * @property {*} value Current filter field value.
     * @property {*} resetValue Value for reset.
@@ -32,6 +62,43 @@ define('Controls/interface/IFastFilter', [
     */
 
    /**
+    * @name Controls/interface/IFastFilter#source
+    * @cfg {FastFilterSource} Устанавливает источник набора данных для использования при сопоставлении.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.filter:Fast
+    *              bind:selectedKey='_selectedKey'
+    *              source="{{_source}}"
+    *    />
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new MemorySource({
+    *       idProperty: 'id',
+    *       data: [
+    *          {id: 'genre',
+    *           resetValue: '0',
+    *           value: '0',
+    *           properties: {
+    *              keyProperty: 'key',
+    *              displayProperty: 'title',
+    *              source: new MemorySource({
+    *                 idProperty: 'id',
+    *                 data: [
+    *                    { key: '0', title: 'все жанры' },
+    *                    { key: '1', title: 'фантастика' },
+    *                    { key: '2', title: 'фэнтези' },
+    *                    { key: '3', title: 'мистика' }
+    *                ]
+    *              })
+    *           }, ...
+    *       ]
+    *    });
+    * </pre>
+    */
+
+   /*
     * @name Controls/interface/IFastFilter#source
     * @cfg {FastFilterSource} Sets the source of data set to use in the mapping.
     * @example
@@ -69,8 +136,14 @@ define('Controls/interface/IFastFilter', [
     */
 
    /**
+    * @event Controls/interface/IFilterButton#filterChanged Происходит при изменении фильтра.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Object} filter Новый фильтр.
+    */
+
+   /*
     * @event Controls/interface/IFastFilter#filterChanged Happens when filter changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
     */
 
