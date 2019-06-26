@@ -355,7 +355,6 @@ var _private = {
                         // Индексы показываемых записей должны стать с 20 по 50.
                         self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + addedItems.getCount();
                     }
-                    self._virtualScroll.recalcItemsIndexes(direction);
                     _private.applyVirtualScrollIndexes(self, direction);
                 }
 
@@ -676,9 +675,11 @@ var _private = {
                     self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                        self._virtualScroll.recalcItemsIndexes(newItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
                     }
                     if (action === collection.IObservable.ACTION_RESET) {
                         self._virtualScroll.resetItemsIndexes();
