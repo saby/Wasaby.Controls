@@ -1,6 +1,11 @@
 <head key="1_1_">
    <ws:if data="{{ !wasServerSide }}">
       <title class="head-title-tag head-server-block" key="title" data-vdomignore="true">{{ _options.title }}</title>
+      <ws:if data="{{_options.noscript}}">
+         <noscript>
+            <meta http-equiv="refresh" content="2; URL={{_options.noscript}}"/>
+         </noscript>
+      </ws:if>
       <meta http-equiv="X-UA-Compatible" content="IE=edge" data-vdomignore="true"/>
       <meta name="viewport" content="{{_options.viewport || 'width=1024'}}" data-vdomignore="true"/>
       <meta charset="utf-8" data-vdomignore="true"/>
