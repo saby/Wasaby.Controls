@@ -62,15 +62,15 @@ define([
             }, {
                minRange: 'day'
             }, {
-               quantum: { days: [1], months: [1] }
+               ranges: { days: [1], months: [1] }
             }, {
-               quantum: { weeks: [1], quarters: [1] }
+               ranges: { weeks: [1], quarters: [1] }
             }, {
-               quantum: { days: [1], quarters: [1] }
+               ranges: { days: [1], quarters: [1] }
             }, {
-               quantum: { days: [1], halfyears: [1] }
+               ranges: { days: [1], halfyears: [1] }
             }, {
-               quantum: { days: [1], years: [1] }
+               ranges: { days: [1], years: [1] }
             }].forEach(function (test) {
                it(`${JSON.stringify(test)}`, function () {
                   const
@@ -91,17 +91,17 @@ define([
             }, {
                minRange: 'month'
             }, {
-               quantum: { days: [1] }
+               ranges: { days: [1] }
             }, {
-               quantum: { weeks: [1] }
+               ranges: { weeks: [1] }
             }, {
-               quantum: { months: [1] }
+               ranges: { months: [1] }
             }, {
-               quantum: { quarters: [1] }
+               ranges: { quarters: [1] }
             }, {
-               quantum: { halfyears: [1] }
+               ranges: { halfyears: [1] }
             }, {
-               quantum: { years: [1] }
+               ranges: { years: [1] }
             }].forEach(function (test) {
                it(`${JSON.stringify(test)}`, function () {
                   const
