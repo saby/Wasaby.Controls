@@ -86,11 +86,9 @@ import { IoC } from 'Env/Env';
             linkParseResult = match;
          } else {
             if (link) {
-               if (linkPrefix === 'www.') {
-                  link = 'http://' + link;
-               }
                link = link + ending;
-               linkParseResult = '<a class="asLink" rel="noreferrer" href="' + link + '" target="_blank">' + link + '</a>';
+               linkParseResult = '<a class="asLink" rel="noreferrer" href="' +
+                  (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>';
             } else {
                email = email + ending;
                linkParseResult = '<a href="mailto:' + email + '">' + email + '</a>';
