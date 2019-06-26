@@ -3,7 +3,7 @@
       <div class="exampleBlock">
          <h2>Панель операций</h2>
          <ws:if data="{{ _expanded }}">
-            <Controls.operations:Button
+            <Controls.operations:Panel
                expanded="{{_expanded}}"
                source="{{_source}}"
                parentProperty="parent"
