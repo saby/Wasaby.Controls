@@ -451,6 +451,22 @@ define([
 
             explorer.saveOptions({});
             explorer._notify = _notify;
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            }
+            explorer._children = {
+               treeControl: {
+                  _children: {
+                     baseControl: {
+                        setRestoredKeyFromExplorer: function() {
+
+                        }
+                     }
+                  }
+               }
+            };
 
             explorer._onItemClick({
                stopPropagation: function() {
@@ -520,8 +536,8 @@ define([
                         }
                      }
                   }
-               };
-
+               }
+            };
             explorer._onBreadCrumbsClick({}, {
                getId: function() {}
             });
