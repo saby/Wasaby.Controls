@@ -846,7 +846,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
-            gridViewModel._model = {};
+            gridViewModel._model = {
+               getItems: function() {}
+            };
             callMethods.forEach(function(item) {
                gridViewModel._model[item] = function() {
                   callStackMethods.push(item);
