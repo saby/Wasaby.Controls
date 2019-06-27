@@ -118,6 +118,17 @@
    height: @tag-size;
 }
 
+.controls-Render__tagStyle_style- {
+   @variants: danger, primary, success, secondary;
+   .for(@variants, { &_@{_item}_theme-@{themeName} {
+      fill: ~"@{@{_item}_color}";
+   } });
+}
+
+.controls-Render__tagStyle_style-info_theme-@{themeName} {
+   fill: @unaccented_icon-color;
+}
+
 .controls-Render_textAlign {
    @variants: right, left;
    .for(@variants, { &-@{_item} {

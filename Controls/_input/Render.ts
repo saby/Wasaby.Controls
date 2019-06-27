@@ -1,6 +1,7 @@
 import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
    IHeight, IHeightOptions, IFontColorStyle,
    IFontColorStyleOptions, IFontSize, IFontSizeOptions
@@ -39,7 +40,11 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
 class Render extends Control<IRenderOptions, void> implements IHeight, IFontColorStyle, IFontSize {
    private contentActive: boolean = false;
 
-   protected _state: string = null;
+   protected _state: string;
+   protected _fontSize: string;
+   protected _inlineHeight: string;
+   protected _fontColorStyle: string;
+   protected _validationStatus: string;
    protected _notifyHandler: notifyHandler;
    protected _template: TemplateFunction = template;
    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
@@ -49,53 +54,13 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
    readonly '[Controls/_interface/IFontColorStyle]': true;
 
    private updateState(options: IRenderOptions): void {
-      this._state = `${options.state}${Render.calcState(this.contentActive, options)}`;
+      this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
+      this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
+      this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);
+      this._validationStatus = ActualAPI.validationStatus(options.style, options.validationStatus);
+      this._state = `${options.state}${this.calcState(options)}`;
    }
-
-   protected _beforeMount(options: IRenderOptions): void {
-      this.updateState(options);
-   }
-
-   protected _beforeUpdate(options: IRenderOptions): void {
-      this.updateState(options);
-   }
-
-   protected _setContentActive(newContentActive: boolean): void {
-      this.contentActive = newContentActive;
-
-      this.updateState(this._options);
-   }
-
-   protected _compatInlineHeight(): string {
-      if (this._options.inlineHeight) {
-         return this._options.inlineHeight;
-      }
-
-      return this._options.size;
-   }
-   protected _compatFontColorStyle(): string {
-      if (this._options.fontColorStyle) {
-         return this._options.fontColorStyle;
-      }
-
-      return this._options.fontStyle;
-   }
-   protected _compatFontSize(): string {
-      if (this._options.fontSize) {
-         return this._options.fontSize;
-      }
-
-      switch (this._options.fontStyle) {
-         case 'default':
-         default:
-            return 'm';
-         case 'primary':
-         case 'secondary':
-            return '3xl'
-      }
-   }
-
-   private static calcState(contentActive: boolean, options: IRenderOptions): State {
+   private calcState(options: IRenderOptions): State {
       if (options.readOnly) {
          if (options.multiline) {
             return 'readonly-multiline';
@@ -107,24 +72,23 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
       /**
        * Only for ie and edge. Other browsers can work with :focus-within pseudo selector.
        */
-      if (contentActive && detection.isIE) {
-         return Render.compatValidationStatus(options) + '-active';
+      if (this.contentActive && detection.isIE) {
+         return this._validationStatus + '-active';
       }
 
-      return Render.compatValidationStatus(options);
+      return this._validationStatus;
    }
-   private static compatValidationStatus(options: IRenderOptions): string {
-      if (options.validationStatus) {
-         return options.validationStatus;
-      }
 
-      switch (options.style) {
-         case 'invalid':
-            return 'invalid';
-         case 'info':
-         default:
-            return 'valid';
-      }
+   protected _beforeMount(options: IRenderOptions): void {
+      this.updateState(options);
+   }
+   protected _beforeUpdate(options: IRenderOptions): void {
+      this.updateState(options);
+   }
+   protected _setContentActive(newContentActive: boolean): void {
+      this.contentActive = newContentActive;
+
+      this.updateState(this._options);
    }
 
    static getDefaultTypes() {
@@ -136,7 +100,6 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
          roundBorder: descriptor(Boolean).required()
       };
    }
-
    static getDefaultOptions() {
       return {
          state: ''

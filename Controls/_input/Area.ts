@@ -5,6 +5,7 @@ import runDelayed = require('Core/helpers/Function/runDelayed');
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
+import * as ActualAPI from 'Controls/_input/ActualAPI';
 import 'Controls/decorator';
       
 
@@ -189,6 +190,7 @@ import 'Controls/decorator';
             Area.superclass._beforeMount.apply(this, arguments);
 
             _private.validateLines(options.minLines, options.maxLines);
+            this._heightLine = ActualAPI.heightLine(options.size, options.fontSize);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -197,6 +199,7 @@ import 'Controls/decorator';
             if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
                _private.validateLines(newOptions.minLines, newOptions.maxLines);
             }
+            this._heightLine = ActualAPI.heightLine(newOptions.size, newOptions.fontSize);
          },
 
          _inputHandler: function() {
@@ -229,29 +232,11 @@ import 'Controls/decorator';
             Area.superclass._initProperties.apply(this, arguments);
 
             this._field.template = fieldTemplate;
-            this._field.scope.compatFontSize = this._compatFontSize.bind(this);
             this._readOnlyField.template = readOnlyFieldTemplate;
          },
 
          _isTriggeredChangeEventByEnterKey: function() {
             return false;
-         },
-
-         _compatFontSize: function () {
-            if (this._options.fontSize) {
-               return this._options.fontSize;
-            }
-
-            switch (this._options.size) {
-               case 's':
-                  return 's';
-               case 'm':
-               case 'default':
-               default:
-                  return 'm';
-               case 'l':
-                  return 'l';
-            }
          }
       });
 

@@ -15,8 +15,8 @@
                         on:tagHover="_notifyHandler('tagHover')">
    <Controls.scroll:Container name="scroll"
                               attr:class="controls-Area__scroll controls-InputBase__field
-                                          controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_compatFontSize()}}_indented
-                                          {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _compatFontSize() + '_indented'}}">
+                                          controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_heightLine}}_indented
+                                          {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _heightLine + '_indented'}}">
       <ws:if data="{{_options.readOnly}}">
          <ws:partial options="{{_options}}"
                      scope="{{_readOnlyField.scope}}"
@@ -29,6 +29,7 @@
                      options="{{_options}}"
                      scope="{{_field.scope}}"
                      fieldName="{{_fieldName}}"
+                     heightLine="{{_heightLine}}"
                      template="{{_field.template}}"
                      value="{{_viewModel.displayValue}}"
                      selection="{{_viewModel.selection}}"

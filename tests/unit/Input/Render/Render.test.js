@@ -39,7 +39,8 @@ define(
                it('Control in active mode.', function() {
                   ctrl._beforeMount({
                      state: '',
-                     readOnly: false
+                     readOnly: false,
+                     validationStatus: 'valid'
                   });
                   ctrl._options = {
                      state: ''
@@ -54,8 +55,9 @@ define(
                });
                it('Control in inactive mode.', function() {
                   ctrl._beforeMount({
+                     state: '',
                      readOnly: false,
-                     state: ''
+                     validationStatus: 'valid'
                   });
 
                   assert.equal(ctrl._state, 'valid');
