@@ -56,8 +56,10 @@
                <ws:if data="{{_needShowApplyButton}}">
                   <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
                      <Controls.buttons:Button viewMode="toolButton"
-                                              icon="icon-Yes icon-medium"
+                                              icon="icon-Yes"
+                                              iconSize="m"
                                               iconStyle="success"
+                                              buttonStyle="success"
                                               on:click="_applySelection()"/>
                   </div>
                </ws:if>

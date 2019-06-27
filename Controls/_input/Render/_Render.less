@@ -119,8 +119,8 @@
 }
 
 .controls-Render__tagStyle_style- {
-   @variants: danger, primary, success, secondary;
-   .for(@variants, { &_@{_item}_theme-@{themeName} {
+   @variants: danger, primary, success, secondary, warning;
+   .for(@variants, { &@{_item}_theme-@{themeName} {
       fill: ~"@{@{_item}_color}";
    } });
 }

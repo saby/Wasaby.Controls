@@ -12,7 +12,6 @@
 .controls-Selectorbutton__button-reset {
    font-size: @font-size_SelectorButton-button-reset;
    color: @color_SelectorButton-button-reset;
-   line-height: @line-height_SelectedCollection-item;
    cursor: pointer;
 }
 
@@ -20,8 +19,14 @@
    font-size: @font-size_SelectorButton-button-more;
    color: @color_SelectorButton-button-more;
    margin-right: @spacing_SelectorButton-between-buttonMore-buttonReset;
-   line-height: @line-height_SelectedCollection-item;
    cursor: pointer;
+}
+
+.controls-Selectorbutton_button-more:after,
+.controls-Selectorbutton__button-reset:after {
+   content: "\200b";
+   font-size: @font-size_SelectedCollection-size_m;
+   line-height: @line-height_SelectedCollection-item;
 }
 
 .ws-is-no-touch {

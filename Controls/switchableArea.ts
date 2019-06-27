@@ -7,7 +7,7 @@
  * @author Kraynov D.
  */
 
-import itemTemplate = require('wml!Controls/_switchableArea/resource/itemTemplate');
+import itemTemplate from 'Controls/_switchableArea/ItemTpl';
 
 export {default as View} from './_switchableArea/View';
 

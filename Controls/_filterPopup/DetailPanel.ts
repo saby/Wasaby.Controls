@@ -186,6 +186,7 @@ import 'Controls/form';
 
       _itemsChangedHandler: function(event, items) {
          this._items = _private.cloneItems(items);
+         this._notify('itemsChanged', [this._items]);
       },
 
       _applyHistoryFilter: function(event, items) {

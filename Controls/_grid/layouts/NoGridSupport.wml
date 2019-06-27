@@ -1,9 +1,9 @@
 <table attr:class="controls-Grid controls-Grid_layout_fixed controls-Grid_{{_options.style}}">
     <ws:partial template="wml!Controls/_grid/ColGroup" listModel="{{_listModel}}"/>
-    <ws:if data="{{_listModel.getHeader()}}">
+    <ws:if data="{{_listModel.shouldDrawHeader()}}">
         <ws:partial template="wml!Controls/_grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
-    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
+    <ws:if data="{{_listModel.shouldDrawResultsAt('top')}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <tbody name="itemsContainer">
@@ -18,6 +18,9 @@
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"/>
+        <ws:if data="{{_options._needBottomPadding}}">
+            <div class="controls-itemActionsV_outside-spacing"></div>
+        </ws:if>
         <ws:if data="{{_options.emptyTemplate}}">
             <tr>
                 <td colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
@@ -26,10 +29,12 @@
             </tr>
         </ws:if>
     </tbody>
-    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
+    <ws:if data="{{_listModel.shouldDrawResultsAt('bottom')}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <div attr:class="{{_calcFooterPaddingClass(_options)}}">
-        <ws:partial template="{{_options.footerTemplate}}"/>
-    </div>
+    <ws:if data="{{_listModel.shouldDrawFooter()}}">
+        <div attr:class="{{_calcFooterPaddingClass(_options)}}">
+            <ws:partial template="{{_options.footerTemplate}}"/>
+        </div>
+    </ws:if>
 </table>

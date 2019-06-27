@@ -14,7 +14,7 @@
  */
 
 import InputContainer = require('Controls/_search/Input/Container');
-import Misspell = require('Controls/_search/Misspell');
+import {default as Misspell} from 'Controls/_search/Misspell';
 import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
 import Input = require('Controls/_search/Input/Search');

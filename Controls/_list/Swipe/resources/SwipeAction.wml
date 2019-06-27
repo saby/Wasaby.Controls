@@ -1,5 +1,6 @@
 <div class="controls-Swipe__action
             {{actionCaptionPosition === 'bottom' ? '  controls-Swipe__action_column'}}
+            {{actionCaptionPosition === 'right' ? '  controls-Swipe__action_caption_right'}}
             controls-itemActionsV__action_padding_swipe
             controls-Swipe__action_{{actionAlignment}}
             controls-Swipe__action_padding_size_{{paddingSize}}

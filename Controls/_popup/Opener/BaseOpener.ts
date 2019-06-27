@@ -40,10 +40,6 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._popupIds = [];
-
-        if (options.popupOptions) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
-        }
     },
 
     _afterMount: function () {
@@ -68,7 +64,6 @@ var Base = Control.extend({
     open: function (popupOptions, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             var cfg = this._getConfig(popupOptions || {});
-            _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 _private.compatibleOpen(this, cfg, controller).then(popupId => resolve(popupId));
@@ -82,8 +77,8 @@ var Base = Control.extend({
         return new Promise((resolve => {
             var self = this;
             this._requireModules(cfg, controller).addCallback((result) => {
-                var
-                    popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
+                _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
+                const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                 cfg._vdomOnOldPage = self._options._vdomOnOldPage;
                 Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function (result) {
@@ -123,7 +118,8 @@ var Base = Control.extend({
     },
 
     _getConfig(popupOptions: Object): Object {
-        let baseConfig = Base.getConfig({...this._options.popupOptions}, this._options, popupOptions);
+        // TODO: Удалить 1 аргумент в getConfig
+        let baseConfig = Base.getConfig({}, this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
@@ -153,10 +149,7 @@ var Base = Control.extend({
     _notifyEvent: function (eventName, args) {
         // Trim the prefix "on" in the event name
         var event = eventName.substr(2);
-        var newEvent = event.toLowerCase();
         this._notify(event, args);
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + newEvent + '" instead of "popup' + event + '"');
-        this._notify('popup' + event, args);
     },
 
     _toggleIndicator: function (visible) {
@@ -276,50 +269,55 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
         }
 
         requirejs(deps, function (compatiblePopup, Action, Tpl) {
-            if (opener && opener._options.closeOnTargetScroll) {
-                cfg.closeOnTargetScroll = true;
+            try {
+                if (opener && opener._options.closeOnTargetScroll) {
+                    cfg.closeOnTargetScroll = true;
+                }
+
+                if (libInfo && libInfo.path.length !== 0) {
+                    cfg.template = Tpl;
+                    libInfo.path.forEach(function (key) {
+                        cfg.template = cfg.template[key];
+                    });
+                }
+
+                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
+
+                // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
+                // Нужно для открытия окон на старых страницах'.
+                if (opener && opener._options.theme) {
+                    newCfg.templateOptions = newCfg.templateOptions || {};
+                    newCfg.templateOptions.theme = newCfg.templateOptions.theme || opener._options.theme;
+                }
+
+                var action;
+                if (!opener || !opener._action) {
+                    action = new Action({
+                        closeByFocusOut: true,
+                    });
+                } else {
+                    action = opener._action;
+                }
+
+                var dialog = action.getDialog(),
+                    compoundArea = dialog && dialog._getTemplateComponent();
+
+                // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
+                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
+                    // Redraw template with new options
+                    compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
+                    compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
+                    dialog.setTarget && dialog.setTarget($(newCfg.target));
+                } else {
+                    action.closeDialog();
+                    action._isExecuting = false;
+                    action.execute(newCfg);
+                }
+                def.callback(action);
+            } catch (err) {
+                Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
             }
 
-            if (libInfo && libInfo.path.length !== 0) {
-                cfg.template = Tpl;
-                libInfo.path.forEach(function (key) {
-                    cfg.template = cfg.template[key];
-                });
-            }
-
-            var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
-
-            // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
-            // Нужно для открытия окон на старых страницах'.
-            if (opener && opener._options.theme) {
-                newCfg.templateOptions = newCfg.templateOptions || {};
-                newCfg.templateOptions.theme = newCfg.templateOptions.theme || opener._options.theme;
-            }
-
-            var action;
-            if (!opener || !opener._action) {
-                action = new Action({
-                    closeByFocusOut: true,
-                });
-            } else {
-                action = opener._action;
-            }
-
-            var dialog = action.getDialog(),
-                compoundArea = dialog && dialog._getTemplateComponent();
-
-            // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
-            if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
-                // Redraw template with new options
-                compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
-                compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
-                dialog.setTarget && dialog.setTarget($(newCfg.target));
-            } else {
-                action.closeDialog();
-                action._isExecuting = false;
-                action.execute(newCfg);
-            }
-            def.callback(action);
         });
     }
     return def;
@@ -383,7 +381,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
     // попасть не должны.
     const usedOptions = [
-        'closeByExternalClick',
         'isCompoundTemplate',
         'eventHandlers',
         'autoCloseOnHide',
@@ -397,7 +394,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'cancelCaption',
         'okCaption',
         'autofocus',
-        'isModal',
         'modal',
         'closeOnOutsideClick',
         'closeOnTargetScroll',
@@ -422,7 +418,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'corner',
         'targetPoint',
         'targetTracking',
-        'locationStrategy',
         'actionOnScroll'
     ];
 
@@ -441,31 +436,17 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     CoreMerge(templateOptions, popupOptions.templateOptions || {});
     const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
-    if (baseCfg.hasOwnProperty('closeByExternalClick')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-        baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
-    }
     if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
+        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
         if (baseCfg.closeOnTargetScroll) {
             baseCfg.actionOnScroll = 'close';
         }
     }
     if (baseCfg.hasOwnProperty('targetTracking')) {
-        Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
+        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
         if (baseCfg.targetTracking) {
             baseCfg.actionOnScroll = 'track';
         }
-    }
-
-    if (baseCfg.hasOwnProperty('isModal')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "modal" instead of "isModal"');
-        baseCfg.modal = baseCfg.isModal;
-    }
-
-    if (baseCfg.hasOwnProperty('locationStrategy')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "fittingMode" instead of "locationStrategy"');
-        baseCfg.fittingMode = baseCfg.locationStrategy;
     }
 
     return baseCfg;

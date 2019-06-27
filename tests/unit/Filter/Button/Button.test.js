@@ -36,6 +36,18 @@ define(
             assert.equal(text, 'Petrov K.K., Unread');
          });
 
+         it('get text resetTextValue', function() {
+            let items = [
+               {id: 'FIO', value: 'Petrov K.K.', textValue: 'Petrov K.K.', resetTextValue: 'Petrov K.K.', visibility: true},
+               {id: 'firstName', value: '', visibility: true},
+               {id: 'Test1', value: [0], textValue: '', visibility: false},
+               {id: 'unread', value: true, textValue: 'Unread', resetTextValue: '', visibility: true},
+               {id: 'id', value: [3], isFast: true, visibility: true}
+            ];
+            let text = filterMod.Selector._private.getText(items);
+            assert.equal(text, 'Unread');
+         });
+
          it('reset items', function() {
             let filterItems2 = [
                {id: 'FIO', value: 'Petrov K.K.', resetValue: '', textValue: 'Petrov K.K.', visibility: true},

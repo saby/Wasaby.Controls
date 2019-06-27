@@ -213,10 +213,15 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             {id: 3, title: 'Application', parent: null, '@parent': false, group: '1'},
             {id: 4, title: 'Assignment', parent: null, '@parent': true, group: '1'},
             {id: 5, title: 'Approval', parent: null, '@parent': false, group: '1'},
-            {id: 6, title: 'Working out', parent: null, '@parent': false, group: '1'},
-            {id: 7, title: 'Assignment for accounting', parent: 4, '@parent': false},
-            {id: 8, title: 'Assignment for delivery', parent: 4, '@parent': false},
-            {id: 9, title: 'Assignment for logisticians', parent: 4, '@parent': false, group: '3'}
+            {id: 6, title: 'Coordination', parent: null, '@parent': true},
+            {id: 7, title: 'Working out', parent: null, '@parent': false, group: '1'},
+            {id: 8, title: 'Assignment for accounting', parent: 4, '@parent': false},
+            {id: 9, title: 'Assignment for delivery', parent: 4, '@parent': false},
+            {id: 10, title: 'Assignment for logisticians', parent: 4, '@parent': false, group: '3'},
+            { id: 11, title: 'Coordination', parent: 6, group: 'coord' },
+            { id: 12, title: 'Negotiate the discount', parent: 6, group: 'coord' },
+            { id: 13, title: 'Coordination of change prices', parent: 6, group: 'coord' },
+            { id: 14, title: 'Matching new dish', parent: 6, group: 'coord' }
          ];
          this._historySource = historySource.createMemory();
          this._historySourceMulti = historySource.createMemory();

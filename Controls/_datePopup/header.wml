@@ -3,10 +3,12 @@
       <Controls.buttons:Button
          if="{{_yearStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
-         style="secondary"
+         fontColorStyle="link"
          viewMode="link"
          tooltip="{[Смена режима календаря]}"
-         icon="icon-small icon-ArrangeList icon-primary"
+         icon="icon-ArrangeList"
+         iconStyle="secondary"
+         iconSize="s"
          checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
          on:click="_toggleState()"
       />
@@ -24,43 +26,60 @@
       />
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">
-      <Controls.input:DateBase
-         mask="{{_options.mask}}"
-         autocompleteMode="start"
-         value="{{_rangeModel.startValue}}"
-         attr:class="controls-PeriodDialog__header-datePickerStart"
-         on:valueChanged="_startValuePickerChanged()"
-      />
+      <Controls.validate:InputContainer>
+         <ws:validators>
+            <ws:Function value="{{_rangeModel.startValue}}">Controls/validate:isValidDate</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <Controls.input:DateBase
+               mask="{{_options.mask}}"
+               autocompleteMode="start"
+               value="{{_rangeModel.startValue}}"
+               attr:class="controls-PeriodDialog__header-datePickerStart"
+               on:valueChanged="_startValuePickerChanged()"
+            />
+         </ws:content>
+      </Controls.validate:InputContainer>
+
       <div if="{{_options.selectionType !== 'single'}}" class="controls-PeriodDialog__dateInputEnd-wrapper">
          <div class="controls-PeriodDialog__header-rangeDash"></div>
-         <Controls.input:DateBase
-            mask="{{_options.mask}}"
-            autocompleteMode="start"
-            value="{{_rangeModel.endValue}}"
-            attr:class="controls-PeriodDialog__header-datePickerEnd"
-            on:valueChanged="_endValuePickerChanged()"
-         />
+            <Controls.validate:InputContainer>
+            <ws:validators>
+               <ws:Function value="{{_rangeModel.endValue}}">Controls/validate:isValidDate</ws:Function>
+            </ws:validators>
+            <ws:content>
+               <Controls.input:DateBase
+                  mask="{{_options.mask}}"
+                  autocompleteMode="start"
+                  value="{{_rangeModel.endValue}}"
+                  attr:class="controls-PeriodDialog__header-datePickerEnd"
+                  on:valueChanged="_endValuePickerChanged()"
+               />
+            </ws:content>
+         </Controls.validate:InputContainer>
       </div>
    </div>
 
    <Controls.buttons:Button
       if="{{_homeButtonVisible}}"
-      style="secondary"
+      fontColorStyle="link"
       viewMode="link"
       activableByClick="{{false}}"
       iconStyle="secondary"
+      iconSize="s"
       tooltip="{[Текущий период]}"
-      icon="icon-size icon-small icon-Home3 icon-primary"
+      icon="icon-Home3"
       on:click="_homeButtonClick()"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.buttons:Button
       viewMode="toolButton"
       transparent="{{true}}"
-      style="success"
+      buttonStyle="success"
       icon="icon-medium icon-Yes"
       iconStyle="success"
-      size="m"
+      iconSize="m"
+      height="l"
       attr:class="controls-PeriodDialog__applyButton"
       on:click="_applyClick()"
    />

@@ -1,5 +1,6 @@
 <div>
    <Controls.buttons:Button viewMode="link"
+                            fontColorStyle="link"
                             caption="{{_options.caption}}"
                             on:click="_openSelectorDialog()"/>
 </div>

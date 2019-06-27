@@ -449,6 +449,11 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Valid code.', function() {
+               ctrl._children[ctrl._fieldName] = undefined;
+
+               ctrl._focusOutHandler();
+            });
          });
          describe('Click event on the placeholder.', function() {
             beforeEach(function() {

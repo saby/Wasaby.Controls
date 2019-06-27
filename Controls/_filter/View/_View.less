@@ -68,7 +68,12 @@
 
 // filter button icon
 .controls-FilterView-button-left_theme_@{themeName} {
+   margin-right: @spacing_FilterView-between-filterButton-text;
    order: -1;
+}
+
+.controls-FilterView-button-right_theme_@{themeName} {
+   margin-left: @spacing_FilterView-between-filterButton-text;
 }
 
 .controls-FilterView__icon_theme_@{themeName} {
@@ -139,6 +144,7 @@
 }
 
 .controls-FilterView__iconArrow_state_enabled_theme_@{themeName} {
+   cursor: pointer;
    color: @color_FastFilter-arrow;
 }
 

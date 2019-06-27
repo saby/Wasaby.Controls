@@ -1,5 +1,6 @@
+import {TemplateFunction} from 'UI/Base';
 export interface ICaptionOptions {
-   caption?: string | Function;
+   caption?: string | TemplateFunction;
 }
 
 /**

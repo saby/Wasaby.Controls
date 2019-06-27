@@ -60,6 +60,13 @@ define('Controls-demo/Input/Base/Base',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
+               },
+               autoComplete: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 1
                }
             };
             this._componentOptions = {
@@ -68,6 +75,7 @@ define('Controls-demo/Input/Base/Base',
                style: 'info',
                size: 'default',
                textAlign: 'left',
+               autoComplete: 'off',
                fontStyle: 'default',
                placeholder: 'Text...',
                readOnly: false,

@@ -147,6 +147,29 @@
       </div>
       <h1>Label</h1>
       <a href="/Controls-demo/app/Controls-demo%252FLabel%252FLabel">Label</a>
+
+      <h1>VirtualScroll <small style="color: #CCC; font-size: 16px">List + MemorySource</small></h1>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll/AllLoaded' }}">
+            <a href="{{content.href}}">Без загрузки данных с источника. Показ с первой записи</a>
+         </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll/LoadBottom' }}">
+            <a href="{{content.href}}">Загрузка вниз. Показ с первой записи</a>
+         </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll/EqualPages' }}">
+            <a href="{{content.href}}">Загрузка вниз. Страница навигации = виртуальной странице</a>
+         </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll/FromLastPage' }}">
+            <a href="{{content.href}}">Загрузка вверх. Показ с последней страницы</a>
+         </Router.router:Reference>
+      </div>
+
    </div>
    <div class="demo_controls_list_section">
       <h1>Buttons</h1>

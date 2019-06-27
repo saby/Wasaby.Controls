@@ -95,11 +95,11 @@ export default interface IButton {
  * @example
  * Button has transparent background.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
  * </pre>
  * Button hasn't transparent background.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="toolButton" transparent="{{false}}"/>
  * </pre>
  * @see style
  */

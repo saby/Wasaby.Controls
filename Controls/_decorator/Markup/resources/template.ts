@@ -44,7 +44,7 @@ import validHtml = require('Core/validHtml');
    function validAttributesInsertion(to, from) {
       var validAttributes = currentValidHtml.validAttributes;
       for (var key in from) {
-         if (!from.hasOwnProperty(key)) {
+         if (!from.hasOwnProperty(key) || typeof from[key] !== 'string') {
             continue;
          }
          if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {

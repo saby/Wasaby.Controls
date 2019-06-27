@@ -24,6 +24,7 @@ import { constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
+import {Focus} from 'Vdom/Vdom'
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -31,7 +32,7 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
-var
+const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
         moveMarkerToPrevious: constants.key.up,
@@ -151,12 +152,10 @@ var _private = {
                     }
                 }
 
-                /* Перезагрузка полностью обновляет данные в рекордсете, а значит индексы, высоты элементов и распорок
-                 потеряли актуальность, сбрасываем их. */
                 if (self._virtualScroll) {
-                    self._virtualScroll.resetItemsIndexes();
                     self._virtualScroll.ItemsCount = listModel.getCount();
-                    _private.applyVirtualScroll(self);
+                    self._virtualScroll.resetItemsIndexes();
+                    _private.applyVirtualScrollIndexesToListModel(self);
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
@@ -249,15 +248,25 @@ var _private = {
             self._keyDisplayedItem = null;
         }
     },
+    moveMarker: function(self, newMarkedKey) {
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (this._mounted) {
+            this.activate();
+        }
+        _private.setMarkedKey(self, newMarkedKey);
+    },
     moveMarkerToNext: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+        }
     },
     moveMarkerToPrevious: function(self) {
-        var
-            model = self.getViewModel();
-        _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+        if (self._options.markerVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
+        }
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
@@ -336,16 +345,17 @@ var _private = {
                 // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                     _private.checkLoadToDirectionCapability(self);
-                }
-
-                /* После догрузки данных потенциально изменяется (увеличивается) количество записей,
-                 нужно пересчитать Virtual Scroll*/
-                if (self._virtualScroll) {
-
-                    // Обновляем общее количество записей
+                } else if (self._virtualScroll) {
+                    // После догрузки данных потенциально увеличивается количество записей, нужно пересчитать индексы
                     self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-
-                    _private.applyVirtualScroll(self);
+                    if (direction === 'up') {
+                        // TODO: KINGO. Когда добавляется пачка записей сверху индексы начала и конца виртуальной страницы
+                        // увеличиваются на размер пачки.
+                        // Например, показываем записи с 0 по 30. Затем, загрузили 20 записей сверху.
+                        // Индексы показываемых записей должны стать с 20 по 50.
+                        self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + addedItems.getCount();
+                    }
+                    _private.applyVirtualScrollIndexes(self, direction);
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -361,22 +371,22 @@ var _private = {
         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
     },
 
-    // Основной метод пересчета состояния Virtual Scroll
-    applyVirtualScroll: function (self) {
-        let
-            indexes = self._virtualScroll.ItemsIndexes,
-            placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
+    // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
+    applyVirtualScrollIndexesToListModel(self): void {
+        const newIndexes = self._virtualScroll.ItemsIndexes;
+        const model = self._listViewModel;
+        if (newIndexes.start !== model.getStartIndex() || newIndexes.stop !== model.getStopIndex()) {
+            model.setIndexes(newIndexes.start, newIndexes.stop);
+            return true;
+        }
+    },
 
-        /*
-         * The virtual scroll updates the indexes only on scroll events. After reload and at the moment of first load,
-         * indexes in virtual scroll remain the same as at the time of initialization. Source may return fewer records
-         * than the size of the virtual page and the stopIndex in the model will be bigger than the stopIndex in the
-         * virtual scroll. It can cause all kinds of troubles, e.g. out of bounds access.
-         */
-        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
-        self._listViewModel.setIndexes(indexes.start, indexes.stop);
-        self._topPlaceholderHeight = placeholdersSizes.top;
-        self._bottomPlaceholderHeight = placeholdersSizes.bottom;
+    // Обновляет высоту распорок при виртуальном скроле
+    applyPlaceholdersSizes(self): void {
+        if (self._virtualScroll) {
+            self._topPlaceholderSize = self._virtualScroll.PlaceholdersSizes.top;
+            self._bottomPlaceholderSize = self._virtualScroll.PlaceholdersSizes.bottom;
+        }
     },
 
     checkLoadToDirectionCapability: function(self) {
@@ -387,94 +397,75 @@ var _private = {
             if (self._loadTriggerVisibility.down) {
                 _private.onScrollLoadEdge(self, 'down');
             }
+            if (self._virtualScroll) {
+                if (self._virtualScrollTriggerVisibility.up) {
+                    // copy-paste from updateVirtualWindowStart
+                    self._virtualScroll.recalcToDirection('up');
+                    _private.applyVirtualScrollIndexes(self, 'up');
+                }
+                if (self._virtualScrollTriggerVisibility.down) {
+                    // copy-paste from updateVirtualWindowStart
+                    self._virtualScroll.recalcToDirection('down');
+                    _private.applyVirtualScrollIndexes(self, 'down');
+                }
+            }
         }
     },
-
-    onScrollLoadEdgeStart: function(self, direction) {
-        if (self._options.task1177135045) {
-            if (self._virtualScroll) {
-                _private.updateVirtualWindow(self, direction)
-            }
-        } else {
-            self._loadTriggerVisibility[direction] = true;
-            _private.onScrollLoadEdge(self, direction);
-        }
+    onScrollLoadEdgeStart: function (self, direction) {
+        self._loadTriggerVisibility[direction] = true;
+        _private.onScrollLoadEdge(self, direction);
     },
 
     onScrollLoadEdgeStop: function(self, direction) {
         self._loadTriggerVisibility[direction] = false;
     },
 
-    loadToDirectionIfNeed: function(self, direction) {
-        //source controller is not created if "source" option is undefined
-        if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
-            _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback
-            );
+    // Вызывает обновление индексов виртуального окна при срабатывании триггера вверх|вниз и запоминает, что тригер в настоящий момент видимый
+    updateVirtualWindowStart(self, direction: 'up' | 'down'): void {
+        if (self._virtualScroll) {
+            self._virtualScrollTriggerVisibility[direction] = true;
+            self._virtualScroll.recalcToDirection(direction);
+            _private.applyVirtualScrollIndexes(self, direction);
         }
     },
 
-    // Метод, в котором опеределяется необходимость догрузки данных
-    updateVirtualWindow: function(self, direction) {
+    // Запоминает, что тригер в настоящий момент скрыт
+    updateVirtualWindowStop(self, direction: 'up'|'down'): void {
+        if (self._virtualScroll) {
+            self._virtualScrollTriggerVisibility[direction] = false;
+        }
+    },
 
-        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        if (self._options.task1177135045) {
-            self._virtualScroll.updateItemsIndexes(direction);
-            _private.applyVirtualScroll(self);
-            self._checkShouldLoadToDirection = true;
-        } else {
-            let
-                indexes = self._virtualScroll.ItemsIndexes;
+    // Обновляет стартовый и конечный индексы виртуального окна
+    applyVirtualScrollIndexes(self, direction): void {
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
+            if (direction === 'up') {
+                self._saveAndRestoreScrollPosition = true;
+            }
+            self._shouldRestoreScrollPosition = true;
+            self._virtualScroll.updatePlaceholdersSizes();
+            _private.applyPlaceholdersSizes(self);
+        }
+    },
 
-            // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
-            if (self._listViewModel.getCount() <= indexes.stop) {
-                if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                    _private.loadToDirectionIfNeed(self, direction);
-                }
-            } else {
-
-                // Иначе пересчитываем скролл
-                self._virtualScroll.updateItemsIndexes(direction);
-                _private.applyVirtualScroll(self);
-                self._checkShouldLoadToDirection = true;
+    loadToDirectionIfNeed: function(self, direction) {
+        //source controller is not created if "source" option is undefined
+        // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
+        if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
+            if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
+                _private.loadToDirection(
+                   self, direction,
+                   self._options.dataLoadCallback,
+                   self._options.dataLoadErrback
+                );
             }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
-    onScrollLoadEdge: function(self, direction) {
-
-        // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        if (self._options.task1177135045) {
-            if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                _private.loadToDirectionIfNeed(self, direction);
-                if (self._virtualScroll) {
-                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-                    self._virtualScroll.updateItemsIndexes(direction);
-                    _private.applyVirtualScroll(self);
-                }
-            }
-        } else {
-            if (self._virtualScroll) {
-                _private.updateVirtualWindow(self, direction);
-            } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                _private.loadToDirectionIfNeed(self, direction);
-            }
-        }
-    },
-
-    onScrollListEdge: function(self, direction) {
-        if (self._options.task1177135045) {
-            self._loadTriggerVisibility[direction] = true;
-            _private.onScrollLoadEdge(self, direction);
-        }
-    },
-
-    onScrollListEdgeStop: function (self, direction) {
-        if (self._options.task1177135045) {
-            self._loadTriggerVisibility[direction] = false;
+    onScrollLoadEdge: function (self, direction) {
+        if (self._options.navigation && self._options.navigation.view === 'infinity') {
+            _private.loadToDirectionIfNeed(self, direction);
         }
     },
 
@@ -505,14 +496,14 @@ var _private = {
             return;
         }
         const triggers = {
-            topListTrigger: children.topListTrigger,
-            bottomListTrigger: children.bottomListTrigger,
-            topLoadTrigger: children.topLoadTrigger,
-            bottomLoadTrigger: children.bottomLoadTrigger
-        };
+                topVirtualScrollTrigger: children.topVirtualScrollTrigger,
+                bottomVirtualScrollTrigger: children.bottomVirtualScrollTrigger,
+                topLoadTrigger: children.topLoadTrigger,
+                bottomLoadTrigger: children.bottomLoadTrigger
+            };
 
         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-        scrollEmitter.startRegister(triggers, self._options.task1177135045);
+        scrollEmitter.startRegister(triggers);
         scrollEmitter.__started = true;
     },
 
@@ -627,12 +618,6 @@ var _private = {
     handleListScroll: function(self, scrollTop, position, clientHeight: number) {
         var hasMoreData;
 
-        // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
-        if (self._virtualScroll) {
-            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop, clientHeight);
-            _private.applyVirtualScroll(self);
-        }
-
         if (self._scrollPagingCtr) {
             if (position === 'middle') {
                 self._scrollPagingCtr.handleScroll(scrollTop);
@@ -685,18 +670,21 @@ var _private = {
                         self._children.itemActionsOpener.close();
                     }
                 }
-                if (!!action && self.getVirtualScroll()) {
+
+                if (!!action && self._virtualScroll) {
                     self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                        self._virtualScroll.recalcItemsIndexes(newItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
                     }
                     if (action === collection.IObservable.ACTION_RESET) {
                         self._virtualScroll.resetItemsIndexes();
                     }
-                    _private.applyVirtualScroll(self);
+                    _private.applyVirtualScrollIndexesToListModel(self);
                 }
             }
             if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
@@ -808,8 +796,8 @@ var _private = {
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
-                   groupTemplate: self._options.groupTemplate,
-                   groupingKeyCallback: self._options.groupingKeyCallback,
+                   groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
+                   groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
                    rootKey: action.id,
                    showHeader: true,
                    dropdownClassName: 'controls-itemActionsV__popup',
@@ -989,6 +977,10 @@ var _private = {
         if (options.keyProperty === undefined) {
             IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
+    },
+
+    needBottomPadding: function(options) {
+        return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     }
 };
 
@@ -1038,6 +1030,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _isScrollShown: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
+    _virtualScrollTriggerVisibility: null,
     _loadOffset: 0,
     _topPlaceholderHeight: 0,
     _bottomPlaceholderHeight: 0,
@@ -1051,6 +1044,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigation: false,
 
     _canUpdateItemsActions: false,
+
+    _needBottomPadding: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1075,7 +1070,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
@@ -1085,7 +1080,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     virtualPageSize: newOptions.virtualPageSize,
                     virtualSegmentSize: newOptions.virtualSegmentSize
                 });
+
             }
+            this._virtualScrollTriggerVisibility = {
+                up: false,
+                down: false
+            };
             this._loadTriggerVisibility = {
                 up: false,
                 down: false
@@ -1121,9 +1121,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (self._virtualScroll) {
-                        self._virtualScroll.ItemsCount = self._items.getCount();
                         // При серверной верстке применяем начальные значения
-                        _private.applyVirtualScroll(self);
+                        self._virtualScroll.ItemsCount = self._items.getCount();
+                        _private.applyVirtualScrollIndexesToListModel(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                     return;
@@ -1168,6 +1168,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1328,6 +1329,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
+        this._virtualScrollTriggerVisibility = null;
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
@@ -1343,6 +1345,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint():void {
+        if (this._virtualScroll && this._itemsChanged) {
+            this._virtualScroll.updateItemsSizes();
+            _private.applyPlaceholdersSizes(this);
+        }
+
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -1366,9 +1373,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._virtualScroll) {
-            this._setScrollItemContainer();
-        }
         if (this._options.itemActions) {
             this._canUpdateItemsActions = false;
         }
@@ -1382,7 +1386,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
             this._delayedSelect = null;
         }
-
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -1410,10 +1413,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadTopStop': _private.onScrollLoadEdgeStop(self, 'up'); break;
             case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
-            case 'listTop': _private.onScrollListEdge(self, 'up'); break;
-            case 'listTopStop': _private.onScrollListEdgeStop(self, 'up'); break;
-            case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'listBottomStop': _private.onScrollListEdgeStop(self, 'down'); break;
+
+            case 'virtualPageTopStart': _private.updateVirtualWindowStart(self, 'up'); break;
+            case 'virtualPageTopStop': _private.updateVirtualWindowStop(self, 'up'); break;
+            case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down'); break;
+            case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
+
+
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
@@ -1528,28 +1534,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-EditableArea, .controls-Dropdown, .controls-Suggest_list')) {
             this._focusTimeout = setTimeout(() => {
                 if (this._children.fakeFocusElem) {
-                    this._children.fakeFocusElem.focus();
+                    Focus.focus(this._children.fakeFocusElem);
                 }
             }, 0);
         }
     },
 
     _viewResize: function() {
-        if (this._setScrollItemContainer()) {
-            /*
-            * To update items sizes, virtualScroll needs their HTML container. It sets on baseControls' afterMount.
-            * The "controlResize" event can fires before baseControls' afterMount, because first performs afterMounts of all
-            * children. It leads to errors, because container has not been settled yet.
-            * */
+        // todo Check, maybe remove "this._virtualScroll.ItemsContainer"?
+        if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
             this._virtualScroll.updateItemsSizes();
+            _private.applyPlaceholdersSizes(this);
         }
     },
     _setScrollItemContainer: function () {
         if (!this._children.listView || !this._virtualScroll) {
-            return false;
+            return;
         }
         this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
-        return  true;
     },
 
     beginEdit: function(options) {
@@ -1653,13 +1655,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
-        // activate list when marker is moving. It let us press enter and open current row
-        if (event.nativeEvent.keyCode === constants.key.down || event.nativeEvent.keyCode === constants.key.up) {
-            // must check mounted to avoid fails on unit tests
-            if (this._mounted) {
-               this.activate();
-            }
-        }
         keysHandler(event, HOT_KEYS, _private, this);
     },
     _dragEnter: function(event, dragObject) {

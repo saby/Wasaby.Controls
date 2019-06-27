@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 
@@ -393,7 +393,7 @@ var
             let
                 columns: Array<{ width: string }> = self._columns,
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                columnsWidth = hasMultiselect ? ['auto'] : [],
+                columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasAutoWidth = !!columns.find((column) => {
                     return column.width === 'auto';
                 });
@@ -519,6 +519,9 @@ var
                 result = cClone(column);
             if (isNoGridSupport) {
                 if (result.width === '1fr') {
+                    result.width = 'auto';
+                }
+                if (result.width === 'max-content') {
                     result.width = 'auto';
                 }
             }
@@ -768,6 +771,21 @@ var
                 return this._options.results.position;
             }
             return this._options.resultsPosition;
+        },
+
+        shouldDrawHeader(): boolean {
+            return !!this.getHeader() && this.getCount() > 0;
+        },
+
+        shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
+            if (this.getResultsPosition() !== position) {
+                return false;
+            }
+            return this.getCount() > 1;
+        },
+
+        shouldDrawFooter(): boolean {
+            return !!this._options.footerTemplate && this.getCount() > 0;
         },
 
         getStyleForCustomResultsTemplate: function() {
@@ -1040,14 +1058,20 @@ var
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
                     multyHeaderOffset: this.getMultyHeaderOffset(),
+                    hasBottomPadding: this._options._needBottomPadding
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
 
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
                 getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
             };
@@ -1378,6 +1402,10 @@ var
             return this._model.getStartIndex();
         },
 
+        getStopIndex(): number {
+            return this._model.getStopIndex();
+        },
+
         setHoveredItem: function (item) {
             this._model.setHoveredItem(item);
         },
@@ -1411,6 +1439,19 @@ var
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
         getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+        getBottomPaddingStyles(): string {
+            let styles = '';
+
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                let
+                    columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
+
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, this._columns.length);
+            }
+
+            return styles;
         },
 
         setHandlersForPartialSupport: function(handlersList: Record<string, Function>): void {
