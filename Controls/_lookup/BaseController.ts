@@ -268,6 +268,10 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
       _onUpdateItemsHandler: function(event, items) {
          this._setItems(items);
+      },
+
+      _closeHandler: function() {
+         this.activate();
       }
    });
 
