@@ -68,7 +68,7 @@ type PlaceholdersSizes = {
  * @mixes Controls/_list/interface/IVirtualScroll
  *
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 class VirtualScroll {
 
