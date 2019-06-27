@@ -16,6 +16,7 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
+   noscript="{{ _options.noscript }}"
    preInitScript="{{ _options.preInitScript }}"
    servicesPath="{{ servicesPath }}"
    product="{{ product }}">
