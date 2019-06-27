@@ -215,7 +215,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          getKeysLoad: function(config, keys) {
             let result = [];
             chain.factory(keys).each(function(key) {
-               if (!config._items.getRecordById(key) && !(key === null && config.emptyText)) {
+               if (key !== undefined && !config._items.getRecordById(key) && !(key === null && config.emptyText)) {
                   result.push(key);
                }
             });
