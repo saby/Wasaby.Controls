@@ -118,7 +118,7 @@ export default interface IButton {
 /**
  * @name Controls/_interface/IButton#size
  * @cfg {String} Размер кнопки. Значение задается общими обозначениями размера.
- * @variant s Маленькиц размер кнопки.
+ * @variant s Маленький размер кнопки.
  * @variant m Средний размер кнопки.
  * @variant l Большой размер кнопки.
  * @variant xl Очень большой размер кнопки.
@@ -131,10 +131,6 @@ export default interface IButton {
  * Размер кнопки по умолчанию.
  * <pre>
  *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button"/>
- * </pre>
- * Неправильный размер кнопки.
- * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="xl"/>
  * </pre>
  * @see style
  */
@@ -168,7 +164,7 @@ export default interface IButton {
  * @cfg {Boolean} Определяет, имеет ли кнопка фон.
  * @default false
  * @remark
- * true - Кнопка имеет прозрачный фон..
+ * true - Кнопка имеет прозрачный фон.
  * false - Кнопка имеет фон по умолчанию для этого режима отображения и стиля.
  * @example
  * Кнопка имеет прозрачный фон.
