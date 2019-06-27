@@ -585,6 +585,9 @@ var
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = getMaxEndRow(this._headerRows);
+                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
+                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
