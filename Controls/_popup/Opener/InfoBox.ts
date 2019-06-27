@@ -50,6 +50,7 @@ const DEFAULT_CONFIG = {
     targetSide: 'top',
     alignment: 'start',
     floatCloseButton: false,
+    closeOnOutsideClick: true,
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
