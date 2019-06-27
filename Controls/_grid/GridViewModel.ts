@@ -786,23 +786,6 @@ var
             this._options.resultsPosition = position;
         },
 
-        shouldDrawHeader(): boolean {
-            return !!this.getHeader() && this.getCount() > 0;
-        },
-
-        shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-            if (this.getResultsPosition() !== position) {
-                return false;
-            }
-            return this.getCount() > 1;
-        },
-
-        shouldDrawFooter(): boolean {
-
-            // Не меняю текущее поведение в 410. В 510 сделал по стандарту
-            return true;
-        },
-
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
