@@ -50,6 +50,7 @@ const DEFAULT_CONFIG = {
     targetSide: 'top',
     alignment: 'start',
     floatCloseButton: false,
+    closeOnOutsideClick: true,
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
@@ -96,7 +97,7 @@ const _private = {
             maxWidth: newCfg.maxWidth,
             zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
             templateOptions: { // for template: Opener/InfoBox/resources/template
                 template: newCfg.template,
