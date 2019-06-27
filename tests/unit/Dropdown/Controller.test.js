@@ -822,14 +822,15 @@ define(
             });
 
             it('_private::onResult itemClick on history item', function() {
-               let resultItems, updated;
-               dropdownController._notify = function(e, d) {
+               let resultItems, updated, closeByNodeClick = true;
+               dropdownController._notify = function (e, d) {
                   if (e === 'selectedItemsChanged') {
                      resultItems = d[0];
+                     return closeByNodeClick;
                   }
                };
 
-               historySource.update = function() {
+               historySource.update = function () {
                   updated = true;
                };
                dropdownController._items = itemsRecords;
@@ -852,6 +853,19 @@ define(
                assert.equal(item.getId(), '6_history');
                dropdownController._onResult(null, {action: 'itemClick', data: [item]});
                assert.equal(resultItems[0].getId(), '6');
+               assert.isTrue(updated);
+
+               updated = false;
+               closeByNodeClick = false;
+               item = new entity.Model({
+                  rawData: {
+                     id: '5', title: 'title 5'
+                  },
+                  idProperty: 'id'
+               });
+               dropdownController._onResult(null, {action: 'itemClick', data: [item]});
+               assert.equal(resultItems[0].getId(), '5');
+               assert.isFalse(updated);
             });
 
             it('check pin click', () => {

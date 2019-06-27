@@ -125,12 +125,9 @@ var _private = {
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
-            var item = result.data[0];
-
-            _private.updateHistory(this, item);
-
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
+               _private.updateHistory(this, result.data[0]);
                this._children.DropdownOpener.close();
             }
             break;
