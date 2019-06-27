@@ -134,6 +134,8 @@ import entity = require('Types/entity');
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
+                //InfoBox close by click on outside only if trigger is set to 'demand' or 'click'.
+               closeOnOutsideClick: self._options.trigger === 'click' || self._options.trigger === 'demand',
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler,
@@ -216,8 +218,8 @@ import entity = require('Types/entity');
                if (!this._opened) {
                   this._open(event);
                }
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _contentMouseenterHandler: function() {
