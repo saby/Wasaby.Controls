@@ -7,7 +7,7 @@ import ListControl from 'Controls/_calendar/MonthList/ListControl';
  * @class Controls/_calendar/MonthList/List
  * @extends Controls/List
  * @control
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 const ModuleControl = List.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{

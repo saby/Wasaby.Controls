@@ -37,7 +37,7 @@ function proxyModelEvents(component, model, eventNames) {
  * @control
  * @public
  * @demo Controls-demo/Input/DateTime/DateTimePG
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @category Input
  */
 

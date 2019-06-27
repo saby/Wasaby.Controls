@@ -2,7 +2,7 @@
  * Interface to select the period of the dialogue..
  * @interface Controls/_datePopup/interfaces/IDatePopup
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 /**

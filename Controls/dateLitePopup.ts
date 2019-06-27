@@ -21,7 +21,7 @@ import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
  * @mixes Controls/_dateLitePopup/IDateLitePopup
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Date/PeriodLiteDialog
  *
  */

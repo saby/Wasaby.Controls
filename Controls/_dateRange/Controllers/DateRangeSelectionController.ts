@@ -15,7 +15,7 @@ import DateUtil = require('Controls/Utils/Date');
  *
  * @class Controls/_dateRange/Controllers/DateRangeSelectionController
  * @extends Controls/_dateRange/Controllers/RangeSelectionController
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 var Component = RangeSelectionController.extend({
    _beforeMount: function(options) {

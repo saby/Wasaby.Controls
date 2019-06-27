@@ -21,7 +21,7 @@ import 'css!theme?Controls/datePopup';
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
  *
  * @css @background-color_PeriodDialog Background color of dialog.

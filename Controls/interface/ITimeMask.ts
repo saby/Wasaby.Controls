@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/ITimeMask
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 interface ITimeMask {
    readonly _options: {

@@ -11,7 +11,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
        *
        * @extends Core/Control
        * @class Controls/_scroll/StickyHeader/Group
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        */
 
       /**
