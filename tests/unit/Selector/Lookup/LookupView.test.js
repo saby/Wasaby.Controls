@@ -246,7 +246,7 @@ define([
 
          lookup._container = {};
 
-         if (!window) {
+         if (window) {
             sinon.stub(window, 'getComputedStyle').returns({paddingLeft: '4px', borderLeftWidth: '1px'});
             Lookup._private.initializeConstants(lookup);
             lookup._openInfoBox(null, config);
