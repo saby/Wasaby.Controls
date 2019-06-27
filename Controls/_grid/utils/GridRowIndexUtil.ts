@@ -16,6 +16,7 @@ import {Collection, CollectionItem} from 'Types/display'
 interface IBaseGridRowIndexOptions {
     display: Collection<unknown, CollectionItem<unknown>>;
     hasHeader: boolean;
+    hasBottomPadding: boolean;
     resultsPosition?: 'top' | 'bottom';
     multyHeaderOffset?: number;
     editingRowIndex?: number
@@ -118,11 +119,35 @@ function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
         }
 
         index += hasEditingItem ? 1 : 0;
+        index += cfg.hasBottomPadding ? 1 : 0;
     }
 
     return index;
 }
 
+
+/**
+ * Возвращает номер строки в списке для строки-отступа между последней записью в таблице и
+ * результатами/подвалом/нижней границей таблицы.
+ *
+ * @param {GridRowIndexOptions} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для строки-отступа.
+ */
+function getBottomPaddingRowIndex(cfg: GridRowIndexOptions): number {
+    let
+        index = 0,
+        isResultsInTop = cfg.resultsPosition === "top",
+        itemsCount = cfg.display.getCount(),
+        hasEditingItem = typeof cfg.editingRowIndex === "number";
+
+    index += cfg.hasHeader ? 1 : 0;
+    index += isResultsInTop ? 1 : 0;
+    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += hasEditingItem ? 1 : 0;
+    index += itemsCount;
+
+    return index;
+}
 
 
 /**
@@ -140,6 +165,7 @@ function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
 
     index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
+    index += cfg.hasBottomPadding ? 1 : 0;
     index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     index += hasEditingItem ? 1 : 0;
 
@@ -303,6 +329,7 @@ export {
     getResultsIndex,
     getFooterIndex,
     getTopOffset,
+    getBottomPaddingRowIndex,
     getRowsArray,
     getMaxEndRow
 }
