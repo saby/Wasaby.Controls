@@ -18,19 +18,19 @@ define('Controls/interface/IEditableList', [
    /**
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
-    * @property {Boolean} [editingConfig.autoAdd=false] Если передано значение "true", после окончания редактирования последнего элемента списка автоматически добавляется новый элемент и начинается его редактирование.
-    * @property {Boolean} [editingConfig.sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
-    * @property {Boolean} [editingConfig.toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
-    * @property {Types/entity:Record} [editingConfig.item=undefined] Позволяет начать редактирование элемента списка при первом рендеринге.
+    * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
+    * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
+    * @property {Types/entity:Record} [item=undefined] Позволяет начать редактирование элемента списка при первом рендеринге.
     */
 
    /*
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
-    * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
-    * @property {Boolean} [editingConfig.sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
-    * @property {Boolean} [editingConfig.toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
-    * @property {Types/entity:Record} [editingConfig.item=undefined] If present, editing of this item will begin on first render.
+    * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
+    * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
+    * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
+    * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
     */
 
    /**
