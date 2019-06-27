@@ -23,9 +23,9 @@ import template = require('wml!Controls/_search/Misspell');
 
 class Misspell extends Control<IControlOptions & ICaption> implements ICaption{
    private _template: TemplateFunction = template;
-   static _theme: Array<string> = ['Controls/search'];
 
-   readonly "[Controls/_interface/ICaption]": true;
+   readonly '[Controls/_interface/ICaption]': true;
+   static _theme: string[] = ['Controls/search'];
 }
 
 export default Misspell;

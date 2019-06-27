@@ -92,7 +92,7 @@ const stickyButton = [
 class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = ToggleButtonTemplate;
-   protected _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
+
    protected _icon: string;
    protected _buttonStyle: string;
    protected _transparent: boolean;
@@ -128,6 +128,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._optionsGeneration(newOptions);
    }
 
+   static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
    static getDefaultOptions(): object {
       return {
          viewMode: 'link',

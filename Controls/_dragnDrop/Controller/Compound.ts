@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dragnDrop/Controller/Compound/Compound');
 import draggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/Vdom';
       var ZINDEX_FOR_OLD_PAGE = 10000;
 
       export = Control.extend({
@@ -13,7 +13,7 @@ import Vdom = require('Vdom/Vdom');
                if (handler) {
                   this._compoundHandlers = this._compoundHandlers || {};
                   this._compoundHandlers[eventName] = function(event) {
-                     handler.apply(emitter, [new Vdom.SyntheticEvent(event)]);
+                     handler.apply(emitter, [new SyntheticEvent(event)]);
                   };
                   document.body.addEventListener(eventName, this._compoundHandlers[eventName]);
                } else if (this._compoundHandlers && this._compoundHandlers[eventName]) {
