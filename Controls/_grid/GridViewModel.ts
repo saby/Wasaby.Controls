@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 
@@ -1057,7 +1057,8 @@ var
                     display: this.getDisplay(),
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
-                    multyHeaderOffset: this.getMultyHeaderOffset()
+                    multyHeaderOffset: this.getMultyHeaderOffset(),
+                    hasBottomPadding: this._options._needBottomPadding
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
@@ -1070,6 +1071,7 @@ var
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
                 getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
             };
@@ -1437,6 +1439,19 @@ var
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
         getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+        getBottomPaddingStyles(): string {
+            let styles = '';
+
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                let
+                    columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
+
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, this._columns.length);
+            }
+
+            return styles;
         },
 
         setHandlersForPartialSupport: function(handlersList: Record<string, Function>): void {

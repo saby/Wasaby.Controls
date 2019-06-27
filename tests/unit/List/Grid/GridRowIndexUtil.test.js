@@ -101,12 +101,22 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+            });
+
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 7);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 8);
             });
 
             it('getFooterIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 9);
             });
          });
 
@@ -134,16 +144,26 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 7);
+            });
+
             it('getResultsIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 6);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 7);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 8);
             });
 
             it('getFooterIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 9);
             });
          });
 
@@ -171,10 +191,18 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 7);
+            });
+
             it('getFooterIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
             });
          });
 
@@ -206,9 +234,17 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 5);
             });
 
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 6);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 7);
+            });
+
             it('getResultsIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+               gridModel._options._needBottomPadding = true;
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
             });
 
@@ -216,6 +252,8 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
             });
 
          });
@@ -244,16 +282,26 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 4);
             });
 
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 5);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 6);
+            });
+
             it('getResultsIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 5);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 6);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 7);
             });
 
             it('getFooterIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
             });
          });
 
@@ -281,10 +329,18 @@ define([
                assert.equal(gridModel._getRowIndexHelper().getIndexByDisplayIndex(4), 4);
             });
 
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 5);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 6);
+            });
+
             it('getFooterIndex', function () {
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 5);
                gridModel._setEditingItemData({index: 0});
                assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 6);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 7);
             });
 
          });
@@ -307,12 +363,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 5);
                   });
                });
 
@@ -326,12 +386,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 4);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 5);
                   });
                });
 
@@ -345,6 +409,8 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
@@ -362,12 +428,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
 
                });
@@ -382,12 +452,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 3);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
@@ -401,6 +475,8 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
 
                });
@@ -422,12 +498,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
@@ -441,12 +521,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 3);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 4);
                   });
                });
 
@@ -460,6 +544,8 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
@@ -477,12 +563,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
 
                });
@@ -497,12 +587,16 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 0);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 2);
                   });
 
                   it('getFooterIndex', function () {
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 3);
                   });
                });
 
@@ -516,6 +610,8 @@ define([
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 0);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 1);
+                     gridModel._options._needBottomPadding = true;
+                     assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 2);
                   });
 
                });

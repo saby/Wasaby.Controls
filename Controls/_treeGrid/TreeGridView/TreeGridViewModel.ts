@@ -1,6 +1,7 @@
 import {GridViewModel} from 'Controls/grid'
 import {GridLayoutUtil} from 'Controls/list'
 import {
+    getBottomPaddingRowIndex,
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
@@ -210,6 +211,7 @@ var
                 cfg: IBaseTreeGridRowIndexOptions = {
                     display: this.getDisplay(),
                     hasHeader: !!this.getHeader(),
+                    hasBottomPadding: this._options._needBottomPadding,
                     resultsPosition: this.getResultsPosition(),
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
@@ -227,8 +229,9 @@ var
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition)
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition),
             };
         }
     });
