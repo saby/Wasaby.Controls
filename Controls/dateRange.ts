@@ -39,5 +39,5 @@ export {IDateRangeSelectable};
  * @includes DateRangeModel Controls/_dateRange/DateRangeModel
  *
  * @public
- * @author Mironov A.
+ * @author Миронов А.Ю.
  */

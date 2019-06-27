@@ -2,7 +2,7 @@
  * Input new line key interface
  * @interface Controls/_input/interface/INewLineKey
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 interface INewLineKey {
     readonly _options: {

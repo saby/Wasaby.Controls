@@ -79,7 +79,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * The
  * @class Controls/Utils/scrollToElement
  * @public
- * @author Mironov A.U.
+ * @author Миронов А.Ю.
  */
 function scrollToElement(element: HTMLElement, toBottom?: Boolean) {
    getScrollableParents(element).forEach(parent => {

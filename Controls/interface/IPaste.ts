@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IPaste
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 interface IPaste {
     /**

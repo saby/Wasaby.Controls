@@ -49,7 +49,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * @class Controls/Pending
     * @extends Core/Control
     * @control
-    * @author Krasilnikov A.
+    * @author Красильников А.С.
     * @public
     */
 

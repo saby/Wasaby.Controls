@@ -150,7 +150,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
     * @extends Core/Control
     * @control
     * @private
-    * @author Kraynov D.
+    * @author Крайнов Д.О.
     */
 
    var CollectionController = Control.extend({

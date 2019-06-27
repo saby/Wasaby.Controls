@@ -2,7 +2,7 @@ import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
 import {Collection, CollectionItem} from 'Types/display'
 
 /**
- * @author Rodionov E.A.
+ * @author Родионов Е.А.
  */
 
 

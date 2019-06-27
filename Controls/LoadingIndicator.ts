@@ -105,7 +105,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @class Controls/Container/LoadingIndicator
  * @extends Core/Control
  * @control
- * @author Krasilnikov A.
+ * @author Красильников А.С.
  * @public
  * @category Container
  * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG

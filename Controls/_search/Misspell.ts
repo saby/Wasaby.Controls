@@ -9,7 +9,7 @@ import template = require('wml!Controls/_search/Misspell');
   * @extends Core/Control
   * @control
   * @public
-  * @author Kraynov D.
+  * @author Крайнов Д.О.
   */
 /*
  * //TODO KONGO A control that displays a tooltip if misspell was in search text was found.
@@ -18,7 +18,7 @@ import template = require('wml!Controls/_search/Misspell');
  * @extends Core/Control
  * @control
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 class Misspell extends Control<IControlOptions & ICaption> implements ICaption{

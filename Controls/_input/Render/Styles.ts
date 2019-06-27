@@ -124,6 +124,6 @@
  * @css @color_Render-tagStyle_warning Information icon color of the input field in the warning style.
  * @css @color_Render-tagStyle_secondary Information icon color of the input field in the secondary style.
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
    

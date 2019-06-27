@@ -8,7 +8,7 @@
  * @includes ITile Controls/_tile/interface/ITile
  * @includes IDraggable Controls/_tile/interface/IDraggable
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import View = require('Controls/_tile/View');

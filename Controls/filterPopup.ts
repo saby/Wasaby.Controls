@@ -18,7 +18,7 @@
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Panel = require('Controls/_filterPopup/Panel');

@@ -4,5 +4,5 @@
  * @css @caret-color_InputBase Carriage color of the input field.
  *
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */

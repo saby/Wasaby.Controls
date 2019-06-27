@@ -7,7 +7,7 @@
  * @includes ITreeControl Controls/_treeGrid/interface/ITreeControl
  * @includes RowEditor wml!Controls/_treeGrid/TreeGrid/RowEditor
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import View = require('Controls/_treeGrid/View');

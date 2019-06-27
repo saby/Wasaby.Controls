@@ -21,7 +21,7 @@
  * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import AddButton = require('Controls/_list/AddButton');

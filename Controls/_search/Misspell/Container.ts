@@ -7,7 +7,7 @@ import template = require('wml!Controls/_search/Misspell/Container');
 * @extends Core/Control
 * @control
 * @public
-* @author Kraynov D.
+* @author Крайнов Д.О.
 */
 export = Control.extend({
    _template: template,

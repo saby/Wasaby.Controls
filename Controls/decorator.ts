@@ -10,7 +10,7 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Highlight = require('Controls/_decorator/Highlight');

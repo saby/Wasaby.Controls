@@ -6,7 +6,7 @@
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import 'css!theme?Controls/scroll';

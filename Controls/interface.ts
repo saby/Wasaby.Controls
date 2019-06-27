@@ -19,7 +19,7 @@
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
