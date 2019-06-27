@@ -778,9 +778,10 @@ var
         },
 
         shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-
-            // Не меняю текущее поведение в 410. В 510 сделал по стандарту
-            return this.getResultsPosition() === position;
+            if (this.getResultsPosition() !== position) {
+                return false;
+            }
+            return this.getCount() > 1;
         },
 
         shouldDrawFooter(): boolean {
