@@ -773,7 +773,6 @@ var
             return this._options.resultsPosition;
         },
 
-
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
