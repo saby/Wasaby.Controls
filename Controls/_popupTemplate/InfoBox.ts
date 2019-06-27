@@ -48,7 +48,9 @@ var InfoBoxTemplate = Control.extend({
 
 InfoBoxTemplate.getDefaultOptions = function() {
     return {
-        closeButtonVisibility: true
+        closeButtonVisibility: true,
+        styleType: 'marker',
+        style: 'default'
     };
 };
 

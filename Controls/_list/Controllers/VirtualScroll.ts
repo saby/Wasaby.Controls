@@ -68,11 +68,11 @@ type PlaceholdersSizes = {
  * @mixes Controls/_list/interface/IVirtualScroll
  *
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 class VirtualScroll {
 
-    private readonly _virtualSegmentSize: number = 10;
+    private readonly _virtualSegmentSize: number;
     private readonly _virtualPageSize: number = 100;
 
     private _startIndex: number = 0;
@@ -126,7 +126,7 @@ class VirtualScroll {
      */
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
-        this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
+        this._virtualSegmentSize = Math.ceil(this._virtualPageSize / 4);
         this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
@@ -148,19 +148,69 @@ class VirtualScroll {
         this._updatePlaceholdersSizes();
     }
 
-    //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
-    public updateItemsIndexes(direction: Direction): void {
-        if (direction === 'down') {
-            if (this._isEnd()) {
-                return;
+    // метод для того, чтобы пересчитать текущие индексы согласно обновленному количеству отображаемых элементов.
+    // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
+    // когда данный метод планируется вызывать:
+    // когда загрузили новую страницу
+    public recalcItemsIndexes(direction): void {
+
+        // допустим показывали при первой загрузке с 0 по 27 элемент, а virtualPageSize = 40.
+        // докрутили до триггера загрузки итемов, загрузили ещё 20 элементов,
+        // показываем с 20 по 47 индексы
+        // а надо показывать с 7 по 47 индексы.
+        const
+           sub = this._virtualPageSize - (this._stopIndex - this._startIndex); // 40 - (27 - 0) = 13
+        if (sub > 0) { // 13 > 0
+            if (direction === 'up') {
+                // при direction === 'up' максимально уменьшаем startIndex
+                if (this._startIndex >= sub) { // если startIndex полностью хватает для компенсации, то берем всё из него
+                    this._startIndex -= sub;
+                } else { // иначе - берем сколько можем из startIndex, остальное возьмем из stopIndex.
+                    this._startIndex = 0;
+                }
+                this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
             }
-            this._startIndex = this._startIndex + this._virtualSegmentSize;
-            this._startIndex = Math.min(this._startIndex, this._itemsCount - this._virtualPageSize);
-        } else {
-            this._startIndex = this._startIndex - this._virtualSegmentSize;
+            if (direction === 'down') {
+                // а при direction === 'down' наоборот - максимально увеличиваем stopIndex
+                this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+
+                // если всё ещё мало записей - можно попробовать уменьшать startIndex ВОТ В ЭТОМ МЕСТЕ.
+            }
         }
-        this._startIndex = Math.max(0, this._startIndex);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+    }
+
+    // метод для того, чтобы пересчитать текущие индексы при скролле
+    // (аналог loadToDirection, но не загружает данные с источника, а оперирует уже имеющимися в рекордсете)
+    // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
+    // когда данный метод планируется вызывать:
+    // скролл вверх/вниз
+    public recalcToDirection(direction): void {
+
+        // допустим показывали с 7 по 47
+        // докрутили до верхнего триггера загрузки виртуального скрола, нужно нарисовать ещё 10 элементов вверх, а есть только 7
+        // показываем с 0 по 40 индексы
+
+        if (direction === 'up') {
+            if (this._startIndex >= this._virtualSegmentSize) {
+                this._startIndex -= this._virtualSegmentSize;
+            } else {
+               this._startIndex = 0;
+            }
+            this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+        } else {
+            // допустим показывали с 15 до 45 записи, а всего их 50.
+            // скролим вниз, должны показывать с 20 по 50.
+
+            // если для сдвига stopIndex хватает количества элементов, то просто увеличиваем stopIndex
+            if (this._stopIndex + this._virtualSegmentSize <= this._itemsCount) { // 45 + 10 = 55, 55 < 50
+                this._stopIndex += this._virtualSegmentSize;
+            } else { // иначе - сдвигаем на сколько можем, остальное пытаемся взять из _startIndex
+                const
+                   sub = this._itemsCount - this._stopIndex; // 45 + 10 - 50 = 5
+                this._stopIndex += sub;
+            }
+            this._startIndex = Math.max(this._stopIndex - this._virtualPageSize, 0);
+        }
     }
 
     public insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
@@ -208,10 +258,10 @@ class VirtualScroll {
     }
 
     public hasEnoughDataToDirection(direction: Direction): boolean {
-        if (direction === "up") {
+        if (direction === 'up') {
             return this._startIndex >= this._virtualSegmentSize;
         } else {
-            return this._itemsCount > this._stopIndex;
+            return this._itemsCount >= this._stopIndex + this._virtualSegmentSize;
         }
     }
 

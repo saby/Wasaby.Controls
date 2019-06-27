@@ -209,6 +209,7 @@ const InfoBox = BaseOpener.extend({
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#openPopup
  * @param {Object} config InfoBox options. See {@link Controls/_popup/InfoBox description}.
+ * @static
  * @see closePopup
  */
 InfoBox.openPopup = (config: object): void => {
@@ -226,6 +227,7 @@ InfoBox.openPopup = (config: object): void => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#closeInfoBox
  * @see openPopup
+ * @static
  */
 InfoBox.closePopup = (): void => {
     BaseOpener.closeDialog(InfoBoxId);

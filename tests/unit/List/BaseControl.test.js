@@ -186,7 +186,7 @@ define([
             ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
             setTimeout(function () {
                assert.equal(ctrl.getViewModel().getStartIndex(), 0);
-               // assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 6);
                resolve();
             }, 10);
          });
@@ -654,7 +654,7 @@ define([
          });
       });
 
-      it('virtualScrollCalculation on list change', function() {
+      it('virtualScrollCalculation on list change', async function() {
          var callBackCount = 0;
          var cfg = {
                 viewName: 'Controls/List/ListView',
@@ -673,32 +673,29 @@ define([
                    view: 'infinity'
                 }
              },
-             instance = new lists.BaseControl(cfg),
-             itemData = {
-                key: 1
-             };
+             instance = new lists.BaseControl(cfg);
 
          instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-
+         await instance._beforeMount(cfg);
+         instance._virtualScroll._stopIndex = 6;
          var vm = instance.getViewModel();
          vm.getCount = function() {
-            return 2;
+            return 8;
          };
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
 
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
          assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, vm.getStartIndex());
-         assert.equal(2, vm.getStopIndex());
+         assert.equal(8, vm.getStopIndex());
 
          vm.getCount = function() {
-            return 1;
+            return 7;
          };
          vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
          assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, vm.getStartIndex());
-         assert.equal(1, vm.getStopIndex());
+         assert.equal(7, vm.getStopIndex());
 
          vm.getCount = function() {
             return 5;
@@ -1771,7 +1768,26 @@ define([
          assert.isTrue(stopPropagationCalled);
          assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
-
+      it ('needFooterPadding', function() {
+         let cfg = {
+            itemActionsPosition: 'outside'
+         };
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, padding is needed");
+         cfg = {
+            itemActionsPosition: 'inside'
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is inside, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            footerTemplate: "footer"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            resultsPosition: "bottom"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+      });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {

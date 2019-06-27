@@ -25,7 +25,10 @@ import Vdom = require('Vdom/Vdom');
 
          _removeDraggingTemplate: function() {
             if (this._draggingTemplate) {
-               this._draggingTemplate.remove();
+               this._draggingTemplate.then((draggingTemplate) => {
+                  draggingTemplate.remove();
+                  draggingTemplate = null;
+               });
                this._draggingTemplate = null;
             }
          },
@@ -34,22 +37,35 @@ import Vdom = require('Vdom/Vdom');
             this._removeDraggingTemplate();
          },
 
+         _updatePosition: function(draggingTemplateOptions) {
+            this._draggingTemplate.then((draggingTemplate) => {
+               draggingTemplate.css({
+                  'top': draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
+                  'left': draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
+               });
+            });
+         },
+
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             //На старых страницах нет application, который отвечает за создание и позиционирование draggingTemplate.
             //Поэтому сами создади его и добавим в body.
             if (draggingTemplate) {
                //Оборачиваем построение шаблона в Promise для унификации синхронных и асинхронных шаблонов.
-               Promise.resolve(draggingTemplateWrapper({
-                  draggingTemplateOptions: draggingTemplateOptions,
-                  draggingTemplate: draggingTemplate
-               })).then((result) => {
-                  this._removeDraggingTemplate();
-                  this._draggingTemplate = $(result);
-                  this._draggingTemplate.appendTo(document.body);
+               if (!this._draggingTemplate) {
+                  this._draggingTemplate = Promise.resolve(draggingTemplateWrapper({
+                     draggingTemplateOptions: draggingTemplateOptions,
+                     draggingTemplate: draggingTemplate
+                  })).then((result) => {
+                     const draggingTemplate = $(result);
+                     draggingTemplate.appendTo(document.body);
 
-                  //На старых страницах стартовый z-index всплывающих окон 1050. Сделаем наш z-index заведомо больше.
-                  this._draggingTemplate.css('z-index', ZINDEX_FOR_OLD_PAGE);
-               });
+                     //На старых страницах стартовый z-index всплывающих окон 1050. Сделаем наш z-index заведомо больше.
+                     draggingTemplate.css('z-index', ZINDEX_FOR_OLD_PAGE);
+                     return draggingTemplate;
+                  });
+               } else {
+                  this._updatePosition(draggingTemplateOptions);
+               }
             } else {
                this._removeDraggingTemplate();
             }

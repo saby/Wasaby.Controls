@@ -22,14 +22,14 @@
  * Установите ladderProperties отобразите шаблон элемента через ladderWrapper:
  * <pre>
  *    <div class="demoGrid">
- *       <Controls.Grid
+ *       <Controls.grid:View
  *          ...
  *          ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grid/Column">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -42,7 +42,7 @@
  *                </ws:Object>
  *             </ws:Array>
  *          </ws:columns>
- *       </Controls.Grid>
+ *       </Controls.grid:View>
  *    </div>
  * </pre>
  */
@@ -55,14 +55,14 @@
  * Set ladderProperties and render item template through the ladderWrapper:
  * <pre>
  *    <div class="demoGrid">
- *       <Controls.Grid
+ *       <Controls.grid:View
  *          ...
  *          ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="wml!Controls/_grid/Column">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -75,16 +75,16 @@
  *                </ws:Object>
  *             </ws:Array>
  *          </ws:columns>
- *       </Controls.Grid>
+ *       </Controls.grid:View>
  *    </div>
  * </pre>
  */
 
 /**
  * @typedef {String} GridCellAlign
- * @variant left Выровнять содержимое ячейки по левой стороне.
+ * @variant left Выровнять содержимое ячейки по левому краю.
  * @variant center Выровнять содержимое ячейки по центру.
- * @variant right Выровнять содержимое ячейки по правой стороне.
+ * @variant right Выровнять содержимое ячейки по правому краю.
  */
 
 /*
@@ -96,9 +96,9 @@
 
 /**
  * @typedef {String} GridCellVAlign
- * @variant top Выровнять содержимое ячейки по верхней стороне.
+ * @variant top Выровнять содержимое ячейки по верхнему краю.
  * @variant center Выровнять содержимое ячейки по центру.
- * @variant bottom Выровнять содержимое ячейки по нижней стороне.
+ * @variant bottom Выровнять содержимое ячейки по нижнему краю.
  */
 
 /*
@@ -174,7 +174,7 @@
  * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов. CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
  * @property {GridCellAlign} [align] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
- * @property {String} [stickyProperty] Имя поля, используемого для прилипания данных столбца.
+ * @property {String} [stickyProperty] Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
  * @property {TextOverflow} [textOverflow] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
@@ -254,7 +254,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
- * @cfg {Boolean} Устанавливает заголовок таблицы.
+ * @cfg {Boolean} Закрепляет заголовок таблицы.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @default true
  */

@@ -13,6 +13,22 @@ import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
       /**
+       * Контрол "Быстрый фильтр".
+       * Использует выпадающие списки для фильтрации данных.
+       *
+       * <a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       *
+       * @class Controls/_filter/Fast
+       * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/_filter/Fast/FastStyles
+       * @demo Controls-demo/FastFilter/fastPG
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+
+      /*
        * Control "Fast Filter".
        * Use dropDown lists for filter data.
        *
@@ -104,13 +120,12 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
             // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
             return pDef.done().getResult().addCallback(function() {
-               self._setText();
-               self._forceUpdate();
-
-               return {
-                  configs: self._configs,
-                  items: self._items
-               };
+               return _private.loadNewItems(self, self._items, self._configs).addCallback(() => {
+                  return {
+                     configs: self._configs,
+                     items: self._items
+                  };
+               });
             });
          },
 
@@ -216,14 +231,14 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          getKeysLoad: function(config, keys) {
             let result = [];
             chain.factory(keys).each(function(key) {
-               if (!config._items.getRecordById(key) && !(key === null && config.emptyText)) {
+               if (key !== undefined && !config._items.getRecordById(key) && !(key === null && config.emptyText)) {
                   result.push(key);
                }
             });
             return result;
          },
 
-         loadNewItems: function(items, configs) {
+         loadNewItems: function(self, items, configs) {
             let pDef = new pDeferred();
             chain.factory(items).each(function(item, index) {
                let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
@@ -239,7 +254,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                   pDef.push(Deferred.success());
                }
             });
-            return pDef.done().getResult();
+            return pDef.done().getResult().addCallback(() => {
+               self._setText();
+            });
          },
 
          hasSelectorTemplate: function(configs) {
@@ -297,9 +314,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                if (_private.isNeedReload(this._options.items, newOptions.items)) {
                   resultDef = _private.reload(this);
                } else {
-                  resultDef = _private.loadNewItems(newOptions.items, this._configs).addCallback(function() {
-                     self._setText();
-                  });
+                  resultDef = _private.loadNewItems(this, newOptions.items, this._configs);
                }
                this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {

@@ -1,7 +1,11 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_heading/Heading/Heading');
-import entity = require('Types/entity');
+import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
 
+export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
+
+}
 
    /**
     * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
@@ -18,57 +22,51 @@ import entity = require('Types/entity');
     *
     * @mixes Controls/_interface/ITooltip
     * @mixes Controls/_interface/ICaption
+    * @mixes Controls/_interface/IFontColorStyle
+    * @mixes Controls/_interface/IFontSize
     * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
-   /**
-    * @name Controls/_heading/Heading#size
-    * @cfg {String} Heading size.
-    * @variant s Small text size.
-    * @variant m Medium text size.
-    * @variant l Large text size.
-    * @variant xl Extralarge text size.
-    * @default m
-    */
+const mapFontSize = {'s': 'm', 'm': 'l', 'l': '3xl', 'xl': '4xl'};
+const mapFontColorStyle = {'info': 'label', 'primary': 'primary', 'secondary': 'secondary'};
+class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
+      // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+      protected _template: TemplateFunction = headingTemplate;
+      protected _theme: string[] = ['Controls/heading','Controls/Classes'];
+      protected _fontSize: string;
+      protected _fontColorStyle: string;
+      private _prepareOptions(options: IHeadingOptions): void {
+          if(options.size){
+              this._fontSize = mapFontSize[options.size];
+          } else {
+              this._fontSize = options.fontSize;
+          }
+          if(options.style){
+              this._fontColorStyle = mapFontColorStyle[options.style];
+          } else {
+              this._fontColorStyle = options.fontColorStyle;
+          }
+      }
+    protected _beforeMount(options: IHeadingOptions): void {
+          this._prepareOptions(options);
+    }
+    protected _beforeUpdate(options: IHeadingOptions): void {
+        this._prepareOptions(options);
+    }
+      static getDefaultOptions(): object {
+         return {
+            fontColorStyle: 'secondary',
+            fontSize: 'l',
+            theme: 'default'
+         };
+      }
+      static getOptionTypes(): object {
+         return {
+            caption: EntityDescriptor(String),
+         };
+      }
+      '[Controls/_interface/ITooltip]': true;
+      '[Controls/_interface/ICaption]': true;
+   }
 
-   /**
-    * @name Controls/_heading/Heading#style
-    * @cfg {String} Heading display style.
-    * @variant primary
-    * @variant secondary
-    * @variant info
-    * @default primary
-    */
-
-   var Header = Control.extend({
-      _template: template
-   });
-
-   Header.getOptionTypes =  function getOptionTypes() {
-      return {
-         caption: entity.descriptor(String),
-         style: entity.descriptor(String).oneOf([
-            'secondary',
-            'primary',
-            'info'
-         ]),
-         size: entity.descriptor(String).oneOf([
-            'xl',
-            'l',
-            'm',
-            's'
-         ])
-      };
-   };
-   Header._theme = ['Controls/heading'];
-
-   Header.getDefaultOptions = function() {
-      return {
-         style: 'secondary',
-         size: 'm',
-         theme: 'default'
-      };
-   };
-
-   export = Header;
-
+export default Header;

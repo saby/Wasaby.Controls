@@ -846,7 +846,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
-            gridViewModel._model = {};
+            gridViewModel._model = {
+               getItems: function() {}
+            };
             callMethods.forEach(function(item) {
                gridViewModel._model[item] = function() {
                   callStackMethods.push(item);
@@ -1470,6 +1472,43 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
                ' grid-column: 1 / 3;'
             );
+         });
+
+         it('shouldDrawResultsAt top or bottom', function () {
+            let gridModel = new gridMod.GridViewModel({...cfg, resultsPosition: 'top'});
+            assert.isTrue(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
+            gridModel.getCount = () => 0;
+            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
+            gridModel.getCount = () => 1;
+            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
+            gridModel._options.resultsPosition = null;
+            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
+            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
+         });
+
+         it('shouldDrawHeader', function () {
+            let gridModel = new gridMod.GridViewModel(cfg);
+            gridModel.getHeader = () => [];
+            assert.isTrue(gridModel.shouldDrawHeader());
+            gridModel.getCount = () => 0;
+            assert.isFalse(gridModel.shouldDrawHeader());
+            gridModel.getCount = () => 1;
+            assert.isTrue(gridModel.shouldDrawHeader());
+            gridModel.getHeader = () => null;
+            assert.isFalse(gridModel.shouldDrawHeader());
+         });
+
+         it('shouldDrawFooter', function () {
+            let gridModel = new gridMod.GridViewModel({...cfg, footerTemplate: 'qwe'});
+            assert.isTrue(gridModel.shouldDrawFooter());
+            gridModel.getCount = () => 0;
+            assert.isFalse(gridModel.shouldDrawFooter());
+            gridModel.getCount = () => 10;
+            gridModel._options.footerTemplate = null;
+            assert.isFalse(gridModel.shouldDrawFooter());
          });
       });
 

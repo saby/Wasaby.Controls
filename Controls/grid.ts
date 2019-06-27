@@ -1,5 +1,5 @@
 /**
- * Grid library
+ * Библиотека табличного представления.
  * @library Controls/grid
  * @includes View Controls/_grid/Grid
  * @includes ItemTemplate wml!Controls/_grid/Item

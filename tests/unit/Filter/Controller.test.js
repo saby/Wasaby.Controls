@@ -411,7 +411,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId2',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: false
          }, {
@@ -493,7 +493,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: undefined
          }]);
@@ -505,7 +505,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: undefined
          }]);
