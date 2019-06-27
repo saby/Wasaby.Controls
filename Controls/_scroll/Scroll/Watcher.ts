@@ -347,6 +347,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                this._registrar.unregister(event, component);
                if (this._observers && this._observers[component.getInstanceId()]) {
                   this._observers[component.getInstanceId()].disconnect();
+                  delete(this._observers[component.getInstanceId()]);
                }
             }
          },
