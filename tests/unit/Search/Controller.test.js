@@ -323,20 +323,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       it('itemOpenHandler', function() {
          var searchController = getSearchController(defaultOptions);
          var searchAborted = false;
+         var abortForced = false;
 
          //Controller moch
          searchController._searchController = {
-            abort: function() {
+            abort: function(force) {
                searchAborted = true;
+               abortForced = force;
             }
          };
 
+         searchController._root = 'test';
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
          assert.equal(searchController._root, null);
 
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);
+         assert.isTrue(abortForced);
          assert.equal(searchController._root, 'test');
          assert.equal(searchController._inputSearchValue, '');
       });

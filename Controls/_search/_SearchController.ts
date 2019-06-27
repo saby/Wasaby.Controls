@@ -48,9 +48,9 @@ var _private = {
       });
    },
 
-   abort: function(self) {
+   abort: function(self, force) {
       _private.getSearch(self).addCallback(function(search) {
-         search.abort().addCallback(function() {
+         search.abort(force).addCallback(function() {
             var filter = self._options.filter;
             delete filter[self._options.searchParam];
             filter = clone(filter);
@@ -102,8 +102,8 @@ var SearchController = extend({
       return this._options.filter;
    },
 
-   abort: function() {
-      _private.abort(this);
+   abort: function(force) {
+      _private.abort(this, force);
    }
 
 });

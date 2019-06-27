@@ -17,7 +17,7 @@
                 itemOutputWrapper="{{_itemOutputWrapper}}"
                 swipeTemplate="{{_options.swipeTemplate}}"/>
     <ws:if data="{{_options._needBottomPadding}}">
-        <div  class="controls-itemActionsV_outside-spacing"></div>
+        <div class="controls-itemActionsV_outside-spacing" attr:style="{{_listModel.getBottomPaddingStyles()}}"></div>
     </ws:if>
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{_listModel.getEmptyTemplateStyles()}}"/>

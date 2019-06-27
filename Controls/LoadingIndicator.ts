@@ -347,25 +347,38 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
     _toggleIndicator(visible, config, force) {
         clearTimeout(this.delayTimeout);
         if (visible) {
-            this._isOverlayVisible = true;
+            this._toggleOverlay(true, config);
             if (force) {
-                this._toggleIndicatorVisible(config);
+                this._toggleIndicatorVisible(true, config);
             } else {
-                this._isMessageVisible = false;
+                // if we have indicator in stack, then don't hide overlay
+                this._toggleIndicatorVisible(this._stack.getCount() !== 1, config);
                 this.delayTimeout = setTimeout(() => {
-                    this._toggleIndicatorVisible(config);
+                    this._toggleIndicatorVisible(true, config);
                     this._forceUpdate();
                 }, this._getDelay(config));
             }
         } else {
-            this._isMessageVisible = false;
-            this._isOverlayVisible = false;
+            // if we dont't have indicator in stack, then hide overlay
+            if (this._stack.getCount() === 0) {
+                this._toggleIndicatorVisible(false);
+                this._toggleOverlay(false, {});
+            }
         }
         this._forceUpdate();
     },
-    _toggleIndicatorVisible(config) {
-        this._isMessageVisible = true;
-        this._updateProperties(config);
+    _toggleOverlay(toggle: boolean, config): void {
+        this._isOverlayVisible = toggle && config.overlay !== 'none';
+    },
+
+    _toggleIndicatorVisible(toggle: boolean, config?: object): void {
+        if (toggle) {
+            this._isMessageVisible = true;
+            this._isOverlayVisible = true;
+            this._updateProperties(config);
+        } else {
+            this._isMessageVisible = false;
+        }
     }
 });
 

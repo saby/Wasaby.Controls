@@ -148,6 +148,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
                // Unregister group after last header is unregistred
                if (!Object.keys(this._headers).length) {
                   this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
+                  this._isRegistry = false;
                }
             }
          }

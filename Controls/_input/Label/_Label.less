@@ -2,7 +2,7 @@
    display: inline-block;
 }
 
-.controls-Label_underline_none {
+.controls-Label_underline_none_theme-@{themeName} {
    height: @height_Label;
    padding: @padding_Label;
 }
@@ -18,49 +18,49 @@
 .controls-Label__caption {
    // https://github.com/philipwalton/flexbugs#flexbug-6
    flex-shrink: 1;
-
    .text-overflow();
+}
+.controls-Label__caption_theme-@{themeName} {
    font-size: @font-size_Label-caption;
 }
-
-.controls-Label__caption_underline_none {
+.controls-Label__caption_underline_none_theme-@{themeName} {
    color: @color_Label-caption_underline_none;
 }
 
-.controls-Label__caption_underline_hovered_edit {
+.controls-Label__caption_underline_hovered_edit_theme-@{themeName} {
    cursor: pointer;
    color: @color_Label-caption_underline_hovered;
 }
 
-.controls-Label__caption_underline_hovered_read {
+.controls-Label__caption_underline_hovered_read_theme-@{themeName} {
    color: @color_Label-caption_underline_hovered_readOnly;
 }
 
-.ws-is-no-touch .controls-Label__caption_underline_hovered_edit:hover,
-.controls-Label__caption_underline_hovered_edit:active {
+.ws-is-no-touch .controls-Label__caption_underline_hovered_edit_theme-@{themeName}:hover,
+.controls-Label__caption_underline_hovered_edit_theme-@{themeName}:active {
    text-decoration: underline;
    color: @color_Label-caption_underline_hovered_hover;
 }
 
-.controls-Label__caption_underline_fixed {
+.controls-Label__caption_underline_fixed_theme-@{themeName} {
    text-decoration: underline;
 }
 
-.controls-Label__caption_underline_fixed_edit {
+.controls-Label__caption_underline_fixed_edit_theme-@{themeName} {
    cursor: pointer;
    color: @color_Label-caption_underline_fixed;
 }
 
-.controls-Label__caption_underline_fixed_read {
+.controls-Label__caption_underline_fixed_read_theme-@{themeName} {
    color: @color_Label-caption_underline_fixed_readOnly;
 }
 
-.ws-is-no-touch .controls-Label__caption_underline_fixed_edit:hover,
-.controls-Label__caption_underline_fixed_edit:active {
+.ws-is-no-touch .controls-Label__caption_underline_fixed_edit_theme-@{themeName}:hover,
+.controls-Label__caption_underline_fixed_edit_theme-@{themeName}:active {
    color: @color_Label-caption_underline_fixed_hover;
 }
 
-.controls-Label__asterisk {
+.controls-Label__asterisk_theme-@{themeName} {
    color: @color_Label-asterisk;
 }
 

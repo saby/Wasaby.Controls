@@ -1,7 +1,7 @@
 /**
  * Search library
  * @library Controls/scroll
- * @includes Container Controls/_scroll/Scroll
+ * @includes Container Controls/_scroll/Container
  * @includes Watcher Controls/_scroll/Scroll/Watcher
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
@@ -11,7 +11,7 @@
 
 import 'css!theme?Controls/scroll';
 
-import Container = require('Controls/_scroll/Scroll');
+import Container = require('Controls/_scroll/Container');
 import Watcher = require('Controls/_scroll/Scroll/Watcher');
 import StickyHeader = require('Controls/_scroll/StickyHeader');
 import _Scrollbar = require('Controls/_scroll/Scroll/Scrollbar');

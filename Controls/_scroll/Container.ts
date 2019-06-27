@@ -19,7 +19,7 @@ import 'css!theme?Controls/scroll';
  * Container with thin scrollbar.
  * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
  *
- * @class Controls/_scroll/Scroll
+ * @class Controls/_scroll/Container
  * @extends Core/Control
  * @control
  * @public
@@ -36,22 +36,22 @@ import 'css!theme?Controls/scroll';
  */
 
 /**
- * @name Controls/_scroll/Scroll#content
+ * @name Controls/_scroll/Container#content
  * @cfg {Content} Container contents.
  */
 
 /**
- * @name Controls/_scroll/Scroll#shadowVisible
+ * @name Controls/_scroll/Container#shadowVisible
  * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
  */
 
 /**
- * @name Controls/_scroll/Scroll#scrollbarVisible
+ * @name Controls/_scroll/Container#scrollbarVisible
  * @cfg {Boolean} Whether scrollbar should be shown.
  */
 
 /**
- * @name Controls/_scroll/Scroll#style
+ * @name Controls/_scroll/Container#style
  * @cfg {String} Color scheme (colors of the shadow and scrollbar).
  * @variant normal Default theme (for bright backgrounds).
  * @variant inverted Inverted theme (for dark backgrounds).
@@ -540,18 +540,18 @@ var
       },
 
       getDataId: function() {
-               return 'Controls/_scroll/Scroll';
+               return 'Controls/_scroll/Container';
       },
 
       /**
        * Скроллит к выбранной позиции. Позиция определяется в пикселях от верха контейнера.
-       * @function Controls/_scroll/Scroll#scrollTo
+       * @function Controls/_scroll/Container#scrollTo
        * @param {Number} Позиция в пикселях
        */
 
       /*
        * Scrolls to the given position from the top of the container.
-       * @function Controls/_scroll/Scroll#scrollTo
+       * @function Controls/_scroll/Container#scrollTo
        * @param {Number} Offset
        */
       scrollTo: function(offset) {
@@ -560,12 +560,12 @@ var
 
       /**
        * Скроллит к верху контейнера
-       * @function Controls/_scroll/Scroll#scrollToTop
+       * @function Controls/_scroll/Container#scrollToTop
        */
 
       /*
        * Scrolls to the top of the container.
-       * @function Controls/_scroll/Scroll#scrollToTop
+       * @function Controls/_scroll/Container#scrollToTop
        */
       scrollToTop: function() {
          _private.setScrollTop(this, 0);
@@ -573,12 +573,12 @@ var
 
       /**
        * Скроллит к низу контейнера
-       * @function Controls/_scroll/Scroll#scrollToBottom
+       * @function Controls/_scroll/Container#scrollToBottom
        */
 
       /*
        * Scrolls to the bottom of the container.
-       * @function Controls/_scroll/Scroll#scrollToBottom
+       * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
          _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
