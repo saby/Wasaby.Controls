@@ -3,7 +3,7 @@
  *
  * @interface Controls/_list/interface/IVirtualScroll
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  *
  * @interface Controls/_list/interface/IVirtualScroll
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 
 /**
