@@ -328,7 +328,7 @@ import Env = require('Env/Env');
     *    <li>displayProperty - определяет поле отображения записи.</li>
     * <ul>
     * @example
-    * Tabs buttons with item template.
+    * Вкладки с шаблоном элемента.
     * <pre>
     *    <Controls.tabs:Buttons
     *                   bind:selectedKey='SelectedKey3'
@@ -384,7 +384,7 @@ import Env = require('Env/Env');
     *    <li>displayProperty - определяет поле отображения записи.</li>
     * <ul>
     * @example
-    * Tabs buttons with item template.
+    * Вкладки с шаблоном элемента.
     * <pre>
     *    <Controls.tabs:Buttons itemTemplateProperty="myTemplate"
     *                           source="{{_source}}

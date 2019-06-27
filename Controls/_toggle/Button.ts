@@ -13,6 +13,25 @@ export interface IToggleButtonOptions extends
 }
 
 /**
+ * Кнопка, которая переключается между двумя состояниями: включено и выключено.
+ *
+ * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+ *
+ * @class Controls/_toggle/Button
+ * @implements Controls/_toggle/interface/ICheckable
+ * @implements Controls/_interface/ITooltip
+ * @implements Controls/_interface/IButton
+ * @implements Controls/_interface/IIconStyle
+ * @mixes Controls/_toggle/Button/Styles
+ * @control
+ * @public
+ * @author Михайловский Д.С.
+ * @category Toggle
+ *
+ * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
+ */
+
+/*
  * Button that switches between two states: on-state and off-state.
  *
  * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
@@ -33,6 +52,22 @@ export interface IToggleButtonOptions extends
 
 /**
  * @name Controls/_toggle/Button#icons
+ * @cfg {Array} Пара иконок.
+ * Первая иконка отображается, когда переключатель выключен.
+ * Первая иконка отображается, когда переключатель включен.
+ * @example
+ * Переключатель с одной иконкой:
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
+ * </pre>
+ * Переключатель с двумя иконками:
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toggle/Button#icons
  * @cfg {Array} Pair of icons.
  * First icon displayed when toggle switch is off.
  * Second icon displayed when toggle switch is on.
@@ -49,6 +84,22 @@ export interface IToggleButtonOptions extends
 
 /**
  * @name Controls/_toggle/Button#captions
+ * @cfg {Array} Пара заголовков.
+ * Первый заголовок отображается, когда переключатель в состоянии "выключено".
+ * Второй заголовок отображается, когда переключатель в состоянии "включено".
+ * @example
+ * Переключатель с двумя заголовками:
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+ * </pre>
+ * Переключатель с одним заголовком
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toggle/Button#captions
  * @cfg {Array} Pair of captions.
  * First caption displayed when toggle switch is off.
  * Second caption displayed when toggle switch is on.
@@ -64,6 +115,28 @@ export interface IToggleButtonOptions extends
  */
 
 /**
+ * @name Controls/_toggle/Button#viewMode
+ * @cfg {Enum} Кнопка переключения режима отображения.
+ * @variant link Декорированная гиперссылка.
+ * @variant pushButton Декорированная гиперссылка, преобразованная в кнопку на панели инструментов.
+ * @variant toolButton Кнопка на панели инструментов.
+ * @default link
+ * @example
+ * Кнопка-переключатель в режиме отображения - 'link'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'toolButton'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'pushButton'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_toggle/Button#viewMode
  * @cfg {Enum} Toggle button view mode.
  * @variant link Decorated hyperlink.

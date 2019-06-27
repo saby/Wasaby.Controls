@@ -1,4 +1,27 @@
 /**
+ * Библиотека переключателей.
+ * @library Controls/toggle
+ * @includes Button Controls/_toggle/Button
+ * @includes Switch Controls/_toggle/Switch
+ * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
+ * @includes RadioGroup Controls/_toggle/RadioGroup
+ * @includes Checkbox Controls/_toggle/Checkbox
+ * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
+ * @includes Separator Controls/_toggle/Separator
+ * @includes BigSeparator Controls/_toggle/BigSeparator
+ * @includes BigSeparatorStyles Controls/_toggle/BigSeparator/BigSeparatorStyles
+ * @includes ButtonStyles Controls/_toggle/Button/Styles
+ * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
+ * @includes ICheckable Controls/_toggle/interface/ICheckable
+ * @includes RadioGroupStyles Controls/_toggle/RadioGroup/RadioGroupStyles
+ * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
+ * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
+ * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ * @public
+ * @author Kraynov D.
+ */
+
+/*
  * toggle library
  * @library Controls/toggle
  * @includes Button Controls/_toggle/Button

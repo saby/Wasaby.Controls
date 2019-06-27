@@ -8,6 +8,23 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
 }
 
 /**
+ * Контрол служит для визуального ограничения контента. При клике на него отображаются скрытые записи, попавшие в ограничение.
+ *
+ * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+ *
+ * @class Controls/_toggle/BigSeparator
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Михайловский Д.С.
+ * @implements Controls/_toggle/interface/ICheckable
+ *
+ * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
+ *
+ * @mixes Controls/_toggle/BigSeparator/BigSeparatorStyles
+ */
+
+/*
  * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
  *
  * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
@@ -25,6 +42,11 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  */
 
 /**
+ * @name Controls/_toggle/Separator#value
+ * @cfg {Boolean} Если значение - "true", то будет отображаться иконка открытия, иначе будет отображаться иконка закрытия.
+ */
+
+/*
  * @name Controls/_toggle/Separator#value
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
