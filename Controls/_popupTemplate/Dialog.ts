@@ -129,6 +129,7 @@ const DialogTemplate = Control.extend({
 DialogTemplate.getDefaultOptions = function() {
     return {
         headingStyle: 'secondary',
+        headingSize: '3xl',
         closeButtonVisibility: true,
         closeButtonViewMode: 'popup',
         closeButtonTransparent: true
