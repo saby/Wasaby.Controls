@@ -383,7 +383,7 @@ const BaseOpener = {
       cfg.template =  'Controls/compatiblePopup:CompoundAreaNewTpl';
       cfg.animation = 'off';
       cfg.border = false;
-      cfg.autoWidth = false;
+      cfg.calcWidthByParent = false;
 
       if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
          cfg.componentOptions.onResultHandler = cfg.onResultHandler;
