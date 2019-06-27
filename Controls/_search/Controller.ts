@@ -109,8 +109,8 @@ var _private = {
       if (root !== null) {
          _private.getSearchController(this).abort(true);
          this._inputSearchValue = '';
-         this._root = root;
       }
+      this._root = root;
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
@@ -201,6 +201,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
+      }
+
+      if (this._options.root !== newOptions.root) {
+         this._root = newOptions.root;
       }
 
       if (this._searchController) {
