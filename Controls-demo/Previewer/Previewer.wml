@@ -1,4 +1,4 @@
-<div class="ControlsDemo-Previewer">
+<div class="ControlsDemo-Previewer" xmlns:Controls.buttons="http://www.w3.org/1999/html">
    <h2 id="info">Previewer</h2>
 	<Controls.dropdown:Combobox
 		source="{{_triggerSource}}"

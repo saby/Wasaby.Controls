@@ -26,21 +26,13 @@ define('Controls-demo/Input/Validate/FormController', [
       _clickHandler: function() {
          var self = this;
          this._children.formController.submit().then(function(result) {
-            if (self._isValid(result)) {
+            if (!result.hasErrors) {
                self._children.Confirmation.open({
                   message: 'Валидация прошла успешно',
                   type: 'ok'
                });
             }
          });
-      },
-      _isValid: function(result) {
-         for (var i = 0; i < Object.keys(result).length; i++) {
-            if (result[i] !== null) {
-               return false;
-            }
-         }
-         return true;
       }
    });
    return VdomDemoText;
