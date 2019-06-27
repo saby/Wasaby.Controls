@@ -1210,11 +1210,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-            });
-            it('getResultsPosition()', function() {
-               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-            });
+         });
+         it('getResultsPosition()', function() {
+            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+         });
+         it('is multiheader', function() {
+            let model = new gridMod.GridViewModel();
+            assert.isFalse(model.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(model.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
 
+         });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
             // gridViewModel._prepareHeaderColumns(gridHeader, false);
