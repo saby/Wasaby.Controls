@@ -17,7 +17,16 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} EditingConfig
-    * @property {Boolean} [editingConfig.editOnClick=false] If true, click on list item starts editing in place.
+    * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
+    * @property {Boolean} [editingConfig.autoAdd=false] Если передано значение "true", после окончания редактирования последнего элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [editingConfig.sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
+    * @property {Boolean} [editingConfig.toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
+    * @property {Types/entity:Record} [editingConfig.item=undefined] Позволяет начать редактирование элемента списка при первом рендеринге.
+    */
+
+   /*
+    * @typedef {Object} EditingConfig
+    * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [editingConfig.sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [editingConfig.toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
@@ -38,15 +47,77 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @event Controls/interface/IEditableList#beforeBeginEdit Происходит перед началом редактирования.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {ItemEditOptions} options Параметры редактирования.
+    * @param {Boolean} isAdd Значение true является признаком, что запись добавляется по месту.
+    * @returns {ItemEditResult}
+    * @example
+    * В следующем примере показано, как запретить редактирование элемента, если он соответствует условию:
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          if (options.item.getId() === 1) {
+    *             return constants.editing.CANCEL;
+    *          }
+    *       }
+    *    });
+    * </pre>
+    * В следующем примере показано, как прочитать элемент из БЛ и открыть его для редактирования:
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    beforeBeginEditHandler: function(e, options) {
+    *       return this.source.read(options.item.getId()).addCallback(function(result) {
+    *          return {
+    *             item: result
+    *          };
+    *       });
+    *    }
+    * </pre>
+    * В следующем примере показано, как начать редактирование элемента, созданного на клиенте:
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:beforeBeginEdit="beforeBeginEditHandler()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    define('ModuleName', ['Types/entity'], function(entity) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options) {
+    *          return {
+    *             item: new entity.Model({
+    *                rawData: {
+    *                   //Obviously, you would use something else instead of Date.now() to generate id, but we'll use it here to keep the example simple
+    *                   id: Date.now(),
+    *                   title: ''
+    *                }
+    *             })
+    *          }
+    *       }
+    *    });
+    * </pre>
+    * @see afterBeginEdit
+    * @see beforeEndEdit
+    * @see afterEndEdit
+    * @see editingConfig
+    */
+
+   /*
     * @event Controls/interface/IEditableList#beforeBeginEdit Occurs before the start of editing.
     * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {ItemEditOptions} options Options of editing.
     * @param {Boolean} isAdd
     * @returns {ItemEditResult}
-    * @remark
-    * You should handle this event if you want to show one item but edit another. For example, you may want to add some fields to it which are not shown in reading mode.
-    * Don't update your UI in the handler of this event because if an error happens during preparation of data you'll have to rollback your changes.
-    * Note that editing\adding can start not only after the calling of corresponding methods but also in response to user actions (e.g., after the user has clicked on list item). See {@link editingConfig editingConfig} for more info on how to configure responses to user actions.
     * @example
     * The following example shows how to prevent editing of an element if it matches condition:
     * WML:
@@ -108,6 +179,34 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @event Controls/interface/IEditableList#afterBeginEdit Происходит после начала редактирования\добавления.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @remark
+    * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить").
+    * Событие запускается, когда подготовка данных успешно завершена и возможно безопасно обновить пользовательский интерфейс.
+    * @example
+    * В следующем примере показано, как скрыть кнопку "Добавить" после начала редактирования\добавления.
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:afterBeginEdit="afterBeginEditHandler()" />
+    *    <ws:if data="{{ showAddButton }}">
+    *       <Controls.list:AddButton />
+    *    </ws:if>
+    * </pre>
+    * JS:
+    * <pre>
+    *    afterBeginEditHandler: function(e, item, isAdd) {
+    *       this.showAddButton = false;
+    *    }
+    * </pre>
+    * @see beforeBeginEdit
+    * @see beforeEndEdit
+    * @see afterEndEdit
+    */
+
+   /*
     * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
     * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
@@ -136,6 +235,38 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования\добавления.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Boolean} willSave Определяет, будут ли сохранены изменения в редактируемом элементе.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @returns {EndEditResult}
+    * @remark
+    * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
+    * Не обновляйте пользовательский интерфейс в обработчике этого события, потому что если во время подготовки данных произойдет ошибка, вам придется откатить изменения.
+    * @example
+    * В следующем примере показано, как запретить завершение редактирования элемента, если оно соответствует условию:
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:beforeEndEdit="beforeEndEditHandler()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeEndEditHandler: function(e, item, commit, isAdd) {
+    *          if (!item.get('text').length) {
+    *             return constants.editing.CANCEL;
+    *          }
+    *       }
+    *    });
+    * </pre>
+    * @see beforeBeginEdit
+    * @see afterBeginEdit
+    * @see afterEndEdit
+    */
+
+   /*
     * @event Controls/interface/IEditableList#beforeEndEdit Occurs before the end of editing\adding.
     * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
@@ -168,6 +299,34 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @event Controls/interface/IEditableList#afterEndEdit Происходит после завершения редактирования\добавления.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @remark
+    * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить"). 
+    * Событие запускается, когда редактирование успешно завершено и возможно безопасно обновить пользовательский интерфейс.
+    * @example
+    * В следующем примере показано, как отобразить кнопку "Добавить" после окончания редактирования\добавления.
+    * WML:
+    * <pre>
+    *    <Controls.list:View on:afterEndEdit="afterEndEditHandler()" />
+    *    <ws:if data="{{ showAddButton }}">
+    *       <Controls.list:AddButton />
+    *    </ws:if>
+    * </pre>
+    * JS:
+    * <pre>
+    *    afterEndEditHandler: function() {
+    *       this.showAddButton = true;
+    *    }
+    * </pre>
+    * @see beforeBeginEdit
+    * @see afterBeginEditа
+    * @see beforeEndEdit
+    */
+
+   /*
     * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
     * @param {Env/Event:Object} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
