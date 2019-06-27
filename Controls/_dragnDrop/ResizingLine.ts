@@ -2,6 +2,7 @@ import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
 import * as Entity from './Entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import { SyntheticEvent } from 'Vdom/vdom';
 
 export interface IContainerOptions extends IControlOptions {
    maxOffset?: number;
@@ -69,7 +70,6 @@ class ResizingLine extends Control<IContainerOptions, void> {
    protected _dragging: boolean = false;
    protected _styleArea: string = '';
    protected _template: TemplateFunction = template;
-   protected _theme: string[] = ['Controls/dragnDrop'];
    protected _offset: number;
    protected _width: number;
    protected _height: number;
@@ -146,12 +146,14 @@ class ResizingLine extends Control<IContainerOptions, void> {
          + ';top:' + coords.cTop + ';height:' + coords.cHeight + ';bottom:' + coords.cBottom;
    }
 
-   protected _onEndDragHandler(e, dragObject): void {
+   protected _onEndDragHandler(e: SyntheticEvent, dragObject): void {
       this._dragging = false;
       if (dragObject.entity._options.itemId === this.getInstanceId()) {
          this._notify('offset', [this._offset]);
       }
    }
+
+   static _theme: string[] = ['Controls/dragnDrop'];
 
    static getDefaultOptions(): object {
       return {

@@ -14,7 +14,7 @@ import {Controller} from 'Controls/popup';
 import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/vdom';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
@@ -456,7 +456,7 @@ var CompoundArea = CompoundContainer.extend([
       // d'n'd работает, когда кликнули непосредственно в шапку
       var isClickedInControl = $(event.target).wsControl() !== this;
       if (dialogTemplate && !isClickedInControl) {
-         dialogTemplate._startDragNDrop(new Vdom.SyntheticEvent(event));
+         dialogTemplate._startDragNDrop(new SyntheticEvent(event));
       }
    },
 
