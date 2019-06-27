@@ -61,7 +61,15 @@ define(['Controls/grid'], function(gridMod) {
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
-
+      it('resultPosition update', function(){
+         let gridView = new gridMod.GridView({resultsPosition: 'top'});
+         let setResultPosinionCalled = false;
+         gridView._listModel = {setResultsPosition: function() {
+               setResultPosinionCalled = true;
+            }};
+         gridView._beforeUpdate({resultsPosition: 'bottom'});
+         assert.isTrue(setResultPosinionCalled, 'setPesultPosinion');
+      });
       it('fill itemsContainer from separated columns', function () {
 
          let
