@@ -1215,10 +1215,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
          it('is multiheader', function() {
-            let model = new gridMod.GridViewModel();
-            assert.isFalse(model.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
-            assert.isTrue(model.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
 
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
          });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
