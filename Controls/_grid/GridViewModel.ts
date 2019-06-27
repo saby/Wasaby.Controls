@@ -506,6 +506,9 @@ var
             this._setColumns(this._options.columns);
             if (this._options.header && this._options.header.length) { this._isMultyHeader = this.getMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
+            if (this._options.items) {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+            }
         },
 
         _updateIndexesCallback(): void {
@@ -1253,6 +1256,9 @@ var
 
         setItems: function(items) {
             this._model.setItems(items);
+            if (items) {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+            }
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
