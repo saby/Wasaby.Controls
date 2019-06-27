@@ -311,6 +311,17 @@ define([
                idProperty: 'id'
             }),
             instance = new explorerMod.View();
+            instance._children = {
+               treeControl: {
+                  _children: {
+                     baseControl: {
+                        setRestoredKeyFromExplorer: function() {
+
+                        }
+                     }
+                  }
+               }
+         };
 
          instance.saveOptions({
             parentProperty: 'parent',
@@ -500,6 +511,16 @@ define([
                explorer = new explorerMod.View({});
             explorer.saveOptions({});
             explorer._notify = _notify;
+            explorer._children = {
+               treeControl: {
+                  _children: {
+                     baseControl: {
+                        setRestoredKeyFromExplorer: function() {
+
+                        }
+                     }
+                  }
+               };
 
             explorer._onBreadCrumbsClick({}, {
                getId: function() {}
