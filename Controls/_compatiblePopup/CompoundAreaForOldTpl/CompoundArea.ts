@@ -873,7 +873,7 @@ var CompoundArea = CompoundContainer.extend([
       const self = this;
       self._notifyVDOM('registerPending', [new cDeferred(), {
          showLoadingIndicator: false,
-         validate(): boolean {
+         validateCompatible(): boolean {
             if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
                self.close();
                return !self._beforeCloseHandlerResult;
