@@ -14,7 +14,7 @@ import {Controller} from 'Controls/popup';
 import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
-import { SyntheticEvent } from 'Vdom/vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {

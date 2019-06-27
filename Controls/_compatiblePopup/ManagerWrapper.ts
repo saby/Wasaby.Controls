@@ -6,7 +6,7 @@ import Control = require('Core/Control');
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup} from 'Controls/popup';
-import { SyntheticEvent } from 'Vdom/vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 var ManagerWrapper = Control.extend({
    _template: template,

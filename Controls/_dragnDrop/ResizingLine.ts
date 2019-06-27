@@ -2,7 +2,7 @@ import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
 import * as Entity from './Entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import { SyntheticEvent } from 'Vdom/vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 export interface IContainerOptions extends IControlOptions {
    maxOffset?: number;

@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import SeparatorTemplate = require('wml!Controls/_toggle/Separator/Separator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import { SyntheticEvent } from 'Vdom/vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import 'css!theme?Controls/toggle';
 

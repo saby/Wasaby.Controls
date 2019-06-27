@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dragnDrop/Controller/Compound/Compound');
 import draggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
-import { SyntheticEvent } from 'Vdom/vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
       var ZINDEX_FOR_OLD_PAGE = 10000;
 
       export = Control.extend({
