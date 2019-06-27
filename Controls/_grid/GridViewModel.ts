@@ -773,6 +773,10 @@ var
             return this._options.resultsPosition;
         },
 
+        setResultsPosition: function(position) {
+            this._options.resultsPosition = position;
+        },
+
         shouldDrawHeader(): boolean {
             return !!this.getHeader() && this.getCount() > 0;
         },
