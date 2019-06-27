@@ -1538,5 +1538,15 @@ define([
          assert.equal(eip._editingItemData.index, 4);
       });
 
+      describe('_private block', function () {
+         it('hasParentInItems', function () {
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            assert.isFalse(EditInPlace._private.hasParentInItems({}, listModel));
+         });
+      });
+
    });
 });
