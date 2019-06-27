@@ -238,6 +238,7 @@ import 'Controls/breadcrumbs';
 
          _private.setViewMode(this, cfg.viewMode, cfg);
          const root = cfg.root !== undefined ? cfg.root : null;
+         this._root = root;
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
