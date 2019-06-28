@@ -42,8 +42,6 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
     protected _triStateKeys: string[] = [];
     protected _groups: object;
 
-    protected _theme: string[] = ['Controls/toggle'];
-
     protected _beforeMount(options: ICheckboxGroupOptions, context: object, receivedState: RecordSet): void|Promise<RecordSet> {
         this._isSelected = this._isSelected.bind(this);
         if (receivedState) {
@@ -228,6 +226,8 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
     private _notifySelectedKeys(): void {
         this._notify('selectedKeysChanged', [this._selectedKeys]);
     }
+
+    static _theme: string[] = ['Controls/toggle'];
 
     static getDefaultOptions(): object {
         return {

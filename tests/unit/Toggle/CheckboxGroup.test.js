@@ -6,7 +6,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
    describe('Controls.toggle:CheckboxGroup', function() {
       describe('methods', function() {
          it('prepare items', function() {
-            let source = new sourceLib.Memory({
+            const source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -25,157 +25,174 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             const options = {
                source
             };
-            const fakeSelf = {};
-            toggles.CheckboxGroup.prototype._initItems.call(fakeSelf, options).addCallback(function() {
-               assert.equal(fakeSelf._items.at(0).get('id'), 1, '_initItems wrong item id');
-               assert.equal(fakeSelf._items.at(1).get('id'), 2, '_initItems wrong item id');
-               toggles.CheckboxGroup.prototype.sortGroup.call(fakeSelf, options, fakeSelf._items);
-               assert.equal(fakeSelf._groups[2].get('id'), 1, 'sortGroup set uncorrect items in _group');
-               fakeSelf._setItemsSelection = function(item) {
+            const Group = new toggles.CheckboxGroup({ options });
+
+            Group._initItems(options).addCallback(function() {
+               assert.equal(Group._items.at(0).get('id'), 1, '_initItems wrong item id');
+               assert.equal(Group._items.at(1).get('id'), 2, '_initItems wrong item id');
+
+               Group.sortGroup(options, Group._items);
+               assert.equal(Group._groups[2].get('id'), 1, 'sortGroup set uncorrect items in _group');
+
+               Group._setItemsSelection = function(item) {
                   assert.equal(this._items.indexOf(item) !== -1, false, '_prepareSelected uncorrect');
                };
-               toggles.CheckboxGroup.prototype._prepareSelected.call(fakeSelf, { selectedKeys: [1] });
+               Group._prepareSelected({ selectedKeys: [1] });
+               Group.destroy();
                done();
             });
          });
          it('operations with key', function() {
-            var fakeSelf = {};
-            fakeSelf._triStateKeys = ['4'];
-            toggles.CheckboxGroup.prototype._addTriStateKey.call(fakeSelf, '4');
-            assert.equal(fakeSelf._triStateKeys.length, 1, '_addTriStateKey wrong result');
-            toggles.CheckboxGroup.prototype._addTriStateKey.call(fakeSelf, '5');
-            assert.equal(fakeSelf._triStateKeys.length, 2, '_addTriStateKey wrong result');
+            const Group = new toggles.CheckboxGroup({});
+            Group._triStateKeys = ['4'];
 
-            toggles.CheckboxGroup.prototype._removeTriStateKey.call(fakeSelf, '4');
-            assert.equal(fakeSelf._triStateKeys.length, 1, '_removeTriStateKey wrong result');
-            toggles.CheckboxGroup.prototype._removeTriStateKey.call(fakeSelf, '5');
-            assert.equal(fakeSelf._triStateKeys.length, 0, '_removeTriStateKey wrong result');
+            Group._addTriStateKey('4');
+            assert.equal(Group._triStateKeys.length, 1, '_addTriStateKey wrong result');
 
-            fakeSelf._removeTriStateKey = function() {
+            Group._addTriStateKey('5');
+            assert.equal(Group._triStateKeys.length, 2, '_addTriStateKey wrong result');
+
+            Group._removeTriStateKey('4');
+            assert.equal(Group._triStateKeys.length, 1, '_removeTriStateKey wrong result');
+
+            Group._removeTriStateKey('5');
+            assert.equal(Group._triStateKeys.length, 0, '_removeTriStateKey wrong result');
+
+            Group._removeTriStateKey = function() {
                return true;
             };
-            fakeSelf._updateItemChildSelection = function() {
+            Group._updateItemChildSelection = function() {
                return true;
             };
-            fakeSelf._selectedKeys = ['4', '3'];
-            toggles.CheckboxGroup.prototype._addKey.call(fakeSelf, '5');
-            assert.equal(fakeSelf._selectedKeys.length, 3, '_addKey wrong result');
-            toggles.CheckboxGroup.prototype._removeKey.call(fakeSelf, '5');
-            assert.equal(fakeSelf._selectedKeys.length, 2, '_addTriStateKey wrong result');
+
+            Group._selectedKeys = ['4', '3'];
+            Group._addKey('5');
+            assert.equal(Group._selectedKeys.length, 3, '_addKey wrong result');
+
+            Group._removeKey('5');
+            assert.equal(Group._selectedKeys.length, 2, '_addTriStateKey wrong result');
+
+            Group.destroy();
          });
 
          it('_isSelected', function() {
-            var fakeSelf = {};
-            fakeSelf._selectedKeys = ['1', '2'];
-            fakeSelf._triStateKeys = ['3', '4'];
-            fakeSelf._getItemKey = function(key) {
+            const Group = new toggles.CheckboxGroup({});
+            Group._selectedKeys = ['1', '2'];
+            Group._triStateKeys = ['3', '4'];
+            Group._getItemKey = function(key) {
                return key;
             };
-            assert.equal(toggles.CheckboxGroup.prototype._isSelected.call(fakeSelf, '5'), false, '_isSelected, unselected item has uncorrect result');
-            assert.equal(toggles.CheckboxGroup.prototype._isSelected.call(fakeSelf, '2'), true, '_isSelected, selected item has uncorrect result');
-            assert.equal(toggles.CheckboxGroup.prototype._isSelected.call(fakeSelf, '3'), null, '_isSelected, tristate item has uncorrect result');
+            assert.equal(Group._isSelected('5'), false, '_isSelected, unselected item has uncorrect result');
+            assert.equal(Group._isSelected('2'), true, '_isSelected, selected item has uncorrect result');
+            assert.equal(Group._isSelected('3'), null, '_isSelected, tristate item has uncorrect result');
+
+            Group.destroy();
          });
 
          it('_getItemKey', function() {
-            const fakeSelf = {},
-               item = {};
+            const Group = new toggles.CheckboxGroup({});
+            const item = {};
             item.get = function(key) {
                return '5';
             };
             const options = {
                keyProperty: 'key'
             };
-            assert.equal(toggles.CheckboxGroup.prototype._getItemKey.call(fakeSelf, item, options), '5', '_getItemKey, unselected item has uncorrect result');
+            assert.equal(Group._getItemKey(item, options), '5', '_getItemKey, unselected item has uncorrect result');
+            Group.destroy();
          });
 
          it('_valueChangedHandler', function() {
-            var fakeSelf = {},
-               result = '';
-            fakeSelf._addKey = function() {
+            const Group = new toggles.CheckboxGroup({});
+            let result = '';
+            Group._addKey = function() {
                result += '_addKey';
             };
-            fakeSelf._removeKey = function() {
+            Group._removeKey = function() {
                result += '_removeKey';
             };
-            fakeSelf._updateItemChildSelection = function() {
+            Group._updateItemChildSelection = function() {
                result += '_updateItemChildSelection';
             };
-            fakeSelf._notifySelectedKeys = function() {
+            Group._notifySelectedKeys = function() {
                result += '_notifySelectedKeys';
             };
-            fakeSelf._getItemKey = function() {
+            Group._getItemKey = function() {
                return true;
             };
-            toggles.CheckboxGroup.prototype._valueChangedHandler.call(fakeSelf, null, null, true);
+            Group._valueChangedHandler(null, null, true);
             assert.equal(result, '_addKey_notifySelectedKeys', '_valueChangedHandler, unselected item has uncorrect result');
+
             result = '';
-            toggles.CheckboxGroup.prototype._valueChangedHandler.call(fakeSelf, null, null, null);
+            Group._valueChangedHandler(null, null, null);
             assert.equal(result, '_removeKey_updateItemChildSelection_notifySelectedKeys', '_valueChangedHandler, unselected item has uncorrect result');
+
             result = '';
-            toggles.CheckboxGroup.prototype._valueChangedHandler.call(fakeSelf, null, null, false);
+            Group._valueChangedHandler(null, null, false);
             assert.equal(result, '_removeKey_updateItemChildSelection_notifySelectedKeys', '_valueChangedHandler, unselected item has uncorrect result');
+            Group.destroy();
          });
 
 
          it('Selection', function() {
-            var fakeSelf = {},
-               result = '',
-               fakeItem = {};
-            fakeItem.get = function(arg) {
-               if (arg !== 1) {
-                  return true;
+            const Group = new toggles.CheckboxGroup({});
+            let result = '';
+            let fakeItem = {
+               get(arg) {
+                  return arg !== 1;
                }
-               return false;
             };
-            fakeSelf._addKey = function() {
+            let baseUpdateItemChildSelection = Group._updateItemChildSelection;
+            Group._addKey = function() {
                result += '_addKey';
             };
-            fakeSelf._removeKey = function() {
+            Group._removeKey = function() {
                result += '_removeKey';
             };
-            fakeSelf._updateItemChildSelection = function() {
-               result += '_updateItemChildSelection';
-            };
-            fakeSelf._notifySelectedKeys = function() {
+            Group._notifySelectedKeys = function() {
                result += '_notifySelectedKeys';
             };
-            fakeSelf._setItemsSelection = function() {
+            Group._setItemsSelection = function() {
                result += '_setItemsSelection';
             };
-            fakeSelf._getItemKey = function() {
+            Group._getItemKey = function() {
                return '3';
             };
-            fakeSelf._groups = {
+            Group._groups = {
                '3': [fakeItem]
             };
-            fakeSelf.keyProperty = 'key';
-            fakeSelf.parentProperty = 'parent';
-            fakeSelf._items = {
+            Group.keyProperty = 'key';
+            Group.parentProperty = 'parent';
+            Group._items = {
                getRecordById: function() {
                   return fakeItem;
                }
             };
-            fakeSelf._options = { keyProperty: true };
-            toggles.CheckboxGroup.prototype._updateItemChildSelection.call(fakeSelf, '3', true);
+
+            Group._options = { keyProperty: true };
+            Group._updateItemChildSelection('3', true);
             assert.equal(result, '_addKey_removeKey_setItemsSelection', '_updateItemChildSelection, unselected item has uncorrect result');
+
             result = '';
-            toggles.CheckboxGroup.prototype._updateItemChildSelection.call(fakeSelf, '2', false);
+            Group._updateItemChildSelection('2', false);
             assert.equal(result, '_removeKey_setItemsSelection', '_updateItemChildSelection, selected item has uncorrect result');
 
-            fakeSelf._items = {
+            Group._items = {
                getRecordById: function() {
                   return 2;
                }
             };
-            fakeSelf._selectedKeys = ['8', '4'];
-            fakeSelf._nodeProperty = true;
+            Group._selectedKeys = ['8', '4'];
+            Group._nodeProperty = true;
             result = '';
-            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem, fakeSelf._options);
+            Group._setItemsSelection(fakeItem, Group._options);
             assert.equal(result, '_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
-            fakeSelf._nodeProperty = 2;
-            fakeSelf._options = { parentProperty: 1 };
-            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem, fakeSelf._options);
+
+            Group._nodeProperty = 2;
+            Group._options = { parentProperty: 1 };
+            Group._setItemsSelection(fakeItem, Group._options);
             assert.equal(result, '_setItemsSelection_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
+            Group.destroy();
          });
       });
    });
