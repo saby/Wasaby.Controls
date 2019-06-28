@@ -145,7 +145,12 @@ var _private = {
                     if (self._isActive) {
                         isActive = true;
                     }
+                    const prevKey = listModel.getMarkedKey();
                     listModel.setItems(list);
+                    const currentKey = listModel.getMarkedKey();
+                    if (self._children.listView && currentKey && currentKey !== prevKey) {
+                        _private.scrollToItem(self, currentKey);
+                    }
                     self._items = listModel.getItems();
                     if (isActive === true) {
                         self._children.listView.activate();
