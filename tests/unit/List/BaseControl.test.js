@@ -781,7 +781,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.down
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(3, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
@@ -793,7 +794,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.up
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
@@ -830,7 +832,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.down
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
@@ -842,7 +845,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.up
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
