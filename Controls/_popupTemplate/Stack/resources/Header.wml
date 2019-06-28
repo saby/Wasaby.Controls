@@ -12,7 +12,9 @@
          </div>
       </ws:if>
       <ws:if data="{{headerContentTemplate}}">
-         <ws:partial template="{{headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate_theme_{{theme}}"></ws:partial>
+         <div class="controls-StackTemplate__headerContentTemplate_theme_{{theme}}">
+            <ws:partial template="{{headerContentTemplate}}" />
+         </div>
       </ws:if>
       <div class="controls-StackTemplate__command_buttons_theme_{{theme}}">
          <ws:if data="{{showMaximizedButton || _maximizeButtonVisibility}}">
