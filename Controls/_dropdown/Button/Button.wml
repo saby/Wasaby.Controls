@@ -11,6 +11,7 @@
         itemTemplate="{{_options.itemTemplate || _itemTemplate}}"
         headTemplate="{{_options.headTemplate || _options.headerTemplate}}"
         footerTemplate="{{_options.footerTemplate}}"
+        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
         headConfig="{{_options.headConfig}}"
         icon="{{_options.icon}}"
         groupingKeyCallback="{{_options.groupingKeyCallback}}"
