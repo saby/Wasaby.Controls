@@ -218,6 +218,9 @@ var
             if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
             }
+            if (this._options.columnScroll) {
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
+            }
         },
 
         _onItemMouseEnter: function (event, itemData) {
@@ -295,6 +298,9 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
+            }
+            if (this._options.columnScroll) {
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 

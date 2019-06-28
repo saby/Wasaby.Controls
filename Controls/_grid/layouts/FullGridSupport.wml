@@ -22,7 +22,14 @@
         <div  class="controls-itemActionsV_outside-spacing"></div>
     </ws:if>
     <ws:if data="{{_options.emptyTemplate}}">
-        <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}"/>
+        <ws:if data="{{_options.columnScroll}}">
+            <div style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}">
+                <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'max-width: ' + _listModel.getContainerWidth() + 'px;'}}"/>
+            </div>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}"/>
+        </ws:else>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>

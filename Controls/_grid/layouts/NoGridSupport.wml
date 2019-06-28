@@ -24,7 +24,12 @@
         <ws:if data="{{_options.emptyTemplate}}">
             <tr>
                 <td colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
-                    <ws:partial template="{{_options.emptyTemplate}}"/>
+                    <ws:if data="{{_options.columnScroll}}">
+                        <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'max-width: ' + _listModel.getContainerWidth() + 'px;'}}"/>
+                    </ws:if>
+                    <ws:else>
+                        <ws:partial template="{{_options.emptyTemplate}}"/>
+                    </ws:else>
                 </td>
             </tr>
         </ws:if>
