@@ -258,18 +258,14 @@ var _private = {
     },
     moveMarkerToNext: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            if (event) {
-                event.preventDefault();
-            }
+            event.preventDefault();
             var model = self.getViewModel();
             _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
     moveMarkerToPrevious: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            if (event) {
-                event.preventDefault();
-            }
+            event.preventDefault();
             var model = self.getViewModel();
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
@@ -287,8 +283,7 @@ var _private = {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self);
-            event.preventDefault();
+            _private.moveMarkerToNext(self, event);
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
