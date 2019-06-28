@@ -143,7 +143,7 @@
 
 /**
  * @name Controls/_filter/interface/IFilterView#detailPanelTemplateName
- * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
+ * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
  * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
@@ -301,7 +301,7 @@
 
 /**
  * @name Controls/_filter/interface/IFilterView#alignment
- * @cfg {String} Устанавливает путь, по которому откроется всплывающая панель.
+ * @cfg {String} Устанавливает выравнивание кнопки фильтров.
  * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается слева.
  * @variant left Кнопка прикреплена к левому краю, всплывающая панель открывается справа.
  * @default right
@@ -348,7 +348,7 @@
  */
 
 /**
- * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении элементов.
+ * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении опции items.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Object} items Новый элемент.
  */

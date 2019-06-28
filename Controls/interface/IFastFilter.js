@@ -19,7 +19,7 @@ define('Controls/interface/IFastFilter', [
     * @typedef {Object} PropertiesFastFilter
     * @property {String} keyProperty Имя свойства, уникально идентифицирующего элемент коллекции.
     * @property {String} displayProperty Имя свойства элемента, содержимое которого будет отображаться. Влияет только на значение при выборе.
-    * @property {Types/source:Base} source Объект, который реализует интерфейс ISource для доступа к данным. Если свойство "items" указано, свойство "source" будет игнорироваться.
+    * @property {Types/source:Base} source Объект, который реализует интерфейс ICrud для доступа к данным. Если свойство "items" указано, свойство "source" будет игнорироваться.
     * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
     * @property {Controls/interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
     * @property {Function} itemTemplate Шаблон рендеринга элементов. Подробнее - {@link Controls/interface/IDropdown#itemTemplate}
@@ -33,7 +33,7 @@ define('Controls/interface/IFastFilter', [
     * @typedef {Object} PropertiesFastFilter
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item.
     * @property {String} displayProperty Name of the item property that content will be displayed. Only affects the value when selecting.
-    * @property {Types/source:Base} source Object that implements ISource interface for data access. If 'items' is specified, 'source' will be ignored.
+    * @property {Types/source:Base} source Object that implements ICrud interface for data access. If 'items' is specified, 'source' will be ignored.
     * @property {Boolean} multiSelect Determines whether multiple selection is set.
     * @property {Controls/interface/ISelectorDialog} selectorTemplate Items selection panel template.
     * @property {Function} itemTemplate Template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplate}

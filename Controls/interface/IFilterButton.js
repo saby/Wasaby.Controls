@@ -121,7 +121,7 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @name Controls/interface/IFilterButton#lineSpaceTemplate
-    * @cfg {Function} Шаблон пространства между кнопкой и строкой, которое формируется значениями элементов.
+    * @cfg {Function} Шаблон, который отрисовывается между кнопкой и текстовым представлением фильтра.
     * @remark
     * Например, в шаблоне можно разместить контрол выбора периода.
     * @example
@@ -165,9 +165,9 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#templateName
     * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
     * @remark
-    * В качестве шаблона ркомендуется использовать {@link Controls.filter:Selector/Panel }
+    * В качестве шаблона рекомендуется использовать {@link Controls.filter:Selector/Panel }
     * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
-    * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола.
+    * Важно: для ленивой загрузки шаблона в значение опции необходимо передать путь до контрола.
     * @example
     * Пример настройки параметров для двух фильтров.
     * Шаблоны отображения обоих фильтров в главном блоке находятся в разделе "MyModule/mainBlockTemplate.wml"
@@ -237,12 +237,12 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @name Controls/interface/IFilterButton#alignment
-    * @cfg {String}  Устанавливает путь, по которому откроется всплывающая панель.
-    * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается слева.
-    * @variant left Кнопка прикреплена к левому краю, всплывающая панель открывается справа.
+    * @cfg {String}  Устанавливает выравнивание кнопки фильтров.
+    * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается влево.
+    * @variant left Кнопка прикреплена к левому краю, всплывающая панель открывается вправо.
     * @default right
     * @remark
-    * Строка, которая формируется значениями из items, а также меняет позицию.
+    * Строка, которая формируется по значениям textValue из опции items, также меняет своё выравнивание.
     * @example
     * Пример открытия панели фильтров справа:
     * <pre>
