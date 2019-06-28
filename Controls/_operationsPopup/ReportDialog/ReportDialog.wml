@@ -11,7 +11,7 @@
    <ws:footerContentTemplate>
       <div class="controls-ReportDialog__closeButtonContainer">
          <ws:partial if="{{_options.footerContentTemplate}}" template="{{_options.footerContentTemplate}}"/>
-         <Controls.buttons:Button class="controls-ReportDialog__closeButton" caption="{[ОК]}" buttonStyle="primary" on:click="_onCloseClick()"/>
+         <Controls.buttons:Button attr:class="controls-ReportDialog__closeButton" caption="{[ОК]}" buttonStyle="primary" on:click="_onCloseClick()"/>
       </div>
    </ws:footerContentTemplate>
 </Controls.popupTemplate:Confirmation>
