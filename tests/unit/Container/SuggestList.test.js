@@ -1,6 +1,6 @@
 define(
-   ['Controls/suggestPopup', 'Env/Env'],
-   function(suggestPopup, Env) {
+   ['Controls/suggestPopup', 'Env/Env', 'Types/entity', 'Types/collection'],
+   function(suggestPopup, Env, entity, collection) {
       
       'use strict';
       
@@ -121,8 +121,18 @@ define(
                   }
                };
 
-
-            suggestList._items = [{id: 'first'}, null, null, null, {id: 'last'}];
+            suggestList._items = new collection.List({
+               items: [
+                  new entity.Model({
+                     rawData: {id: 'first'},
+                     idProperty: 'id'
+                  }),
+                  new entity.Model({
+                     rawData: {id: 'last'},
+                     idProperty: 'id'
+                  })
+               ]
+            });
             suggestList._suggestListOptions = {
                source: {
                   getIdProperty: function() {
