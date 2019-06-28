@@ -9,7 +9,7 @@ import monthListUtils from './Utils';
  *
  * @class Controls/_calendar/MonthList/YearsSource
  * @extends Types/source:Base
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 var YearsSource = Memory.extend({
     _moduleName: 'Controls._calendar.MonthList.CalendarSource',

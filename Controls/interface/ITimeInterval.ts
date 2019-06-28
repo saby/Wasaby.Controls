@@ -5,7 +5,7 @@ import {TimeInterval} from 'Types/entity';
  *
  * @interface Controls/interface/ITimeInterval
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 interface ITimeInterval {
     readonly _options: {

@@ -18,7 +18,7 @@ type IOptions = IModelOptions;
  * @public
  * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG
  *
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 class TimeInterval extends Base {

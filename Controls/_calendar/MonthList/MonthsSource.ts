@@ -12,7 +12,7 @@ import dateUtils = require('Controls/Utils/Date');
  *
  * @class Controls/_calendar/MonthList/MonthSource
  * @extends Types/source:Base
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 export default class MonthsSource extends Memory {

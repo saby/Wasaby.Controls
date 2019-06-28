@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IInputMaskValue
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 interface IInputMaskValue {
     readonly _options: {

@@ -17,7 +17,7 @@ import 'css!theme?Controls/datePopup';
  * @class Controls/_datePopup/DateRange
  * @extends Core/Control
  * @control
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  *
  */
 

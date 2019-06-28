@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IDateMask
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 interface IDateMask {
     readonly _options: {

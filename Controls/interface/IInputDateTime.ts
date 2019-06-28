@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IInputDateTime
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 interface IInputDateTime {
     readonly _options: {

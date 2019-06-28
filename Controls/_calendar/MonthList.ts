@@ -19,7 +19,7 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
  * @mixes Controls/_calendar/interface/IMonthListSource
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthList
  */
 

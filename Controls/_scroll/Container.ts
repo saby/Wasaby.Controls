@@ -23,7 +23,7 @@ import 'css!theme?Controls/scroll';
  * @extends Core/Control
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @category Container
  * @demo Controls-demo/Container/Scroll
  *
@@ -37,7 +37,7 @@ import 'css!theme?Controls/scroll';
  * @extends Core/Control
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @category Container
  * @demo Controls-demo/Container/Scroll
  *
