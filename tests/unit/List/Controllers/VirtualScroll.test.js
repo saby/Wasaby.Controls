@@ -247,38 +247,4 @@ define([
          // Bottom  placeholder visible
          assert.isFalse(vsInstance._isScrollInPlaceholder(700));
       });
-
-      it('updateItemsIndexesOnScrolling', function() {
-         var
-            vsInstance = new list.VirtualScroll({
-               virtualPageSize: 6,
-               virtualSegmentSize: 3
-            });
-         vsInstance._topPlaceholderSize = 500;
-         vsInstance._bottomPlaceholderSize = 340;
-
-         for (var i = 0; i < 30; i++) {
-            vsInstance._itemsHeights[i] = 10;
-         }
-         vsInstance._itemsHeights[30] = 10;
-         vsInstance._itemsHeights[31] = 20;
-         vsInstance._itemsHeights[32] = 30;
-         vsInstance._itemsHeights[33] = 20;
-         vsInstance._itemsHeights[34] = 10;
-         vsInstance._itemsHeights[35] = 10;
-
-         vsInstance._itemsHeights[36] = 20;
-         vsInstance._itemsHeights[37] = 30;
-         vsInstance._itemsHeights[38] = 20;
-         vsInstance._itemsHeights[39] = 10;
-
-
-         vsInstance.updateItemsIndexesOnScrolling(395);
-         assert.deepEqual({
-            start: 32,
-            stop: 38
-         }, vsInstance.ItemsIndexes);
-      });
-
-   });
 });
