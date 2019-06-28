@@ -654,58 +654,6 @@ define([
          });
       });
 
-      it('virtualScrollCalculation on list change', async function() {
-         var callBackCount = 0;
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                virtualScrolling: true,
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                markedKey: 0,
-                source: source,
-                navigation: {
-                   view: 'infinity'
-                }
-             },
-             instance = new lists.BaseControl(cfg);
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-         instance._virtualScroll._stopIndex = 6;
-         var vm = instance.getViewModel();
-         vm.getCount = function() {
-            return 8;
-         };
-         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
-         assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(8, vm.getStopIndex());
-
-         vm.getCount = function() {
-            return 7;
-         };
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
-         assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(7, vm.getStopIndex());
-
-         vm.getCount = function() {
-            return 5;
-         };
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
-         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(5, vm.getStopIndex());
-      });
-
       it('virtual scroll shouldn\'t update indexes on reload', async function() {
          let
              cfg = {
