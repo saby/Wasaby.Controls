@@ -10,6 +10,25 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
    captionPosition: string;
 }
 /**
+ * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
+ *
+ * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+ *
+ * @class Controls/_toggle/Switch
+ * @extends Core/Control
+ * @implements Controls/_toggle/interface/ICheckable
+ * @implements Controls/_interface/ITooltip
+ * @control
+ * @public
+ * @author Михайловский Д.С.
+ * @category Toggle
+ * @demo Controls-demo/Switch/SwitchDemo
+ *
+ * @mixes Controls/_toggle/Switch/SwitchStyles
+ * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ */
+
+/*
  * Switch button with single caption. Frequently used for 'on-off' settings.
  *
  * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
@@ -30,10 +49,22 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
 
 /**
  * @name Controls/_toggle/Switch#caption
+ * @cfg {String} Текст заголовка кнопки.
+ */
+
+/*
+ * @name Controls/_toggle/Switch#caption
  * @cfg {String} Caption text.
  */
 
 /**
+ * @name Controls/_toggle/Switch#captionPosition
+ * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
+ * @variant left Заголовок расположен перед кнопкой.
+ * @variant right Заголовок расположен после кнопки. Значение по умолчанию.
+ */
+
+/*
  * @name Controls/_toggle/Switch#captionPosition
  * @cfg {String} Determines on which side of the button caption is located.
  * @variant left Caption before toggle.
