@@ -109,11 +109,14 @@
    margin-left: @header_padding-left_stack;
 }
 
-.controls-StackTemplate__caption_text_theme_@{themeName} {
+.controls-StackTemplate__caption_text {
    text-overflow: ellipsis;
    overflow: hidden;
    white-space: nowrap;
    flex-shrink: 1;
+}
+
+.controls-StackTemplate__caption_text_theme_@{themeName} {
    &:before {
       content: '\200b';
       font-size: @header_lineheight_stack;

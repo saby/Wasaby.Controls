@@ -1,8 +1,8 @@
 <div class="controls-StackTemplate__top-area controls-StackTemplate__top-area_theme_{{theme}}">
    <div class="controls-StackTemplate__top-area-content">
       <ws:if data="{{headingCaption}}">
-         <div class="controls-StackTemplate__caption_theme_{{theme}}">
-            <Controls.heading:Title attr:class="controls-StackTemplate__caption controls-StackTemplate__caption_text_theme_{{theme}}"
+         <div class="controls-StackTemplate__caption controls-StackTemplate__caption_theme_{{theme}}">
+            <Controls.heading:Title attr:class="controls-StackTemplate__caption_text controls-StackTemplate__caption_text_theme_{{theme}}"
                                     caption="{{headingCaption}}"
                                     style="{{headingStyle}}"
                                     size="{{headingSize}}"
