@@ -12,7 +12,7 @@
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 /*
@@ -29,7 +29,7 @@
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 

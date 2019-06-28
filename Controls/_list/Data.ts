@@ -28,7 +28,7 @@ type GetSourceResult = {
        * @extends Core/Control
        * @control
        * @public
-       * @author A.M. Gerasimov
+       * @author Герасимов А.М.
        */
       
       /*
@@ -42,7 +42,7 @@ type GetSourceResult = {
        * @extends Core/Control
        * @control
        * @public
-       * @author A.M. Gerasimov
+       * @author Герасимов А.М.
        */
 
       /**

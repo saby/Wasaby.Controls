@@ -5,7 +5,7 @@
  * @includes Crud Controls/_form/Crud
  * @includes PrimaryAction Controls/_form/PrimaryAction
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Controller = require('Controls/_form/FormController');

@@ -6,7 +6,7 @@ import entity = require('Types/entity');
        * Базовый класс ViewModel для InputRender
        * @class Controls/_input/resources/InputRender/BaseViewModel
        * @private
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        */
 
       export = simpleExtend.extend([entity.VersionableMixin], {

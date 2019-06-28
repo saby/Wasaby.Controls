@@ -18,7 +18,7 @@ import phoneCodeModule = require('Controls/_decorator/PhoneNumber/Dictionary');
        * @extends Core/Control
        * @control
        * @public
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        * @category Decorators
        */
 
