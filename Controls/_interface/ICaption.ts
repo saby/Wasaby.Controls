@@ -8,7 +8,7 @@ export interface ICaptionOptions {
  *
  * @interface Controls/_interface/ICaption
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  */
 
 /*
@@ -16,7 +16,7 @@ export interface ICaptionOptions {
  *
  * @interface Controls/_interface/ICaption
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  */
 export default interface ICaption {
    readonly '[Controls/_interface/ICaption]': boolean;

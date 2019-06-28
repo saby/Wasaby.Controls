@@ -9,7 +9,7 @@ export interface IToggleGroupOptions {
  *
  * @interface Controls/_toggle/interface/IToggleGroup
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  */
 
 /*
@@ -17,7 +17,7 @@ export interface IToggleGroupOptions {
  *
  * @interface Controls/_toggle/interface/IToggleGroup
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  */
 
 export interface IToggleGroup {

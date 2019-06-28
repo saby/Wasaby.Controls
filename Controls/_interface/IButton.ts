@@ -10,7 +10,7 @@ export interface IButtonOptions {
  *
  * @interface Controls/_interface/IButton
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  */
 export default interface IButton {
    readonly '[Controls/_interface/IButton]': boolean;

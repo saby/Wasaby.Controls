@@ -1,5 +1,5 @@
 /**
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @mixin Controls/_toggle/Button/Styles
  * @public
  * @css @height_Button_size_s Height of button with options viewMode 'button' and size 's'.

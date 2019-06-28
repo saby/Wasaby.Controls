@@ -40,7 +40,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @mixes Controls/_interface/ITooltip
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ButtonDemoPG
  */
