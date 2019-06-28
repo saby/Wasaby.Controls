@@ -6,7 +6,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
    describe('Controls.toggle:CheckboxGroup', function() {
       describe('methods', function() {
          it('prepare items', function() {
-            var source = new sourceLib.Memory({
+            let source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -22,12 +22,14 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
                   }
                ]
             });
-            var fakeSelf = {},
-               result = false;
-            toggles.CheckboxGroup.prototype._initItems.call(fakeSelf, source).addCallback(function() {
+            const options = {
+               source
+            };
+            const fakeSelf = {};
+            toggles.CheckboxGroup.prototype._initItems.call(fakeSelf, options).addCallback(function() {
                assert.equal(fakeSelf._items.at(0).get('id'), 1, '_initItems wrong item id');
                assert.equal(fakeSelf._items.at(1).get('id'), 2, '_initItems wrong item id');
-               toggles.CheckboxGroup.prototype.sortGroup.call(fakeSelf, fakeSelf._items);
+               toggles.CheckboxGroup.prototype.sortGroup.call(fakeSelf, options, fakeSelf._items);
                assert.equal(fakeSelf._groups[2].get('id'), 1, 'sortGroup set uncorrect items in _group');
                fakeSelf._setItemsSelection = function(item) {
                   assert.equal(this._items.indexOf(item) !== -1, false, '_prepareSelected uncorrect');
@@ -75,15 +77,15 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
          });
 
          it('_getItemKey', function() {
-            var fakeSelf = {},
+            const fakeSelf = {},
                item = {};
             item.get = function(key) {
                return '5';
             };
-            fakeSelf._options = {
+            const options = {
                keyProperty: 'key'
             };
-            assert.equal(toggles.CheckboxGroup.prototype._getItemKey.call(fakeSelf, item), '5', '_getItemKey, unselected item has uncorrect result');
+            assert.equal(toggles.CheckboxGroup.prototype._getItemKey.call(fakeSelf, item, options), '5', '_getItemKey, unselected item has uncorrect result');
          });
 
          it('_valueChangedHandler', function() {
@@ -168,11 +170,11 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             fakeSelf._selectedKeys = ['8', '4'];
             fakeSelf._nodeProperty = true;
             result = '';
-            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem);
+            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem, fakeSelf._options);
             assert.equal(result, '_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
             fakeSelf._nodeProperty = 2;
             fakeSelf._options = { parentProperty: 1 };
-            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem);
+            toggles.CheckboxGroup.prototype._setItemsSelection.call(fakeSelf, fakeItem, fakeSelf._options);
             assert.equal(result, '_setItemsSelection_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
          });
       });
