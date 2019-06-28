@@ -328,7 +328,7 @@ import Env = require('Env/Env');
     *    <li>displayProperty - определяет поле отображения записи.</li>
     * <ul>
     * @example
-    * Вкладки с шаблоном элемента.
+    * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
     * <pre>
     *    <Controls.tabs:Buttons
     *                   bind:selectedKey='SelectedKey3'
