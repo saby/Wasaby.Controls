@@ -415,6 +415,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'verticalAlign',
         'offset',
         'direction',
+        '_vdomOnOldPage',
         'corner',
         'targetPoint',
         'targetTracking',

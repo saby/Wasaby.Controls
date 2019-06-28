@@ -149,6 +149,46 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openStickyByHelper: function() {
+            let stickyId;
+            popupLib.Sticky.openPopup({
+               template: 'Controls-demo/Popup/TestDialog',
+               opener: this._children.helperButton4,
+               target: this._children.helperButton4._container
+            }).then((popupId) => {
+               stickyId = popupId;
+            });
+            setTimeout(function() {
+               popupLib.Sticky.closePopup(stickyId);
+            }, 5000);
+         },
+
+         openStackByHelper: function() {
+            let stackId;
+            popupLib.Stack.openPopup({
+               template: 'Controls-demo/Popup/TestStack',
+               opener: this._children.helperButton5
+            }).then((popupId) => {
+               stackId = popupId;
+            });
+            setTimeout(function() {
+               popupLib.Stack.closePopup(stackId);
+            }, 5000);
+         },
+
+         openDialogByHelper: function() {
+            let dialogId;
+            popupLib.Dialog.openPopup({
+               template: 'Controls-demo/Popup/TestDialog',
+               opener: this._children.helperButton6
+            }).then((popupId) => {
+               dialogId = popupId;
+            });
+            setTimeout(function() {
+               popupLib.Dialog.closePopup(dialogId);
+            }, 5000);
+         },
+
          _onResult: function (result) {
             if( result ){
                alert(result);
