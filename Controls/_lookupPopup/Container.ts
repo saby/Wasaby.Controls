@@ -139,7 +139,7 @@ import {IData, IDecorator} from "Types/source";
             filter = Utils.object.clone(filter);
 
             //FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
-            if (searchParam) {
+            if (searchParam && selection.get('marked')[0] !== null) {
                delete filter[searchParam];
             }
             filter.selection = selection;
