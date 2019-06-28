@@ -22,7 +22,6 @@ const DialogTemplate = Control.extend({
      * @public
      * @category Popup
      * @author Красильников А.С.
-     * @mixes Controls/_popupTemplate/Dialog/DialogStyles
      * @demo Controls-demo/Popup/Templates/DialogTemplatePG
      */
 
