@@ -127,10 +127,9 @@ export interface IToggleGroup {
      * @cfg {String} Имя свойства элемента, которое содержит шаблон для рендеринга элемента.
      * @default Если не установлено, вместо него используется itemTemplate.
      * @remark
-     * Чтобы определить шаблон, вы должны вызвать базовый шаблон "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate".
+     * Чтобы определить шаблон, вы должны вызвать базовый шаблон.
      * Шаблон размещается в компоненте с использованием тега <ws:partial> с атрибутом "template".
      *
-     * По умолчанию базовый шаблон wml!Controls/_dropdown/itemTemplate будет отображать только поле «title».
      * Вы можете изменить режим отображения записей, установив значения для следующих параметров:
      * <ul>
      *    <li>displayProperty - определяет отображаемое поле записи.</li>
@@ -176,7 +175,7 @@ export interface IToggleGroup {
      * @cfg {String} Name of the item property that contains template for item render.
      * @default If not set, itemTemplate is used instead.
      * @remark
-     * To determine the template, you should call the base template "wml!Controls/_toggle/RadioGroup/resources/ItemTemplate".
+     * To determine the template, you should call the base template.
      * The template is placed in the component using the <ws:partial> tag with the template attribute.
      *
      * By default, the base template wml!Controls/_dropdown/itemTemplate will display only the 'title' field.
