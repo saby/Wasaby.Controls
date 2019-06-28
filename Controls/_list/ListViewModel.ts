@@ -436,7 +436,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 }
             });
         }
-        _private.updateIndexes(this, 0, this.getCount());
+        if (!this._options.virtualScrolling) {
+            _private.updateIndexes(this, 0, this.getCount());
+        }
         if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
             const curenMarkerIndex = this.getIndexByKey(this._markedKey);
             const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
