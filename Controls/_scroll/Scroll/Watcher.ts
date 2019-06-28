@@ -298,7 +298,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
                //IntersectionObserver doesn't work correctly in Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers &&  !Env.detection.isIE12 && !Env.detection.firefox) {
+               if (global && global.IntersectionObserver && triggers && !Env.detection.firefox) {
                   this._canObserver = true;
                   _private.initIntersectionObserver(this, triggers, component);
                }
