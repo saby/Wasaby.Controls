@@ -174,6 +174,12 @@ define([
          LoadingInd._toggleIndicator(true, config);
          assert.equal(LoadingInd._isOverlayVisible, true);
          assert.equal(LoadingInd._isMessageVisible, false);
+
+         LoadingInd._stack.clear();
+         LoadingInd._toggleIndicator(true, config);
+         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isMessageVisible, false);
+
          LoadingInd._toggleIndicatorVisible = function() {
             baseToggleIndicatorVisible.apply(LoadingInd, arguments);
             assert.equal(LoadingInd._isMessageVisible, true);
