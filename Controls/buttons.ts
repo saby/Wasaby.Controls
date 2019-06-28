@@ -4,7 +4,7 @@
  * @includes Button Controls/_buttons/Button
  * @includes IHref Controls/_buttons/interface/IHref
  * @includes IClick Controls/_buttons/interface/IClick
- * @author Михайловский Д. С.
+ * @author Красильников А.С.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes Button Controls/_buttons/Button
  * @includes IHref Controls/_buttons/interface/IHref
  * @includes IClick Controls/_buttons/interface/IClick
- * @author Михайловский Д. С.
+ * @author Красильников А.С.
  */
 
 export {default as Button} from './_buttons/Button';

@@ -98,7 +98,7 @@ import Env = require('Env/Env');
     * @control
     * @public
     * @category List
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
@@ -114,7 +114,7 @@ import Env = require('Env/Env');
     * @control
     * @public
     * @category List
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
