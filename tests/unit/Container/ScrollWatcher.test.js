@@ -93,7 +93,7 @@ define([
          var ins = new scrollMod.Watcher();
          ins._registrar = registrarMock;
          var containerMock = {
-            scrollTop: 0,
+            scrollTop: 10,
             clientHeight: 300,
             scrollHeight: 400
          };
@@ -102,7 +102,7 @@ define([
          evType = [];
          scrollMod.Watcher._private.onResizeContainer(ins, containerMock, true);
          assert.deepEqual({clientHeight: 300, scrollHeight: 400}, ins._sizeCache, 'Wrong size cache values');
-         assert.deepEqual(111, containerMock.scrollTop, 'Wrong scrollTop value after resize');
+         assert.deepEqual(10, containerMock.scrollTop, 'Wrong scrollTop value after resize');
          assert.deepEqual(['canScroll'], evType, 'Wrong can scroll value');
 
          evType = [];
