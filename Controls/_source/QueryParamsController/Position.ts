@@ -9,7 +9,6 @@ interface IPositionHasMore {
    after: boolean;
 }
 
-
 declare type FieldCfg = any;
 declare type Field = any[];
 declare type PositionCfg = any;
