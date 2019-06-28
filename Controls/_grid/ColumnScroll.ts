@@ -119,6 +119,9 @@ const
 
             _private.drawTransform(this, this._scrollPosition);
          }
+      },
+      getContentContainerSize() {
+         return this._contentContainerSize;
       }
    });
 export = ColumnScroll;
