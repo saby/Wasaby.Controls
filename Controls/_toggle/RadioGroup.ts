@@ -15,7 +15,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *
@@ -35,7 +35,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *
