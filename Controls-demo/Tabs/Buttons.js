@@ -238,7 +238,9 @@ define('Controls-demo/Tabs/Buttons', [
                {
                   id: '1',
                   title: 'Document',
-                  align: 'left'
+                  align: 'left',
+                  contentTab: true
+
                },
                {
                   id: '2',
