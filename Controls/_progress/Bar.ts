@@ -1,29 +1,11 @@
-import Control = require('Core/Control');
-import entity = require('Types/entity');
-import env = require('Env/Env');
-import template = require('wml!Controls/_progress/Bar/Bar');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import {IoC} from 'Env/Env';
+import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 
-var
-   _private = {
-      getWidth: function(val) {
-         if (val < 0 || val > 100) {
-            env.IoC.resolve('ILogger').error('Bar', 'The value must be in range of [0..100]');
-         }
-         return (val > 0 ? Math.min(val,100)+'%' : '0px');
-      }
-   },
-   Bar = Control.extend({
-      _template: template,
-      _width: '0px',
-
-      _beforeMount: function(opts) {
-         this._width = _private.getWidth(opts.value);
-      },
-      _beforeUpdate: function(opts) {
-         this._width = _private.getWidth(opts.value);
-      },
-   });
-/// <amd-module name="Controls/_progress/Bar" />
+export interface IBarOptions extends IControlOptions {
+   value?: number;
+}
 /**
  * Control that renders progress bar
  * @class Controls/_progress/Bar
@@ -38,27 +20,47 @@ var
  * @css @height-ProgressBar_bar Progress bar height
  * @css @color-ProgressBar__progress Progress bar fill color
  */
-
 /**
  * @name Controls/_progress/Bar#value
  * @cfg {Number} Progress in percents (ratio of the filled part)
  * @remark
  * An integer from 1 to 100.
  */
+class Bar extends Control<IBarOptions> {
+   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+   protected _template: TemplateFunction = barTemplate;
+   protected _width: string = '0px';
 
-   Bar.getOptionTypes = function() {
-      return {
-         value: entity.descriptor(Number).required()
-      };
-   };
+   private _getWidth(val: number): string {
+      const maxPercentValue = 100;
+      if (val < 0 || val > maxPercentValue) {
+         IoC.resolve('ILogger').error('Bar', 'The value must be in range of [0..100]');
+      }
+      return (val > 0 ? Math.min(val, maxPercentValue) + '%' : '0px');
+   }
 
-   Bar.getDefaultOptions = function() {
+   protected _beforeMount(opts: IBarOptions): void {
+      this._width = this._getWidth(opts.value);
+   }
+
+   protected _beforeUpdate(opts: IBarOptions): void {
+      this._width = this._getWidth(opts.value);
+   }
+
+   static _theme: string[] = ['Controls/progress'];
+
+   static getDefaultOptions(): object {
       return {
-         theme: "default",
+         theme: 'default',
          value: 0
       };
-   };
+   }
 
-Bar._theme = ['Controls/progress'];
-Bar._private = _private;
+   static getOptionTypes(): object {
+      return {
+         value: EntityDescriptor(Number).required()
+      };
+   }
+}
+
 export default Bar;
