@@ -1212,11 +1212,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-            });
-            it('getResultsPosition()', function() {
-               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-            });
+         });
+         it('getResultsPosition()', function() {
+            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+         });
+         it('is multiheader', function() {
 
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
+         });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
             // gridViewModel._prepareHeaderColumns(gridHeader, false);
@@ -1230,6 +1235,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
+            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {
@@ -1472,43 +1479,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
                ' grid-column: 1 / 3;'
             );
-         });
-
-         it('shouldDrawResultsAt top or bottom', function () {
-            let gridModel = new gridMod.GridViewModel({...cfg, resultsPosition: 'top'});
-            assert.isTrue(gridModel.shouldDrawResultsAt('top'));
-            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
-            gridModel.getCount = () => 0;
-            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
-            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
-            gridModel.getCount = () => 1;
-            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
-            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
-            gridModel._options.resultsPosition = null;
-            assert.isFalse(gridModel.shouldDrawResultsAt('top'));
-            assert.isFalse(gridModel.shouldDrawResultsAt('bottom'));
-         });
-
-         it('shouldDrawHeader', function () {
-            let gridModel = new gridMod.GridViewModel(cfg);
-            gridModel.getHeader = () => [];
-            assert.isTrue(gridModel.shouldDrawHeader());
-            gridModel.getCount = () => 0;
-            assert.isFalse(gridModel.shouldDrawHeader());
-            gridModel.getCount = () => 1;
-            assert.isTrue(gridModel.shouldDrawHeader());
-            gridModel.getHeader = () => null;
-            assert.isFalse(gridModel.shouldDrawHeader());
-         });
-
-         it('shouldDrawFooter', function () {
-            let gridModel = new gridMod.GridViewModel({...cfg, footerTemplate: 'qwe'});
-            assert.isTrue(gridModel.shouldDrawFooter());
-            gridModel.getCount = () => 0;
-            assert.isFalse(gridModel.shouldDrawFooter());
-            gridModel.getCount = () => 10;
-            gridModel._options.footerTemplate = null;
-            assert.isFalse(gridModel.shouldDrawFooter());
          });
       });
 

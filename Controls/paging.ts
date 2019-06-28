@@ -5,7 +5,7 @@
  * @includes PagingStyles Controls/_paging/PagingStyles
  * @includes PagingStyles Controls/_paging/DigitButtonsStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Paging = require('Controls/_paging/Paging');

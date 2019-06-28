@@ -10,7 +10,7 @@ import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
  *
  * @public
  *
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 
 export interface IWrapURLsOptions extends IControlOptions {

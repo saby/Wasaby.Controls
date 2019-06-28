@@ -504,7 +504,7 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
-            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.getMultyHeader(this._options.header); }
+            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.isMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
             this._updateLastItemKey();
         },
@@ -571,10 +571,10 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-        getMultyHeader: function(columns) {
+        isMultyHeader: function(columns) {
             let k = 0;
             while(columns.length > k) {
-                if (columns[k].startRow && columns[k].endRow) {
+                if (columns[k].endRow > 2) {
                     return true;
                 }
                 k++;
@@ -585,6 +585,9 @@ var
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = getMaxEndRow(this._headerRows);
+                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
+                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -785,22 +788,7 @@ var
         setResultsPosition: function(position) {
             this._options.resultsPosition = position;
         },
-
-        shouldDrawHeader(): boolean {
-            return !!this.getHeader() && this.getCount() > 0;
-        },
-
-        shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-            if (this.getResultsPosition() !== position) {
-                return false;
-            }
-            return this.getCount() > 1;
-        },
-
-        shouldDrawFooter(): boolean {
-            return !!this._options.footerTemplate && this.getCount() > 0;
-        },
-
+        
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,

@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import DoubleSwitchTemplate = require('wml!Controls/_toggle/DoubleSwitch/DoubleSwitch');
 import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchToggle');
 import textTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchText');
@@ -50,7 +50,6 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = DoubleSwitchTemplate;
-   protected _theme: string[] = ['Controls/toggle'];
 
    protected _toggleTemplate: Function = toggleTemplate;
    protected _textTemplate: Function = textTemplate;
@@ -91,6 +90,7 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
       this._checkCaptions(newOptions.captions);
    }
 
+   static _theme: string[] = ['Controls/toggle'];
    static getDefaultOptions(): object {
       return {
          value: false

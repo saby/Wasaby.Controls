@@ -6,7 +6,7 @@
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Panel = require('Controls/_operations/Panel');

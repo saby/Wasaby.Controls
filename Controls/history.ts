@@ -7,7 +7,7 @@
  * @includes Service Controls/_history/Service
  * @includes Source Controls/_history/Source
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Constants = require('Controls/_history/Constants');

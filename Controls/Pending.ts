@@ -49,7 +49,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * @class Controls/Pending
     * @extends Core/Control
     * @control
-    * @author Krasilnikov A.
+    * @author Красильников А.С.
     * @public
     */
 
@@ -127,6 +127,9 @@ import ParallelDeferred = require('Core/ParallelDeferred');
             var isValid = true;
             if (pending.validate) {
                isValid = pending.validate();
+            } else if (pending.validateCompatible) {
+               // ignore compatible pendings
+               isValid = false;
             }
 
             // We have at least 1 active pending

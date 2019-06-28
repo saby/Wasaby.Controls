@@ -4,7 +4,7 @@
  * @includes ListContainer Controls/_suggestPopup/List
  * @includes FooterTemplate wml!Controls/_suggestPopup/footer
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import ListContainer = require('Controls/_suggestPopup/List');

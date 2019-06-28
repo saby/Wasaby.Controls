@@ -12,7 +12,7 @@ import {ITooltip, ITooltipOptions,
    IFontSize, IFontSizeOptions,
    IHeight, IHeightOptions
 } from 'Controls/interface';
-import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
@@ -105,7 +105,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 class Button extends Control<IButtonOptions> implements
       IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight {
    protected _template: TemplateFunction = ButtonTemplate;
-   protected _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
    // Называть _style нельзя, так как это состояние используется для темизации
    private _buttonStyle: string;
@@ -165,6 +164,8 @@ class Button extends Control<IButtonOptions> implements
          e.stopPropagation();
       }
    }
+
+   static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {

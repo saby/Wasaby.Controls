@@ -6,7 +6,7 @@
  * @includes SearchContextField Controls/_context/SearchContextField
  * @includes SearchContextField Controls/_context/TouchContextField
  * @deprecated
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 export {default as ContextOptions} from 'Controls/_context/ContextOptions';

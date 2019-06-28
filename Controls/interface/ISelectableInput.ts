@@ -4,7 +4,7 @@
  * @interface Controls/interface/ISelectableInput
  *
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 interface ISelectableInput {
     readonly _options: {

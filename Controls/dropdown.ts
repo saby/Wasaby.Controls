@@ -14,7 +14,7 @@
  * @includes Styles Controls/_dropdown/Input/Styles
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Button = require('Controls/_dropdown/Button');

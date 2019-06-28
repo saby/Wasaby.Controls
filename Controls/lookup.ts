@@ -13,7 +13,7 @@
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Selector = require("Controls/_lookup/Button");

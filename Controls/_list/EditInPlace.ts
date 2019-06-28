@@ -171,7 +171,7 @@ var
         },
 
         hasParentInItems: function (item, listModel) {
-            return !!listModel.getItemById(item.get(listModel._options.parentProperty));
+            return !!listModel._options.parentProperty && listModel.getItemById(item.get(listModel._options.parentProperty));
         },
 
         editNextRow: function (self, editNextRow) {
@@ -531,5 +531,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         _private.resetVariables(this);
     }
 });
+
+EditInPlace._private = _private;
 
 export = EditInPlace;
